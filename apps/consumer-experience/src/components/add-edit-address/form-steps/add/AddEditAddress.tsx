@@ -47,6 +47,10 @@ export interface AddEditAddressProps {
     dirtyFields: AddressFormFields
   ) => void;
   removeCallback?: () => void;
+  /**
+   * If the user only has one address, we need to prevent editing the preferred address setting
+   */
+  disableEditingPreferredAddress?: boolean;
 }
 export const AddEditAddress: FC<AddEditAddressProps> = ({
   values,
@@ -54,6 +58,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
   submitCallback,
   removeCallback,
   actionType,
+  disableEditingPreferredAddress,
 }) => {
   const {
     control,
@@ -89,7 +94,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
   };
 
   const buttonText =
-    actionType === FormActionType.ADD ? 'Save address' : 'Edit address';
+    actionType === FormActionType.ADD ? 'Save address' : 'Update address';
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -241,6 +246,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             render={({ field }) => (
               <div className={styles.zip}>
                 <FieldDataActive
+                  inputMode="numeric"
                   errorMessage={errors.zipCode?.message}
                   fieldStatus={
                     errors.zipCode ? FieldStatus.ERROR : FieldStatus.DEFAULT
@@ -271,8 +277,8 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
                 id="checkbox-default-address"
                 onClick={field.onChange}
                 isCheckedByDefault={field.value}
+                isDisabled={disableEditingPreferredAddress}
               >
-                {' '}
                 Set this address as my mailing address
               </Checkbox>
             </div>
@@ -288,7 +294,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             className={styles.delete}
             mode="error"
           >
-            Delete
+            Remove address
           </Button>
         )}
         <Button onClick={handleCancel} className={styles.cancel} mode="link">
