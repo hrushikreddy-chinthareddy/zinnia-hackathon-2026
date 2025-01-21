@@ -3893,7 +3893,8 @@
             "documents": "Documents",
             "caseDetails": "Détails du Dossier",
             "deliveryMethod": "Méthode de livraison",
-            "correspondence": "Correspondence"
+            "correspondence": "Correspondence",
+            "activity": "Activité"
         }
     },
     "bannerAlert": {
