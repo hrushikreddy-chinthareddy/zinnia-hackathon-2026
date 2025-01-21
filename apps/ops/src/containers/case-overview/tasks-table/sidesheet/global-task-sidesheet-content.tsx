@@ -29,10 +29,7 @@ import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { writeToCache } from '@deps/utils/cache';
-import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
-import { TranslationFiles } from '@deps/config/translations';
 import { TaskLabel } from '@deps/models/case/task-instance';
-import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import Content, { ContentVariant } from '@deps/components/content/content';
 
 const TaskTypeMap: Record<string, string> = {
@@ -45,19 +42,16 @@ export enum TabOptions {
 }
 
 export interface DocumentItem {
-    document:
-        | {
-              documentId: string;
-              documentName: string;
-          }
-        | DocumentWithSource;
+    document: {
+        documentId: string;
+        documentName?: string;
+    };
     taskCarrier: string;
     docType: DocumentTypeView;
 }
 
 export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId: string; type?: string }) {
     const { t } = useTranslation();
-    const { t: documentPanel } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'task.documentPanel' });
 
     const [loading, setLoading] = useState(true);
     const [task, setTask] = useState<ManagementTask | null>(null);
@@ -215,19 +209,15 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     </div>
                 </div>
                 <div className="flex items-center">
-                    {type == 'case' ? (
-                        <DocumentPreviewer
-                            className="flex gap-1"
-                            activeDocType={docType}
-                            carrier={taskCarrier.toUpperCase()}
-                            documentId={document?.documentId || ''}
-                            displayName={document?.documentName || ''}
-                        >
-                            <>{t('general.view')}</>
-                        </DocumentPreviewer>
-                    ) : (
-                        createAction(document as DocumentWithSource, taskCarrier.toUpperCase(), documentPanel)
-                    )}
+                    <DocumentPreviewer
+                        className="flex gap-1"
+                        activeDocType={docType}
+                        carrier={taskCarrier.toUpperCase()}
+                        documentId={document?.documentId || ''}
+                        displayName={document?.documentName || ''}
+                    >
+                        <>{t('general.view')}</>
+                    </DocumentPreviewer>
                 </div>
             </div>
         );
