@@ -40,7 +40,7 @@ export const CaseDetailsTabValues: { [key: string]: string } = {
 export const PolicyActivityTabValues: { [key: string]: string } = {
     transactions: 'transactions',
     notes: 'notes',
-    callLogs: 'callLogs',
+    'call-logs': 'call-logs',
 };
 
 // DEPU-2749 https://zinnia.atlassian.net/browse/DEPU-2749

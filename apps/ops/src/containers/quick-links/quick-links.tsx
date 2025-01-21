@@ -25,7 +25,7 @@ export interface QuickLinksProps extends QuickActionsMenuProps {
     links: {
         href: string;
         name: string;
-        dropdown?: boolean;
+        subLinks?: { href: string; name: string }[];
     }[];
     policy: PolicyDetails;
     sessionId: string;
@@ -157,22 +157,22 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
 
     return (
         <div className="flex flex-wrap gap-x-8 gap-y-4 text-md" data-testid="quick-links">
-            {links.map(({ name, href, dropdown }) => {
-                if (dropdown) {
+            {links.map(({ name, href, subLinks }) => {
+                if (subLinks) {
                     return (
                         <MenuContextual
                             key={name + href}
                             trigger={
-                                <Typography variant={TypographyVariant.BodyBold} className="text-secondary">
+                                <Typography variant={TypographyVariant.BodySmBold} className="text-secondary ">
                                     {name}
                                     <Icon type={IconType.CHEVRON} height={16} width={16} className="ml-1" />
                                 </Typography>
                             }
                         >
                             <MenuContextualLabel label={name}>
-                                <MenuContextualItem content={'Transactions'} href={``} />
-                                <MenuContextualItem content={'Notes'} href={``} />
-                                <MenuContextualItem content={'Call Logs'} href={``} />
+                                {subLinks.map(subLink => {
+                                    return <MenuContextualItem content={subLink.name} href={subLink.href} key={subLink.name} />;
+                                })}
                             </MenuContextualLabel>
                         </MenuContextual>
                     );

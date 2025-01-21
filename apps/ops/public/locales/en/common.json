@@ -240,7 +240,17 @@
             },
             "activity": {
                 "text": "Activity",
-                "link": "/policies/{{planCode}}/{{id}}/activity"
+                "link": "/policies/{{planCode}}/{{id}}/activity",
+                "subLinks": {
+                    "callLogs": {
+                        "text": "Call logs",
+                        "link": "/policies/{{planCode}}/{{id}}/activity/call-logs"
+                    },
+                    "transactions": {
+                        "text": "Transactions",
+                        "link": "/policies/{{planCode}}/{{id}}/activity/transactions"
+                    }
+                }
             }
         },
         "loader": "Loading..."

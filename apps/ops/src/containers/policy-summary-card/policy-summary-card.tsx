@@ -93,7 +93,16 @@ const quickLinks = (t: TFunction, policy: PolicyDetails): QuickLinksProps['links
         {
             href: t('site.navLinks.history.link', { id: policyNumber, planCode }),
             name: t('pageHeader.activity.headerText'),
-            dropdown: true,
+            subLinks: [
+                {
+                    name: t(`site.navLinks.activity.subLinks.transactions.text`),
+                    href: t(`site.navLinks.activity.subLinks.transactions.link`, { id: policyNumber, planCode }),
+                },
+                {
+                    name: t(`site.navLinks.activity.subLinks.callLogs.text`),
+                    href: t(`site.navLinks.activity.subLinks.callLogs.link`, { id: policyNumber, planCode }),
+                },
+            ],
         },
         {
             href: t('site.navLinks.documents.link', { id: policyNumber, planCode }),

@@ -234,7 +234,17 @@
             },
             "activity": {
                 "text": "Activité",
-                "link": "/policies/{{planCode}}/{{id}}/activity"
+                "link": "/policies/{{planCode}}/{{id}}/activity",
+                "subLinks": {
+                    "callLogs": {
+                        "text": "Histoire d'appels",
+                        "link": "activity/call-logs"
+                    },
+                    "transactions": {
+                        "text": "Transactions",
+                        "link": "activity/transactions"
+                    }
+                }
             }
         },
         "loader": "Chargement..."
