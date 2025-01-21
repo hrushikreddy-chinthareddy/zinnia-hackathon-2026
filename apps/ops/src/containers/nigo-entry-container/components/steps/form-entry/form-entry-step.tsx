@@ -32,9 +32,10 @@ type FormEntryStepProps = {
     document: DocumentData;
     clientCode: string;
     docType: string;
+    planCode: string;
 };
 
-function FormEntryStep({ document, clientCode, docType }: FormEntryStepProps) {
+function FormEntryStep({ document, clientCode, docType, planCode }: FormEntryStepProps) {
     const router = useRouter();
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.formEntry' });
     const { t: withdrawalTxt } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -48,7 +49,7 @@ function FormEntryStep({ document, clientCode, docType }: FormEntryStepProps) {
     const { areDiaryNotesViewed } = useContext(DiaryNotesContext);
     const { setSubmitFailed } = useNigoEntry();
 
-    const formParts = getFormParts(caseType, clientCode, qualType, docType);
+    const formParts = getFormParts(caseType, clientCode, qualType, planCode);
     const [taskApiError, setTaskApiError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const carrier = clientCode.toUpperCase();
