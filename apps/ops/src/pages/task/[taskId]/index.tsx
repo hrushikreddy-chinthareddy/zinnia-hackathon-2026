@@ -133,7 +133,11 @@ export const getServerSideProps = withPageAuthRequired({
             const currentTaskMetadata: FormMetadata[] = taskMetadata?.schemaContent?.tabSchemas || [];
 
             if (!currentTaskMetadata.length) {
-                const fallbackMetadata = { title: '', formSchema: taskMetadata?.formSchema ?? {}, uiSchema: taskMetadata?.uiSchema ?? {} };
+                const fallbackMetadata: FormMetadata = {
+                    title: '',
+                    formSchema: taskMetadata?.formSchema ?? {},
+                    uiSchema: taskMetadata?.uiSchema ?? {},
+                };
                 currentTaskMetadata.push(fallbackMetadata);
             }
 

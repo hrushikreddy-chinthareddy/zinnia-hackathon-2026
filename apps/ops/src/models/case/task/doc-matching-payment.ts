@@ -1,6 +1,6 @@
 export type PotentialMatches = {
     id?: string;
-    entityType: string; // todo:vijaya: add enum for mapping
+    entityType: string;
     applicationId: string;
     zlCaseId: string;
     policyNumber: string;
@@ -39,6 +39,14 @@ export type TransactionData = [
         ];
     }
 ];
+
+export enum MatchingCase {
+    REINDEX = 'REINDEX',
+    MATCH_FOUND = 'MATCH_FOUND',
+    NO_MATCH = 'NO_MATCH',
+    DUPLICATE = 'DUPLICATE',
+    ENTERED = 'ENTERED',
+}
 
 type Entity = {
     paymentRecordId: string;
@@ -82,3 +90,7 @@ type Entity = {
     };
     paymentRecordStatus: 'COMPLETED';
 };
+
+export enum EntityTypes {
+    NB_PAYMENT_RECORD = 'NB_PAYMENT_RECORD',
+}

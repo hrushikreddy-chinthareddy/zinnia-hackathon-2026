@@ -58,4 +58,5 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata }
         </WorkflowCard>
     );
 };
+
 export const MemoizedTaskFormStep = memo(TaskFormStep);

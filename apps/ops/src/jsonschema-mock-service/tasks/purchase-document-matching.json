@@ -9,7 +9,7 @@
                 "if": {
                     "properties": {
                         "potentialMatches": {
-                            "const": "enterCaseId"
+                            "const": "ENTERED"
                         }
                     }
                 },
@@ -26,7 +26,7 @@
                 "if": {
                     "properties": {
                         "potentialMatches": {
-                            "const": "notMatched"
+                            "const": "REINDEX"
                         }
                     }
                 },
@@ -174,11 +174,11 @@
                 "customOptions": [
                     {
                         "label": "Enter a case ID",
-                        "value": "enterCaseId"
+                        "value": "ENTERED"
                     },
                     {
                         "label": "Document cannot be matched to a case",
-                        "value": "notMatched"
+                        "value": "REINDEX"
                     }
                 ]
             }
@@ -187,6 +187,7 @@
             "ui:widget": "radio"
         }
     },
+    "title": "",
     "schemaContent": {
         "tabSchemas": [
             {
@@ -265,7 +266,7 @@
                             "if": {
                                 "properties": {
                                     "potentialMatches": {
-                                        "const": "enterCaseId"
+                                        "const": "ENTERED"
                                     }
                                 }
                             },
@@ -281,7 +282,7 @@
                                 "if": {
                                     "properties": {
                                         "potentialMatches": {
-                                            "const": "notMatched"
+                                            "const": "REINDEX"
                                         }
                                     }
                                 },
@@ -303,8 +304,7 @@
                                     "properties": {
                                         "isDuplicate": {
                                             "type": "string",
-                                            "title": "Is this document a duplicate?",
-                                            "enum": ["Yes", "No"]
+                                            "title": "Is this document a duplicate?"
                                         }
                                     }
                                 }
@@ -378,11 +378,11 @@
                             "customOptions": [
                                 {
                                     "label": "Enter a case ID",
-                                    "value": "enterCaseId"
+                                    "value": "ENTERED"
                                 },
                                 {
                                     "label": "Document cannot be matched to a case",
-                                    "value": "notMatched"
+                                    "value": "REINDEX"
                                 }
                             ]
                         }
@@ -416,7 +416,19 @@
                         }
                     },
                     "isDuplicate": {
-                        "ui:widget": "radio"
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "customOptions": [
+                                {
+                                    "label": "Yes",
+                                    "value": "DUPLICATE"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "MATCH_FOUND"
+                                }
+                            ]
+                        }
                     }
                 }
             },

@@ -6,6 +6,7 @@ import { ManagementTask } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 export type TaskState = {
     task: ManagementTask;
+    initialTask: ManagementTask;
     correlationId: string;
     isReadyForDataEntry: boolean;
     exceptions: string[];
@@ -27,6 +28,7 @@ export type TaskState = {
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 export const taskDefaultValues = {
     task: {} as ManagementTask,
+    initialTask: {} as ManagementTask,
     correlationId: '',
     isReadyForDataEntry: false,
     exceptions: [] as any,

@@ -4,10 +4,13 @@ import React, { ForwardedRef, useCallback, useContext, useEffect, useMemo, useSt
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
+import { updateTask } from '@deps/containers/task-container/task.healpers';
 import { Case } from '@deps/models/case/case';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
+import { EntityTypes, MatchingCase } from '@deps/models/case/task/doc-matching-payment';
 import { getCases } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 import { buildTaskPayload } from '@deps/utils/tasks/task-payload-helper';
 
 type TaskFormProps = {
@@ -22,12 +25,12 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     forwardedRef: ForwardedRef<Form>
 ) {
     const formState = useContext(TaskDataContext);
-    const { task, setTask, setSubmitFailed, correlationId } = formState;
+    const { task, setTask, setSubmitFailed, correlationId, initialTask } = formState;
     const [formSchema, setFormSchema] = useState(taskMetadata);
     const fetchData = async () => {
         const correlationId = task.data.potentialMatches;
         if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
-            if (correlationId === 'enterCaseId' && task.data.caseId) {
+            if (correlationId === MatchingCase.ENTERED && task.data.caseId) {
                 try {
                     const caseRequestBody = {
                         caseIds: [task.data.caseId],
@@ -40,23 +43,44 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     const response = await getCases(caseRequestBody);
                     const cases = response.data as Case[];
 
-                    if (cases.length > 0) {
-                        setTask(task => ({
-                            ...task,
-                            data: {
-                                ...task.data,
-                                caseId: cases[0].id,
-                            },
-                        }));
+                    if (!cases.length) {
+                        browserLogWarn('task::case not found', task.data.caseId);
+                        return;
                     }
+
+                    const transactionResponse = await getTransactionsByCorrelationId(correlationId, {
+                        entityType: EntityTypes.NB_PAYMENT_RECORD,
+                    });
+
+                    const paymentCards = transactionResponse?.map((transaction: any) => ({
+                        label: transaction.correlationId,
+                        value: transaction.recordId,
+                        subElement: {
+                            ...transaction,
+                            title: transaction?.entity?.payment?.companyName,
+                        },
+                    }));
+
+                    setTask(previousTask => {
+                        return {
+                            ...previousTask,
+                            data: {
+                                ...previousTask.data,
+                                transactionOptions: paymentCards,
+                                caseId: cases[0].id,
+                                potentialMatches: cases[0].correlationId,
+                                isDuplicate: MatchingCase.MATCH_FOUND,
+                            },
+                        };
+                    });
                 } catch (e) {
                     console.log(e);
                 }
             }
-            if (!['enterCaseId', 'notMatched'].includes(correlationId)) {
+            if (![MatchingCase.ENTERED, MatchingCase.REINDEX].includes(correlationId)) {
                 try {
                     const response = await getTransactionsByCorrelationId(correlationId, {
-                        entityType: 'NB_PAYMENT_RECORD',
+                        entityType: EntityTypes.NB_PAYMENT_RECORD,
                     });
 
                     const paymentCards = response?.map((transaction: any) => ({
@@ -77,6 +101,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                             },
                         };
                     });
+
+                    console.log(task, 'current');
                 } catch (e) {
                     console.log(e);
                 }
@@ -91,15 +117,13 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             return;
         }
 
-        //todo:vijaya: payload customization
+        const taskPayload = buildTaskPayload(task, initialTask);
 
-        const taskPayload = buildTaskPayload(task);
-        console.log('🚀 ~ handleSubmit ~ taskPayload:Submitted', taskPayload);
-
-        // const success = await updateTask(taskPayload, correlationId);
-        // setSubmitFailed(!success);
+        const success = await updateTask(taskPayload, correlationId);
+        setSubmitFailed(!success);
 
         onSubmit();
+        console.log('🚀 ~ handleSubmit ~ taskPayload:Submitted', taskPayload);
     }, [correlationId, isSubmit, onSubmit, setSubmitFailed, task]);
 
     const handleChange = useCallback(

@@ -33,7 +33,7 @@ export const TaskProvider = ({ children, initialTask, correlationId }: TaskProvi
     return (
         <TaskDataContext.Provider
             value={{
-                // taskMetadata: metaData,
+                initialTask,
                 task,
                 correlationId,
                 isReadyForDataEntry,
@@ -51,7 +51,6 @@ export const TaskProvider = ({ children, initialTask, correlationId }: TaskProvi
                 setTransactionSubType,
                 setFormErrors,
                 setSubmitFailed,
-                // setTaskMetadata: setMetaData,
             }}
         >
             {children}
