@@ -3,14 +3,15 @@ import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ApiResponse, bpmApiBaseUrl, ServerApi } from '@/services';
-import { isBpmError } from '@/services/bpm/types';
+import { ActionTypes } from '@/store/store';
 import { AddressRequest, BPMResponse } from '@/types/transactions';
-import { parseAPIResponse, logApiNotOkDetails } from '@/utils/api';
-import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
-import { logError } from '@/utils/logging/server-logging';
 
-import { returnErrorResponse } from './utils';
+import {
+  returnErrorResponse,
+  returnSuccessResponse,
+  TransactionTypes,
+} from './utils';
 
 /**
  * Deletes a bank account from the BPM API by setting an end date.
@@ -47,30 +48,13 @@ export const putEndDateAddress = async (
       }
     );
 
-    const parsedResponse = await parseAPIResponse(rawResponse);
-    if (!rawResponse.ok) {
-      logError(
-        'Error deleting address',
-        await logApiNotOkDetails({
-          rawResponse,
-          parsedResponse: parsedResponse,
-        })
-      );
-      if (isBpmError(parsedResponse)) {
-        throw parsedResponse;
-      }
-      throw rawResponse;
-    }
-    const phone = `<a href="tel:+${EVERLY_CONTACT_PHONE_NUMBER}">${EVERLY_CONTACT_PHONE_NUMBER}</a>`;
-
-    const messages = {
-      title: `Thanks!`,
-      message: `Address is being removed. Address changes may not save immediately. If you need assistance to change an address, call ${phone}.<br /><br />Note: Updating this address won't affect your other policies. Update each policy individually if they share this address.`,
-    };
-
-    return { data: { ...parsedResponse, messages }, error: null };
+    return await returnSuccessResponse(
+      rawResponse,
+      TransactionTypes.ADDRESS,
+      ActionTypes.REMOVE
+    );
   } catch (e: unknown) {
-    return returnErrorResponse(e);
+    return returnErrorResponse(e, TransactionTypes.ADDRESS, ActionTypes.REMOVE);
   }
 };
 
@@ -93,30 +77,13 @@ export const postAddAddress = async (
       }
     );
 
-    const parsedResponse = await parseAPIResponse(rawResponse);
-    if (!rawResponse.ok) {
-      logError(
-        'Error deleting address',
-        await logApiNotOkDetails({
-          rawResponse,
-          parsedResponse: parsedResponse,
-        })
-      );
-      if (isBpmError(parsedResponse)) {
-        throw parsedResponse;
-      }
-      throw rawResponse;
-    }
-
-    const messages = {
-      title: `Thanks!`,
-      // TODO: what should this message be? if we show the address, needs to include pii wrapper!!!
-      message: 'Your address is being added.',
-    };
-
-    return { data: { ...parsedResponse, messages }, error: null };
+    return await returnSuccessResponse(
+      rawResponse,
+      TransactionTypes.ADDRESS,
+      ActionTypes.ADD
+    );
   } catch (e) {
-    return returnErrorResponse(e);
+    return returnErrorResponse(e, TransactionTypes.ADDRESS, ActionTypes.ADD);
   }
 };
 
@@ -128,7 +95,7 @@ export const putUpdateAddress = async (
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/parties/${partyId}/address/${addressId}`;
 
   try {
-    const rawResponse = await ServerApi.post(
+    const rawResponse = await ServerApi.put(
       url,
       JSON.stringify({
         ...addressChangeRequest,
@@ -142,29 +109,12 @@ export const putUpdateAddress = async (
       }
     );
 
-    const parsedResponse = await parseAPIResponse(rawResponse);
-    if (!rawResponse.ok) {
-      logError(
-        'Error deleting address',
-        await logApiNotOkDetails({
-          rawResponse,
-          parsedResponse: parsedResponse,
-        })
-      );
-      if (isBpmError(parsedResponse)) {
-        throw parsedResponse;
-      }
-      throw rawResponse;
-    }
-
-    const messages = {
-      title: `Thanks!`,
-      // TODO: what should this message be? if we show the address, needs to include pii wrapper!!!
-      message: 'Your address is being updated.',
-    };
-
-    return { data: { ...parsedResponse, messages }, error: null };
+    return await returnSuccessResponse(
+      rawResponse,
+      TransactionTypes.ADDRESS,
+      ActionTypes.EDIT
+    );
   } catch (e) {
-    return returnErrorResponse(e);
+    return returnErrorResponse(e, TransactionTypes.ADDRESS, ActionTypes.EDIT);
   }
 };

@@ -17,6 +17,7 @@ import {
   useForm,
 } from 'react-hook-form';
 
+import { getDirtyValues } from '@/utils/forms';
 import { isNumberOrHyphen } from '@/utils/regex';
 import { states } from '@/utils/states';
 
@@ -41,22 +42,30 @@ export interface AddEditAddressProps {
   values?: AddressFormFields;
   actionType?: FormActionType;
   cancelCallback?: () => void;
-  submitCallback?: (val: AddressFormFields) => void;
+  submitCallback?: (
+    val: AddressFormFields,
+    dirtyFields: AddressFormFields
+  ) => void;
   removeCallback?: () => void;
+  /**
+   * If the user only has one address, we need to prevent editing the preferred address setting
+   */
+  disableEditingPreferredAddress?: boolean;
 }
-
 export const AddEditAddress: FC<AddEditAddressProps> = ({
   values,
   cancelCallback,
   submitCallback,
   removeCallback,
   actionType,
+  disableEditingPreferredAddress,
 }) => {
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors, defaultValues },
+    getValues,
+    formState: { errors, defaultValues, dirtyFields },
   } = useForm<AddressFormFields>({
     defaultValues: {
       addressType: values?.addressType || AddressChange.addressType.RESIDENCE,
@@ -79,11 +88,13 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
   };
 
   const onSubmit: SubmitHandler<AddressFormFields> = data => {
-    submitCallback?.(data);
+    const values = getValues();
+    const dirtyValues = getDirtyValues(dirtyFields, values);
+    submitCallback?.(data, dirtyValues);
   };
 
   const buttonText =
-    actionType === FormActionType.ADD ? 'Save address' : 'Edit address';
+    actionType === FormActionType.ADD ? 'Save address' : 'Update address';
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -166,8 +177,8 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             onClick={() => append({ addressVal: '' })}
             size="small"
           >
-            <Icon type={IconType.ADD} /> Add address line (e.g. unit, floor,
-            suite, etc)
+            <Icon type={IconType.ADD} />
+            Add address line (e.g.&nbsp;apt,&nbsp;, suite,&nbsp;etc)
           </Button>
         )}
 
@@ -235,6 +246,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             render={({ field }) => (
               <div className={styles.zip}>
                 <FieldDataActive
+                  inputMode="numeric"
                   errorMessage={errors.zipCode?.message}
                   fieldStatus={
                     errors.zipCode ? FieldStatus.ERROR : FieldStatus.DEFAULT
@@ -263,10 +275,10 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             <div className={styles.defaultAddress}>
               <Checkbox
                 id="checkbox-default-address"
-                onChange={field.onChange}
+                onClick={field.onChange}
                 isCheckedByDefault={field.value}
+                isDisabled={disableEditingPreferredAddress}
               >
-                {' '}
                 Set this address as my mailing address
               </Checkbox>
             </div>
@@ -282,7 +294,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             className={styles.delete}
             mode="error"
           >
-            Delete
+            Remove address
           </Button>
         )}
         <Button onClick={handleCancel} className={styles.cancel} mode="link">

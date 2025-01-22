@@ -2,7 +2,7 @@ import { Icon, IconType, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/com
 import { toTitleCase } from '@zinnia/utils';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { FC, PropsWithChildren, useState } from 'react';
+import { CSSProperties, FC, PropsWithChildren, useState } from 'react';
 
 export enum DashboardTabs {
     ACTIVE_APPLICATIONS = 'active-applications',
@@ -33,10 +33,17 @@ export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
             activationMode="manual"
             onValueChange={handleTabChange}
         >
-            <TabList className="!mb-0 w-full !border-b-0">
+            <TabList
+                style={
+                    {
+                        '--indicator-z-index': 2,
+                    } as CSSProperties
+                }
+                className="!mb-0 w-full !border-b-0"
+            >
                 <TabTrigger value={DashboardTabs.ACTIVE_APPLICATIONS}>
                     <Icon type={IconType.DOCUMENT_TEXT} width={24} height={24} className="hidden lg:block" />{' '}
-                    {toTitleCase('active transactions')}
+                    {toTitleCase('open transactions')}
                 </TabTrigger>
                 <TabTrigger value={DashboardTabs.ISSUED_BUSINESS}>
                     <Icon type={IconType.SHIELD_CHECKMARK} width={24} height={24} className="hidden lg:block" />{' '}

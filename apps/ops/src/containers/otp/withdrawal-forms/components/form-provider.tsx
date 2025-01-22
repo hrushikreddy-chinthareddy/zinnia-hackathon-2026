@@ -121,6 +121,7 @@ export const FormProvider = ({
     const [formValidator, setFormValidator] = useState<(val?: FormParts) => FormValidationErrors>(() => () => {
         return {};
     });
+    const [formBeneInfo, setFormBeneInfo] = useState(form.data.formRequest?.formBeneInfo || null);
 
     // Update contract issue state when issue state changes
     useEffect(() => {
@@ -207,6 +208,7 @@ export const FormProvider = ({
                 setFormNigos,
                 setFormReindexingData,
                 setFormComment,
+                setFormBeneInfo,
             }}
         >
             {children}

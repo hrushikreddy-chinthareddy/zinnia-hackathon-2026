@@ -20,7 +20,7 @@ interface DetailProps {
   summary: Partial<CarrierPolicyDetails>;
 }
 
-export const PolicyDetailsSummary = async ({
+export const PolicyDetailsSummary = ({
   summary,
   className,
   policyNumber,

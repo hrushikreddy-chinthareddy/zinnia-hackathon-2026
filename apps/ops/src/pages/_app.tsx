@@ -99,6 +99,7 @@ const queryClient = new QueryClient();
 queryClient.setDefaultOptions({
     queries: {
         staleTime: 60 * 1000, // 1 minute,
+        retry: false,
     },
 });
 

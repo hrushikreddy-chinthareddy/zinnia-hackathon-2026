@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { DocumentData } from '@deps/models/case/document';
 
@@ -27,7 +28,7 @@ export default function MassMutualReg60Form({ document }: { document: DocumentDa
         setDisclosureAuthorization,
     } = useContext(Reg60FormContext);
 
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request' });
     const { disclosureAuthorizationConfig, disclosureConfig, ownerInformationConfig, agentInformtaionConfig } = getMassMutualReg60Config(t);
 
     const ownerInfoErrors = getErrorObjectByRole(PartyRoles.OWNER, formErrors);

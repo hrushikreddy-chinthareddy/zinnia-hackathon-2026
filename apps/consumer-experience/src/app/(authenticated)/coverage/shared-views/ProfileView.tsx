@@ -1,12 +1,10 @@
-import { Address, Email, Phone } from '@zinnia/api-types/types/sor';
+import { Email, Phone } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
-import { AddEditAddressSidesheet } from '@/components/add-edit-address/AddEditAddressSidesheet';
-import { FormActionType } from '@/components/add-edit-address/types';
+import { AddressList } from '@/components/address-list/AddressList';
 import { BankList } from '@/components/bank-list/BankList';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
-import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
@@ -31,37 +29,13 @@ export const ProfileView = async ({
   const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
 
   const addresses = () => {
-    if (profileData.addresses && profileData.addresses.length) {
-      const currentAddresses = filterItemsWithPastEndDate(
-        profileData.addresses
-      );
-
-      if (currentAddresses && currentAddresses.length) {
-        return (
-          <Addresses
-            addresses={currentAddresses as Address[]}
-            title="Address"
-            preferredAddressIndicator={profileData.preferredAddressIndicator}
-            partyId={profileData.partyId}
-            allowAddressChanges={allowAddressChanges}
-          />
-        );
-      }
-    }
-
-    if (!allowAddressChanges) {
-      return null;
-    }
-    // If there are no addresses, show the add address button and set defaultAddress to true
     return (
-      <>
-        <h2 className="mb-lg">Addresses</h2>
-        <AddEditAddressSidesheet
-          values={{ defaultAddress: true }}
-          partyId={profileData.partyId}
-          actionType={FormActionType.ADD}
-        />
-      </>
+      <AddressList
+        planCode={planCode}
+        policyNumber={policyNumber}
+        initialProfileData={profileData}
+        allowAddressChanges={allowAddressChanges}
+      />
     );
   };
 

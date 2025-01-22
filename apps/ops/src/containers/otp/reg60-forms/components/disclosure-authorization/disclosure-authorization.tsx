@@ -6,6 +6,7 @@ import Field, { FieldFormat, FieldSize, FieldType, FieldVariant } from '@deps/co
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import SelectSimple from '@deps/components/select/select';
+import { TranslationFiles } from '@deps/config/translations';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -23,7 +24,7 @@ export function useDisclosureAuthorizationFields(
     formErrors?: FormValidationErrors,
     isFormStateReadOnly?: boolean
 ) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request.disclosureAuthorization' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request.disclosureAuthorization' });
 
     const [signatureDate, setSignatureDate] = useState(disclosureAuthorization?.signatureDate || '');
     const [expectedAcctValue, setExpectedAcctValue] = useState(disclosureAuthorization?.expectedAcctValue || '');

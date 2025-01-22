@@ -25,6 +25,7 @@ import MassWithdrawalForm from '@deps/containers/otp/withdrawal-forms/mass/mass-
 import NasuWithdrawalForm from '@deps/containers/otp/withdrawal-forms/nasu/nasu-withdrawal-form';
 import RslnWithdrawalForm from '@deps/containers/otp/withdrawal-forms/rsln/rsln-withdrawal-form';
 import SbgcWithdrawalForm from '@deps/containers/otp/withdrawal-forms/sbgc-withdrawal-form';
+import UlpcWithdrawalForm from '@deps/containers/otp/withdrawal-forms/ulpc/ulpc-withdrawal-form';
 import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { determineFormToRender } from '@deps/helpers/form-selector.helper';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
@@ -43,7 +44,7 @@ import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, QualTypes, TransactionStatus, SortOrder } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
-import { getDocumentSSR } from '@deps/queries/api/documents';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -81,6 +82,7 @@ const getFormComponentMap = (qualType: QualTypes | ''): Record<string, React.Rea
     [Carrier.NASU]: <NasuWithdrawalForm />,
     [Carrier.GDMN]: <GdmnWithdrawalForm />,
     [Carrier.RSLN]: <RslnWithdrawalForm />,
+    [Carrier.ULPC]: <UlpcWithdrawalForm />,
     [Carrier.GLCO]: <GilicoWithdrawalForm />,
 });
 
@@ -269,7 +271,7 @@ export const getServerSideProps = withPageAuthRequired({
 
         const [translations, document] = await Promise.all([
             serverSideTranslations(locale, [TranslationFiles.COMMON]),
-            getDocumentSSR(documentNumber, DocumentType.Redemption, clientId.toUpperCase(), accessToken),
+            getDocumentV2SSR(documentNumber, DocumentType.Redemption, clientId.toUpperCase(), accessToken),
         ]);
         if (!document?.contract) {
             logError('create-case/withdrawal/:id::Error getting document', { documentNumber, clientId });

@@ -17,5 +17,5 @@ export interface BpmErrorResponse {
 }
 
 export const isBpmError = (e: unknown): e is BpmErrorResponse => {
-  return (e as BpmErrorResponse).validationResult.length > 0;
+  return (e as BpmErrorResponse)?.validationResult?.length > 0;
 };

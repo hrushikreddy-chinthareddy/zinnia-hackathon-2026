@@ -2,19 +2,10 @@ import { dataURItoBlob } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import {
-    PolicyDocumentApiRequest,
-    DocumentData,
-    DocumentErrorResponse,
-    DocumentDownload,
-    DocumentDownloadWithMime,
-    EDSDocumentResponse,
-    PolicyDocument,
-} from '@deps/models/case/document';
+import { PolicyDocumentApiRequest, DocumentData, DocumentErrorResponse, EDSDocumentResponse } from '@deps/models/case/document';
 import { ManagementTask } from '@deps/models/case/task-instance';
-import { isMockPolicyDocsRequestEnabled } from '@deps/services/api-config';
-import { mockPolicyDocs } from '@deps/services/mocks/policy-docs';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
@@ -22,13 +13,11 @@ import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logg
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
-import { StatusCode } from '../api-utils/baseAPIClient';
 
 const ssrBaseUrl = `${apiServerBaseUrl}/document/v2/documents`;
-const documentBaseUrl = `${baseAppUrl}/api/document/v2/documents`;
+export const documentBaseUrl = `${baseAppUrl}/api/document/v2/documents`;
 
-export const getDocument = async (documentNumber: string, docType: string, clientCode: string): Promise<DocumentData | null> => {
+export const getDocumentV2 = async (documentNumber: string, docType: string, clientCode: string): Promise<DocumentData | null> => {
     try {
         const url = `${documentBaseUrl}/${documentNumber}?docType=${docType}&clientCode=${clientCode.toUpperCase()}`;
         const { data } = await client.get<DocumentData, AxiosResponse>(url);
@@ -41,7 +30,7 @@ export const getDocument = async (documentNumber: string, docType: string, clien
     }
 };
 
-export const uploadDocument = async (task: ManagementTask, document: any, correlationId: string): Promise<EDSDocumentResponse | null> => {
+export const uploadDocumentV2 = async (task: ManagementTask, document: any, correlationId: string): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/upload`;
         const { blob, name } = dataURItoBlob(document);
@@ -75,44 +64,7 @@ export const uploadDocument = async (task: ManagementTask, document: any, correl
     }
 };
 
-export const downloadDocument = async (
-    documentNumber: string,
-    docType: string,
-    clientCode: string
-): Promise<DocumentDownloadWithMime | null> => {
-    try {
-        const url = `${baseAppUrl}/api/documents/${documentNumber}/download?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
-        const { data } = await client.get<DocumentDownloadWithMime, AxiosResponse>(url);
-        return data;
-    } catch (error: any) {
-        logWarn('An error occurred while downloading document', {
-            ...parseErrorInformation(error),
-            file: 'queries/api/documents',
-            function: 'getDocumentDownload',
-        });
-
-        return error.response;
-    }
-};
-
-export const getDocumentPreview = async (documentNumber: string, docType: string, clientCode: string): Promise<DocumentDownload | null> => {
-    try {
-        const url = `${baseAppUrl}/api/documents/${documentNumber}/preview?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
-        const { data } = await client.get<DocumentDownload, AxiosResponse>(url);
-
-        return data;
-    } catch (error: any) {
-        logWarn('An error occurred while getting document', {
-            ...parseErrorInformation(error),
-            file: 'queries/api/documents',
-            function: 'getDocumentDownload',
-        });
-
-        return error.response;
-    }
-};
-
-export const getDocumentSSR = async (
+export const getDocumentV2SSR = async (
     documentNumber: string,
     docType: string,
     clientCode: string,
@@ -146,7 +98,7 @@ export const getDocumentSSR = async (
     }
 };
 
-type DocumentApiRequestInputs = {
+export type DocumentApiRequestInputs = {
     source: DocumentTypeView;
     clientCode: string;
     contractNumber?: string;
@@ -162,136 +114,12 @@ type DocumentApiRequestInputs = {
     documentNumber?: string;
     recipient?: 'Client' | 'Agent';
     zinniaLiveCaseId?: string;
-    periods?: { PeriodYear: string; PeriodQuarters: string[] }[];
-};
-export const getDocuments = async ({
-    periods,
-    ...queryParams
-}: DocumentApiRequestInputs): Promise<PolicyDocumentApiRequest | DocumentErrorResponse> => {
-    try {
-        let queryString = new URLSearchParams(queryParams);
-        if (periods) {
-            queryString.append('periods', JSON.stringify(periods));
-        }
-        const cachedResult = pullFromCache('getDocuments', queryString.toString());
-
-        if (cachedResult) return cachedResult;
-
-        const data = await client.get<any, AxiosResponse>(`${documentBaseUrl}?${queryString.toString()}`);
-
-        writeToCache('getDocuments', queryString.toString(), data);
-
-        return data;
-    } catch (error: any) {
-        console.error('An error occurred while getting document results', error);
-        return error.response || error;
-    }
+    periods?: { periodYear: string; periodQuarters: string[] }[];
+    limit?: number;
+    offset?: number;
 };
 
-// Get all documents potentially associated with a case by using caseId and policy and combining the results sets
-export const getCaseDocuments = async ({
-    caseId,
-    clientCode,
-    policyNumber,
-    source,
-}: {
-    caseId: string;
-    clientCode: string;
-    policyNumber?: string;
-    source: DocumentTypeView;
-}): Promise<{ data: PolicyDocument[]; error?: { status: number; message: string } }> => {
-    if (!caseId || !clientCode || !source) {
-        console.error('getAllCaseDocuments::Missing caseId, clientCode, or source');
-        return { data: [], error: { status: 400, message: 'Missing caseId, clientCode, or source' } };
-    }
-
-    const caseDocRequest = getDocuments({ source, clientCode, zinniaLiveCaseId: caseId });
-    const policyDocRequest = policyNumber ? getDocuments({ source, clientCode, contractNumber: policyNumber }) : null;
-
-    try {
-        const [caseDocsResponse, policyDocsResponse] = await Promise.all([caseDocRequest, policyDocRequest]);
-        const docIds = new Set<string>();
-        const docs: PolicyDocument[] = [];
-        let status;
-        let message = '';
-
-        // if either request is unsuccessful, escape early
-        if (caseDocsResponse?.status !== 200 || policyDocsResponse?.status !== 200) {
-            return {
-                data: [],
-                error: {
-                    status: Math.max(caseDocsResponse?.status || 0, policyDocsResponse?.status || 0) || StatusCode.InternalServerError,
-                    message:
-                        (caseDocsResponse as PolicyDocumentApiRequest)?.statusText ||
-                        (caseDocsResponse as DocumentErrorResponse)?.message ||
-                        (policyDocsResponse as PolicyDocumentApiRequest)?.statusText ||
-                        (policyDocsResponse as DocumentErrorResponse)?.message ||
-                        'An error occured while getting documents',
-                },
-            };
-        }
-
-        (caseDocsResponse as PolicyDocumentApiRequest)?.data?.items?.forEach((doc: PolicyDocument) => {
-            if (!docIds.has(doc.documentId || (doc.documentID as string))) {
-                docIds.add(doc.documentId || (doc.documentID as string));
-                docs.push(doc);
-            }
-        });
-
-        (policyDocsResponse as PolicyDocumentApiRequest)?.data?.items?.forEach((doc: PolicyDocument) => {
-            if (!docIds.has(doc.documentId || (doc.documentID as string))) {
-                docIds.add(doc.documentId || (doc.documentID as string));
-                docs.push(doc);
-            }
-        });
-
-        return {
-            data: docs.sort((a, b) => b.documentDate.localeCompare(a.documentDate)),
-        };
-    } catch (e) {
-        console.error('getAllCaseDocuments::An error occurred while getting case documents', e);
-        return { data: [], error: { status: 500, message: 'An unknown error occurred while getting case documents' } };
-    }
-};
-
-export const getPolicyDocs = async (
-    id: string,
-    clientCode: string,
-    optionalParams: { documentStartDate?: string; documentEndDate?: string } = {}
-): Promise<PolicyDocumentApiRequest | DocumentErrorResponse> => {
-    try {
-        if (isMockPolicyDocsRequestEnabled()) {
-            return {
-                data: mockPolicyDocs,
-                status: 200,
-                statusText: 'success',
-            };
-        }
-
-        let queryParams = `?source=Policy&contractNumber=${id}&clientCode=${clientCode?.toUpperCase()}`;
-        if (optionalParams?.documentStartDate) {
-            queryParams += `&documentStartDate=${optionalParams.documentStartDate}`;
-        }
-        if (optionalParams?.documentEndDate) {
-            queryParams += `&documentEndDate=${optionalParams.documentEndDate}`;
-        }
-
-        const cachedResult = pullFromCache('getPolicyDocs', queryParams);
-
-        if (cachedResult) return cachedResult;
-
-        const data = await client.get<any, AxiosResponse>(`${documentBaseUrl}${queryParams}`);
-
-        writeToCache('getPolicyDocs', queryParams, data);
-
-        return data;
-    } catch (error: any) {
-        console.error('An error occurred while getting policy document results', error);
-        return error;
-    }
-};
-
-export const getCorrespondenceDocs = async (
+export const getCorrespondenceDocsV2 = async (
     id: string,
     clientCode: string,
     optionalParams: { documentStartDate?: string; documentEndDate?: string; documentType?: string; periods?: string } = {}
@@ -327,7 +155,7 @@ export const getCorrespondenceDocs = async (
     }
 };
 
-export const getPolicyTypeDocs = async (
+export const getPolicyTypeDocsV2 = async (
     id: string,
     clientCode: string,
     docType?: string

@@ -7,34 +7,51 @@ import { CaseStatus } from '@deps/models/case/withdrawal/case';
 import ActionCellRenderer from './action-cell-renderer';
 
 describe('#ActionCellRenderer', () => {
-    it('should render the popover with the correct actions based on status when Reg60', () => {
+    it('should render readonly action when the task status is completed', async () => {
         const params = {
             data: {
-                status: 'IN_PROGRESS',
+                status: TaskStatus.Completed,
             },
-            isReadOnly: (status: string) => CaseStatus.Submit || status === TaskStatus.Completed,
-            isEditable: (status: string) =>status === (CaseStatus.Pending || status === TaskStatus.New),
+            actionParams: {
+                isReadOnly: (status: string) => (status === CaseStatus.Submit || status === TaskStatus.Completed),
+                isEditable: (status: string) =>  (status === CaseStatus.Pending || status === TaskStatus.New ||  status === TaskStatus.InProgress),
+                actionLabels: {
+                    edit: 'Edit',
+                    readOnlyView: 'Read-only view',
+                    duplicateTaskContent: 'Edit',
+                },
+                actionMenu: 'Actions',
+            }
         };
 
         render(<ActionCellRenderer {...(params as any)} />);
 
-        userEvent.click(screen.getByRole('button'));
+        await userEvent.click(screen.getByRole('button'));
         expect(screen.queryByText('Edit')).not.toBeInTheDocument();
+        expect(screen.queryByText('Read-only view')).toBeInTheDocument();
     });
 
-    it('should render the edit action when status is PENDING and case is Reg60', () => {
+    it('should render the edit action when task Status us new', async () => {
         const params = {
             data: {
-                status: 'PENDING',
+                status: TaskStatus.New ,
             },
-            isReadOnly: (status: string) => CaseStatus.Submit || status === TaskStatus.Completed,
-            isEditable: (status: string) =>  status === (CaseStatus.Pending || status === TaskStatus.New),
+            actionParams: {
+                isReadOnly: (status: string) => (status === CaseStatus.Submit || status === TaskStatus.Completed),
+                isEditable: (status: string) =>  (status === CaseStatus.Pending || status === TaskStatus.New ||  status === TaskStatus.InProgress),
+                actionLabels: {
+                    edit: 'Edit',
+                    readOnlyView: 'Read-only view',
+                    duplicateTaskContent: 'Edit',
+                },
+                actionMenu: 'Actions',
+            }
         };
 
         render(<ActionCellRenderer {...(params as any)} />);
 
-        userEvent.click(screen.getByRole('button'));
-        expect(screen.queryByText('Duplicate task content')).not.toBeInTheDocument();
+        await userEvent.click(screen.getByRole('button'));
+        expect(screen.queryByText('Edit')).toBeInTheDocument();
         expect(screen.queryByText('Read-only view')).not.toBeInTheDocument();
     });
 });

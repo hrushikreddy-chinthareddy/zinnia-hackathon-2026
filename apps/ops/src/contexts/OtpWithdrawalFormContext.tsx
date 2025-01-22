@@ -32,7 +32,6 @@ import {
     FormComment,
 } from '@deps/models/case/withdrawal/case';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-
 export type WithdrawalTaskStatus = CaseStatus | TaskStatus;
 export interface OtpWithdrawalFormState {
     formSubtype?: FormSubtype;
@@ -69,7 +68,6 @@ export interface OtpWithdrawalFormState {
     ownerAcknowledgement?: OwnerAcknowledgement;
     formComment?: FormComment;
     formBeneInfo: FormBeneInfo | null;
-    setFormBeneInfo: React.Dispatch<React.SetStateAction<any>>;
     setCurrentFormState: React.Dispatch<React.SetStateAction<WithdrawalTaskStatus>>;
     setFormSubtype?: React.Dispatch<React.SetStateAction<FormSubtype>>;
     setFormData: React.Dispatch<React.SetStateAction<FormData>>;
@@ -98,6 +96,7 @@ export interface OtpWithdrawalFormState {
     setFormNigos: React.Dispatch<React.SetStateAction<FormNigos | null>>;
     setFormReindexingData: React.Dispatch<React.SetStateAction<FormReIndexingData | null>>;
     setFormComment: React.Dispatch<React.SetStateAction<FormComment>>;
+    setFormBeneInfo: React.Dispatch<React.SetStateAction<any>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -135,9 +134,8 @@ export const defaultFormDataContext = {
     contractIssueState: '',
     parties: [],
     currentFormState: CaseStatus.Draft,
-    formBeneInfo: {},
-    setFormBeneInfo: noop,
     isFormStateReadOnly: false,
+    formBeneInfo: {},
     setCurrentFormState: noop,
     setFormAdditionalWaivers: noop,
     setFormData: noop,
@@ -165,6 +163,7 @@ export const defaultFormDataContext = {
     setFormNigos: noop,
     setFormReindexingData: noop,
     setFormComment: noop,
+    setFormBeneInfo: noop,
 };
 
 export const FormDataContext = createContext<OtpWithdrawalFormState>(defaultFormDataContext as OtpWithdrawalFormState);
