@@ -76,6 +76,7 @@
   top: 19px;
 }
 
+<<<<<<< HEAD
 .mfaOptionsContainer {
   display: flex;
   align-items: center;
@@ -101,6 +102,8 @@
   align-items: center;
 }
 
+=======
+>>>>>>> 4962ec8fc (initial setup for adding mfa screen to add a bank)
 .resend {
   .small.spinnerButton {
     display: inline-flex;
