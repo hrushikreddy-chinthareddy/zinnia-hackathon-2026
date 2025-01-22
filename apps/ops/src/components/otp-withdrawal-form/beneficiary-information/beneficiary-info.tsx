@@ -51,6 +51,7 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
                             isBeneInfoProvided: !beneInfo?.isBeneInfoProvided,
                         })
                     }
+                    isDisabled={isFormStateReadOnly}
                 />
                 <Label label={t('beneficiaryInfo.title')} variant={LabelVariant.FieldLabel} className="mx-3" />
             </div>
@@ -67,9 +68,10 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
                                 })
                             }
                             labels={isBeneSpouseOption}
-                            disabled={false}
+                            disabled={isFormStateReadOnly}
+                            variant={'primary'}
                             className="my-3"
-                            size="lg"
+                            size={'xxs'}
                         />
                     </div>
                     {beneInfo?.isBeneSpouse && (
