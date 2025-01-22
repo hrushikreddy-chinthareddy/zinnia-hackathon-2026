@@ -70,7 +70,6 @@ export interface FormParts {
     formData: FormData;
     formProgram: FormProgram;
     formParty: FormParty;
-    formBeneInfo?: FormBeneInfo | null;
     formDistribution: FormDistribution;
     formDisbursement: FormDisbursement;
     formRestriction: FormRestriction;
