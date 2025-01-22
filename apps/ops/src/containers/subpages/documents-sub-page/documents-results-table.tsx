@@ -1,3 +1,4 @@
+import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 import {
     Icon,
     IconType,
@@ -17,14 +18,15 @@ import DocumentPreviewer from '@deps/components/document-viewer/document-preview
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Popover from '@deps/components/popover/popover';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { isPreviewSupported, useDocumentDownload } from '@deps/helpers/documents.helper';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
+import { isPreviewSupported, useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { ReactComponent as LinkIcon } from '@deps/styles/elements/icons/actions/link.svg';
 import loadingImage from '@deps/styles/images/loader.png';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { V3DocumentWithSource } from '@deps/types/documents-v3';
 
 import styles from './documents-results-table.module.css';
 import { DocumentWithSource } from './documents-sub-page';
@@ -34,16 +36,17 @@ type DocumentsResultsTableProps = {
     documentType: DocumentTypeView;
     linkedDocumentIdentifiers?: string[];
     policyNumber: string;
-    results: DocumentWithSource[];
+    results: DocumentWithSource[] | V3DocumentWithSource[];
 };
 
-const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource; carrierCode: string }) => {
+const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource | MetadataSearchResponse; carrierCode: string }) => {
     const { t } = useTranslation();
+    const docId = doc.documentId || ((doc as DocumentWithSource).documentID as string);
     const [loading, download] = useDocumentDownload(
-        doc.documentId || (doc.documentID as string),
-        doc.documentSource,
+        docId,
+        (doc as DocumentWithSource).documentSource || (doc as MetadataSearchResponse).documentClassification,
         carrierCode,
-        doc.displayName
+        doc.displayName || docId
     );
 
     return (
@@ -70,13 +73,13 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource; carrierCo
     );
 };
 
-export const createAction = (doc: DocumentWithSource, carrierCode: string, t: TFunction, label?: string) => {
+export const createAction = (doc: DocumentWithSource | V3DocumentWithSource, carrierCode: string, t: TFunction, label?: string) => {
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
             className="!underline-offset-2"
             carrier={carrierCode}
-            displayName={doc.displayName}
-            documentId={doc.documentId ?? (doc.documentID as string)}
+            displayName={(doc.displayName || doc.documentId) ?? ((doc as DocumentWithSource).documentID as string)}
+            documentId={doc.documentId ?? ((doc as DocumentWithSource).documentID as string)}
             activeDocType={doc.documentSource}
             variant={NavElementVariant.Secondary}
         >
@@ -129,9 +132,15 @@ export default function DocumentsResultsTable({
             </TableHeader>
             <TableBody className={clsx('typography-content-body-sm', styles.tableBody)}>
                 {results.map(document => {
-                    const docDisplayId = document.documentNumber || document.documentId || (document.documentID as string);
+                    const docDisplayId =
+                        (document as DocumentWithSource).documentNumber ||
+                        document.documentId ||
+                        ((document as DocumentWithSource).documentID as string);
                     return (
-                        <TableRow className="disabled-tr" key={`document-${document.documentId || document.documentID}`}>
+                        <TableRow
+                            className="disabled-tr"
+                            key={`document-${document.documentId || (document as DocumentWithSource).documentID}`}
+                        >
                             <TableCell>
                                 <div className="flex flex-col items-start">
                                     <PiiWrapper>{document?.displayName || ''}</PiiWrapper>

@@ -2,15 +2,14 @@ import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
-import DocumentDownloader from '@deps/components/document-viewer/document-downloader';
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatSSN } from '@deps/helpers/string.helper';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 
 export function CardTemplate(props: ObjectFieldTemplateProps) {
     const { formData, uiSchema, schema } = props;
@@ -129,14 +128,6 @@ const DocumentActions = ({ cardType, document, t }: any) => {
                     >
                         {t('general.view')}
                     </DocumentPreviewer>
-                </div>
-                <div className="px-4">
-                    <DocumentDownloader
-                        carrierCode={'WELB'} //todo: vijaya carrier mapping
-                        documentId={document?.documentId}
-                        documentName={document?.documentName}
-                        documentType={DocumentTypeView.Case}
-                    />
                 </div>
             </>
         );

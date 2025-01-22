@@ -55,6 +55,7 @@ export enum FEATURE_FLAGS {
     NIGO_ENTRY_MASS_WITHDRAWAL = 'nigo-entry_mass_withdrawal',
     NIGO_ENTRY_RSLN_WITHDRAWAL = 'nigo-entry_rsln_withdrawal',
     NIGO_ENTRY_GDMN_WITHDRAWAL = 'nigo-entry_gdmn_withdrawal',
+    NIGO_ENTRY_GLCO_WITHDRAWAL = 'nigo-entry_glco_withdrawal',
     NIGO_ENTRY_SBGC_OFT = 'nigo-entry_sbgc_oft',
     NIGO_ENTRY_FLIC_OFT = 'nigo-entry_flic_oft',
     NIGO_ENTRY_DLIC_OFT = 'nigo-entry_dlic_oft',
@@ -108,5 +109,6 @@ export enum FEATURE_FLAGS {
     SUITABILITY_REVIEW_WELB = 'task-queue_feature_welb_suitability_review',
     PURCHASE_DOCUMENT_MATCHING_WELB = 'task-queue_feature_welb_purchase_document_matching',
     NEW_LOAN_TRANSACTION = 'new_loan_transaction',
+    DOCUMENTS_V3 = 'documents-v3-update',
     CASE_ADVISORS_EXCEL_ADDITIONAL_CARRIER_SUPPORT = 'case_advisors_excel_additional_carrier_support',
 }

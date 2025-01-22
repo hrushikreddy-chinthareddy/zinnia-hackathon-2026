@@ -13,7 +13,7 @@ import { ProcessType } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
-import { getDocumentSSR } from '@deps/queries/api/documents';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
@@ -105,7 +105,7 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const document = documentNumber
-                ? await getDocumentSSR(documentNumber, DocumentType.AddressChange, clientId.toUpperCase(), accessToken as string)
+                ? await getDocumentV2SSR(documentNumber, DocumentType.AddressChange, clientId.toUpperCase(), accessToken as string)
                 : null;
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
 

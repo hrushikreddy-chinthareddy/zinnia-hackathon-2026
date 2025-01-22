@@ -2,7 +2,7 @@ import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 import { useCallback } from 'react';
 
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
