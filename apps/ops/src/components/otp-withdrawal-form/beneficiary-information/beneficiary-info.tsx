@@ -40,6 +40,16 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
         }
     }, [bornDate]);
 
+    useEffect(() => {
+        if (beneInfo?.isBeneInfoProvided === false) {
+            onBeneChange({
+                ...beneInfo,
+                isBeneSpouse: false,
+                spouseDOB: '',
+            });
+        }
+    }, [beneInfo?.isBeneInfoProvided]);
+
     return (
         <CardContainer containerClassNames={`border-b-2 border-gray-100`}>
             <div className="flex items-center mb-5">
@@ -60,11 +70,15 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
                     <div className="my-3">
                         <Label label={t('beneficiaryInfo.isBeneficiarySpouse.title')} variant={LabelVariant.FieldLabel} />
                         <ButtonGroup
-                            activeValue={stringifyTrueFalseNull(beneInfo?.isBeneSpouse) || stringifyTrueFalseNull(false)}
+                            activeValue={
+                                beneInfo?.isBeneInfoProvided
+                                    ? stringifyTrueFalseNull(beneInfo?.isBeneSpouse)
+                                    : stringifyTrueFalseNull(false)
+                            }
                             toggle={() =>
                                 onBeneChange({
                                     ...beneInfo,
-                                    isBeneSpouse: !beneInfo?.isBeneSpouse,
+                                    isBeneSpouse: beneInfo?.isBeneInfoProvided ? !beneInfo?.isBeneSpouse : false,
                                 })
                             }
                             labels={isBeneSpouseOption}
