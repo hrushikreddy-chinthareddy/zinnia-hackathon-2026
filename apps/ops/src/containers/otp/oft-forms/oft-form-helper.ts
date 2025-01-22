@@ -42,6 +42,7 @@ export const getQualTypeOptions = (t: TFunction) => ([
     { label: t('oftProcess.qualTypes.profitSharingPlan'), value: QualTypes.ProfitSharingPlan },
     { label: t('oftProcess.qualTypes.targetBenefitPlan'), value: QualTypes.TargetBenefitPlan },
     { label: t('oftProcess.qualTypes.brokerageAccountNon1035Exchange'), value: QualTypes.BrokerageAccountNon1035Exchange },
+    { label: t('oftProcess.qualTypes.serviceCredits'), value: QualTypes.ServiceCredits },
 ])
 
 export const commonOftFormValidation = (t: TFunction, { formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {

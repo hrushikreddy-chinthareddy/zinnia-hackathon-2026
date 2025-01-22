@@ -1,7 +1,6 @@
 import { TFunction } from 'next-i18next';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
-import { FormDisbursementSelections } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import {
     BankingFields,
     DisbursementFields,
@@ -9,50 +8,155 @@ import {
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
-import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import AsOfDateComponent from '@deps/components/otp-withdrawal-form/form-program/as-of-date';
 import { PartialWithdrawalOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-process-date';
 import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helper';
+import { MaritalStatusAllowances } from '@deps/components/otp-withdrawal-form/maritial-status-allowance-withholdings';
 import {
     SignatureBonusFields,
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import { USStates } from '@deps/constants/geography/us-states';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { statesAndTerritories } from '@deps/helpers/states.helper';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
-    FormValidationErrors,
-    PartyRoles,
-    PhoneTypes,
+    FormProgram,
+    FundWithdrawnMethod,
+    ProgramType,
+    WithdrawalType,
     FormParts,
     AmountType,
-    WithdrawalType,
-    ProgramType,
-    ProgramSubType,
-    FormProgram,
     PaymentMethod,
     PaymentMailType,
+    PartyRoles,
     ProcessRequestType,
-    Program,
-    FundWithdrawnMethod,
+    AccountCloseReason,
     AccountType,
-    FormDisbursement
+    FormDisbursement,
+    ProgramSubType,
+    LifeCadPartyRoles,
+    AddressTypes,
 } from '@deps/models/case/withdrawal/case';
 import {
-    DEFAULT_BANK_DETAILS,
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementParts,
     PaymentMethodOption,
+    DEFAULT_BANK_DETAILS,
+    FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
+import { commonOftFormValidation } from '../../oft-forms/oft-form-helper';
 import { createValidator } from '../../utils/helper-utils';
-import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
-import { commonOftFormValidation, getQualTypeOptions } from '../oft-form-helper';
 
-export default function getOftDlicConfig(t: TFunction) {
-    // importing base configuration from FLIC form helper.
-    const formValidation = (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values);
+export enum FormSubtype {
+    FullWithdrawal = 'Full',
+    PartialWithdrawal = 'Partial',
+}
+
+export enum WithdrawalSelectionValues {
+    GrossWithdrawal = 'grossWithdrawal',
+    NetWithdrawal = 'netWithdrawal',
+    TotalFreeWithdrawal = 'totalFreeWithdrawal',
+}
+
+export const spousalSignatureStateCodes = [
+    statesAndTerritories.ARIZONA,
+    statesAndTerritories.CALIFORNIA,
+    statesAndTerritories.IDAHO,
+    statesAndTerritories.LOUISIANA,
+    statesAndTerritories['NEW MEXICO'],
+    statesAndTerritories.NEVADA,
+    statesAndTerritories.TEXAS,
+    statesAndTerritories.WASHINGTON,
+    statesAndTerritories.WISCONSIN,
+];
+
+export default function getUlpcConfig(t: TFunction) {
+    const identifySelectedFormProgramOption = (
+        formProgram: FormProgram
+    ): { selectedOption: string | null; amount: string | null; maturityGuaranteePeriod?: string | null } => {
+        const programTypeText = formProgram?.programType?.text || '';
+        const amount = formProgram?.partialAmount?.text || '';
+        const programSubType = formProgram?.programSubType?.text || '';
+
+        if (programTypeText === ProgramType.NetWithdrawal) {
+            return { selectedOption: ProgramType.NetWithdrawal, amount };
+        }
+        if (programTypeText === ProgramType.GrossWithdrawal) {
+            return { selectedOption: ProgramType.GrossWithdrawal, amount };
+        }
+
+        if (programSubType === ProgramSubType.PercentageofAV) {
+            return { selectedOption: ProgramType.PartialPercent, amount: formProgram?.partialPercent?.text || '' };
+        }
+
+        if (programSubType === ProgramSubType.TotalFreeWithdrawal) {
+            return { selectedOption: ProgramType.PenaltyFreeAmount, amount: '' };
+        }
+        return { selectedOption: null, amount: '' };
+    };
+
+    const partialWithdrawalOptions: PartialWithdrawalOption[] = [
+        {
+            label: t('amountDetails.partialWithdrawal.netDoller'),
+            value: ProgramType.NetWithdrawal,
+            amountFieldType: AmountType.Dollar,
+            generatePayloadFromSelection: (val = null) => {
+                return {
+                    ...getDefaultFormProgramValues(),
+                    withdrawType: { text: WithdrawalType.Net },
+                    programType: { text: ProgramType.NetWithdrawal },
+                    partialAmount: { text: val, amountType: AmountType.Dollar },
+                    partialNetAmount: { text: val, amountType: AmountType.Dollar },
+                };
+            },
+        },
+        {
+            label: t('amountDetails.partialWithdrawal.grossDoller'),
+            value: ProgramType.GrossWithdrawal,
+            amountFieldType: AmountType.Dollar,
+            generatePayloadFromSelection: (val = null) => {
+                return {
+                    ...getDefaultFormProgramValues(),
+                    withdrawType: { text: WithdrawalType.Gross },
+                    programType: { text: ProgramType.GrossWithdrawal },
+                    partialAmount: { text: val, amountType: AmountType.Dollar },
+                    partialGrossAmount: { text: val, amountType: AmountType.Dollar },
+                };
+            },
+        },
+        {
+            label: t('amountDetails.programTypes.penaltyFreeAmount'),
+            value: ProgramType.PenaltyFreeAmount,
+            generatePayloadFromSelection: () => {
+                return {
+                    ...getDefaultFormProgramValues(),
+                    withdrawType: { text: WithdrawalType.Gross },
+                    programType: { text: ProgramType.TotalFreeAmt },
+                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                };
+            },
+        },
+    ];
+
+    const formSubtypeOptions = [
+        {
+            label: t('formSubtype.partialWithdrawal'),
+            value: FormSubtype.PartialWithdrawal,
+        },
+        {
+            label: t('formSubtype.fullWithdrawal'),
+            value: FormSubtype.FullWithdrawal,
+        },
+    ];
+
+    const fundWithdrawnMethodOptions = [
+        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Default },
+        { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
+    ];
 
     const signaturesConfig: SignatureValidationConfig[] = [
         {
@@ -61,6 +165,14 @@ export default function getOftDlicConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureType,
                     key: 'owner-type',
+                },
+                {
+                    component: SignatureFields.SignatureCityProvided,
+                    key: 'owner-city-state',
+                },
+                {
+                    component: SignatureFields.SignatureSsn,
+                    key: 'owner-ssn',
                 },
                 {
                     component: SignatureFields.SignaturePresent,
@@ -74,12 +186,9 @@ export default function getOftDlicConfig(t: TFunction) {
                     component: SignatureFields.SignatureDate,
                     key: 'owner-date',
                 },
-                {
-                    component: SignatureFields.SignGuaranteeStamp,
-                    key: 'owner-sign-guarantee-stamp',
-                },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
+            partyRole: PartyRoles.OWNER,
         },
         {
             key: `sig-val-joint`,
@@ -87,6 +196,14 @@ export default function getOftDlicConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureType,
                     key: 'joint-type',
+                },
+                {
+                    component: SignatureFields.SignatureCityProvided,
+                    key: 'joint-city-state',
+                },
+                {
+                    component: SignatureFields.SignatureSsn,
+                    key: 'joint-ssn',
                 },
                 {
                     component: SignatureFields.SignaturePresent,
@@ -100,17 +217,13 @@ export default function getOftDlicConfig(t: TFunction) {
                     component: SignatureFields.SignatureDate,
                     key: 'joint-date',
                 },
-                {
-                    component: SignatureFields.SignGuaranteeStamp,
-                    key: 'owner-sign-guarantee-stamp',
-                },
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
+            partyRole: PartyRoles.JOINT_OWNER,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
                 return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
             },
         },
-
         {
             key: `sig-val-beneficiary`,
             fields: [
@@ -130,12 +243,11 @@ export default function getOftDlicConfig(t: TFunction) {
                     component: SignatureFields.SignatureDate,
                     key: 'beneficiary-date',
                 },
-                {
-                    component: SignatureFields.SignGuaranteeStamp,
-                    key: 'owner-sign-guarantee-stamp',
-                },
             ],
             signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
+                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
+            },
         },
         {
             key: `sig-val-spouse`,
@@ -153,10 +265,6 @@ export default function getOftDlicConfig(t: TFunction) {
                     component: SignatureFields.SignatureDate,
                     key: 'spouse-date',
                 },
-                {
-                    component: SignatureFields.SignGuaranteeStamp,
-                    key: 'owner-sign-guarantee-stamp',
-                },
             ],
             shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
                 return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
@@ -165,19 +273,19 @@ export default function getOftDlicConfig(t: TFunction) {
         },
     ];
 
-    const oftFormValidation = ({ formParty, formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({ formParty, formSignature, formDisbursement });
-        // fbo details required
-        if (formDisbursement?.paymentMethod.text && !formDisbursement?.payee?.fboDetails?.text) {
-            errors['fboDetails'] = t('formValidation.fboDetails');
-        }
-        return errors;
-    };
-
-    const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Default },
-        { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
+    const irsSignatureConfig = [
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'irs-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'irs-signature-sign-date',
+        },
     ];
+
+    const cslnCheckStates = ['MA'];
+
     const formPartyConfigs: PartyConfig[] = [
         {
             partyRoleType: PartyRoles.OWNER,
@@ -196,23 +304,18 @@ export default function getOftDlicConfig(t: TFunction) {
                     fieldLabel: t('personalDetails.lastName'),
                 },
                 {
-                    fieldName: PartyFields.Dob,
-                    fieldLabel: t('personalDetails.dob'),
-                },
-                {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
                 },
             ],
-            phones: [
+            addressFields: [
                 {
-                    phoneType: PhoneTypes.Owner_Phone_Day,
-                    fields: [
-                        {
-                            fieldName: PhoneFields.phoneNumber,
-                            fieldLabel: t('phoneDetails.telephoneNumber'),
-                        },
-                    ],
+                    addressType: AddressTypes.DEFAULT,
+                    title: t('addressDetails.residentialAddressTitle'),
+                },
+                {
+                    addressType: AddressTypes.MAILING_ADDRESS,
+                    title: t('addressDetails.mailingAddressTitle'),
                 },
             ],
         },
@@ -254,99 +357,9 @@ export default function getOftDlicConfig(t: TFunction) {
                     fieldName: PartyFields.LastName,
                     fieldLabel: t('personalDetails.lastName'),
                 },
-                {
-                    fieldName: PartyFields.TaxId,
-                    fieldLabel: t('personalDetails.ssn'),
-                },
             ],
         },
     ];
-
-    const surrenderingInstructionsOptions: PartialWithdrawalOption[] = [
-        {
-            label: t('amountDetails.programTypes.full'),
-            value: ProgramType.FullSurrender,
-            generatePayloadFromSelection: () => {
-                return {
-                    ...getDefaultFormProgramValues(),
-                    withdrawType: { text: WithdrawalType.Gross },
-                    program: {
-                        text: Program.OFT,
-                    },
-                    programType: { text: ProgramType.FullSurrender },
-                    programSubType: { text: ProgramSubType.FullSurrender },
-                };
-            },
-        },
-        {
-            label: `${t('amountDetails.programTypes.partial')} $`,
-            value: ProgramType.PartialDollar,
-            amountFieldType: AmountType.Dollar,
-            generatePayloadFromSelection: (val = null) => {
-                return {
-                    ...getDefaultFormProgramValues(),
-                    withdrawType: { text: WithdrawalType.Gross },
-                    program: {
-                        text: Program.OFT,
-                    },
-                    programType: { text: ProgramType.WITHDRAWAL },
-                    programSubType: { text: ProgramSubType.Dollar },
-                    partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialGrossAmount: { text: val, amountType: AmountType.Dollar },
-                };
-            },
-        },
-        {
-            label: `${t('amountDetails.programTypes.partial')} %`,
-            value: ProgramType.PartialPercent,
-            amountFieldType: AmountType.Percent,
-            generatePayloadFromSelection: (val = null) => {
-                return {
-                    ...getDefaultFormProgramValues(),
-                    withdrawType: { text: WithdrawalType.Gross },
-                    program: {
-                        text: Program.OFT,
-                    },
-                    programType: { text: ProgramType.WITHDRAWAL },
-                    programSubType: { text: ProgramSubType.PercentageofAV },
-                    partialPercent: { text: val, amountType: AmountType.Percent },
-                };
-            },
-        },
-        {
-            label: t('amountDetails.programTypes.penaltyFreeAmount'),
-            value: ProgramType.PenaltyFreeAmount,
-            generatePayloadFromSelection: () => {
-                return {
-                    ...getDefaultFormProgramValues(),
-                    withdrawType: { text: WithdrawalType.Gross },
-                    program: {
-                        text: Program.OFT,
-                    },
-                    programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
-                };
-            },
-        },
-    ];
-
-    const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
-        const programSubType = formProgram?.programSubType?.text || '';
-        if (programSubType === ProgramSubType.FullSurrender) {
-            return { selectedOption: ProgramType.FullSurrender, amount: '' };
-        }
-        if (programSubType === ProgramSubType.TotalFreeWithdrawal) {
-            return { selectedOption: ProgramType.PenaltyFreeAmount, amount: '' };
-        }
-        if (programSubType === ProgramSubType.PercentageofAV) {
-            return { selectedOption: ProgramType.PartialPercent, amount: formProgram?.partialPercent?.text || '' };
-        }
-
-        if (programSubType === ProgramSubType.Dollar) {
-            return { selectedOption: ProgramType.PartialDollar, amount: formProgram?.partialAmount?.text || '' };
-        }
-        return { selectedOption: null, amount: '' };
-    };
 
     const disbursementOptions: PaymentMethodOption[] = [
         {
@@ -354,26 +367,36 @@ export default function getOftDlicConfig(t: TFunction) {
             value: FormDisbursementSelections.EFT,
             fields: [
                 {
+                    fieldLabel: t('distributionMethod.chooseTheBank'),
+                    fieldName: BankingFields.Bank,
+                    component: DisbursementFields.SelectBank,
+                },
+                {
+                    fieldName: BankingFields.IsVoidCheckAttached,
+                    fieldLabel: t('distributionMethod.isVoidCheckAttached'),
+                    component: DisbursementFields.BankBooleanButtonGroup,
+                    classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
+                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    component: DisbursementFields.BankBooleanButtonGroup,
+                },
+                {
                     fieldName: BankingFields.AccountType,
                     fieldLabel: t('distributionMethod.accountType'),
                     component: DisbursementFields.AccountTypes,
                     classNames: 'col-span-2 w-full',
-                },
-                {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                    maxLength: 40,
+                    isBankingField: true,
                 },
                 {
                     fieldName: BankingFields.AccountNumber,
                     fieldLabel: t('distributionMethod.accountNumber'),
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
+                    isBankingField: true,
                     maskOnBlur: true,
                     disableCopyPaste: true,
-                    isBankingField: true,
                 },
                 {
                     fieldName: BankingFields.ReEnterAccountNumber,
@@ -389,11 +412,10 @@ export default function getOftDlicConfig(t: TFunction) {
                     fieldLabel: t('distributionMethod.bankRoutingNumber'),
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
+                    isBankingField: true,
                     maskOnBlur: true,
                     disableCopyPaste: true,
-                    isBankingField: true,
                 },
-
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
                     fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
@@ -407,66 +429,38 @@ export default function getOftDlicConfig(t: TFunction) {
                     fieldLabel: t('distributionMethod.bankName'),
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
-                },
-                {
-                    fieldName: BankingFields.AccountHolder,
-                    fieldLabel: t('distributionMethod.accountHolder'),
-                    component: DisbursementFields.BankTextField,
-                },
-                {
-                    fieldName: BankingFields.FboDetails,
-                    fieldLabel: t('distributionMethod.fboDetails'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 35,
-                },
-                {
-                    fieldName: BankingFields.ContractNumber,
-                    fieldLabel: t('distributionMethod.contractNumber'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 35,
-                    tooltip: {
-                        shouldDisplay: true,
-                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
-                    },
-                },
-                {
-                    fieldName: BankingFields.Address,
-                    fieldLabel: '',
-                    component: DisbursementFields.BankAddress,
-                    classNames: 'col-span-3',
+                    isBankingField: true,
                 },
             ],
-            getDefaultPayload({ paymentMethod, bank, payee }: FormDisbursement) {
+            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    accountHolder: selectedBank.nameOnBankAccount ?? '',
+                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
                     accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    payeeName: payee?.name?.text ?? '',
-                    fboDetails: payee?.fboDetails?.text || '',
-                    contractNumber: payee?.contractNumber.text ?? '',
-                    address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
+                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
-                payeeName,
                 accountNumber,
                 accountType,
                 bankName,
-                bankRoutingNumber,
                 accountHolder,
+                bankFurtherCreditAccount,
+                bankFurtherCreditName,
+                bankRoutingNumber,
+                isVoidCheckAttached,
+                doesCheckMeetSecurityRequirements,
                 reEnterAccountNumber,
                 reEnterBankRoutingNumber,
-                fboDetails,
-                address,
-                contractNumber,
             }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -482,16 +476,14 @@ export default function getOftDlicConfig(t: TFunction) {
                             bankName,
                             nameOnBankAccount: accountHolder ?? '',
                             routingNumber: bankRoutingNumber,
+                            bankFurtherCreditAccount,
+                            bankFurtherCreditName,
                             reEnterAccountNumber,
                             reEnterBankRoutingNumber,
                         },
                     ],
-                    payee: {
-                        name: { text: payeeName ?? null },
-                        fboDetails: { text: fboDetails ?? null },
-                        addresses: [address || DEFAULT_ADDRESS],
-                        contractNumber: { text: contractNumber ?? null },
-                    },
+                    voidCheck: isVoidCheckAttached ?? null,
+                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -500,24 +492,27 @@ export default function getOftDlicConfig(t: TFunction) {
             value: FormDisbursementSelections.Wire,
             fields: [
                 {
+                    fieldName: BankingFields.IsVoidCheckAttached,
+                    fieldLabel: t('distributionMethod.isVoidCheckAttached'),
+                    component: DisbursementFields.BankBooleanButtonGroup,
+                },
+                {
+                    fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
+                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    component: DisbursementFields.BankBooleanButtonGroup,
+                },
+                {
                     fieldName: BankingFields.AccountType,
                     fieldLabel: t('distributionMethod.accountType'),
                     component: DisbursementFields.AccountTypes,
                     classNames: 'col-span-2 w-full',
                 },
                 {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                    maxLength: 40,
-                },
-                {
                     fieldName: BankingFields.AccountNumber,
                     fieldLabel: t('distributionMethod.accountNumber'),
                     component: DisbursementFields.BankTextField,
-                    maskOnBlur: true,
                     classNames: 'col-start-1',
+                    maskOnBlur: true,
                     disableCopyPaste: true,
                 },
                 {
@@ -533,8 +528,8 @@ export default function getOftDlicConfig(t: TFunction) {
                     fieldName: BankingFields.BankRoutingNumber,
                     fieldLabel: t('distributionMethod.bankRoutingNumber'),
                     component: DisbursementFields.BankTextField,
-                    maskOnBlur: true,
                     classNames: 'col-start-1',
+                    maskOnBlur: true,
                     disableCopyPaste: true,
                 },
                 {
@@ -546,85 +541,41 @@ export default function getOftDlicConfig(t: TFunction) {
                     validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
                 },
                 {
-                    fieldName: BankingFields.AccountHolder,
-                    fieldLabel: t('distributionMethod.accountName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                },
-                {
                     fieldName: BankingFields.BankName,
                     fieldLabel: t('distributionMethod.bankName'),
-                    component: DisbursementFields.BankTextField
-                },
-                {
-                    fieldName: BankingFields.BankFurtherCreditName,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditName'),
                     component: DisbursementFields.BankTextField,
-                },
-                {
-                    fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
-                    component: DisbursementFields.BankTextField,
-                },
-                {
-                    fieldName: BankingFields.FboDetails,
-                    fieldLabel: t('distributionMethod.fboDetails'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 35,
                     classNames: 'col-start-1',
                 },
-                {
-                    fieldName: BankingFields.ContractNumber,
-                    fieldLabel: t('distributionMethod.contractNumber'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 35,
-                    tooltip: {
-                        shouldDisplay: true,
-                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
-                    },
-                },
-                {
-                    fieldName: BankingFields.Address,
-                    fieldLabel: '',
-                    component: DisbursementFields.BankAddress,
-                    classNames: 'col-span-3',
-                },
             ],
-            getDefaultPayload({ paymentMethod, bank, payee }: FormDisbursement) {
+            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    accountHolder: selectedBank.nameOnBankAccount ?? '',
-                    accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
-                    bankName: selectedBank.bankName ?? '',
-                    bankRoutingNumber: selectedBank.routingNumber ?? '',
+                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    isVoidCheckAttached: voidCheck,
+                    accountNumber: selectedBank?.accountNumber ?? '',
+                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    bankName: selectedBank?.bankName ?? '',
+                    bankRoutingNumber: selectedBank?.routingNumber ?? '',
                     bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
                     bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
-                    payeeName: payee?.name?.text ?? '',
-                    fboDetails: payee?.fboDetails?.text || '',
-                    contractNumber: payee?.contractNumber.text ?? '',
-                    address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
                 };
             },
             generatePayloadFromSelection: ({
-                payeeName,
                 accountNumber,
                 accountType,
                 bankName,
-                bankRoutingNumber,
+                accountHolder,
                 bankFurtherCreditAccount,
                 bankFurtherCreditName,
-                accountHolder,
+                bankRoutingNumber,
+                isVoidCheckAttached,
+                doesCheckMeetSecurityRequirements,
                 reEnterAccountNumber,
                 reEnterBankRoutingNumber,
-                fboDetails,
-                contractNumber,
-                address,
             }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -646,73 +597,23 @@ export default function getOftDlicConfig(t: TFunction) {
                             reEnterBankRoutingNumber,
                         },
                     ],
-                    payee: {
-                        name: { text: payeeName ?? null },
-                        fboDetails: { text: fboDetails ?? null },
-                        addresses: [address || DEFAULT_ADDRESS],
-                        contractNumber: { text: contractNumber ?? null },
-                    },
+                    voidCheck: isVoidCheckAttached ?? null,
+                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
         {
             label: t('distributionMethod.sendCheck'),
             value: FormDisbursementSelections.Check,
-            fields: [
-                {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                    maxLength: 40,
-                },
-                {
-                    fieldName: BankingFields.FboDetails,
-                    fieldLabel: t('distributionMethod.fboDetails'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 35,
-                },
-                {
-                    fieldName: BankingFields.ContractNumber,
-                    fieldLabel: t('distributionMethod.contractNumber'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 35,
-                    tooltip: {
-                        shouldDisplay: true,
-                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
-                    },
-                },
-                {
-                    fieldName: BankingFields.Address,
-                    fieldLabel: '',
-                    component: DisbursementFields.BankAddress,
-                    classNames: 'col-span-3',
-                },
-            ],
-            getDefaultPayload({ paymentMethod, paymentMailType, payee }: FormDisbursement) {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
-                    return {
-                        ...DEFAULT_DISBURSEMENT_UPDATE,
-                        payeeName: payee?.name.text ?? '',
-                        address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
-                        contractNumber: payee?.contractNumber.text ?? '',
-                        fboDetails: payee?.fboDetails?.text || '',
-                    };
-                }
+            fields: null,
+            getDefaultPayload() {
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ fboDetails, payeeName, address, contractNumber }: DisbursementParts) => {
+            generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
-                    payee: {
-                        name: { text: payeeName || null },
-                        addresses: [address || DEFAULT_ADDRESS],
-                        contractNumber: { text: contractNumber || null },
-                        fboDetails: { text: fboDetails ?? null },
-                    },
                 };
             },
         },
@@ -721,39 +622,9 @@ export default function getOftDlicConfig(t: TFunction) {
             value: FormDisbursementSelections.ExpressCheck,
             fields: [
                 {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                    maxLength: 40,
-                },
-                {
-                    fieldName: BankingFields.FboDetails,
-                    fieldLabel: t('distributionMethod.fboDetails'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 35,
-                },
-                {
-                    fieldName: BankingFields.ContractNumber,
-                    fieldLabel: t('distributionMethod.contractNumber'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 35,
-                    tooltip: {
-                        shouldDisplay: true,
-                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
-                    },
-                },
-                {
-                    fieldName: BankingFields.Address,
-                    fieldLabel: '',
-                    component: DisbursementFields.BankAddress,
-                },
-                {
                     fieldName: BankingFields.AccountNumber,
                     fieldLabel: t('distributionMethod.upsAccountNumber'),
                     component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
                 },
                 {
                     fieldName: BankingFields.AccountName,
@@ -761,28 +632,17 @@ export default function getOftDlicConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, paymentMailType, payee, upsAccount }: FormDisbursement) {
+            getDefaultPayload({ paymentMethod, paymentMailType, upsAccount }: FormDisbursement) {
                 if (paymentMethod.text === FormDisbursementSelections.Check && paymentMailType.text === PaymentMailType.ExpressCheck) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        payeeName: payee?.name.text ?? '',
-                        address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
-                        contractNumber: payee?.contractNumber.text ?? '',
                         accountNumber: upsAccount?.accountNumber?.text ?? '',
                         accountName: upsAccount?.accountName?.text ?? '',
-                        fboDetails: payee?.fboDetails?.text || '',
                     };
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({
-                accountName,
-                accountNumber,
-                payeeName,
-                contractNumber,
-                address,
-                fboDetails,
-            }: DisbursementParts) => {
+            generatePayloadFromSelection: ({ payeeName, contractNumber, address, accountName, accountNumber }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
@@ -796,7 +656,6 @@ export default function getOftDlicConfig(t: TFunction) {
                         name: { text: payeeName ?? null },
                         addresses: [address || DEFAULT_ADDRESS],
                         contractNumber: { text: contractNumber ?? null },
-                        fboDetails: { text: fboDetails ?? null },
                     },
                 };
             },
@@ -812,21 +671,61 @@ export default function getOftDlicConfig(t: TFunction) {
         { label: t('amountDetails.processTimeframe.asOfThisDate'), value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
     ];
 
-    const defaultValues = {
-        disbursementOption: FormDisbursementSelections.DTCC,
+    const fullWithdrawalOptions = [
+        {
+            label: t('amountDetails.fullWithdrawal.withdrawTheEntireContractValue'),
+            value: AccountCloseReason.Surrender,
+        },
+        {
+            label: t('amountDetails.fullWithdrawal.contractHasBeenLostOrDestroyed'),
+            value: AccountCloseReason.ContractLost,
+        },
+    ];
+
+    const maritalStatusAllowanceConfig = {
+        label: 'maritalStatusAllowancesMN',
+        maritalStatusAllowancesOptions: [
+            { label: 'maritalStatusAllowanceItems.single', value: MaritalStatusAllowances.Single },
+            { label: 'maritalStatusAllowanceItems.married', value: MaritalStatusAllowances.Married },
+            { label: 'maritalStatusAllowanceItems.headOfHousehold', value: MaritalStatusAllowances.HeadOfHousehold },
+        ],
     };
 
+    const validateMaritalStatusAllowances = (issueState: USStates) => {
+        return [USStates.MICHIGAN, USStates.MINNESOTA].includes(issueState);
+    };
+
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+
+    ];
+
     return {
-        signaturesConfig,
-        formPartyConfigs,
-        formValidation: oftFormValidation,
-        fundWithdrawnMethodOptions,
+        cslnCheckStates,
         disbursementOptions,
-        surrenderingInstructionsOptions,
+        formPartyConfigs,
+        formSubtypeOptions,
+        formValidation: (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values),
+        fundWithdrawnMethodOptions,
         identifySelectedFormProgramOption,
+        irsSignatureConfig,
+        partialWithdrawalOptions,
+        signaturesConfig,
         selectOneOptions,
-        defaultValues,
-        qualificationOptions: getQualTypeOptions(t),
-        showContractReplacement: true,
+        fullWithdrawalOptions,
+        maritalStatusAllowanceConfig,
+        validateMaritalStatusAllowances,
+        w4pSignaturesConfig
     };
 }

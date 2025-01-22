@@ -37,7 +37,6 @@ const NoteSection = React.forwardRef(function NoteSectionComponent() {
                 onChange={handleChange}
                 onSubmit={noop}
                 readonly={isFormStateReadOnly}
-                setFormData={noop}
             ></DynamicForm>
         </CardContainer>
     );
