@@ -58,13 +58,10 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     label,
     rawErrors = [],
     uiSchema,
-    formData,
-    setFormData,
     formContext,
 }: WidgetProps<T, S, F>) {
-    console.log('🚀 ~ value:', value);
+    const formData = formContext;
 
-    const dataContext = { ...formData, ...formContext };
     const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
     const { props } = getUiOptions<T, S, F>(uiSchema);
@@ -80,24 +77,26 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     };
 
-    const _onChangeSingle = (value: string) => {
+    const _onChangeSingle = async (value: string) => {
         const newValue = getValue(false, value, enumOptions, selectedIndexes, multiple);
-        onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
-        fetchDetails(apiProps.apiUrl, value, newValue);
+
+        if (!apiProps.apiUrl) return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
+        await fetchDetails(apiProps.apiUrl, value, newValue);
     };
 
-    function fetchDetails(apiUrl: string, value: string, newValue?: any) {
-        const payload = replacePlaceholders(apiProps.apiPayload, { ...dataContext, value });
+    async function fetchDetails(apiUrl: string, value: string, newValue?: any) {
+        const payload = replacePlaceholders(apiProps.apiPayload, { ...formData?.customData, value });
 
-        const response = client[apiProps?.apiMethod ?? 'get']<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload ?? undefined);
+        const response = await client[apiProps?.apiMethod ?? 'get']<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload ?? undefined);
 
         const data1 = replacePlaceholders(apiProps.responseData, response);
 
-        // const data = {
-        //     ...formData,
-        //     [name]: enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal),
-        //     [apiProps?.responseKey]: data1,
-        // };
+        const data = {
+            [apiProps?.responseKey]: data1,
+        };
+
+        onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
+        formData?.setCustomData && formData.setCustomData(data);
     }
 
     const showPlaceholderOption = !multiple && schema.default === undefined;

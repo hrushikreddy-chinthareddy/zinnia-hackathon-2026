@@ -21,13 +21,14 @@ export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, 
                 ></TaskFormStep>
             ),
             text: taskMetadata[0]?.title || '',
+            isSubmit: isSubmit,
             index: 0,
             isCompleted: true,
             screenReaderLabel: taskMetadata[0]?.title || '',
         },
         {
             ariaLabel: taskMetadata[1]?.title || '',
-            isVisible: () => true,
+            isVisible: () => !isSubmit,
             component: (
                 <TaskFormStep
                     taskInfoLink={taskInfoLink}

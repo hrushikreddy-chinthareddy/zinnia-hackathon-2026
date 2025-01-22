@@ -12,7 +12,7 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
-import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+import { ManagementTask } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
@@ -93,74 +93,10 @@ export const getServerSideProps = withPageAuthRequired({
         }
 
         try {
-            const [translations] = await Promise.all([
+            const [translations, task] = await Promise.all([
                 await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
                 await getCaseTaskById(taskId, accessToken),
             ]);
-
-            const task = {
-                id: 'TA000000017049',
-                caseId: 'CA0000386733',
-                source: 'BPM.IndexationOrkestr',
-                templateId: '1f802f29-b4e0-4a4b-9923-ba63a1bde55b',
-                process: 'Qualification',
-                carrier: 'WELB',
-                taskType: 'PURCHASE_DOCUMENT_MATCHING',
-                taskName: 'Match Document',
-                status: TaskStatus.New,
-                data: {
-                    details: {
-                        caseOverview: '/cases',
-                        amount: '2843.13',
-                        payerDetails: {
-                            taxId: '832902950',
-                        },
-                        purchaseDocument: {
-                            documentSource: 'EDS',
-                        },
-                    },
-                    potentialMatches: [
-                        {
-                            transactionType: 'New Business',
-                            zlCaseId: '1234',
-                            policyNumber: 'ADA00012',
-                            taxId: 'SSN000111',
-                            firstName: 'Test',
-                            lastName: 'Test',
-                        },
-                        {
-                            transactionType: 'Renewals',
-                            zlCaseId: '1233',
-                            policyNumber: 'ADA00015',
-                            taxId: 'SSN000111',
-                            firstName: 'Test1',
-                            lastName: 'Test2',
-                        },
-                    ],
-                    caseType: 'Qualification',
-                },
-                mappedExceptions: [],
-                mappedDocuments: [],
-                queue: 'qualification',
-                escalated: false,
-                createdBy: 'SYSTEM',
-                createdByPartyId: 'SYSTEM',
-                createdAt: '2025-01-21T13:24:07Z',
-                updatedBy: 'Vijayalaxmi.Sambhane@zinnia.com',
-                updatedByPartyId: 'fa49a69c3939412d87b315cb39459497',
-                updatedAt: '2025-01-22T13:09:35Z',
-                identifiers: [
-                    {
-                        identifier: 'correlationid',
-                        value: '1e1819e9-2e45-4703-9b3a-e8c9ac111168',
-                    },
-                    {
-                        identifier: 'zlCaseId',
-                        value: 'CA0000386733',
-                    },
-                ],
-                externalId: 'aa5fceed-f3a4-4b9a-a348-4c7d5003fcc5',
-            };
 
             if (!task) {
                 logError('Task::Error getting task by id', {
@@ -179,11 +115,6 @@ export const getServerSideProps = withPageAuthRequired({
             const { taskType, carrier, caseId, process } = task;
             const caseDetails = await getCaseDetailsSSR(caseId, accessToken as string);
             const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
-
-            console.log(
-                '🚀 ~ getServerSideProps: ~ isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions):',
-                isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions)
-            );
 
             if (!isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions)) {
                 logWarn('task/:id::feature flag not enabled', { carrier });

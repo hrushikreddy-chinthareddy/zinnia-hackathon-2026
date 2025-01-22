@@ -143,8 +143,14 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         [setTask, task]
     );
 
-    const handleFormDataChange = (data: any) => {
-        console.log(data);
+    const setFormContext = (dynamicData: any) => {
+        setTask((ogTask: any) => ({
+            ...ogTask,
+            data: {
+                ...ogTask.data,
+                ...dynamicData,
+            },
+        }));
     };
 
     useEffect(() => {
@@ -193,12 +199,11 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         <DynamicForm
             ref={forwardedRef}
             formData={task.data}
-            setFormData={handleFormDataChange}
             taskMetadata={memoizedSchema}
             onChange={handleChange}
             onSubmit={handleSubmit}
             readonly={readonly}
-            formContext={formContext}
+            formContext={{ customData: { ...formContext, ...task.data }, setCustomData: setFormContext }}
         ></DynamicForm>
     );
 });
