@@ -1888,7 +1888,8 @@
                 "bankUpdateTitle": "Bank Details",
                 "cancel": "Cancel",
                 "submit": "Submit",
-                "submitedMessage": "Bank Update Request has been submitted."
+                "submitedMessage": "Bank Update Request has been submitted.",
+                "ussa": "USSA"
             },
             "neaBenefitsSensitivity": "NEA Benefit Sensitivity",
             "distributionInstruction": {

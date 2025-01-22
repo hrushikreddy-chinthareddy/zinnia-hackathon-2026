@@ -1873,7 +1873,8 @@
                 "bankUpdateTitle": "Détails bancaires",
                 "cancel": "Annuler",
                 "submit": "Soumettre",
-                "submitedMessage": "La demande de mise à jour bancaire a été soumise."
+                "submitedMessage": "La demande de mise à jour bancaire a été soumise.",
+                "ussa": "USSA"
             },
             "neaBenefitsSensitivity": "Sensibilité aux avantages NEA",
             "distributionInstruction": {

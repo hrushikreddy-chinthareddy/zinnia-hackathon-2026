@@ -1024,7 +1024,7 @@ export enum Carrier {
     WELB = 'WELB',
     ULPC = 'ULPC',
     GLCO = 'GLCO',
-    ULPC = 'ULPC'
+    USAA = 'USAA',
 }
 
 export const ParticipantCompanies = [

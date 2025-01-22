@@ -18,6 +18,7 @@ import MassOftWithdrawalForm from '@deps/containers/otp/oft-forms/mass/mass-oft-
 import NasuOftWithdrawalForm from '@deps/containers/otp/oft-forms/nasu/nasu-oft-form';
 import RSLNOftWithdrawalForm from '@deps/containers/otp/oft-forms/rsln/rsln-oft-form';
 import SbgcOftWithdrawalForm from '@deps/containers/otp/oft-forms/sbgc/sbgc-oft-form';
+import UsaaOftWithdrawalForm from '@deps/containers/otp/oft-forms/usaa/usaa-oft-form';
 import UlpcOftWithdrawalForm from '@deps/containers/otp/oft-forms/ulpc/ulpc-oft-form';
 import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/form-controls';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
@@ -74,6 +75,7 @@ const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): R
     [Carrier.SBGC]: <SbgcOftWithdrawalForm planCode={planCode} />,
     [Carrier.DLIC]: <OftDlicForm qualType={qualType} />,
     [Carrier.RSLN]: <RSLNOftWithdrawalForm qualType={qualType} />,
+    [Carrier.USAA]: <UsaaOftWithdrawalForm />,
     [Carrier.NASU]: <NasuOftWithdrawalForm />,
     [Carrier.ULPC]: <UlpcOftWithdrawalForm />,
 });
