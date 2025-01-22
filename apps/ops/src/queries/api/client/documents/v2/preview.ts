@@ -1,0 +1,28 @@
+import { AxiosResponse } from 'axios';
+
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
+import { DocumentDownloadV2 } from '@deps/models/case/document';
+import { baseAppUrl } from '@deps/queries/api-config';
+import { client } from '@deps/queries/api-utils/client';
+import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+
+export const getDocumentPreviewV2 = async (
+    documentNumber: string,
+    docType: DocumentTypeView,
+    clientCode: string
+): Promise<DocumentDownloadV2 | null> => {
+    try {
+        const url = `${baseAppUrl}/api/documents/${documentNumber}/preview?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
+        const { data } = await client.get<DocumentDownloadV2, AxiosResponse>(url);
+
+        return data;
+    } catch (error: any) {
+        logWarn('An error occurred while getting document', {
+            ...parseErrorInformation(error),
+            file: 'queries/api/documents',
+            function: 'getDocumentDownload',
+        });
+
+        return error.response;
+    }
+};

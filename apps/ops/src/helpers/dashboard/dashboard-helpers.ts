@@ -34,6 +34,9 @@ export const dashboardChartTitleFormat = (label: string, length?: number | boole
     label = label.replace(/_/g, ' ');
     label = toTitleCase(label);
     label = getLabelSubString(label, length);
+    label = label.replace(/\bexceptions?\b/gi, match => {
+        return match.toLowerCase() === 'exception' ? 'NIGO' : 'NIGOs';
+    });
     return label;
 };
 

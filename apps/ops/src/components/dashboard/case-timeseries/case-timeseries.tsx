@@ -58,6 +58,7 @@ interface Props {
     linkQueryFormat: string;
     timeframe: TimeframeFilterOptions;
     sortable?: boolean;
+    showSubtitle?: boolean;
 }
 
 type SortType = 'total' | 'name' | 'avg';
@@ -91,6 +92,7 @@ export const CaseTimeseries = ({
     linkQueryFormat,
     timeframe,
     sortable = false,
+    showSubtitle = true,
 }: Props) => {
     const { data: caseTimeseriesData, isLoading: caseTimeseriesDataLoading } = useQuery({
         queryKey: ['caseTimeseriesData', filters, groupByOptions],
@@ -222,6 +224,10 @@ export const CaseTimeseries = ({
                               />
                           );
 
+                          if (!stat) {
+                              return null;
+                          }
+
                           return (
                               <TableRow key={`stat-${index}-${stat?.name || ''}`}>
                                   <TableCell className="flex items-center gap-3">
@@ -260,17 +266,19 @@ export const CaseTimeseries = ({
 
     return (
         <CardContainer containerClassNames="rounded" classNames="!p-0 flex flex-col gap-8" fullWidth={true}>
-            <div className="grow flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-6">
+            <div className="grow flex flex-col lg:flex-row lg:justify-between gap-8 lg:gap-6">
                 <div className="flex flex-col gap-8 lg:w-1/4">
                     <div id="case-timeseries-title" className="flex flex-col gap-2">
                         <Typography variant={TypographyVariant.H3}>{title}</Typography>
-                        <Typography variant={TypographyVariant.LabelLg}>
-                            {caseTimeseriesDataLoading ? (
-                                <Skeleton className="w-full h-6" />
-                            ) : (
-                                dashboardChartTitleFormat(selectedSubprocess, false)
-                            )}
-                        </Typography>
+                        {showSubtitle && (
+                            <Typography variant={TypographyVariant.LabelLg}>
+                                {caseTimeseriesDataLoading ? (
+                                    <Skeleton className="w-full h-6" />
+                                ) : (
+                                    dashboardChartTitleFormat(selectedSubprocess, false)
+                                )}
+                            </Typography>
+                        )}
                     </div>
                     <InsightSummary className="grow" prompt={prompt} content={content} />
                 </div>

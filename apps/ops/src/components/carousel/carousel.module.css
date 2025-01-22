@@ -1,0 +1,31 @@
+.embla {
+    --slide-height: 19rem;
+    --slide-spacing: 1rem;
+    --slide-size: 100%;
+    width: 100%;
+}
+.emblaViewport {
+    overflow: hidden;
+}
+.emblaContainer {
+    display: flex;
+    touch-action: pan-x pinch-zoom;
+    margin-top: calc(var(--slide-spacing) * -1);
+    width: 100%;
+}
+
+.vertical {
+    flex-direction: column;
+}
+.emblaSlide {
+    transform: translate3d(0, 0, 0);
+    flex: 0 0 auto; /* Adapt slide size to its content */
+    min-height: 0;
+    padding-top: var(--slide-spacing);
+    width: 100%;
+}
+
+.controlsContainer {
+    display: flex;
+    gap: 16px;
+}
