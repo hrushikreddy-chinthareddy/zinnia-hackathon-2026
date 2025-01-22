@@ -1513,7 +1513,8 @@
                 "nasu": "Annuity Contract Withdrawal Request ",
                 "gdmn": "Commonwealth Withdrawal Request",
                 "rsln": "Lincoln Benefit Life Withdrawal Request",
-                "glco": "Annuity Contract Withdrawal Request"
+                "glco": "Annuity Contract Withdrawal Request",
+                "ulpc": "Unified Life Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Personal Details",
@@ -1602,7 +1603,8 @@
                     "grossDoller": "Gross $",
                     "percetageOfAccountValue": "% of Account value",
                     "maximum": "Maximum amount",
-                    "maturingGuranteePeriod": "Maturing guarantee period"
+                    "maturingGuranteePeriod": "Maturing guarantee period",
+                    "percentageOfAccumulatedValue": "% of accumulated value"
                 },
                 "processTimeframe": {
                     "selectOne": "Select one",

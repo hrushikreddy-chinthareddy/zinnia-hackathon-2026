@@ -1505,7 +1505,8 @@
                 "defaultTitle": "Annuity Contract Withdrawal Request",
                 "nasu": "Demande de retrait de contrat de rente",
                 "gdmn": "Demande de retrait du Commonwealth",
-                "rsln": "Lincoln Benefit Life Withdrawal Request"
+                "rsln": "Lincoln Benefit Life Withdrawal Request",
+                "ulpc": "Unified Life Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Détails personnels",
@@ -1590,7 +1591,8 @@
                     "specificAmount": "Montant spécifique brut$",
                     "specificAmountGross": "Specific Amount net$",
                     "percetageOfAccountValue": "% de la valeur du compte",
-                    "maximum": "Montant maximum"
+                    "maximum": "Montant maximum",
+                    "percentageOfAccumulatedValue": "% de valeur accumulée"
                 },
                 "processTimeframe": {
                     "selectOne": "Sélectionnez-en un",

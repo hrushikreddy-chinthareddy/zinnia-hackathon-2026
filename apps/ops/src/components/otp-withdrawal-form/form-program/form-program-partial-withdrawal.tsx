@@ -54,6 +54,7 @@ export default function FormProgramPartialWithdrawal({
     const [selected, setSelected] = useState('');
     const selectedOption = options.find(val => val.value === selected);
     const { formProgram, setFormProgram } = useContext(FormDataContext);
+
     useEffect(() => {
         if (selectionIdentifier) {
             const { selectedOption, amount: savedAmount, maturityGuaranteePeriod } = selectionIdentifier(formProgram);
@@ -71,6 +72,7 @@ export default function FormProgramPartialWithdrawal({
 
     useEffect(() => {
         const selectedOption = options.find(val => val.value === selected);
+
         if (selectedOption?.generatePayloadFromSelection) {
             if (selectedOption.dateFieldType === DateFieldType.MaturityDate) {
                 setFormProgram(oldVal => {
