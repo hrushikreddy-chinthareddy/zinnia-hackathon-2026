@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { parseAndFormatDate } from '@deps/helpers/string.helper';
+import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
@@ -16,8 +16,8 @@ import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/c
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/content/clipboard-1.svg';
 import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
-import { ReactComponent as CirclePauseIcon } from '@deps/styles/elements/icons/circles/circle-pause.svg';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
+import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
 
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
@@ -134,27 +134,27 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
 
     switch (task.status) {
         case TaskStatus.Completed:
-            badgeIcon = <CircleCheckIcon height={20} width={20} />;
+            badgeIcon = <CircleCheckIcon height={16} width={16} />;
             badgeVariant = BadgeVariant.Success;
             badgeLabel = TaskLabel.Completed;
             break;
         case TaskStatus.Canceled:
-            badgeIcon = <BanIcon height={20} width={20} />;
+            badgeIcon = <BanIcon height={16} width={16} />;
             badgeVariant = BadgeVariant.Inactive;
             badgeLabel = TaskLabel.Canceled;
             break;
         case TaskStatus.InProgress:
-            badgeIcon = <ClipboardListIcon height={20} width={20} />;
+            badgeIcon = <ClipboardListIcon height={16} width={16} />;
             badgeVariant = BadgeVariant.Info;
             badgeLabel = TaskLabel.InProgress;
             break;
         case TaskStatus.Pending:
-            badgeIcon = <CirclePauseIcon height={24} width={24} />;
+            badgeIcon = <Pause height={16} width={16} />;
             badgeVariant = BadgeVariant.Error;
             badgeLabel = TaskLabel.Pending;
             break;
         default:
-            badgeIcon = <ClipboardIcon height={20} width={20} />;
+            badgeIcon = <ClipboardIcon height={16} width={16} />;
             badgeVariant = BadgeVariant.Info;
             badgeLabel = TaskLabel.New;
             break;
@@ -225,10 +225,13 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
 
     const renderDetails = (
         <div className="flex flex-col w-full">
-            <label className="font-primary text-lg  mt-10">{t('sideSheet.task.tabs.details')}</label>
-            <div className="grid grid-cols-3 gap-2 text-md">
-                <div className="col-span-1 mt-4 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.status.label')} </div>
-                <div className="col-span-2">
+            <label className="font-primary text-lg mt-8">{t('sideSheet.task.tabs.details')}</label>
+            <div className="grid grid-cols-3 gap-2 text-md align-center">
+                <div className="col-span-1 mt-4 align-self text-[--color-base-text-text-secondary]">
+                    {' '}
+                    {t('sideSheet.task.status.label')}{' '}
+                </div>
+                <div className="col-span-2 mt-2 align-self">
                     <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
                         <Badge
                             icon={badgeIcon}
@@ -293,16 +296,32 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                         {`(${t('temporal.timeago', { formattedDate: '', count: createdCount, unit: createdUnit }).trim()})`}
                     </span>
                 </Typography>
+
+                {task.taskName && type == 'case' && (
+                    <>
+                        <div className="col-span-1 text-[--color-base-text-text-secondary]">{t('sideSheet.task.stepLabel')}</div>
+                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                            {toSentenceCase(task.taskName)}
+                        </Typography>
+
+                        <div className="col-span-1 text-[--color-base-text-text-secondary]">{t('sideSheet.task.detailsLabel')}</div>
+                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                            {t('sideSheet.task.taskDetails', {
+                                taskType: toSentenceCase(task.taskName),
+                            })}
+                        </Typography>
+                    </>
+                )}
             </div>
 
             {type == 'case' && !userExists && showStartButton && (
-                <div className="bg-black text-white text-sm font-normal rounded-lg shadow-lg p-2 top-[-40px] left-1/2 transform -translate-x-1/2 whitespace-nowrap z-10  mt-6 max-w-[240px]">
+                <div className="bg-black text-white text-sm font-normal rounded-lg shadow p-2  whitespace-nowrap z-10  mt-8 max-w-[240px]">
                     {t('sideSheet.task.noAssignee')}
                 </div>
             )}
 
             {type == 'case' && showStartButton && (
-                <div className={!userExists ? 'flex flex-row items-center gap-1 pt-2' : 'flex flex-row items-center gap-1 pt-6'}>
+                <div className={!userExists ? 'flex flex-row items-center gap-1 pt-2' : 'flex flex-row items-center gap-1 pt-8'}>
                     {userExists ? (
                         <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
                     ) : (
@@ -323,7 +342,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
 
     const renderDocuments = (
         <div className="flex flex-col w-full">
-            <label className="font-primary text-lg mt-10">{t('sideSheet.task.tabs.documents')}</label>
+            <label className="font-primary text-lg mt-8">{t('sideSheet.task.tabs.documents')}</label>
             <div className="border-box w-full  mt-2">
                 {documentsList.length == 0 ? (
                     <EmptyState content={t('sideSheet.task.noDataAvailable')} />
@@ -375,7 +394,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
 
     const renderTabContent = (
         <>
-            <TabContent className="flex px-10 flex-col items-center" value={TabOptions.Details}>
+            <TabContent className="flex px-10  w-full flex-col items-center" value={TabOptions.Details}>
                 {renderDetails}
             </TabContent>
             <TabContent className="flex px-10  w-full flex-col items-center" value={TabOptions.Documents}>
