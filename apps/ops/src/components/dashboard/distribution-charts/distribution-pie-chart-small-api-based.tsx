@@ -16,7 +16,26 @@ interface Props {
     width?: number;
     fullWidth?: boolean;
     sort?: boolean;
+    chartConfigOverrides?: Highcharts.Options;
 }
+
+export const getPieChartData = (dashboardStatsResponse?: CaseDashboardStatsResponse) => {
+    const chartData: { name: string; y: number; totalCount: number }[] = [];
+
+    if (!dashboardStatsResponse || !dashboardStatsResponse.data || dashboardStatsResponse.data.length === 0) {
+        return chartData;
+    }
+    const totalCount = dashboardStatsResponse.data.reduce((prevValue, statElement) => prevValue + statElement.count, 0);
+    dashboardStatsResponse.data.forEach(statElement => {
+        chartData.push({
+            name: statElement.name,
+            y: statElement.count / totalCount,
+            totalCount: statElement.count,
+        });
+    });
+
+    return chartData;
+};
 
 const DistributionPieChartSmallAPIBased = ({
     className,
@@ -26,25 +45,9 @@ const DistributionPieChartSmallAPIBased = ({
     width,
     height,
     sort = true,
+    chartConfigOverrides,
 }: Props) => {
     const [chartConfig, setChartConfig] = useState({});
-    const getChartData = (dashboardStatsResponse?: CaseDashboardStatsResponse) => {
-        const chartData: { name: string; y: number; totalCount: number }[] = [];
-
-        if (!dashboardStatsResponse || !dashboardStatsResponse.data || dashboardStatsResponse.data.length === 0) {
-            return chartData;
-        }
-        const totalCount = dashboardStatsResponse.data.reduce((prevValue, statElement) => prevValue + statElement.count, 0);
-        dashboardStatsResponse.data.forEach(statElement => {
-            chartData.push({
-                name: statElement.name,
-                y: statElement.count / totalCount,
-                totalCount: statElement.count,
-            });
-        });
-
-        return chartData;
-    };
 
     const getBaseConfig = useCallback(
         (showInLegend: boolean) => {
@@ -90,11 +93,11 @@ const DistributionPieChartSmallAPIBased = ({
     }, []);
 
     useEffect(() => {
-        const chartData = getChartData(dashboardStatsResponse);
+        const chartData = getPieChartData(dashboardStatsResponse);
         const baseConfig = getBaseConfig(showInLegend);
         const config = getChartConfig(chartData, baseConfig);
-        setChartConfig(config);
-    }, [dashboardStatsResponse, getChartConfig, showInLegend, getBaseConfig]);
+        setChartConfig({ ...config, ...chartConfigOverrides });
+    }, [dashboardStatsResponse, getChartConfig, showInLegend, getBaseConfig, chartConfigOverrides]);
 
     return (
         <div className={className}>

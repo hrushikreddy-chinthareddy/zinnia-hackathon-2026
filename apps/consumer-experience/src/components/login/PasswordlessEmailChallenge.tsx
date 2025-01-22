@@ -9,6 +9,7 @@ import {
   SpinnerButton,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import Cookies from 'js-cookie';
 import { useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
@@ -17,6 +18,7 @@ import {
   verifyPasswordlessStartChallenge,
 } from '@/actions/login-actions';
 import styles from '@/app/login/Login.module.css';
+import { LOGIN_EMAIL_COOKIE_KEY } from '@/utils/serverClientUtils';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -34,8 +36,8 @@ const SubmitButton = () => {
   );
 };
 
-export const PasswordlessEmailChallenge = ({ email }: { email: string }) => {
-  const userEmail = decodeURIComponent(email);
+export const PasswordlessEmailChallenge = () => {
+  const userEmail = Cookies.get(LOGIN_EMAIL_COOKIE_KEY);
   const [resendPasswordlessStartCode, setResendPasswordlessStartCode] =
     useState(false);
   const [resendPasswordlessStartCodeState, passwordlessStartFormAction] =
@@ -75,7 +77,7 @@ export const PasswordlessEmailChallenge = ({ email }: { email: string }) => {
   const handleResendPasswordlessStartCode = () => {
     setResendPasswordlessStartCode(true);
     const formData = new FormData();
-    formData.append('email', userEmail);
+    formData.append('email', userEmail || '');
     passwordlessStartFormAction(formData);
   };
 
@@ -103,7 +105,7 @@ export const PasswordlessEmailChallenge = ({ email }: { email: string }) => {
           aria-label="Enter your email"
           type="email"
           className={styles.input}
-          defaultValue={decodeURIComponent(userEmail)}
+          defaultValue={userEmail}
           disabled
         />
         <Icon className={styles.icon} type={IconType.MAIL} />

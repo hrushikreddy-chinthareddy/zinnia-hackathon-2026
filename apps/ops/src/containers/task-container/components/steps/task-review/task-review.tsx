@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import Radio from '@deps/components/radio/radio';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 

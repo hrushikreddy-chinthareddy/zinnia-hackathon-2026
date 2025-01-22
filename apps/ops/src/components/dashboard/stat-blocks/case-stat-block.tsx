@@ -26,6 +26,7 @@ interface Props {
     showViewMore?: boolean;
     filterParams?: { [key: string]: string | string[] | number | boolean };
     loading?: boolean;
+    chartConfig?: Highcharts.Options;
 }
 
 const CaseStatBlock = ({
@@ -38,6 +39,7 @@ const CaseStatBlock = ({
     showViewMore = false,
     filterParams = {},
     loading = true,
+    chartConfig,
 }: Props) => {
     const [aiSummary, setAiSummary] = useState<string | null>(null);
     const shouldShowCaseInsights = useCaseInsightsPermission();
@@ -80,7 +82,13 @@ const CaseStatBlock = ({
     };
 
     const renderChart = () => {
-        return <DistributionPieChartSmallAPIBased dashboardStatsResponse={dashboardStatsResponse} showInLegend={true} />;
+        return (
+            <DistributionPieChartSmallAPIBased
+                dashboardStatsResponse={dashboardStatsResponse}
+                showInLegend={true}
+                chartConfigOverrides={chartConfig}
+            />
+        );
     };
 
     const renderAISummary = () => {
