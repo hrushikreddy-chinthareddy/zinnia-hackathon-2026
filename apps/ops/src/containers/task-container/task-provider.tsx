@@ -9,8 +9,6 @@ import { TaskDataContext } from './task-context';
 
 type TaskProviderProps = {
     children: React.ReactNode;
-    // can I remove it from here
-    // taskMetadata: FormMetadata;
     initialTask: ManagementTask;
     correlationId: string;
 };

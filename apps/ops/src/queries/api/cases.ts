@@ -214,7 +214,6 @@ export const getCaseMetadataSSR = async (id: string, accessToken: string): Promi
 };
 
 export const getReferenceData = async (query: ReferenceDataQuery): Promise<CaseReferenceResponse | null> => {
-    console.log('🚀 ~ getReferenceData ~ query:', query);
     try {
         const cachedResult = pullFromCache('getReferenceData', query);
 
