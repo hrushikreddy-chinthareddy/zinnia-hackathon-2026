@@ -27,7 +27,7 @@ import { UserPermission } from '@deps/models/user-profile';
 import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
 import { getSearchTransactionsSSR } from '@deps/queries/api/c2web';
 import { searchCasesSSR } from '@deps/queries/api/cases';
-import { getDocumentSSR } from '@deps/queries/api/documents';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyDetailsSsr, getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
@@ -375,7 +375,7 @@ export const getServerSideProps = withPageAuthRequired({
 
             const [parties, document, searchCasesResponse] = await Promise.all([
                 await getPolicyPartiesSSR(contractNum, clientCode, accessToken as string),
-                await getDocumentSSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken),
+                await getDocumentV2SSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken),
                 await searchCasesSSR(filters, accessToken),
             ]);
             logInfo('nigo-entry::Retrieved parties, document and correspondence case search result', {
@@ -451,9 +451,9 @@ export const getServerSideProps = withPageAuthRequired({
                 }
             }
 
-            const latestForm = !isNullEmptyOrUndefined(docType) && searchCasesResponse?.data?.find(
-                item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase()
-            );
+            const latestForm =
+                !isNullEmptyOrUndefined(docType) &&
+                searchCasesResponse?.data?.find(item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase());
             return {
                 props: {
                     ...translations,
@@ -470,7 +470,7 @@ export const getServerSideProps = withPageAuthRequired({
                     featureFlagDecisions,
                     document,
                     taskInfoLink,
-                    prevTransactionDetails: latestForm ? (latestForm?.additionalData || null) : null,
+                    prevTransactionDetails: latestForm ? latestForm?.additionalData || null : null,
                     isNigoCase,
                 },
             };

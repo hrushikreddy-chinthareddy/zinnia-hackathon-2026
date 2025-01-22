@@ -10,6 +10,7 @@ import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -23,6 +24,7 @@ import { RowConfig } from '../comparison-benefits/benefits-table.types';
 import { Products } from '../disclosure-authorization/disclosure-authorization.types';
 import ProposedAnnuityQuote from '../proposed-annuity-quote/proposed-annuity-quote';
 import { AnnuityQuote } from '../proposed-annuity-quote/proposed-annuity-quote.types';
+
 
 const getComparisonTypeOptions = (t: TFunction) => [
     { label: t('comparisonTypes.veriableToFixed'), value: ComparisonType.VARIABLE_TO_FIXED },
@@ -38,7 +40,7 @@ const ComparisonContract = ({
     formErrors = {},
     onComparisonContractChange,
 }: ComparisonContractProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request' });
     const { annuitizationQuoteConfig } = getMassMutualReg60Config(t);
     const { disclosureAuthorization, isFormStateReadOnly } = useContext(Reg60FormContext);
     const { field } = formConfigs;

@@ -18,6 +18,7 @@ import MassOftWithdrawalForm from '@deps/containers/otp/oft-forms/mass/mass-oft-
 import NasuOftWithdrawalForm from '@deps/containers/otp/oft-forms/nasu/nasu-oft-form';
 import RSLNOftWithdrawalForm from '@deps/containers/otp/oft-forms/rsln/rsln-oft-form';
 import SbgcOftWithdrawalForm from '@deps/containers/otp/oft-forms/sbgc/sbgc-oft-form';
+import UlpcOftWithdrawalForm from '@deps/containers/otp/oft-forms/ulpc/ulpc-oft-form';
 import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/form-controls';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
@@ -37,7 +38,7 @@ import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, PartyRoles, QualTypes } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
-import { getDocumentSSR } from '@deps/queries/api/documents';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
@@ -74,6 +75,7 @@ const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): R
     [Carrier.DLIC]: <OftDlicForm qualType={qualType} />,
     [Carrier.RSLN]: <RSLNOftWithdrawalForm qualType={qualType} />,
     [Carrier.NASU]: <NasuOftWithdrawalForm />,
+    [Carrier.ULPC]: <UlpcOftWithdrawalForm />,
 });
 
 export default function OftCase({ document, form, featureFlagDecisions, user }: OftCaseProps) {
@@ -260,7 +262,7 @@ export const getServerSideProps = withPageAuthRequired({
 
         const [translations, document] = await Promise.all([
             serverSideTranslations(locale, [TranslationFiles.COMMON]),
-            getDocumentSSR(documentNumber, DocumentType.Oft, clientId.toUpperCase(), accessToken),
+            getDocumentV2SSR(documentNumber, DocumentType.Oft, clientId.toUpperCase(), accessToken),
         ]);
 
         if (!document?.contract) {

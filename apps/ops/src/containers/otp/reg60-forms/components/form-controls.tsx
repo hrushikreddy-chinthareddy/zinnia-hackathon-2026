@@ -4,6 +4,7 @@ import { FormEvent, useContext, useState } from 'react';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { isLocalStorageEnabled } from '@deps/helpers/local-storage.hepler';
 import { getSlug } from '@deps/helpers/string.helper';
@@ -41,7 +42,7 @@ export function allValuesEmptyObjects(obj: any) {
 export function FormControls({ isLoading, setIsLoading, setTaskApiError, document }: FormControlsProps) {
     const router = useRouter();
     const [timer] = useState(performance.now());
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseReg60.request' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request' });
     const formState = useContext(Reg60FormContext);
     const formStatusCompleted = formState?.initialForm?.status === TaskStatus.Completed;
     const caseId = router?.query?.id || '';

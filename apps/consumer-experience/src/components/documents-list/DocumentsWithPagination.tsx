@@ -6,6 +6,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 import {
   DocumentCategory,
+  DocumentV3SearchItem,
   ExtendedDocumentMeta,
   TaxDocument,
 } from '@/types/document';
@@ -23,7 +24,7 @@ export default function DocumentsWithPagination({
   carrierId,
 }: {
   docCategory: DocumentCategory;
-  documents: ExtendedDocumentMeta[] | TaxDocument[];
+  documents: ExtendedDocumentMeta[] | TaxDocument[] | DocumentV3SearchItem[];
   planCode: string;
   policyNumber: string;
   lineOfBusiness: LineOfBusiness;

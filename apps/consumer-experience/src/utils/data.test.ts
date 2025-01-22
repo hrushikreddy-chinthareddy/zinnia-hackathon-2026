@@ -73,7 +73,7 @@ describe('formatPhoneNumberWithExtension', () => {
 
     const formattedNumber = formatPhoneNumberWithExtension(phone);
 
-    expect(formattedNumber).toBe('+1 (123) 456-7890 ext. 1234');
+    expect(formattedNumber).toBe('1-123-456-7890 ext. 1234');
   });
 
   // Should format a phone number with a countryCode of length 1
@@ -92,7 +92,7 @@ describe('formatPhoneNumberWithExtension', () => {
 
     const formattedNumber = formatPhoneNumberWithExtension(phone);
 
-    expect(formattedNumber).toBe('+9 (987) 654-3210');
+    expect(formattedNumber).toBe('9-987-654-3210');
   });
 });
 

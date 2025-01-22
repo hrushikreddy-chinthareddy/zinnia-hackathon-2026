@@ -1,16 +1,25 @@
 import { datadogLogs } from '@datadog/browser-logs';
+import { TaxformDownloadResponse } from '@zinnia/api-types/types/documents-v3';
 import { AxiosRequestConfig, AxiosResponse, isCancel } from 'axios';
 
+import { DocumentDownloadV2 } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody, SearchTaxFormResponseBody } from '@deps/models/case/send-tax-forms';
 import { client } from '@deps/queries/api-utils/client';
 
 import { baseAppUrl } from '../api-config';
 
 const baseUrl = baseAppUrl + '/api/document/v2/';
+const baseUrlV3 = baseAppUrl + '/api/document/v3/documents/';
 
-export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody, signal?: AbortSignal): Promise<SearchTaxFormResponseBody> => {
+export const searchTaxForms = async (
+    requestBody: SearchTaxFormRequestBody,
+    useV3: boolean,
+    signal?: AbortSignal
+): Promise<SearchTaxFormResponseBody> => {
     try {
-        let url = `${baseUrl}taxForms?contractNumber=${requestBody.contractNumber}&clientCode=${requestBody.clientCode}`;
+        let url = `${useV3 ? baseUrlV3 : baseUrl}taxForms?contractNumber=${requestBody.contractNumber}&clientCode=${
+            requestBody.clientCode
+        }`;
 
         if (requestBody?.numYears) {
             url += `&numYears=${requestBody.numYears}`;
@@ -47,19 +56,28 @@ export const searchTaxForms = async (requestBody: SearchTaxFormRequestBody, sign
     }
 };
 
-export const downloadTaxFormById = async (formId: number, optionalParams: { [key: string]: string } = {}): Promise<any> => {
+export const downloadTaxFormById = async (
+    formId: number,
+    optionalParams: { [key: string]: string } = {},
+    useV3: boolean
+): Promise<DocumentDownloadV2 | TaxformDownloadResponse> => {
     try {
         if (!formId) {
             throw new Error('No formId provided');
         }
-        const url = `${baseAppUrl}/api/documents/tax-form/${formId}/preview?clientCode=${optionalParams?.clientCode}&contractNumber=${optionalParams?.contractNumber}&fChar=${optionalParams?.fChar}&taxYear=${optionalParams?.taxYear}`;
+
+        const queryParams = `?clientCode=${optionalParams?.clientCode}&contractNumber=${optionalParams?.contractNumber}&fChar=${optionalParams?.fChar}&taxYear=${optionalParams?.taxYear}`;
+
+        const url = useV3
+            ? `${baseUrlV3}/taxForms/${formId}${queryParams}`
+            : `${baseAppUrl}/api/documents/tax-form/${formId}/preview${queryParams}`;
 
         datadogLogs.logger.info('contactCenterDownloadTaxFormById', {
             payload: { formId, ...optionalParams },
             url,
             function: 'tax-forms.downloadTaxFormById',
         });
-        const { data } = await client.get<string, AxiosResponse<any>>(url);
+        const { data } = await client.get<string, AxiosResponse<DocumentDownloadV2 | TaxformDownloadResponse>>(url);
 
         return data;
     } catch (e: any) {

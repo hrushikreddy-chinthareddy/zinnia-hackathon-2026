@@ -99,16 +99,7 @@ const queryClient = new QueryClient();
 queryClient.setDefaultOptions({
     queries: {
         staleTime: 60 * 1000, // 1 minute,
-        retry: (failureCount, error) => {
-            //Allow retries for anything except for 401 or 403s up to 3 times
-            if (failureCount >= 3) return false;
-            if ('status' in error) {
-                if (error.status === 403 || error.status === 401) {
-                    return false;
-                }
-            }
-            return true;
-        },
+        retry: false,
     },
 });
 
