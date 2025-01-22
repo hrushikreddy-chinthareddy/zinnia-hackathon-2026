@@ -1,14 +1,11 @@
-import { PasswordlessEmailChallenge } from '@/components/login/PasswordlessEmailChallenge';
-import { GenericLoginPage } from '../GenericLoginPage';
 import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { PasswordlessEmailChallenge } from '@/components/login/PasswordlessEmailChallenge';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
-export default async function PasswordlessEmailChallengePage({
-  searchParams,
-}: {
-  searchParams: { email: string };
-}) {
+import { GenericLoginPage } from '../GenericLoginPage';
+
+export default async function PasswordlessEmailChallengePage() {
   const featureFlagDecisions = await getFeatureFlags();
 
   if (!featureFlagDecisions[FEATURE_FLAGS.ANNUITY_MODE]) {
@@ -16,7 +13,7 @@ export default async function PasswordlessEmailChallengePage({
       <GenericInfoPage
         title="Enter your code."
         description="Check for an email from us with your 6-digit verification code."
-        action={<PasswordlessEmailChallenge email={searchParams.email} />}
+        action={<PasswordlessEmailChallenge />}
       />
     );
   }
@@ -25,7 +22,7 @@ export default async function PasswordlessEmailChallengePage({
     <GenericLoginPage
       title="Enter your code."
       description="Check for an email from us with your 6-digit verification code."
-      action={<PasswordlessEmailChallenge email={searchParams.email} />}
+      action={<PasswordlessEmailChallenge />}
     />
   );
 }

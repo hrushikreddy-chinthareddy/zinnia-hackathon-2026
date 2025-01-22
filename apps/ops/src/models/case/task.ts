@@ -16,6 +16,15 @@ export enum TaskType {
     SuitabilityReview = 'SUITABILITY_REVIEW',
 }
 
+export enum EarlyTaskType {
+    Withdrawal = 'WithdrawalFormInputTask',
+    OFT = 'OFTFormInputTask',
+    RMD = 'RMDFormInputTask',
+    SSW = 'SSWFormInputTask',
+    RENEWAL = 'RenewalTask',
+    REG60 = 'NBReg60Comparision',
+}
+
 export enum TaskSource {
     ZinniaTaskManagement = 'Zinnia.TaskManagement',
 }

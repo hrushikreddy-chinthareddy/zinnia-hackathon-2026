@@ -1,4 +1,3 @@
-// BPB - I know this is cheating a bit, but hey, it's a test
 import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
 
 import { Addresses } from './Addresses';

@@ -1,0 +1,14 @@
+.h1 {
+    composes: h1 from '../globalStyles.module.css';
+}
+
+.caption {
+    composes: caption from '../globalStyles.module.css';
+}
+
+.cardHeader {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: baseline;
+    padding: var(--measure-dimension-padding-4xl);
+}

@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 import { useTranslation } from 'next-i18next';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import Button from '@deps/components/button/button';
 import { PolicyDocument } from '@deps/models/case/document';
@@ -8,7 +8,7 @@ import '@deps/styles/styles.css';
 
 import SideSheetDocumentItem from './document-item';
 import SideSheet from '../../side-sheet';
-import { DocumentTypeView } from '../documents-content';
+import { DocumentTypeView } from '../DocumentTypeView';
 
 export default {
     title: 'Components/SideSheet',

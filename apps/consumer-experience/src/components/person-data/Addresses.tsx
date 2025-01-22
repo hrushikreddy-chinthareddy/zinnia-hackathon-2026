@@ -31,11 +31,13 @@ const AddressGroup = ({
   preferredAddressIndicator,
   showEditButton,
   partyId,
+  userOnlyHasOneAddress,
 }: {
   addresses: AddressInterface[];
   preferredAddressIndicator: string;
   showEditButton?: boolean;
   partyId: string;
+  userOnlyHasOneAddress: boolean;
 }) => {
   return addresses?.map((address, index) => {
     const mailingAddressText =
@@ -102,6 +104,7 @@ const AddressGroup = ({
             values={editValues}
             addressId={address.addressId}
             fullAddressData={address}
+            disableEditingPreferredAddress={userOnlyHasOneAddress}
           />
         )}
       </div>
@@ -123,13 +126,14 @@ export const Addresses = ({
   const residentialAddresses = addresses?.filter(
     address => address.addressType === AddressType.RESIDENCE
   );
-
   const boxAddresses = addresses?.filter(
     address => address.addressType === AddressType.POBOX
   );
   const businessAddresses = addresses?.filter(
     address => address.addressType === AddressType.BUSINESS
   );
+
+  const userOnlyHasOneAddress = addresses.length == 1;
 
   return (
     <div className={styles.itemsRowContainer}>
@@ -140,18 +144,21 @@ export const Addresses = ({
           preferredAddressIndicator={preferredAddressIndicator}
           showEditButton={allowAddressChanges}
           partyId={partyId}
+          userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
         <AddressGroup
           addresses={boxAddresses}
           preferredAddressIndicator={preferredAddressIndicator}
           showEditButton={allowAddressChanges}
           partyId={partyId}
+          userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
         <AddressGroup
           addresses={businessAddresses}
           preferredAddressIndicator={preferredAddressIndicator}
           showEditButton={allowAddressChanges}
           partyId={partyId}
+          userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
       </div>
       {allowAddressChanges && (
