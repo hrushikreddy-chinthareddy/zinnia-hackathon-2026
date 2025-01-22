@@ -14,6 +14,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import OftDlicForm from '@deps/containers/otp/oft-forms/dlic/dlic-oft-form';
 import FlicOftWithdrawalForm from '@deps/containers/otp/oft-forms/flic/flic-oft-form';
+import GdmnOftWithdrawalForm from '@deps/containers/otp/oft-forms/gdmn/gdmn-oft-form';
 import MassOftWithdrawalForm from '@deps/containers/otp/oft-forms/mass/mass-oft-form';
 import NasuOftWithdrawalForm from '@deps/containers/otp/oft-forms/nasu/nasu-oft-form';
 import RSLNOftWithdrawalForm from '@deps/containers/otp/oft-forms/rsln/rsln-oft-form';
@@ -75,6 +76,7 @@ const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): R
     [Carrier.SBGC]: <SbgcOftWithdrawalForm planCode={planCode} />,
     [Carrier.DLIC]: <OftDlicForm qualType={qualType} />,
     [Carrier.RSLN]: <RSLNOftWithdrawalForm qualType={qualType} />,
+    [Carrier.GDMN]: <GdmnOftWithdrawalForm qualType={qualType} />,
     [Carrier.USAA]: <UsaaOftWithdrawalForm />,
     [Carrier.NASU]: <NasuOftWithdrawalForm />,
     [Carrier.ULPC]: <UlpcOftWithdrawalForm />,

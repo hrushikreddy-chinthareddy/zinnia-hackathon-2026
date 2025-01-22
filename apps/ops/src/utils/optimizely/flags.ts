@@ -20,6 +20,7 @@ export enum FEATURE_FLAGS {
     OFT_DLIC = 'case-management-otp_feature_dlic_oft',
     OFT_RSLN = 'case-management-otp_feature_rsln_oft',
     OFT_FLIC = 'case-management-otp_feature_flic_oft',
+    OFT_GDMN = 'case-management-otp_feature_gdmn_oft',
     OFT_USAA = 'case-management-otp_feature_usaa_oft',
     OFT_NASU = 'case-management-otp_feature_nasu_oft',
     OFT_ULPC = 'case-management-otp_feature_ulpc_oft',
