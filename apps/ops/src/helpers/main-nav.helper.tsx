@@ -24,19 +24,22 @@ export const getMainNavItems = async (
 
     const shouldShowNewExperience = featureFlags?.[FEATURE_FLAGS.NEW_EXP];
     const shouldShowCaseStatsDashboard = featureFlags?.[FEATURE_FLAGS.CASE_STATS_DASHBOARD];
+    const enableAdditionalAdvisorsExcelCarriers = featureFlags?.[FEATURE_FLAGS.CASE_ADVISORS_EXCEL_ADDITIONAL_CARRIER_SUPPORT];
     const navItems: NavBarLinkProps[] = [];
 
     const getNavItems = async () => {
-        const isAllowReadCaseManagement = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadCaseManagement);
+        const isAdvisorsExcel = await permissionContext.getIsAdvisorsExcel();
+        const isAllowReadCaseManagement =
+            isAdvisorsExcel || (await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadCaseManagement));
         const isAllowReadPolicyAdmin = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadPolicyAdmin);
         const isAllowReadOtpRenewals = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadOtpRenewals);
-        const isAdvisorsExcel = await permissionContext.getIsAdvisorsExcel();
         const hasDashboardPermission = await permissionContext.doesUserHaveDashboardPermission();
 
-        if (isAdvisorsExcel || isAllowReadCaseManagement) {
+        if (isAllowReadCaseManagement) {
             navItems.push({ label: caseLinkText, link: caseLinkHref, icon: <DocumentIcon width={20} height={20} /> });
         }
-        if (isAllowReadPolicyAdmin) {
+
+        if ((enableAdditionalAdvisorsExcelCarriers && isAdvisorsExcel) || isAllowReadPolicyAdmin) {
             navItems.push({
                 label: policySearchText,
                 link: policySearchHref,
@@ -46,6 +49,7 @@ export const getMainNavItems = async (
                 icon: <Icon type={IconType.SHIELD_CHECKMARK} />,
             });
         }
+
         if (isAllowReadOtpRenewals) {
             shouldShowNewExperience
                 ? navItems.push({

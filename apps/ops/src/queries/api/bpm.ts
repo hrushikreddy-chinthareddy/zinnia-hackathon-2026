@@ -16,7 +16,6 @@ import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
 
 export interface OneTimePremiumRequestQuery extends OneTimePremiumRequest {
@@ -92,19 +91,19 @@ export enum TransactionResponseStatus {
 export const checkEligibilityNewLoan = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
-    maxLoanValue: number | undefined,
+    maxLoanValue: number | undefined
 ): Promise<TransactionResponse> => {
     try {
         // Temporary solution while BPM adds logic
         if (maxLoanValue === 0) {
             return {
                 status: TransactionResponseStatus.Failure,
-            }
+            };
         }
 
         const { data } = await client.post<TransactionResponse, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/newloan/eligibilitycheck`,
-            {} as AxiosResponse // BPB - TODO: fix this typing!
+            {} as AxiosResponse
         );
 
         return data;
@@ -325,10 +324,7 @@ export const submitNewLoan = async (
     query: NewLoanRequest
 ): Promise<TransactionResponse> => {
     try {
-        const response = await client.post<NewLoanRequest, AxiosResponse>(
-            `${baseUrl}/policies/${planCode}/${policyNumber}/newloan`,
-            query
-        );
+        const response = await client.post<NewLoanRequest, AxiosResponse>(`${baseUrl}/policies/${planCode}/${policyNumber}/newloan`, query);
         return { status: response.status };
     } catch (error: any) {
         console.error('submitNewLoan::an error occurred during submission', error);

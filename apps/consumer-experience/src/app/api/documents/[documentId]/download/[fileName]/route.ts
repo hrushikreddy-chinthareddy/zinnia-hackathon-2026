@@ -1,15 +1,14 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { getDocumentDownload } from '@/services/document';
+import { b64ToBlob } from '@/app/api/documents/utils';
+import { getDocumentDownloadV2 } from '@/services/document/v2';
 import { getSession } from '@/utils/auth';
 import {
   getUserInfoFromSession,
   logCompliance,
   logWarn,
 } from '@/utils/logging/server-logging';
-
-import { b64ToBlob } from '../../../utils';
 
 export const GET = async (
   request: NextRequest,
@@ -41,7 +40,7 @@ export const GET = async (
     ...loggingContext,
   });
 
-  const download = await getDocumentDownload(
+  const download = await getDocumentDownloadV2(
     params.documentId,
     source as string,
     clientCode as string,

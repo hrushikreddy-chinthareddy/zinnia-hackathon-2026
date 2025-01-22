@@ -756,7 +756,10 @@
                     "lapseBannerText": "Ce contrat est agréé moyennant une prime de réintégration. Y aller maintenant ?",
                     "lapseBannerLink": "Effectuer un paiement de prime",
                     "freeLookCancelBannerText": "Cette police est encore dans sa période d'examen gratuit et peut être annulée sans pénalité jusqu'à cette date.",
-                    "freeLookCancelBannerLink": "Annuler la police"
+                    "freeLookCancelBannerLink": "Annuler la police",
+                    "caseBannerLink": "Voir les cas",
+                    "caseBannerText_one": "Cette politique a {{count}} cas ouvert",
+                    "caseBannerText_other": "Cette politique a {{count}} cas ouverts"
                 }
             },
             "empty": {
@@ -841,6 +844,7 @@
         "pageSize": "Lignes par page",
         "results": "Résultats",
         "refineResults": "Affiner les résultats",
+        "addFilters": "Ajouter des filtres",
         "refineResultsOptions": {
             "carriers": "Assureur",
             "caseType": "Type de dossier",

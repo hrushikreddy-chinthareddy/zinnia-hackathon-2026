@@ -732,7 +732,10 @@
                     "lapseBannerText": "This policy is approved for a reinstatement premium.  Go there now?",
                     "lapseBannerLink": "Make a premium payment",
                     "freeLookCancelBannerText": "This policy is still in its free look period and can be canceled without penalty until",
-                    "freeLookCancelBannerLink": "Cancel policy"
+                    "freeLookCancelBannerLink": "Cancel policy",
+                    "caseBannerLink": "View cases",
+                    "caseBannerText_one": "This policy has {{count}} open case",
+                    "caseBannerText_other": "This policy has {{count}} open cases"
                 }
             },
             "empty": {
@@ -849,6 +852,7 @@
         "pageSize": "Rows per page",
         "results": "Results",
         "refineResults": "Refine results",
+        "addFilters": "Add filters",
         "refineResultsOptions": {
             "carrier": "Carriers",
             "caseType": "Case type",
