@@ -21,7 +21,7 @@ const TransactionsTab = () => {
         <HistoryFiltersProvider>
             <div className="flex h-full flex-col items-start rounded bg-white">
                 <ActivityPageHeader />
-                <div className="responsive-padding flex grow basis-[350px] flex-col items-start gap-4 self-stretch overflow-auto !pr-0 lg:flex-row lg:gap-8">
+                <div className="responsive-padding flex grow basis-[350px] flex-col items-start gap-4 self-stretch !pr-0 lg:flex-row lg:gap-8">
                     <NavElement
                         className="flex h-6 items-center gap-1 leading-6 lg:hidden"
                         onClick={() => setIsSideSheetOpen(true)}

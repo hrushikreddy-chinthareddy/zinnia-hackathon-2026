@@ -17,7 +17,15 @@ const ActivitySubPage = () => {
 
     const { policy } = useContext(PolicyData);
 
-    const [tabVal, setTabVal] = useState(PolicyActivityTabValues.transactions);
+    const getInitialTabValue = () => {
+        let initialTabVal = PolicyActivityTabValues.transactions;
+        if (window.location.pathname.includes('call-logs')) {
+            initialTabVal = PolicyActivityTabValues['call-logs'];
+        }
+        return initialTabVal;
+    };
+
+    const [tabVal, setTabVal] = useState(getInitialTabValue());
 
     const [loadingCallLogs, setLoadingCallLogs] = useState(true);
     const [callLogs, setCallLogs] = useState<CallLog[]>([]);
@@ -39,13 +47,6 @@ const ActivitySubPage = () => {
 
         getCallLogs();
     }, [policy.policyNumber]);
-
-    useEffect(() => {
-        // to do - this doesn't seem like the best way to take whatever is in the url and switch to that tab on load
-        if (window.location.pathname.includes('call-logs')) {
-            setTabVal(PolicyActivityTabValues['call-logs']);
-        }
-    }, []);
 
     const handleTabChange = (val: string) => {
         // We do not want to send the user to a new page, just update the URL in response to a user action
