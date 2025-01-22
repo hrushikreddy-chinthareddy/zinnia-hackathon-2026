@@ -25,6 +25,7 @@ import MassWithdrawalForm from '@deps/containers/otp/withdrawal-forms/mass/mass-
 import NasuWithdrawalForm from '@deps/containers/otp/withdrawal-forms/nasu/nasu-withdrawal-form';
 import RslnWithdrawalForm from '@deps/containers/otp/withdrawal-forms/rsln/rsln-withdrawal-form';
 import SbgcWithdrawalForm from '@deps/containers/otp/withdrawal-forms/sbgc-withdrawal-form';
+import UlpcWithdrawalForm from '@deps/containers/otp/withdrawal-forms/ulpc/ulpc-withdrawal-form';
 import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { determineFormToRender } from '@deps/helpers/form-selector.helper';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
@@ -81,6 +82,7 @@ const getFormComponentMap = (qualType: QualTypes | ''): Record<string, React.Rea
     [Carrier.NASU]: <NasuWithdrawalForm />,
     [Carrier.GDMN]: <GdmnWithdrawalForm />,
     [Carrier.RSLN]: <RslnWithdrawalForm />,
+    [Carrier.ULPC]: <UlpcWithdrawalForm />,
     [Carrier.GLCO]: <GilicoWithdrawalForm />,
 });
 
