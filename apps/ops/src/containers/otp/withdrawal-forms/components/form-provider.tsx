@@ -178,7 +178,6 @@ export const FormProvider = ({
                 formComment,
                 formReindexingData,
                 formBeneInfo,
-                setFormBeneInfo,
                 setFormSubtype,
                 setCurrentFormState,
                 setFormWarnings,
