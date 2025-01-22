@@ -14,6 +14,8 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
+import PageLoader from '../page-loader/page-loader';
+
 interface Props {
     height?: number;
     width?: number;
@@ -45,7 +47,11 @@ const defaultChartOptions = {
     maxItems: 10,
 };
 
-const DEFAULT_GROUPBY_FILTER_OPTIONS = [GroupByOptions.BrokerDealerName, GroupByOptions.Process, GroupByOptions.CaseStatus];
+const DEFAULT_GROUPBY_FILTER_OPTIONS = {
+    L1SelectValue: GroupByOptions.BrokerDealerName,
+    L2SelectValue: GroupByOptions.ProcessSubType,
+    L3SelectValue: GroupByOptions.CaseStatus,
+};
 
 const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOptions, baseDashboardQueryFilter }: Props) => {
     const { t } = useTranslation();
@@ -68,14 +74,14 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
     const [l1SelectedIndex, setL1SelectedIndex] = useState<number>(-100);
 
-    const [l1SelectValue, setL1SelectValue] = useState(GroupByOptions.BrokerDealerName);
-    const [l2SelectValue, setL2SelectValue] = useState(GroupByOptions.ProcessSubType);
-    const [l3SelectValue, setL3SelectValue] = useState(GroupByOptions.CaseStatus);
+    const [l1SelectValue, setL1SelectValue] = useState(DEFAULT_GROUPBY_FILTER_OPTIONS.L1SelectValue);
+    const [l2SelectValue, setL2SelectValue] = useState(DEFAULT_GROUPBY_FILTER_OPTIONS.L2SelectValue);
+    const [l3SelectValue, setL3SelectValue] = useState(DEFAULT_GROUPBY_FILTER_OPTIONS.L3SelectValue);
 
     const [parentSize, setParentSize] = useState({ width, height });
     const svgParentRef = useRef<HTMLDivElement>(null);
 
-    const { data: caseGroupingState } = useQuery({
+    const { data: caseGroupingState, isLoading: caseGroupingDataLoading } = useQuery({
         queryKey: ['caseGrouping', baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue],
         queryFn: () => {
             setL1SelectedIndex(-100);
@@ -709,169 +715,179 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const formattedCasesNumber = wholeNumberFormatify(totalCases || 0) as never;
 
     const resetFilters = () => {
-        [setL1SelectValue, setL2SelectValue, setL3SelectValue].forEach((setter, index) => setter(DEFAULT_GROUPBY_FILTER_OPTIONS[index]));
+        [setL1SelectValue, setL2SelectValue, setL3SelectValue].forEach((setterFn, index) =>
+            setterFn(Object.values(DEFAULT_GROUPBY_FILTER_OPTIONS)[index])
+        );
     };
 
-    const resetDisabled = [l1SelectValue, l2SelectValue, l3SelectValue].every(
-        (value, index) => DEFAULT_GROUPBY_FILTER_OPTIONS[index] === value
-    );
+    const resetDisabled =
+        l1SelectValue === DEFAULT_GROUPBY_FILTER_OPTIONS.L1SelectValue &&
+        l2SelectValue === DEFAULT_GROUPBY_FILTER_OPTIONS.L2SelectValue &&
+        l3SelectValue === DEFAULT_GROUPBY_FILTER_OPTIONS.L3SelectValue;
 
     return (
-        <div>
-            <Typography className="flex items-center mt-7 mb-7" variant={TypographyVariant.H4} asTag="h2" data-testid="header-text">
-                {t('caseStatCharHeader', { count: formattedCasesNumber })}
-            </Typography>
-            <div className="relative pb-6">
-                <div
-                    className="absolute top-0 bottom-0 left-0 border-r-2 border-[#EDEDED]"
-                    style={{
-                        width: '34%',
-                    }}
-                ></div>
-                <div
-                    className="absolute top-0 bottom-0 border-r-2 border-[#EDEDED]"
-                    style={{
-                        width: '34%',
-                        left: '34%',
-                    }}
-                ></div>
-                <div
-                    className="absolute top-0 bottom-0 right-0"
-                    style={{
-                        width: '32%',
-                    }}
-                ></div>
-                <div className="flex items-stretch flex-wrap mb-5 md:-mx-4 relative z-2">
-                    <div className="mb-4 md:mb-0 pl-6 md:w-1/3">
-                        <SelectSimple
-                            options={[
-                                {
-                                    value: GroupByOptions.BrokerDealerName.toString(),
-                                    label: 'Broker Dealer',
-                                },
-                                {
-                                    value: GroupByOptions.Carrier.toString(),
-                                    label: 'Carrier',
-                                },
-                                {
-                                    value: GroupByOptions.Process.toString(),
-                                    label: 'Case Type',
-                                },
-                                {
-                                    value: GroupByOptions.ProductName.toString(),
-                                    label: 'Product Name',
-                                },
-                                {
-                                    value: GroupByOptions.ProcessSubType.toString(),
-                                    label: 'Sub Case Type',
-                                },
-                            ]}
-                            onChange={handleL1SelectChange}
-                            size={FieldSize.Small}
-                            type={FieldType.BaseActive}
-                            value={l1SelectValue}
-                        />
-                    </div>
-                    <div className="mb-4 md:mb-0 pl-6 md:w-1/3 text-center">
-                        <SelectSimple
-                            options={[
-                                {
-                                    value: GroupByOptions.BrokerDealerName.toString(),
-                                    label: 'Broker Dealer',
-                                },
-                                {
-                                    value: GroupByOptions.Carrier.toString(),
-                                    label: 'Carrier',
-                                },
-                                {
-                                    value: GroupByOptions.Process.toString(),
-                                    label: 'Case Type',
-                                },
-                                {
-                                    value: GroupByOptions.ProductName.toString(),
-                                    label: 'Product Name',
-                                },
-                                {
-                                    value: GroupByOptions.ProcessSubType.toString(),
-                                    label: 'Sub Case Type',
-                                },
-                            ]}
-                            onChange={handleL2SelectChange}
-                            size={FieldSize.Small}
-                            type={FieldType.BaseActive}
-                            value={l2SelectValue}
-                        />
-                    </div>
-                    <div className="mb-4 md:mb-0 pl-6 md:w-1/3 text-right flex flex-row align-middle items-center gap-2">
-                        <SelectSimple
-                            options={[
-                                {
-                                    value: GroupByOptions.CaseStatus.toString(),
-                                    label: 'Case Status',
-                                },
-                                {
-                                    value: GroupByOptions.Process.toString(),
-                                    label: 'Case Type',
-                                },
-                            ]}
-                            onChange={handleL3SelectChange}
-                            size={FieldSize.Small}
-                            type={FieldType.BaseActive}
-                            value={l3SelectValue}
-                        />
-                        <Button onClick={resetFilters} disabled={resetDisabled} mode="link" size="small">
-                            <Icon width={16} height={16} type={IconType.REFRESH} />
-                            reset
-                        </Button>
-                    </div>
-                    <div></div>
+        <>
+            {caseGroupingDataLoading && (
+                <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
+                    <PageLoader />
                 </div>
-                {/* DO NOT REMOVE the explicity height setting. This prevents the useEffect from firing constantly after
-                render due to the height changing */}
-                <div className="relative z-2" style={{ height: `${height}px` }} ref={svgParentRef}>
-                    <svg
+            )}
+            <div>
+                <Typography className="flex items-center mt-7 mb-7" variant={TypographyVariant.H4} asTag="h2" data-testid="header-text">
+                    {t('caseStatCharHeader', { count: formattedCasesNumber })}
+                </Typography>
+                <div className="relative pb-6">
+                    <div
+                        className="absolute top-0 bottom-0 left-0 border-r-2 border-[#EDEDED]"
                         style={{
-                            left: '0px',
-                            top: '0px',
-                            width: parentSize.width,
-                            height: parentSize.height,
-                            display: 'block',
-                            minWidth: '700px',
-                            minHeight: '400px',
-                            backgroundImage: 'none',
-                            backgroundColor: 'transparent',
+                            width: '34%',
                         }}
-                    >
-                        <g data-name="level 1">
-                            {/* Loop through all of the l1 objects and render a group for each */}
-                            {level1ObjectGrouping &&
-                                level1ObjectGrouping.length > 0 &&
-                                level1ObjectGrouping.map((item, index) => renderL1Group(item, index))}
-                            {/* SVGs require the highlighted item to be rendered last so the paths are on top */}
-                            {level1ObjectGrouping &&
-                                level1ObjectGrouping.length > 0 &&
-                                isL1Selected() &&
-                                renderL1Group(getSelectedL1StatGrouping(), l1SelectedIndex, true)}
-                        </g>
-                        <g data-name="level 2">
-                            {level2ObjectGrouping &&
-                                level2ObjectGrouping.length > 0 &&
-                                level2ObjectGrouping.map((l2Item, index) => renderL2Group(l2Item, index))}
-                            {level2ObjectGrouping &&
-                                level2ObjectGrouping.length > 0 &&
-                                level2ObjectGrouping.map((l2Item, index) => renderL2Group(l2Item, index, true))}
-                        </g>
-                        <g data-name="level 3">
-                            <g data-name="End Stages" transform="translate(0.5,0.5)" style={{ visibility: 'visible' }}>
-                                {level3ObjectGrouping &&
-                                    level3ObjectGrouping.length > 0 &&
-                                    level3ObjectGrouping.map((item, index) => renderL3Group(item, index))}
+                    ></div>
+                    <div
+                        className="absolute top-0 bottom-0 border-r-2 border-[#EDEDED]"
+                        style={{
+                            width: '34%',
+                            left: '34%',
+                        }}
+                    ></div>
+                    <div
+                        className="absolute top-0 bottom-0 right-0"
+                        style={{
+                            width: '32%',
+                        }}
+                    ></div>
+                    <div className="flex items-stretch flex-wrap mb-5 md:-mx-4 relative z-2">
+                        <div className="mb-4 md:mb-0 pl-6 md:w-1/3">
+                            <SelectSimple
+                                options={[
+                                    {
+                                        value: GroupByOptions.BrokerDealerName.toString(),
+                                        label: 'Broker Dealer',
+                                    },
+                                    {
+                                        value: GroupByOptions.Carrier.toString(),
+                                        label: 'Carrier',
+                                    },
+                                    {
+                                        value: GroupByOptions.Process.toString(),
+                                        label: 'Case Type',
+                                    },
+                                    {
+                                        value: GroupByOptions.ProductName.toString(),
+                                        label: 'Product Name',
+                                    },
+                                    {
+                                        value: GroupByOptions.ProcessSubType.toString(),
+                                        label: 'Sub Case Type',
+                                    },
+                                ]}
+                                onChange={handleL1SelectChange}
+                                size={FieldSize.Small}
+                                type={FieldType.BaseActive}
+                                value={l1SelectValue}
+                            />
+                        </div>
+                        <div className="mb-4 md:mb-0 pl-6 md:w-1/3 text-center">
+                            <SelectSimple
+                                options={[
+                                    {
+                                        value: GroupByOptions.BrokerDealerName.toString(),
+                                        label: 'Broker Dealer',
+                                    },
+                                    {
+                                        value: GroupByOptions.Carrier.toString(),
+                                        label: 'Carrier',
+                                    },
+                                    {
+                                        value: GroupByOptions.Process.toString(),
+                                        label: 'Case Type',
+                                    },
+                                    {
+                                        value: GroupByOptions.ProductName.toString(),
+                                        label: 'Product Name',
+                                    },
+                                    {
+                                        value: GroupByOptions.ProcessSubType.toString(),
+                                        label: 'Sub Case Type',
+                                    },
+                                ]}
+                                onChange={handleL2SelectChange}
+                                size={FieldSize.Small}
+                                type={FieldType.BaseActive}
+                                value={l2SelectValue}
+                            />
+                        </div>
+                        <div className="mb-4 md:mb-0 pl-6 md:w-1/3 text-right flex flex-row align-middle items-center gap-2">
+                            <SelectSimple
+                                options={[
+                                    {
+                                        value: GroupByOptions.CaseStatus.toString(),
+                                        label: 'Case Status',
+                                    },
+                                    {
+                                        value: GroupByOptions.Process.toString(),
+                                        label: 'Case Type',
+                                    },
+                                ]}
+                                onChange={handleL3SelectChange}
+                                size={FieldSize.Small}
+                                type={FieldType.BaseActive}
+                                value={l3SelectValue}
+                            />
+                            <Button onClick={resetFilters} disabled={resetDisabled} mode="link" size="small">
+                                <Icon width={16} height={16} type={IconType.REFRESH} />
+                                reset
+                            </Button>
+                        </div>
+                        <div></div>
+                    </div>
+                    {/* DO NOT REMOVE the explicity height setting. This prevents the useEffect from firing constantly after
+                render due to the height changing */}
+                    <div className="relative z-2" style={{ height: `${height}px` }} ref={svgParentRef}>
+                        <svg
+                            style={{
+                                left: '0px',
+                                top: '0px',
+                                width: parentSize.width,
+                                height: parentSize.height,
+                                display: 'block',
+                                minWidth: '700px',
+                                minHeight: '400px',
+                                backgroundImage: 'none',
+                                backgroundColor: 'transparent',
+                            }}
+                        >
+                            <g data-name="level 1">
+                                {/* Loop through all of the l1 objects and render a group for each */}
+                                {level1ObjectGrouping &&
+                                    level1ObjectGrouping.length > 0 &&
+                                    level1ObjectGrouping.map((item, index) => renderL1Group(item, index))}
+                                {/* SVGs require the highlighted item to be rendered last so the paths are on top */}
+                                {level1ObjectGrouping &&
+                                    level1ObjectGrouping.length > 0 &&
+                                    isL1Selected() &&
+                                    renderL1Group(getSelectedL1StatGrouping(), l1SelectedIndex, true)}
                             </g>
-                        </g>
-                    </svg>
+                            <g data-name="level 2">
+                                {level2ObjectGrouping &&
+                                    level2ObjectGrouping.length > 0 &&
+                                    level2ObjectGrouping.map((l2Item, index) => renderL2Group(l2Item, index))}
+                                {level2ObjectGrouping &&
+                                    level2ObjectGrouping.length > 0 &&
+                                    level2ObjectGrouping.map((l2Item, index) => renderL2Group(l2Item, index, true))}
+                            </g>
+                            <g data-name="level 3">
+                                <g data-name="End Stages" transform="translate(0.5,0.5)" style={{ visibility: 'visible' }}>
+                                    {level3ObjectGrouping &&
+                                        level3ObjectGrouping.length > 0 &&
+                                        level3ObjectGrouping.map((item, index) => renderL3Group(item, index))}
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

@@ -1,18 +1,18 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
 
-import { DocumentDownload } from '@deps/models/case/document';
+import { DocumentDownloadV2 } from '@deps/models/case/document';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
+import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 import { logCompliance, logError, logTrace, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 
 const baseUrl = `${apiServerBaseUrl}/document/v2`;
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<DocumentDownload | any | null>, loggingContext) => {
+    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadV2 | any | null>, loggingContext) => {
         const now = performance.now();
         const session = await getSession(req, res);
         const { documentNumber, clientCode, source } = req.query;
@@ -28,7 +28,7 @@ export default withAuthAndLogging(
         }
 
         try {
-            const { data } = await serverApi.get<DocumentDownload, AxiosResponse>(
+            const { data } = await serverApi.get<DocumentDownloadV2, AxiosResponse>(
                 url,
                 {
                     authorization: `Bearer ${accessToken}`,

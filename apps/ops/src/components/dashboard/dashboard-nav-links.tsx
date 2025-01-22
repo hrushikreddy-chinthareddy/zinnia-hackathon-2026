@@ -43,7 +43,7 @@ export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
             >
                 <TabTrigger value={DashboardTabs.ACTIVE_APPLICATIONS}>
                     <Icon type={IconType.DOCUMENT_TEXT} width={24} height={24} className="hidden lg:block" />{' '}
-                    {toTitleCase('active transactions')}
+                    {toTitleCase('open transactions')}
                 </TabTrigger>
                 <TabTrigger value={DashboardTabs.ISSUED_BUSINESS}>
                     <Icon type={IconType.SHIELD_CHECKMARK} width={24} height={24} className="hidden lg:block" />{' '}

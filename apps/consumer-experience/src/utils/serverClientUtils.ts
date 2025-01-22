@@ -29,6 +29,7 @@ export const SHOW_TEST_POLICIES_COOKIE_KEY = '..show_test_policies..';
 export const MOCK_ANNUITY_COOKIE_KEY = '..mock_annuity..';
 export const THEME_COOKIE = '..theme..';
 export const ACKNOWLEDGEMENT_COOKIE_KEY = 'hasAckowledgedPolicy';
+export const LOGIN_EMAIL_COOKIE_KEY = 'loginEmail';
 
 export interface GetSessionResponse {
   isActiveSession: boolean;

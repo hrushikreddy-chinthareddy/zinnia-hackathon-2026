@@ -8,11 +8,12 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 
 interface LoanAcknowledgementProps {
     isFormStateReadOnly?: boolean,
+    isLoanRepayment?: boolean,
 }
 
-export default function LoanAcknowledgement({ isFormStateReadOnly }: LoanAcknowledgementProps) {
+export default function LoanAcknowledgement({ isFormStateReadOnly, isLoanRepayment=false }: LoanAcknowledgementProps) {
     const { formLoan, setFormLoan } = useContext(FormDataContext);
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.loanAcknowledgement' });
+    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const [acknowledgement, setAcknowledgement] = useState(formLoan?.isLoanAck?.text || false);
 
 
@@ -27,13 +28,13 @@ export default function LoanAcknowledgement({ isFormStateReadOnly }: LoanAcknowl
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100">
             <Typography variant={TypographyVariant.H3} className="mb-4">
-                {t('title')}
+                {isLoanRepayment ? t('loanRepayment.title') : t('loanAcknowledgement.title')}
             </Typography>
             <div className="flex flex-wrap gap-8 max-md:flex-col">
                 <div className="flex-1">
                     <CheckboxText
                         data-testid="acknowledgement"
-                        label={t('acknowledgement')}
+                        label={isLoanRepayment ? t('loanRepayment.acknowledgement') : t('loanAcknowledgement.acknowledgement')}
                         checked={acknowledgement}
                         onChange={() => setAcknowledgement(!acknowledgement)}
                         isDisabled={isFormStateReadOnly}

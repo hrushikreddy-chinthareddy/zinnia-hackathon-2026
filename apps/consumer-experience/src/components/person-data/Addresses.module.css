@@ -3,4 +3,12 @@
   justify-content: space-between;
   align-items: baseline;
   margin-bottom: var(--measure-dimension-gap-lg);
+  gap: var(--measure-dimension-gap-md);
+}
+
+.itemsRow {
+  gap: var(--measure-dimension-gap-lg);
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }

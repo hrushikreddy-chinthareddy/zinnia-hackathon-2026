@@ -21,7 +21,7 @@ import { DocumentType } from '@deps/models/case/document';
 import { caseTypes } from '@deps/models/case/helpers';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCases } from '@deps/queries/api/cases';
-import { getDocument } from '@deps/queries/api/documents';
+import { getDocumentV2 } from '@deps/queries/api/documents';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { ReactComponent as SuccessIcon } from '@deps/styles/elements/icons/icons_outlined/refresh-2.svg';
 import loadingImage from '@deps/styles/images/loader.png';
@@ -98,14 +98,14 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                 caseType,
                 docType,
                 clientCode,
-                documentNumber
+                documentNumber,
             });
             return;
         }
         setCookie(OTP_FORM_CLIENT_COOKIE, clientCode, { maxAge: 1000 * 60 * 60 * 12 }); // 12hrs
         setCookie(OTP_FORM_TYPE_COOKIE, caseType, { maxAge: 1000 * 60 * 60 * 12 });
         try {
-            const document = await getDocument(documentNumber as string, docType as string, clientCode as string);
+            const document = await getDocumentV2(documentNumber as string, docType as string, clientCode as string);
             if (!document?.documentNumber) {
                 throw new Error('Document data was not returned from the documents service.');
             }
@@ -131,7 +131,7 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                         caseType,
                         docType,
                         clientCode,
-                        documentNumber
+                        documentNumber,
                     });
 
                     setCardProps({
@@ -148,7 +148,7 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                         caseType,
                         docType,
                         clientCode,
-                        documentNumber
+                        documentNumber,
                     });
                     router.push(
                         `/create-case/${caseSlug}/${caseId}?doc=${document.documentNumber}&clientId=${clientCode as string}${getLastSaved}`
@@ -159,11 +159,9 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                         caseType,
                         docType,
                         clientCode,
-                        documentNumber
+                        documentNumber,
                     });
-                    router.push(
-                        `/create-case/`
-                    );
+                    router.push(`/create-case/`);
                     return;
                 }
             } else {
@@ -175,7 +173,7 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                 caseType,
                 docType,
                 clientCode,
-                documentNumber
+                documentNumber,
             });
             setIsError(true);
             setCardProps({
