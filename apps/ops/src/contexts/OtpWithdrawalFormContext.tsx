@@ -100,7 +100,7 @@ export interface OtpWithdrawalFormState {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = (() => { }) as React.Dispatch<React.SetStateAction<any>>;
+const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 
 export const defaultFormDataContext = {
     formData: {} as FormData,

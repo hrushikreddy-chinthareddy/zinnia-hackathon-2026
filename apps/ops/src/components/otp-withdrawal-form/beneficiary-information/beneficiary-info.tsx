@@ -40,6 +40,16 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
         }
     }, [bornDate]);
 
+    useEffect(() => {
+        if (beneInfo?.isBeneInfoProvided === false) {
+            onBeneChange({
+                ...beneInfo,
+                isBeneSpouse: false,
+                spouseDOB: '',
+            });
+        }
+    }, [beneInfo?.isBeneInfoProvided]);
+
     return (
         <CardContainer containerClassNames={`border-b-2 border-gray-100`}>
             <div className="flex items-center mb-5">
@@ -58,16 +68,17 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
             {beneInfo?.isBeneInfoProvided && (
                 <>
                     <div className="my-3">
-                        <Label
-                            label={t('beneficiaryInfo.isBeneficiarySpouse.title')}
-                            variant={LabelVariant.FieldLabel}
-                        />
+                        <Label label={t('beneficiaryInfo.isBeneficiarySpouse.title')} variant={LabelVariant.FieldLabel} />
                         <ButtonGroup
-                            activeValue={stringifyTrueFalseNull(beneInfo?.isBeneSpouse) || stringifyTrueFalseNull(false)}
+                            activeValue={
+                                beneInfo?.isBeneInfoProvided
+                                    ? stringifyTrueFalseNull(beneInfo?.isBeneSpouse)
+                                    : stringifyTrueFalseNull(false)
+                            }
                             toggle={() =>
                                 onBeneChange({
                                     ...beneInfo,
-                                    isBeneSpouse: !beneInfo?.isBeneSpouse,
+                                    isBeneSpouse: beneInfo?.isBeneInfoProvided ? !beneInfo?.isBeneSpouse : false,
                                 })
                             }
                             labels={isBeneSpouseOption}
@@ -77,30 +88,25 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
                             size={'xxs'}
                         />
                     </div>
-                    { beneInfo?.isBeneSpouse &&
-                        (
-                            <div className="my-3">
-                                <Label
-                                    label={t('beneficiaryInfo.isYourSpouseYoungerThanYou')}
-                                    variant={LabelVariant.FieldLabel}
+                    {beneInfo?.isBeneSpouse && (
+                        <div className="my-3">
+                            <Label label={t('beneficiaryInfo.isYourSpouseYoungerThanYou')} variant={LabelVariant.FieldLabel} />
+                            <div className="grid grid-cols-6 mt-2">
+                                <FieldDateSelect
+                                    isFutureDateDisabled={false}
+                                    label={t('beneficiaryInfo.dob') as string}
+                                    onChange={e => {
+                                        setBornDate(e.target.value);
+                                    }}
+                                    size={FieldSize.Small}
+                                    type={FieldType.BaseActive}
+                                    value={bornDate}
+                                    disabled={isFormStateReadOnly}
+                                    variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
                                 />
-                                <div className="grid grid-cols-6 mt-2">
-                                    <FieldDateSelect
-                                        isFutureDateDisabled={false}
-                                        label={t('beneficiaryInfo.dob') as string}
-                                        onChange={e => {
-                                            setBornDate(e.target.value);
-                                        }}
-                                        size={FieldSize.Small}
-                                        type={FieldType.BaseActive}
-                                        value={bornDate}
-                                        disabled={isFormStateReadOnly}
-                                        variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
-                                    />
-                                </div>
                             </div>
-                        )
-                    }
+                        </div>
+                    )}
                 </>
             )}
         </CardContainer>
