@@ -62,6 +62,8 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     setFormData,
     formContext,
 }: WidgetProps<T, S, F>) {
+    console.log('🚀 ~ value:', value);
+
     const dataContext = { ...formData, ...formContext };
     const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
@@ -78,28 +80,26 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     };
 
-    const _onChangeSingle = async (value: string) => {
+    const _onChangeSingle = (value: string) => {
         const newValue = getValue(false, value, enumOptions, selectedIndexes, multiple);
-
-        if (!apiProps.apiUrl) return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
-        await fetchDetails(apiProps.apiUrl, value, newValue);
+        onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
+        fetchDetails(apiProps.apiUrl, value, newValue);
     };
 
-    async function fetchDetails(apiUrl: string, value: string, newValue?: any) {
+    function fetchDetails(apiUrl: string, value: string, newValue?: any) {
         const payload = replacePlaceholders(apiProps.apiPayload, { ...dataContext, value });
 
-        const response = await client[apiProps?.apiMethod ?? 'get']<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload ?? undefined);
+        const response = client[apiProps?.apiMethod ?? 'get']<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload ?? undefined);
 
         const data1 = replacePlaceholders(apiProps.responseData, response);
 
-        const data = {
-            ...formData,
-            [name]: enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal),
-            [apiProps?.responseKey]: data1,
-        };
-
-        setFormData(data);
+        // const data = {
+        //     ...formData,
+        //     [name]: enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal),
+        //     [apiProps?.responseKey]: data1,
+        // };
     }
+
     const showPlaceholderOption = !multiple && schema.default === undefined;
     let selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
 
@@ -152,7 +152,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
                 {!multiple && (
                     <SelectComponent
                         id={id}
-                        title={`label-${id}`}
+                        title={label}
                         value={selectedValues as string}
                         required={required}
                         disabled={disabled || readonly}

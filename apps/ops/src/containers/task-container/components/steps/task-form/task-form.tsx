@@ -113,6 +113,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const handleSubmit = useCallback(async () => {
         if (!isSubmit) {
+            console.log(task.data, 'task data');
+
             await fetchData();
             onSubmit();
             return;
@@ -129,6 +131,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+            console.log('🚀 ~ event:', event);
+
             setTask({
                 ...task,
 
@@ -140,10 +144,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     );
 
     const handleFormDataChange = (data: any) => {
-        setTask((task: any) => ({
-            ...task,
-            data: data,
-        }));
+        console.log(data);
     };
 
     useEffect(() => {

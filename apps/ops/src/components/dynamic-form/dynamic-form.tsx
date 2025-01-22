@@ -13,7 +13,7 @@ import { ApplyUITemplates } from './helpers/template.helper';
 type DynamicFormProps = {
     onChange: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, id?: string) => void;
     onSubmit: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, event: FormEvent<any>) => void;
-    setFormData: (formData: any) => void;
+    setFormData: (data: any) => void;
     formData: any;
     taskMetadata: FormMetadata;
     readonly?: boolean;
@@ -38,7 +38,7 @@ const DynamicForm = React.forwardRef(function DynamicFormComponent(
                 onChange={onChange}
                 onSubmit={onSubmit}
                 validator={validator}
-                widgets={widgets(formData, setFormData)}
+                widgets={widgets(setFormData)}
                 fields={fields}
                 templates={templates}
                 readonly={readonly}

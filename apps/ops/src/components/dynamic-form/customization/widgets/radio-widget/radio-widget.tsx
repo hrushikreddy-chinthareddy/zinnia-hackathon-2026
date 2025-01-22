@@ -39,10 +39,7 @@ const renderSubElement = (option: any, properties: any, cardType: any, icon: any
     }
 };
 
-export type RadioWidgetProps<T, S extends StrictRJSFSchema, F extends FormContextType> = WidgetProps<T, S, F> & {
-    formData: any;
-    setFormData: (data: any) => void;
-};
+export type RadioWidgetProps<T, S extends StrictRJSFSchema, F extends FormContextType> = WidgetProps<T, S, F>;
 function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props1: RadioWidgetProps<T, S, F>) {
     const { options, value, disabled, onChange, id, uiSchema, formData, setFormData } = props1;
 
