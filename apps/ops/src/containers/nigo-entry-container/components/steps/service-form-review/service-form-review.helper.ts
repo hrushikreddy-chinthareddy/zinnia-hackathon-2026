@@ -60,6 +60,7 @@ export const getWithdrawalFormData = (carrier: string, formSubtype: string | und
         case Carrier.NASU:
         case Carrier.RSLN:
         case Carrier.GDMN:
+        case Carrier.GLCO:
             formData = {
                 formExtName: `${carrier}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
                 metaData: {
