@@ -1,9 +1,9 @@
-import { PolicyDocument } from '@/types/document';
+import { DocumentV2SearchResult } from '@/types/document';
 
-export const mockDocumentsResponse: PolicyDocument = {
+export const mockDocumentsResponse: DocumentV2SearchResult = {
   count: 13,
   statusCode: 200,
-  items: [
+  documents: [
     {
       documentID: '11615502',
       pageCount: '2',

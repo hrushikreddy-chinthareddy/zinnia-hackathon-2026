@@ -6,7 +6,7 @@ import utc from 'dayjs/plugin/utc';
 import { TFunction } from 'next-i18next';
 
 import { DocumentPreviewerProps } from '@deps/components/document-viewer/document-previewer';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { percentFormatify } from '@deps/helpers/numbers.helper';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
 import { Case, Statuses } from '@deps/models/case/case';
@@ -382,7 +382,7 @@ export class TransformedCase {
         }
         return {
             createdAt: foundTask.createdAt,
-            description: foundTask.label || foundTask.taskType, // BPB - taskType is where we get the info, but label is on the type?
+            description: foundTask.label || foundTask.taskType,
             id: foundTask.id,
             hasParentException: isFromException,
             parentExceptionStatus: status,

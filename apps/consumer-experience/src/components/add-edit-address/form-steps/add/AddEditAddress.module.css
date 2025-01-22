@@ -30,13 +30,23 @@
 }
 
 .addAddressButton {
-  justify-content: flex-start;
-  padding: 0;
+  display: inline-flex;
+  align-items: start;
+  vertical-align: middle;
   width: fit-content;
+  gap: var(--measure-dimension-gap-sm);
+  padding: 0;
+  text-align: start;
+
+  svg {
+    display: inline;
+  }
 }
+
 .selectContent {
   z-index: 600;
 }
+
 .remove {
   border-color: var(--color-status-surface-status-error-border-alt, #db004f);
 }
@@ -64,6 +74,7 @@
 .zip {
   max-width: 115px;
 }
+
 /*
 .defaultAddress div[class^='_container'] {
   display: flex;

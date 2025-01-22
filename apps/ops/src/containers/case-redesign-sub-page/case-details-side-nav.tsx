@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { toTitleCase } from '@deps/helpers/string.helper';

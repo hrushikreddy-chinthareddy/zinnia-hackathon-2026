@@ -13,4 +13,5 @@ export interface AddEditAddressSidesheetProps {
   values?: AddressFormFields;
   actionType: FormActionType;
   addressId?: string;
+  disableEditingPreferredAddress?: boolean;
 }

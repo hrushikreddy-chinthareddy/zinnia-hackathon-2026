@@ -1513,7 +1513,8 @@
                 "nasu": "Annuity Contract Withdrawal Request ",
                 "gdmn": "Commonwealth Withdrawal Request",
                 "rsln": "Lincoln Benefit Life Withdrawal Request",
-                "glco": "Annuity Contract Withdrawal Request"
+                "glco": "Annuity Contract Withdrawal Request",
+                "ulpc": "Unified Life Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Personal Details",
@@ -1574,7 +1575,8 @@
                     "partial": "Partial",
                     "totalFreeAmt": "Total free amount",
                     "penaltyFreeAmount": "Penalty free amount",
-                    "annualFreeAmountBalance": "Annual free amount balance"
+                    "annualFreeAmountBalance": "Annual free amount balance",
+                    "maximumFreeAmount": "Maximum free amount"
                 },
                 "fullWithdrawal": {
                     "contractHasBeenLostOrDestroyed": "Contract has been lost or destroyed",
@@ -1602,7 +1604,8 @@
                     "grossDoller": "Gross $",
                     "percetageOfAccountValue": "% of Account value",
                     "maximum": "Maximum amount",
-                    "maturingGuranteePeriod": "Maturing guarantee period"
+                    "maturingGuranteePeriod": "Maturing guarantee period",
+                    "percentageOfAccumulatedValue": "% of accumulated value"
                 },
                 "processTimeframe": {
                     "selectOne": "Select one",
@@ -2004,6 +2007,10 @@
                 "acknowledgement": "Loan acknowledgement",
                 "title": "Loan Acknowledgement"
             },
+            "loanRepayment": {
+                "acknowledgement": "I understand in order to process the full surrender request all loans on the contract must be paid in full by me or throgh load surrender.",
+                "title": "Loan Repayment"
+            },
             "cslnCheck": {
                 "title": "Validate Child Support Lien Network (CSLN)",
                 "label": "Child Support Lien Network (CSLN) status",
@@ -2113,7 +2120,17 @@
                 "OFTFormInputTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
                 "SSWFormInputTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
             },
-            "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
+            "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal.",
+            "beneficiaryInfo": {
+                "title": "Beneficiary Information",
+                "isBeneficiarySpouse": {
+                    "title": "Is your beneficiary your spouse?",
+                    "yes": "Yes",
+                    "no": "No"
+                },
+                "dob": "Date of birth",
+                "isYourSpouseYoungerThanYou": "Is your spouse 10 years younger than you?"
+            }
         },
         "sidebar": {
             "contractStatusCode": "Policy Status",

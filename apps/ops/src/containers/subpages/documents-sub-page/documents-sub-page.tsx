@@ -1,7 +1,8 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import UnauthorizedCard from '@deps/components/card/card-unauthorized';
 import EventsLoader from '@deps/components/events-loader/events-loader';
@@ -9,13 +10,13 @@ import FieldLabel from '@deps/components/fields/field-label';
 import PageHeader from '@deps/components/page-header/page-header';
 import SelectSimple from '@deps/components/select/select';
 import { SimpleOption } from '@deps/components/select/select.helpers';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { determineRange } from '@deps/helpers/numbers.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
-import { PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
+import { useDocumentSearch } from '@deps/hooks/useDocumentSearch';
+import { PolicyDocument } from '@deps/models/case/document';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { getPolicyDocs, getCorrespondenceDocs } from '@deps/queries/api/documents';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -41,77 +42,48 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
     const { breadcrumb } = useBreadcrumb();
 
     const [documentType, setDocumentType] = useState(DocumentTypeView.Policy as string);
-    const [loading, setLoading] = useState<boolean | null>(null);
-    const [policyResults, setPolicyResults] = useState<DocumentWithSource[] | null>(null);
-    const [correspondenceResults, setCorrespondenceResults] = useState<DocumentWithSource[] | null>(null);
-    const [statuses, setStatuses] = useState<{ [key: string]: number | null }>({
-        [DocumentTypeView.Correspondence]: null,
-        [DocumentTypeView.Policy]: null,
-    });
-    const [yearSelection, setYearSelection] = useState<string>(dayjs().year().toString());
     const limit = 25;
     const [offset, setOffset] = useState(0);
-
     const yearOptions = getYearOptions(policy);
+    const [yearSelection, setYearSelection] = useState<string>(dayjs().year().toString());
+    const searchParams = useMemo(() => {
+        let optionalParams = {};
+        if (yearSelection !== 'all') {
+            const isFirstYearSelected = yearOptions[yearOptions.length - 1].value === yearSelection;
+            const startDate = dayjs().year(Number(yearSelection)).month(0).date(1);
+            const documentStartDate = isFirstYearSelected
+                ? startDate.add(1, 'year').subtract(1100, 'days').format(ZAHARA_API_DATE_FORMAT) // this is the maximum range allowed
+                : startDate.format(ZAHARA_API_DATE_FORMAT);
+            const documentEndDate = startDate.add(1, 'year').format(ZAHARA_API_DATE_FORMAT);
 
-    const results = useMemo(() => {
-        return documentType === DocumentTypeView.Policy ? policyResults : correspondenceResults;
-    }, [policyResults, correspondenceResults, documentType]);
-
-    const total = useMemo(() => {
-        return results?.length || 0;
-    }, [results, documentType]);
+            optionalParams = { documentEndDate, documentStartDate };
+        }
+        return {
+            ...optionalParams,
+            documentClassification:
+                documentType === DocumentTypeView.Policy
+                    ? SearchRequest.documentClassification.INBOUND
+                    : SearchRequest.documentClassification.OUTBOUND,
+            policyNumber: policy.policyNumber,
+            parentCarrierCode: policy?.carrierId,
+            orderBy: 'documentDate',
+            orderByDirection: SearchRequest.orderByDirection.DESC,
+        };
+    }, [documentType, policy, yearOptions, yearSelection]);
+    const [results, loading, total, status] = useDocumentSearch(searchParams, limit, offset);
 
     const goToPage = useCallback(
         (pageNumber: number) => {
             setOffset((pageNumber - 1) * limit);
         },
-        [limit, offset, total, setOffset]
+        [limit, setOffset]
     );
 
     const handleYearSelection = (val: string) => {
         if (val === yearSelection) return;
-        setCorrespondenceResults(null);
-        setPolicyResults(null);
+        setOffset(0);
         setYearSelection(val);
     };
-
-    useEffect(() => {
-        const getDocs = async () => {
-            setLoading(true);
-            let optionalParams;
-            if (yearSelection !== 'all') {
-                const isFirstYearSelected = yearOptions[yearOptions.length - 1].value === yearSelection;
-                const startDate = dayjs().year(Number(yearSelection)).month(0).date(1);
-                const documentStartDate = isFirstYearSelected
-                    ? startDate.add(1, 'year').subtract(1100, 'days').format(ZAHARA_API_DATE_FORMAT) // this is the maximum range allowed
-                    : startDate.format(ZAHARA_API_DATE_FORMAT);
-                const documentEndDate = startDate.add(1, 'year').format(ZAHARA_API_DATE_FORMAT);
-
-                optionalParams = { documentEndDate, documentStartDate };
-            }
-
-            const [policyDocs, correspondenceDocs] = await Promise.all([
-                getPolicyDocs(policy.policyNumber as string, policy.carrierId as string, optionalParams),
-                getCorrespondenceDocs(policy.policyNumber as string, policy.carrierId as string, optionalParams),
-            ]);
-
-            const mappedPolicyResults =
-                (policyDocs?.data as PolicyDocuments)?.items?.map(item => ({ ...item, documentSource: DocumentTypeView.Policy })) ?? [];
-            const mappedCorrespondenceResults =
-                (correspondenceDocs?.data as PolicyDocuments)?.items?.map(item => ({
-                    ...item,
-                    documentSource: DocumentTypeView.Correspondence,
-                })) ?? [];
-            setPolicyResults(mappedPolicyResults);
-            setCorrespondenceResults(mappedCorrespondenceResults);
-            setStatuses({ [DocumentTypeView.Correspondence]: correspondenceDocs?.status, [DocumentTypeView.Policy]: policyDocs?.status });
-            setLoading(false);
-        };
-        if (!loading && !results) {
-            getDocs();
-        }
-    }, [setCorrespondenceResults, setPolicyResults, setLoading, loading, yearSelection]);
 
     return (
         <div className="h-full rounded bg-white text-gray-900 shadow-elevation-light-04">
@@ -147,7 +119,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                         </RadioGroup.Item>
                     </RadioGroup.Root>
                 </div>
-                {statuses[documentType] === StatusCode.Forbidden ? (
+                {status === StatusCode.Forbidden ? (
                     <UnauthorizedCard />
                 ) : (
                     <>
@@ -156,7 +128,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                                 carrierCode={policy.carrierId ?? ''}
                                 documentType={documentType as DocumentTypeView}
                                 policyNumber={policy.policyNumber ?? ''}
-                                results={results?.slice(offset, offset + limit) ?? []}
+                                results={results ?? []}
                             />
                         )}
                         {loading && (

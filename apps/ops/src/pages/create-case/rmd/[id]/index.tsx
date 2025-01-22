@@ -15,6 +15,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
 import MassMutualRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/mm-rmd-form';
 import SbgcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/sbgc-rmd-form';
+import UlpcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/ulpc/ulpc-rmd-form';
 import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/form-controls';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
@@ -33,7 +34,7 @@ import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
-import { getDocumentSSR } from '@deps/queries/api/documents';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
@@ -69,6 +70,8 @@ const determineFormToRender = (clientId: string, qualType: QualTypes | ''): Reac
             return <MassMutualRmdWithdrawalForm qualType={qualType} />;
         case Carrier.SBGC:
             return <SbgcRmdWithdrawalForm />;
+        case Carrier.ULPC:
+            return <UlpcRmdWithdrawalForm />;
         default:
             console.error('determineFormToRender::unsupported clientId', clientId);
             return null;
@@ -248,7 +251,7 @@ export const getServerSideProps = withPageAuthRequired({
 
         const [translations, document] = await Promise.all([
             serverSideTranslations(locale, [TranslationFiles.COMMON]),
-            getDocumentSSR(documentNumber, DocumentType.Rmd, clientId.toUpperCase(), accessToken),
+            getDocumentV2SSR(documentNumber, DocumentType.Rmd, clientId.toUpperCase(), accessToken),
         ]);
 
         if (!document?.contract) {
