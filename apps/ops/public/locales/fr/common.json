@@ -3166,10 +3166,13 @@
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
             "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat..",
             "reasonLabel": "Raison du statut",
-            "pendinglabel":"En attente jusqu'au",
-            "canceledLabel":"Annulé le",
-            "completedLabel":"Terminé le",
-            "additionalDocuments": "Documents supplémentaires"
+            "pendinglabel": "En attente jusqu'au",
+            "canceledLabel": "Annulé le",
+            "completedLabel": "Terminé le",
+            "additionalDocuments": "Documents supplémentaires",
+            "noAssignee": "Seul le responsable peut démarrer cette tâche",
+            "startTask": "Démarrer la tâche",
+            "ClaimTask": "Revendiquer la tâche"
         },
         "suitability": {
             "header": "Examen complet de l’adéquation",
@@ -4633,7 +4636,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "ID du document",
-            "noFormAvailable": "Aucun formulaire disponible."
+            "noFormAvailable": "Aucun formulaire disponible.",
+            "taskTitle": "Détails de la tâche"
         },
         "CaseDetailsContent": {
             "tabs": {

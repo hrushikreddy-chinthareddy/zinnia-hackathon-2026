@@ -31,6 +31,8 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { removeFromCache } from '@deps/utils/cache';
+
 type TaskQueueTableRowProps = {
     task: AssignedTask;
     featureFlagDecisions: FeatureFlags;
@@ -131,10 +133,14 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
         try {
             const response = await unassignTask(taskData.caseId, taskData.id);
             if (response.status === TaskStatus.New) {
+                removeFromCache('getTaskInstance', { taskId });
                 browserLogInfo('task-queue:handleUnassignTask::Successfully un-assigned task', { taskId: taskId });
                 getTasks();
             } else {
-                browserLogInfo('task-queue:handleUnassignTask::An error occurred while un-assigning the task', { taskId: taskId, status: response?.status });
+                browserLogInfo('task-queue:handleUnassignTask::An error occurred while un-assigning the task', {
+                    taskId: taskId,
+                    status: response?.status,
+                });
                 setErrorMessage(t('unassignTaskError') + 'An error occurred while un-assigning the task');
             }
         } catch (e) {

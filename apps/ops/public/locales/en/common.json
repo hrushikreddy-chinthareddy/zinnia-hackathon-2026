@@ -3193,11 +3193,13 @@
             "commonTaskIssues": "One or more {{taskType}} issues found.",
             "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
             "reasonLabel": "Status reason",
-            "pendinglabel":"Pending until",
-            "canceledLabel":"Canceled on",
-            "completedLabel":"Completed on",
-            "additionalDocuments": "Additional Documents"
-
+            "pendinglabel": "Pending until",
+            "canceledLabel": "Canceled on",
+            "completedLabel": "Completed on",
+            "additionalDocuments": "Additional Documents",
+            "noAssignee": "Only the assignee can start this task",
+            "startTask": "Start task",
+            "ClaimTask": "Claim task"
         },
         "suitability": {
             "header": "Complete Suitability Review",
@@ -4664,7 +4666,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "Document ID",
-            "noFormAvailable": "No form available."
+            "noFormAvailable": "No form available.",
+            "taskTitle": "Task details"
         },
         "CaseDetailsContent": {
             "tabs": {

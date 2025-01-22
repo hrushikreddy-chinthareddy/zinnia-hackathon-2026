@@ -543,7 +543,7 @@ export default function DatePicker({
             return disabledClasses;
         }
         // Disables past dates
-        if (isPastDateDisabled && (dayjsDate.isBefore(dayjs().startOf('day')) || dayjsDate.month() !== month)) {
+        if (isPastDateDisabled && (dayjsDate.isBefore(dayjs().startOf('day')) || dayjsDate.month() !== month) || dayjsDate.isSame(dayjs(), 'day')) {
             return disabledClasses;
         }
         return '';

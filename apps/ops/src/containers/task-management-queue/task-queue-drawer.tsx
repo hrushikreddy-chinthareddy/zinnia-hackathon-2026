@@ -13,6 +13,7 @@ import { browserLogError, browserLogInfo } from "@deps/utils/browser-logging";
 import { useRouter } from "next/router";
 import { TaskSource } from "@deps/models/case/task";
 import { ERROR_CODES } from "@deps/pages/create-case/error";
+import { writeToCache } from "@deps/utils/cache";
 function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: () => void, getTasks?: () => void, taskStatus: TaskStatus, taskId: string }) {
   const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
   const [date, setDate] = useState(tomorrow)
@@ -74,6 +75,15 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: (
           clientCode: taskData?.carrier,
           process: taskData?.process,
         });
+
+        writeToCache(
+          'getTaskInstance',
+          { taskId },
+          {
+            ...taskData,
+            status: TaskStatus.Pending,
+          }
+        );
         onClose();
         getTasks && getTasks();
 

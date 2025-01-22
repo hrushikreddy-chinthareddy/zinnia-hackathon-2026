@@ -67,7 +67,6 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
             <div className="flex flex-col mb-4">
                 <div className="my-3 flex justify-end">
                     <div className="self-center xl:mt-5 xl:self-baseline">
-
                         <Button
                             type={ButtonType.Primary}
                             onClick={handleClaimTask}
