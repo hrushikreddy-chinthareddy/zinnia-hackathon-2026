@@ -98,7 +98,6 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
                     categories: applicationTypeCategories,
                 },
                 series,
-                colors: ['#00628B', '#85BCD3', '#021936'],
             }),
         };
     });
@@ -117,10 +116,6 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
     ];
 
     const timerangeText = getDateRangeText(timeframe);
-
-    useEffect(() => {
-        console.log({ applicationTypeLoading2, applicationTypeLoading });
-    }, [applicationTypeLoading, applicationTypeLoading2]);
 
     return (
         <div className={styles.container}>
@@ -146,7 +141,7 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
                             classNames={styles.statBlock}
                             variant="single"
                             loading={applicationTypeLoading2 || applicationTypeLoading}
-                            chartConfig={{ colors: ['#00628B', '#85BCD3', '#021936'] }}
+                            chartConfig={{ colors: ['#85BCD3', '#00628B', '#021936'] }}
                         />
                         <div className={styles.chartContainer}>
                             <div className={styles.filterContainer}>
@@ -160,7 +155,7 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
                             </div>
                             <div className={styles.timeframeContainer}>
                                 <div>
-                                    <p className="typography-labels-label-lg-alt">Average case submissions</p>
+                                    <p className="typography-labels-label-lg-alt">Total case submissions</p>
                                     <p className="typography-labels-label-sm">{timerangeText}</p>
                                 </div>
                                 <ChipRadio
