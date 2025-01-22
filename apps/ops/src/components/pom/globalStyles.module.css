@@ -1,0 +1,27 @@
+/* @TODO: these will be moved to a global typography file once pom becomes its own separate project */
+.h1 {
+    font-family: var(--font-family-primary);
+    font-size: 36px;
+    font-weight: 500;
+    line-height: 44px;
+}
+
+.caption {
+    font-family: var(font-family-primary);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+}
+
+.h2 {
+    font-family: var(--font-family-primary);
+    font-size: 26px;
+    font-weight: 500;
+}
+
+.span {
+    font-family: var(--font-family-secondary);
+    font-size: 14px;
+    font-weight: 400;
+}

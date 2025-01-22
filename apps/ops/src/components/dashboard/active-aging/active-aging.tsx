@@ -115,7 +115,7 @@ const ActiveAging = ({
     const getAgingSubtitle = () => {
         let totalCaseCount = 0;
         if (selectedAgingRange === 'All') {
-            totalCaseCount = createdBySubProcess?.data?.reduce((a, b) => a + b.count, 0) || 0;
+            totalCaseCount = createdBySubProcess?.totalElements || 0;
             return `Showing All (Total ${wholeNumberFormatify(totalCaseCount)} apps)`;
         }
 
@@ -435,7 +435,7 @@ const ActiveAging = ({
                                                 className="capitalize"
                                                 target="_blank"
                                             >
-                                                {stat.name.toLocaleLowerCase()}
+                                                {dashboardChartTitleFormat(stat.name)}
                                             </NavElement>
                                             <Typography
                                                 className="flex gap-2"

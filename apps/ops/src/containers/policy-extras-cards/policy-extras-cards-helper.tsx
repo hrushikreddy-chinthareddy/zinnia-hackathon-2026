@@ -155,7 +155,7 @@ const getBadgeFromRider = (rider: Rider, t: TFunction): ReactElement<BadgeWithTo
             );
         default:
             console.error('getBadgeFromRider::Invalid or unsupported rider type', rider.status);
-            return null as unknown as ReactElement<BadgeWithTooltipProps>; // BPB - fix the right way
+            return null as unknown as ReactElement<BadgeWithTooltipProps>;
     }
 };
 

@@ -192,12 +192,13 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                             legendLabel={splitAndSentenceCase(carrierOrBrokerDealer)}
                             groupByOptions={[carrierOrBrokerDealer, GroupByOptions.UpdatedAt]}
                             filters={caseVolumeTimeseriesFilters}
-                            title={`Top 5 ${carrierOrBrokerDealer === GroupByOptions.BrokerDealerName ? 'Brokers' : 'Carriers'}`}
+                            title={`${dashboardChartTitleFormat(selectedSubprocess)} Trends`}
                             selectedProcess={selectedProcessType}
                             linkQueryFormat={`/cases${convertToQueryString({
                                 ...caseVolumeTimeseriesFilters,
                                 [carrierOrBrokerDealer]: 'replaceme',
                             } as any)}`}
+                            showSubtitle={false}
                         />
                     </div>
                     <div className="lg:px-8">

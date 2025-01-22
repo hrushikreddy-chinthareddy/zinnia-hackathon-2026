@@ -60,7 +60,7 @@ export const ExceptionInsights = ({
                 )} applications, but the ${dashboardChartTitleFormat(
                     processSubType,
                     false
-                )} applications encountered exceptions along their path to completion. The data is grouped by Exception Category and the values represent an exception that occurred for a ${dashboardChartTitleFormat(
+                )} applications encountered NIGOs along their path to completion. The data is grouped by NIGO Category and the values represent a NIGO that occurred for a ${dashboardChartTitleFormat(
                     processSubType,
                     false
                 )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to United States, including commas where appropriate. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
@@ -235,7 +235,7 @@ export const ExceptionInsights = ({
                 }
             });
         } else {
-            setAiSummary(`No exceptions for ${dashboardChartTitleFormat(selectedSubprocess)} in the ${timeframe}.`);
+            setAiSummary(`No NIGOs for ${dashboardChartTitleFormat(selectedSubprocess)} in the ${timeframe}.`);
         }
     }, [exceptions, selectedSubprocess, shouldShowCaseInsights, timeframe]);
 
@@ -244,7 +244,7 @@ export const ExceptionInsights = ({
             <div className="basis-1/4 flex flex-col gap-4 items-start">
                 <div>
                     <Typography variant={TypographyVariant.H3}>{dashboardChartTitleFormat(selectedSubprocess, false)}</Typography>
-                    <Typography variant={TypographyVariant.Label}>Exception Distribution</Typography>
+                    <Typography variant={TypographyVariant.Label}>NIGO Distribution</Typography>
                 </div>
                 {loading ? (
                     <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
@@ -265,7 +265,7 @@ export const ExceptionInsights = ({
                             size="small"
                             className="mt-4 inline"
                             href={caseLink}
-                            text={`View all ${dashboardChartTitleFormat(selectedSubprocess)} exceptions`}
+                            text={`View all ${dashboardChartTitleFormat(selectedSubprocess)} NIGOs`}
                         />
                     </>
                 )}
@@ -284,7 +284,7 @@ export const ExceptionInsights = ({
                         <div className="flex flex-col gap-2 items-center">
                             <ChartBarsIcon height={'24px'} width={'24px'} />
                             <Typography variant={TypographyVariant.BodyBold}>
-                                No exceptions for {dashboardChartTitleFormat(selectedSubprocess)} in the {timeframe}
+                                No NIGOs for {dashboardChartTitleFormat(selectedSubprocess)} in the {timeframe}
                             </Typography>
                         </div>
                     ) : (
