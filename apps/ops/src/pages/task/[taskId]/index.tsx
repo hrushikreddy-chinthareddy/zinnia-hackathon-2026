@@ -40,8 +40,6 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     nigoSubExceptions,
     taskMetadata,
 }: TaskPageProps) => {
-    console.log('🚀 ~ task:', task);
-
     return (
         <div>
             <NoNavLayout fullHeight={true}>

@@ -1,10 +1,8 @@
 import { ArrayFieldTemplateProps, isObject, UiSchema } from '@rjsf/utils';
 
-import { AccordionTemplate } from '../customization/templates/accordian-template/accordian-template';
 import ArrayFieldTableTemplate from '../customization/templates/array-field-template/array-field-table-template';
 import ArrayFieldTemplate from '../customization/templates/array-field-template/array-field-template';
 import { CardTemplate } from '../customization/templates/card-templates/card-template';
-import { PartyCardTemplate } from '../customization/templates/card-templates/party-card-template';
 import InstructionsTemplate from '../customization/templates/instructions-template/instructions-template';
 
 export const UIArrayTemplateMap: Record<string, (props: ArrayFieldTemplateProps) => React.JSX.Element> = {
@@ -13,9 +11,7 @@ export const UIArrayTemplateMap: Record<string, (props: ArrayFieldTemplateProps)
 };
 
 export const UIObjectTemplateMap: Record<string, (props: any) => React.JSX.Element> = {
-    ['PartyCardTemplate']: PartyCardTemplate,
     ['CardTemplate']: CardTemplate,
-    ['AccordionTemplate']: AccordionTemplate,
     ['InstructionsTemplate']: InstructionsTemplate,
 };
 

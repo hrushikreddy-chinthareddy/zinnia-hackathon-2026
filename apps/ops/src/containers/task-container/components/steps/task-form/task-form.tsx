@@ -102,8 +102,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                             },
                         };
                     });
-
-                    console.log(task, 'current');
                 } catch (e) {
                     console.log(e);
                 }
@@ -113,8 +111,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const handleSubmit = useCallback(async () => {
         if (!isSubmit) {
-            console.log(task.data, 'task data');
-
             await fetchData();
             onSubmit();
             return;
@@ -126,13 +122,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         setSubmitFailed(!success);
 
         onSubmit();
-        console.log('🚀 ~ handleSubmit ~ taskPayload:Submitted', taskPayload);
     }, [correlationId, isSubmit, onSubmit, setSubmitFailed, task]);
 
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
-            console.log('🚀 ~ event:', event);
-
             setTask({
                 ...task,
 
