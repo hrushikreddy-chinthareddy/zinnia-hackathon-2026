@@ -31,7 +31,6 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
         formNigos,
         formReindexingData,
         formComment,
-        formBeneInfo,
     } = currentFormState;
 
     return {
@@ -51,7 +50,6 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
             formOL4753Data,
             formLoan,
             formParty,
-            formBeneInfo,
             formProgram,
             formRestriction,
             formSignature,
