@@ -110,7 +110,13 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         getTaskData();
     }, [taskId]);
 
-    if (loading) return <PageLoader variant={PageLoaderVariant.Center} />;
+    if (loading)
+        return (
+            <div className="flex justify-center items-center h-screen">
+                {' '}
+                <PageLoader variant={PageLoaderVariant.Center} />;{' '}
+            </div>
+        );
 
     if (!task) return null;
 
@@ -411,7 +417,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     <TabTrigger value={TabOptions.Documents}>{t('sideSheet.task.tabs.documents') ?? ''}</TabTrigger>
                 </TabList>
                 {loading ? (
-                    <div className="my-5 flex flex-col items-center justify-center">
+                    <div className="flex justify-center items-center h-screen">
                         <Loader />
                     </div>
                 ) : (
