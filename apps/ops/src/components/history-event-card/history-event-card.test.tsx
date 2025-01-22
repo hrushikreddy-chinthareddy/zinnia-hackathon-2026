@@ -4,7 +4,7 @@ import { toTitleCase } from '@zinnia/utils';
 import { SideSheetContext } from '@deps/contexts/SideSheetContext';
 import { mockPolicy, mockPremiumSystematicProgram } from '@deps/jest/data/mockPolicy';
 import { Transaction, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
-import {} from '@deps/setupTests';
+import { } from '@deps/setupTests';
 
 import HistoryEventCard from './history-event-card';
 import { getHistoryEventCardValues } from './history-event-card.helper';
@@ -54,13 +54,14 @@ describe.skip('HistoryEventCard Component', () => {
         render(
             <SideSheetContext.Provider
                 value={{
-                    changeSideSheetContent: () => {},
-                    handleLocation: () => {},
-                    handleOpen: () => {},
-                    openSecondarySideSheet: () => {},
+                    changeSideSheetContent: () => { },
+                    handleLocation: () => { },
+                    handleOpen: () => { },
+                    openSecondarySideSheet: () => { },
+                    onClose: () => { },
                 }}
             >
-                <HistoryEventCard policy={mockPolicy} refreshTransactions={() => {}} transaction={sample} />
+                <HistoryEventCard policy={mockPolicy} refreshTransactions={() => { }} transaction={sample} />
             </SideSheetContext.Provider>
         );
 
