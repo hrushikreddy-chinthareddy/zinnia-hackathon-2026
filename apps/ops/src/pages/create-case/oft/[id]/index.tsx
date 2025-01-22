@@ -14,6 +14,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import OftDlicForm from '@deps/containers/otp/oft-forms/dlic/dlic-oft-form';
 import FlicOftWithdrawalForm from '@deps/containers/otp/oft-forms/flic/flic-oft-form';
+import GlcoOftWithdrawalForm from '@deps/containers/otp/oft-forms/gilico/glco-oft-form';
 import GdmnOftWithdrawalForm from '@deps/containers/otp/oft-forms/gdmn/gdmn-oft-form';
 import MassOftWithdrawalForm from '@deps/containers/otp/oft-forms/mass/mass-oft-form';
 import NasuOftWithdrawalForm from '@deps/containers/otp/oft-forms/nasu/nasu-oft-form';
@@ -72,6 +73,7 @@ const DefaultSidebarContent = {
 
 const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
     [Carrier.FLIC]: <FlicOftWithdrawalForm />,
+    [Carrier.GLCO]: <GlcoOftWithdrawalForm />,
     [Carrier.MASS]: <MassOftWithdrawalForm />,
     [Carrier.SBGC]: <SbgcOftWithdrawalForm planCode={planCode} />,
     [Carrier.DLIC]: <OftDlicForm qualType={qualType} />,
