@@ -69,3 +69,9 @@ export enum SpecialProgramType {
     RMD = 'RMD',
     EFT = 'EFT',
 }
+
+export enum PendingReasonOptions {
+    AwaitingAdditionalInformation = 'Awaiting additional information',
+    AwaitingApproval = 'Awaiting approval',
+    AwaitingApplication = 'Awaiting application',
+}
