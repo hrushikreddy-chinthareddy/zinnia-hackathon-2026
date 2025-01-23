@@ -9,6 +9,7 @@ import { Statuses } from '@deps/models/case/case';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
 import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
+import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
 
 import { TaskView } from './progress-tab-types';
 
@@ -28,9 +29,9 @@ export function Task({ task }: { task: TaskView }) {
 
     const handleClick = (task: TaskView) => {
         sideSheet.changeSideSheetContent(
-            TaskTitle[task.description],
+            `${t('sideSheet.task.taskHeading')}: ${TaskTitle[task.description]}`,
             SupportedTaskMap.includes(task.description as TaskType) ? (
-                <NewTaskSideSheet taskId={task.id} />
+                <GlobalTaskSideSheet taskId={task.id} />
             ) : (
                 <TaskSideSheet taskId={task.id} />
             )

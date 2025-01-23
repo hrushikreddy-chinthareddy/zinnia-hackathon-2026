@@ -5,12 +5,12 @@ import GlobalValuesNbBar from '@deps/components/global-values/global-values-bar/
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
 
 import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
-import DocumentPortalPanel from './components/side-panel/document-portal-panel';
 import { TaskDataContext } from './task-context';
+import GlobalTaskSideSheet from '../case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
+import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
 
 type TaskPageProps = {
     steps: Step[];
@@ -26,13 +26,12 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
 
     const handleProgressBarClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
-
         setCurrentStepIndex(step.index);
     };
 
     const openSideSheet = () => {
-        const content = <DocumentPortalPanel documents={task.documents || []} clientCode={carrierId} />;
-        sideSheet.changeSideSheetContent(t('task.documentPanel.documents'), content);
+        const content = <GlobalTaskSideSheet taskId={task.id} type={'task'} />;
+        sideSheet.changeSideSheetContent(`Task: ${task.taskName}`, content);
         sideSheet.handleOpen(true);
     };
 
@@ -46,13 +45,13 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
     );
 
     return (
-        <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
+        <div className="workflow-height-adjusted flex w-full max-w-[1130px] flex-col self-center">
             <div className="flex">
                 <GlobalValuesNbBar carrierId={carrierId} showLink={false} caseId={caseId} />
-                <div className="my-2 ml-auto" onClick={showDocumentPanel}>
-                    <div className="flex  font-semibold text-secondary">
-                        <DocumentIcon height={20} width={20} />
-                        <span>{t('nigoEntry.documentPanel.documentTitle')}</span>
+                <div className="my-2 ml-auto cursor:pointer" onClick={showDocumentPanel}>
+                    <div className="flex  font-semibold text-secondary whitespace-nowrap cursor-pointer">
+                        <ClipboardListIcon height={20} width={20} />
+                        <div>{t('nigoEntry.documentPanel.taskTitle')}</div>
                     </div>
                 </div>
             </div>
