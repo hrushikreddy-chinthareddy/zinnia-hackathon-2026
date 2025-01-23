@@ -1,7 +1,7 @@
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { forwardRef, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useMemo, useState } from 'react';
 
 import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import { ButtonSize } from '@deps/components/button/button';
@@ -84,6 +84,20 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
         const options = useMemo(() => {
             return getUniqueCarrierFilterItems(carrierFilterItems);
         }, [carrierFilterItems]);
+
+        // if user only has access to one broker dealer, update zustand with it
+        useEffect(() => {
+            if (brokerDealers.length === 1) {
+                updateSelectedBrokerDealers({ [brokerDealers[0].key]: brokerDealers[0].name });
+            }
+        }, [brokerDealers, updateSelectedBrokerDealers]);
+
+        // if user only has access to one carrier, update zustand with it
+        useEffect(() => {
+            if (carrierFilterItems.length === 1) {
+                updateSelectedCarriers({ [carrierFilterItems[0].value]: carrierFilterItems[0].displayText });
+            }
+        }, [carrierFilterItems, updateSelectedCarriers]);
 
         const updateCarrierFilters = (value: string, displayText: string) => {
             setPlaceholderSelectedCarriers(prevSelectedCarriers => {

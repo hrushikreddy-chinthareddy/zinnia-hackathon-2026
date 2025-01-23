@@ -9,8 +9,8 @@ export const CardHeader = () => {
             <Icon type={IconType.DOCUMENT_TEXT} />
             <div>
                 <h1 className={styles.h1}>Acme Corporation</h1>
-                <span aria-label="Company tax identification number" className={styles.caption}>
-                    Tax identification number: 669-45-6789
+                <span aria-label="Company national producer number" className={styles.caption}>
+                    National producer number: 987654321
                 </span>
             </div>
         </div>

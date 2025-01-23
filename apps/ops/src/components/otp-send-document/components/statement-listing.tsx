@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { PolicyDocument } from '@deps/models/case/document';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';

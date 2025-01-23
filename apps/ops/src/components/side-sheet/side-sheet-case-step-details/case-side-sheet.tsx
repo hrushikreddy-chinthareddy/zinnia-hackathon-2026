@@ -9,7 +9,6 @@ import { AdditionalDataStepIds } from '@deps/models/case/additional-data-instanc
 import DocumentsTab from './tabs/documents-tab';
 import MultiInstanceTab from './tabs/multi-instance-tab';
 
-// BPB - move this!
 const StepSideSheetViews = {
     AdditionalData: 'additionalData',
     Documents: 'documents',
