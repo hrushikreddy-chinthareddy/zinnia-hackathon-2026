@@ -20,6 +20,7 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
     const [taskDetails, setTaskDetails] = useState<AssignedTask[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [errorType, setErrorType] = useState('error');
 
     const handleClaimTask = async () => {
         setErrorMessage('');
@@ -35,6 +36,7 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
                         break;
                     case 404:
                         setErrorMessage(data.message);
+                        setErrorType('info');
                         break;
                     default:
                         setErrorMessage(data.message);
@@ -60,7 +62,7 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
 
     useEffect(() => {
         getTasks(true);
-    }, [])
+    }, []);
 
     return (
         <>
@@ -82,10 +84,20 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
                 </div>
 
                 {errorMessage && (
-                    <AssistiveText text={errorMessage} variant={AssistiveTextVariant.Error} className="my-4" />
+                    <AssistiveText
+                        text={errorMessage}
+                        variant={errorType == 'info' ? AssistiveTextVariant.Info : AssistiveTextVariant.Error}
+                        className="my-4"
+                    />
                 )}
 
-                <TaskQueueTable tasks={taskDetails} isLoading={isLoading} featureFlagDecisions={featureFlagDecisions} getTasks={getTasks} setErrorMessage={setErrorMessage} />
+                <TaskQueueTable
+                    tasks={taskDetails}
+                    isLoading={isLoading}
+                    featureFlagDecisions={featureFlagDecisions}
+                    getTasks={getTasks}
+                    setErrorMessage={setErrorMessage}
+                />
             </div>
         </>
     );
