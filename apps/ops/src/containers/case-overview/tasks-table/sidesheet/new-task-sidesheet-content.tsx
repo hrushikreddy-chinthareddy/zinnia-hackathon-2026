@@ -97,9 +97,8 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                         <div className="pt-2">
                             <UserCircleIcon width={24} height={24} />
                         </div>
-
                         <Typography variant={TypographyVariant.BodySm} className="py-2 px-2">
-                            {`${task.assigneeFirstName} ${task.assigneeLastName}`}
+                            {task.assignee ? task.assignee : task.prefferedAssignee ? task.prefferedAssignee : 'No assignee'}
                         </Typography>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { Button, Icon, IconType, Link, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import { Button, Icon, IconType, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -16,7 +16,7 @@ import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper'
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { ManagementTask, TaskStatus, TaskLabel } from '@deps/models/case/task-instance';
 import { claimTask } from '@deps/queries/api/v1/task';
-import { getTaskInstance } from '@deps/queries/api/v2/task';
+import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
@@ -27,6 +27,8 @@ import { DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_DISPLAY_FORMAT, NUMERIC_DATE_FORM
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { writeToCache } from '@deps/utils/cache';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import router from 'next/router';
+import { TaskSource } from '@deps/models/case/task';
 
 export enum TabOptions {
     Details = 'Details',
@@ -50,8 +52,10 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
     const [claimTaskLoader, setClaimTaskLoader] = useState(false);
     const [showAdditionalDocuments, setShowAdditionalDocuments] = useState(false);
+    const [startLoader, setStartLoader] = useState(false);
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
+    const [timer] = useState(performance.now());
 
     const { user } = useUser();
 
@@ -90,6 +94,36 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
             } finally {
                 setClaimTaskLoader(false);
             }
+        }
+    };
+
+    const handleStart = async (taskId: string, taskStatus: TaskStatus) => {
+        try {
+            setStartLoader(true);
+            if (taskStatus === TaskStatus.InProgress) {
+                await router.push(`/task/${taskId}`);
+            } else {
+                // Fetch the task instance
+                const taskData = await getTaskInstance({ taskId });
+                if (!taskData) {
+                    console.error('Task data could not be retrieved.');
+                    return;
+                }
+                const body = {
+                    ...taskData,
+                    status: TaskStatus.InProgress,
+                    source: TaskSource.ZinniaTaskManagement,
+                };
+                const response = await updateTask(taskData.caseId, taskData.id, body, timer);
+                if (response) {
+                    await router.push(`/task/${taskId}`);
+                    return;
+                }
+            }
+        } catch (error) {
+            console.error('Error handling start task:', error);
+        } finally {
+            setStartLoader(false);
         }
     };
 
@@ -157,6 +191,18 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
             break;
     }
 
+    const smallLoader = (
+        <div
+            style={
+                {
+                    '--loader-size': '20px',
+                } as React.CSSProperties
+            }
+        >
+            <Loader />
+        </div>
+    );
+
     const NoAssigneeComp = (
         <div className="flex gap-2 text-gray-600">
             <span>No assignee</span>
@@ -166,15 +212,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                         {t('sideSheet.task.claimTask')}
                     </button>
                 ) : (
-                    <div
-                        style={
-                            {
-                                '--loader-size': '20px',
-                            } as React.CSSProperties
-                        }
-                    >
-                        <Loader />
-                    </div>
+                    smallLoader
                 ))}
         </div>
     );
@@ -319,19 +357,17 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
 
             {type == 'case' && showStartButton && (
                 <div className={!userExists ? 'flex flex-row items-center gap-1 pt-2' : 'flex flex-row items-center gap-1 pt-8'}>
-                    {userExists ? (
-                        <Link href={`/task/${task.id}`} text="Start task" variant="button" size="small"></Link>
-                    ) : (
-                        <Button
-                            disabled
-                            size="small"
-                            className="rounded-full border border-[#B3B3B3] bg-[#EDEDED] text-gray-400 cursor-not-allowed"
-                            aria-label="click me"
-                            mode="primary"
-                        >
-                            {t('sideSheet.task.startTask')}
-                        </Button>
-                    )}
+                    <Button
+                        mode="primary"
+                        disabled={!userExists || startLoader}
+                        onClick={() => handleStart(task.id, task.status)}
+                        data-testid="start-task-btm"
+                        aria-label={t('ariaLabel.startTask') as string}
+                        type="submit"
+                        size={startLoader ? 'large' : 'small'}
+                    >
+                        {!startLoader ? t('sideSheet.task.startTask') : smallLoader}
+                    </Button>
                 </div>
             )}
         </div>
