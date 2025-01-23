@@ -810,6 +810,20 @@
         "unassignTask": "Unassign Task",
         "startTask": "Start Task",
         "transaction": "Transaction: {{transactionType}}",
+        "updateTaskStatusDrawer": {
+            "updateTaskStatus": "Update Task Status",
+            "setTaskAsPending": "Set Task as Pending",
+            "followUpDate": "Follow-Up Date",
+            "reason": "Reason",
+            "selectReason": "Select Reason",
+            "cancel": "Cancel",
+            "updateStatus": "Update Status",
+            "pendingReasonOptions": {
+                "awaitingAdditionalInformation": "Awaiting additional information",
+                "awaitingApproval": "Awaiting approval",
+                "awaitingApplication": "Awaiting application"
+            }
+        },
         "tasksListing": {
             "taskSubmittedAgo": "Submitted {{updatedCount}} {{updatedUnit}} ago",
             "taskCompletedAgo": "Completed {{updatedCount}} {{updatedUnit}} ago",

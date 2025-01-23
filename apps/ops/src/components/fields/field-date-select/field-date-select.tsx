@@ -1,10 +1,10 @@
 import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import localData from 'dayjs/plugin/localeData';
-import React, { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 
 import DatePicker, { DatePickerTypes, DateQuarter, Quarter } from '@deps/components/date-picker/date-picker';
-import Field, { FieldType , FieldProps } from '@deps/components/fields/field';
+import Field, { FieldType, FieldProps } from '@deps/components/fields/field';
 import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { FieldDateSelectTest } from '@deps/jest/constants/test-id-constants';
 import { ReactComponent as CalendarIcon } from '@deps/styles/elements/icons/icons_outlined/calendar.svg';
@@ -18,6 +18,7 @@ export type FieldDateSelectProps = {
     label?: string;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
     isFutureDateDisabled?: boolean;
+    isPastDateDisabled?: boolean;
     disableFormat?: boolean;
     datePickerType?: DatePickerTypes;
     isDateAllowed?: (dayjsDate: Dayjs) => boolean;
@@ -30,6 +31,7 @@ export default function FieldDateSelect({
     label,
     onChange,
     isFutureDateDisabled = true,
+    isPastDateDisabled = false,
     isDateAllowed,
     disableFormat,
     datePickerType,
@@ -51,7 +53,6 @@ export default function FieldDateSelect({
     } else {
         date = dayjs(value, DATE_PICKER_FORMAT, true).isValid() ? dayjs(value, DATE_PICKER_FORMAT).toDate() : null;
     }
-
     const handleCustomSelection = (_year: number, _quarter?: Quarter) => {
         const value = _quarter ? `${_year}-${_quarter}` : _year.toString();
 
@@ -97,6 +98,7 @@ export default function FieldDateSelect({
                 <DatePicker
                     isDateAllowed={isDateAllowed}
                     isFutureDateDisabled={isFutureDateDisabled}
+                    isPastDateDisabled={isPastDateDisabled}
                     open={open}
                     date={date}
                     handleDateSelect={handleDateSelect}
