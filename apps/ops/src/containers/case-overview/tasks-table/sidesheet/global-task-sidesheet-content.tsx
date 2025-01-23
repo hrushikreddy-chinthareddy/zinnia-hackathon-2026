@@ -1,41 +1,34 @@
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { Button, Icon, IconType, Link, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-
+import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import Badge from '@deps/components/badge/badge';
+import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import Content, { ContentVariant } from '@deps/components/content/content';
+import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
-import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskStatus, TaskLabel } from '@deps/models/case/task-instance';
+import { claimTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
-import { DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_DISPLAY_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
+import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/content/clipboard-1.svg';
-import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
-import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
-import Badge from '@deps/components/badge/badge';
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
-import { claimTask } from '@deps/queries/api/v1/task';
-
-import { useUser } from '@auth0/nextjs-auth0/client';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
+import { DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_DISPLAY_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { parseErrorInformation } from '@deps/utils/server-logging';
-import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import Dropdown from '@deps/components/dropdown/Dropdown';
-import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { writeToCache } from '@deps/utils/cache';
-import { TaskLabel } from '@deps/models/case/task-instance';
-import Content, { ContentVariant } from '@deps/components/content/content';
-
-const TaskTypeMap: Record<string, string> = {
-    ['SUITABILITY_REVIEW']: 'suitability review',
-};
+import { parseErrorInformation } from '@deps/utils/server-logging';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
+import Dropdown from '@deps/components/dropdown/Dropdown';
 
 export enum TabOptions {
     Details = 'Details',
@@ -125,16 +118,16 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     const formattedUpdated = parseAndFormatDate(NUMERIC_DATE_FORMAT, DEFAULT_DATE_FORMAT, task.updatedAt);
     const formattedPending = parseAndFormatDate(NUMERIC_DATE_FORMAT, DEFAULT_DATE_FORMAT, task.impededTillDate);
 
-    let userExists =
+    const userExists =
         user?.email?.toLowerCase() !== '' &&
         (user?.email?.toLowerCase() === task.assignee?.toLowerCase() ||
             task.prefferedAssignee?.toLowerCase() === user?.email?.toLowerCase());
 
-    let documentsList = type == 'task' ? task.documents || [] : task.mappedDocuments || [];
-    let additionalDocumentsList = task.additionalDocuments || [];
+    const documentsList = type == 'task' ? task.documents || [] : task.mappedDocuments || [];
+    const additionalDocumentsList = task.additionalDocuments || [];
 
-    let showStartButton = task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending;
-    let statusReason = task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason;
+    const showStartButton = task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending;
+    const statusReason = task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason;
 
     let badgeIcon, badgeVariant, badgeLabel;
 
