@@ -89,6 +89,10 @@
                             },
                             "createdDate": {
                                 "type": "string"
+                            },
+                            "carrier": {
+                                "type": "string",
+                                "default": "{{carrier}}"
                             }
                         }
                     },
@@ -483,6 +487,10 @@
                                         },
                                         "createdDate": {
                                             "type": "string"
+                                        },
+                                        "carrier": {
+                                            "type": "string",
+                                            "default": "{{carrier}}"
                                         }
                                     }
                                 }

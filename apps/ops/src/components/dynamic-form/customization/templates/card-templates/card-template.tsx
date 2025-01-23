@@ -4,15 +4,15 @@ import { useTranslation } from 'next-i18next';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatSSN } from '@deps/helpers/string.helper';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 
 export function CardTemplate(props: ObjectFieldTemplateProps) {
-    const { formData, uiSchema, schema } = props;
+    const { formData, uiSchema, schema, formContext } = props;
 
     const { cardType, icon, sectionTitle } = getUiOptions(uiSchema);
 
@@ -24,6 +24,7 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
                 data={formData}
                 properties={schema?.properties}
                 sectionTitle={(sectionTitle as string) ?? ''}
+                formData={formContext?.customData}
             />
         </>
     );
@@ -36,8 +37,9 @@ export type SingleCardProps = {
     properties: any;
     sectionTitle?: string;
     className?: string;
+    formData?: any;
 };
-export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, className }: SingleCardProps) => {
+export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, className, formData }: SingleCardProps) => {
     const { t } = useTranslation();
 
     const sideSheet = useSideSheetContext();
@@ -64,7 +66,9 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                 </div>
                 <div className="grow">
                     <div className="text-sm font-bold">
-                        <PiiWrapper>{data?.title ?? replacePlaceholders(properties?.title, data)?.default ?? ''}</PiiWrapper>
+                        <PiiWrapper>
+                            {(title in properties && data?.title) ?? replacePlaceholders(properties?.title, data)?.default ?? ''}
+                        </PiiWrapper>
                     </div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
                         <PiiWrapper>
@@ -78,7 +82,14 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                     </div>
                 </div>
                 {cardType === 'Detailed' && <DetailAction handleCardClick={handleCardClick} formData={data} />}
-                {cardType === 'Document' && <DocumentActions cardType={cardType} document={data} t={t} />}
+                {cardType === 'Document' && (
+                    <DocumentActions
+                        cardType={cardType}
+                        document={replacePlaceholders(data, formData) || data}
+                        properties={displayProperties}
+                        t={t}
+                    />
+                )}
             </div>
         </>
     );
@@ -122,7 +133,7 @@ const DocumentActions = ({ cardType, document, t }: any) => {
                     <DocumentPreviewer
                         className="flex max-w-[234px] gap-1"
                         activeDocType={DocumentTypeView.Case}
-                        carrier={'WELB'} //todo: vijaya carrier mapping
+                        carrier={document?.carrier || ''}
                         displayName={document?.displayName || ''}
                         documentId={document?.documentId ?? (document?.documentID as string)}
                     >
