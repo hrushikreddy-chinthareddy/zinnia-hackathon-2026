@@ -172,6 +172,7 @@ export class TransformedStep {
         }
         this.name = this.parentStage.parentCase.t([`caseManagementApiKeys.steps.${this.id}`, toSentenceCase(this.stepRaw.label)], {
             subType: this.parentStage.parentCase.processSubType,
+            process: this.parentStage.parentCase.process,
         });
         this.description =
             this.parentStage.parentCase.t([`caseManagementApiKeys.stepDescriptions.${this.id}`, ''], {
@@ -310,6 +311,7 @@ export class TransformedCase {
     documentsMap: { [key: string]: DocumentView };
     exceptionMap: { [key: string]: ExceptionInstance & { usedInStep?: boolean } };
     processSubType: string;
+    process: string;
     stages: TransformedStage[] = [];
     t: TFunction;
     taskMap: { [key: string]: TaskInstance };
@@ -350,6 +352,7 @@ export class TransformedCase {
             return acc;
         }, {} as { [key: string]: ExceptionInstance });
         this.processSubType = (caseDetails?.processSubType || caseDetails?.process)?.toLowerCase();
+        this.process = caseDetails?.process || '';
         this.taskMap = caseDetails?.tasks?.reduce((acc, task) => {
             acc[task.id] = task;
             return acc;
