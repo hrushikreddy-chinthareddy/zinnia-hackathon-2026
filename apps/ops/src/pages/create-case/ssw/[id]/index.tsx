@@ -39,19 +39,19 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logInfo, logWarn } from '@deps/utils/server-logging';
-
-import { ERROR_CODES } from '../../error';
+import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
+import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-form';
 import { NassauSSWForm } from '@deps/containers/otp/ssw-forms/nasu/nasu-ssw-form';
-import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
+import { GlcoSSWForm } from '@deps/containers/otp/ssw-forms/glco/glco-ssw-form';
+import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
+import { UlpcSSWForm } from '@deps/containers/otp/ssw-forms/ulpc/ulpc-ssw-form';
+import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 
-import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
-import { UlpcSSWForm } from '@deps/containers/otp/ssw-forms/ulpc/ulpc-ssw-form';
-import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
-import { checkNigoExistsSSR } from '@deps/queries/api/integration';
+import { ERROR_CODES } from '../../error';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -83,6 +83,7 @@ const DefaultSidebarContent = {
 
 const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Record<string, React.ReactNode> => ({
     [Carrier.SBGC]: <SbgcSSWForm />,
+    [Carrier.GLCO]: <GlcoSSWForm planCode={planCode} />,
     [Carrier.MASS]: <MassMutualSSWForm qualType={qualType} />,
     [Carrier.NASU]: <NassauSSWForm />,
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
@@ -91,7 +92,6 @@ const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Recor
 
 export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user, planCode }: SSWCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
-
     // TODO: Need to map this from common portion whenever we will restructure i18 files
     const { t: withdrawalTx } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const router = useRouter();

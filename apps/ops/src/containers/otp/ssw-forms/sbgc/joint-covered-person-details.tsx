@@ -32,9 +32,7 @@ const JointCoveredPersonDetails = ({ isReadOnly, planCode, jointCoveredPlanCodes
     );
 
     const [payoutOption, setPayoutOption] = useState(party?.withdrawalPayoutOption || '' as PayoutOptions);
-
     const { coveredPartyConfigs } = useSbgcConfig(t);
-
     const [partyInfo, setPartyInfo] = useState(party || DEFAULT_JOINT_PERSON_DATA);
 
     useEffect(() => {
