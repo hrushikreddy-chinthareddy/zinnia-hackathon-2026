@@ -22,6 +22,7 @@ import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { removeFromCache } from '@deps/utils/cache';
 
 type TaskQueueTableRowProps = {
     task: AssignedTask;
@@ -128,6 +129,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
         try {
             const response = await unassignTask(taskData.caseId, taskData.id);
             if (response.status === TaskStatus.New) {
+                removeFromCache('getTaskInstance', { taskId });
                 browserLogInfo('task-queue:handleUnassignTask::Successfully un-assigned task', { taskId: taskId });
                 getTasks();
             } else {

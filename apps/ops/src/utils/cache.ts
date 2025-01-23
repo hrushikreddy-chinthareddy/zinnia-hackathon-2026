@@ -45,3 +45,12 @@ export const writeToCache = (query_name: string, query: any, data: any, expirati
         console.error('An error occurred while writing to cache', query_name, query, data, expiration_minutes, err);
     }
 };
+
+export const removeFromCache = (query_name: string, query: any): void => {
+    try {
+        const cacheKey = generateCacheKey(query_name, JSON.stringify(query));
+        storage.removeItem(cacheKey);
+    } catch (err) {
+        console.error('An error occurred while removing from cache', query_name, query, err);
+    }
+};

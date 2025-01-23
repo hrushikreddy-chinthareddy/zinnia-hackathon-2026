@@ -191,6 +191,7 @@ export interface PolicyDocument {
     periodYear?: string;
     periodQuarter?: string;
     displayCode?: DocumentDisplayCode;
+    documentName?: string;
 }
 
 export interface PolicyDocuments {

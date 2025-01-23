@@ -13,9 +13,11 @@ import MassMutualRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/mm-rmd-f
 import SbgcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/sbgc-rmd-form';
 import UlpcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/ulpc/ulpc-rmd-form';
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
+import { GlcoSSWForm } from '@deps/containers/otp/ssw-forms/glco/glco-ssw-form';
 import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-form';
 import { NassauSSWForm } from '@deps/containers/otp/ssw-forms/nasu/nasu-ssw-form';
 import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
+import { UlpcSSWForm } from '@deps/containers/otp/ssw-forms/ulpc/ulpc-ssw-form';
 import DlicWithdrawalForm from '@deps/containers/otp/withdrawal-forms/dlic/dlic-withdrawal-form';
 import FlicWithdrawalForm from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form';
 import GdmnWithdrawalForm from '@deps/containers/otp/withdrawal-forms/gdmn/gdmn-withdrawal-form';
@@ -72,11 +74,13 @@ export const getRMDFormComponentMap = (qualType: QualTypes | ''): Record<string,
     [Carrier.ULPC]: <UlpcRmdWithdrawalForm />
 });
 
-const getSSWFormComponentMap = (qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
+const getSSWFormComponentMap = (qualType: QualTypes | '', planCode?: string): Record<string, React.ReactNode> => ({
     [Carrier.SBGC]: <SbgcSSWForm />,
     [Carrier.MASS]: <MassMutualSSWForm qualType={qualType} />,
     [Carrier.NASU]: <NassauSSWForm />,
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
+    [Carrier.GLCO]: <GlcoSSWForm planCode={planCode} />,
+    [Carrier.ULPC]: <UlpcSSWForm planCode={planCode} />,
 });
 
 export const getFormParts = (caseType: CaseType, clientCode: string, qualType: QualTypes | '', planCode: string = '') => {
@@ -89,7 +93,7 @@ export const getFormParts = (caseType: CaseType, clientCode: string, qualType: Q
             formParts = determineFormToRender(clientCode, getOFTFormComponentMap(planCode, qualType));
             break;
         case CaseType.SSW:
-            formParts = determineFormToRender(clientCode, getSSWFormComponentMap(qualType));
+            formParts = determineFormToRender(clientCode, getSSWFormComponentMap(qualType, planCode));
             break;
         case CaseType.Rmd:
             formParts = determineFormToRender(clientCode, getRMDFormComponentMap(qualType));

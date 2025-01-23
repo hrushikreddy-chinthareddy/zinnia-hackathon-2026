@@ -486,6 +486,7 @@ export interface Party {
     fullName: string;
     suffix?: string | null;
     relationshipToOwnerAnnutant?: RelationshipToCoveredPerson;
+    withdrawalPayoutOption?: PayoutOptions;
     dob?: {
         text: string | null;
     };
@@ -883,6 +884,11 @@ export enum RestrictionOption {
     EligibleDistribution = 'eligibledistribution',
     Empty = '',
     Hardship = 'hardship',
+}
+
+export enum PayoutOptions {
+    level = 'LEVEL',
+    increasing = 'INCREASING',
 }
 
 export enum TaxWithholdingPlace {

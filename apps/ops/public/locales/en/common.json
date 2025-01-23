@@ -1670,6 +1670,13 @@
                         "spouse": "Spouse",
                         "na": "NA"
                     }
+                },
+                "payout": {
+                    "title": "Payout",
+                    "payoutOptions": {
+                        "level": "Level",
+                        "increasing": "Increasing"
+                    }
                 }
             },
             "rmdMethod": {
@@ -3194,13 +3201,23 @@
                 "closed": "Closed"
             },
             "createdLabel": "Date Created",
+            "newCreatedLabel": "Created",
             "assigneeLabel": "Assignee",
             "stepLabel": "Step",
             "issueLabel": "Issue",
             "detailsLabel": "Details",
             "noDataAvailable": "No data available.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
-            "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract."
+            "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
+            "reasonLabel": "Status reason",
+            "pendinglabel": "Pending until",
+            "canceledLabel": "Canceled on",
+            "completedLabel": "Completed on",
+            "additionalDocuments": "Additional Documents",
+            "noAssignee": "Only the assignee can start this task",
+            "startTask": "Start task",
+            "claimTask": "Claim task",
+            "taskHeading": "Task"
         },
         "suitability": {
             "header": "Complete Suitability Review",
@@ -4667,7 +4684,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "Document ID",
-            "noFormAvailable": "No form available."
+            "noFormAvailable": "No form available.",
+            "taskTitle": "Task details"
         },
         "CaseDetailsContent": {
             "tabs": {
