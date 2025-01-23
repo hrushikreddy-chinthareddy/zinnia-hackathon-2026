@@ -3,7 +3,7 @@ import { Button, Icon, IconType, Link, Loader, TabContent, TabGroup, TabList, Ta
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
+
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
@@ -21,14 +21,12 @@ import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/a
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/content/clipboard-1.svg';
+import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
 import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
 import { DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_DISPLAY_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { writeToCache } from '@deps/utils/cache';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
-import Dropdown from '@deps/components/dropdown/Dropdown';
 
 export enum TabOptions {
     Details = 'Details',
@@ -142,6 +140,11 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
             badgeVariant = BadgeVariant.Inactive;
             badgeLabel = TaskLabel.Canceled;
             break;
+        case TaskStatus.InProgress:
+            badgeIcon = <ClipboardListIcon height={16} width={16} />;
+            badgeVariant = BadgeVariant.Info;
+            badgeLabel = TaskLabel.InProgress;
+            break;
         case TaskStatus.Pending:
             badgeIcon = <Pause height={16} width={16} />;
             badgeVariant = BadgeVariant.Error;
@@ -216,21 +219,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
             </div>
         );
     };
-    const sideSheet = useSideSheetContext();
-    const openSideSheet = () => {
-        const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} />;
-        sideSheet.changeSideSheetContent(t('taskManagementQueue.updateTaskStatusDrawer.updateTaskStatus'), content);
-        sideSheet.handleOpen(true);
-    };
-    const statuses = [
-        {
-            label: 'Pending',
-            icon: <Pause width={16} height={16} />,
-            onSelect: () => {
-                openSideSheet()
-            },
-        },
-    ];
+
     const renderDetails = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg mt-8">{t('sideSheet.task.tabs.details')}</label>
@@ -240,8 +229,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     {t('sideSheet.task.status.label')}{' '}
                 </div>
                 <div className="col-span-2 mt-2 align-self">
-
-                    {task?.status != TaskStatus.InProgress && <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
+                    <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
                         <Badge
                             icon={badgeIcon}
                             variant={badgeVariant}
@@ -249,41 +237,34 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                             rounded={true}
                             className="flex gap-1 items-center"
                         />
-                    </Typography>}
-                    {task?.status === TaskStatus.InProgress && <Dropdown
-                        triggerIcon={<div className='pb-1'><Progress width={16} height={16} /></div>}
-                        triggerLabel="In Progress"
-                        options={statuses}
-                    />}
-
-
+                    </Typography>
                 </div>
 
                 {((task.status === TaskStatus.Pending && task.impededReason) ||
                     (task.status === TaskStatus.Canceled && task.cancellationReason)) && (
-                        <>
-                            <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
-                            <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                                <Content
-                                    truncate
-                                    details={statusReason}
-                                    variant={ContentVariant.BodySm}
-                                    popoverBody={statusReason}
-                                    popoverClassName="background-white w-full "
-                                    pii={true}
-                                />
-                                {task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason}
-                            </Typography>
-                        </>
-                    )}
+                    <>
+                        <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
+                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                            <Content
+                                truncate
+                                details={statusReason}
+                                variant={ContentVariant.BodySm}
+                                popoverBody={statusReason}
+                                popoverClassName="background-white w-full "
+                                pii={true}
+                            />
+                            {task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason}
+                        </Typography>
+                    </>
+                )}
                 {(task.status === TaskStatus.Pending || task.status === TaskStatus.Canceled || task.status === TaskStatus.Completed) && (
                     <>
                         <div className="col-span-1 text-[--color-base-text-text-secondary]">
                             {task.status === TaskStatus.Pending
                                 ? t('sideSheet.task.pendinglabel')
                                 : task.status === TaskStatus.Canceled
-                                    ? t('sideSheet.task.canceledLabel')
-                                    : t('sideSheet.task.completedLabel')}
+                                ? t('sideSheet.task.canceledLabel')
+                                : t('sideSheet.task.completedLabel')}
                         </div>
                         <Typography variant={TypographyVariant.BodySm} className="col-span-2">
                             {task.status === TaskStatus.Pending
@@ -291,8 +272,8 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                                     ? dayjs(formattedPending).format(DEFAULT_DATETIME_DISPLAY_FORMAT)
                                     : 'N/A'
                                 : formattedUpdated
-                                    ? dayjs(formattedUpdated).format(DEFAULT_DATETIME_DISPLAY_FORMAT)
-                                    : 'N/A'}
+                                ? dayjs(formattedUpdated).format(DEFAULT_DATETIME_DISPLAY_FORMAT)
+                                : 'N/A'}
                         </Typography>
                     </>
                 )}
@@ -405,7 +386,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     )
                 ) : null}
             </div>
-
         </div>
     );
 

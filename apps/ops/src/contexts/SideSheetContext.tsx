@@ -8,7 +8,6 @@ export interface SideSheetContextProps {
     handleLocation: (location: SideSheetLocation) => void;
     handleOpen: (isOpen: boolean) => void;
     openSecondarySideSheet: (header: string | React.ReactNode, body?: React.ReactNode) => void;
-    onClose: () => void;
 }
 
 export const SideSheetContext = createContext<SideSheetContextProps>({} as SideSheetContextProps);
@@ -84,7 +83,7 @@ export const SideSheetProvider: React.FC<SideSheetProviderProps> = ({ children }
 
     return (
         <SideSheetContext.Provider
-            value={{ handleOpen, handleLocation, changeSideSheetContent: handleComponentChange, openSecondarySideSheet, onClose }}
+            value={{ handleOpen, handleLocation, changeSideSheetContent: handleComponentChange, openSecondarySideSheet }}
         >
             {children}
             <SideSheet

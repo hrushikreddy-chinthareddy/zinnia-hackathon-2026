@@ -74,11 +74,10 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
                             aria-label={t('claimTask') as string}
                             size={ButtonSize.Small}
                             disabled={taskDetails.length > 0}
-                            variant={ButtonVariant.Default}
+                            variant={taskDetails.length > 0 ? ButtonVariant.Inactive : ButtonVariant.Default}
                         >
                             {t('claimTask')}
                         </Button>
-
                     </div>
                 </div>
 
