@@ -17,7 +17,7 @@ type BaseStepInstance = {
     mappedNotes: string[];
     mappedTasks: string[] | null;
     multiInstance?: boolean;
-    stepResult?: string | null; // BPB - maybe enumerate this one day
+    stepResult?: string | null;
     stepStatus: Statuses;
     tasks?: null;
     updatedAt: string;

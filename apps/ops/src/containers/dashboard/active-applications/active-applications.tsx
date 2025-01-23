@@ -9,6 +9,7 @@ import { ButtonSize } from '@deps/components/button/button';
 import ActiveAging from '@deps/components/dashboard/active-aging/active-aging';
 import SankeyChart from '@deps/components/dashboard/sankey-chart';
 import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
+import { SubmissionType } from '@deps/components/dashboard/submission-type/submission-type';
 import { TreeMapInsights } from '@deps/components/dashboard/tree-map-insights';
 import { FieldSize } from '@deps/components/fields/field';
 import PageLoader from '@deps/components/page-loader/page-loader';
@@ -26,11 +27,7 @@ import { CarrierListItem } from '@deps/pages/dashboard';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { DashboardSearchFilter } from '@deps/queries/cases';
-import {
-    getProcessListOptions,
-    getCaseDashboardStatsQuery,
-    getSubprocessListOptions,
-} from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
@@ -96,16 +93,77 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
         }
     };
 
-    const { data: processListOptions, isLoading: processListOptionsLoading } = useQuery({
-        queryKey: ['processListOptions'],
-        queryFn: () => getProcessListOptions(),
-        select: data => formatProcessListOptions(data),
+    const { data: insightGroupingCountByCarrierStats } = useQuery({
+        queryKey: ['countByCarrierInsights', baseInsightQueryFilter],
+        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.Carrier]),
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
     });
 
-    const { data: subprocessListOptions, isLoading: subprocessListOptionsLoading } = useQuery({
-        queryKey: ['subprocessListOptions', createdDateStart, baseInsightQueryFilter?.process],
-        queryFn: () => getSubprocessListOptions(createdDateStart, baseInsightQueryFilter?.process),
-        select: data => {
+    const { data: insightGroupingCountByBrokerStats } = useQuery({
+        queryKey: ['countByBrokerInsights', baseInsightQueryFilter],
+        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.BrokerDealerName]),
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
+    });
+
+    const { data: insightGroupingCountBySubProcessStats } = useQuery({
+        queryKey: ['countBySubProcessInsights', baseInsightQueryFilter],
+        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType]),
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
+    });
+
+    const {
+        data: insightCreatedBySubProcess,
+
+        isError: insightCreatedBySubProcessError,
+    } = useQuery({
+        queryKey: ['createdBySubProcessInsights', baseInsightQueryFilter],
+        placeholderData: previousData => previousData,
+        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
+    });
+
+    const {
+        data: insightActiveAgingPiesByCreated,
+        isLoading: insightActiveAgingPiesByCreatedLoading,
+        isError: insightActiveAgingPiesByCreatedError,
+    } = useQuery({
+        queryKey: ['activeAgingPieChartKeys', baseInsightQueryFilter],
+        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.CreatedAt, GroupByOptions.ProductName]),
+        placeholderData: previousData => previousData,
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
+    });
+
+    const { data: insightExceptionStats } = useQuery({
+        queryKey: ['exceptionStats', baseInsightQueryFilter],
+        queryFn: async () => {
+            const response = await createBaseQuery(baseInsightQueryFilter, [GroupByOptions.ExceptionCategory]);
+            if (response?.data?.length) {
+                response.data = response?.data?.filter(item => item.name !== '');
+            }
+
+            return response;
+        },
+        placeholderData: previousData => previousData,
+        enabled: Object.keys(baseInsightQueryFilter).length > 0,
+    });
+
+    const { data: processListOptions } = useQuery({
+        queryKey: ['processListOptions', baseDashboardQueryFilter],
+        placeholderData: previousData => previousData,
+        queryFn: () => createBaseQuery(baseDashboardQueryFilter, [GroupByOptions.Process]),
+        select: ({ data }) => formatProcessListOptions(data),
+        enabled: Object.keys(baseDashboardQueryFilter).length > 0,
+    });
+
+    const { data: subprocessListOptions } = useQuery({
+        queryKey: ['subprocessListOptions', createdDateStart, baseInsightQueryFilter],
+        placeholderData: previousData => previousData,
+        queryFn: () =>
+            createBaseQuery({ ...baseInsightQueryFilter, createdDateStart: createdDateStart }, [
+                GroupByOptions.ProcessSubType,
+                GroupByOptions.Process,
+            ]),
+        select: ({ data }) => {
             const options: MultiselectOption[] = [];
             if (!data) return options;
             data.forEach(item => {
@@ -118,6 +176,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
 
             return options;
         },
+        enabled: Object.keys(baseDashboardQueryFilter).length > 0,
     });
 
     const [selectedSubprocess, setSelectedSubprocess] = useState<CarrierListItem>(
@@ -140,76 +199,37 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
         }
     };
 
-    const { data: insightGroupingCountByCarrierStats, isLoading: insightGroupingCountByCarrierStatsLoading } = useQuery({
-        queryKey: ['countByCarrierInsights', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.Carrier]),
-        enabled: Object.keys(baseInsightQueryFilter).length > 0,
-    });
-
-    const { data: insightGroupingCountByBrokerStats, isLoading: insightGroupingCountByBrokerStatsLoading } = useQuery({
-        queryKey: ['countByBrokerInsights', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.BrokerDealerName]),
-        enabled: Object.keys(baseInsightQueryFilter).length > 0,
-    });
-
-    const { data: insightGroupingCountBySubProcessStats, isLoading: insightGroupingCountBySubProcessStatsLoading } = useQuery({
-        queryKey: ['countBySubProcessInsights', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType]),
-        enabled: Object.keys(baseInsightQueryFilter).length > 0,
-    });
-
-    const {
-        data: insightCreatedBySubProcess,
-        isLoading: insightCreatedBySubProcessLoading,
-        isError: insightCreatedBySubProcessError,
-    } = useQuery({
-        queryKey: ['createdBySubProcessInsights', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
-        enabled: Object.keys(baseInsightQueryFilter).length > 0,
-    });
-
-    const {
-        data: insightActiveAgingPiesByCreated,
-        isLoading: insightActiveAgingPiesByCreatedLoading,
-        isError: insightActiveAgingPiesByCreatedError,
-    } = useQuery({
-        queryKey: ['activeAgingPieChartKeys', baseInsightQueryFilter],
-        queryFn: () => createBaseQuery(baseInsightQueryFilter, [GroupByOptions.CreatedAt, GroupByOptions.ProductName]),
-        placeholderData: previousData => previousData,
-        enabled: Object.keys(baseInsightQueryFilter).length > 0,
-    });
-
-    const { data: insightExceptionStats, isLoading: insightExceptionStatsLoading } = useQuery({
-        queryKey: ['exceptionStats', baseInsightQueryFilter],
-        queryFn: async () => {
-            const response = await createBaseQuery(baseInsightQueryFilter, [GroupByOptions.ExceptionCategory]);
-            if (response?.data?.length) {
-                response.data = response?.data?.filter(item => item.name !== '');
-            }
-
-            return response;
-        },
-        placeholderData: previousData => previousData,
-        enabled: Object.keys(baseInsightQueryFilter).length > 0,
-    });
-
     useEffect(() => {
         const baseFilter: DashboardSearchFilter = {
-            caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-        };
-        const insightFilter: DashboardSearchFilter = {
             caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
         };
 
         const carriers = Object.keys(selectedCarriers);
         if (selectedCarriers && carriers.length) {
             baseFilter.carrier = carriers;
-            insightFilter.carrier = carriers;
         }
 
         const brokers = Object.keys(selectedBrokerDealers);
         if (selectedBrokerDealers && brokers.length) {
             baseFilter.brokerDealerName = brokers;
+        }
+
+        setBaseDashboardQueryFilter(baseFilter);
+    }, [selectedCarriers, insightOption, selectedBrokerDealers, selectedSubprocess]);
+
+    //set insight filter
+    useEffect(() => {
+        const insightFilter: DashboardSearchFilter = {
+            caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+        };
+
+        const carriers = Object.keys(selectedCarriers);
+        if (selectedCarriers && carriers.length) {
+            insightFilter.carrier = carriers;
+        }
+
+        const brokers = Object.keys(selectedBrokerDealers);
+        if (selectedBrokerDealers && brokers.length) {
             insightFilter.brokerDealerName = brokers;
         }
 
@@ -220,21 +240,8 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
         if (Object.keys(selectedSubprocess).length) {
             insightFilter.requestSubType = Object.keys(selectedSubprocess);
         }
-
-        setBaseDashboardQueryFilter(baseFilter);
         setBaseInsightQueryFilter(insightFilter);
-    }, [selectedCarriers, insightOption, selectedBrokerDealers, selectedSubprocess]);
-
-    const sankeyChartLoading =
-        loading ||
-        processListOptionsLoading ||
-        subprocessListOptionsLoading ||
-        insightGroupingCountBySubProcessStatsLoading ||
-        insightCreatedBySubProcessLoading ||
-        insightActiveAgingPiesByCreatedLoading ||
-        insightExceptionStatsLoading ||
-        insightGroupingCountByCarrierStatsLoading ||
-        insightGroupingCountByBrokerStatsLoading;
+    }, [insightOption, selectedBrokerDealers, selectedCarriers, selectedSubprocess]);
 
     const clearFilters = () => {
         setInsightOption(Processes.NewBusiness);
@@ -247,11 +254,6 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
         <>
             <div className="relative border-t-2 border-[--color-base-border-border-light]">
                 <CardContainer classNames="relative !pt-0" containerClassNames="mt-none">
-                    {sankeyChartLoading && (
-                        <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
-                            <PageLoader />
-                        </div>
-                    )}
                     <SankeyChart key={JSON.stringify(baseDashboardQueryFilter)} baseDashboardQueryFilter={baseDashboardQueryFilter} />
                 </CardContainer>
             </div>
@@ -266,7 +268,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                 }
             >
                 <Typography className="flex items-center" variant={TypographyVariant.H2} data-testid="header-text">
-                    {'Active Transactions'}
+                    {'Open Transactions'}
                 </Typography>
                 <div className={`${styles.insightsHeaderDropdownContainer}`}>
                     <div className="w-52">
@@ -330,7 +332,7 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                     <div className="mt-1">
                         {/* this is the Exception Distribution by Category tree map chart */}
                         <CardContainer fullWidth={false}>
-                            <TreeMapInsights dashboardStatsData={insightExceptionStats} heading="Exception Distribution by Category" />
+                            <TreeMapInsights dashboardStatsData={insightExceptionStats} heading="NIGO Distribution by Category" />
                         </CardContainer>
                     </div>
                     <div className="flex flex-col gap-1 mt-1">
@@ -382,6 +384,11 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ loading, carri
                         </div>
                     </div>
                 </div>
+            </div>
+
+            {/* Submission type chart */}
+            <div className="relative border-t-2 border-[--color-base-border-border-light]">
+                <SubmissionType selectedCarriers={selectedCarriers} selectedBrokerDealers={selectedBrokerDealers} />
             </div>
         </>
     );

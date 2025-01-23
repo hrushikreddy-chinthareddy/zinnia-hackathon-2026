@@ -63,7 +63,7 @@ const JointCoveredPersonDetails = ({ isReadOnly, planCode, jointCoveredPlanCodes
     const handleRelationshipUpdate = (val: RelationshipToCoveredPerson) => {
         setRelationToCoveredPerson(val);
         setPartyInfo(party => ({ ...party, relationshipToOwnerAnnutant: val }));
-    }
+    };
 
     return (
         <>

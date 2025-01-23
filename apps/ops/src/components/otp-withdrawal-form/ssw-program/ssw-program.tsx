@@ -22,6 +22,8 @@ type SystematicWithdrawalProgramProps = {
     planCode?: string;
     jointCoveredPlanCodes?: string[];
     onSswProgramFrequencyChange?: (val: Frequency) => void;
+    planCode?: string;
+    jointCoveredPlanCodes?: string[];
 };
 
 export interface SSWProgramOptions extends Omit<RadioItem, 'subelement'> {
@@ -76,7 +78,6 @@ const SystematicWithdrawalProgram = ({
             <div className="p-2">
                 <SystematicWithdrawalRow isReadOnly={isReadOnly} sswTypeOptions={options} onDataChange={setSswData} sswData={sswData} />
             </div>
-
             {sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
                 <JointCoveredPersonDetails
                     isReadOnly={isReadOnly || false}
@@ -84,7 +85,6 @@ const SystematicWithdrawalProgram = ({
                     jointCoveredPlanCodes={jointCoveredPlanCodes}
                 />
             )}
-
             {formErrors && (
                 <div className="flex flex-col">
                     {formErrors?.systematicStartDate && (

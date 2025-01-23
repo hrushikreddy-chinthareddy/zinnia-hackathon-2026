@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { TaskType } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { updateCaseTask } from '@deps/operations/tasks/task-operations';
-import { uploadDocument } from '@deps/queries/api/documents';
+import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 
 export const processPayload = (task: ManagementTask, correlationId: string): boolean => {
@@ -15,7 +15,7 @@ export const processPayload = (task: ManagementTask, correlationId: string): boo
             if (attachments?.length === 0) return true;
             attachments?.forEach(async (attachment: any) => {
                 if (!attachment.attachmentFile || attachment.attachmentFile === '') return;
-                const document = await uploadDocument(task, attachment.attachmentFile, correlationId);
+                const document = await uploadDocumentV2(task, attachment.attachmentFile, correlationId);
                 const { blob } = dataURItoBlob(attachment.attachmentFile);
                 if (document?.success) {
                     attachment.documentId = document?.documentId;

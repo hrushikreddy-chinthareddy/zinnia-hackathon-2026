@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 
+import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { FormSubtype } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -31,7 +32,6 @@ import {
     FormComment,
 } from '@deps/models/case/withdrawal/case';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-
 export type WithdrawalTaskStatus = CaseStatus | TaskStatus;
 export interface OtpWithdrawalFormState {
     formSubtype?: FormSubtype;
@@ -67,6 +67,7 @@ export interface OtpWithdrawalFormState {
     featureFlagDecisions?: FeatureFlags;
     ownerAcknowledgement?: OwnerAcknowledgement;
     formComment?: FormComment;
+    formBeneInfo: FormBeneInfo | null;
     setCurrentFormState: React.Dispatch<React.SetStateAction<WithdrawalTaskStatus>>;
     setFormSubtype?: React.Dispatch<React.SetStateAction<FormSubtype>>;
     setFormData: React.Dispatch<React.SetStateAction<FormData>>;
@@ -95,10 +96,11 @@ export interface OtpWithdrawalFormState {
     setFormNigos: React.Dispatch<React.SetStateAction<FormNigos | null>>;
     setFormReindexingData: React.Dispatch<React.SetStateAction<FormReIndexingData | null>>;
     setFormComment: React.Dispatch<React.SetStateAction<FormComment>>;
+    setFormBeneInfo: React.Dispatch<React.SetStateAction<any>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = (() => { }) as React.Dispatch<React.SetStateAction<any>>;
+const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 
 export const defaultFormDataContext = {
     formData: {} as FormData,
@@ -133,6 +135,7 @@ export const defaultFormDataContext = {
     parties: [],
     currentFormState: CaseStatus.Draft,
     isFormStateReadOnly: false,
+    formBeneInfo: {},
     setCurrentFormState: noop,
     setFormAdditionalWaivers: noop,
     setFormData: noop,
@@ -160,6 +163,7 @@ export const defaultFormDataContext = {
     setFormNigos: noop,
     setFormReindexingData: noop,
     setFormComment: noop,
+    setFormBeneInfo: noop,
 };
 
 export const FormDataContext = createContext<OtpWithdrawalFormState>(defaultFormDataContext as OtpWithdrawalFormState);

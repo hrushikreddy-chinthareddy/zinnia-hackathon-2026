@@ -32,7 +32,7 @@ import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, QualTypes, Transaction, TransactionStatus } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
-import { getDocumentSSR } from '@deps/queries/api/documents';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -46,6 +46,7 @@ import { NassauSSWForm } from '@deps/containers/otp/ssw-forms/nasu/nasu-ssw-form
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
 import { GlcoSSWForm } from '@deps/containers/otp/ssw-forms/glco/glco-ssw-form';
 import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
+import { UlpcSSWForm } from '@deps/containers/otp/ssw-forms/ulpc/ulpc-ssw-form';
 import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
@@ -61,7 +62,7 @@ interface SSWCaseProps extends SegmentTrackedPageProps {
     parties: LifeCadParty[];
     // TODO MG: put this in an interface for FeatureFlags that each page needing it can just extend
     featureFlagDecisions: FeatureFlags;
-    planCode: string;
+    planCode?: string;
 }
 
 // Return the first 5 transactions that are either done or pending
@@ -86,6 +87,7 @@ const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Recor
     [Carrier.MASS]: <MassMutualSSWForm qualType={qualType} />,
     [Carrier.NASU]: <NassauSSWForm />,
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
+    [Carrier.ULPC]: <UlpcSSWForm planCode={planCode} />,
 });
 
 export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user, planCode }: SSWCaseProps) {
@@ -261,7 +263,7 @@ export const getServerSideProps = withPageAuthRequired({
 
         const [translations, document] = await Promise.all([
             serverSideTranslations(locale, [TranslationFiles.COMMON]),
-            getDocumentSSR(documentNumber, DocumentType.SSW, clientId.toUpperCase(), accessToken),
+            getDocumentV2SSR(documentNumber, DocumentType.SSW, clientId.toUpperCase(), accessToken),
         ]);
         if (!document?.contract) {
             logError('create-case/ssw/:id::Error getting document', { documentNumber, clientId });

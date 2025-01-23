@@ -6,8 +6,9 @@ import {
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import {
   DocumentApiRequestInputs,
-  DocumentDownloadApiRequestInputs,
-  PolicyDocument,
+  DocumentV2DownloadApiRequestInputs,
+  DocumentV2SearchResult,
+  ExtendedDocumentMeta,
   TaxDocument,
   TaxDocumentApiRequestInputs,
 } from '@/types/document';
@@ -17,18 +18,18 @@ import { logError, logWarn } from '@/utils/logging/server-logging';
 import {
   ApiResponse,
   ServerApi,
-  documentApiBaseUrl,
+  documentV2ApiBaseUrl,
   isMockDocumentRequestEnabled,
   isMockDocumentsRequestEnabled,
   isMockErrorEnabled,
-} from '..';
-import { mockDocumentResponse } from '../mocks/document';
+} from '../..';
+import { mockDocumentResponse } from '../../mocks/document';
 import {
   mockDocumentsResponse,
   mockTaxDocumentsResponse,
-} from '../mocks/documents';
+} from '../../mocks/documents';
 
-const getDocumentsRaw = async (documentUrl: string) => {
+const getDocumentsRawV2 = async (documentUrl: string) => {
   const rawResponse = await ServerApi.get(documentUrl);
   const response = await parseAPIResponse(rawResponse);
   if (isMockErrorEnabled(ApiEndpoints.DOCUMENTS)) {
@@ -59,10 +60,10 @@ const getDocumentsRaw = async (documentUrl: string) => {
 };
 
 // Remove any params that are null or undefined since this will throw a 400
-const buildDocumentQueryParams = (
+const buildDocumentQueryParamsV2 = (
   queryParams:
     | Partial<DocumentApiRequestInputs>
-    | Partial<DocumentDownloadApiRequestInputs>
+    | Partial<DocumentV2DownloadApiRequestInputs>
 ) => {
   const documentQueryParams = new URLSearchParams();
   for (const key in queryParams) {
@@ -76,14 +77,14 @@ const buildDocumentQueryParams = (
   return documentQueryParams;
 };
 
-export const getDocumentDownload = async (
+export const getDocumentDownloadV2 = async (
   documentNumber: string,
   source: string,
   clientCode: string,
   policyNumber: string,
   planCode: string
 ): Promise<ApiResponse<DownloadDocumentResponse>> => {
-  const queryParams = buildDocumentQueryParams({
+  const queryParams = buildDocumentQueryParamsV2({
     documentNumber,
     source,
     clientCode,
@@ -95,36 +96,36 @@ export const getDocumentDownload = async (
     if (isMockDocumentRequestEnabled()) {
       return { data: mockDocumentResponse, error: null };
     }
-    const url = `${documentApiBaseUrl}/documents/${documentNumber}/download?${queryParams}`;
+    const url = `${documentV2ApiBaseUrl}/documents/${documentNumber}/download?${queryParams}`;
     const response = await ServerApi.get(url);
     if (!response.ok) {
       throw response;
     }
     return { data: await response.json(), error: null };
   } catch (e) {
-    logWarn('getDocument::Error', {
+    logWarn('getDocumentDownloadV2::Error', {
       error: (e as Error)?.message || (e as Response).statusText,
       file: 'services/document',
-      function: 'getDocumentDownload',
+      function: 'getDocumentDownloadV2',
     });
     return {
       data: null,
       error: {
         cause: e,
         status: (e as Response)?.status ?? 502,
-        name: 'getDocument::Error',
+        name: 'getDocumentDownloadV2::Error',
         message: 'error getting document',
       },
     };
   }
 };
 
-export const getDocuments = async (
+export const getDocumentsV2 = async (
   queryParams: Partial<DocumentApiRequestInputs>
-): Promise<ApiResponse<PolicyDocument>> => {
+): Promise<ApiResponse<DocumentV2SearchResult>> => {
   const { clientCode, source } = queryParams;
-  const documentQueryParams = buildDocumentQueryParams(queryParams);
-  const documentUrl = `${documentApiBaseUrl}/documents?${documentQueryParams.toString()}`;
+  const documentQueryParams = buildDocumentQueryParamsV2(queryParams);
+  const documentUrl = `${documentV2ApiBaseUrl}/documents?${documentQueryParams.toString()}`;
 
   if (isMockDocumentsRequestEnabled()) {
     return {
@@ -134,16 +135,19 @@ export const getDocuments = async (
   }
 
   try {
-    const docsData = await getDocumentsRaw(documentUrl);
+    const docsData = await getDocumentsRawV2(documentUrl);
 
     return {
       data: {
         ...docsData,
-        items: docsData?.items?.map((item: PolicyDocument) => ({
-          ...item,
-          clientCode,
-          downloadSource: source,
-        })),
+        documents: docsData?.items?.map(
+          ({ documentId, documentID, ...item }: ExtendedDocumentMeta) => ({
+            ...item,
+            documentId: documentId || documentID,
+            clientCode,
+            downloadSource: source,
+          })
+        ),
       },
       error: null,
     };
@@ -166,12 +170,12 @@ export const getDocuments = async (
  * TAX DOCUMENTS
  * =====================
  */
-export const getTaxDocuments = async (
+export const getTaxDocumentsV2 = async (
   queryParams: Partial<TaxDocumentApiRequestInputs>
 ): Promise<ApiResponse<TaxFormsResponse200>> => {
   const { clientCode } = queryParams;
-  const documentQueryParams = buildDocumentQueryParams(queryParams);
-  const documentUrl = `${documentApiBaseUrl}/taxForms?${documentQueryParams.toString()}`;
+  const documentQueryParams = buildDocumentQueryParamsV2(queryParams);
+  const documentUrl = `${documentV2ApiBaseUrl}/taxForms?${documentQueryParams.toString()}`;
 
   if (isMockDocumentsRequestEnabled()) {
     return {
@@ -181,7 +185,7 @@ export const getTaxDocuments = async (
   }
 
   try {
-    const docsData = await getDocumentsRaw(documentUrl);
+    const docsData = await getDocumentsRawV2(documentUrl);
     return {
       data: {
         ...docsData,
@@ -193,20 +197,20 @@ export const getTaxDocuments = async (
       error: null,
     };
   } catch (error) {
-    logWarn('getTaxDocuments error', { error });
+    logWarn('getTaxDocumentsV2 error', { error });
 
     return {
       data: null,
       error: {
         message: 'Something went wrong',
         status: 500,
-        name: 'getTaxDocuments Error',
+        name: 'getTaxDocumentsV2 Error',
       },
     };
   }
 };
 
-export const getTaxDocumentDownload = async ({
+export const getTaxDocumentDownloadV2 = async ({
   formId,
   taxYear,
   carrierId,
@@ -223,24 +227,24 @@ export const getTaxDocumentDownload = async ({
     if (isMockDocumentRequestEnabled()) {
       return { data: mockDocumentResponse, error: null };
     }
-    const url = `${documentApiBaseUrl}/taxForms/${formId}?clientCode=${carrierId}&fChar=${fChar}&contractNumber=${contractNumber}&taxYear=${taxYear}`;
+    const url = `${documentV2ApiBaseUrl}/taxForms/${formId}?clientCode=${carrierId}&fChar=${fChar}&contractNumber=${contractNumber}&taxYear=${taxYear}`;
     const response = await ServerApi.get(url);
     if (!response.ok) {
       throw response;
     }
     return { data: await response.json(), error: null };
   } catch (e) {
-    logWarn('getDocument::Error', {
+    logWarn('getTaxDocumentDownloadV2::Error', {
       error: (e as Error)?.message || (e as Response).statusText,
       file: 'services/document',
-      function: 'getTaxDocumentDownload',
+      function: 'getTaxDocumentDownloadV2',
     });
     return {
       data: null,
       error: {
         cause: e,
         status: (e as Response)?.status ?? 502,
-        name: 'getDocument::Error',
+        name: 'getTaxDocumentDownloadV2::Error',
         message: 'error getting document',
       },
     };

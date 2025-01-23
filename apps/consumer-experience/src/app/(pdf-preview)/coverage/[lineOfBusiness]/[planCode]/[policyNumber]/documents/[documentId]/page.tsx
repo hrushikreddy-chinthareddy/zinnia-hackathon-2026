@@ -3,8 +3,10 @@ import { Metadata } from 'next';
 
 import PdfPreviewer from '@/components/pdf-previewer/PdfPreviewer';
 import { RouteKey, getPageTitle } from '@/route-map';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { DocumentCategory } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { createQueryString } from '@/utils/strings';
 
 import previewStyles from './Preview.module.css';
@@ -30,16 +32,32 @@ export default async function DocumentPreview({
     docCategory: DocumentCategory;
   };
 }) {
+  const flags = await getFeatureFlags();
+  const shouldUseV3 = flags?.[FEATURE_FLAGS.DOCUMENTS_V3];
   const { lineOfBusiness, documentId, ...otherParams } = params;
   const { fileName, ...otherSearchParams } = searchParams;
-  const queryParamString = createQueryString({
-    ...otherParams,
-    ...otherSearchParams,
-  });
-  const docDownloadUrl =
-    searchParams.docCategory === DocumentCategory.TAX
-      ? `/api/documents/tax-docs/${documentId}/download/${fileName}.pdf?${queryParamString}`
-      : `/api/documents/${documentId}/download/${fileName}.pdf?${queryParamString}`;
+  let docDownloadUrl;
+  if (shouldUseV3) {
+    const queryParamString = createQueryString({
+      ...otherParams,
+      ...otherSearchParams,
+      parentCarrierCode: searchParams.clientCode,
+      documentClassification: searchParams.source,
+    });
+    docDownloadUrl =
+      searchParams.docCategory === DocumentCategory.TAX
+        ? `/api/documents/v3/tax-docs/${documentId}/download/${fileName}.pdf?${queryParamString}`
+        : `/api/documents/v3/${documentId}/download/${fileName}.pdf?${queryParamString}`;
+  } else {
+    const queryParamString = createQueryString({
+      ...otherParams,
+      ...otherSearchParams,
+    });
+    docDownloadUrl =
+      searchParams.docCategory === DocumentCategory.TAX
+        ? `/api/documents/tax-docs/${documentId}/download/${fileName}.pdf?${queryParamString}`
+        : `/api/documents/${documentId}/download/${fileName}.pdf?${queryParamString}`;
+  }
 
   return (
     <div style={{ height: '100svh' }}>
