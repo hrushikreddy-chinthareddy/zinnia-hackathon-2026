@@ -3163,7 +3163,8 @@
             "additionalDocuments": "Documents supplémentaires",
             "noAssignee": "Seul le responsable peut démarrer cette tâche",
             "startTask": "Démarrer la tâche",
-            "ClaimTask": "Revendiquer la tâche"
+            "claimTask": "Revendiquer la tâche",
+            "taskHeading": "Tâche"
         },
         "suitability": {
             "header": "Examen complet de l’adéquation",

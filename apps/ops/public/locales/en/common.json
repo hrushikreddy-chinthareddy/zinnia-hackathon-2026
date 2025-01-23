@@ -3190,7 +3190,8 @@
             "additionalDocuments": "Additional Documents",
             "noAssignee": "Only the assignee can start this task",
             "startTask": "Start task",
-            "ClaimTask": "Claim task"
+            "claimTask": "Claim task",
+            "taskHeading": "Task"
         },
         "suitability": {
             "header": "Complete Suitability Review",

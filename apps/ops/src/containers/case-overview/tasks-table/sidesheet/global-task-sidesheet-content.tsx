@@ -4,7 +4,6 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
@@ -41,7 +40,7 @@ export enum TabOptions {
     Documents = 'Documents',
 }
 
-export interface DocumentItem {
+export interface DocumentItemProps {
     document: {
         documentId: string;
         documentName?: string;
@@ -113,8 +112,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     if (loading)
         return (
             <div className="flex justify-center items-center h-screen">
-                {' '}
-                <PageLoader variant={PageLoaderVariant.Center} />;{' '}
+                <Loader />
             </div>
         );
 
@@ -172,7 +170,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
             {task.status === TaskStatus.New &&
                 (!claimTaskLoader ? (
                     <button className="text-blue-600 hover:text-blue-700 hover:underline focus:outline-none" onClick={handleClaimTask}>
-                        Claim task
+                        {t('sideSheet.task.claimTask')}
                     </button>
                 ) : (
                     <div
@@ -200,7 +198,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         );
     };
 
-    const DocumentItem = ({ document, taskCarrier, docType }: DocumentItem) => {
+    const DocumentItem = ({ document, taskCarrier, docType }: DocumentItemProps) => {
         return (
             <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]" key={document.documentId}>
                 <div>
