@@ -20,6 +20,7 @@ type SystematicWithdrawalProgramProps = {
     options: SSWProgramOptions[];
     isReadOnly?: boolean;
     planCode?: string;
+    jointCoveredPlanCodes?: string[];
     onSswProgramFrequencyChange?: (val: Frequency) => void;
 };
 
@@ -33,6 +34,7 @@ const SystematicWithdrawalProgram = ({
     isReadOnly,
     onSswProgramFrequencyChange,
     planCode,
+    jointCoveredPlanCodes
 }: SystematicWithdrawalProgramProps) => {
     const { formErrors, formProgram, setFormProgram } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
@@ -76,7 +78,11 @@ const SystematicWithdrawalProgram = ({
             </div>
 
             {sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
-                <JointCoveredPersonDetails isReadOnly={isReadOnly || false} planCode={planCode} />
+                <JointCoveredPersonDetails
+                    isReadOnly={isReadOnly || false}
+                    planCode={planCode}
+                    jointCoveredPlanCodes={jointCoveredPlanCodes}
+                />
             )}
 
             {formErrors && (

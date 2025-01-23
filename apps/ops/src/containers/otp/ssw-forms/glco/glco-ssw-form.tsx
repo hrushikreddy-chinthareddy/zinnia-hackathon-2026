@@ -32,6 +32,7 @@ export function GlcoSSWForm({ planCode }: GlcoSSWFormProps) {
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
         w4pSignaturesConfig,
+        jointCoveredPlanCodes
     } = getGlcoConfig(t);
     const {
         formParty,
@@ -66,7 +67,12 @@ export function GlcoSSWForm({ planCode }: GlcoSSWFormProps) {
             <SswEditSelection />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
-            <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} planCode={planCode} />
+            <SystematicWithdrawalProgram
+                isReadOnly={isFormStateReadOnly}
+                options={systematicWithdrawalOptions}
+                planCode={planCode}
+                jointCoveredPlanCodes={jointCoveredPlanCodes}
+            />
             <FormDistribution
                 isDerivedMethodFromFunds={true}
                 isFormStateReadOnly={isFormStateReadOnly}

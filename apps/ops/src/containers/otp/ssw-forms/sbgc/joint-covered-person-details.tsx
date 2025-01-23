@@ -19,9 +19,10 @@ import useSbgcConfig from './sbgc-ssw-form-helper';
 type JointCoveredPersonDetailsProps = {
     isReadOnly: boolean;
     planCode?: string;
+    jointCoveredPlanCodes?: string[];
 };
 
-const JointCoveredPersonDetails = ({ isReadOnly, planCode }: JointCoveredPersonDetailsProps) => {
+const JointCoveredPersonDetails = ({ isReadOnly, planCode, jointCoveredPlanCodes }: JointCoveredPersonDetailsProps) => {
     const { formParty, setFormParty } = useContext(FormDataContext);
     const party = formParty?.parties?.find(item => item.partyRoleType === PartyRoles.JOINTCOVEREDPERSON);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -88,7 +89,7 @@ const JointCoveredPersonDetails = ({ isReadOnly, planCode }: JointCoveredPersonD
                     value={relationToCoveredPerson}
                     name="relationToCoveredPerson"
                 />
-                {planCode === '772' && (
+                {jointCoveredPlanCodes && planCode && jointCoveredPlanCodes.includes(planCode) && (
                     <SelectSimple
                         disabled={isReadOnly}
                         className="max-w-lg"

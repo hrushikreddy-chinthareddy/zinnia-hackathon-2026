@@ -567,6 +567,8 @@ export default function getGlcoConfig(t: TFunction) {
             key: 'w4p-signature-sign-date',
         },
     ];
+    const jointCoveredPlanCodes = [ '772' ];
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -575,5 +577,6 @@ export default function getGlcoConfig(t: TFunction) {
         signaturesConfig,
         w4pSignaturesConfig,
         systematicWithdrawalOptions,
+        jointCoveredPlanCodes
     };
 }
