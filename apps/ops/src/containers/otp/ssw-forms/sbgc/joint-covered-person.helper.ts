@@ -1,6 +1,6 @@
 import { TFunction } from 'next-i18next';
 
-import { PartyRoles } from '@deps/models/case/withdrawal/case';
+import { PartyRoles, PayoutOptions } from '@deps/models/case/withdrawal/case';
 
 export enum RelationshipToCoveredPerson {
     HUSBAND = 'HUSBAND',
@@ -33,4 +33,9 @@ export const relationshipToCoveredPerson = (t: TFunction) => [
     { label: t('sswProgram.relationshipToCoveredPerson.relationshipOptions.wife'), value: RelationshipToCoveredPerson.WIFE },
     { label: t('sswProgram.relationshipToCoveredPerson.relationshipOptions.spouse'), value: RelationshipToCoveredPerson.SPOUSE },
     { label: t('sswProgram.relationshipToCoveredPerson.relationshipOptions.na'), value: RelationshipToCoveredPerson.NA },
+];
+
+export const payoutOptions = (t: TFunction) => [
+    { label: t('sswProgram.payout.payoutOptions.level'), value: PayoutOptions.level },
+    { label: t('sswProgram.payout.payoutOptions.increasing'), value: PayoutOptions.increasing },
 ];

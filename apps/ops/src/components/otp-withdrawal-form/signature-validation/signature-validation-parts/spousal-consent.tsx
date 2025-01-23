@@ -1,6 +1,6 @@
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -16,7 +16,7 @@ const SpousalConsent = () => {
 
     const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const isFormStateReadOnly = shouldShowNewExperience
-        ? (searchParams.get('action') === 'readonly' || ((currentFormState !== CaseStatus.Pending && currentFormState !== TaskStatus.New) && searchParams.get('action') !== 'duplicate'))
+        ? (searchParams.get('action') === 'readonly' || ((currentFormState !== CaseStatus.Pending && currentFormState !== TaskStatus.New && currentFormState !== TaskStatus.InProgress) && searchParams.get('action') !== 'duplicate'))
         : false;
 
     useEffect(() => {

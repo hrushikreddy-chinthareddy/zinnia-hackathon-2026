@@ -103,6 +103,7 @@ const CreateCaseForm = ({
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
                                 value={documentNumber}
+                                id='documentNumber'
                             />
                         )}
                     </div>
@@ -124,6 +125,7 @@ const CreateCaseForm = ({
                                         size={FieldSize.Small}
                                         type={FieldType.BaseActive}
                                         value={documentNumber}
+                                        id='documentNumber'
                                     />
                                 ) : (
                                     <Field
@@ -134,6 +136,7 @@ const CreateCaseForm = ({
                                         size={FieldSize.Small}
                                         type={FieldType.BaseActive}
                                         value={policyNumber}
+                                        id='policyNumber'
                                     />
                                 )}
                             </div>

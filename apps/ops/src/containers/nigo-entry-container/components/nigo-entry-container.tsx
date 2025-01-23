@@ -128,7 +128,7 @@ const NigoEntryContainer = ({
             {
                 ariaLabel: t('tabs.formEntry'),
                 isVisible: () => sectionOption === SelOptionType.DATA_ENTRY,
-                component: <FormEntryStep document={documentData} clientCode={clientCode} docType={docType} />,
+                component: <FormEntryStep document={documentData} clientCode={clientCode} docType={docType} planCode={policy.product?.planCode || ''}/>,
                 screenReaderLabel: t('tabs.formEntry'),
                 index: 1,
                 text: t('tabs.formEntry'),

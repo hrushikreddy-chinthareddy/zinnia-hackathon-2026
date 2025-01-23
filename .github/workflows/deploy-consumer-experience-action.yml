@@ -62,14 +62,14 @@ jobs:
 
       - name: Fill in the new image ID in the Amazon ECS task definition (east)
         id: task-def-east
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        uses: aws-actions/amazon-ecs-render-task-definition@v1.6.1
         with:
           task-definition: east-task-definition.json
           container-name: ${{ vars.CONTAINER_NAME }}
           image: ${{ steps.login-ecr-east.outputs.registry }}/${{ vars.ECR_REPOSITORY_CONSUMER_EXPERIENCE }}:${{ github.sha }}
 
       - name: Deploy Amazon ECS Task Definition (east)
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2.2.0
         with:
           task-definition: ${{ steps.task-def-east.outputs.task-definition }}
           service: ${{ secrets.ECS_CLUSTER_SERVICE_CONSUMER_EXPERIENCE }}

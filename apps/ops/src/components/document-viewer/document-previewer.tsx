@@ -2,7 +2,7 @@ import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../nav-element/nav-element';
-import { DocumentTypeView } from '../side-sheet/documents/documents-content';
+import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
 
 export interface DocumentPreviewerProps {
     activeDocType: DocumentTypeView;

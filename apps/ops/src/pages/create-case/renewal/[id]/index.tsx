@@ -26,7 +26,7 @@ import { DocumentData } from '@deps/models/case/document';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
-import { getDocumentSSR } from '@deps/queries/api/documents';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyAccountInfoSSR, getPolicyPartiesSSR } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
@@ -198,7 +198,7 @@ export const getServerSideProps = withPageAuthRequired({
         const taskId = (query.taskId as string) || '';
         const action = (query.action as string) || '';
 
-        const caseDocument = await getDocumentSSR(documentNumber, 'Exchange', clientId, accessToken as string);
+        const caseDocument = await getDocumentV2SSR(documentNumber, 'Exchange', clientId, accessToken as string);
 
         if (!caseDocument?.contract) {
             logError('create-case/exchange/:id::Error getting document', {

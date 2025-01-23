@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 
 import SideSheetDocumentItem from './document-item';
 import { mockDocuments } from './document-item.stories';
-import { DocumentTypeView } from '../documents-content';
+import { DocumentTypeView } from '../DocumentTypeView';
 
 const unsupportedDocument = mockDocuments[mockDocuments.length - 1];
 const supportedDocument = mockDocuments[0];

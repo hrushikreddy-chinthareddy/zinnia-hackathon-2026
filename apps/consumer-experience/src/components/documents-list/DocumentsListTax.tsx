@@ -1,5 +1,6 @@
 'use client';
 
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 
@@ -20,7 +21,7 @@ export default function DocumentsListTax({
   lineOfBusiness,
   carrierId,
 }: {
-  documents: TaxDocument[];
+  documents: TaxDocument[] | TaxformResponse[];
   planCode: string;
   policyNumber: string;
   lineOfBusiness: LineOfBusiness;
@@ -40,7 +41,7 @@ export default function DocumentsListTax({
       listItems={documents.map(d => {
         const queryParams = {
           clientCode: carrierId,
-          fChar: d.fChar,
+          fChar: (d as TaxDocument)?.fChar || (d as TaxformResponse)?.fchar,
           taxYear: d.taxYear,
           docCategory: DocumentCategory.TAX,
         };

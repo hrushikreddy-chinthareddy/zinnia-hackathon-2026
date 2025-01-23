@@ -4,6 +4,7 @@ import '@/app/styles/globals.css';
 
 import styles from '@/app/layout.module.css';
 import Analytics from '@/components/analytics/Analytics';
+import { MourningBanner } from '@/components/mourning-banner/MourningBanner';
 import { Nav } from '@/components/nav/Nav';
 import { PiiProvider } from '@/components/providers/PiiProvider';
 import { RefreshRouterManager } from '@/components/providers/RefreshRouterManager';
@@ -64,6 +65,7 @@ export default async function AuthenticatedLayout({
 
               <div className={styles.container}>
                 <div className={styles.content}>
+                  <MourningBanner />
                   <UserConsentManager>{children}</UserConsentManager>
                   <Analytics />
                 </div>

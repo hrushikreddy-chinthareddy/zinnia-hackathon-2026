@@ -6,7 +6,11 @@ import { IconType } from '@zinnia/bloom/components';
 import { ClickableListContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import { DocumentCategory, ExtendedDocumentMeta } from '@/types/document';
+import {
+  DocumentCategory,
+  DocumentV3SearchItem,
+  ExtendedDocumentMeta,
+} from '@/types/document';
 import { checkIfNull, lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { createQueryString } from '@/utils/strings';
@@ -27,7 +31,7 @@ export default function DocumentsList({
   lineOfBusiness,
 }: {
   docCategory: DocumentCategory;
-  documents: ExtendedDocumentMeta[];
+  documents: ExtendedDocumentMeta[] | DocumentV3SearchItem[];
   planCode: string;
   policyNumber: string;
   lineOfBusiness: LineOfBusiness;
@@ -45,8 +49,15 @@ export default function DocumentsList({
     <ClickableListContainer
       listItems={documents.map(d => {
         const queryParams = {
-          clientCode: d.clientCode,
-          source: d.downloadSource,
+          clientCode:
+            (d as ExtendedDocumentMeta)?.clientCode ??
+            (d as DocumentV3SearchItem)?.parentCarrierCode,
+          source:
+            (d as ExtendedDocumentMeta)?.downloadSource ??
+            (d as DocumentV3SearchItem)?.documentClassification,
+          documentClassification:
+            d.documentClassification ||
+            (d as ExtendedDocumentMeta)?.downloadSource,
           fileName:
             d?.displayName?.replace(/[^A-Z0-9]/gi, '') ??
             d.documentId ??

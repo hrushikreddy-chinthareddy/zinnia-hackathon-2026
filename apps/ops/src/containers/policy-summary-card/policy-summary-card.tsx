@@ -1,7 +1,7 @@
 import { Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
-import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { PropsWithChildren, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -33,9 +33,11 @@ import { fillColDefs } from '@deps/helpers/data-transform.helper';
 import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { BasePolicyComponentArgs, PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { convertToQueryString } from '@deps/helpers/routing.helper';
 import { convertKebabedDateString, formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helper';
 import { CardColumnsTest, CardDetailsTest } from '@deps/jest/constants/test-id-constants';
+import { Statuses } from '@deps/models/case/case';
 import {
     Address,
     Email,
@@ -51,6 +53,7 @@ import {
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
+import { getCases } from '@deps/queries/api/cases';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -383,62 +386,69 @@ const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
     );
 };
 
-const StatusBanner = ({ policy }: BasePolicyComponentArgs) => {
+const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesTotal?: number }) => {
     const { t } = useTranslation();
     const policyStatus = policy.policyStatus;
     const { featureFlags } = useOptimizely();
     const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
 
-    if (policyStatus === PolicyStatus.PENDINGLAPSE) {
-        return (
-            <BannerAlert
-                variant={BannerVariant.Warning}
-                cta={{
-                    href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
-                    text: t('dashboard.search.results.policySummaryCard.pendingLapseBannerLink'),
-                }}
-                bodyText={t('dashboard.search.results.policySummaryCard.pendingLapseBannerText')}
-            />
-        );
-    }
-    if (policyStatus === PolicyStatus.LAPSE) {
-        // TODO - BPB: Policy Features Helper Class
-        const reinstatementWithApproval = policy.policy.policyFeatures?.find(
-            pf => pf.featureType === ('REINSTATEMENT' as PolicyFeatureFeatureType) && pf.approvalDate
-        );
+    const showCaseBanner = !!casesTotal && casesTotal > 0;
 
-        if (!reinstatementWithApproval) {
-            return null;
-        }
+    // TODO - BPB: Policy Features Helper Class
+    const reinstatementWithApproval = policy.policy.policyFeatures?.find(
+        pf => pf.featureType === ('REINSTATEMENT' as PolicyFeatureFeatureType) && pf.approvalDate
+    );
 
-        return (
-            <BannerAlert
-                variant={BannerVariant.Error}
-                cta={{
-                    href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
-                    text: t('dashboard.search.results.policySummaryCard.lapseBannerLink'),
-                }}
-                bodyText={t('dashboard.search.results.policySummaryCard.lapseBannerText')}
-            />
-        );
-    }
+    return (
+        <div className="flex flex-col gap-4">
+            {showCaseBanner && (
+                <BannerAlert
+                    variant={BannerVariant.Warning}
+                    bodyText={t('dashboard.search.results.policySummaryCard.caseBannerText', { count: casesTotal })}
+                    cta={{
+                        href: `/cases${convertToQueryString({ policyNumber: policy.policyNumber || '' })}`,
+                        text: t('dashboard.search.results.policySummaryCard.caseBannerLink'),
+                        target: '_blank',
+                    }}
+                />
+            )}
 
-    if (freeLookEnabled && policy.freeLookPeriodDetails.isInFreeLookPeriod) {
-        return (
-            <BannerAlert
-                variant={BannerVariant.Warning}
-                bodyText={`${t('dashboard.search.results.policySummaryCard.freeLookCancelBannerText')} ${convertKebabedDateString(
-                    policy.freeLookPeriodDetails?.endDate
-                )}`}
-                cta={{
-                    href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,
-                    text: t('dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'),
-                }}
-            />
-        );
-    }
+            {policyStatus === PolicyStatus.PENDINGLAPSE && (
+                <BannerAlert
+                    variant={BannerVariant.Warning}
+                    cta={{
+                        href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
+                        text: t('dashboard.search.results.policySummaryCard.pendingLapseBannerLink'),
+                    }}
+                    bodyText={t('dashboard.search.results.policySummaryCard.pendingLapseBannerText')}
+                />
+            )}
 
-    return null;
+            {policyStatus === PolicyStatus.LAPSE && !!reinstatementWithApproval && (
+                <BannerAlert
+                    variant={BannerVariant.Error}
+                    cta={{
+                        href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
+                        text: t('dashboard.search.results.policySummaryCard.lapseBannerLink'),
+                    }}
+                    bodyText={t('dashboard.search.results.policySummaryCard.lapseBannerText')}
+                />
+            )}
+
+            {freeLookEnabled && policy.freeLookPeriodDetails.isInFreeLookPeriod && (
+                <BannerAlert
+                    variant={BannerVariant.Warning}
+                    bodyText={`${t('dashboard.search.results.policySummaryCard.freeLookCancelBannerText')} ${convertKebabedDateString(
+                        policy.freeLookPeriodDetails?.endDate
+                    )}`}
+                    cta={{
+                        href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,
+                        text: t('dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'),
+                    }}
+                />
+            )}
+        </div>
+    );
 };
 
 const QuickViewModule = ({ policy }: BasePolicyComponentArgs) => {
@@ -663,13 +673,42 @@ const ActiveQuickView = ({ policy }: BasePolicyComponentArgs) => {
 
 export const PolicyQuickView: React.FC<SummaryCardProps> = ({ policy }) => {
     const policyDetails = new PolicyDetails(policy);
+    const [casesTotal, setCasesTotal] = useState<number>(0);
+
+    const fetchCases = useCallback(async () => {
+        try {
+            const policyNumber = policyDetails.policyNumber;
+            const response = await getCases({
+                limit: 5,
+                notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
+                policyNumber,
+            });
+
+            if (!response) {
+                console.log('Error fetching cases: No data in response');
+            }
+
+            if ('total' in response) {
+                const total = response.total;
+                setCasesTotal(total);
+            } else {
+                console.log('Error fetching cases: No data in response');
+            }
+        } catch (error) {
+            console.error(`Error fetching cases: No data in response: ${error}`);
+        }
+    }, [policyDetails.policyNumber]);
+
+    useEffect(() => {
+        fetchCases();
+    }, [fetchCases]);
 
     return (
         <section data-testid={CardDetailsTest.CARD} className="mb-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
             <ResponsivePadding>
                 <QuickViewHeader policy={policyDetails} />
                 <div data-testid={CardDetailsTest.CONTENT}>
-                    <StatusBanner policy={policyDetails} />
+                    <StatusBanner policy={policyDetails} casesTotal={casesTotal} />
                     <div data-testid={CardColumnsTest.COLUMNS} className="my-4 md:my-6 lg:my-8 lg:flex">
                         <OwnerInformation policy={policyDetails} />
                         <QuickViewModule policy={policyDetails} />

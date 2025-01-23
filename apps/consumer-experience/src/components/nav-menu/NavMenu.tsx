@@ -12,7 +12,7 @@ import { UserBadge } from '@/components/user-badge/UserBadge';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import useMock from '@/hooks/use-mock';
 import { CarrierNames } from '@/types/carriers';
-import { CarrierListDetail } from '@/utils/carriers';
+import { CarrierListDetail, getCarrierSubdomainByName } from '@/utils/carriers';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './NavMenu.module.css';
@@ -124,13 +124,17 @@ export const NavMenu = ({
                   const CarrierIcon =
                     carrierIcons[detail.carrierName as CarrierNames];
 
+                  const companyName = getCarrierSubdomainByName(
+                    detail.carrierName.toLowerCase()
+                  );
+
                   return (
                     <li
                       key={detail.carrierName}
                       className={clsx({
                         [styles.active as string]:
-                          pathname === navUrls.allPolicies &&
-                          currentUrl.includes(detail.carrierName.toLowerCase()),
+                          // companyName might be an empty string
+                          companyName && currentUrl.includes(companyName),
                       })}
                     >
                       <span>

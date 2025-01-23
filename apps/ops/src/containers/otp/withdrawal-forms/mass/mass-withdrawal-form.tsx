@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
@@ -43,6 +43,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         validateMaritalStatusAllowances,
         distributionReasonOptions,
         waiverItemsConfig,
+
     } = useMassWithdrawalConfig(t);
     const {
         setFormValidator,

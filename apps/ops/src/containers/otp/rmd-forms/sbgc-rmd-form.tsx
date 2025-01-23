@@ -9,11 +9,13 @@ import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-pa
 import JointLifeExpectancy from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
+import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getSbgcRmdConfig from './sbgc-rmd-form.helper';
 
@@ -26,9 +28,10 @@ export default function SbgcRmdWithdrawalForm() {
         disbursementOptions,
         jointLifeExpectancyConfigs,
         fundWithdrawnMethodOptions,
+        w4pSignaturesConfig
     } = getSbgcRmdConfig(t);
 
-    const { formParty, setFormData, formData, initialForm, setFormValidator, formTpaAuthorization, isFormStateReadOnly } =
+    const { formParty, setFormData, formData, initialForm, setFormValidator, formTpaAuthorization, isFormStateReadOnly, contractIssueState } =
         useContext(FormDataContext);
 
     useEffect(() => {
@@ -50,7 +53,7 @@ export default function SbgcRmdWithdrawalForm() {
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const ownerIsVirginiaResident = ownerStateOfResidence === USStates.VIRGINIA;
-
+    const shouldStateW4pRender = isAllowedState(contractIssueState)
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -63,6 +66,7 @@ export default function SbgcRmdWithdrawalForm() {
                 title={t('distributionInstruction.distributionInstruction') as string}
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
+            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             {ownerIsVirginiaResident && <FinancialProfessionalSignature isFormStateReadOnly={isFormStateReadOnly} />}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />

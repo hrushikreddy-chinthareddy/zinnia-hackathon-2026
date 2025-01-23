@@ -23,6 +23,8 @@ const TaskStatusMap: Record<TaskStatus, string> = {
     [TaskStatus.Completed]: 'COMPLETED',
     [TaskStatus.New]: 'NEW',
     [TaskStatus.InProgress]: 'INPROGRESS',
+    [TaskStatus.Canceled]: 'CANCELED',
+    [TaskStatus.Pending]: 'IMPEDED',
 }
 
 const statusOrderHelper: Record<string, number> = {

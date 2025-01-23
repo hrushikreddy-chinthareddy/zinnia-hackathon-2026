@@ -1,3 +1,4 @@
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect } from 'react';
 
@@ -7,13 +8,18 @@ import { TranslationFiles } from '@deps/config/translations';
 import HtmlPreview from '@deps/containers/documents-page/html-preview';
 import ImagePreview from '@deps/containers/documents-page/image-preview';
 import PdfPreview from '@deps/containers/documents-page/pdf-preview';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { supportedExtensions, supportedImgExtensions } from '@deps/models/case/document';
-import { getDocumentPreview } from '@deps/queries/api/documents';
+import { getDocumentPreviewV2 } from '@deps/queries/api/client/documents/v2/preview';
+import { getDocumentPreviewV3 } from '@deps/queries/api/client/documents/v3/preview';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+
+import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
 
 export interface DocumentViewerProps {
     status: number;
     id: string;
-    documentType?: string;
+    documentType?: DocumentTypeView;
     carrierCode?: string;
 }
 
@@ -23,11 +29,27 @@ const DocumentViewer = (props: DocumentViewerProps) => {
     const [isLoading, setIsLoading] = useState(true);
     const [fileExtension, setFileExtension] = useState<null | string>(null);
     const [documentBinary, setDocumentBinary] = useState<null | string>(null);
+    const { featureFlags } = useOptimizely();
     const { id, documentType, carrierCode } = props;
 
     useEffect(() => {
         const getDocument = async () => {
-            const download = await getDocumentPreview(id, documentType || '', carrierCode || '');
+            let download;
+            if (featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]) {
+                let docClass;
+                switch (documentType) {
+                    case DocumentTypeView.Correspondence:
+                        docClass = SearchRequest.documentClassification.OUTBOUND;
+                        break;
+                    case DocumentTypeView.Policy:
+                    default:
+                        docClass = SearchRequest.documentClassification.INBOUND;
+                        break;
+                }
+                download = await getDocumentPreviewV3(id, docClass, carrierCode || '');
+            } else {
+                download = await getDocumentPreviewV2(id, documentType || ('' as DocumentTypeView), carrierCode || '');
+            }
 
             setFileExtension(download?.fileExtension?.toLowerCase() || null);
             setDocumentBinary(download?.binaryData || null);
@@ -56,7 +78,7 @@ const DocumentViewer = (props: DocumentViewerProps) => {
         return () => {
             document.removeEventListener('keydown', onKeyDown);
         };
-    }, [carrierCode, documentType, id]);
+    }, [carrierCode, documentType, id, featureFlags]);
 
     if (isLoading) {
         return <PageLoader />;

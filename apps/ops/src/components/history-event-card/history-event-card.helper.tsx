@@ -14,9 +14,9 @@ import {
     TransactionStatus,
     TransactionType,
 } from '@deps/models/policy/sor-policy';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { GetBankAccount, PeopleChangeType } from './types';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 const typeByTransactionType = {
     [TransactionType.AddressChange]: 'address',

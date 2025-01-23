@@ -11,12 +11,12 @@ import { useFetchCases } from '@deps/hooks/useFetchCases';
 import { Case, CaseType, Statuses } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import createCaseFromDocumentNumber from '@deps/operations/cases/caseOperations';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import { CaseListControls } from './case-list-controls';
 import { CaseListEmptyState } from './case-list-empty-state';
 import { CaseListItem } from './case-list-item';
 import { initialCaseSearchCriteria } from '../helpers/const';
-import { browserLogInfo } from '@deps/utils/browser-logging';
 
 export interface CaseListContainerProps {
     t: TFunction;

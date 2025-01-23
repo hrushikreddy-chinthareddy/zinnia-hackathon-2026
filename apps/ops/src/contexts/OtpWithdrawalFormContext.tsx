@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 
+import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { FormSubtype } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -28,9 +29,9 @@ import {
     OwnerAcknowledgement,
     FormNigos,
     FormReIndexingData,
+    FormComment,
 } from '@deps/models/case/withdrawal/case';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-
 export type WithdrawalTaskStatus = CaseStatus | TaskStatus;
 export interface OtpWithdrawalFormState {
     formSubtype?: FormSubtype;
@@ -40,7 +41,7 @@ export interface OtpWithdrawalFormState {
     formErrors: FormValidationErrors;
     formWarnings: FormValidationErrors;
     formFullSurrenderAck: FormFullSurrenderAck;
-    formIrsData: FormIrsData | null;
+    formIrsData: FormIrsData[];
     formOL4753Data: FormOL4753Data | null;
     formLoan: FormLoan;
     formParty: FormParty;
@@ -65,6 +66,8 @@ export interface OtpWithdrawalFormState {
     formSpecialInstruction: FormSpecialInstruction;
     featureFlagDecisions?: FeatureFlags;
     ownerAcknowledgement?: OwnerAcknowledgement;
+    formComment?: FormComment;
+    formBeneInfo: FormBeneInfo | null;
     setCurrentFormState: React.Dispatch<React.SetStateAction<WithdrawalTaskStatus>>;
     setFormSubtype?: React.Dispatch<React.SetStateAction<FormSubtype>>;
     setFormData: React.Dispatch<React.SetStateAction<FormData>>;
@@ -73,7 +76,7 @@ export interface OtpWithdrawalFormState {
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setFormWarnings: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setFormFullSurrenderAck: React.Dispatch<React.SetStateAction<FormFullSurrenderAck>>;
-    setFormIrsData: React.Dispatch<React.SetStateAction<FormIrsData | null>>;
+    setFormIrsData: React.Dispatch<React.SetStateAction<FormIrsData[]>>;
     setFormOL4753Data: React.Dispatch<React.SetStateAction<FormOL4753Data | null>>;
     setFormLoan: React.Dispatch<React.SetStateAction<FormLoan>>;
     setFormParty: React.Dispatch<React.SetStateAction<FormParty>>;
@@ -92,6 +95,8 @@ export interface OtpWithdrawalFormState {
     setOwnerAcknowledgement: React.Dispatch<React.SetStateAction<OwnerAcknowledgement | undefined>>;
     setFormNigos: React.Dispatch<React.SetStateAction<FormNigos | null>>;
     setFormReindexingData: React.Dispatch<React.SetStateAction<FormReIndexingData | null>>;
+    setFormComment: React.Dispatch<React.SetStateAction<FormComment>>;
+    setFormBeneInfo: React.Dispatch<React.SetStateAction<any>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -103,7 +108,7 @@ export const defaultFormDataContext = {
     formDistribution: {} as FormDistribution,
     formErrors: {} as FormValidationErrors,
     formFullSurrenderAck: {} as FormFullSurrenderAck,
-    formIrsData: {} as FormIrsData,
+    formIrsData: [] as FormIrsData[],
     formOL4753Data: {} as FormOL4753Data,
     formLoan: {} as FormLoan,
     formParty: {} as FormParty,
@@ -118,6 +123,7 @@ export const defaultFormDataContext = {
     formSpecialInstruction: {} as FormSpecialInstruction,
     formNigos: {} as FormNigos,
     formReindexingData: {} as FormReIndexingData,
+    formComment: {} as FormComment,
     formValidator: () => {
         return {} as FormValidationErrors;
     },
@@ -129,6 +135,7 @@ export const defaultFormDataContext = {
     parties: [],
     currentFormState: CaseStatus.Draft,
     isFormStateReadOnly: false,
+    formBeneInfo: {},
     setCurrentFormState: noop,
     setFormAdditionalWaivers: noop,
     setFormData: noop,
@@ -154,7 +161,9 @@ export const defaultFormDataContext = {
     setFormSpecialInstruction: noop,
     setOwnerAcknowledgement: noop,
     setFormNigos: noop,
-    setFormReindexingData: noop
+    setFormReindexingData: noop,
+    setFormComment: noop,
+    setFormBeneInfo: noop,
 };
 
 export const FormDataContext = createContext<OtpWithdrawalFormState>(defaultFormDataContext as OtpWithdrawalFormState);

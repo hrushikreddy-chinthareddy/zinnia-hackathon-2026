@@ -61,6 +61,7 @@ export enum GroupByOptions {
     UpdatedAt = 'updatedAt',
     CreatedAt = 'createdAt',
     AgingRange = 'agingRange',
+    ApplicationType = 'applicationType',
 }
 
 export enum SpecialProgramType {

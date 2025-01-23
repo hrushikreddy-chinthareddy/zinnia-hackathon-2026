@@ -1,3 +1,4 @@
+import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { MaritalStatusAllowances } from '@deps/components/otp-withdrawal-form/maritial-status-allowance-withholdings';
 import { RelationshipToCoveredPerson } from '@deps/containers/otp/ssw-forms/sbgc/joint-covered-person.helper';
 import { WithdrawalTaskStatus } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -54,7 +55,16 @@ export interface OwnerAcknowledgement {
         text: string | null;
     };
 }
+export enum maritalStatusType {
+    single = 'Single',
+    marriedFilingJointly = 'Married Filing Jointly',
+    marriedFilingSeparately = 'Married Filing Separately',
+}
 
+export enum IrsFormType {
+    W4R = 'W4R',
+    W4P = 'W4P',
+}
 export interface FormParts {
     formSource: FormSource;
     formData: FormData;
@@ -99,19 +109,23 @@ export interface FormParts {
     };
     formLoan: FormLoan;
     formSpecialInstruction: FormSpecialInstruction;
-    formIrsData?: FormIrsData | null;
+    formIrsData?: FormIrsData[];
     formOL4753Data?: FormOL4753Data | null;
     ownerAcknowledgement?: OwnerAcknowledgement;
     formNigos?: FormNigos | null;
     formReindexingData?: FormReIndexingData | null;
+    formComment?: FormComment;
+    irsFormType?: IrsFormType;
+    formBeneInfo?: FormBeneInfo | null;
 }
 
 export interface FormIrsData {
     irsApplicable: boolean;
     irsSpecified: boolean;
     formParty: Party | null;
-    irsTaxWithholding?: TaxWithholding;
+    irsTaxWithholding?: TaxWithholding[];
     irsSignature?: SignatureWithdrawal;
+    irsFormType: IrsFormType;
 }
 
 export interface FormOL4753Data {
@@ -472,6 +486,7 @@ export interface Party {
     fullName: string;
     suffix?: string | null;
     relationshipToOwnerAnnutant?: RelationshipToCoveredPerson;
+    withdrawalPayoutOption?: PayoutOptions;
     dob?: {
         text: string | null;
     };
@@ -480,7 +495,7 @@ export interface Party {
     email?: string | null;
     employer?: string | null;
     maritalStatus: {
-        text: MaritalStatus | null;
+        text: maritalStatusType | null;
     };
     addresses: Address[];
     phones: Phone[];
@@ -560,7 +575,7 @@ export interface TaxWithholding {
     amount: TaxWithholdingAmount;
     additionalAmount: TaxWithholdingAmount;
     filingStatus: {
-        text: null; //-- always null
+        text: string | null;
     };
     exemption?: {
         text: string | null;
@@ -717,6 +732,10 @@ export interface UpsAccount {
     };
 }
 
+export type FormComment = {
+    comment: string;
+};
+
 // ENUMS for various parts of the form
 export enum AccountCloseReason {
     ContractAttached = 'CONTRACT_ATTACH',
@@ -843,6 +862,7 @@ export enum ProgramType {
     PartialDollar = 'Partial Dollar',
     PartialPercent = 'Partial Percent',
     PenaltyFreeAmount = 'Penalty Free Amount',
+    MaximumFreeAmount = 'Maximum Free Amount',
     OFT = 'OFT',
     SSW = 'SSW',
 }
@@ -864,6 +884,11 @@ export enum RestrictionOption {
     EligibleDistribution = 'eligibledistribution',
     Empty = '',
     Hardship = 'hardship',
+}
+
+export enum PayoutOptions {
+    level = 'LEVEL',
+    increasing = 'INCREASING',
 }
 
 export enum TaxWithholdingPlace {
@@ -1003,8 +1028,11 @@ export enum Carrier {
     GDMN = 'GDMN',
     RSLN = 'RSLN',
     WELB = 'WELB',
+    ULPC = 'ULPC',
     GLCO = 'GLCO',
+    USAA = 'USAA',
 }
+
 export const ParticipantCompanies = [
     { companyName: 'AIG ANNUITIES-VAR & IDX/VAR.ANN.LIFE', code: '3179' },
 
