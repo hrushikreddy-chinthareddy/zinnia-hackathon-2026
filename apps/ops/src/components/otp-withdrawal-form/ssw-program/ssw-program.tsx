@@ -21,6 +21,7 @@ type SystematicWithdrawalProgramProps = {
     isReadOnly?: boolean;
     onSswProgramFrequencyChange?: (val: Frequency) => void;
     planCode?: string;
+    jointCoveredPlanCodes?: string[];
 };
 
 export interface SSWProgramOptions extends Omit<RadioItem, 'subelement'> {
@@ -33,6 +34,7 @@ const SystematicWithdrawalProgram = ({
     isReadOnly,
     onSswProgramFrequencyChange,
     planCode,
+    jointCoveredPlanCodes
 }: SystematicWithdrawalProgramProps) => {
     const { formErrors, formProgram, setFormProgram } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
@@ -74,11 +76,13 @@ const SystematicWithdrawalProgram = ({
             <div className="p-2">
                 <SystematicWithdrawalRow isReadOnly={isReadOnly} sswTypeOptions={options} onDataChange={setSswData} sswData={sswData} />
             </div>
-
             {sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
-                <JointCoveredPersonDetails isReadOnly={isReadOnly || false} planCode={planCode} />
+                <JointCoveredPersonDetails
+                    isReadOnly={isReadOnly || false}
+                    planCode={planCode}
+                    jointCoveredPlanCodes={jointCoveredPlanCodes}
+                />
             )}
-
             {formErrors && (
                 <div className="flex flex-col">
                     {formErrors?.systematicStartDate && (

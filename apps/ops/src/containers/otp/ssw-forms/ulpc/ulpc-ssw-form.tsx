@@ -33,6 +33,7 @@ export function UlpcSSWForm({ planCode }: UlpcSSWFormProps) {
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
         w4pSignaturesConfig,
+        jointCoveredPlanCodes
     } = getUlpcConfig(t);
     const {
         formParty,
@@ -67,9 +68,12 @@ export function UlpcSSWForm({ planCode }: UlpcSSWFormProps) {
             <SswEditSelection />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
-
-            <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} planCode={planCode} />
-
+            <SystematicWithdrawalProgram
+                isReadOnly={isFormStateReadOnly}
+                options={systematicWithdrawalOptions}
+                planCode={planCode}
+                jointCoveredPlanCodes={jointCoveredPlanCodes}
+            />
             <FormDistribution
                 isDerivedMethodFromFunds={true}
                 isFormStateReadOnly={isFormStateReadOnly}

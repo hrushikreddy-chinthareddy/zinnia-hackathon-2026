@@ -534,6 +534,8 @@ export default function getUlpcConfig(t: TFunction) {
         },
     ];
 
+    const jointCoveredPlanCodes = [ '772', '728', '775'];
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -542,5 +544,6 @@ export default function getUlpcConfig(t: TFunction) {
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
         w4pSignaturesConfig,
+        jointCoveredPlanCodes
     };
 }
