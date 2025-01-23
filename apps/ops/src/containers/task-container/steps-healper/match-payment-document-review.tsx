@@ -6,43 +6,25 @@ import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
 export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, taskMetadata, task }: GetStepsProps) => {
-    const isSubmit = task.data.potentialMatches === MatchingCase.REINDEX;
+    const isSubmit = task.data.matchingResult === MatchingCase.REINDEX;
 
-    const dynamicSteps = [
-        {
-            ariaLabel: taskMetadata[0]?.title || '',
-            isVisible: () => true,
-            component: (
-                <TaskFormStep
-                    taskInfoLink={taskInfoLink}
-                    isSubmit={isSubmit}
-                    taskMetadata={taskMetadata[0]}
-                    key={'docMatchKey'}
-                ></TaskFormStep>
-            ),
-            text: taskMetadata[0]?.title || '',
-            isSubmit: isSubmit,
-            index: 0,
-            isCompleted: true,
-            screenReaderLabel: taskMetadata[0]?.title || '',
-        },
-        {
-            ariaLabel: taskMetadata[1]?.title || '',
-            isVisible: () => !isSubmit,
-            component: (
-                <TaskFormStep
-                    taskInfoLink={taskInfoLink}
-                    isSubmit={true}
-                    taskMetadata={taskMetadata[1]}
-                    key={'paymentMatchKey'}
-                ></TaskFormStep>
-            ),
-            text: taskMetadata[1]?.title || '',
-            index: 1,
-            isCompleted: true,
-            screenReaderLabel: taskMetadata[1]?.title || '',
-        },
-    ];
+    const dynamicSteps = taskMetadata.map((metadata, index) => ({
+        ariaLabel: metadata?.title || '',
+        isVisible: () => index === 0 || !isSubmit,
+        component: (
+            <TaskFormStep
+                taskInfoLink={taskInfoLink}
+                isSubmit={index === 1 ? true : isSubmit}
+                taskMetadata={metadata}
+                key={`step_${index}`}
+            ></TaskFormStep>
+        ),
+        text: metadata?.title || '',
+        isSubmit: index === 1 ? true : isSubmit,
+        index: index,
+        isCompleted: true,
+        screenReaderLabel: metadata?.title || '',
+    }));
 
     const staticSteps: Step[] = [
         {

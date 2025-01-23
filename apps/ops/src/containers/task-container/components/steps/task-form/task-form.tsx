@@ -29,7 +29,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const [formSchema, setFormSchema] = useState(taskMetadata);
     const formContext = { carrier: task.carrier, caseId: task.caseId, taskType: task.taskType };
     const fetchData = async () => {
-        const correlationId = task.data.potentialMatches;
+        const correlationId = task.data.matchingResult;
         if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
             if (correlationId === MatchingCase.ENTERED && task.data.caseId) {
                 try {
@@ -44,12 +44,12 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     const response = await getCases(caseRequestBody);
                     const cases = response.data as Case[];
 
-                    if (!cases.length) {
-                        browserLogWarn('task::case not found', task.data.caseId);
-                        return;
+                    if (!cases.length || cases?.[0]?.correlationId) {
+                        browserLogWarn('task::case not found or correlationId id not found', task.data.caseId);
+                        return false;
                     }
 
-                    const transactionResponse = await getTransactionsByCorrelationId(correlationId, {
+                    const transactionResponse = await getTransactionsByCorrelationId(cases?.[0]?.correlationId || '', {
                         entityType: EntityTypes.NB_PAYMENT_RECORD,
                     });
 
@@ -69,7 +69,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                                 ...previousTask.data,
                                 transactionOptions: paymentCards,
                                 caseId: cases[0].id,
-                                potentialMatches: cases[0].correlationId,
+                                matchingResult: cases[0].correlationId,
                                 isDuplicate: MatchingCase.MATCH_FOUND,
                             },
                         };

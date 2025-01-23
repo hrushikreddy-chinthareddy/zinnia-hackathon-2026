@@ -16,9 +16,9 @@ export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: any[]) =
                         return option;
                     });
 
-                    const potentialMatchesOptions = generatePotentialMatchesOptions(task.data.potentialMatches) || [];
+                    const potentialMatchesOptions = generatePotentialMatchesOptions(task?.data?.potentialMatches || []) || [];
 
-                    uiSchema.potentialMatches['ui:options'].customOptions = [...potentialMatchesOptions, ...existingOptions];
+                    uiSchema.matchingResult['ui:options'].customOptions = [...potentialMatchesOptions, ...existingOptions];
                 }
 
                 return taskMetadata;
@@ -31,17 +31,19 @@ export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: any[]) =
 };
 
 const generatePotentialMatchesOptions = (potentialMatches: PotentialMatches[]): any[] => {
-    return potentialMatches
-        ?.filter(item => item.correlationid && item.correlationid !== '')
-        ?.map((item: PotentialMatches) => {
-            const id = uuidv4();
-            const subElement = {
-                label: MatchingCaseTypes[item.entityType as keyof typeof MatchingCaseTypes] ?? MatchingCaseTypes.NB_APPLICATION_DATA,
-                value: item?.zlCaseId ?? '',
-                title: item?.entityType ?? '',
-                url: `/cases/${item.zlCaseId}`,
-                disabled: false,
-            };
-            return { label: item.entityType, value: item.correlationid, id, subElement };
-        });
+    return (
+        potentialMatches
+            ?.filter(item => item.correlationid && item.correlationid !== '')
+            ?.map((item: PotentialMatches) => {
+                const id = uuidv4();
+                const subElement = {
+                    label: MatchingCaseTypes[item.entityType as keyof typeof MatchingCaseTypes] ?? MatchingCaseTypes.NB_APPLICATION_DATA,
+                    value: item?.zlCaseId ?? '',
+                    title: item?.entityType ?? '',
+                    url: `/cases/${item.zlCaseId}`,
+                    disabled: false,
+                };
+                return { label: item.entityType, value: item.correlationid, id, subElement };
+            }) || []
+    );
 };

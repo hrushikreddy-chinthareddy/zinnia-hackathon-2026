@@ -6,7 +6,7 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
     let updateTask = { ...task };
     switch (task.taskType) {
         case TaskType.PURCHASE_DOCUMENT_MATCHING: {
-            const correlationId = task.data.potentialMatches;
+            const correlationId = task.data.matchingResult;
             const duplicateCase = task.data.isDuplicate;
 
             let matchingResult = correlationId;
