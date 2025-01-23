@@ -547,11 +547,6 @@ export default function getGlcoConfig(t: TFunction) {
             value: SSWType.JointLifetimeIncomeOption,
             generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
         },
-        {
-            label: t('sswProgram.sswOptions.interestEarningDividendsGains'),
-            value: SSWType.InterestEarningDividendsGains,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.InterestEarningDividendsGains),
-        },
     ];
     const w4pSignaturesConfig = [
         {

@@ -513,11 +513,6 @@ export default function getUlpcConfig(t: TFunction) {
             value: SSWType.JointLifetimeIncomeOption,
             generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
         },
-        {
-            label: t('sswProgram.sswOptions.interestEarningDividendsGains'),
-            value: SSWType.InterestEarningDividendsGains,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.InterestEarningDividendsGains),
-        },
     ];
     const w4pSignaturesConfig = [
         {
@@ -534,7 +529,7 @@ export default function getUlpcConfig(t: TFunction) {
         },
     ];
 
-    const jointCoveredPlanCodes = [ '772', '728', '775'];
+    const jointCoveredPlanCodes = [ '775' ];
 
     return {
         disbursementOptions,
