@@ -1567,7 +1567,7 @@
                     "totalFreeAmt": "Montant total gratuit",
                     "penaltyFreeAmount": "Montant sans pénalité",
                     "annualFreeAmountBalance": "Solde annuel du montant gratuit",
-                    "maximumFreeAmount": "Montant gratuit maximum"
+                    "maximumFreeAmount": "Montant maximum gratuit"
                 },
                 "fullWithdrawal": {
                     "contractHasBeenLostOrDestroyed": "Le contrat a été perdu ou détruit",
@@ -1656,6 +1656,13 @@
                         "wife": "Femme",
                         "spouse": "Conjoint",
                         "na": "N/A"
+                    }
+                },
+                "payout": {
+                    "title": "Paiement",
+                    "payoutOptions": {
+                        "level": "Niveau",
+                        "increasing": "Croissant"
                     }
                 }
             },
@@ -1873,7 +1880,8 @@
                 "bankUpdateTitle": "Détails bancaires",
                 "cancel": "Annuler",
                 "submit": "Soumettre",
-                "submitedMessage": "La demande de mise à jour bancaire a été soumise."
+                "submitedMessage": "La demande de mise à jour bancaire a été soumise.",
+                "ussa": "USSA"
             },
             "neaBenefitsSensitivity": "Sensibilité aux avantages NEA",
             "distributionInstruction": {
@@ -1988,6 +1996,10 @@
                 "acknowledgement": "Reconnaissance de prêt",
                 "title": "Reconnaissance de prêt"
             },
+            "loanRepayment": {
+                "acknowledgement": "Je comprends que pour traiter la demande de rachat complet, tous les prêts du contrat doivent être entièrement payés par moi ou par rachat de charge.",
+                "title": "Remboursement du prêt"
+            },
             "cslnCheck": {
                 "title": "Valider le Child Support Lien Network (CSLN)",
                 "status": "État du Child Support Lien Network (CSLN)",
@@ -2095,7 +2107,17 @@
                 "OFTFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
                 "SSWFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },
-            "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
+            "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique.",
+            "beneficiaryInfo": {
+                "title": "Informations sur le bénéficiaire",
+                "isBeneficiarySpouse": {
+                    "title": "Votre bénéficiaire est-il votre conjoint?",
+                    "yes": "Oui",
+                    "no": "Non"
+                },
+                "dob": "Date de naissance",
+                "isYourSpouseYoungerThanYou": "Votre conjoint a-t-il 10 ans de moins que vous?"
+            }
         },
         "sidebar": {
             "contractStatusCode": "Statut de la politique",
@@ -3152,12 +3174,22 @@
                 "closed": "fermée"
             },
             "createdLabel": "Date de création",
+            "newCreatedLabel": "Créée",
             "assigneeLabel": "Cessionnaire",
             "stepLabel": "Étape",
             "issueLabel": "Problème",
             "detailsLabel": "Détails",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
-            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat.."
+            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat..",
+            "reasonLabel": "Raison du statut",
+            "pendinglabel": "En attente jusqu'au",
+            "canceledLabel": "Annulé le",
+            "completedLabel": "Terminé le",
+            "additionalDocuments": "Documents supplémentaires",
+            "noAssignee": "Seul le responsable peut démarrer cette tâche",
+            "startTask": "Démarrer la tâche",
+            "claimTask": "Revendiquer la tâche",
+            "taskHeading": "Tâche"
         },
         "suitability": {
             "header": "Examen complet de l’adéquation",
@@ -4621,7 +4653,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "ID du document",
-            "noFormAvailable": "Aucun formulaire disponible."
+            "noFormAvailable": "Aucun formulaire disponible.",
+            "taskTitle": "Détails de la tâche"
         },
         "CaseDetailsContent": {
             "tabs": {

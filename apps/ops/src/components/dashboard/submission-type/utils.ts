@@ -41,7 +41,11 @@ export const transformData = (data: DashboardStatsElementResponse[]): Transforme
 
 export const generateSeries = (transformedData: TransformedData): SeriesOptionsType[] => {
     const applicationTypeCategories = Object.keys(transformedData); // e.g., ["MASS", "ANOTHER"]
-
+    const applicationTypeColors: Record<string, string> = {
+        Digital: '#00628B',
+        Electronic: '#85BCD3',
+        Paper: '#021936',
+    };
     // Find all unique application types (e.g., "Electronic", "Digital", "Paper")
     const allApplicationTypes = Array.from(new Set(applicationTypeCategories.flatMap(category => Object.keys(transformedData[category]))));
 
@@ -54,8 +58,10 @@ export const generateSeries = (transformedData: TransformedData): SeriesOptionsT
 
         return {
             name: applicationType,
+            color: applicationTypeColors[applicationType],
             type: 'bar',
             data,
+            legendIndex: allApplicationTypes.indexOf(applicationType),
         };
     });
 

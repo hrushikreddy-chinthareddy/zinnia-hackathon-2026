@@ -1576,7 +1576,7 @@
                     "totalFreeAmt": "Total free amount",
                     "penaltyFreeAmount": "Penalty free amount",
                     "annualFreeAmountBalance": "Annual free amount balance",
-                    "maximumFreeAmount": "Maximum free amount"
+                    "maximumFreeAmount": "Maximum Free Amount"
                 },
                 "fullWithdrawal": {
                     "contractHasBeenLostOrDestroyed": "Contract has been lost or destroyed",
@@ -1668,6 +1668,13 @@
                         "wife": "Wife",
                         "spouse": "Spouse",
                         "na": "NA"
+                    }
+                },
+                "payout": {
+                    "title": "Payout",
+                    "payoutOptions": {
+                        "level": "Level",
+                        "increasing": "Increasing"
                     }
                 }
             },
@@ -1888,7 +1895,8 @@
                 "bankUpdateTitle": "Bank Details",
                 "cancel": "Cancel",
                 "submit": "Submit",
-                "submitedMessage": "Bank Update Request has been submitted."
+                "submitedMessage": "Bank Update Request has been submitted.",
+                "ussa": "USSA"
             },
             "neaBenefitsSensitivity": "NEA Benefit Sensitivity",
             "distributionInstruction": {
@@ -2006,6 +2014,10 @@
                 "acknowledgement": "Loan acknowledgement",
                 "title": "Loan Acknowledgement"
             },
+            "loanRepayment": {
+                "acknowledgement": "I understand in order to process the full surrender request all loans on the contract must be paid in full by me or throgh load surrender.",
+                "title": "Loan Repayment"
+            },
             "cslnCheck": {
                 "title": "Validate Child Support Lien Network (CSLN)",
                 "label": "Child Support Lien Network (CSLN) status",
@@ -2115,7 +2127,17 @@
                 "OFTFormInputTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
                 "SSWFormInputTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
             },
-            "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
+            "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal.",
+            "beneficiaryInfo": {
+                "title": "Beneficiary Information",
+                "isBeneficiarySpouse": {
+                    "title": "Is your beneficiary your spouse?",
+                    "yes": "Yes",
+                    "no": "No"
+                },
+                "dob": "Date of birth",
+                "isYourSpouseYoungerThanYou": "Is your spouse 10 years younger than you?"
+            }
         },
         "sidebar": {
             "contractStatusCode": "Policy Status",
@@ -3178,13 +3200,23 @@
                 "closed": "Closed"
             },
             "createdLabel": "Date Created",
+            "newCreatedLabel": "Created",
             "assigneeLabel": "Assignee",
             "stepLabel": "Step",
             "issueLabel": "Issue",
             "detailsLabel": "Details",
             "noDataAvailable": "No data available.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
-            "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract."
+            "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
+            "reasonLabel": "Status reason",
+            "pendinglabel": "Pending until",
+            "canceledLabel": "Canceled on",
+            "completedLabel": "Completed on",
+            "additionalDocuments": "Additional Documents",
+            "noAssignee": "Only the assignee can start this task",
+            "startTask": "Start task",
+            "claimTask": "Claim task",
+            "taskHeading": "Task"
         },
         "suitability": {
             "header": "Complete Suitability Review",
@@ -4651,7 +4683,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "Document ID",
-            "noFormAvailable": "No form available."
+            "noFormAvailable": "No form available.",
+            "taskTitle": "Task details"
         },
         "CaseDetailsContent": {
             "tabs": {

@@ -36,9 +36,8 @@ import {
     ProcessRequestType,
     Program,
     FundWithdrawnMethod,
-    QualTypes,
     AccountType,
-    FormDisbursement,
+    FormDisbursement
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_BANK_DETAILS,
@@ -817,11 +816,6 @@ export default function getOftDlicConfig(t: TFunction) {
         disbursementOption: FormDisbursementSelections.DTCC,
     };
 
-    const qualTypeOptions = [
-        ...getQualTypeOptions(t),
-        { label: t('oftProcess.qualTypes.serviceCredits'), value: QualTypes.ServiceCredits },
-    ];
-
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -832,7 +826,7 @@ export default function getOftDlicConfig(t: TFunction) {
         identifySelectedFormProgramOption,
         selectOneOptions,
         defaultValues,
-        qualificationOptions: qualTypeOptions,
+        qualificationOptions: getQualTypeOptions(t),
         showContractReplacement: true,
     };
 }

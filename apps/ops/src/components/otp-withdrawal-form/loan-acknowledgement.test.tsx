@@ -24,7 +24,7 @@ describe('formLoan component', () => {
                     <LoanAcknowledgement />
                 </FormDataContext.Provider>
             );
-            const sectionTitle = screen.getByText('title');
+            const sectionTitle = screen.getByText('loanAcknowledgement.title');
             expect(sectionTitle).toBeInTheDocument();
             expect(sectionTitle.tagName).toBe('H3');
         });
@@ -36,7 +36,7 @@ describe('formLoan component', () => {
                     <LoanAcknowledgement />
                 </FormDataContext.Provider>
             );
-            const acknowledgementElement = screen.getByLabelText('acknowledgement');
+            const acknowledgementElement = screen.getByLabelText('loanAcknowledgement.acknowledgement');
             expect(acknowledgementElement).toBeInTheDocument();
             expect(acknowledgementElement).not.toBeChecked();
 

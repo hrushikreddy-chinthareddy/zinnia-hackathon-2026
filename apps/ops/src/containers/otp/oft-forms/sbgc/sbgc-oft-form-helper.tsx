@@ -35,9 +35,8 @@ import {
     PaymentMailType,
     ProcessRequestType,
     Program,
-    QualTypes,
     AccountType,
-    FormDisbursement,
+    FormDisbursement
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_BANK_DETAILS,
@@ -787,11 +786,6 @@ export default function useSbgcOftConfig(t: TFunction) {
         disbursementOption: FormDisbursementSelections.DTCC,
     };
 
-    const qualTypeOptions = [
-        ...getQualTypeOptions(t),
-        { label: t('oftProcess.qualTypes.serviceCredits'), value: QualTypes.ServiceCredits },
-    ];
-
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -801,7 +795,7 @@ export default function useSbgcOftConfig(t: TFunction) {
         identifySelectedFormProgramOption,
         selectOneOptions,
         defaultValues,
-        qualTypeOptions,
+        qualTypeOptions: getQualTypeOptions(t),
         showContractReplacement: true,
     };
 }
