@@ -262,16 +262,18 @@
         "transaction": "Transaction: {{transactionType}}",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Mettre à jour l'état de la tâche",
-            "setTaskAsPending": "Mettre la tâche en attente",
+            "setTaskAsPending": "Définir la tâche comme en attente",
             "followUpDate": "Date de suivi",
-            "updateStatus": "Mettre à jour l'état",
+            "reason": "Raison",
+            "selectReason": "Sélectionner une raison",
+            "cancel": "Annuler",
+            "updateStatus": "Mettre à jour le statut",
             "pendingReasonOptions": {
-                "awaitingAdditionalInformation": "En attente de renseignements supplémentaires",
+                "awaitingAdditionalInformation": "En attente d'informations supplémentaires",
                 "awaitingApproval": "En attente d'approbation",
                 "awaitingApplication": "En attente de candidature"
             }
         },
-
         "tasksListing": {
             "taskSubmittedAgo": "Soumise {{updatedCount}} {{updatedUnit}} il y a",
             "taskCompletedAgo": "Complété {{updatedCount}} {{updatedUnit}} il y a",
