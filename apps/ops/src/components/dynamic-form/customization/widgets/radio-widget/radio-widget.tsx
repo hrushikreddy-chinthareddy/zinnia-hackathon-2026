@@ -74,10 +74,6 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
         setFormData(data);
     }
 
-    // useEffect(() => {
-    //     onChange(selected);
-    // }, [selected]);
-
     const handleOnChange = (event: any) => {
         onChange(event.target.value);
         if (apiProps.apiUrl) {

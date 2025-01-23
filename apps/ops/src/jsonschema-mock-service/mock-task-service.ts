@@ -1,15 +1,16 @@
+import wellabeSuitabilitySchema from '@deps/jsonschema-mock-service/carrier/wellabe/suitability/suitability-schema.json';
 import wellabeSuitabilityData from '@deps/jsonschema-mock-service/carrier/wellabe/suitability/suitability.json';
+import wellabeSuitabilityReviewSchema from '@deps/jsonschema-mock-service/carrier/wellabe/suitability-review/suitability-review-schema.json';
 import wellabeSuitabilityReviewData from '@deps/jsonschema-mock-service/carrier/wellabe/suitability-review/suitability-review.json';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 
 export const getTaskFormMetadataSSRMock = async (taskType: TaskType): Promise<FormMetadata | null> => {
     switch (taskType) {
-        // todo:vijaya: need to fix metadata details
-        // case TaskType.SuitabilityDataEntry:
-        //     return wellabeSuitabilitySchema as FormMetadata;
-        // case TaskType.SuitabilityReview:
-        //     return wellabeSuitabilityReviewSchema as FormMetadata;
+        case TaskType.SuitabilityDataEntry:
+            return wellabeSuitabilitySchema as unknown as FormMetadata;
+        case TaskType.SuitabilityReview:
+            return wellabeSuitabilityReviewSchema as unknown as FormMetadata;
         default:
             return null;
     }
