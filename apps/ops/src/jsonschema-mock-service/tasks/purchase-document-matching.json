@@ -250,6 +250,10 @@
                                         },
                                         "createdDate": {
                                             "type": "string"
+                                        },
+                                        "carrier": {
+                                            "type": "string",
+                                            "default": "{{carrier}}"
                                         }
                                     }
                                 },
