@@ -1514,7 +1514,8 @@
                 "defaultTitle": "Annuity Contract Withdrawal Request",
                 "nasu": "Demande de retrait de contrat de rente",
                 "gdmn": "Demande de retrait du Commonwealth",
-                "rsln": "Lincoln Benefit Life Withdrawal Request"
+                "rsln": "Lincoln Benefit Life Withdrawal Request",
+                "ulpc": "Unified Life Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Détails personnels",
@@ -1574,7 +1575,8 @@
                     "partial": "Partielle",
                     "totalFreeAmt": "Montant total gratuit",
                     "penaltyFreeAmount": "Montant sans pénalité",
-                    "annualFreeAmountBalance": "Solde annuel du montant gratuit"
+                    "annualFreeAmountBalance": "Solde annuel du montant gratuit",
+                    "maximumFreeAmount": "Montant maximum gratuit"
                 },
                 "fullWithdrawal": {
                     "contractHasBeenLostOrDestroyed": "Le contrat a été perdu ou détruit",
@@ -1599,7 +1601,8 @@
                     "specificAmount": "Montant spécifique brut$",
                     "specificAmountGross": "Specific Amount net$",
                     "percetageOfAccountValue": "% de la valeur du compte",
-                    "maximum": "Montant maximum"
+                    "maximum": "Montant maximum",
+                    "percentageOfAccumulatedValue": "% de valeur accumulée"
                 },
                 "processTimeframe": {
                     "selectOne": "Sélectionnez-en un",
@@ -1662,6 +1665,13 @@
                         "wife": "Femme",
                         "spouse": "Conjoint",
                         "na": "N/A"
+                    }
+                },
+                "payout": {
+                    "title": "Paiement",
+                    "payoutOptions": {
+                        "level": "Niveau",
+                        "increasing": "Croissant"
                     }
                 }
             },
@@ -1879,7 +1889,8 @@
                 "bankUpdateTitle": "Détails bancaires",
                 "cancel": "Annuler",
                 "submit": "Soumettre",
-                "submitedMessage": "La demande de mise à jour bancaire a été soumise."
+                "submitedMessage": "La demande de mise à jour bancaire a été soumise.",
+                "ussa": "USSA"
             },
             "neaBenefitsSensitivity": "Sensibilité aux avantages NEA",
             "distributionInstruction": {
@@ -1994,6 +2005,10 @@
                 "acknowledgement": "Reconnaissance de prêt",
                 "title": "Reconnaissance de prêt"
             },
+            "loanRepayment": {
+                "acknowledgement": "Je comprends que pour traiter la demande de rachat complet, tous les prêts du contrat doivent être entièrement payés par moi ou par rachat de charge.",
+                "title": "Remboursement du prêt"
+            },
             "cslnCheck": {
                 "title": "Valider le Child Support Lien Network (CSLN)",
                 "status": "État du Child Support Lien Network (CSLN)",
@@ -2101,7 +2116,17 @@
                 "OFTFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
                 "SSWFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },
-            "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
+            "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique.",
+            "beneficiaryInfo": {
+                "title": "Informations sur le bénéficiaire",
+                "isBeneficiarySpouse": {
+                    "title": "Votre bénéficiaire est-il votre conjoint?",
+                    "yes": "Oui",
+                    "no": "Non"
+                },
+                "dob": "Date de naissance",
+                "isYourSpouseYoungerThanYou": "Votre conjoint a-t-il 10 ans de moins que vous?"
+            }
         },
         "sidebar": {
             "contractStatusCode": "Statut de la politique",
@@ -3172,7 +3197,8 @@
             "additionalDocuments": "Documents supplémentaires",
             "noAssignee": "Seul le responsable peut démarrer cette tâche",
             "startTask": "Démarrer la tâche",
-            "ClaimTask": "Revendiquer la tâche"
+            "claimTask": "Revendiquer la tâche",
+            "taskHeading": "Tâche"
         },
         "suitability": {
             "header": "Examen complet de l’adéquation",

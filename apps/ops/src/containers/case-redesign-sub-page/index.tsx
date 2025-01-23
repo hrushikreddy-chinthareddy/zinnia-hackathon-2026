@@ -5,25 +5,25 @@ import { useEffect, useState } from 'react';
 import { getStatusDetails } from '@deps/components/case-list/components/case-status-tooltip';
 import CaseSubPage from '@deps/components/case-sub-page/case-sub-page';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { Case } from '@deps/models/case/case';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import CasePageHeader from './CasePageHeader';
 import CaseSideNav from './CaseSideNav';
 
 interface CaseRedesignProps {
     caseDetails: Case;
-    featureFlags: FeatureFlags;
     tab?: string; // The subpath (if any)
 }
 
-const CaseRedesign = ({ caseDetails, tab, featureFlags }: CaseRedesignProps) => {
+const CaseRedesign = ({ caseDetails, tab }: CaseRedesignProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [tabVal, setTabVal] = useState(tab);
+    const { featureFlags } = useOptimizely();
 
     const [caseDetailsModel, setCaseDetailsModel] = useState(caseDetails);
 
