@@ -116,7 +116,7 @@
         },
         "sectionHeader": {
             "props": {
-                "description": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision."
+                "description": "Review supporting information and determine if the document can be matched to an existing case. Search all cases and review any suggested potential matches. Confirm the matching Case ID, if possible."
             },
             "ui:options": {
                 "label": true,
@@ -187,7 +187,6 @@
             "ui:widget": "radio"
         }
     },
-    "title": "",
     "schemaContent": {
         "tabSchemas": [
             {
@@ -325,7 +324,7 @@
                     },
                     "sectionHeader": {
                         "props": {
-                            "description": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision."
+                            "description": "Review supporting information and determine if the document can be matched to an existing case. Search all cases and review any suggested potential matches. Confirm the matching Case ID, if possible."
                         },
                         "ui:options": {
                             "label": true,
