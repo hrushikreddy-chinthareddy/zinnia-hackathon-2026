@@ -1,6 +1,7 @@
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Icon, IconType } from '@zinnia/bloom/components';
+import styles from './Dropdown.module.css';
 interface DropdownOption {
   label: string;
   icon?: React.ReactNode;
@@ -33,10 +34,7 @@ const Dropdown: React.FC<DropdownProps> = ({ triggerIcon, triggerLabel, options 
             <DropdownMenu.Item
               key={index}
               onSelect={option.onSelect}
-              className="flex items-center gap-2 px-2 py-1 text-gray-700 hover:bg-[--color-fuchsia-color-50-fuchsia]
-              hover:border-[--color-fuchsia-color-200-fuchsia] rounded-full cursor-pointer border-2 border-[--color-fuchsia-color-500-fuchsia]
-               text-[--color-fuchsia-color-600-fuchsia] font-medium hover:text-[--color-fuchsia-color-400-fuchsia]
-              bg-[--color-fuchsia-color-50-fuchsia]"
+              className={styles.button}
             >
               {option.icon && <span className="text-lg">{option.icon}</span>}
               <span className="text-sm">{option.label}</span>

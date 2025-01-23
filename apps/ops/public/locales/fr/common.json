@@ -263,8 +263,15 @@
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Mettre à jour l'état de la tâche",
             "setTaskAsPending": "Mettre la tâche en attente",
-            "followUpDate": "Date de suivi"
+            "followUpDate": "Date de suivi",
+            "updateStatus": "Mettre à jour l'état",
+            "pendingReasonOptions": {
+                "awaitingAdditionalInformation": "En attente de renseignements supplémentaires",
+                "awaitingApproval": "En attente d'approbation",
+                "awaitingApplication": "En attente de candidature"
+            }
         },
+
         "tasksListing": {
             "taskSubmittedAgo": "Soumise {{updatedCount}} {{updatedUnit}} il y a",
             "taskCompletedAgo": "Complété {{updatedCount}} {{updatedUnit}} il y a",
@@ -277,8 +284,7 @@
                 "inProgress": "En cours",
                 "reason": "Raison",
                 "selectReason": "Sélectionner la raison",
-                "cancel": "Annuler",
-                "updateStatus": "Mettre à jour l'état"
+                "cancel": "Annuler"
             }
         },
         "caseId": "Numéro du cas: ",

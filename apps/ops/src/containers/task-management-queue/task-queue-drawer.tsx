@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { TaskSource } from "@deps/models/case/task";
 import { ERROR_CODES } from "@deps/pages/create-case/error";
 import { writeToCache } from "@deps/utils/cache";
+import { PendingReasonOptions } from "@deps/models/case/enums";
 function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: () => void, getTasks?: () => void, taskStatus: TaskStatus, taskId: string }) {
   const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
   const [date, setDate] = useState(tomorrow)
@@ -29,9 +30,11 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: (
   }
 
   const pendingReasonOptions = [
-    { value: 'Awaiting additional information ', label: 'Awaiting additional information' },
-    { value: 'Awaiting approval', label: 'Awaiting approval' },
-    { value: 'Awaiting application', label: 'Awaiting application' },
+    { value: PendingReasonOptions.AwaitingAdditionalInformation, label: t('pendingReasonOptions.awaitingAdditionalInformation') },
+    {
+      value: PendingReasonOptions.AwaitingApproval, label: t('pendingReasonOptions.awaitingApproval')
+    },
+    { value: PendingReasonOptions.AwaitingApplication, label: t('pendingReasonOptions.awaitingApplication') },
   ];
 
 

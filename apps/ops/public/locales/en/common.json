@@ -817,7 +817,12 @@
             "reason": "Reason",
             "selectReason": "Select Reason",
             "cancel": "Cancel",
-            "updateStatus": "Update Status"
+            "updateStatus": "Update Status",
+            "pendingReasonOptions": {
+                "awaitingAdditionalInformation": "Awaiting additional information",
+                "awaitingApproval": "Awaiting approval",
+                "awaitingApplication": "Awaiting application"
+            }
         },
         "tasksListing": {
             "taskSubmittedAgo": "Submitted {{updatedCount}} {{updatedUnit}} ago",
