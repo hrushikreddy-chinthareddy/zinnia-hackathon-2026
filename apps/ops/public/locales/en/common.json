@@ -1669,6 +1669,13 @@
                         "spouse": "Spouse",
                         "na": "NA"
                     }
+                },
+                "payout": {
+                    "title": "Payout",
+                    "payoutOptions": {
+                        "level": "Level",
+                        "increasing": "Increasing"
+                    }
                 }
             },
             "rmdMethod": {

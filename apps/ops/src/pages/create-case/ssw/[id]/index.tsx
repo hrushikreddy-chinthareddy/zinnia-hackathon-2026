@@ -12,7 +12,6 @@ import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawa
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/form-controls';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
@@ -34,7 +33,7 @@ import { ActiveWithdrawalCase, Carrier, QualTypes, Transaction, TransactionStatu
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
-import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
+import { getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -49,8 +48,10 @@ import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 
-import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
+import { UlpcSSWForm } from '@deps/containers/otp/ssw-forms/ulpc/ulpc-ssw-form';
+import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
+import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -61,6 +62,7 @@ interface SSWCaseProps extends SegmentTrackedPageProps {
     parties: LifeCadParty[];
     // TODO MG: put this in an interface for FeatureFlags that each page needing it can just extend
     featureFlagDecisions: FeatureFlags;
+    planCode?: string;
 }
 
 // Return the first 5 transactions that are either done or pending
@@ -79,14 +81,15 @@ const DefaultSidebarContent = {
     transactions: [],
 };
 
-const getFormComponentMap = (qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
+const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Record<string, React.ReactNode> => ({
     [Carrier.SBGC]: <SbgcSSWForm />,
     [Carrier.MASS]: <MassMutualSSWForm qualType={qualType} />,
     [Carrier.NASU]: <NassauSSWForm />,
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
+    [Carrier.ULPC]: <UlpcSSWForm planCode={planCode} />,
 });
 
-export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user }: SSWCaseProps) {
+export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user, planCode }: SSWCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
 
     // TODO: Need to map this from common portion whenever we will restructure i18 files
@@ -110,7 +113,7 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     const [taskApiError, setTaskApiError] = useState('');
     const [loading, setLoading] = useState(false);
     const initialForm = form;
-    const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(qualType));
+    const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(qualType, planCode));
 
     if (!formParts) {
         console.error('SSWCase::No form parts', {
@@ -294,6 +297,22 @@ export const getServerSideProps = withPageAuthRequired({
         } else {
             logInfo('create-case/ssw/:id:Skipping NIGO check', { taskId, action, documentNumber, id, clientId });
         }
+
+        const policyNumber = document?.contract ?? '';
+        const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
+        const planCode = response ? response[0]?.planCode : null;
+        if (!planCode) {
+            logInfo('create-case/ssw/:id::Plan code not found', { documentNumber, policyNumber, clientId });
+            return {
+                redirect: {
+                    destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                    permanent: false,
+                },
+            };
+        } else {
+            logInfo('create-case/ssw/:id::Plan code found', { documentNumber, policyNumber, clientId, planCode });
+        }
+
         const form = await initializeOTPTaskSSR({
             accessToken,
             caseId: id,
@@ -307,7 +326,7 @@ export const getServerSideProps = withPageAuthRequired({
             action: action,
         });
         if (!form) {
-            logError('create-case/SSW/:id::Error initializing task ssw form', {
+            logError('create-case/ssw/:id::Error initializing task ssw form', {
                 documentNumber,
                 clientId,
                 contract: document?.contract,
@@ -332,6 +351,7 @@ export const getServerSideProps = withPageAuthRequired({
                 parties: Array.isArray(parties) ? parties : [],
                 featureFlagDecisions,
                 user,
+                planCode,
             },
         };
     },
