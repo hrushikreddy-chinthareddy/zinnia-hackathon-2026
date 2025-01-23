@@ -6,7 +6,7 @@ import { default as styles } from './CardHeader.module.css';
 export const CardHeader = () => {
     return (
         <div className={clsx(styles.cardHeader)}>
-            <Icon type={IconType.DOCUMENT_TEXT} />
+            <Icon type={IconType.OFFICEBUILDING} />
             <div>
                 <h1 className={styles.h1}>Acme Corporation</h1>
                 <span aria-label="Company national producer number" className={styles.caption}>

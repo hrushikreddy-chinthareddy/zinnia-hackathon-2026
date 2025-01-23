@@ -11,7 +11,7 @@ export const Identification = () => {
                 <div>
                     <Label>Type of corporation</Label>
                     <span className={clsx(styles.span)} aria-label="Type of corporation">
-                        General Agency
+                        General agency
                     </span>
                 </div>
                 <div>
