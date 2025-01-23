@@ -17,12 +17,12 @@ export enum DocumentFileExtension {
     Tiff = 'tiff',
 }
 
-export interface DocumentDownload {
+export interface DocumentDownloadV2 {
     fileExtension: string;
     binaryData: string;
 }
 
-export interface DocumentDownloadWithMime extends DocumentDownload {
+export interface DocumentDownloadV2WithMime extends DocumentDownloadV2 {
     mimeType: string;
 }
 
@@ -191,6 +191,7 @@ export interface PolicyDocument {
     periodYear?: string;
     periodQuarter?: string;
     displayCode?: DocumentDisplayCode;
+    documentName?: string;
 }
 
 export interface PolicyDocuments {

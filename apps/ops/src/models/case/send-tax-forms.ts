@@ -1,3 +1,5 @@
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
+
 export type TaxForm = {
     contractNumber: string;
     name: string;
@@ -7,8 +9,8 @@ export type TaxForm = {
 };
 export const ALLOWED_TAX_YEARS = 5;
 export type TaxFormSelectionDetails = {
-    taxForms: TaxForm[];
-    selectedTaxForms: TaxForm[];
+    taxForms: TaxForm[] | TaxformResponse[];
+    selectedTaxForms: TaxForm[] | TaxformResponse[];
 };
 
 export type SearchTaxFormRequestBody = {

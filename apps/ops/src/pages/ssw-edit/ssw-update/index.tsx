@@ -22,7 +22,7 @@ import { ActiveWithdrawalCase, Carrier, RMDProgramType } from '@deps/models/case
 import { Policy } from '@deps/models/policy/sor-policy';
 import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
-import { getDocumentSSR } from '@deps/queries/api/documents';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR, getSpecialProgramsSSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -231,7 +231,7 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const document = documentNumber
-                ? await getDocumentSSR(documentNumber, DocumentType.SSW, clientCode?.toUpperCase(), accessToken as string)
+                ? await getDocumentV2SSR(documentNumber, DocumentType.SSW, clientCode?.toUpperCase(), accessToken as string)
                 : null;
 
             if (!document) {

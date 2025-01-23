@@ -19,6 +19,8 @@ type SystematicWithdrawalProgramProps = {
     title?: string;
     options: SSWProgramOptions[];
     isReadOnly?: boolean;
+    planCode?: string;
+    jointCoveredPlanCodes?: string[];
     onSswProgramFrequencyChange?: (val: Frequency) => void;
 };
 
@@ -26,7 +28,14 @@ export interface SSWProgramOptions extends Omit<RadioItem, 'subelement'> {
     generateSSWPayloadFromSelection: (sswData: SSWProgram) => SSWFormProgramFields; // Defines what the formProgram "editable fields" should look like when the option is selected.  There is significant variance between carriers and selections on what parts of formProgram should change.
 }
 
-const SystematicWithdrawalProgram = ({ options, title, isReadOnly, onSswProgramFrequencyChange }: SystematicWithdrawalProgramProps) => {
+const SystematicWithdrawalProgram = ({
+    options,
+    title,
+    isReadOnly,
+    onSswProgramFrequencyChange,
+    planCode,
+    jointCoveredPlanCodes
+}: SystematicWithdrawalProgramProps) => {
     const { formErrors, formProgram, setFormProgram } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
     const today = dayjs().format(ZAHARA_API_DATE_FORMAT);
@@ -67,11 +76,13 @@ const SystematicWithdrawalProgram = ({ options, title, isReadOnly, onSswProgramF
             <div className="p-2">
                 <SystematicWithdrawalRow isReadOnly={isReadOnly} sswTypeOptions={options} onDataChange={setSswData} sswData={sswData} />
             </div>
-
             {sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
-                <JointCoveredPersonDetails isReadOnly={isReadOnly || false} />
+                <JointCoveredPersonDetails
+                    isReadOnly={isReadOnly || false}
+                    planCode={planCode}
+                    jointCoveredPlanCodes={jointCoveredPlanCodes}
+                />
             )}
-
             {formErrors && (
                 <div className="flex flex-col">
                     {formErrors?.systematicStartDate && (

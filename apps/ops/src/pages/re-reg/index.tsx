@@ -17,7 +17,7 @@ import { ProcessType } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
-import { getDocumentSSR } from '@deps/queries/api/documents';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -130,7 +130,7 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const document = documentNumber
-                ? await getDocumentSSR(documentNumber, DocumentType.ReReg, clientId.toUpperCase(), accessToken as string)
+                ? await getDocumentV2SSR(documentNumber, DocumentType.ReReg, clientId.toUpperCase(), accessToken as string)
                 : null;
             const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
 

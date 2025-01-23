@@ -24,7 +24,7 @@ import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
-import { getDocumentSSR } from '@deps/queries/api/documents';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { SegmentPageName } from '@deps/types/segment-analytics';
@@ -190,7 +190,7 @@ export const getServerSideProps = withPageAuthRequired({
 
         const [translations, document] = await Promise.all([
             serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.REG60DEFS]),
-            getDocumentSSR(documentNumber, DocumentType.Reg60, clientId.toUpperCase(), accessToken),
+            getDocumentV2SSR(documentNumber, DocumentType.Reg60, clientId.toUpperCase(), accessToken),
         ]);
 
         if (!document?.caseId) {

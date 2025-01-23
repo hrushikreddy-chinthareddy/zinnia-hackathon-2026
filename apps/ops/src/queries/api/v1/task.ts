@@ -239,3 +239,28 @@ export const unassignTask = async (caseId: string, taskId: string, entryDuration
         return null;
     }
 };
+
+export const claimTask = async (caseId: string, taskId: string): Promise<any> => {
+
+    try {
+        const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/claim`;
+        const { data } = await client.put<AxiosResponse>(url);
+
+        browserLogInfo('Form entry time', {
+            caseId,
+            taskId,
+            url,
+            function: 'tasks.claimTask',
+        });
+        return data;
+    } catch (error: any) {
+        browserLogError('An error occurred during update task using v1', {
+            ...parseErrorInformation(error),
+            error,
+            caseId,
+            taskId,
+            function: 'tasks.claimTask',
+        });
+        return null;
+    }
+}

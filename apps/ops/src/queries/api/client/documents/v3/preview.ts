@@ -1,0 +1,30 @@
+import { AxiosResponse } from 'axios';
+import { SearchRequest } from 'node_modules/@zinnia/api-types/dist/generated-types/documents-v3/models/SearchRequest';
+
+import { baseAppUrl } from '@deps/queries/api-config';
+import { client } from '@deps/queries/api-utils/client';
+import { DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
+import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+
+// note: docType and clientCode are used to allow v3 to hit v2 documents for us.  We can remove if all v2 documents are migrated
+
+export const getDocumentPreviewV3 = async (
+    documentId: string,
+    documentClassification: SearchRequest.documentClassification,
+    parentCarrierCode: string
+): Promise<DocumentDownloadV3WithMime | null> => {
+    try {
+        const url = `${baseAppUrl}/api/document/v3/documents/${documentId}/preview?parentCarrierCode=${parentCarrierCode.toUpperCase()}&documentClassification=${documentClassification}`;
+        const { data } = await client.get<DocumentDownloadV3WithMime, AxiosResponse>(url);
+
+        return data;
+    } catch (error: any) {
+        logWarn('An error occurred while getting document', {
+            ...parseErrorInformation(error),
+            file: 'queries/api/documents',
+            function: 'getDocumentPreviewV3',
+        });
+
+        return error.response;
+    }
+};

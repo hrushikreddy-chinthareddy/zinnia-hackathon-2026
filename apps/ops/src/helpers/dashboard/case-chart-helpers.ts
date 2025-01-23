@@ -266,7 +266,7 @@ const caseChartHelpers = {
             verticalAlign: 'bottom',
             floating: false,
             title: {
-                text: 'Applications', // Legend title
+                text: 'Case submissions', // Legend title
                 style: {
                     fontWeight: 'bold', // Bold font for title
                     display: 'inline-block', // Keep inline with legend items
