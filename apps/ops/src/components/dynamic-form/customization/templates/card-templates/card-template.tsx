@@ -66,9 +66,7 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                 </div>
                 <div className="grow">
                     <div className="text-sm font-bold">
-                        <PiiWrapper>
-                            {(title in properties && data?.title) ?? replacePlaceholders(properties?.title, data)?.default ?? ''}
-                        </PiiWrapper>
+                        <PiiWrapper>{data?.[title] ?? replacePlaceholders(properties?.[title], data)?.default ?? ''}</PiiWrapper>
                     </div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
                         <PiiWrapper>
