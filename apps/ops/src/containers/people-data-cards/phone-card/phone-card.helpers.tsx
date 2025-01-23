@@ -96,7 +96,7 @@ export const Phones = ({ editable, onEditClick, phones, showAdditional }: PhoneP
         <>
             {phones.map((phone, index) => {
                 const { phoneType = PhoneType.HOME, isPending } = phone as PhoneWithPending;
-                const phoneTypeKey = phoneType.toLocaleLowerCase();
+                const phoneTypeKey = phoneType ? phoneType.toLocaleLowerCase() : 'homePhone';
                 const labelId = uuid4();
 
                 return (
