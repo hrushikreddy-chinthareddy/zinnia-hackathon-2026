@@ -22,7 +22,7 @@ import { BadgeVariant } from '@deps/components/badge/badge.helper';
 import { claimTask } from '@deps/queries/api/v1/task';
 
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
