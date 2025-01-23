@@ -22,8 +22,6 @@ type SystematicWithdrawalProgramProps = {
     planCode?: string;
     jointCoveredPlanCodes?: string[];
     onSswProgramFrequencyChange?: (val: Frequency) => void;
-    planCode?: string;
-    jointCoveredPlanCodes?: string[];
 };
 
 export interface SSWProgramOptions extends Omit<RadioItem, 'subelement'> {
