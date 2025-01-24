@@ -8,7 +8,7 @@ export default function ActivityPageHeader() {
     const { breadcrumb } = useBreadcrumb();
 
     return (
-        <div className="flex self-stretch border-b-2 border-gray-100">
+        <div className="flex self-stretch">
             <PageHeader
                 headerText={t('pageHeader.activity.headerText') || ''}
                 breadcrumbText={breadcrumb?.text}

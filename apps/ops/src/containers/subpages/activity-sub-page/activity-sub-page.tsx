@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 
 import CallLogsTab from '@deps/components/case-sub-page/case-tabs/call-logs-tab';
 import { TranslationFiles } from '@deps/config/translations';
+import ActivityPageHeader from '@deps/containers/page-header/activity-page-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { CallLog } from '@deps/models/case/call-log';
 import { getCaseCallLogs } from '@deps/queries/api/contracts';
@@ -59,19 +60,22 @@ const ActivitySubPage = () => {
     };
 
     return (
-        <TabGroup defaultValue={tabVal} value={tabVal} onValueChange={handleTabChange}>
-            <TabList>
-                <TabTrigger value={PolicyActivityTabValues.transactions}>Transactions</TabTrigger>
-                <TabTrigger value={PolicyActivityTabValues['call-logs']}>Call Logs</TabTrigger>
-            </TabList>
-            <TabContent value={PolicyActivityTabValues.transactions}>
-                <TransactionsTab />
-            </TabContent>
+        <div className="flex h-full flex-col rounded bg-white">
+            <ActivityPageHeader />
+            <TabGroup defaultValue={tabVal} value={tabVal} onValueChange={handleTabChange} className="px-8">
+                <TabList>
+                    <TabTrigger value={PolicyActivityTabValues.transactions}>Transactions</TabTrigger>
+                    <TabTrigger value={PolicyActivityTabValues['call-logs']}>Call Logs</TabTrigger>
+                </TabList>
+                <TabContent value={PolicyActivityTabValues.transactions}>
+                    <TransactionsTab />
+                </TabContent>
 
-            <TabContent value={PolicyActivityTabValues['call-logs']}>
-                <CallLogsTab loadingCallLogs={loadingCallLogs} callLogs={callLogs} callLogsStatusCode={callLogsStatusCode} />
-            </TabContent>
-        </TabGroup>
+                <TabContent value={PolicyActivityTabValues['call-logs']}>
+                    <CallLogsTab loadingCallLogs={loadingCallLogs} callLogs={callLogs} callLogsStatusCode={callLogsStatusCode} />
+                </TabContent>
+            </TabGroup>
+        </div>
     );
 };
 
