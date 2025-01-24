@@ -1369,7 +1369,8 @@
             "suitabilityReview": "suitability",
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
             "suitabilityReviewIssues": "Review Suitability",
-            "purchaseDocumentMatchingIssues": "Match Document"
+            "purchaseDocumentMatchingIssues": "Match Document",
+            "agentNigo": "Review Agent Issues"
         },
         "processDate": {
             "canceled": "Canceled on",

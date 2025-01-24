@@ -1362,7 +1362,8 @@
             "noDataAvailable": "Aucune donnée disponible.",
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
             "suitabilityReviewIssues": "Revoir Suitability Problèmes",
-            "purchaseDocumentMatchingIssues": "Document de correspondance"
+            "purchaseDocumentMatchingIssues": "Document de correspondance",
+            "agentNigo": "Réviser les problèmes d'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
