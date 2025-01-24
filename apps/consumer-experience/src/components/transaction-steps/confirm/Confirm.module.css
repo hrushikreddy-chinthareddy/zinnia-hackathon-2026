@@ -6,7 +6,7 @@
   margin-top: var(--measure-dimension-gap-3xl);
   margin-bottom: var(--measure-dimension-gap-lg);
   width: 100%;
-  border-color: var(--color-status-surface-status-error-border-alt, #db004f);
+  border-color: var(--color-status-border-status-error-border-alt, #db004f);
 }
 
 .wrapper {

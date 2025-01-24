@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 
-import '@/app/styles/globals.css';
-
 import styles from '@/app/layout.module.css';
 import Analytics from '@/components/analytics/Analytics';
 import { MourningBanner } from '@/components/mourning-banner/MourningBanner';
