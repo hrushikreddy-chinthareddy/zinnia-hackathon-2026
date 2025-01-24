@@ -13,6 +13,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 
 import { associateMfa } from '@/actions/login-actions';
 import styles from '@/app/login/Login.module.css';
+import { MfaVerificationType } from '@/types/auth';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -29,12 +30,6 @@ const SubmitButton = () => {
     </SpinnerButton>
   );
 };
-
-// TODO: move this out
-export enum VerificationType {
-  SMS = 'sms',
-  CALL = 'voice',
-}
 
 export const MfaEnrollment = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
@@ -107,7 +102,7 @@ export const MfaEnrollment = () => {
               <input
                 type="radio"
                 name="authenticatorType"
-                value={VerificationType.SMS}
+                value={MfaVerificationType.SMS}
                 defaultChecked
               />
               SMS
@@ -116,7 +111,7 @@ export const MfaEnrollment = () => {
               <input
                 type="radio"
                 name="authenticatorType"
-                value={VerificationType.CALL}
+                value={MfaVerificationType.CALL}
               />
               Phone call
             </label>

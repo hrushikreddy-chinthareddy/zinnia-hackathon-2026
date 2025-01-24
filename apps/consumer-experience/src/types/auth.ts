@@ -220,3 +220,8 @@ export interface TermsAndConditionApiResponse {
   dateCreated: string;
   id: string;
 }
+
+export enum MfaVerificationType {
+  SMS = 'sms',
+  CALL = 'voice',
+}
