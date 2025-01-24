@@ -8,10 +8,11 @@ export const TextWidget = function (props: WidgetProps) {
 
     if (inline) {
         return (
-            <div className="grid grid-cols-2 text-md text-gray-500 max-w-screen-sm">
-                <div>{label}</div>
+            <div className="grid grid-cols-2 text-md  max-w-screen-sm">
+                <div className="text-gray-500">{label}</div>
                 <div>
-                    {prefix ? prefix : ''} {value}
+                    {prefix ? prefix : ''}
+                    {value}
                 </div>
             </div>
         );
