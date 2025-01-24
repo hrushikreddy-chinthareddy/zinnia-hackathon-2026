@@ -28,10 +28,6 @@ import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { writeToCache } from '@deps/utils/cache';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
-const TaskTypeMap: Record<string, string> = {
-    ['SUITABILITY_REVIEW']: 'suitability review',
-};
-
 export enum TabOptions {
     Details = 'Details',
     Documents = 'Documents',

@@ -110,7 +110,6 @@ export default function GilicoWithdrawalForm() {
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}
                 isMaritalStatusAllowances={isMaritalStatusAllowances}
-                ownerStateOfResidence={ownerStateOfResidence}
                 meritalStatusAllowanceConfig={meritalStatusAllowanceConfig}
             />
             <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />

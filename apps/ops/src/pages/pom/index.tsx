@@ -20,9 +20,9 @@ function POM() {
     // ----------------------------
 
     const tabs = [
-        { label: 'Entity Information', icon: IconType.DOCUMENT_TEXT, value: 'personalInfo', content: <PersonalInfo /> },
+        { label: 'Entity Information', icon: IconType.IDENTIFICATION, value: 'personalInfo', content: <PersonalInfo /> },
         { label: 'Licenses and Appointments', icon: IconType.CALENDAR, value: 'licenses', content: <div>Section 2</div> },
-        { label: 'Training and Education', icon: IconType.DOCUMENT_TEXT, value: 'training', content: <div>Section 3</div> },
+        { label: 'Training and Education', icon: IconType.BOOKMARK_ALT, value: 'training', content: <div>Section 3</div> },
         { label: 'Hierarchies', icon: IconType.COLLECTION, value: 'hierarchies', content: <div>Section 4</div> },
     ];
 
