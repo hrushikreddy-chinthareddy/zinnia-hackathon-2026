@@ -14,8 +14,6 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { associateMfa } from '@/actions/login-actions';
 import styles from '@/app/login/Login.module.css';
 
-import { MfaOptions } from '../mfa-options/MfaOptions';
-
 const SubmitButton = () => {
   const { pending } = useFormStatus();
   return (
@@ -31,6 +29,12 @@ const SubmitButton = () => {
     </SpinnerButton>
   );
 };
+
+// TODO: move this out
+export enum VerificationType {
+  SMS = 'sms',
+  CALL = 'voice',
+}
 
 export const MfaEnrollment = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
@@ -95,7 +99,30 @@ export const MfaEnrollment = () => {
           </div>
         )}
       </div>
-      <MfaOptions />
+      <fieldset className={styles.mfaOptionsContainer}>
+        <div>
+          <legend>How would you like to receive the code?</legend>
+          <div className={styles.mfaOptions}>
+            <label className={styles.mfaOption}>
+              <input
+                type="radio"
+                name="authenticatorType"
+                value={VerificationType.SMS}
+                defaultChecked
+              />
+              SMS
+            </label>
+            <label className={styles.mfaOption}>
+              <input
+                type="radio"
+                name="authenticatorType"
+                value={VerificationType.CALL}
+              />
+              Phone call
+            </label>
+          </div>
+        </div>
+      </fieldset>
       <p className="typography-content-caption text-left">
         By inputting your mobile number and clicking Continue, you are providing
         express written consent to Zinnia Tech Solutions, LLC to call via live,
