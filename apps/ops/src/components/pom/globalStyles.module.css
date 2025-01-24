@@ -8,10 +8,10 @@
 
 .caption {
     font-family: var(font-family-primary);
-    font-size: 12px;
+    font-size: 15px;
     font-style: normal;
     font-weight: 500;
-    line-height: 16px;
+    line-height: 24px;
 }
 
 .h2 {
