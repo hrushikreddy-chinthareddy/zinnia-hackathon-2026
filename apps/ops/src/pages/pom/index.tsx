@@ -6,6 +6,7 @@ import Head from 'next/head';
 import { BackgroundCheck, CardHeader, ContactInfo, Identification, TabTitle } from '@deps/components/pom';
 import { ProducerType } from '@deps/components/pom/types';
 import usePomExperience from '@deps/hooks/usePomExperience';
+import { NavBar } from '@deps/navigation/nav-bar';
 
 import { default as styles } from './index.module.css';
 
@@ -39,6 +40,7 @@ function POM() {
             <Head>
                 <title>POM</title>
             </Head>
+            <NavBar navItems={[]} />
             <div className={clsx(styles.cardContainer)}>
                 <CardHeader producerType={producerType} />
                 <TabGroup defaultValue={tabs[0].value}>
