@@ -3,9 +3,9 @@ import { Divider, IconType, TabContent, TabGroup, TabList } from '@zinnia/bloom/
 import { clsx } from 'clsx';
 import Head from 'next/head';
 
-import { CardHeader, ContactInfo, Identification, TabTitle } from '@deps/components/pom';
+import { BackgroundCheck, CardHeader, ContactInfo, Identification, TabTitle } from '@deps/components/pom';
+import { ProducerType } from '@deps/components/pom/types';
 import usePomExperience from '@deps/hooks/usePomExperience';
-import { NavBar } from '@deps/navigation/nav-bar';
 
 import { default as styles } from './index.module.css';
 
@@ -19,8 +19,15 @@ function POM() {
     }
     // ----------------------------
 
+    // @TODO: will remove this once we integrate with the api
+    const producerType = ProducerType.INDIVIDUAL;
     const tabs = [
-        { label: 'Entity Information', icon: IconType.IDENTIFICATION, value: 'personalInfo', content: <PersonalInfo /> },
+        {
+            label: 'Entity Information',
+            icon: IconType.IDENTIFICATION,
+            value: 'personalInfo',
+            content: <PersonalInfo producerType={producerType} />,
+        },
         { label: 'Licenses and Appointments', icon: IconType.CALENDAR, value: 'licenses', content: <div>Section 2</div> },
         { label: 'Training and Education', icon: IconType.BOOKMARK_ALT, value: 'training', content: <div>Section 3</div> },
         { label: 'Hierarchies', icon: IconType.COLLECTION, value: 'hierarchies', content: <div>Section 4</div> },
@@ -32,9 +39,8 @@ function POM() {
             <Head>
                 <title>POM</title>
             </Head>
-            <NavBar navItems={[]} />
             <div className={clsx(styles.cardContainer)}>
-                <CardHeader />
+                <CardHeader producerType={producerType} />
                 <TabGroup defaultValue={tabs[0].value}>
                     <TabList className={clsx(styles.tabList)}>
                         {tabs.map(({ label, icon, value }) => (
@@ -52,12 +58,14 @@ function POM() {
     );
 }
 
-const PersonalInfo = () => {
+const PersonalInfo = ({ producerType }: { producerType: ProducerType }) => {
     return (
         <div>
-            <Identification />
+            <Identification producerType={producerType} />
             <Divider direction="horizontal" />
-            <ContactInfo />
+            <ContactInfo producerType={producerType} />
+            <Divider direction="horizontal" />
+            {producerType === ProducerType.INDIVIDUAL && <BackgroundCheck />}
         </div>
     );
 };

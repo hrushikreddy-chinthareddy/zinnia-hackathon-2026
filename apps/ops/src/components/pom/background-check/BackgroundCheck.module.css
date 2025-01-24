@@ -8,13 +8,12 @@
 .cardSubSectionContent {
     display: flex;
     gap: var(--measure-dimension-gap-2xl);
-    flex-wrap: wrap;
 }
 
 .h2 {
     composes: h2 from '../globalStyles.module.css';
 }
 
-.span {
-    composes: span from '../globalStyles.module.css';
+.table {
+    width: 100%;
 }
