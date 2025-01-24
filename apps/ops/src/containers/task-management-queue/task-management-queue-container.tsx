@@ -21,7 +21,7 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
     const [taskDetails, setTaskDetails] = useState<AssignedTask[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [errorType, setErrorType] = useState('error');
+   const [errorType, setErrorType] = useState(MessageType.Error);
 
     const handleClaimTask = async () => {
         setErrorMessage('');
