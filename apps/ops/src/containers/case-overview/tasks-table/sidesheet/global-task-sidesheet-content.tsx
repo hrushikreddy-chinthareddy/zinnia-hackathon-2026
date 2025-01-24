@@ -41,6 +41,7 @@ export interface DocumentItemProps {
     document: {
         documentId: string;
         documentName?: string;
+        documentSource?: string;
     };
     taskCarrier: string;
     docType: DocumentTypeView;
@@ -157,7 +158,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         (user?.email?.toLowerCase() === task.assignee?.toLowerCase() ||
             task.prefferedAssignee?.toLowerCase() === user?.email?.toLowerCase());
 
-    const documentsList = type == 'task' ? task.documents || [] : task.mappedDocuments || [];
+    const documentsList = task.mappedDocuments || [];
     const additionalDocumentsList = task.additionalDocuments || [];
 
     const showStartButton = task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending;
@@ -250,6 +251,8 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     >
                         <>{t('general.view')}</>
                     </DocumentPreviewer>
+
+                    
                 </div>
             </div>
         );
@@ -265,7 +268,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
             label: 'Pending',
             icon: <Pause width={16} height={16} />,
             onSelect: () => {
-                openSideSheet()
+                openSideSheet();
             },
         },
     ];
@@ -278,50 +281,55 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     {t('sideSheet.task.status.label')}{' '}
                 </div>
                 <div className="col-span-2 mt-2 align-self">
-
-                    {task?.status != TaskStatus.InProgress && <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
-                        <Badge
-                            icon={badgeIcon}
-                            variant={badgeVariant}
-                            label={badgeLabel}
-                            rounded={true}
-                            className="flex gap-1 items-center"
+                    {task?.status != TaskStatus.InProgress && (
+                        <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
+                            <Badge
+                                icon={badgeIcon}
+                                variant={badgeVariant}
+                                label={badgeLabel}
+                                rounded={true}
+                                className="flex gap-1 items-center"
+                            />
+                        </Typography>
+                    )}
+                    {task?.status === TaskStatus.InProgress && (
+                        <Dropdown
+                            triggerIcon={
+                                <div className="pb-1">
+                                    <Progress width={16} height={16} />
+                                </div>
+                            }
+                            triggerLabel="In Progress"
+                            options={statuses}
                         />
-                    </Typography>}
-                    {task?.status === TaskStatus.InProgress && <Dropdown
-                        triggerIcon={<div className='pb-1'><Progress width={16} height={16} /></div>}
-                        triggerLabel="In Progress"
-                        options={statuses}
-                    />}
-
-
+                    )}
                 </div>
 
                 {((task.status === TaskStatus.Pending && task.impededReason) ||
                     (task.status === TaskStatus.Canceled && task.cancellationReason)) && (
-                        <>
-                            <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
-                            <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                                <Content
-                                    truncate
-                                    details={statusReason}
-                                    variant={ContentVariant.BodySm}
-                                    popoverBody={statusReason}
-                                    popoverClassName="background-white w-full "
-                                    pii={true}
-                                />
-                                {task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason}
-                            </Typography>
-                        </>
-                    )}
+                    <>
+                        <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
+                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                            <Content
+                                truncate
+                                details={statusReason}
+                                variant={ContentVariant.BodySm}
+                                popoverBody={statusReason}
+                                popoverClassName="background-white w-full "
+                                pii={true}
+                            />
+                            {task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason}
+                        </Typography>
+                    </>
+                )}
                 {(task.status === TaskStatus.Pending || task.status === TaskStatus.Canceled || task.status === TaskStatus.Completed) && (
                     <>
                         <div className="col-span-1 text-[--color-base-text-text-secondary]">
                             {task.status === TaskStatus.Pending
                                 ? t('sideSheet.task.pendinglabel')
                                 : task.status === TaskStatus.Canceled
-                                    ? t('sideSheet.task.canceledLabel')
-                                    : t('sideSheet.task.completedLabel')}
+                                ? t('sideSheet.task.canceledLabel')
+                                : t('sideSheet.task.completedLabel')}
                         </div>
                         <Typography variant={TypographyVariant.BodySm} className="col-span-2">
                             {task.status === TaskStatus.Pending
@@ -329,8 +337,8 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                                     ? dayjs(formattedPending).format(DEFAULT_DATETIME_DISPLAY_FORMAT)
                                     : 'N/A'
                                 : formattedUpdated
-                                    ? dayjs(formattedUpdated).format(DEFAULT_DATETIME_DISPLAY_FORMAT)
-                                    : 'N/A'}
+                                ? dayjs(formattedUpdated).format(DEFAULT_DATETIME_DISPLAY_FORMAT)
+                                : 'N/A'}
                         </Typography>
                     </>
                 )}
@@ -441,7 +449,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     )
                 ) : null}
             </div>
-
         </div>
     );
 
