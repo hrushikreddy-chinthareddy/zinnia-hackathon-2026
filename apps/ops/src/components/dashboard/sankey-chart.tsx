@@ -14,7 +14,7 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
-import PageLoader from '../page-loader/page-loader';
+import { BlurOverlayLoader } from '../overlay-loader/overlay-loader';
 
 interface Props {
     height?: number;
@@ -81,7 +81,11 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     const [parentSize, setParentSize] = useState({ width, height });
     const svgParentRef = useRef<HTMLDivElement>(null);
 
-    const { data: caseGroupingState, isLoading: caseGroupingDataLoading } = useQuery({
+    const {
+        data: caseGroupingState,
+        isLoading: caseGroupingDataLoading,
+        isFetching,
+    } = useQuery({
         queryKey: ['caseGrouping', baseDashboardQueryFilter, l1SelectValue, l2SelectValue, l3SelectValue],
         queryFn: () => {
             setL1SelectedIndex(-100);
@@ -726,12 +730,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         l3SelectValue === DEFAULT_GROUPBY_FILTER_OPTIONS.L3SelectValue;
 
     return (
-        <>
-            {caseGroupingDataLoading && (
-                <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
-                    <PageLoader />
-                </div>
-            )}
+        <BlurOverlayLoader loading={caseGroupingDataLoading || isFetching}>
             <div>
                 <Typography className="flex items-center mt-7 mb-7" variant={TypographyVariant.H4} asTag="h2" data-testid="header-text">
                     {t('caseStatCharHeader', { count: formattedCasesNumber })}
@@ -887,7 +886,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                     </div>
                 </div>
             </div>
-        </>
+        </BlurOverlayLoader>
     );
 };
 

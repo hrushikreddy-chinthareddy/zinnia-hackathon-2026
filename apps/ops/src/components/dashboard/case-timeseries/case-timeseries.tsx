@@ -19,7 +19,7 @@ import { useMemo, useState } from 'react';
 
 import { LineAndVolumeCategoryChart } from '@deps/components/dashboard/line-and-volume-category-chart/line-and-volume-category-chart';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { InsightSummary } from '@deps/containers/dashboard/insight-summary/insight-summary';
@@ -94,9 +94,9 @@ export const CaseTimeseries = ({
     sortable = false,
     showSubtitle = true,
 }: Props) => {
-    const { data: caseTimeseriesData, isLoading: caseTimeseriesDataLoading } = useQuery({
+    const { data: caseTimeseriesData, isFetching: caseTimeSeriesDataFetching } = useQuery({
         queryKey: ['caseTimeseriesData', filters, groupByOptions],
-
+        placeholderData: previousData => previousData,
         queryFn: async () => {
             const data = await getStatsData(filters, groupByOptions);
             if (!data?.data?.statsResponseData) {
@@ -192,111 +192,82 @@ export const CaseTimeseries = ({
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {caseTimeseriesDataLoading || !monthlyArray.length
-                    ? Array.from({ length: 5 }).map((_, index) => (
-                          <TableRow key={`skeleton-${index}`}>
-                              <TableCell className="flex items-center gap-3">
-                                  <div className="h-3 w-3 rounded" style={{ backgroundColor: colors[index] }}></div>
-                                  <div className="grow h-[22px] w-full rounded bg-gray-50" />
-                              </TableCell>
-                              <TableCell>
-                                  <div className="grow h-[22px] w-full rounded bg-gray-50" />
-                              </TableCell>
-                              <TableCell>
-                                  <div className="grow h-[22px] w-full rounded bg-gray-50" />
-                              </TableCell>
-                          </TableRow>
-                      ))
-                    : Array.from({ length: 5 }).map((_, index) => {
-                          const divisors: Record<TimeframeFilterOptions, number> = {
-                              [TimeframeFilterOptions.Trailing12Months]: 12,
-                              [TimeframeFilterOptions.Last6Months]: 6,
-                              [TimeframeFilterOptions.Last90Days]: 3,
-                              [TimeframeFilterOptions.Last60Days]: 2,
-                              [TimeframeFilterOptions.LastMonth]: 1,
-                          };
+                {Array.from({ length: 5 }).map((_, index) => {
+                    const divisors: Record<TimeframeFilterOptions, number> = {
+                        [TimeframeFilterOptions.Trailing12Months]: 12,
+                        [TimeframeFilterOptions.Last6Months]: 6,
+                        [TimeframeFilterOptions.Last90Days]: 3,
+                        [TimeframeFilterOptions.Last60Days]: 2,
+                        [TimeframeFilterOptions.LastMonth]: 1,
+                    };
 
-                          const stat = sortedMonthlyArray[index];
-                          const NoDataComponent = caseTimeseriesDataLoading ? Skeleton : 'div';
-                          const NoDataCell = (
-                              <NoDataComponent
-                                  className={clsx('grow h-[22px] w-full rounded', caseTimeseriesDataLoading && 'bg-gray-50')}
-                              />
-                          );
+                    const stat = sortedMonthlyArray[index];
+                    const NoDataComponent = caseTimeSeriesDataFetching ? Skeleton : 'div';
+                    const NoDataCell = (
+                        <NoDataComponent className={clsx('grow h-[22px] w-full rounded', caseTimeSeriesDataFetching && 'bg-gray-50')} />
+                    );
 
-                          if (!stat) {
-                              return null;
-                          }
+                    if (!stat) {
+                        return null;
+                    }
 
-                          return (
-                              <TableRow key={`stat-${index}-${stat?.name || ''}`}>
-                                  <TableCell className="flex items-center gap-3">
-                                      <div className="h-3 w-3 rounded" style={{ backgroundColor: colors[index] }}></div>
-                                      {stat?.name ? (
-                                          <NavElement
-                                              href={linkQueryFormat.replace(/replaceme/g, encodeURIComponent(stat.name))}
-                                              size={NavElementSize.Small}
-                                              type={NavElementType.Link}
-                                              className="capitalize whitespace-nowrap overflow-hidden text-ellipsis typography-content-body-sm-bold"
-                                              target="_blank"
-                                              title={toTitleCase(stat.name)}
-                                          >
-                                              {stat.name}
-                                          </NavElement>
-                                      ) : (
-                                          NoDataCell
-                                      )}
-                                  </TableCell>
-                                  <TableCell className={`typography-content-body-sm text-right`}>
-                                      {stat?.total
-                                          ? wholeNumberFormatify(
-                                                stat.total / divisors[timeframe || TimeframeFilterOptions.Trailing12Months]
-                                            )
-                                          : NoDataCell}
-                                  </TableCell>
-                                  <TableCell className={`typography-content-body-sm text-right`}>
-                                      {stat?.total ? wholeNumberFormatify(stat.total) : NoDataCell}
-                                  </TableCell>
-                              </TableRow>
-                          );
-                      })}
+                    return (
+                        <TableRow key={`stat-${index}-${stat?.name || ''}`}>
+                            <TableCell className="flex items-center gap-3">
+                                <div className="h-3 w-3 rounded" style={{ backgroundColor: colors[index] }}></div>
+                                {stat?.name ? (
+                                    <NavElement
+                                        href={linkQueryFormat.replace(/replaceme/g, encodeURIComponent(stat.name))}
+                                        size={NavElementSize.Small}
+                                        type={NavElementType.Link}
+                                        className="capitalize whitespace-nowrap overflow-hidden text-ellipsis typography-content-body-sm-bold"
+                                        target="_blank"
+                                        title={toTitleCase(stat.name)}
+                                    >
+                                        {stat.name}
+                                    </NavElement>
+                                ) : (
+                                    NoDataCell
+                                )}
+                            </TableCell>
+                            <TableCell className={`typography-content-body-sm text-right`}>
+                                {stat?.total
+                                    ? wholeNumberFormatify(stat.total / divisors[timeframe || TimeframeFilterOptions.Trailing12Months])
+                                    : NoDataCell}
+                            </TableCell>
+                            <TableCell className={`typography-content-body-sm text-right`}>
+                                {stat?.total ? wholeNumberFormatify(stat.total) : NoDataCell}
+                            </TableCell>
+                        </TableRow>
+                    );
+                })}
             </TableBody>
         </Table>
     );
 
     return (
         <CardContainer containerClassNames="rounded" classNames="!p-0 flex flex-col gap-8" fullWidth={true}>
-            <div className="grow flex flex-col lg:flex-row lg:justify-between gap-8 lg:gap-6">
-                <div className="flex flex-col gap-8 lg:w-1/4">
-                    <div id="case-timeseries-title" className="flex flex-col gap-2">
-                        <Typography variant={TypographyVariant.H3}>{title}</Typography>
-                        {showSubtitle && (
-                            <Typography variant={TypographyVariant.LabelLg}>
-                                {caseTimeseriesDataLoading ? (
-                                    <Skeleton className="w-full h-6" />
-                                ) : (
-                                    dashboardChartTitleFormat(selectedSubprocess, false)
-                                )}
-                            </Typography>
-                        )}
+            <BlurOverlayLoader loading={caseTimeSeriesDataFetching}>
+                <div className="grow flex flex-col lg:flex-row lg:justify-between gap-8 lg:gap-6">
+                    <div className="flex flex-col gap-8 lg:w-1/4">
+                        <div id="case-timeseries-title" className="flex flex-col gap-2">
+                            <Typography variant={TypographyVariant.H3}>{title}</Typography>
+                            {showSubtitle && (
+                                <Typography variant={TypographyVariant.LabelLg}>
+                                    {dashboardChartTitleFormat(selectedSubprocess, false)}
+                                </Typography>
+                            )}
+                        </div>
+                        <InsightSummary className="grow" prompt={prompt} content={content} />
                     </div>
-                    <InsightSummary className="grow" prompt={prompt} content={content} />
+                    <div className="grow py-1">{StatsTable}</div>
                 </div>
-                <div className="grow py-1">{StatsTable}</div>
-            </div>
-            <div className="grow flex flex-col gap-2">
-                <Typography variant={TypographyVariant.BodyBold}>{dashboardChartTitleFormat(timeframe, false)}</Typography>
-                {caseTimeseriesDataLoading || !processedData ? (
-                    <div
-                        style={{ height: `${CHART_HEIGHT}px` }}
-                        className="grid h-full w-full items-stretch justify-stretch bg-[--color-base-surface-surface-tertiary]"
-                    >
-                        <PageLoader variant={PageLoaderVariant.Center} />
-                    </div>
-                ) : (
+                <div className="grow flex flex-col gap-2">
+                    <Typography variant={TypographyVariant.BodyBold}>{dashboardChartTitleFormat(timeframe, false)}</Typography>
+
                     <LineAndVolumeCategoryChart timeframe={timeframe} chartData={processedData} />
-                )}
-            </div>
+                </div>
+            </BlurOverlayLoader>
         </CardContainer>
     );
 };

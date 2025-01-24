@@ -5,7 +5,7 @@ import { FC, useEffect, useState } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
 import { ChipRadio } from '@deps/components/chip-radio/chip-radio';
-import { BlurOverlayLoader } from '@deps/components/overlay-loader';
+import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
