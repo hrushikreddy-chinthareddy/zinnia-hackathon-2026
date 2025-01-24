@@ -46,6 +46,7 @@ export type DatePickerProps = {
     datePickerType?: DatePickerTypes;
     showMonths?: boolean;
     isPastDateDisabled?: boolean;
+    isTodayDisabled?: boolean;
 };
 
 interface YearsProps {
@@ -464,6 +465,7 @@ export default function DatePicker({
     datePickerType,
     handleCustomSelection,
     showMonths = true,
+    isTodayDisabled = false
 }: DatePickerProps) {
     const isRange = date && 'start' in date && 'end' in date;
     const [currentDate] = useState(() => {
@@ -543,9 +545,13 @@ export default function DatePicker({
             return disabledClasses;
         }
         // Disables past dates
-        if (isPastDateDisabled && (dayjsDate.isBefore(dayjs().startOf('day')) || dayjsDate.month() !== month) || dayjsDate.isSame(dayjs(), 'day')) {
+        if (isPastDateDisabled && (dayjsDate.isBefore(dayjs().startOf('day')) || dayjsDate.month() !== month)) {
             return disabledClasses;
         }
+        if (isTodayDisabled && (dayjsDate.isSame(dayjs(), 'day'))) {
+            return disabledClasses;
+        }
+
         return '';
     };
 

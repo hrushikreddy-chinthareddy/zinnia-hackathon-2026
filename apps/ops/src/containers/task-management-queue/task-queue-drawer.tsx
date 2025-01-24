@@ -111,6 +111,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: (
         value={date}
         isFutureDateDisabled={false}
         isPastDateDisabled={true}
+        isTodayDisabled={true}
       />
       <SelectSimple
         className="max-w-lg placeholder:text-gray-400"

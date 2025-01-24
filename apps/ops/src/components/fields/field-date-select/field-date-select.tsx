@@ -23,6 +23,7 @@ export type FieldDateSelectProps = {
     datePickerType?: DatePickerTypes;
     isDateAllowed?: (dayjsDate: Dayjs) => boolean;
     showMonths?: boolean;
+    isTodayDisabled?: boolean
 } & FieldProps;
 export const DATE_PICKER_FORMAT = NUMERIC_DATE_FORMAT;
 
@@ -32,6 +33,7 @@ export default function FieldDateSelect({
     onChange,
     isFutureDateDisabled = true,
     isPastDateDisabled = false,
+    isTodayDisabled = false,
     isDateAllowed,
     disableFormat,
     datePickerType,
@@ -105,6 +107,7 @@ export default function FieldDateSelect({
                     handleCustomSelection={handleCustomSelection}
                     datePickerType={datePickerType}
                     showMonths={showMonths}
+                    isTodayDisabled={isTodayDisabled}
                 />
             </div>
         </div>
