@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { FC, useEffect, useState } from 'react';
@@ -97,6 +98,9 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
                 xAxis: {
                     categories: applicationTypeCategories,
                 },
+                yAxis: {
+                    allowDecimals: false,
+                },
                 series,
             }),
         };
@@ -110,12 +114,28 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
     }));
 
     const submissionVsOptions = [
-        { label: 'Carrier', value: GroupByOptions.Carrier },
+        { label: 'Carrier', value: GroupByOptions.Carrier, disabled: carriers.length === 1 },
         { label: 'Product', value: GroupByOptions.ProductName },
-        { label: 'DistributionPartner', value: GroupByOptions.BrokerDealerName },
+        { label: 'Distribution Partner', value: GroupByOptions.BrokerDealerName },
     ];
 
     const timerangeText = getDateRangeText(timeframe);
+
+    const submissionMethodTooltip = (
+        <>
+            <p>
+                <span className="font-bold">Digital:</span> Cases submitted directly through Policy Portal without using OnBase.
+            </p>
+
+            <p>
+                <span className="font-bold">Electronic:</span> Cases submitted electronically via DTCC.
+            </p>
+
+            <p>
+                <span className="font-bold">Paper:</span> Cases submitted using a paper form.
+            </p>
+        </>
+    );
 
     return (
         <div className={styles.container}>
@@ -140,10 +160,11 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
                             statMeasurementLabel="case"
                             classNames={styles.statBlock}
                             variant="single"
+                            labelTooltip={submissionMethodTooltip}
                             loading={applicationTypeLoading2 || applicationTypeLoading}
                             chartConfig={{ colors: ['#85BCD3', '#00628B', '#021936'] }}
                         />
-                        <div className={styles.chartContainer}>
+                        <div className={clsx('w-3/4', styles.chartContainer)}>
                             <div className={styles.filterContainer}>
                                 <h3 className="headline-3-d">Submission Vs</h3>
                                 <Select
