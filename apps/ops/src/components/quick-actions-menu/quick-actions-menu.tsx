@@ -156,6 +156,7 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                     onClick={() => {
                         trackClick('Send Forms', `/contact-center/send-document?planCode=${planCode}&policyNumber=${policyNumber}`);
                     }}
+                    openInNewTab={true}
                 />
                 <MenuContextualItem
                     content={t('documents.sendStatements')}
@@ -167,6 +168,7 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                             `/contact-center/send-correspondence?planCode=${planCode}&policyNumber=${policyNumber}`
                         );
                     }}
+                    openInNewTab={true}
                 />
                 <MenuContextualItem
                     content={t('documents.sendTaxForms')}
@@ -175,6 +177,7 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                     onClick={() => {
                         trackClick('Send Tax Forms', `/contact-center/send-taxform?planCode=${planCode}&policyNumber=${policyNumber}`);
                     }}
+                    openInNewTab={true}
                 />
             </MenuContextualLabel>
         </>
