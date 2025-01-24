@@ -10,6 +10,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatSSN } from '@deps/helpers/string.helper';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { CardTypes } from '@deps/models/case/task';
 
 export function CardTemplate(props: ObjectFieldTemplateProps) {
     const { formData, uiSchema, schema, formContext } = props;
@@ -19,7 +20,7 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
     return (
         <>
             <SingleCard
-                cardType={cardType as string}
+                cardType={cardType as CardTypes}
                 icon={icon as IconType}
                 data={formData}
                 properties={schema?.properties}
@@ -31,7 +32,7 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
 }
 
 export type SingleCardProps = {
-    cardType: string;
+    cardType: CardTypes;
     icon: IconType;
     data: any;
     properties: any;
@@ -54,7 +55,7 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
 
     const handleCardClick = () => {
         const content = <DetailsCard details={data} sectionTitle={sectionTitle} properties={displayProperties} />;
-        sideSheet.changeSideSheetContent(data?.title || '', content);
+        sideSheet.changeSideSheetContent(data?.[title] || '', content);
         sideSheet.handleOpen(true);
     };
 
@@ -79,8 +80,8 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                         </PiiWrapper>
                     </div>
                 </div>
-                {cardType === 'Detailed' && <DetailAction handleCardClick={handleCardClick} formData={data} />}
-                {cardType === 'Document' && (
+                {cardType === CardTypes.Detailed && <DetailAction handleCardClick={handleCardClick} formData={data} />}
+                {cardType === CardTypes.Document && (
                     <DocumentActions
                         cardType={cardType}
                         document={replacePlaceholders(data, formData) || data}

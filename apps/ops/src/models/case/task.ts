@@ -126,10 +126,11 @@ export type FormMetadata = {
 };
 
 export enum CardTypes {
-    Detailed,
-    Hyperlink,
-    Download,
-    Preview,
+    Detailed = 'Detailed',
+    Hyperlink = 'Hyperlink',
+    Download = 'Download',
+    Preview = 'Preview',
+    Document = 'Document',
 }
 
 export type ApiProps = {

@@ -4,46 +4,6 @@
     "carrier": "WELB",
     "taskType": "PURCHASE_DOCUMENT_MATCHING",
     "formSchema": {
-        "allOf": [
-            {
-                "if": {
-                    "properties": {
-                        "matchingResult": {
-                            "const": "ENTERED"
-                        }
-                    }
-                },
-                "then": {
-                    "properties": {
-                        "caseId": {
-                            "type": "string",
-                            "title": "Case Id"
-                        }
-                    }
-                }
-            },
-            {
-                "if": {
-                    "properties": {
-                        "matchingResult": {
-                            "const": "REINDEX"
-                        }
-                    }
-                },
-                "then": {
-                    "properties": {
-                        "caseType": {
-                            "type": "string",
-                            "title": "Cases"
-                        },
-                        "caseSubType": {
-                            "type": "string",
-                            "title": "Case"
-                        }
-                    }
-                }
-            }
-        ],
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
         "properties": {
@@ -174,15 +134,11 @@
             "ui:widget": "radio",
             "ui:options": {
                 "label": true,
-                "cardType": "Link",
+                "cardType": "Hyperlink",
                 "customOptions": [
                     {
                         "label": "Enter a case ID",
                         "value": "ENTERED"
-                    },
-                    {
-                        "label": "Document cannot be matched to a case",
-                        "value": "REINDEX"
                     }
                 ]
             }
@@ -287,33 +243,10 @@
                                 }
                             },
                             "else": {
-                                "if": {
-                                    "properties": {
-                                        "matchingResult": {
-                                            "const": "REINDEX"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "caseType": {
-                                            "type": "string",
-                                            "title": "Cases",
-                                            "$ref": "#/definitions/caseTypeEnum"
-                                        },
-                                        "caseSubType": {
-                                            "type": "string",
-                                            "title": "Case Types",
-                                            "$ref": "#/definitions/caseSubTypeEnum"
-                                        }
-                                    }
-                                },
-                                "else": {
-                                    "properties": {
-                                        "isDuplicate": {
-                                            "type": "string",
-                                            "title": "Is this document a duplicate?"
-                                        }
+                                "properties": {
+                                    "isDuplicate": {
+                                        "type": "string",
+                                        "title": "Is this document a duplicate?"
                                     }
                                 }
                             }
@@ -384,16 +317,12 @@
                     "matchingResult": {
                         "ui:widget": "radio",
                         "ui:options": {
-                            "cardType": "Link",
+                            "cardType": "Hyperlink",
                             "label": true,
                             "customOptions": [
                                 {
                                     "label": "Enter a case ID",
                                     "value": "ENTERED"
-                                },
-                                {
-                                    "label": "Document cannot be matched to a case",
-                                    "value": "REINDEX"
                                 }
                             ]
                         }

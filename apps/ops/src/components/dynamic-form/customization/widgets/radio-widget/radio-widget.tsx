@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 import { useMemo } from 'react';
 
 import Radio, { RadioItem } from '@deps/components/radio/radio';
-import { ApiProps } from '@deps/models/case/task';
+import { ApiProps, CardTypes } from '@deps/models/case/task';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 
@@ -14,7 +14,7 @@ const baseUrl = baseAppUrl + '/api/';
 
 const renderSubElement = (option: any, properties: any, cardType: any, icon: any, sectionTitle: string) => {
     switch (cardType) {
-        case 'Link':
+        case CardTypes.Hyperlink:
             return (
                 <HyperLink
                     title={option.label}
@@ -25,10 +25,10 @@ const renderSubElement = (option: any, properties: any, cardType: any, icon: any
                     className="border-gray-200 border-1 p-[12px] w-[436px] "
                 />
             );
-        case 'Detailed':
+        case CardTypes.Detailed:
             return (
                 <SingleCard
-                    cardType={cardType as string}
+                    cardType={cardType as CardTypes}
                     icon={icon as IconType}
                     data={option}
                     properties={properties}
