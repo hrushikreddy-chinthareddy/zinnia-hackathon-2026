@@ -1,7 +1,7 @@
 import { FC, RefObject } from 'react';
 
 import { OpenTransactions } from '@deps/components/dashboard/open-transactions/open-transactions';
-import SankeyChart from '@deps/components/dashboard/sankey-chart';
+import SankeyChart from '@deps/components/dashboard/sankey-chart/sankey-chart';
 import { SubmissionType } from '@deps/components/dashboard/submission-type/submission-type';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useResizeObserver } from '@deps/hooks/useResizeObserver';

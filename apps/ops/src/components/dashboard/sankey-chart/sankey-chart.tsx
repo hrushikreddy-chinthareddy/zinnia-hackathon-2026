@@ -4,17 +4,18 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 
 import { FieldSize, FieldType } from '@deps/components/fields/field';
+import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { getLabelSubString, dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { dashboardChartTitleFormat, getLabelSubString } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
-import { BlurOverlayLoader } from '../overlay-loader/overlay-loader';
+import { SankeyCellText } from './sankey-cell-text';
 
 interface Props {
     height?: number;
@@ -413,27 +414,21 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                             fill: isL1Selected() && !isMatchForL1SelectedStatGrouping(index) ? '#eee' : getLevel1PathColor(index),
                         }}
                     />
-                    <text
-                        transform={`translate(${svgleftAndRightPadding} ${
-                            calculateVerticalBlockPosition(index, level1ObjectGrouping.length) + blockheights / 2
-                        })`}
-                        x="10"
-                        y="10"
-                        style={{
-                            fill: isL1Selected() && !isMatchForL1SelectedStatGrouping(index) ? '#ddd' : 'inherit',
-                        }}
-                        pointerEvents="none"
-                    >
-                        <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
-                            {wholeNumberFormatify(l1StatGrouping.count)}
-                        </tspan>
-                        <tspan className="font-primary text-sm font-medium">
-                            {l1SelectValue === GroupByOptions.Carrier
+                    <SankeyCellText
+                        width={blockWidths}
+                        height={blockheights}
+                        transform={`translate(${svgleftAndRightPadding} ${calculateVerticalBlockPosition(
+                            index,
+                            level1ObjectGrouping.length
+                        )})`}
+                        fill={isL1Selected() && !isMatchForL1SelectedStatGrouping(index) ? '#ddd' : 'inherit'}
+                        count={l1StatGrouping.count}
+                        title={
+                            l1SelectValue === GroupByOptions.Carrier
                                 ? getLabelSubString(l1StatGrouping.name)
-                                : dashboardChartTitleFormat(l1StatGrouping.name, 15)}
-                        </tspan>
-                        <title>{l1StatGrouping.name}</title>
-                    </text>
+                                : dashboardChartTitleFormat(l1StatGrouping.name, false)
+                        }
+                    />
                 </a>
                 <g
                     data-name={`level-1-${index}-paths`}
@@ -485,26 +480,17 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         }}
                         pointerEvents="none"
                     ></rect>
-                    <text
-                        transform={`translate(${parentSize.width / 2 - blockWidths / 2 + 10} ${
-                            calculateVerticalBlockPosition(index, level2ObjectGrouping.length) + blockheights / 2
-                        })`}
-                        x="10"
-                        y="10"
+                    <SankeyCellText
                         width={blockWidths}
-                        overflow="auto"
-                        style={{
-                            fill: getL2TextColor(l2StatGrouping),
-                        }}
-                    >
-                        <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
-                            {wholeNumberFormatify(getL2ObjectCount(l2StatGrouping))}
-                        </tspan>
-                        <tspan className="font-primary text-sm font-medium">
-                            &nbsp;{dashboardChartTitleFormat(l2StatGrouping.name, 15)}
-                        </tspan>
-                        <title>{dashboardChartTitleFormat(l2StatGrouping.name, false)}</title>
-                    </text>
+                        height={blockheights}
+                        transform={`translate(${parentSize.width / 2 - blockWidths / 2} ${calculateVerticalBlockPosition(
+                            index,
+                            level2ObjectGrouping.length
+                        )})`}
+                        fill={getL2TextColor(l2StatGrouping)}
+                        count={getL2ObjectCount(l2StatGrouping)}
+                        title={dashboardChartTitleFormat(l2StatGrouping.name, false)}
+                    />
                 </g>
                 {/* </a> */}
                 {/* Rendering the overall to the leve3 object grouping. We put these last so they can sit on top of rectangles */}
@@ -534,20 +520,19 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                     }}
                     pointerEvents="all"
                 ></rect>
-                <text
-                    transform={`translate(${parentSize.width - blockWidths - svgleftAndRightPadding} ${
-                        calculateVerticalBlockPosition(index, level3ObjectGrouping.length) + blockheights / 2
-                    })`}
-                    x="10"
-                    y="10"
-                    fill="white"
-                >
-                    <tspan className="tracking-normal no-underline font-primary text-xl font-medium">
-                        {wholeNumberFormatify(getL3ObjectCount(l3StatGrouping))}
-                    </tspan>
-                    <tspan className="font-primary text-sm font-medium"> {dashboardChartTitleFormat(l3StatGrouping.name)}</tspan>
-                    <title>{dashboardChartTitleFormat(l3StatGrouping.name, false)}</title>
-                </text>
+
+                <SankeyCellText
+                    width={blockWidths}
+                    height={blockheights}
+                    transform={`translate(${parentSize.width - blockWidths - svgleftAndRightPadding} ${calculateVerticalBlockPosition(
+                        index,
+                        level3ObjectGrouping.length
+                    )})`}
+                    fill={'white'}
+                    textColor="white"
+                    count={getL3ObjectCount(l3StatGrouping)}
+                    title={dashboardChartTitleFormat(l3StatGrouping.name, false)}
+                />
             </g>
         );
     };

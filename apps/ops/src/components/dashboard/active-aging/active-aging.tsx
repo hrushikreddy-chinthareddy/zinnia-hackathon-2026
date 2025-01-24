@@ -476,7 +476,7 @@ const ActiveAging = ({
                                                 className="capitalize"
                                                 target="_blank"
                                             >
-                                                {dashboardChartTitleFormat(stat.name)}
+                                                {dashboardChartTitleFormat(stat.name, false)}
                                             </NavElement>
                                             <Typography
                                                 className="flex gap-2"
