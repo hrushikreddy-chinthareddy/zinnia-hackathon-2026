@@ -125,7 +125,7 @@ export const NavMenu = ({
                     carrierIcons[detail.carrierName as CarrierNames];
 
                   const companyName = getCarrierSubdomainByName(
-                    detail.carrierName.toLowerCase()
+                    detail.carrierName
                   );
 
                   return (
