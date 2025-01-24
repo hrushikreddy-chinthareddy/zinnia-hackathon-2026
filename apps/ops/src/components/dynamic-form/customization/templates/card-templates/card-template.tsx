@@ -1,16 +1,22 @@
 import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
+import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
+import { MetadataSearchResponse } from 'node_modules/@zinnia/api-types/dist/generated-types/documents-v3/models/MetadataSearchResponse';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatSSN } from '@deps/helpers/string.helper';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { CardTypes } from '@deps/models/case/task';
+import loadingImage from '@deps/styles/images/loader.png';
 
 export function CardTemplate(props: ObjectFieldTemplateProps) {
     const { formData, uiSchema, schema, formContext } = props;
@@ -86,12 +92,7 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                 </div>
                 {cardType === CardTypes.Detailed && <DetailAction handleCardClick={handleCardClick} formData={data} />}
                 {cardType === CardTypes.Document && (
-                    <DocumentActions
-                        cardType={cardType}
-                        document={replacePlaceholders(data, formData) || data}
-                        properties={displayProperties}
-                        t={t}
-                    />
+                    <DocumentActions document={replacePlaceholders(data, formData) || data} properties={displayProperties} t={t} />
                 )}
             </div>
         </>
@@ -128,23 +129,55 @@ const DetailAction = ({ handleCardClick }: any) => {
     );
 };
 
-const DocumentActions = ({ cardType, document, t }: any) => {
-    if (cardType === 'Document') {
-        return (
-            <>
-                <div className="px-4">
-                    <DocumentPreviewer
-                        className="flex max-w-[234px] gap-1"
-                        activeDocType={DocumentTypeView.Case}
-                        carrier={document?.carrier || ''}
-                        displayName={document?.displayName || ''}
-                        documentId={document?.documentId ?? (document?.documentID as string)}
-                    >
-                        {t('general.view')}
-                    </DocumentPreviewer>
-                </div>
-            </>
-        );
-    }
-    return null;
+const DocumentActions = ({ document, t }: any) => {
+    const docId = document.documentId || ((document as DocumentWithSource).documentID as string);
+
+    const [loading, download] = useDocumentDownload(
+        docId,
+        (document as DocumentWithSource).documentSource || (document as MetadataSearchResponse).documentClassification,
+        document.carrier,
+        document.displayName || docId
+    );
+
+    const handleClick = (event: React.MouseEvent) => {
+        event.preventDefault();
+        download();
+    };
+
+    return (
+        <>
+            <div className="px-4 pt-1">
+                <DocumentPreviewer
+                    className="flex max-w-[234px] gap-1"
+                    activeDocType={DocumentTypeView.Case}
+                    carrier={document?.carrier || ''}
+                    displayName={document?.displayName || ''}
+                    documentId={document?.documentId ?? (document?.documentID as string)}
+                >
+                    {t('general.view')}
+                </DocumentPreviewer>
+            </div>
+            <div className="px-2">
+                <NavElement
+                    onClick={handleClick}
+                    size={NavElementSize.Small}
+                    title={`${t('general.download')} ${document?.displayName}`}
+                    type={NavElementType.Button}
+                    variant={NavElementVariant.Secondary}
+                >
+                    {loading ? (
+                        <Image
+                            alt={t('general.downloading')}
+                            className="transform-origin-center duration-2000 animate-spin ease-linear"
+                            height={20}
+                            src={loadingImage}
+                            width={20}
+                        />
+                    ) : (
+                        <Icon width={20} height={20} type={IconType.DOWNLOAD} />
+                    )}
+                </NavElement>
+            </div>
+        </>
+    );
 };

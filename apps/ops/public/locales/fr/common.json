@@ -4888,6 +4888,11 @@
             "subTitle": "Tâche: Appariement de Document a été soumise.",
             "cta": "Aller à la Qualification",
             "secondaryCta": "Retour à l'accueil"
+        },
+        "formErrors": {
+            "caseNotFound": "Dossier non trouvé",
+            "correlationIdNotFount": "ID de corrélation non trouvé",
+            "transactionNotFound": "Transaction non trouvée"
         }
     },
     "newbusinessAgentNigo": {

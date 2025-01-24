@@ -88,26 +88,37 @@
                             "if": {
                                 "properties": {
                                     "matchingResult": {
-                                        "const": "ENTERED"
+                                        "const": ""
                                     }
                                 }
                             },
-                            "then": {
-                                "properties": {
-                                    "caseId": {
-                                        "type": "string",
-                                        "title": "Case Id"
-                                    }
-                                }
-                            },
+                            "then": {},
                             "else": {
-                                "properties": {
-                                    "isDuplicate": {
-                                        "type": "string",
-                                        "title": "Is this document a duplicate?"
+                                "if": {
+                                    "properties": {
+                                        "matchingResult": {
+                                            "const": "ENTERED"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "caseId": {
+                                            "type": "string",
+                                            "title": "Case Id"
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "properties": {
+                                        "isDuplicate": {
+                                            "type": "string",
+                                            "title": "Is this document a duplicate?"
+                                        }
                                     }
                                 }
-                            }
+                            },
+                            "required": ["matchingResult"]
                         }
                     ]
                 },
@@ -123,7 +134,7 @@
                     },
                     "sectionHeader": {
                         "props": {
-                            "description": "Review supporting information and determine if the document can be matched to an existing case. Search all cases and review any suggested potential matches. Confirm the matching Case ID, if possible."
+                            "description": "Review supporting information and determine if the document can be matched to an existing case. Search all cases and review any suggested potential matches. Confirm the matching Case ID, if possible. If there's no existing case to match the document to, mark the task as pending and wait for the application to arrive."
                         },
                         "ui:options": {
                             "label": true,

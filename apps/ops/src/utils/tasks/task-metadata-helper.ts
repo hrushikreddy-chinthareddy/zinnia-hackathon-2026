@@ -8,8 +8,9 @@ export const TaskMetadataHelper = (task: ManagementTask, tasksMetadata: any[]) =
         switch (task.taskType) {
             case TaskType.PURCHASE_DOCUMENT_MATCHING: {
                 const uiSchema = taskMetadata.uiSchema || {};
-                if (uiSchema.potentialMatches?.['ui:options']?.customOptions) {
-                    const existingOptions = uiSchema.potentialMatches['ui:options'].customOptions.map((option: any) => {
+
+                if (uiSchema.matchingResult?.['ui:options']?.customOptions) {
+                    const existingOptions = uiSchema.matchingResult['ui:options'].customOptions.map((option: any) => {
                         if (option.value === undefined) {
                             return { ...option, value: null };
                         }

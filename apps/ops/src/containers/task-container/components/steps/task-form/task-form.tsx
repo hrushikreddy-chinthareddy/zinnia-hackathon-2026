@@ -1,10 +1,11 @@
 import Form, { IChangeEvent } from '@rjsf/core';
 import { GenericObjectType, RJSFSchema } from '@rjsf/utils';
+import { useTranslation } from 'next-i18next';
 import React, { ForwardedRef, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
+import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
-import { updateTask } from '@deps/containers/task-container/task.healpers';
 import { Case } from '@deps/models/case/case';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { EntityTypes, MatchingCase } from '@deps/models/case/task/doc-matching-payment';
@@ -15,7 +16,7 @@ import { buildTaskPayload } from '@deps/utils/tasks/task-payload-helper';
 
 type TaskFormProps = {
     readonly: boolean;
-    onSubmit: () => void;
+    onSubmit: (error: string) => void;
     isSubmit?: boolean;
     taskMetadata: FormMetadata;
 };
@@ -24,6 +25,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     { readonly, onSubmit, isSubmit, taskMetadata }: TaskFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `taskManagement.formErrors` });
     const formState = useContext(TaskDataContext);
     const { task, setTask, setSubmitFailed, correlationId, initialTask } = formState;
     const [formSchema, setFormSchema] = useState(taskMetadata);
@@ -44,14 +46,20 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     const response = await getCases(caseRequestBody);
                     const cases = response.data as Case[];
 
-                    if (!cases.length || cases?.[0]?.correlationId) {
-                        browserLogWarn('task::case not found or correlationId id not found', task.data.caseId);
-                        return false;
+                    if (!cases.length || !cases?.[0]?.correlationId) {
+                        const error = !cases.length ? 'caseNotFound' : 'correlationIdNotFount';
+                        browserLogWarn(`task:: ${t(error)}`, task.data.caseId);
+                        onSubmit(t(error));
+                        return;
                     }
 
                     const transactionResponse = await getTransactionsByCorrelationId(cases?.[0]?.correlationId || '', {
                         entityType: EntityTypes.NB_PAYMENT_RECORD,
                     });
+                    if (!transactionResponse || !transactionResponse.length) {
+                        onSubmit(t('transactionNotFound'));
+                        return;
+                    }
 
                     const paymentCards = transactionResponse?.map((transaction: any) => ({
                         label: transaction.correlationId,
@@ -62,20 +70,19 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         },
                     }));
 
-                    setTask(previousTask => {
-                        return {
-                            ...previousTask,
-                            data: {
-                                ...previousTask.data,
-                                transactionOptions: paymentCards,
-                                caseId: cases[0].id,
-                                matchingResult: cases[0].correlationId,
-                                isDuplicate: MatchingCase.MATCH_FOUND,
-                            },
-                        };
-                    });
+                    setTask(previousTask => ({
+                        ...previousTask,
+                        data: {
+                            ...previousTask.data,
+                            transactionOptions: paymentCards,
+                            caseId: cases[0].id,
+                            matchingResult: cases[0].correlationId,
+                            isDuplicate: MatchingCase.MATCH_FOUND,
+                        },
+                    }));
                 } catch (e) {
                     console.log(e);
+                    return;
                 }
             }
             if (![MatchingCase.ENTERED, MatchingCase.REINDEX].includes(correlationId)) {
@@ -112,16 +119,16 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const handleSubmit = useCallback(async () => {
         if (!isSubmit) {
             await fetchData();
-            onSubmit();
+            onSubmit('');
             return;
         }
 
         const taskPayload = buildTaskPayload(task, initialTask);
 
-        const success = await updateTask(taskPayload, correlationId);
-        setSubmitFailed(!success);
+        // const success = await updateTask(taskPayload, correlationId);
+        // setSubmitFailed(!success);
 
-        onSubmit();
+        onSubmit('');
     }, [correlationId, isSubmit, onSubmit, setSubmitFailed, task]);
 
     const handleChange = useCallback(

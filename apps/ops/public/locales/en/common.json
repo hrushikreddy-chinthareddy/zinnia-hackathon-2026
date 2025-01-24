@@ -4912,6 +4912,11 @@
             "cancel": "Cancel",
             "confirm": "Confirm",
             "continue": "Continue"
+        },
+        "formErrors": {
+            "caseNotFound": "Case not found",
+            "correlationIdNotFount": "Correlation ID not found",
+            "transactionNotFound": "Transaction not found"
         }
     },
     "purchaseDocumentMatching": {
