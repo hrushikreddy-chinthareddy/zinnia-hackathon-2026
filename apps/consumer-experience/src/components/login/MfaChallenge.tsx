@@ -2,6 +2,7 @@
 import {
   AssistiveText,
   AssistiveTextVariant,
+  Button,
   Loader,
   LoaderVariant,
   SpinnerButton,
@@ -41,9 +42,11 @@ const SubmitButton = () => {
 export const MfaChallenge = ({
   enrollment,
   id,
+  postLogin,
 }: {
   enrollment?: string;
   id?: string;
+  postLogin?: boolean;
 }) => {
   const router = useRouter();
   const [resendCode, setResendCode] = useState(false);
@@ -62,6 +65,8 @@ export const MfaChallenge = ({
     }
   );
 
+  // TODO: move this into utils, however this is currently a clientside version
+  // need to either un-serverside the utils file or pass cookies or something
   const getMfaToken = () => {
     const cookies = Cookies.get();
     const keys = Object.keys(cookies)
@@ -74,6 +79,7 @@ export const MfaChallenge = ({
 
     return keys.map(key => cookies[key]).join('');
   };
+
   useEffect(() => {
     const fetchAuthenticators = async () => {
       let redirectToErrorPage = false;
@@ -107,14 +113,18 @@ export const MfaChallenge = ({
           throw new Error('unauthorized');
         }
       } catch (error) {
-        redirectToErrorPage = true;
+        if (postLogin) {
+          // log user out
+        } else {
+          redirectToErrorPage = true;
+        }
       }
       if (redirectToErrorPage) {
         router.push('/login/error');
       }
     };
     fetchAuthenticators();
-  }, [router, id]);
+  }, [router, id, postLogin]);
 
   const hasError = !!verifyMfaChallengeState.error;
   const inputStyles = clsx(`${styles.input}`, {
@@ -221,7 +231,13 @@ export const MfaChallenge = ({
             <span>Re-send verification code.</span>
           </SpinnerButton>
         </p>
-        <SubmitButton />
+        <div className="stacked-items">
+          <SubmitButton />
+          {postLogin && (
+            // TODO: add handling for this click
+            <Button mode="link">Cancel</Button>
+          )}
+        </div>
       </form>
     );
   };
