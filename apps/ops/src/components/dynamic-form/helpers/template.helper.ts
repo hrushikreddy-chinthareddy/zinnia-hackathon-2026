@@ -4,10 +4,12 @@ import ArrayFieldTableTemplate from '../customization/templates/array-field-temp
 import ArrayFieldTemplate from '../customization/templates/array-field-template/array-field-template';
 import { CardTemplate } from '../customization/templates/card-templates/card-template';
 import InstructionsTemplate from '../customization/templates/instructions-template/instructions-template';
+import TextListTemplate from '../customization/templates/text-list-template';
 
 export const UIArrayTemplateMap: Record<string, (props: ArrayFieldTemplateProps) => React.JSX.Element> = {
     ['ArrayFieldTemplate']: ArrayFieldTemplate,
     ['ArrayFieldTableTemplate']: ArrayFieldTableTemplate,
+    ['TextListTemplate']: TextListTemplate,
 };
 
 export const UIObjectTemplateMap: Record<string, (props: any) => React.JSX.Element> = {

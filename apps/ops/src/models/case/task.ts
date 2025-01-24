@@ -15,6 +15,7 @@ export enum TaskType {
     SuitabilityDataEntry = 'SUITABILITY_DATA_ENTRY',
     SuitabilityReview = 'SUITABILITY_REVIEW',
     PURCHASE_DOCUMENT_MATCHING = 'PURCHASE_DOCUMENT_MATCHING',
+    Agent_Nigo = 'NEWBUSINESS_AGENT_NIGO',
 }
 
 export enum EarlyTaskType {

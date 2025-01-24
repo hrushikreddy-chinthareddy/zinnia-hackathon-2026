@@ -90,7 +90,7 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
                 disabled={disabled}
                 defaultValue={value}
                 onChange={handleOnChange}
-                className="items-center justify-between"
+                className="items-center justify-between text-sm"
             />
         </div>
     );

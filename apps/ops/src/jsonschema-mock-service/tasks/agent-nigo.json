@@ -1,0 +1,183 @@
+{
+    "formId": "8f6c435b-9827-430f-b776-dd6101d1cfd3",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NEWBUSINESS_AGENT_NIGO",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "formId": "004c97a1-d97c-4faa-9b7f-8ff9105b4c29",
+                "process": "New Business",
+                "carrier": "WELB",
+                "taskType": "SUITABILITY_REVIEW",
+                "title": "Review Agent Issues",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions"
+                        },
+                        "issuesList": {
+                            "type": "array",
+                            "title": "Issues",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "reason": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Details",
+                            "properties": {
+                                "agentDetails": {
+                                    "title": "Supporting Information",
+                                    "type": "object",
+                                    "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "First Name"
+                                        },
+                                        "agentExternalId": {
+                                            "type": "string",
+                                            "title": "External Id"
+                                        },
+                                        "taxId": {
+                                            "type": "string",
+                                            "title": "SSN",
+                                            "dataType": "ssn"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Last Name"
+                                        }
+                                    }
+                                },
+                                "agentDocument": {
+                                    "type": "object",
+                                    "properties": {
+                                        "documentName": {
+                                            "type": "string"
+                                        },
+                                        "documentId": {
+                                            "type": "string"
+                                        },
+                                        "documentSource": {
+                                            "type": "string"
+                                        },
+                                        "createdDate": {
+                                            "type": "string"
+                                        },
+                                        "carrier": {
+                                            "type": "string",
+                                            "default": "{{carrier}}"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enumNames": ["Yes", "No"],
+                            "enum": [true, false],
+                            "title": "Can you resolve the issues?"
+                        }
+                    },
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "enum": ["Yes"]
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "enum": ["No"]
+                                        },
+                                        "reason": {
+                                            "type": "object",
+                                            "title": "The status reason for the task will be set to:"
+                                        }
+                                    },
+                                    "required": ["issueResolved"]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "props": {
+                            "description": "Review the agent’s line of business issue and confirm if we can resolve it."
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "issuesList": {
+                        "ui:options": {
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "keyName": "reason"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "agentDetails": {
+                            "ui:options": {
+                                "type": "Detailed",
+                                "icon": "CIRCLE_USER",
+                                "label": true,
+                                "ObjectFieldTemplate": "CardTemplate",
+                                "key": "agentDetails"
+                            }
+                        },
+                        "agentDocument": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": false,
+                                "cardType": "Document",
+                                "icon": "DOCUMENT_TEXT",
+                                "ObjectFieldTemplate": "CardTemplate"
+                            }
+                        }
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "inline": true
+                        }
+                    },
+                    "reason": {
+                        "props": {
+                            "description": "NIGO's unable to be resolved"
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

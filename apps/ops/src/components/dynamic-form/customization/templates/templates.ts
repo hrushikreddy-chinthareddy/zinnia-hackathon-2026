@@ -8,6 +8,7 @@ import FieldErrorTemplate from './field-error-template/field-error-template';
 import { FieldTemplate } from './field-template/field-template';
 import InstructionsTemplate from './instructions-template/instructions-template';
 import { ObjectFieldTemplate } from './object-field-template/object-field-template';
+import TextListTemplate from './text-list-template';
 import { TitleFieldTemplate } from './title-field-template/title-field-template';
 
 export function generateTemplates() {
@@ -21,6 +22,7 @@ export function generateTemplates() {
         ArrayFieldTableTemplate,
         CardTemplate,
         InstructionsTemplate,
+        TextListTemplate,
         ButtonTemplates: { AddButton, RemoveButton },
     };
 }
