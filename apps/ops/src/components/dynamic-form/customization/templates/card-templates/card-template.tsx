@@ -59,6 +59,10 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
         sideSheet.handleOpen(true);
     };
 
+    if (cardType === CardTypes.Document && !data?.documentId) {
+        return;
+    }
+
     return (
         <>
             <div className={`flex w-[436px] rounded border border-gray-100 p-[12px] ${className}`}>
