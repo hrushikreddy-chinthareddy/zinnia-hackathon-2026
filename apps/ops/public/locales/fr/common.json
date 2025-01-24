@@ -4890,7 +4890,7 @@
             "secondaryCta": "Retour à l'accueil"
         }
     },
-    "agentNigo": {
+    "newbusinessAgentNigo": {
         "confirmStep": {
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",

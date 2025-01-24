@@ -4922,7 +4922,7 @@
             "secondaryCta": "Back to home"
         }
     },
-    "agentNigo": {
+    "newbusinessAgentNigo": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review Agent Issues was submitted.",
