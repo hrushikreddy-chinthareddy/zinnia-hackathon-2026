@@ -8,6 +8,7 @@ import { AssignedTask } from '@deps/models/case/task-instance';
 import { claimNextTask } from '@deps/queries/api/v1/claim-task';
 import { getAssignedTasks } from '@deps/queries/api/v1/task';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+import { MessageType } from '@deps/models/case/task';
 
 import TaskQueueTable from './task-queue-table';
 
@@ -36,7 +37,7 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
                         break;
                     case 404:
                         setErrorMessage(data.message);
-                        setErrorType('info');
+                        setErrorType(MessageType.Info);
                         break;
                     default:
                         setErrorMessage(data.message);
@@ -86,7 +87,7 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
                 {errorMessage && (
                     <AssistiveText
                         text={errorMessage}
-                        variant={errorType == 'info' ? AssistiveTextVariant.Info : AssistiveTextVariant.Error}
+                        variant={errorType == MessageType.Info ? AssistiveTextVariant.Info : AssistiveTextVariant.Error}
                         className="my-4"
                     />
                 )}
