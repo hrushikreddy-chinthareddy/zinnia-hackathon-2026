@@ -4390,6 +4390,12 @@
             "label": "Personnes",
             "manageBeneficiaries": "Gérer les bénéficiaires"
         },
+        "documents": {
+            "label": "Envoyer des documents",
+            "sendForms": "Envoyer des formulaires",
+            "sendStatements": "Envoyer des relevés",
+            "sendTaxForms": "Envoyer des formulaires fiscaux"
+        },
         "transactions": {
             "label": "Transactions",
             "managePremiumAutopay": "Gérer le paiement automatique des primes",
