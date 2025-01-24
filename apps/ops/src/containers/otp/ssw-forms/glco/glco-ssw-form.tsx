@@ -59,7 +59,6 @@ export function GlcoSSWForm({ planCode }: GlcoSSWFormProps) {
         });
     }, []);
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
-    const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
@@ -80,7 +79,7 @@ export function GlcoSSWForm({ planCode }: GlcoSSWFormProps) {
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.investmentSelectionForDistribution') as string}
             />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
+            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
