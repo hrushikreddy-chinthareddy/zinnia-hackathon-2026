@@ -90,7 +90,7 @@ export default function UlpcRmdWithdrawalForm() {
                 isDerivedMethodFromFunds={true}
                 defaultMethod={FundWithdrawnMethod.Prorata}
             />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
+            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />
             <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />

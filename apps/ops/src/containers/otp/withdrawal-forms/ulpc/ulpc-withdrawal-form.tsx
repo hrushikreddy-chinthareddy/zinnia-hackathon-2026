@@ -110,7 +110,6 @@ export default function UlpcWithdrawalForm() {
             />
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}
-                ownerStateOfResidence={ownerStateOfResidence}
                 isMaritalStatusAllowances={isMaritalStatusAllowances}
                 meritalStatusAllowanceConfig={maritalStatusAllowanceConfig}
             />
