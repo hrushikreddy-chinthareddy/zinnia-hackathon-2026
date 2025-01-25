@@ -17,22 +17,10 @@ Components that are global to Zinnia products are imported from [Bloom](https://
 - node >20 -> run `nvm install 20`
 - accessiblity plugins (see [docs](https://zinnia.atlassian.net/wiki/spaces/AU/pages/3707568138/Accessibility))
 
-### Packages
-
-- [pnpm](https://pnpm.io/)
-
 ### VS Code plugins
-
-**Required**
-
-- [Codeium ](https://codeium.com/vscode_tutorial)
-  - Contact Ryan to be added to license
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
 **Recommended**
 
-- [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
 - [TODO Highlight](https://marketplace.visualstudio.com/items?itemName=wayou.vscode-todo-highlight)
   - this allows you to add TODOs with `TODO` syntax and they'll be clearly highlighted in your code.
 - [React/Redux/JS Snippies](https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snippets)
@@ -47,7 +35,7 @@ Add to your settings.json
 ```
   "editor.stickyScroll.enabled": true,
   "workbench.tree.enableStickyScroll": true,
-    "files.trimTrailingWhitespace": true,
+  "files.trimTrailingWhitespace": true,
 ```
 
 ### Setup
@@ -66,7 +54,7 @@ From your user directory:
 sudo nano /etc/hosts
 ```
 
-Add the following two lines to the bottom of your file
+Add the following lines to the bottom of your file
 
 ```
 127.0.0.1 everly.zinniatech.local
@@ -75,7 +63,7 @@ Add the following two lines to the bottom of your file
 127.0.0.1 wellabe.mypolicyview.local
 ```
 
-Then go to `.env.local` and change this value to match:
+Then go to `.env.local` and change these values to match:
 
 ```
 AUTH0_COOKIE_DOMAIN='zinniatech.local'
@@ -84,41 +72,15 @@ AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW='mypolicyview.local'
 
 Now you can run the project and open `http://everly.zinniatech.local:3000/` to view the subdomain locally.
 
-## Setting up a new user:
-
-1. You'll need a zinnia email adress to get extended permissions
-1. Create a policy
-   a. Using Postman
-   b. [Using the UI](https://zinnia.atlassian.net/wiki/spaces/CIAMC/pages/4059562037/How-To+Create+a+user+for+Consumer+Experience+via+Policy+Creation)
-
-- creating a policy will create your Auth0 user as well. This will allow access to Consumer
-
-1. Zahara processes new users every night, so you'll need to manually move the policy from `Pending` to `Active`.
-   a. go to the policy GUI (TODO: add link)
-   b. open inspector
-   c. find the button that's hidden with css, unhide it, and press that (TODO: add more discrete details)
-1. Have the policy you just created added to seed policies (zahara slack) so it is recreated with each Zahara release
-   1
-
 # Local development
+
+Go [here](./docs/onboarding-to-the-project.md) for more info.
 
 ## Dev Menu
 
 There is a dev menu availble for several different mocking purporses. To turn it on, add `..show_dev_menu..=true` as a query string.
 
-If you click `Show test policies` but still aren't able to see more than your account's policies, your account may not have ops level permissions, and you will only be able to view the policies assigned to your user.
-
-## Opening a PR
-
-1. Open a PR into dev (or feature branch)
-2. include details in PR with helpful screenshots and context
-3. Add link to ticket in Jira
-4. once you PR has been approved, open Vercel `Preview Link`, change the settings to `anyone with link can view`, add to the ticket and move it to `Ready for QA`
-5. Once PR has passed QA, merge changes
-
-# Styling
-
-There's a mix of global, css modules and utility classes in the project. We decided to add utility classes for things like spacing and borders so that devs wouldn't have to make an additional style file for simple components.
+If you click `Show test policies` but still aren't able to see more than your account's policies, your account may not have ops level permissions, and you will only be able to view the policies assigned to your user. Contact CIAM for added permissions.
 
 # Branching Strategy & Environments
 
@@ -126,21 +88,20 @@ See [docs](https://zinnia.atlassian.net/wiki/spaces/AU/pages/3635053021/Deployme
 
 [Release Flow](https://zinnia.atlassian.net/wiki/spaces/AU/pages/4024860691/Git+and+Release+Workflow)
 
-TLDR
-
-- Rebase on feature branches only. Rebasing on long running branches causes wild merge conflicts.
-- for feature development, branch from dev (or feature branch) open pr back into dev
-
-# App Configuration
-
 ## Vercel
 
 - Vercel is used for deploying ephemeral or preview environments so that features and updates can be tested before merging PRs into the dev branch.
 - Once you open a pr, you will see a Vercel section that includes links to the generated preview environment. Paste this in the ticket for product and/or design to review.
 
-## Github actions
+TLDR
 
-### Variables
+- Rebase on feature branches only. Rebasing on long running branches causes wild merge conflicts.
+- for feature development, branch from dev (or feature branch) open pr back into dev
+- prefer to do QA on the ephemeral environment (you will need to update access on that environment to allow for anyone with link to view)
+
+## Environment Variables
+
+TODO: add this to it's own doc and include in developer onboarding
 
 See [this chart](apps/consumer-experience/src/app/documentation/adding-a-new-enviornment-variable.md)
 
@@ -166,12 +127,18 @@ Find more info about Architecture [here](https://zinnia.atlassian.net/wiki/space
 
 Feature flags are implemented using [Optimizely Javascript SDK](https://docs.developers.optimizely.com/feature-experimentation/docs/javascript-sdk). The React SDK doesn't work for server side rendering.
 
-## Access
+## Optimizely Access
 
 To get access, contact a lead. You will need to get a PolicyGenius email and be added to the Optimizely account to log in.
 
 # Docs
 
-There is documentation throughout the project in the form of jsdoc comments or various markdown files. There is also a folder called `documentation` that contains higher level information related to multiple places.
+There is documentation throughout the project in the form of jsdoc comments or various markdown files. There is also a docs folder that contains higher level information.
 
 To view mermaid diagrams install [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
+
+## Helpful Confluence Docs
+
+[Setting up auth for Postman](https://zinnia.atlassian.net/wiki/spaces/AU/pages/3870654971/Configure+Postman+auth)
+
+[Helpful resources for team contacts](https://zinnia.atlassian.net/wiki/spaces/AU/pages/3635053994/Helpful+Resources)
