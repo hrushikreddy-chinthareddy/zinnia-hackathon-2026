@@ -461,11 +461,10 @@ export default function DatePicker({
     handleDateSelect,
     isFutureDateDisabled = true,
     isDateAllowed = () => true,
-    isPastDateDisabled = false,
     datePickerType,
     handleCustomSelection,
     showMonths = true,
-    isTodayDisabled = false
+
 }: DatePickerProps) {
     const isRange = date && 'start' in date && 'end' in date;
     const [currentDate] = useState(() => {
@@ -544,14 +543,6 @@ export default function DatePicker({
         if (isFutureDateDisabled && dayjsDate.isAfter(dayjs(), 'day')) {
             return disabledClasses;
         }
-        // Disables past dates
-        if (isPastDateDisabled && (dayjsDate.isBefore(dayjs().startOf('day')) || dayjsDate.month() !== month)) {
-            return disabledClasses;
-        }
-        if (isTodayDisabled && (dayjsDate.isSame(dayjs(), 'day'))) {
-            return disabledClasses;
-        }
-
         return '';
     };
 
