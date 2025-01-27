@@ -13,8 +13,8 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { CarrierListItem } from '@deps/pages/dashboard';
 import { DashboardSearchFilter } from '@deps/queries/cases';
+import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
 
@@ -22,13 +22,10 @@ import styles from './submission-type.module.css';
 import { submissionTypeQuery, transformData, generateSeries, startDates, TimeframeFilterOptions, getDateRangeText } from './utils';
 import CaseStatBlock from '../stat-blocks/case-stat-block';
 
-interface SubmissionTypeProps {
-    selectedCarriers: CarrierListItem;
-    selectedBrokerDealers: CarrierListItem;
-}
-export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, selectedBrokerDealers }) => {
+export const SubmissionType: FC = () => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
     const [submissionVs, setSubmissionVs] = useState<GroupByOptions>(GroupByOptions.Carrier);
+    const { selectedCarriers, selectedBrokerDealers, selectedProcess, selectedSubProcess } = useDashboardStore(state => state);
 
     const filter: DashboardSearchFilter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
@@ -44,6 +41,9 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
     if (selectedBrokerDealers && brokers.length) {
         filter.brokerDealerName = brokers;
     }
+
+    filter.process = [selectedProcess];
+    filter.requestSubType = selectedSubProcess;
 
     // If there is a selected carrier, default to the product name. Otherwise back to carrier
     useEffect(() => {
