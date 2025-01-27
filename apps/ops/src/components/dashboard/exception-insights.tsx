@@ -142,8 +142,10 @@ export const ExceptionInsights = ({
                             const seriesValues: Array<number> = this.series.valueData;
                             const total = seriesValues.reduce((sum, val) => sum + val, 0);
                             const len = (Number(value) / total) * 100;
-                            const ratio = `${value} / ${total}`;
                             const wrapper = document.createElement('div');
+                            // @ts-expect-error: this actually exists
+                            const dataLabel = this.point.dataLabel;
+                            const shape = this.point.shapeArgs;
                             wrapper.style.backgroundColor = 'var(--color-base-surface-surface-primary)';
                             wrapper.classList.add('rounded', 'typography-content-body');
                             wrapper.style.color = 'var(--color-base-text-text-primary)';
@@ -159,15 +161,19 @@ export const ExceptionInsights = ({
 
                             const nameSpan = document.createElement('span');
                             // const valueSpan = document.createElement('span');
-                            if (len < Math.max(name.length, ratio.length)) {
-                                nameSpan.innerText = len < name.length ? name.substring(0, Math.floor(len)) + '...' : name;
-                                // valueSpan.innerText = len < ratio.length ? ratio.substring(0, Math.floor(len)) + '...' : ratio;
+                            nameSpan.innerText = name;
+
+                            //TODO: For some reason, dataLabel can be undefined sometimes and cause issues
+                            if (dataLabel?.width + dataLabel?.padding >= shape?.width) {
+                                wrapper.style.whiteSpace = 'break-spaces';
+
                                 if (len < 1) {
                                     wrapper.style.visibility = 'hidden';
                                 }
-                            } else {
-                                nameSpan.innerText = name;
-                                // valueSpan.innerText = ratio;
+                            }
+
+                            if (dataLabel?.height + dataLabel?.padding >= shape?.height) {
+                                wrapper.style.visibility = 'hidden';
                             }
                             wrapper.appendChild(nameSpan);
                             // wrapper.appendChild(valueSpan);

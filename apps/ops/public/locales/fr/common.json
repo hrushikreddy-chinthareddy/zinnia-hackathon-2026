@@ -260,20 +260,6 @@
         "unassignTaskError": "Erreur de désattribution de tâche :",
         "startTask": "Démarrer la tâche",
         "transaction": "Transaction: {{transactionType}}",
-        "updateTaskStatusDrawer": {
-            "updateTaskStatus": "Mettre à jour l'état de la tâche",
-            "setTaskAsPending": "Définir la tâche comme en attente",
-            "followUpDate": "Date de suivi",
-            "reason": "Raison",
-            "selectReason": "Sélectionner une raison",
-            "cancel": "Annuler",
-            "updateStatus": "Mettre à jour le statut",
-            "pendingReasonOptions": {
-                "awaitingAdditionalInformation": "En attente d'informations supplémentaires",
-                "awaitingApproval": "En attente d'approbation",
-                "awaitingApplication": "En attente de candidature"
-            }
-        },
         "tasksListing": {
             "taskSubmittedAgo": "Soumise {{updatedCount}} {{updatedUnit}} il y a",
             "taskCompletedAgo": "Complété {{updatedCount}} {{updatedUnit}} il y a",
@@ -283,10 +269,7 @@
                 "closed": "Fermée",
                 "new": "Nouvelle",
                 "completed": "Complété",
-                "inProgress": "En cours",
-                "reason": "Raison",
-                "selectReason": "Sélectionner la raison",
-                "cancel": "Annuler"
+                "inProgress": "En cours"
             }
         },
         "caseId": "Numéro du cas: ",
@@ -974,7 +957,7 @@
             "renewalFormValidation": "Valider le formulaire de renouvellement",
             "renewalRequestCompletion": "Terminer le traitement",
             "renewalTransactionProcessing": "Traiter la transaction",
-            "requestAck": "Préparer {{subType}} pour le traitement",
+            "requestAck": "Préparer la requête {{subType}} pour le traitement",
             "requestAcknowledgement": "Préparer {{subType}} pour le traitement",
             "requestCompletion": "Terminer le traitement",
             "requestProcessing": "Traiter la transaction",
@@ -992,9 +975,10 @@
             "requestAck.nbRequestReceived": "Réception de {{subType}}",
             "requestAck.caseProcessing": "Préparer {{subType}} pour le traitement",
             "requestAck.draftContractCreation": "Créer un contrat provisoire",
-            "requestAck.processFormRequestReceived": "Recevoir une demande de formulaire de service",
+            "requestAck.processFormRequestReceived": "Recevoir une demande d'envoi de {{subType}}",
+            "requestAck.processFormRequestProcessing": "Traitement de la requête {{subType}}",
             "requestCompletion.deliverLetter": "Recevoir la confirmation de livraison",
-            "requestCompletion.completeRequest": "Envoyer le formulaire demandé",
+            "requestCompletion.completeRequest": "Envoyer {{process}}  avec {{subType}}",
             "agentValidation.preValidationRules": "Confirmer l'exhaustivité des informations de l'agent",
             "agentValidation.agentAppointmentValidation": "Valider la nomination de l'agent",
             "agentValidation.agentLOBValidation": "Valider la ligne de produits de l'agent",
@@ -4408,6 +4392,12 @@
         "people": {
             "label": "Personnes",
             "manageBeneficiaries": "Gérer les bénéficiaires"
+        },
+        "documents": {
+            "label": "Envoyer des documents",
+            "sendForms": "Envoyer des formulaires",
+            "sendStatements": "Envoyer des relevés",
+            "sendTaxForms": "Envoyer des formulaires fiscaux"
         },
         "transactions": {
             "label": "Transactions",

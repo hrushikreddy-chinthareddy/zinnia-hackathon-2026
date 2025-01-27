@@ -25,3 +25,17 @@ export const Default: StoryType = {
 export const Loading: StoryType = {
   args: { isLoading: true, funds: [] },
 };
+
+export const EverlyLoading: StoryType = {
+  parameters: {
+    theme: 'everly',
+  },
+  args: { isLoading: true, funds: [] },
+};
+
+export const WellabeLoading: StoryType = {
+  parameters: {
+    theme: 'wellabe',
+  },
+  args: { isLoading: true, funds: [] },
+};

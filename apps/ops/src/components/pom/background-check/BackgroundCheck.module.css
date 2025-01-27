@@ -1,0 +1,19 @@
+.cardSubSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg);
+    padding: var(--measure-dimension-padding-4xl);
+}
+
+.cardSubSectionContent {
+    display: flex;
+    gap: var(--measure-dimension-gap-2xl);
+}
+
+.h2 {
+    composes: h2 from '../globalStyles.module.css';
+}
+
+.table {
+    width: 100%;
+}

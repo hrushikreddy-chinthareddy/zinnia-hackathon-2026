@@ -810,20 +810,6 @@
         "unassignTask": "Unassign Task",
         "startTask": "Start Task",
         "transaction": "Transaction: {{transactionType}}",
-        "updateTaskStatusDrawer": {
-            "updateTaskStatus": "Update Task Status",
-            "setTaskAsPending": "Set Task as Pending",
-            "followUpDate": "Follow-Up Date",
-            "reason": "Reason",
-            "selectReason": "Select Reason",
-            "cancel": "Cancel",
-            "updateStatus": "Update Status",
-            "pendingReasonOptions": {
-                "awaitingAdditionalInformation": "Awaiting additional information",
-                "awaitingApproval": "Awaiting approval",
-                "awaitingApplication": "Awaiting application"
-            }
-        },
         "tasksListing": {
             "taskSubmittedAgo": "Submitted {{updatedCount}} {{updatedUnit}} ago",
             "taskCompletedAgo": "Completed {{updatedCount}} {{updatedUnit}} ago",
@@ -979,7 +965,7 @@
             "renewalFormValidation": "Validate renewal form",
             "renewalRequestCompletion": "Complete processing",
             "renewalTransactionProcessing": "Process transaction",
-            "requestAck": "Prepare {{subType}} for processing",
+            "requestAck": "Prepare {{subType}} request for processing",
             "requestAcknowledgement": "Prepare {{subType}} for processing",
             "requestCompletion": "Complete processing",
             "requestProcessing": "Process transaction",
@@ -997,9 +983,10 @@
             "requestAck.nbRequestReceived": "Receive {{subType}}",
             "requestAck.caseProcessing": "Set up {{subType}} for processing",
             "requestAck.draftContractCreation": "Create draft contract",
-            "requestAck.processFormRequestReceived": "Receive Service Form Request",
+            "requestAck.processFormRequestReceived": "Receive request to send {{subType}}",
+            "requestAck.processFormRequestProcessing": "Processing {{subType}} request",
             "requestCompletion.deliverLetter": "Receive Delivery Confirmation",
-            "requestCompletion.completeRequest": "Send Requested Form",
+            "requestCompletion.completeRequest": "Send {{process}} with {{subType}}",
             "agentValidation.preValidationRules": "Confirm completeness of agent details",
             "agentValidation.agentAppointmentValidation": "Validate appointment",
             "agentValidation.agentLOBValidation": "Validate line of business",
@@ -4434,6 +4421,12 @@
         "people": {
             "label": "People",
             "manageBeneficiaries": "Manage beneficiaries"
+        },
+        "documents": {
+            "label": "Send Documents",
+            "sendForms": "Send forms",
+            "sendStatements": "Send statements",
+            "sendTaxForms": "Send tax forms"
         },
         "transactions": {
             "label": "Transactions",

@@ -8,7 +8,8 @@ import { DataDogInit } from '@/components/DataDogInit';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { isProd } from '@/utils';
 
-import './styles/globals.css';
+import '@/app/styles/globals.css';
+
 import Providers from './providers';
 
 // disable because NextJS needs this to be exported from this file

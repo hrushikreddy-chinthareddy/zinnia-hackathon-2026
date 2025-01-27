@@ -3,7 +3,7 @@ import { Button, Icon, IconType, Loader, TabContent, TabGroup, TabList, TabTrigg
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
+
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
@@ -20,6 +20,7 @@ import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/a
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/content/clipboard-1.svg';
+import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
 import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
 import { DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_DISPLAY_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
@@ -28,8 +29,8 @@ import { parseErrorInformation } from '@deps/utils/server-logging';
 import router from 'next/router';
 import { TaskSource } from '@deps/models/case/task';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
-import Dropdown from '@deps/components/dropdown/Dropdown';
+
+// import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
@@ -71,7 +72,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
             displayName: doc.displayName ? doc.displayName : doc.documentName ? doc.documentName : '',
             documentNumber: doc.documentNumber,
             fileType: doc.fileType || doc.documentSource || 'pdf',
-            documentSource: DocumentTypeView.Policy,
+            documentSource: DocumentTypeView.Case,
         }));
         return transformedDocuments;
     };
@@ -232,6 +233,11 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
             badgeVariant = BadgeVariant.Inactive;
             badgeLabel = TaskLabel.Canceled;
             break;
+        case TaskStatus.InProgress:
+            badgeIcon = <ClipboardListIcon height={16} width={16} />;
+            badgeVariant = BadgeVariant.Info;
+            badgeLabel = TaskLabel.InProgress;
+            break;
         case TaskStatus.Pending:
             badgeIcon = <Pause height={16} width={16} />;
             badgeVariant = BadgeVariant.Error;
@@ -258,11 +264,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         </div>
     );
 
-    const openSideSheet = () => {
-        const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} />;
-        sideSheet.changeSideSheetContent(t('taskManagementQueue.updateTaskStatusDrawer.updateTaskStatus'), content);
-        sideSheet.handleOpen(true);
-    };
 
     const EmptyState = ({ content }: { content: string }) => {
         return (
@@ -295,15 +296,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         );
     };
 
-    const statuses = [
-        {
-            label: 'Pending',
-            icon: <Pause width={16} height={16} />,
-            onSelect: () => {
-                openSideSheet();
-            },
-        },
-    ];
     const renderDetails = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg mt-8">{t('sideSheet.task.tabs.details')}</label>
@@ -313,27 +305,15 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     {t('sideSheet.task.status.label')}{' '}
                 </div>
                 <div className="col-span-2 mt-2 align-self">
-                    {task?.status != TaskStatus.InProgress ? (
-                        <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
-                            <Badge
-                                icon={badgeIcon}
-                                variant={badgeVariant}
-                                label={badgeLabel}
-                                rounded={true}
-                                className="flex gap-1 items-center"
-                            />
-                        </Typography>
-                    ) : (
-                        <Dropdown
-                            triggerIcon={
-                                <div className="pb-1">
-                                    <Progress width={16} height={16} />
-                                </div>
-                            }
-                            triggerLabel="In Progress"
-                            options={statuses}
+                    <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
+                        <Badge
+                            icon={badgeIcon}
+                            variant={badgeVariant}
+                            label={badgeLabel}
+                            rounded={true}
+                            className="flex gap-1 items-center"
                         />
-                    )}
+                    </Typography>
                 </div>
 
                 {((task.status === TaskStatus.Pending && task.impededReason) ||
