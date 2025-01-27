@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
 import { ChipRadio } from '@deps/components/chip-radio/chip-radio';
@@ -18,6 +18,7 @@ import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
 
+import { Legend } from './legend';
 import styles from './submission-type.module.css';
 import { submissionTypeQuery, transformData, generateSeries, startDates, TimeframeFilterOptions, getDateRangeText } from './utils';
 import CaseStatBlock from '../stat-blocks/case-stat-block';
@@ -92,6 +93,9 @@ export const SubmissionType: FC = () => {
             series,
             applicationTypeCategories,
             chartConfig: Highcharts.merge(caseChartHelpers.getBaseBarChartConfiguration(), {
+                legend: {
+                    enabled: false,
+                },
                 chart: {
                     height: 300,
                 },
@@ -101,6 +105,7 @@ export const SubmissionType: FC = () => {
                 yAxis: {
                     allowDecimals: false,
                 },
+
                 series,
             }),
         };
@@ -137,6 +142,37 @@ export const SubmissionType: FC = () => {
         </>
     );
 
+    const chunkedResponseLengths = chunkedResponse.map(chunk => chunk.length);
+
+    const eachChunkPortionOfTotal = useMemo(
+        () =>
+            chunkedResponseLengths.map((chunkLength, index) => {
+                const total = chunkedResponseLengths.reduce((acc, val) => acc + val, 0);
+                const chunkStartIndex = chunkedResponseLengths.slice(0, index).reduce((acc, val) => acc + val, 1);
+                const chunkEndIndex = chunkStartIndex + chunkLength - 1;
+                return {
+                    start: chunkStartIndex,
+                    end: chunkEndIndex,
+                    total,
+                };
+            }),
+        [chunkedResponseLengths]
+    );
+
+    const legendItems = [
+        {
+            label: 'Electronic',
+            color: '#85BCD3',
+        },
+        {
+            label: 'Digital',
+            color: '#00628B',
+        },
+        {
+            label: 'Paper',
+            color: '#021936',
+        },
+    ];
     return (
         <div className={styles.container}>
             {applicationTypeLoading2 || applicationTypeLoading ? (
@@ -187,7 +223,7 @@ export const SubmissionType: FC = () => {
                                 />
                             </div>
                             <Carousel
-                                slideStyle="my-8 px-8 pt-6"
+                                slideStyle="my-8 pt-6"
                                 slides={statsWithChartData.map((stat, index) => {
                                     return (
                                         <HighchartsReact
@@ -197,6 +233,10 @@ export const SubmissionType: FC = () => {
                                         />
                                     );
                                 })}
+                                slideItemsCount={eachChunkPortionOfTotal}
+                                bottomContent={
+                                    <Legend title="Case Submissions" items={legendItems} containerClass={styles.legendContainer} />
+                                }
                             />
                         </div>
                     </div>

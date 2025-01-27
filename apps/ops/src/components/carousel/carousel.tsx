@@ -21,6 +21,8 @@ interface CarouselProps {
         firstLabel?: string;
         lastLabel?: string;
     };
+    slideItemsCount?: { start: number; end: number; total: number }[];
+    bottomContent?: ReactNode;
 }
 
 const defaultOptions: EmblaOptionsType = {
@@ -45,14 +47,18 @@ export const Carousel: FC<CarouselProps> = ({
     emblaOptions = defaultOptions,
     containerHeight = '400px',
     controls = defaultControlsOptions,
+    slideItemsCount = [],
+    bottomContent,
 }) => {
     const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);
     const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
     const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
+    const [selectedSlide, setSelectedSlide] = useState(0);
 
     const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
         setPrevBtnDisabled(!emblaApi.canScrollPrev());
         setNextBtnDisabled(!emblaApi.canScrollNext());
+        setSelectedSlide(emblaApi.selectedScrollSnap());
     }, []);
 
     useEffect(() => {
@@ -79,6 +85,7 @@ export const Carousel: FC<CarouselProps> = ({
                     </div>
                 </div>
             </div>
+            {bottomContent && bottomContent}
 
             <div className={styles.controlsContainer}>
                 {controls?.firstLabel && (
@@ -121,6 +128,13 @@ export const Carousel: FC<CarouselProps> = ({
                     >
                         {controls?.lastLabel}
                     </Button>
+                )}
+
+                {slideItemsCount.length > 0 && (
+                    <span className="typography-labels-label-md">
+                        {slideItemsCount?.[selectedSlide]?.start}-{slideItemsCount?.[selectedSlide]?.end} of{' '}
+                        {slideItemsCount?.[selectedSlide]?.total}
+                    </span>
                 )}
             </div>
         </>
