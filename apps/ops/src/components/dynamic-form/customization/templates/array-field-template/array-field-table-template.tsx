@@ -34,8 +34,8 @@ export function ArrayFieldTableTemplate(props: ArrayFieldTemplateProps) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {formData.map((element: any) => (
-                                <TableRow key={element.key}>
+                            {formData.map((element: any, index: number) => (
+                                <TableRow key={element.key ?? index}>
                                     {Object.keys(element).map(
                                         (property, index) =>
                                             getUiOptions(uiSchema?.items[property]).widget !== 'hidden' && (
