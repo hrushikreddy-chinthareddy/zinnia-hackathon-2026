@@ -15,7 +15,6 @@ export enum TaskStatus {
     'InProgress' = 'INPROGRESS',
     'Pending' = 'IMPEDED',
     'Canceled' = 'CANCELED',
-
 }
 
 export enum TaskLabel {
@@ -56,7 +55,7 @@ export type ManagementTask<T = TaskStatus> = {
     updatedAt: string;
     data: any;
     documents?: TaskDocument[];
-    statusReason?: string ;
+    statusReason?: string;
     impededTillDate?: string;
     prefferedAssignee?: string;
     mappedDocuments?: TaskDocument[];
