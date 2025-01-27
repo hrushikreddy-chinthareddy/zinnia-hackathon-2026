@@ -31,7 +31,7 @@ export default function SideSheetDocumentItem({ document, carrier = '', activeDo
                     className="flex max-w-[234px] gap-1"
                     activeDocType={activeDocType}
                     carrier={carrier}
-                    displayName={document.displayName}
+                    displayName={document?.displayName || ''}
                     documentId={document.documentId ?? (document.documentID as string)}
                 >
                     <>

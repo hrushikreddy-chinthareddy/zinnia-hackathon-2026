@@ -1369,7 +1369,9 @@
             "reviewIssues": "Review {{taskType}}",
             "suitabilityReview": "suitability",
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
-            "suitabilityReviewIssues": "Review Suitability"
+            "suitabilityReviewIssues": "Review Suitability",
+            "purchaseDocumentMatchingIssues": "Match Document",
+            "agentNigo": "Review Agent Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -4872,16 +4874,16 @@
             },
             "view": "View",
             "documentId": "Document ID",
-            "submitLabel": "Submit",
-            "continueLabel": "Continue",
-            "cancelLabel": "Cancel"
+            "submit": "Submit",
+            "continue": "Continue",
+            "cancel": "Cancel"
         },
         "taskForm": {
             "title": "Input Suitability Data",
             "subTitle": "Manually enter all suitability data. Note that canceling at any point will erase all the entered data.",
-            "submitLabel": "Submit",
-            "continueLabel": "Continue",
-            "cancelLabel": "Cancel"
+            "submit": "Submit",
+            "continue": "Continue",
+            "cancel": "Cancel"
         },
         "confirmStep": {
             "title": "Submitted!",
@@ -4899,8 +4901,8 @@
         "taskForm": {
             "title": "Review Suitability",
             "subTitle": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
-            "submitLabel": "Submit decision",
-            "cancelLabel": "Cancel"
+            "submit": "Submit decision",
+            "cancel": "Cancel"
         },
         "confirmStep": {
             "title": "Submitted!",
@@ -4908,6 +4910,42 @@
             "cta": "Go to suitability review",
             "secondaryCta": "Close",
             "submitTask": "Submit suitability review details"
+        }
+    },
+    "taskManagement": {
+        "taskForm": {
+            "title": "Task Management",
+            "submit": "Continue",
+            "cancel": "Cancel",
+            "confirm": "Confirm",
+            "continue": "Continue",
+            "tabs": {
+                "start": "Start",
+                "nigoDetails": "Missing Information",
+                "suitabilityForm": "Suitability form",
+                "summary": "Summary"
+            }
+        },
+        "formErrors": {
+            "caseNotFound": "Case not found",
+            "correlationIdNotFount": "Correlation ID not found",
+            "transactionNotFound": "Transaction not found"
+        }
+    },
+    "purchaseDocumentMatching": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Match Document was submitted.",
+            "cta": "Go to Qualification ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "newbusinessAgentNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Agent Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
         }
     },
     "unauthorized": {

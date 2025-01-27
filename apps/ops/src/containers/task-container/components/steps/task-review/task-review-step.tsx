@@ -37,7 +37,7 @@ export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepP
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"
-                    cancelLabel={t('cancelLabel') as string}
+                    cancelLabel={t('cancel') as string}
                 />
             }
         >
