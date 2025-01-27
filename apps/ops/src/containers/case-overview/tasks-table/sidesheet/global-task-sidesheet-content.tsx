@@ -29,8 +29,6 @@ import { parseErrorInformation } from '@deps/utils/server-logging';
 import router from 'next/router';
 import { TaskSource } from '@deps/models/case/task';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-
-// import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
