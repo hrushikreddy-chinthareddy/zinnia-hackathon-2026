@@ -8,13 +8,12 @@ import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
 import Content, { ContentVariant } from '@deps/components/content/content';
-import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
-import { ManagementTask, TaskStatus, TaskLabel } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskStatus, TaskLabel, DocumentData } from '@deps/models/case/task-instance';
 import { claimTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
@@ -31,6 +30,10 @@ import { TaskSource } from '@deps/models/case/task';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import Dropdown from '@deps/components/dropdown/Dropdown';
+import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { V3DocumentWithSource } from '@deps/types/documents-v3';
 
 export enum TabOptions {
     Details = 'Details',
@@ -38,13 +41,8 @@ export enum TabOptions {
 }
 
 export interface DocumentItemProps {
-    document: {
-        documentId: string;
-        documentName?: string;
-        documentSource?: string;
-    };
+    document: DocumentData;
     taskCarrier: string;
-    docType: DocumentTypeView;
 }
 
 export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId: string; type?: string }) {
@@ -54,6 +52,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     const [task, setTask] = useState<ManagementTask | null>(null);
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
     const [claimTaskLoader, setClaimTaskLoader] = useState(false);
+    const [additionalDocuments, setAdditionalDocuments] = useState<DocumentData[]>([]);
     const [showAdditionalDocuments, setShowAdditionalDocuments] = useState(false);
     const [startLoader, setStartLoader] = useState(false);
 
@@ -61,6 +60,36 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     const [timer] = useState(performance.now());
 
     const { user } = useUser();
+    const sideSheet = useSideSheetContext();
+
+    const transformDocument = (documents: DocumentData[]) => {
+        const transformedDocuments = documents.map((doc: DocumentData) => ({
+            documentId: doc.documentId || doc.documentID,
+            displayName: doc.displayName ? doc.displayName : doc.documentName ? doc.documentName : '',
+            documentNumber: doc.documentNumber,
+            fileType: doc.fileType || doc.documentSource || 'pdf',
+            documentSource: DocumentTypeView.Case,
+        }));
+        return transformedDocuments;
+    };
+
+    const fetchAdditionalDocuments = async ({ carrier, caseId }: { carrier: string; caseId: string }) => {
+        let limit = 25;
+        let offset = 0;
+
+        let searchBody: SearchRequest = {
+            documentClassification: SearchRequest.documentClassification.INBOUND,
+            zinniaLiveCaseId: caseId,
+            parentCarrierCode: carrier,
+        };
+
+        const { data, error } = await searchDocumentsV3({ limit, offset, searchBody });
+
+        if (data?.documents) {
+            const filteredDocuments = transformDocument(data.documents);
+            setAdditionalDocuments(filteredDocuments);
+        }
+    };
 
     const handleClaimTask = async () => {
         if (task) {
@@ -133,6 +162,9 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     useEffect(() => {
         const getTaskData = async () => {
             const data = await getTaskInstance({ taskId });
+            if (data && data.carrier && data.caseId) {
+                fetchAdditionalDocuments({ carrier: data.carrier, caseId: data.caseId });
+            }
             setTask(data);
             setLoading(false);
         };
@@ -158,8 +190,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         (user?.email?.toLowerCase() === task.assignee?.toLowerCase() ||
             task.prefferedAssignee?.toLowerCase() === user?.email?.toLowerCase());
 
-    const documentsList = task.mappedDocuments || [];
-    const additionalDocumentsList = task.additionalDocuments || [];
+    const documentsList = transformDocument(task.mappedDocuments || []);
 
     const showStartButton = task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending;
     const statusReason = task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason;
@@ -215,6 +246,12 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         </div>
     );
 
+    const openSideSheet = () => {
+        const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} />;
+        sideSheet.changeSideSheetContent(t('taskManagementQueue.updateTaskStatusDrawer.updateTaskStatus'), content);
+        sideSheet.handleOpen(true);
+    };
+
     const EmptyState = ({ content }: { content: string }) => {
         return (
             <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
@@ -227,42 +264,25 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         );
     };
 
-    const DocumentItem = ({ document, taskCarrier, docType }: DocumentItemProps) => {
+    const DocumentItem = ({ document, taskCarrier }: DocumentItemProps) => {
         return (
-            <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]" key={document.documentId}>
+            <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px] gap-2" key={document.documentId}>
                 <div>
                     <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />
                 </div>
                 <div>
-                    <div className="text-sm font-bold">
-                        <PiiWrapper>{document.documentName ?? ''}</PiiWrapper>
+                    <div className="text-sm font-bold break-all">
+                        <PiiWrapper>{document.displayName ?? ''}</PiiWrapper>
                     </div>
-                    <div className="flex items-center text-sm font-normal text-gray-300">
+                    <div className="flex items-center text-sm font-normal text-gray-300 break-all">
                         <PiiWrapper>{t('nigoEntry.documentPanel.documentId') + ': ' + document.documentId}</PiiWrapper>
                     </div>
                 </div>
-                <div className="flex items-center">
-                    <DocumentPreviewer
-                        className="flex gap-1"
-                        activeDocType={docType}
-                        carrier={taskCarrier.toUpperCase()}
-                        documentId={document?.documentId || ''}
-                        displayName={document?.documentName || ''}
-                    >
-                        <>{t('general.view')}</>
-                    </DocumentPreviewer>
-
-                    
-                </div>
+                {createAction(document as V3DocumentWithSource, taskCarrier.toUpperCase(), t, 'View')}
             </div>
         );
     };
-    const sideSheet = useSideSheetContext();
-    const openSideSheet = () => {
-        const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} />;
-        sideSheet.changeSideSheetContent(t('taskManagementQueue.updateTaskStatusDrawer.updateTaskStatus'), content);
-        sideSheet.handleOpen(true);
-    };
+
     const statuses = [
         {
             label: 'Pending',
@@ -400,25 +420,31 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         </div>
     );
 
+    const DocumentsListComponent: React.FC<{
+        documentsList: DocumentData[];
+        task: { carrier: string };
+        t: (key: string) => string;
+    }> = ({ documentsList, task, t }) => {
+        return (
+            <>
+                {documentsList.length === 0 ? (
+                    <EmptyState content={t('sideSheet.task.noDocuments')} />
+                ) : (
+                    documentsList.map((document: DocumentData) =>
+                        document.documentId ? (
+                            <DocumentItem document={document} taskCarrier={task.carrier} key={document.documentId} />
+                        ) : null
+                    )
+                )}
+            </>
+        );
+    };
+
     const renderDocuments = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg mt-8">{t('sideSheet.task.tabs.documents')}</label>
             <div className="border-box w-full  mt-2">
-                {documentsList.length == 0 ? (
-                    <EmptyState content={t('sideSheet.task.noDataAvailable')} />
-                ) : (
-                    documentsList.map(
-                        (document, index) =>
-                            document.documentId && (
-                                <DocumentItem
-                                    document={document}
-                                    taskCarrier={task.carrier}
-                                    key={document.documentId}
-                                    docType={DocumentTypeView.Policy}
-                                />
-                            )
-                    )
-                )}
+                <DocumentsListComponent documentsList={documentsList} task={task} t={t} />
             </div>
             <div className="border-box w-full">
                 <div className="flex items-baseline gap-1 mb-4">
@@ -430,24 +456,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     />
                     <label className="font-primary text-lg mt-10">{t('sideSheet.task.additionalDocuments')}</label>
                 </div>
-
-                {showAdditionalDocuments ? (
-                    additionalDocumentsList.length == 0 ? (
-                        <EmptyState content={t('sideSheet.task.noDataAvailable')} />
-                    ) : (
-                        additionalDocumentsList.map(
-                            (document, index) =>
-                                document.documentId && ( // Ensure documentId exists
-                                    <DocumentItem
-                                        document={document}
-                                        taskCarrier={task.carrier}
-                                        key={document.documentId}
-                                        docType={DocumentTypeView.Policy}
-                                    />
-                                )
-                        )
-                    )
-                ) : null}
+                {showAdditionalDocuments ? <DocumentsListComponent documentsList={additionalDocuments} task={task} t={t} /> : null}
             </div>
         </div>
     );

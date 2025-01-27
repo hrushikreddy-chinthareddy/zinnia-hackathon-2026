@@ -111,3 +111,13 @@ export type AssignedTask<T = TaskStatus> = {
     updatedAt: string;
     identifiers: IdentifierInstance[];
 };
+
+export type DocumentData = {
+    documentId?: string;
+    displayName?: string;
+    documentSource?: string;
+    fileType?: string;
+    documentName?: string;
+    documentNumber?: string;
+    documentID?:string;
+};

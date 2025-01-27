@@ -1377,6 +1377,7 @@
             "reviewIssues": "Revoir {{taskType}} problèmes",
             "suitabilityReview": "suitability",
             "noDataAvailable": "Aucune donnée disponible.",
+            "noDocuments": "Aucun document à afficher.",
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
             "suitabilityReviewIssues": "Revoir Suitability Problèmes"
         },

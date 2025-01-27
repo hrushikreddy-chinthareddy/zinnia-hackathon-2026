@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
-import NewTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/new-task-sidesheet-content';
 import TaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/task-sidesheet-content';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
@@ -29,7 +28,7 @@ export function Task({ task }: { task: TaskView }) {
 
     const handleClick = (task: TaskView) => {
         sideSheet.changeSideSheetContent(
-            `${t('sideSheet.task.taskHeading')}: ${TaskTitle[task.description]}`,
+            `${t('sideSheet.task.taskHeading')}: ${TaskTitle[task.description] ? TaskTitle[task.description] : task?.description ?? ''}`,
             SupportedTaskMap.includes(task.description as TaskType) ? (
                 <GlobalTaskSideSheet taskId={task.id} />
             ) : (
