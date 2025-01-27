@@ -34,6 +34,7 @@ import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search'
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
+import CustomLoader from '@deps/components/loader/customLoader';
 
 export enum TabOptions {
     Details = 'Details',
@@ -74,8 +75,8 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     };
 
     const fetchAdditionalDocuments = async ({ carrier, caseId }: { carrier: string; caseId: string }) => {
-        let limit = 25;
-        let offset = 0;
+        const limit = 25;
+        const offset = 0;
 
         let searchBody: SearchRequest = {
             documentClassification: SearchRequest.documentClassification.INBOUND,
@@ -88,6 +89,13 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         if (data?.documents) {
             const filteredDocuments = transformDocument(data.documents);
             setAdditionalDocuments(filteredDocuments);
+        } else if (error) {
+            browserLogError('fetchAdditionalDocuments::Error fetching additional documents', {
+                ...parseErrorInformation(error),
+                carrier,
+                caseId,
+                fileName: 'global-task-sidesheet-content',
+            });
         }
     };
 
@@ -220,18 +228,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
             break;
     }
 
-    const smallLoader = (
-        <div
-            style={
-                {
-                    '--loader-size': '20px',
-                } as React.CSSProperties
-            }
-        >
-            <Loader />
-        </div>
-    );
-
     const NoAssigneeComp = (
         <div className="flex gap-2 text-gray-600">
             <span>No assignee</span>
@@ -241,7 +237,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                         {t('sideSheet.task.claimTask')}
                     </button>
                 ) : (
-                    smallLoader
+                    <CustomLoader />
                 ))}
         </div>
     );
@@ -301,7 +297,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     {t('sideSheet.task.status.label')}{' '}
                 </div>
                 <div className="col-span-2 mt-2 align-self">
-                    {task?.status != TaskStatus.InProgress && (
+                    {task?.status != TaskStatus.InProgress ? (
                         <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
                             <Badge
                                 icon={badgeIcon}
@@ -311,8 +307,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                                 className="flex gap-1 items-center"
                             />
                         </Typography>
-                    )}
-                    {task?.status === TaskStatus.InProgress && (
+                    ) : (
                         <Dropdown
                             triggerIcon={
                                 <div className="pb-1">
@@ -413,7 +408,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                         type="submit"
                         size={startLoader ? 'large' : 'small'}
                     >
-                        {!startLoader ? t('sideSheet.task.startTask') : smallLoader}
+                        {!startLoader ? t('sideSheet.task.startTask') : <CustomLoader />}
                     </Button>
                 </div>
             )}
