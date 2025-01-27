@@ -1,4 +1,3 @@
-import '@/app/styles/globals.css';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 

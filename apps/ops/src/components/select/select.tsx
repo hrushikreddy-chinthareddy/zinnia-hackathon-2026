@@ -29,6 +29,7 @@ const SingleSelectOptions = ({ options, value }: Omit<SimpleSelectProps, 'onChan
         <Select.Viewport>
             {options.map((option: SimpleOption, index: number) => (
                 <Select.Item
+                    disabled={option.disabled}
                     value={option.value}
                     key={`option-${option.value}`}
                     className={getItemClasses(option, index, options.length, option.value === value)}

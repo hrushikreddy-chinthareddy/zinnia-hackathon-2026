@@ -1,5 +1,6 @@
+import { Tooltip } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -11,6 +12,7 @@ import { convertToQueryString } from '@deps/helpers/routing.helper';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 import { getCaseInsights } from '@deps/queries/api/openai';
+import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { ReactComponent as ChartSquare } from '@deps/styles/elements/icons/icons_outlined/chart-square-bar.svg';
 import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_outlined/light-bulb.svg';
 
@@ -27,12 +29,14 @@ interface Props {
     filterParams?: { [key: string]: string | string[] | number | boolean };
     loading?: boolean;
     chartConfig?: Highcharts.Options;
+    labelTooltip?: ReactNode | string;
 }
 
 const CaseStatBlock = ({
     dashboardStatsResponse,
     classNames,
     blockLabel,
+    labelTooltip,
     timeFrameLabel,
     statMeasurementLabel,
     variant = 'single',
@@ -61,7 +65,15 @@ const CaseStatBlock = ({
     const renderLabel = () => {
         return (
             <div className="flex gap-1">
-                <Label label={blockLabel} variant={LabelVariant.LabelMd} />
+                <div className="flex">
+                    <Label label={blockLabel} variant={LabelVariant.LabelMd} />
+                    {labelTooltip && (
+                        <Tooltip trigger={<CircleInfoIcon height={'16px'} width={'16px'} className="text-primary" />}>
+                            {labelTooltip}
+                        </Tooltip>
+                    )}
+                </div>
+
                 <Label label={timeFrameLabel} variant={LabelVariant.LabelSmAlt} />
             </div>
         );

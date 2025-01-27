@@ -7,15 +7,16 @@ export interface MenuContextualItemProps {
     icon?: React.ReactNode;
     onClick?: () => void;
     disabled?: boolean;
+    openInNewTab?: boolean;
 }
 
-const MenuContextualItem = ({ content, icon, href, onClick, disabled }: MenuContextualItemProps) => {
+const MenuContextualItem = ({ content, icon, href, onClick, disabled, openInNewTab }: MenuContextualItemProps) => {
     const router = useRouter();
 
     const handleSelect = () => {
         onClick && onClick();
 
-        router.push(href);
+        !openInNewTab && router.push(href);
     };
 
     return (
@@ -27,6 +28,8 @@ const MenuContextualItem = ({ content, icon, href, onClick, disabled }: MenuCont
                         : 'disabled flex cursor-not-allowed items-center gap-2 self-stretch rounded-sm px-4 py-0 text-gray-600'
                 }
                 href={!disabled ? href : undefined}
+                rel={openInNewTab ? 'noopener noreferrer' : undefined}
+                target={openInNewTab ? '_blank' : undefined}
             >
                 {icon}
                 <p className="whitespace-nowrap font-primary text-md font-light leading-6">{content}</p>

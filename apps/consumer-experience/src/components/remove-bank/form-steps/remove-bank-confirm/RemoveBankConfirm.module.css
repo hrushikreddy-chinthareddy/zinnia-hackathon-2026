@@ -1,5 +1,5 @@
 .remove {
-  border-color: var(--color-status-surface-status-error-border-alt, #db004f);
+  border-color: var(--color-status-border-status-error-border-alt, #db004f);
 }
 
 .cancel {

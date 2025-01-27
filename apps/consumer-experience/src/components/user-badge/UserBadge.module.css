@@ -6,7 +6,5 @@
   justify-content: center;
   align-items: center;
   background-color: var(--color-avatar-avatar-fill);
-  /* This is not set in bloom, so custom variable to allow for updates
-  depending on carrier */
-  color: var(--user-badge-text-color);
+  color: var(--color-avatar-avatar-text);
 }
