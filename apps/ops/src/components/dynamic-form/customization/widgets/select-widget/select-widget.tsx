@@ -3,12 +3,20 @@ import {
     EnumOptionsType,
     enumOptionsValueForIndex,
     FormContextType,
+    getUiOptions,
     RJSFSchema,
     StrictRJSFSchema,
     WidgetProps,
 } from '@rjsf/utils';
+import { AxiosResponse } from 'axios';
 
 import SelectComponent from '@deps/components/select/select';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { ApiProps } from '@deps/models/case/task';
+import { baseAppUrl } from '@deps/queries/api-config';
+import { client } from '@deps/queries/api-utils/client';
+
+const baseUrl = baseAppUrl + '/api/';
 
 function getValue(
     isSelected: boolean,
@@ -38,6 +46,7 @@ function getValue(
 function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     schema,
     id,
+    name,
     options,
     value,
     required,
@@ -48,8 +57,15 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     placeholder,
     label,
     rawErrors = [],
+    uiSchema,
+    formContext,
 }: WidgetProps<T, S, F>) {
+    const formData = formContext;
+
     const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+
+    const { props } = getUiOptions<T, S, F>(uiSchema);
+    const apiProps = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
 
     const _onChange = (value: string, _displaytext: string, isSelected: boolean = false) => {
         if (!isSelected && Array.isArray(selectedIndexes)) {
@@ -61,10 +77,27 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     };
 
-    const _onChangeSingle = (value: string) => {
+    const _onChangeSingle = async (value: string) => {
         const newValue = getValue(false, value, enumOptions, selectedIndexes, multiple);
-        onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
+
+        if (!apiProps.apiUrl) return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
+        await fetchDetails(apiProps.apiUrl, value, newValue);
     };
+
+    async function fetchDetails(apiUrl: string, value: string, newValue?: any) {
+        const payload = replacePlaceholders(apiProps.apiPayload, { ...formData?.customData, value });
+
+        const response = await client[apiProps?.apiMethod ?? 'get']<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload ?? undefined);
+
+        const data1 = replacePlaceholders(apiProps.responseData, response);
+
+        const data = {
+            [apiProps?.responseKey]: data1,
+        };
+
+        onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
+        formData?.setCustomData && formData.setCustomData(data);
+    }
 
     const showPlaceholderOption = !multiple && schema.default === undefined;
     let selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
