@@ -18,13 +18,13 @@ export const getSuitabilitySteps = ({
 }: GetStepsProps) => {
     const steps: Step[] = [
         {
-            ariaLabel: t('tabs.taskReview'),
+            ariaLabel: taskMetadata[0]?.title || '',
             isVisible: () => true,
             component: <TaskReviewStep caseId={caseId} clientCode={carrierId} taskInfoLink={taskInfoLink} taskType={taskType} />,
             text: t('tabs.start'),
             index: 0,
             isCompleted: true,
-            screenReaderLabel: t('tabs.taskReview'),
+            screenReaderLabel: taskMetadata[0]?.title || '',
         },
         {
             ariaLabel: t('tabs.suitabilityForm'),
@@ -53,12 +53,12 @@ export const getSuitabilitySteps = ({
             text: t('tabs.nigoDetails'),
         },
         {
-            ariaLabel: t('tabs.confirm'),
+            ariaLabel: t('confirm'),
             isVisible: () => true,
             component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
-            text: t('tabs.confirm'),
+            text: t('confirm'),
             index: 3,
-            screenReaderLabel: t('tabs.confirm'),
+            screenReaderLabel: t('confirm'),
         },
     ];
     return steps;

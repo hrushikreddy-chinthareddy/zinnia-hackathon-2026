@@ -1,4 +1,9 @@
 {
+    "formId": "004c97a1-d97c-4faa-9b7f-8ff9105b4c29",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "SUITABILITY_REVIEW",
+    "title": "",
     "formSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
@@ -286,11 +291,10 @@
             }
         }
     },
-    "title": "",
     "schemaContent": {
         "tabSchemas": [
             {
-                "title": "Suitability Review",
+                "title": "Review Suitability",
                 "formSchema": {
                     "$schema": "http://json-schema.org/draft-07/schema#",
                     "type": "object",

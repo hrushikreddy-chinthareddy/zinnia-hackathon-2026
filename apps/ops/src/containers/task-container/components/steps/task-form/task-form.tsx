@@ -6,6 +6,7 @@ import React, { ForwardedRef, useCallback, useContext, useEffect, useMemo, useSt
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
+import { updateTask } from '@deps/containers/task-container/task.healpers';
 import { Case } from '@deps/models/case/case';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { EntityTypes, MatchingCase } from '@deps/models/case/task/doc-matching-payment';
@@ -125,8 +126,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
         const taskPayload = buildTaskPayload(task, initialTask);
 
-        // const success = await updateTask(taskPayload, correlationId);
-        // setSubmitFailed(!success);
+        const success = await updateTask(taskPayload, correlationId);
+        setSubmitFailed(!success);
 
         onSubmit('');
     }, [correlationId, isSubmit, onSubmit, setSubmitFailed, task]);

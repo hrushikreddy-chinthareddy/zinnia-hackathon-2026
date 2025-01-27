@@ -2,8 +2,9 @@ import { ObjectFieldTemplateProps } from '@rjsf/utils';
 import clsx from 'clsx';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 function InstructionsTemplate(props: ObjectFieldTemplateProps) {
-    const { title, uiSchema } = props;
+    const { title, uiSchema, formContext } = props;
 
     const description = uiSchema?.props?.description;
     return (
@@ -12,7 +13,9 @@ function InstructionsTemplate(props: ObjectFieldTemplateProps) {
                 <Typography data-testid="workflow-card-title" variant={TypographyVariant.BodyBold}>
                     {title}
                 </Typography>
-                {!!description && <Typography variant={TypographyVariant.Body}>{description}</Typography>}
+                {!!description && (
+                    <Typography variant={TypographyVariant.Body}>{replacePlaceholders(description, formContext) ?? description}</Typography>
+                )}
             </div>
         </div>
     );

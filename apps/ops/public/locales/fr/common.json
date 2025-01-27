@@ -4879,7 +4879,13 @@
             "submit": "Soumettre",
             "cancel": "Annuler",
             "confirm": "Confirmer",
-            "continue": "Continue"
+            "continue": "Continue",
+            "tabs": {
+                "start": "Démarrer",
+                "nigoDetails": "Informations manquantes",
+                "suitabilityForm": "Formulaire d'adéquation",
+                "summary": "Résumé"
+            }
         }
     },
     "purchaseDocumentMatching": {

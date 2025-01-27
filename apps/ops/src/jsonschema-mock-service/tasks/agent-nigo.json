@@ -125,7 +125,7 @@
                     },
                     "sectionHeader": {
                         "props": {
-                            "description": "Review the agent’s line of business issue and confirm if we can resolve it."
+                            "description": "{{customData.issuesList[0].detailedReason}}"
                         },
                         "ui:options": {
                             "label": true,
@@ -135,7 +135,7 @@
                     "issuesList": {
                         "ui:options": {
                             "ArrayFieldTemplate": "TextListTemplate",
-                            "keyName": "reason"
+                            "keyName": "processingReason"
                         }
                     },
                     "details": {

@@ -1,8 +1,22 @@
 export const replacePlaceholders = (template: any, data: Record<string, any>): any => {
     if (typeof template === 'string') {
         return template.replace(/{{(.*?)}}/g, (match, p1) => {
-            const keys = p1.split('.');
-            return keys.reduce((obj: any, key: string) => (obj ? obj[key] : undefined), data) || match;
+            // Split by dot (.) and handle array indices (numbers inside [])
+            const keys = p1.split(/\.|\[|\]/).filter(Boolean);
+
+            return (
+                keys.reduce((obj: any, key: string, index: number) => {
+                    if (obj === undefined || obj === null) return undefined;
+                    const numericKey = Number(key);
+
+                    // Check if the key is an array index
+                    if (!isNaN(numericKey)) {
+                        return obj[numericKey];
+                    }
+
+                    return obj[key];
+                }, data) || match
+            ); // Return the match if nothing is found
         });
     } else if (Array.isArray(template)) {
         return template.map(item => replacePlaceholders(item, data));
