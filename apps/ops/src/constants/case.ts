@@ -27,3 +27,5 @@ export const ProcessesToCaseTypeMap: Partial<Record<Processes, CaseType>> = {
     [Processes.Suitability]: CaseType.Suitability,
     [Processes.SuitabilityReview]: CaseType.SuitabilityReview,
 };
+
+export const DocumentsLimit: number = 25;

@@ -35,6 +35,7 @@ import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import CustomLoader from '@deps/components/loader/customLoader';
+import { DocumentsLimit } from '@deps/constants/case';
 
 export enum TabOptions {
     Details = 'Details',
@@ -55,6 +56,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     const [claimTaskLoader, setClaimTaskLoader] = useState(false);
     const [additionalDocuments, setAdditionalDocuments] = useState<DocumentData[]>([]);
     const [showAdditionalDocuments, setShowAdditionalDocuments] = useState(false);
+    const [errorDocuments, setErrorDocuments] = useState(false);
     const [startLoader, setStartLoader] = useState(false);
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
@@ -69,29 +71,36 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
             displayName: doc.displayName ? doc.displayName : doc.documentName ? doc.documentName : '',
             documentNumber: doc.documentNumber,
             fileType: doc.fileType || doc.documentSource || 'pdf',
-            documentSource: DocumentTypeView.Case,
+            documentSource: DocumentTypeView.Policy,
         }));
         return transformedDocuments;
     };
 
     const fetchAdditionalDocuments = async ({ carrier, caseId }: { carrier: string; caseId: string }) => {
-        const limit = 25;
-        const offset = 0;
-
         let searchBody: SearchRequest = {
             documentClassification: SearchRequest.documentClassification.INBOUND,
             zinniaLiveCaseId: caseId,
             parentCarrierCode: carrier,
         };
+        try {
+            const { data, error } = await searchDocumentsV3({ limit: DocumentsLimit, offset: 0, searchBody });
 
-        const { data, error } = await searchDocumentsV3({ limit, offset, searchBody });
-
-        if (data?.documents) {
-            const filteredDocuments = transformDocument(data.documents);
-            setAdditionalDocuments(filteredDocuments);
-        } else if (error) {
-            browserLogError('fetchAdditionalDocuments::Error fetching additional documents', {
-                ...parseErrorInformation(error),
+            if (data?.documents) {
+                const filteredDocuments = transformDocument(data.documents);
+                setAdditionalDocuments(filteredDocuments);
+            } else if (error) {
+                setErrorDocuments(true);
+                browserLogError('fetchAdditionalDocuments::Error fetching additional documents', {
+                    ...parseErrorInformation(error),
+                    carrier,
+                    caseId,
+                    fileName: 'global-task-sidesheet-content',
+                });
+            }
+        } catch (err) {
+            setErrorDocuments(true);
+            browserLogError('fetchAdditionalDocuments::Unexpected error occurred', {
+                ...parseErrorInformation(err),
                 carrier,
                 caseId,
                 fileName: 'global-task-sidesheet-content',
@@ -146,7 +155,10 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                 // Fetch the task instance
                 const taskData = await getTaskInstance({ taskId });
                 if (!taskData) {
-                    console.error('Task data could not be retrieved.');
+                    browserLogError('handleStartTask::Task data could not be retrieved.', {
+                        taskId,
+                        fileName: 'global-task-sidesheet-content',
+                    });
                     return;
                 }
                 const body = {
@@ -161,7 +173,11 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                 }
             }
         } catch (error) {
-            console.error('Error handling start task:', error);
+            browserLogError('handleStartTask::Error handling start task', {
+                ...parseErrorInformation(error),
+                taskId,
+                fileName: 'global-task-sidesheet-content',
+            });
         } finally {
             setStartLoader(false);
         }
@@ -419,11 +435,18 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         documentsList: DocumentData[];
         task: { carrier: string };
         t: (key: string) => string;
-    }> = ({ documentsList, task, t }) => {
+        documentsListType?: string;
+    }> = ({ documentsList, task, t, documentsListType }) => {
         return (
             <>
                 {documentsList.length === 0 ? (
-                    <EmptyState content={t('sideSheet.task.noDocuments')} />
+                    <EmptyState
+                        content={
+                            documentsListType === 'additional' && errorDocuments
+                                ? t('sideSheet.task.errorAdditionalDocuments')
+                                : t('sideSheet.task.noDocuments')
+                        }
+                    />
                 ) : (
                     documentsList.map((document: DocumentData) =>
                         document.documentId ? (
@@ -451,7 +474,9 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     />
                     <label className="font-primary text-lg mt-10">{t('sideSheet.task.additionalDocuments')}</label>
                 </div>
-                {showAdditionalDocuments ? <DocumentsListComponent documentsList={additionalDocuments} task={task} t={t} /> : null}
+                {showAdditionalDocuments ? (
+                    <DocumentsListComponent documentsList={additionalDocuments} task={task} t={t} documentsListType={'additional'} />
+                ) : null}
             </div>
         </div>
     );

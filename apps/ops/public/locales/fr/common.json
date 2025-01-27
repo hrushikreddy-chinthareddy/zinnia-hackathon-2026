@@ -1377,7 +1377,8 @@
             "reviewIssues": "Revoir {{taskType}} problèmes",
             "suitabilityReview": "suitability",
             "noDataAvailable": "Aucune donnée disponible.",
-            "noDocuments": "Aucun document à afficher.",
+            "noDocuments": "Aucun document disponible",
+            "errorAdditionalDocuments": "Erreur lors de la récupération de documents supplémentaires.",
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
             "suitabilityReviewIssues": "Revoir Suitability Problèmes"
         },
