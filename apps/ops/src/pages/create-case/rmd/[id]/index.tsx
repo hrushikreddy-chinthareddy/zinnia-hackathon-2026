@@ -13,10 +13,10 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
-import GlcoRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/glco-rmd-form';
 import MassMutualRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/mm-rmd-form';
 import SbgcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/sbgc-rmd-form';
 import UlpcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/ulpc/ulpc-rmd-form';
+import UsaaRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/usaa/usaa-rmd-form';
 import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/form-controls';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
@@ -72,9 +72,11 @@ const determineFormToRender = (clientId: string, qualType: QualTypes | ''): Reac
         case Carrier.SBGC:
             return <SbgcRmdWithdrawalForm />;
         case Carrier.GLCO:
-            return <GlcoRmdWithdrawalForm />;
+            return <UsaaRmdWithdrawalForm />;
         case Carrier.ULPC:
             return <UlpcRmdWithdrawalForm />;
+        case Carrier.USAA:
+            return <UsaaRmdWithdrawalForm />;
         default:
             console.error('determineFormToRender::unsupported clientId', clientId);
             return null;
