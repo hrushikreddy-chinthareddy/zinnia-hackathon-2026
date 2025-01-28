@@ -18,7 +18,6 @@ export type FieldDateSelectProps = {
     label?: string;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
     isFutureDateDisabled?: boolean;
-    isPastDateDisabled?: boolean;
     disableFormat?: boolean;
     datePickerType?: DatePickerTypes;
     isDateAllowed?: (dayjsDate: Dayjs) => boolean;
@@ -31,7 +30,6 @@ export default function FieldDateSelect({
     label,
     onChange,
     isFutureDateDisabled = true,
-    isPastDateDisabled = false,
     isDateAllowed,
     disableFormat,
     datePickerType,
@@ -53,6 +51,7 @@ export default function FieldDateSelect({
     } else {
         date = dayjs(value, DATE_PICKER_FORMAT, true).isValid() ? dayjs(value, DATE_PICKER_FORMAT).toDate() : null;
     }
+
     const handleCustomSelection = (_year: number, _quarter?: Quarter) => {
         const value = _quarter ? `${_year}-${_quarter}` : _year.toString();
 
@@ -98,13 +97,13 @@ export default function FieldDateSelect({
                 <DatePicker
                     isDateAllowed={isDateAllowed}
                     isFutureDateDisabled={isFutureDateDisabled}
-                    isPastDateDisabled={isPastDateDisabled}
                     open={open}
                     date={date}
                     handleDateSelect={handleDateSelect}
                     handleCustomSelection={handleCustomSelection}
                     datePickerType={datePickerType}
                     showMonths={showMonths}
+
                 />
             </div>
         </div>

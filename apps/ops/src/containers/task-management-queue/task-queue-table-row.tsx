@@ -216,7 +216,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
                 <Content details={task?.process} variant={ContentVariant.BodySm} />
             </TableCell>
             <TableCell>
-                {(SupportedTaskMap.includes(task?.taskType as TaskType)) &&
+                {(SupportedTaskMap.includes(task?.taskType as TaskType)) ?
 
                     <>
                         {task?.status === TaskStatus.InProgress && <Dropdown
@@ -233,7 +233,8 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
                                 className="flex gap-1 items-center"
                             />
                         </Typography>}
-                    </>
+                    </> :
+                    <Content details={taskStatus} variant={ContentVariant.BodySm} />
                 }
             </TableCell>
 

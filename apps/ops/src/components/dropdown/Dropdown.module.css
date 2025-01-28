@@ -4,11 +4,11 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.25rem 0.5rem; /* px-2 py-1 */
-    color: var(--color-fuchsia-color-700-fuchsia);
+    color: #ac0091;
     border-radius: 9999px;
     cursor: pointer;
-    border: 2px solid var(--color-fuchsia-color-500-fuchsia);
-    background-color: var(--color-fuchsia-color-50-fuchsia);
+    border: 2px solid #ac0091;
+    background-color: #fbf2f9;
     font-weight: 500;
 }
 

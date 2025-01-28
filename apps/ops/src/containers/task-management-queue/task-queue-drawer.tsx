@@ -2,7 +2,7 @@ import { FieldSize, FieldType } from "@deps/components/fields/field";
 import FieldDateSelect from "@deps/components/fields/field-date-select/field-date-select";
 import Typography, { TypographyVariant } from "@deps/components/typography/typography";
 import { TranslationFiles } from "@deps/config/translations";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
@@ -97,6 +97,12 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: (
       console.log(error)
     }
   };
+  function handleIsDateAllowed(date: Dayjs): boolean {
+    const currentDate = dayjs()
+    if (date.isBefore(currentDate) || date.isSame(currentDate)) return false
+    return true
+  }
+
 
   return (
     <div className="m-10 flex flex-col gap-5">
@@ -110,7 +116,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: (
         type={FieldType.BaseActive}
         value={date}
         isFutureDateDisabled={false}
-        isPastDateDisabled={true}
+        isDateAllowed={date => handleIsDateAllowed(date)}
       />
       <SelectSimple
         className="max-w-lg placeholder:text-gray-400"
