@@ -36,7 +36,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
     const sideSheet = useSideSheetContext();
 
     const { processDate, status } = transaction || {};
-    const { amount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(
+    const { amount, requestedAmount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(
         policy as Policy,
         transaction as Transaction
     );
@@ -99,7 +99,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
             {/* TODO MG: warning about aria-disabled not being set correctly */}
             <button aria-disabled={isClickable} className={containerClasses} onClick={openTransactionSidesheet}>
                 <div className="flex min-h-[62px] w-full items-center justify-between gap-4">
-                    <div className="flex grow flex-col items-start">
+                    <div className="flex grow flex-col items-start flex-grow">
                         <div className="text-content-caption font-medium text-gray-500">{caption}</div>
 
                         <div className="flex items-center gap-2">
@@ -113,12 +113,19 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
                             </div>
                         )}
                     </div>
-                    {amount !== undefined && (
-                        <div className="font-bold md:text-content-value">
-                            <AccessibleFormattedAmount amount={amount} />
-                        </div>
-                    )}
-
+                    <div className="flex flex-col flex-shrink items-start">
+                        {amount !== undefined && (
+                            <div className="font-bold md:text-content-value">
+                                <AccessibleFormattedAmount amount={amount} />
+                            </div>
+                        )}
+                        {requestedAmount && (
+                            <div className="font-secondary text-body-sm text-gray-500">
+                                {`Requested: `}
+                                <AccessibleFormattedAmount amount={requestedAmount} />
+                            </div>
+                        )}
+                    </div>
                     {isClickable && <ChevronRightIcon className="text-secondary" height={24} width={24} />}
                 </div>
             </button>
