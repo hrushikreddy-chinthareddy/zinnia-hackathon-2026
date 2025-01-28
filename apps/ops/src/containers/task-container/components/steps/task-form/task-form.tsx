@@ -5,6 +5,7 @@ import React, { ForwardedRef, useCallback, useContext } from 'react';
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.healpers';
+import { removeFromCache } from '@deps/utils/cache';
 
 type TaskFormProps = {
     readonly: boolean;
@@ -22,6 +23,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const handleSubmit = useCallback(async () => {
         if (isSubmit) {
             const success = await updateTask(task, correlationId);
+            removeFromCache('getTaskInstance', { taskId: task.id });
             setSubmitFailed(!success);
         }
         onSubmit();
