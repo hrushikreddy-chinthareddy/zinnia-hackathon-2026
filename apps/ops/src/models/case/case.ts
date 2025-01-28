@@ -52,6 +52,7 @@ export type Case = {
     tasks: TaskInstance[];
     templateId: string;
     updatedAt: string;
+    caseResultDetail?: string;
 };
 
 // Case Type and a Case's Process are the same
