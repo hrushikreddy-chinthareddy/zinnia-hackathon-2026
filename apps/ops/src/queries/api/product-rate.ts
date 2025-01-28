@@ -246,7 +246,7 @@ export const getProductRate = async (
         if (!planCode) {
             throw new Error('No planCode on policy');
         }
-        if (resourceId == ConfiguredSettingId.MatchRate) {
+        if (resourceId === ConfiguredSettingId.MatchRate) {
             planCode = 'SBUL-MATCH';
         }
 
