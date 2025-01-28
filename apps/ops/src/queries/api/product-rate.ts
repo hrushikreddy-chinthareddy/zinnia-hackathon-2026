@@ -111,7 +111,7 @@ const extractSimpleRateValue = (response: ProductRateResponse): number | null =>
 };
 
 const getInsuredGenderFromPolicy = (policy: PolicyDetails): string | null => {
-    const insuredPartyGenders = new Set(policy.coveredPeople.map(({ gender }) => gender));
+    const insuredPartyGenders = new Set(policy.coveredPeople?.map(({ gender }) => gender));
     if (insuredPartyGenders.size !== 1) {
         return null;
     }
@@ -149,7 +149,6 @@ const getCoverageValuesFromPolicy = (
 const getPolicyRatesArguments = (policy: PolicyDetails, effectiveDate: string): string => {
     const querySearchParams = new URLSearchParams();
     querySearchParams.append('effectiveDate', effectiveDate);
-
     const gender = getInsuredGenderFromPolicy(policy);
     const { coverageAmount, issueAge, riskClass } = getCoverageValuesFromPolicy(policy);
     const contractYear = policy.policyYear ?? null;
@@ -165,14 +164,7 @@ const getPolicyRatesArguments = (policy: PolicyDetails, effectiveDate: string): 
 // Match rate is an SBUL-specific value and will not scale to support other products
 export const getSbulMatchRate = async (policy: PolicyDetails, effectiveDate: string = dayjs().format(ZAHARA_API_DATE_FORMAT)) => {
     try {
-        const sbulMatchPolicy = structuredClone(policy);
-        if (!sbulMatchPolicy.product) {
-            throw new Error('No product found');
-        } else {
-            sbulMatchPolicy.planCode = 'SBUL-MATCH';
-        }
-
-        return await getProductRate(policy, ConfiguredSettingId.CurrentInterestRate, 'BASE_COVERAGE', effectiveDate);
+        return await getProductRate(policy, ConfiguredSettingId.MatchRate, 'BASE_COVERAGE', effectiveDate);
     } catch (e) {
         console.error('getSbulMatchRate error |', (e as AxiosResponse)?.data ?? (e as Error)?.message);
 
@@ -245,7 +237,8 @@ export const getProductRate = async (
     errorMessage?: string
 ) => {
     try {
-        const { carrierId, product: { planCode } = {} } = policy;
+        const { carrierId } = policy;
+        let { planCode } = policy;
 
         if (!carrierId) {
             throw new Error('No carrierId on policy');
@@ -253,8 +246,12 @@ export const getProductRate = async (
         if (!planCode) {
             throw new Error('No planCode on policy');
         }
+        if (resourceId == ConfiguredSettingId.MatchRate) {
+            planCode = 'SBUL-MATCH';
+        }
 
         const querySearchParams = getPolicyRatesArguments(policy, effectiveDate);
+        console.log(planCode);
         const { data } = await client.get(buildClientSideProductRatePathUrl(carrierId, planCode, benefitId, resourceId, querySearchParams));
 
         return extractSimpleRateValue(data);
