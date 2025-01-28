@@ -251,7 +251,6 @@ export const getProductRate = async (
         }
 
         const querySearchParams = getPolicyRatesArguments(policy, effectiveDate);
-        console.log(planCode);
         const { data } = await client.get(buildClientSideProductRatePathUrl(carrierId, planCode, benefitId, resourceId, querySearchParams));
 
         return extractSimpleRateValue(data);
