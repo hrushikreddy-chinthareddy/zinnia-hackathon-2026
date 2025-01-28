@@ -67,7 +67,13 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     const transformDocument = (documents: DocumentData[]) => {
         const transformedDocuments = documents.map((doc: DocumentData) => ({
             documentId: doc.documentId || doc.documentID,
-            displayName: doc.displayName ? doc.displayName : doc.documentName ? doc.documentName : '',
+            displayName: doc.displayName
+                ? doc.displayName
+                : doc.documentName
+                ? doc.documentName
+                : doc.sourceFileName
+                ? doc.sourceFileName
+                : '',
             documentNumber: doc.documentNumber,
             fileType: doc.fileType || doc.documentSource || 'pdf',
             documentSource: DocumentTypeView.Case,
