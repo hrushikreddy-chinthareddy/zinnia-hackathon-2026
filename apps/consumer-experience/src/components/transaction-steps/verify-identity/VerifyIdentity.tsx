@@ -1,13 +1,17 @@
 'use client';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from '@zinnia/bloom/components';
 import { useState } from 'react';
 
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
 import { PhoneNumber } from '@/components/pii/PhoneNumber';
+import { QueryKeys } from '@/queries/query-keys';
+import { getUserAuthenticationMethods } from '@/queries/user-queries';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 
 import styles from './VerifyIdentity.module.css';
+import { Loading } from '../loading/Loading';
 
 interface VerifyIdentityProps {
   closeCallback: () => void;
@@ -20,24 +24,25 @@ export const VerifyIdentity = ({
   transactionDescription,
 }: VerifyIdentityProps) => {
   const [verifyStep, setVerifyStep] = useState(FormSteps.VERIFY_IDENTITY);
-  // const [mfaToken, setMfaToken] = useState(null);
+  const { data, isLoading } = useQuery({
+    queryKey: [QueryKeys.USER_AUTHENTICATION_METHODS],
+    queryFn: () => getUserAuthenticationMethods(),
+  });
+
+  console.log(data);
 
   const moveToCodeStep = () => {
+    // call refreshToken endpoint
+    // using token in return ->
+    //     await setMfaCookie({
+    //   value: data.mfa_token,
+    // });
     setVerifyStep(FormSteps.VERIFY_IDENTITY_CODE);
   };
 
-  // useEffect(() => {
-  // call https://auth0.com/docs/api/authentication?http#refresh-token to retrieve
-  // set mfaToken with response from above
-  // setMfaToken()
-  // call following with mfa_token recieved from call above
-  // const response = await fetch('/api/auth/mfa/authenticators', {
-  // credentials: 'include',
-  // headers: {
-  //   authorization: `Bearer ${token}`,
-  // },
-  // });
-  // }, []);
+  if (isLoading) {
+    return <Loading />;
+  }
 
   if (verifyStep === FormSteps.VERIFY_IDENTITY) {
     return (

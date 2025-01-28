@@ -246,6 +246,8 @@ export const getSession = async (
         (await getCookie(AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY)) === 'true';
       const { payload } = await decrypt(existingSessionValue);
       const { oauthToken } = payload;
+      // This article is super helpful in terms of understanding the difference between
+      // these two tokens: https://auth0.com/blog/id-token-access-token-what-is-the-difference/
       const { access_token, id_token } = oauthToken;
 
       const userClaims = jose.decodeJwt(id_token) as UserClaims;

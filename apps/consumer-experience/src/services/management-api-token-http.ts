@@ -1,19 +1,27 @@
+// TODO: this is duplicating the enterprise-api-token-http class
+// need to make a higher up constructor that this and the enterprise one can
+// extend and override the generateToken function, but wasn't sure how to
+// genercize that generateToken function....
+
 import { logApiNotOkDetails } from '@/utils/api';
 import { logError } from '@/utils/logging/server-logging';
 
 import { HttpRequest } from './http';
 
 /**
- * This class is used to hit endpoints that user specific tokens wouldn't have access to on the Zinnia API.
- * For instance, the fund information API. This uses the machine to machine auth token which
+ * This class is used to hit auth0 management API. This uses the machine to machine auth token which
  * means that the machine (server) is communicating with the auth0 management api.
  * Read more [here](https://auth0.com/blog/using-m2m-authorization/)
  * Specifically: https://auth0.com/blog/using-m2m-authorization/#:~:text=The%20key%20aspect,don%27t%20make%20sense.
  *
+ * If you are getting a 403 with errorCode `insufficient_scope` you will speak with CIAM
+ * about getting that scope added to the management/enterprise token.
+ * See this doc for more info about management api endpoints https://auth0.com/docs/api/management/v2/users/get-authentication-methods
+ *
  * WARNING: Use sparingly. This class should only be used if you need data that is not
  * provided by a user token.
  */
-class EnterpriseTokenHttp extends HttpRequest {
+class ManagementTokenHttp extends HttpRequest {
   private token: string | null = null;
   private tokenExp: number | null = null;
 
@@ -37,6 +45,8 @@ class EnterpriseTokenHttp extends HttpRequest {
       Authorization: `Bearer ${this.token}`,
     };
 
+    console.log('machine token', this.token);
+
     return fetch(input, requestInit);
   };
 
@@ -52,6 +62,7 @@ class EnterpriseTokenHttp extends HttpRequest {
     access_token: string | null;
     expires_in: number | null;
   }> {
+    console.log('are you regenerating this token?');
     try {
       const authRes = await fetch(
         `${process.env.AUTH0_ISSUER_BASE_URL}/oauth/token`,
@@ -65,7 +76,7 @@ class EnterpriseTokenHttp extends HttpRequest {
             grant_type: 'client_credentials',
             client_id: process.env.AUTH0_CLIENT_ID,
             client_secret: process.env.AUTH0_CLIENT_SECRET,
-            audience: process.env.AUTH0_AUDIENCE,
+            audience: process.env.AUTHO_MANAGEMENT_API_AUDIENCE,
           }),
         }
       );
@@ -74,7 +85,7 @@ class EnterpriseTokenHttp extends HttpRequest {
 
       if (!authRes.ok) {
         logError(
-          'Error generating EnterpriseApiTokenHttp oauth token',
+          'Error generating ManagementApiTokenHttp oauth token',
           await logApiNotOkDetails({
             rawResponse: authRes,
             parsedResponse: parsedRes,
@@ -96,9 +107,9 @@ class EnterpriseTokenHttp extends HttpRequest {
       this.token = access_token;
       this.tokenExp = expires_in;
     } catch (e) {
-      logError('EnterpriseApiTokenHttp::refreshToken::', e);
+      logError('ManagementApiTokenHttp::refreshToken::', e);
     }
   }
 }
 
-export const EnterpriseTokenApi = new EnterpriseTokenHttp();
+export const ManagementTokenApi = new ManagementTokenHttp();
