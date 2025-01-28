@@ -45,8 +45,6 @@ export type DatePickerProps = {
     isDateAllowed?: (dayjsDate: Dayjs) => boolean;
     datePickerType?: DatePickerTypes;
     showMonths?: boolean;
-    isPastDateDisabled?: boolean;
-    isTodayDisabled?: boolean;
 };
 
 interface YearsProps {

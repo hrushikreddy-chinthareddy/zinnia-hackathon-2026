@@ -30,8 +30,6 @@ export default function FieldDateSelect({
     label,
     onChange,
     isFutureDateDisabled = true,
-
-
     isDateAllowed,
     disableFormat,
     datePickerType,
@@ -53,6 +51,7 @@ export default function FieldDateSelect({
     } else {
         date = dayjs(value, DATE_PICKER_FORMAT, true).isValid() ? dayjs(value, DATE_PICKER_FORMAT).toDate() : null;
     }
+
     const handleCustomSelection = (_year: number, _quarter?: Quarter) => {
         const value = _quarter ? `${_year}-${_quarter}` : _year.toString();
 
