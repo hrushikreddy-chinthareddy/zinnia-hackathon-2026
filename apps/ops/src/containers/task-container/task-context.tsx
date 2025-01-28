@@ -2,12 +2,11 @@ import { createContext } from 'react';
 
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { CallCenterElement } from '@deps/models/case/send-document';
-import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 export type TaskState = {
-    taskMetadata: FormMetadata;
     task: ManagementTask;
+    initialTask: ManagementTask;
     correlationId: string;
     isReadyForDataEntry: boolean;
     exceptions: string[];
@@ -28,8 +27,8 @@ export type TaskState = {
 
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 export const taskDefaultValues = {
-    taskMetadata: {} as FormMetadata,
     task: {} as ManagementTask,
+    initialTask: {} as ManagementTask,
     correlationId: '',
     isReadyForDataEntry: false,
     exceptions: [] as any,
