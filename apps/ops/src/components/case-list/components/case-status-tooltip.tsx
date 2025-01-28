@@ -27,7 +27,7 @@ export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
     let statusVariant = '';
     let statusText = '';
 
-    const caseResultDetail = rawCaseResultDetail ?? '';
+    const caseResultDetail = rawCaseResultDetail ? ` ${rawCaseResultDetail}` : '';
 
     switch (caseStatus) {
         case Statuses.InProgress:
