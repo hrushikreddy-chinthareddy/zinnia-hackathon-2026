@@ -9,13 +9,13 @@ import {
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
+import { JointLifeExpectancyConfig } from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import {
     SignatureBonusFields,
     SignatureFieldNames,
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
-import { USStates } from '@deps/constants/geography/us-states';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
@@ -79,10 +79,6 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
         },
         [t]
     );
-
-    const validateMaritalStatusAllowances = (issueState: USStates) => {
-        return [USStates.GEORGIA, USStates.MINNESOTA, USStates['SOUTH CAROLINA']].includes(issueState);
-    };
 
     const disbursementOptions: PaymentMethodOption[] = [
         {
@@ -386,13 +382,35 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
         },
     ];
 
+    const jointLifeExpectancyConfigs: JointLifeExpectancyConfig = {
+        checkboxLabel: t('rmdMethod.jointLifeExpectancy.label.flic'),
+        fields: [
+            {
+                fieldName: PartyFields.FirstName,
+                fieldLabel: t('rmdMethod.jointLifeExpectancy.firstName'),
+            },
+            {
+                fieldName: PartyFields.MiddleName,
+                fieldLabel: t('rmdMethod.jointLifeExpectancy.middleName'),
+            },
+            {
+                fieldName: PartyFields.LastName,
+                fieldLabel: t('rmdMethod.jointLifeExpectancy.lastName'),
+            },
+            {
+                fieldName: PartyFields.Dob,
+                fieldLabel: t('rmdMethod.jointLifeExpectancy.dob.flic'),
+            },
+        ],
+    };
+
     return {
         disbursementOptions,
         formPartyConfigs,
         formValidation,
         fundWithdrawnMethodOptions,
         irsSignatureConfig,
-        validateMaritalStatusAllowances,
+        jointLifeExpectancyConfigs,
         signaturesConfig,
     };
 }
