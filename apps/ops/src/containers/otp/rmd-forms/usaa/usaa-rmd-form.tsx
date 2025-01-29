@@ -11,12 +11,11 @@ import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-metho
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
-import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { Carrier } from '@deps/models/case/withdrawal/case';
+import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
+import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 
 import getUsaaWithdrawalConfig from './usaa-rmd-from.helper';
-import { FormSubtype } from '../../withdrawal-forms/flic-withdrawal-form.helper';
 
 const UsaaRmdWithdrawalForm = () => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -27,11 +26,19 @@ const UsaaRmdWithdrawalForm = () => {
         fundWithdrawnMethodOptions,
         irsSignatureConfig,
         signaturesConfig,
-        validateMaritalStatusAllowances,
         jointLifeExpectancyConfigs,
     } = getUsaaWithdrawalConfig(t);
-    const { setFormValidator, setFormData, formSubtype, initialForm, contractIssueState, isFormStateReadOnly, formTpaAuthorization } =
-        useContext(FormDataContext);
+    const {
+        formParty,
+        setFormValidator,
+        setFormData,
+        formSubtype,
+        initialForm,
+        isFormStateReadOnly,
+        formTpaAuthorization,
+        ownerStateOfResidence,
+        setOwnerStateOfResidence,
+    } = useContext(FormDataContext);
 
     useEffect(() => {
         if (formSubtype) {
@@ -51,8 +58,14 @@ const UsaaRmdWithdrawalForm = () => {
         setFormValidator(() => formValidation);
     }, [setFormValidator]);
 
+    useEffect(() => {
+        const newOwnerStateOfResidence = getOwnerStateOfResidence(formParty);
+        if (newOwnerStateOfResidence !== ownerStateOfResidence) {
+            setOwnerStateOfResidence(newOwnerStateOfResidence);
+        }
+    }, [formParty]);
+
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
-    const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -64,13 +77,9 @@ const UsaaRmdWithdrawalForm = () => {
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.distributionInstruction') as string}
+                defaultMethod={FundWithdrawnMethod.Default}
             />
-            <TaxWithholdings
-                isFormStateReadOnly={isFormStateReadOnly}
-                isMaritalStatusAllowances={isMaritalStatusAllowances && formSubtype === FormSubtype.PartialWithdrawal}
-                specifiedView={true}
-            />
-
+            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />

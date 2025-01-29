@@ -16,7 +16,6 @@ import {
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
-import { USStates } from '@deps/constants/geography/us-states';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
@@ -80,10 +79,6 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
         },
         [t]
     );
-
-    const validateMaritalStatusAllowances = (issueState: USStates) => {
-        return [USStates.GEORGIA, USStates.MINNESOTA, USStates['SOUTH CAROLINA']].includes(issueState);
-    };
 
     const disbursementOptions: PaymentMethodOption[] = [
         {
@@ -415,7 +410,6 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
         formValidation,
         fundWithdrawnMethodOptions,
         irsSignatureConfig,
-        validateMaritalStatusAllowances,
         signaturesConfig,
         jointLifeExpectancyConfigs,
     };
