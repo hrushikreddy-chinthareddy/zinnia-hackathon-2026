@@ -98,6 +98,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             const body = { ...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement };
             const response = await updateTask(taskData.caseId, taskData.id, body, timer);
 
+            removeFromCache('getTaskInstance', { taskId: task.id });
             if (response) {
                 browserLogInfo('task-queue:handleStartTask::Successfully updated task in progress', {
                     taskId: taskData.id,
