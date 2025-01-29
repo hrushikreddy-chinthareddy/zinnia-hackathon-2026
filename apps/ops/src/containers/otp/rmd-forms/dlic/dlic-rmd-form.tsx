@@ -1,8 +1,8 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
+import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
-import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
@@ -26,8 +26,11 @@ const DlicRmdWithdrawalForm = () => {
         irsSignatureConfig,
         signaturesConfig,
         jointLifeExpectancyConfigs,
+        additionalWithholdingAmountConfig,
+        signaturesNotaryConfig,
+        cslnCheckStates,
     } = getDlicWithdrawalConfig(t);
-    const { formParty, setFormValidator, setFormData, formSubtype, initialForm, isFormStateReadOnly, formTpaAuthorization } =
+    const { formParty, setFormValidator, setFormData, formSubtype, initialForm, isFormStateReadOnly, contractIssueState } =
         useContext(FormDataContext);
 
     useEffect(() => {
@@ -50,13 +53,11 @@ const DlicRmdWithdrawalForm = () => {
 
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
 
-    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <JointLifeExpectancy isFormStateReadOnly={isFormStateReadOnly} configs={jointLifeExpectancyConfigs} />
-
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -64,11 +65,23 @@ const DlicRmdWithdrawalForm = () => {
                 title={t('distributionInstruction.distributionInstruction') as string}
                 defaultMethod={FundWithdrawnMethod.Default}
             />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                ownerStateOfResidence={ownerStateOfResidence}
+                additionalWithHoldingConfig={additionalWithholdingAmountConfig}
+            />{' '}
             <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
+            {(ownerStateOfResidence || contractIssueState) &&
+                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
+                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
+                )}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                headerTranslationKey={'notaryHeader'}
+                config={signaturesNotaryConfig}
+            />
         </>
     );
 };

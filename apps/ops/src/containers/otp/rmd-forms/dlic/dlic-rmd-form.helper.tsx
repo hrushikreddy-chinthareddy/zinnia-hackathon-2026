@@ -1,6 +1,7 @@
 import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
+import { DisbursementToggleType } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import {
     BankingFields,
     DisbursementFields,
@@ -29,6 +30,8 @@ import {
     AddressTypes,
     FormDisbursement,
     AccountType,
+    TaxWithholdingPlace,
+    AmountType,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -39,7 +42,7 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import { FormSubtype, spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
+import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
 
 export default function getDlicRmdWithdrawalConfig(t: TFunction) {
     const formValidation = useCallback(
@@ -79,33 +82,35 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
         },
         [t]
     );
+    const additionalWithholdingAmountConfig = {
+        [TaxWithholdingPlace.Federal]: { amountType: AmountType.Percent },
+    };
 
     const disbursementOptions: PaymentMethodOption[] = [
         {
             label: t('distributionMethod.eft'),
             value: FormDisbursementSelections.EFT,
+            additionalOptions: {
+                disbursementToggleType: DisbursementToggleType.MaskedInfoToggle,
+            },
             fields: [
                 {
-                    fieldLabel: t('distributionMethod.chooseTheBank'),
                     fieldName: BankingFields.Bank,
+                    fieldLabel: t('distributionMethod.chooseTheBank'),
                     component: DisbursementFields.SelectBank,
                 },
                 {
-                    fieldName: BankingFields.IsVoidCheckAttached,
-                    fieldLabel: t('distributionMethod.isVoidCheckAttached'),
-                    component: DisbursementFields.BankBooleanButtonGroup,
+                    fieldName: BankingFields.IsDirectDepositValid,
+                    fieldLabel: t('distributionMethod.isDirectDepositFormValid'),
                     classNames: 'col-start-1',
-                },
-                {
-                    fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
                     fieldName: BankingFields.AccountType,
                     fieldLabel: t('distributionMethod.accountType'),
                     component: DisbursementFields.AccountTypes,
-                    classNames: 'col-span-2 w-full',
+
+                    classNames: 'col-start-1 col-span-2 w-full',
                     isBankingField: true,
                 },
                 {
@@ -130,8 +135,8 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                     fieldName: BankingFields.BankRoutingNumber,
                     fieldLabel: t('distributionMethod.bankRoutingNumber'),
                     component: DisbursementFields.BankTextField,
-                    isBankingField: true,
                     classNames: 'col-start-1',
+                    isBankingField: true,
                     maskOnBlur: true,
                     disableCopyPaste: true,
                 },
@@ -144,75 +149,132 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                     validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
                 },
                 {
+                    fieldName: BankingFields.AccountHolder,
+                    fieldLabel: t('distributionMethod.accountName'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                },
+                {
                     fieldName: BankingFields.BankName,
                     fieldLabel: t('distributionMethod.bankName'),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
-                    classNames: 'col-start-1',
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({ paymentMethod, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
+
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
-                    isVoidCheckAttached: voidCheck,
-                    accountHolder: selectedBank.nameOnBankAccount ?? '',
-                    accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
-                    bankName: selectedBank.bankName ?? '',
-                    bankRoutingNumber: selectedBank.routingNumber ?? '',
+                    isDirectDepositValid: selectedBank?.isDirectDepositValid?.text ?? true,
+                    accountHolder: selectedBank?.nameOnBankAccount ?? '',
+                    accountNumber: selectedBank?.accountNumber ?? '',
+                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    bankName: selectedBank?.bankName ?? '',
+                    bankRoutingNumber: selectedBank?.routingNumber ?? '',
+                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
+                    isDirectDeposit: selectedBank?.isDirectDeposit?.text ?? true,
+                    maskedAccountNumber: selectedBank?.maskedAccountNumber ?? '',
                 };
             },
             generatePayloadFromSelection: ({
                 accountNumber,
                 accountType,
                 bankName,
-                bankRoutingNumber,
                 accountHolder,
-                isVoidCheckAttached,
-                doesCheckMeetSecurityRequirements,
+                bankFurtherCreditAccount,
+                bankFurtherCreditName,
+                bankRoutingNumber,
+                isDirectDepositValid,
+                maskedAccountNumber,
+                isDirectDeposit,
                 reEnterAccountNumber,
                 reEnterBankRoutingNumber,
             }: DisbursementParts) => {
+                const bank = isDirectDeposit
+                    ? [
+                          {
+                              ...DEFAULT_BANK_DETAILS,
+                              maskedAccountNumber: null,
+                              accountNumber,
+                              accountType: {
+                                  text: accountType,
+                              },
+                              bankName,
+                              nameOnBankAccount: accountHolder ?? '',
+                              routingNumber: bankRoutingNumber,
+                              bankFurtherCreditAccount,
+                              bankFurtherCreditName,
+                              isDirectDeposit: { text: true },
+                              isDirectDepositValid: { text: isDirectDepositValid },
+                              reEnterAccountNumber,
+                              reEnterBankRoutingNumber,
+                          },
+                      ]
+                    : [
+                          {
+                              ...DEFAULT_BANK_DETAILS,
+                              isDirectDeposit: { text: false },
+                              maskedAccountNumber: maskedAccountNumber ?? null,
+                          },
+                      ];
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
-                    bank: [
-                        {
-                            ...DEFAULT_BANK_DETAILS,
-                            accountNumber,
-                            accountType: {
-                                text: accountType,
-                            },
-                            bankName,
-                            nameOnBankAccount: accountHolder ?? '',
-                            routingNumber: bankRoutingNumber,
-                            reEnterAccountNumber,
-                            reEnterBankRoutingNumber,
-                        },
-                    ],
-                    voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    bank: bank,
                 };
             },
         },
         {
             label: t('distributionMethod.sendCheck'),
             value: FormDisbursementSelections.Check,
-            fields: null,
-            getDefaultPayload() {
+            fields: [
+                {
+                    fieldName: BankingFields.SelectIfPayeeIsDifferent,
+                    fieldLabel: t('distributionMethod.selectIfDifferentPayee'),
+                    component: DisbursementFields.BankCheckboxField,
+                    classNames: 'col-start-1 col-span-3',
+                },
+                {
+                    fieldName: BankingFields.PayeeName,
+                    fieldLabel: t('distributionMethod.payeeName'),
+                    classNames: 'col-start-1 col-span-2 max-w-lg',
+                    component: DisbursementFields.BankTextField,
+                },
+                {
+                    fieldName: BankingFields.Address,
+                    fieldLabel: '',
+                    classNames: 'col-span-3',
+                    component: DisbursementFields.BankAddress,
+                },
+            ],
+            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
+                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+                    return {
+                        ...DEFAULT_DISBURSEMENT_UPDATE,
+                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
+                        address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
+                        payeeName: payee?.name?.text ?? '',
+                    };
+                }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: () => {
+            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
+                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
+                    payee: {
+                        name: { text: payeeName || null },
+                        addresses: [address || DEFAULT_ADDRESS],
+                        contractNumber: { text: null },
+                    },
                 };
             },
         },
@@ -239,10 +301,6 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
                 },
-                {
-                    fieldName: PartyFields.Dob,
-                    fieldLabel: t('personalDetails.dob'),
-                },
             ],
             phones: [
                 {
@@ -250,7 +308,16 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                     fields: [
                         {
                             fieldName: PhoneFields.phoneNumber,
-                            fieldLabel: t('phoneDetails.telephoneNumber'),
+                            fieldLabel: t('phoneDetails.daytimePhone'),
+                        },
+                    ],
+                },
+                {
+                    phoneType: PhoneTypes.Owner_Phone_Home,
+                    fields: [
+                        {
+                            fieldName: PhoneFields.phoneNumber,
+                            fieldLabel: t('phoneDetails.homePhone'),
                         },
                     ],
                 },
@@ -259,11 +326,12 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                 {
                     addressType: AddressTypes.DEFAULT,
                     title: t('addressDetails.title'),
+                    isReadonly: true,
                 },
             ],
-            agentRecommendation: {
-                label: t('additionalInformation.isAgentOrBrokerRecommended'),
-                shouldDisplay: (formSubtype: FormSubtype) => formSubtype === FormSubtype.FullWithdrawal,
+            isAddressChanged: {
+                addressType: AddressTypes.DEFAULT,
+                title: t('addressDetails.checkHereIfYourAddressHasChanged'),
             },
         },
         {
@@ -285,14 +353,6 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                 {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
-                },
-                {
-                    fieldName: PartyFields.Dob,
-                    fieldLabel: t('personalDetails.dob'),
-                },
-                {
-                    fieldName: PartyFields.Email,
-                    fieldLabel: t('personalDetails.email'),
                 },
             ],
         },
@@ -404,6 +464,33 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
         },
     ];
 
+    const signaturesNotaryConfig = [
+        {
+            key: `sig-val-notary`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'notary-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'notary-present',
+                },
+                {
+                    component: SignatureFields.NotaryStampValid,
+                    key: 'notary-stamp-valid',
+                },
+                {
+                    component: SignatureFields.CommissionExpireDate,
+                    key: 'notary-commission-exp-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.Notary,
+        },
+    ];
+
+    const cslnCheckStates = ['CA', 'CO', 'TX'];
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -412,5 +499,8 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
         irsSignatureConfig,
         signaturesConfig,
         jointLifeExpectancyConfigs,
+        additionalWithholdingAmountConfig,
+        signaturesNotaryConfig,
+        cslnCheckStates,
     };
 }

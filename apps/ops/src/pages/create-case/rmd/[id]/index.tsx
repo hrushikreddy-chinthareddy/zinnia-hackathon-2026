@@ -12,6 +12,7 @@ import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawa
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import DlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/dlic/dlic-rmd-form';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
 import GlcoRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/glco-rmd-form';
 import MassMutualRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/mm-rmd-form';
@@ -75,6 +76,8 @@ const determineFormToRender = (clientId: string, qualType: QualTypes | ''): Reac
             return <GlcoRmdWithdrawalForm />;
         case Carrier.ULPC:
             return <UlpcRmdWithdrawalForm />;
+        case Carrier.DLIC:
+            return <DlicRmdWithdrawalForm />;
         default:
             console.error('determineFormToRender::unsupported clientId', clientId);
             return null;
