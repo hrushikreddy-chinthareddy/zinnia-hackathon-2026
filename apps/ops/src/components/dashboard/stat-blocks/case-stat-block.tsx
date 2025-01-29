@@ -65,7 +65,7 @@ const CaseStatBlock = ({
     const renderLabel = () => {
         return (
             <div className="flex gap-1">
-                <div className="flex">
+                <div className="flex gap-1">
                     <Label label={blockLabel} variant={LabelVariant.LabelMd} />
                     {labelTooltip && (
                         <Tooltip trigger={<CircleInfoIcon height={'16px'} width={'16px'} className="text-primary" />}>

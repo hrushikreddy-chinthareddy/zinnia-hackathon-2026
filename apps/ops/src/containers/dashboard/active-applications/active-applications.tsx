@@ -2,7 +2,6 @@ import { FC, RefObject } from 'react';
 
 import { OpenTransactions } from '@deps/components/dashboard/open-transactions/open-transactions';
 import SankeyChart from '@deps/components/dashboard/sankey-chart/sankey-chart';
-import { SubmissionType } from '@deps/components/dashboard/submission-type/submission-type';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useResizeObserver } from '@deps/hooks/useResizeObserver';
 import { Statuses } from '@deps/models/case/case';
@@ -47,10 +46,6 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ carrierHeaderR
                 baseDashboardQueryFilter={baseFilter}
                 carrierHeaderHeight={carrierHeaderHeight}
             />
-
-            <div className="relative border-t-2 border-[--color-base-border-border-light]">
-                <SubmissionType selectedCarriers={selectedCarriers} selectedBrokerDealers={selectedBrokerDealers} />
-            </div>
         </>
     );
 };
