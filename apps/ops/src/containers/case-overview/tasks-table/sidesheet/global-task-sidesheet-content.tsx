@@ -44,7 +44,7 @@ export interface DocumentItemProps {
     docType: DocumentTypeView;
 }
 
-export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescription }: { taskId: string; type?: string, taskDescription: string }) {
+export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescription }: { taskId: string; type?: string, taskDescription?: string }) {
     const { t } = useTranslation();
 
     const [loading, setLoading] = useState(true);
