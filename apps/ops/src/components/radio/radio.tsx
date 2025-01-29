@@ -42,6 +42,7 @@ export default function Radio({
     disabled = false,
     'data-testid': dataTestId,
     name,
+    className,
 }: RadioProps) {
     const classes = radioClasses(variant);
 
@@ -64,7 +65,7 @@ export default function Radio({
                 });
 
                 return (
-                    <div key={item.value} className={containerClasses}>
+                    <div key={item.value} className={`${containerClasses} ${className}`}>
                         <input
                             type="radio"
                             value={item.value}

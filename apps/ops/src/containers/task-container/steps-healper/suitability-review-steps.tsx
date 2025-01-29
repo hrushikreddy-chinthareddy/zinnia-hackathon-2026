@@ -3,24 +3,24 @@ import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
-export const getSuitabilityReviewSteps = ({ taskType, taskInfoLink, t }: GetStepsProps) => {
+export const getSuitabilityReviewSteps = ({ taskType, taskInfoLink, t, taskMetadata }: GetStepsProps) => {
     const steps: Step[] = [
         {
-            ariaLabel: t('tabs.taskReview'),
+            ariaLabel: taskMetadata[0]?.title || '',
             isVisible: () => true,
-            component: <TaskFormStep taskType={taskType} taskInfoLink={taskInfoLink} isSubmit={true}></TaskFormStep>,
-            text: t('tabs.taskReview'),
+            component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={true} taskMetadata={taskMetadata[0]}></TaskFormStep>,
+            text: taskMetadata[0]?.title || '',
             index: 0,
             isCompleted: true,
-            screenReaderLabel: t('tabs.taskReview'),
+            screenReaderLabel: taskMetadata[0]?.title || '',
         },
         {
-            ariaLabel: t('tabs.confirm'),
+            ariaLabel: t('confirm'),
             isVisible: () => true,
             component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
-            text: t('tabs.confirm'),
+            text: t('confirm'),
             index: 1,
-            screenReaderLabel: t('tabs.confirm'),
+            screenReaderLabel: t('confirm'),
         },
     ];
     return steps;

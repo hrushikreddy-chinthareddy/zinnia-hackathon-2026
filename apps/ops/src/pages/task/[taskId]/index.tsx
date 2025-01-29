@@ -16,15 +16,16 @@ import { ManagementTask } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
-import { getCaseDetailsSSR } from '@deps/queries/api/cases';
+import { getCaseDetailsSSR, getReferenceDataSSR } from '@deps/queries/api/cases';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
 
 type TaskPageProps = {
     task: ManagementTask;
-    taskMetadata: FormMetadata;
+    taskMetadata: FormMetadata[];
     correlationId: string;
     taskInfoLink: string;
     nigoExceptions: any;
@@ -33,17 +34,22 @@ type TaskPageProps = {
 
 export const TaskPage: React.FC<TaskPageProps> = ({
     task,
-    taskMetadata,
     taskInfoLink,
     correlationId,
     nigoExceptions,
     nigoSubExceptions,
+    taskMetadata,
 }: TaskPageProps) => {
     return (
         <div>
             <NoNavLayout fullHeight={true}>
-                <TaskProvider taskMetadata={taskMetadata} initialTask={task} correlationId={correlationId}>
-                    <TaskContainer taskInfoLink={taskInfoLink} nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />
+                <TaskProvider initialTask={task} correlationId={correlationId}>
+                    <TaskContainer
+                        taskInfoLink={taskInfoLink}
+                        nigoExceptions={nigoExceptions}
+                        nigoSubExceptions={nigoSubExceptions}
+                        taskMetadata={taskMetadata}
+                    />
                 </TaskProvider>
             </NoNavLayout>
         </div>
@@ -89,6 +95,7 @@ export const getServerSideProps = withPageAuthRequired({
                 await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
                 await getCaseTaskById(taskId, accessToken),
             ]);
+
             if (!task) {
                 logError('Task::Error getting task by id', {
                     taskId,
@@ -103,11 +110,20 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
+            if (task.assignee !== user.email) {
+                logWarn('task/:id::task is not assigned to user', { assignee: task.assignee, user: user.email });
+                return {
+                    redirect: {
+                        destination: '/home',
+                        permanent: false,
+                    },
+                };
+            }
+
             const { taskType, carrier, caseId, process } = task;
             const caseDetails = await getCaseDetailsSSR(caseId, accessToken as string);
             const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
 
-            // If feature flag is not enabled, redirect to error page
             if (!isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions)) {
                 logWarn('task/:id::feature flag not enabled', { carrier });
                 return {
@@ -117,15 +133,17 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-
             const taskMetadata = await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken);
-            if (!taskMetadata?.formSchema || !taskMetadata?.uiSchema) {
-                logError('task::Form schema not found', {
-                    taskId,
-                    carrier,
-                    file: `pages/task/${taskId}/${taskType}`,
-                    function: 'getServerSideProps',
-                });
+
+            const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
+
+            if (!currentTaskMetadata.length) {
+                const fallbackMetadata: FormMetadata = {
+                    title: '',
+                    formSchema: taskMetadata?.formSchema ?? {},
+                    uiSchema: taskMetadata?.uiSchema ?? {},
+                };
+                currentTaskMetadata.push(fallbackMetadata ?? {});
             }
 
             const nigoFilters = {
@@ -137,11 +155,25 @@ export const getServerSideProps = withPageAuthRequired({
             const nigoExceptionResponse = await getNigoExceptions(nigoFilters, accessToken);
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
             const taskInfoLink = buildCaseLink(caseId);
+            if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
+                const filters = {
+                    carrier: [task.carrier],
+                    keys: ['processList'] as ('processList' | 'requestSubType' | 'productName')[],
+                };
+
+                const caseTypeOptions = await getReferenceDataSSR(filters, accessToken);
+
+                if (currentTaskMetadata[0]?.formSchema?.definitions) {
+                    currentTaskMetadata[0].formSchema.definitions.caseTypeEnum = {
+                        enum: caseTypeOptions?.referenceData.processList || ['Case Type Not Found'],
+                    };
+                }
+            }
 
             return {
                 props: {
                     ...translations,
-                    taskMetadata,
+                    taskMetadata: TaskMetadataHelper(task, currentTaskMetadata),
                     task,
                     correlationId,
                     taskInfoLink,

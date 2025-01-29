@@ -1362,7 +1362,9 @@
             "suitabilityReview": "suitability",
             "noDataAvailable": "Aucune donnée disponible.",
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
-            "suitabilityReviewIssues": "Revoir Suitability Problèmes"
+            "suitabilityReviewIssues": "Revoir Suitability Problèmes",
+            "purchaseDocumentMatchingIssues": "Document de correspondance",
+            "agentNigo": "Réviser les problèmes d'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -4827,16 +4829,16 @@
             },
             "view": "Voir",
             "documentId": "ID du document",
-            "submitLabel": "Soumettre",
+            "submit": "Soumettre",
             "continueLabel": "Continuer",
-            "cancelLabel": "Annuler"
+            "cancel": "Annuler"
         },
         "taskForm": {
             "title": "Données d’adéquation des entrées",
             "subTitle": "Saisissez manuellement toutes les données d'adéquation. Notez que l'annulation à tout moment effacera toutes les données saisies.",
-            "submitLabel": "Soumettre",
+            "submit": "Soumettre",
             "continueLabel": "Continuer",
-            "cancelLabel": "Annuler"
+            "cancel": "Annuler"
         },
         "confirmStep": {
             "title": "Soumise!",
@@ -4867,8 +4869,8 @@
         "taskForm": {
             "title": "Évaluation de la pertinence",
             "subTitle": "La candidature de ce client a été marquée pour examen. Acceptez ou refusez chaque problème avant de soumettre une décision finale.",
-            "submitLabel": "Soumettre la décision",
-            "cancelLabel": "Annuler"
+            "submit": "Soumettre la décision",
+            "cancel": "Annuler"
         },
         "confirmStep": {
             "title": "Soumise!",
@@ -4876,6 +4878,42 @@
             "cta": "Aller à l'examen d'adéquation",
             "secondaryCta": "Fermer",
             "submitTask": "Soumettre les détails de l'examen d'adéquation"
+        }
+    },
+    "taskManagement": {
+        "taskForm": {
+            "title": "Gestion des tâches",
+            "submit": "Soumettre",
+            "cancel": "Annuler",
+            "confirm": "Confirmer",
+            "continue": "Continue",
+            "tabs": {
+                "start": "Démarrer",
+                "nigoDetails": "Informations manquantes",
+                "suitabilityForm": "Formulaire d'adéquation",
+                "summary": "Résumé"
+            }
+        }
+    },
+    "purchaseDocumentMatching": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche: Appariement de Document a été soumise.",
+            "cta": "Aller à la Qualification",
+            "secondaryCta": "Retour à l'accueil"
+        },
+        "formErrors": {
+            "caseNotFound": "Dossier non trouvé",
+            "correlationIdNotFount": "ID de corrélation non trouvé",
+            "transactionNotFound": "Transaction non trouvée"
+        }
+    },
+    "newbusinessAgentNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
         }
     },
     "unauthorized": {

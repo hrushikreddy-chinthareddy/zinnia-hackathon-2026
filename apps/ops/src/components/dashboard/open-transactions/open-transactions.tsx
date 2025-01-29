@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { IconType, Button, Icon } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { t } from 'i18next';
-import { FC, CSSProperties, useState } from 'react';
+import { FC, CSSProperties } from 'react';
 
 import { MultiselectOption, SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { ButtonSize } from '@deps/components/button/button';
@@ -24,6 +24,7 @@ import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/ill
 
 import ActiveAging from '../active-aging/active-aging';
 import CaseStatBlock from '../stat-blocks/case-stat-block';
+import { SubmissionType } from '../submission-type/submission-type';
 import { TreeMapInsights } from '../tree-map-insights';
 
 interface OpenTransactionsProps {
@@ -62,9 +63,14 @@ const createBaseQuery = async (baseInsightQueryFilter: DashboardSearchFilter, gr
 
 export const OpenTransactions: FC<OpenTransactionsProps> = ({ carrierHeaderHeight, baseDashboardQueryFilter, authorizedCarriers }) => {
     const { createdDateStart, createdDateEnd } = getStartAndEndDates('All');
-    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
-    const [selectedProcess, setSelectedProcess] = useState(Processes.NewBusiness);
-    const [selectedSubProcess, setSelectedSubprocess] = useState<string[]>([]);
+    const {
+        selectedCarriers,
+        selectedBrokerDealers,
+        selectedSubProcess,
+        selectedProcess,
+        updateSelectedSubprocess,
+        updateSelectedProcess,
+    } = useDashboardStore(state => state);
 
     const {
         isIntersecting: footerIsIntersecting,
@@ -172,25 +178,25 @@ export const OpenTransactions: FC<OpenTransactionsProps> = ({ carrierHeaderHeigh
     });
 
     const updateProcessFilter = (processType: Processes) => {
-        setSelectedProcess(processType);
-        setSelectedSubprocess([]);
+        updateSelectedProcess(processType);
+        updateSelectedSubprocess([]);
     };
 
     const updateSubprocessFilter = (processType: string) => {
         if (processType === ('All' as Processes)) {
-            setSelectedSubprocess([]);
+            updateSelectedSubprocess([]);
         } else {
-            setSelectedSubprocess(prevState => {
-                const isAlreadyInArray = prevState.includes(processType);
-                const updatedState = isAlreadyInArray ? prevState.filter(item => item !== processType) : [...prevState, processType];
-                return updatedState;
-            });
+            const isAlreadyInArray = selectedSubProcess.includes(processType);
+            const updatedState = isAlreadyInArray
+                ? selectedSubProcess.filter(item => item !== processType)
+                : [...selectedSubProcess, processType];
+            updateSelectedSubprocess(updatedState);
         }
     };
 
     const clearFilters = () => {
-        setSelectedProcess(Processes.NewBusiness);
-        setSelectedSubprocess([]);
+        updateSelectedProcess(Processes.NewBusiness);
+        updateSelectedSubprocess([]);
     };
 
     const clearFiltersDisabled = selectedProcess?.includes(Processes.NewBusiness) && !selectedSubProcess?.length;
@@ -251,7 +257,7 @@ export const OpenTransactions: FC<OpenTransactionsProps> = ({ carrierHeaderHeigh
                     </Button>
                 </div>
             </div>
-            {/* Open Transaction Charts */}
+            {/**** Open Transaction Charts ******/}
             <div ref={insightChartRef}>
                 <div className={styles.container}>
                     {insightCreatedBySubProcessError ||
@@ -274,7 +280,9 @@ export const OpenTransactions: FC<OpenTransactionsProps> = ({ carrierHeaderHeigh
                             />
                         </BlurOverlayLoader>
                     )}
-
+                    <div className="mt-1">
+                        <SubmissionType />
+                    </div>
                     <div className="mt-1">
                         {/* this is the Exception Distribution by Category tree map chart */}
                         <CardContainer fullWidth={false} classNames="relative">

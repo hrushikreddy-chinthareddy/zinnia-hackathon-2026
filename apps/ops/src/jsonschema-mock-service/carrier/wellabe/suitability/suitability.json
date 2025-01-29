@@ -52,10 +52,7 @@
                     }
                 ],
                 "employment": {
-                    "employmentStatus": [
-                        "DISABLED",
-                        "RETIRED"
-                    ],
+                    "employmentStatus": ["DISABLED", "RETIRED"],
                     "occupation": "Software Engineer",
                     "disabilityExplanation": "I am disabled"
                 }
@@ -84,10 +81,7 @@
             "liquidNetWorth": "400000.00",
             "materialChangeExp": "NO",
             "materialChangeReason": "change reason statement",
-            "sourceOfIncome": [
-                "FIXED_ANNUITY",
-                "LIFE_INSURENCE"
-            ],
+            "sourceOfIncome": ["FIXED_ANNUITY", "LIFE_INSURENCE"],
             "sourceOfIncomeOther": "Other income of source details",
             "surrPeriodMaterialChangeExp": "YES",
             "surrPeriodMaterialChangeReason": "change reason statement",
@@ -102,9 +96,7 @@
             "totalAssets": "25000",
             "totalDebt": "25000",
             "annualExpenses": "25000",
-            "sourceOfFunds": [
-                "FIXED_ANNUITY"
-            ],
+            "sourceOfFunds": ["FIXED_ANNUITY"],
             "federalTaxBand": "12",
             "otherTaxBand": "10"
         },
@@ -134,20 +126,14 @@
             "annuityFitsRiskTolerance": "YES"
         },
         "financialObjectives": {
-            "purchaseReason": [
-                "INCOME"
-            ],
+            "purchaseReason": ["INCOME"],
             "otherPurchaseReason": "Explain details in case of others",
             "buyingReasonDetails": "Explain buying reason",
             "annuityMeetsFinancialNeeds": "YES"
         },
         "liquidityOptions": {
             "fundsAccessExplanation": "string",
-            "distributionMethods": [
-                "INCOME",
-                "TAX_DEFERRAL",
-                "GURANTEES"
-            ],
+            "distributionMethods": ["INCOME", "TAX_DEFERRAL", "GURANTEES"],
             "firstPayoutOption": "string",
             "surrenderChargeConsent": "string",
             "possibleReductionInValue": "string",
@@ -156,9 +142,7 @@
             "benefitAnnuityQuestions": {
                 "understandIncomeAdjustmentFactor": "string",
                 "consideredFinancialNeedsAfter10Years": "string",
-                "planForIncomeDecreaseAfter10Years": [
-                    "string"
-                ]
+                "planForIncomeDecreaseAfter10Years": ["string"]
             }
         },
         "agentAcknowledgment": {

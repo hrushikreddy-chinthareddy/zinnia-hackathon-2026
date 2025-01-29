@@ -8,9 +8,9 @@ import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 export const getTaskFormMetadataSSRMock = async (taskType: TaskType): Promise<FormMetadata | null> => {
     switch (taskType) {
         case TaskType.SuitabilityDataEntry:
-            return wellabeSuitabilitySchema as FormMetadata;
+            return wellabeSuitabilitySchema as unknown as FormMetadata;
         case TaskType.SuitabilityReview:
-            return wellabeSuitabilityReviewSchema as FormMetadata;
+            return wellabeSuitabilityReviewSchema as unknown as FormMetadata;
         default:
             return null;
     }

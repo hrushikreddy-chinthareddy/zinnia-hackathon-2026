@@ -1,5 +1,6 @@
 import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
-import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import { Icon, IconType, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import { useState } from 'react';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
@@ -8,7 +9,7 @@ import style from './object-field.module.css';
 export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
     const uiOptions = getUiOptions(props.uiSchema);
     const helpText = uiOptions.help;
-
+    const [openSection, setOpenSection] = useState(true);
     const helpInformation = helpText && (
         <Tooltip
             trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}
@@ -18,29 +19,53 @@ export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
         </Tooltip>
     );
 
+    const content = (
+        <div className="my-0 px-0 w-full">
+            {props.properties
+                .filter(element => element.hidden !== true)
+                .map(element => {
+                    return (
+                        <div key={element.name} className="property-wrapper flex flex-col">
+                            {element.content}
+                        </div>
+                    );
+                })}
+        </div>
+    );
+
     return (
-        <div>
-            {props.title && (
-                <div className={'flex my-2'}>
-                    <div className={style.container}>
-                        <div className={style.text}>{props.title}</div>
-                        {helpInformation}
+        <>
+            {props.uiSchema?.accord ? (
+                <div className="accordion">
+                    <div className="accordion-item">
+                        <div className="accordion-header" onClick={() => setOpenSection(!openSection)}>
+                            {props.title && (
+                                <div className={'flex my-2'}>
+                                    <div className={style.container}>
+                                        <div className={style.text}>{props.title}</div>
+                                        {helpInformation}
+
+                                        <Icon width={20} height={20} type={IconType.CHEVRON} />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        {openSection && content}
                     </div>
                 </div>
-            )}
-
-            {props.description}
-            <div className="my-0 px-0  w-full">
-                {props.properties
-                    .filter(element => element.hidden !== true)
-                    .map(element => {
-                        return (
-                            <div key={element.name} className="property-wrapper flex flex-col">
-                                {element.content}
+            ) : (
+                <>
+                    {props.title && (
+                        <div className={'flex my-5'}>
+                            <div className={style.container}>
+                                <div className={style.text}>{props.title} </div>
+                                {helpInformation}
                             </div>
-                        );
-                    })}
-            </div>
-        </div>
+                        </div>
+                    )}
+                    {content}
+                </>
+            )}
+        </>
     );
 }
