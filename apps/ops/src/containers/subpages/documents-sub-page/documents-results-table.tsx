@@ -106,7 +106,7 @@ export default function DocumentsResultsTable({
 
     return (
         <Table className="my-8" stickyColumn={TableStickyColumn.End} {...rest}>
-            <caption className={`${captionTitle ? '' : 'hidden'} bg-gray-50 text-center  px-4 pt-2`}>
+            <caption className={`${captionTitle ? '' : 'hidden'} bg-gray-50 text-left px-2 sm:px-6 pt-2`}>
                 <Typography variant={TypographyVariant.BodyBold}>{captionText}</Typography>
             </caption>
             <TableHeader className="typography-content-body-sm-bold">
