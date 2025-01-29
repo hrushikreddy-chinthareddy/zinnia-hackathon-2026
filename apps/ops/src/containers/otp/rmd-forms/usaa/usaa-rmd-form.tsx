@@ -12,7 +12,6 @@ import SignatureValidations from '@deps/components/otp-withdrawal-form/signature
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 
 import getUsaaWithdrawalConfig from './usaa-rmd-from.helper';
@@ -28,17 +27,8 @@ const UsaaRmdWithdrawalForm = () => {
         signaturesConfig,
         jointLifeExpectancyConfigs,
     } = getUsaaWithdrawalConfig(t);
-    const {
-        formParty,
-        setFormValidator,
-        setFormData,
-        formSubtype,
-        initialForm,
-        isFormStateReadOnly,
-        formTpaAuthorization,
-        ownerStateOfResidence,
-        setOwnerStateOfResidence,
-    } = useContext(FormDataContext);
+    const { formParty, setFormValidator, setFormData, formSubtype, initialForm, isFormStateReadOnly, formTpaAuthorization } =
+        useContext(FormDataContext);
 
     useEffect(() => {
         if (formSubtype) {
@@ -58,12 +48,7 @@ const UsaaRmdWithdrawalForm = () => {
         setFormValidator(() => formValidation);
     }, [setFormValidator]);
 
-    useEffect(() => {
-        const newOwnerStateOfResidence = getOwnerStateOfResidence(formParty);
-        if (newOwnerStateOfResidence !== ownerStateOfResidence) {
-            setOwnerStateOfResidence(newOwnerStateOfResidence);
-        }
-    }, [formParty]);
+    const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
 
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     return (
