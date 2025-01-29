@@ -6,7 +6,6 @@ import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/emplo
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
-import JointLifeExpectancy from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
@@ -18,15 +17,8 @@ import getUsaaWithdrawalConfig from './usaa-rmd-from.helper';
 
 const UsaaRmdWithdrawalForm = () => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
-    const {
-        formValidation,
-        formPartyConfigs,
-        disbursementOptions,
-        fundWithdrawnMethodOptions,
-        irsSignatureConfig,
-        signaturesConfig,
-        jointLifeExpectancyConfigs,
-    } = getUsaaWithdrawalConfig(t);
+    const { formValidation, formPartyConfigs, disbursementOptions, fundWithdrawnMethodOptions, irsSignatureConfig, signaturesConfig } =
+        getUsaaWithdrawalConfig(t);
     const { formParty, setFormValidator, setFormData, formSubtype, initialForm, isFormStateReadOnly, formTpaAuthorization } =
         useContext(FormDataContext);
 
@@ -34,9 +26,9 @@ const UsaaRmdWithdrawalForm = () => {
         if (formSubtype) {
             setFormData(fs => ({
                 ...fs,
-                formExtName: `${initialForm?.carrier || Carrier.USAA}_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`, //get client code & withdrawal type from index
+                formExtName: `${initialForm?.carrier || Carrier.USAA}_RMD_DIGITAL_FORM`,
                 metaData: {
-                    formType: `${initialForm?.carrier || Carrier.USAA}_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
+                    formType: `${initialForm?.carrier || Carrier.USAA}_RMD_DIGITAL_FORM`,
                     formId: null,
                     formNumber: '',
                 },
@@ -55,7 +47,6 @@ const UsaaRmdWithdrawalForm = () => {
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <JointLifeExpectancy isFormStateReadOnly={isFormStateReadOnly} configs={jointLifeExpectancyConfigs} />
 
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
             <FormDistribution
