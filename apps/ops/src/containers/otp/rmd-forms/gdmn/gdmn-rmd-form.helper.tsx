@@ -5,27 +5,26 @@ import { BankingFields, DisbursementFields, getDefaultFormDisbursementValues } f
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
-import { JointLifeExpectancyConfig } from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import { frequencyToValue } from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import {
-  SignatureFields
+    SignatureFields
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import {
-  PartyRoles,
-  AddressTypes,
-  PhoneTypes, PaymentMailType,
-  PaymentMethod, FormDisbursement,
-  AccountType,
-  FundWithdrawnMethod,
-  FormParts,
-  FormValidationErrors
+    PartyRoles,
+    AddressTypes,
+    PhoneTypes, PaymentMailType,
+    PaymentMethod, FormDisbursement,
+    AccountType,
+    FundWithdrawnMethod,
+    FormParts,
+    FormValidationErrors
 } from '@deps/models/case/withdrawal/case';
 import {
-  DEFAULT_DISBURSEMENT_UPDATE,
-  DisbursementParts,
-  PaymentMethodOption,
-  DEFAULT_BANK_DETAILS,
-  FormDisbursementSelections,
+    DEFAULT_DISBURSEMENT_UPDATE,
+    DisbursementParts,
+    PaymentMethodOption,
+    DEFAULT_BANK_DETAILS,
+    FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 import { ZAHARA_API_DATE_FORMAT, DEFAULT_DATE_FORMAT } from '@deps/types/constants';
 
@@ -161,29 +160,7 @@ export default function getGdmnRmdConfig(t: TFunction) {
               },
           ],
       },
-  ];
-
-    const jointLifeExpectancyConfigs: JointLifeExpectancyConfig = {
-        checkboxLabel: t('rmdMethod.jointLifeExpectancy.label.flic'),
-        fields: [
-            {
-                fieldName: PartyFields.FirstName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.firstName'),
-            },
-            {
-                fieldName: PartyFields.MiddleName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.middleName'),
-            },
-            {
-                fieldName: PartyFields.LastName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.lastName'),
-            },
-            {
-                fieldName: PartyFields.Dob,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.dob.flic'),
-            },
-        ],
-    };
+    ];
 
     const fundWithdrawnMethodOptions = [
         { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
@@ -362,7 +339,6 @@ export default function getGdmnRmdConfig(t: TFunction) {
 
     return {
         formPartyConfigs,
-        jointLifeExpectancyConfigs,
         fundWithdrawnMethodOptions,
         irsSignatureConfig,
         w4pSignaturesConfig,

@@ -6,7 +6,6 @@ import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/emplo
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
-import JointLifeExpectancy from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
@@ -23,7 +22,6 @@ export default function GdmnRmdWithdrawalForm() {
     const {
       formValidation,
       formPartyConfigs,
-      jointLifeExpectancyConfigs,
       fundWithdrawnMethodOptions,
       irsSignatureConfig,
       w4pSignaturesConfig,
@@ -58,7 +56,6 @@ export default function GdmnRmdWithdrawalForm() {
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <JointLifeExpectancy isFormStateReadOnly={isFormStateReadOnly} configs={jointLifeExpectancyConfigs} />
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
