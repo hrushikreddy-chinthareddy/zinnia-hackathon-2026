@@ -33,7 +33,6 @@ import { DocumentWithSource } from './documents-sub-page';
 
 type DocumentsResultsTableProps = {
     carrierCode: string;
-    captionTitle?: string;
     documentType: DocumentTypeView;
     linkedDocumentIdentifiers?: string[];
     policyNumber: string;
@@ -97,17 +96,12 @@ export default function DocumentsResultsTable({
     linkedDocumentIdentifiers = [],
     policyNumber,
     results,
-    captionTitle,
 }: DocumentsResultsTableProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
 
-    const captionText = captionTitle || `${policyNumber} ${t('documents')}`;
-
     return (
         <Table className="my-8" stickyColumn={TableStickyColumn.End}>
-            <caption className={`${captionTitle ? '' : 'hidden'} bg-gray-50 text-left px-2 sm:px-6 pt-2`}>
-                <Typography variant={TypographyVariant.BodyBold}>{captionText}</Typography>
-            </caption>
+            <caption className="hidden">{`${policyNumber} ${t('documents')}`}</caption>
             <TableHeader className="typography-content-body-sm-bold">
                 <TableRow>
                     <TableHeaderCell>

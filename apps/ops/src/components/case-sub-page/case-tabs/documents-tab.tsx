@@ -75,14 +75,16 @@ const DocumentsResults = ({
                 <UnauthorizedCard />
             ) : (
                 <>
+                    <Typography variant={TypographyVariant.H3} className="-mb-4 mt-6">
+                        {
+                            t(
+                                searchType === 'policyNumber' ? 'caseOverview.tabs.policyDocuments' : `caseOverview.tabs.caseDocuments`
+                            ) as string
+                        }
+                    </Typography>
                     {!loadingDocuments && (
                         <DocumentsResultsTable
                             carrierCode={caseDetails.carrier}
-                            captionTitle={
-                                t(
-                                    searchType === 'policyNumber' ? 'caseOverview.tabs.policyDocuments' : `caseOverview.tabs.caseDocuments`
-                                ) as string
-                            }
                             documentType={docSource as DocumentTypeView}
                             linkedDocumentIdentifiers={knownCaseDocIds}
                             results={documents ?? []}
@@ -112,10 +114,6 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
     const knownCaseDocIds = getKnownCaseDocIds(caseDetails);
     const [docSource, setDocSource] = useState(DocumentTypeView.Policy as string);
 
-    const setDocSourceFilter = (val: string) => {
-        setDocSource(val);
-    };
-
     return (
         <CardContainer>
             <div>
@@ -126,7 +124,7 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
                 <div className="mt-6 flex w-full flex-col gap-6 md:flex-row md:justify-between">
                     <div className="flex flex-col gap-2">
                         <Label label={t('policy.documents.filterByCategory') as string} variant={LabelVariant.LabelSm} />
-                        <RadioGroup.Root className="flex gap-2" onValueChange={setDocSourceFilter} value={docSource}>
+                        <RadioGroup.Root className="flex gap-2" onValueChange={setDocSource} value={docSource}>
                             <RadioGroup.Item className="chip" value={DocumentTypeView.Policy}>
                                 {t('policy.documents.received') as string}
                             </RadioGroup.Item>
