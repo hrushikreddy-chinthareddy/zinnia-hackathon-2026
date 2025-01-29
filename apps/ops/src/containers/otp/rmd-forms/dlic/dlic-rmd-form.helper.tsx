@@ -1,6 +1,7 @@
 import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
+import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import { DisbursementToggleType } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import {
     BankingFields,
