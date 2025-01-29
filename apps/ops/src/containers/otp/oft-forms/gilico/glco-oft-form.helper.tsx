@@ -61,10 +61,6 @@ export default function getGlcoOftConfig(t: TFunction) {
                     key: 'owner-type',
                 },
                 {
-                    component: SignatureFields.SignatureCityProvided,
-                    key: 'owner-city-state',
-                },
-                {
                     component: SignatureFields.SignatureSsn,
                     key: 'owner-ssn',
                 },
@@ -92,10 +88,6 @@ export default function getGlcoOftConfig(t: TFunction) {
                     key: 'joint-type',
                 },
                 {
-                    component: SignatureFields.SignatureCityProvided,
-                    key: 'joint-city-state',
-                },
-                {
                     component: SignatureFields.SignatureSsn,
                     key: 'joint-ssn',
                 },
@@ -118,7 +110,6 @@ export default function getGlcoOftConfig(t: TFunction) {
                 return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
             },
         },
-
         {
             key: `sig-val-beneficiary`,
             fields: [
