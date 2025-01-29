@@ -60,7 +60,7 @@ const ActivitySubPage = () => {
     };
 
     return (
-        <div className="flex h-full flex-col rounded bg-white">
+        <div className="flex flex-col rounded bg-white">
             <ActivityPageHeader />
             <TabGroup defaultValue={tabVal} value={tabVal} onValueChange={handleTabChange} className="px-8">
                 <TabList>
