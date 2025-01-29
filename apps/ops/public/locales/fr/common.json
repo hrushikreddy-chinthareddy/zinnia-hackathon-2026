@@ -1321,6 +1321,8 @@
             "call-logs": "Journal des appels",
             "closedOn": "Fermé le {{date}}",
             "documents": "Documents",
+            "caseDocuments": "Documents du dossier",
+            "policyDocuments": "Documents de la police",
             "issue": "Problème: {{issue}}",
             "issueCount_one": "{{count}} problème",
             "issueCount_other": "{{count}} problemes",

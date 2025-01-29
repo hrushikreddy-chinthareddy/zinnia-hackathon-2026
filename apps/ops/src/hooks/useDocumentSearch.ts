@@ -36,7 +36,7 @@ const buildV2SearchArgs = ({
 };
 
 export const useDocumentSearch = (
-    searchBody: SearchRequest,
+    searchBody: SearchRequest | null,
     limit = 25,
     offset = 0
 ): [DocumentWithSource[] | V3DocumentWithSource[] | null, boolean, number, number | null] => {
@@ -49,6 +49,12 @@ export const useDocumentSearch = (
 
     const searchDocs = useCallback(async () => {
         if (loading || loadedForArgs === JSON.stringify({ searchBody, limit, offset })) return;
+        if (!searchBody) {
+            setDocs([]);
+            setTotal(0);
+            setResponseStatus(null);
+            return;
+        }
         setLoading(true);
         try {
             if (featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]) {
