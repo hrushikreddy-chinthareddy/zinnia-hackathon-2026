@@ -44,7 +44,7 @@ export interface DocumentItemProps {
     docType: DocumentTypeView;
 }
 
-export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId: string; type?: string }) {
+export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescription }: { taskId: string; type?: string, taskDescription: string }) {
     const { t } = useTranslation();
 
     const [loading, setLoading] = useState(true);
@@ -217,8 +217,9 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         );
     };
     const sideSheet = useSideSheetContext();
+
     const openSideSheet = () => {
-        const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} />;
+        const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} taskDescription={taskDescription} />;
         sideSheet.changeSideSheetContent(t('taskManagementQueue.updateTaskStatusDrawer.updateTaskStatus'), content);
         sideSheet.handleOpen(true);
     };

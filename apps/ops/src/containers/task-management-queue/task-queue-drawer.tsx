@@ -11,17 +11,24 @@ import { TaskStatus } from "@deps/models/case/task-instance";
 import { getTaskInstance, updateTask } from "@deps/queries/api/v2/task";
 import { browserLogError, browserLogInfo } from "@deps/utils/browser-logging";
 import { useRouter } from "next/router";
-import { TaskSource } from "@deps/models/case/task";
+import { TaskSource, TaskType } from "@deps/models/case/task";
 import { ERROR_CODES } from "@deps/pages/create-case/error";
 import { writeToCache } from "@deps/utils/cache";
 import { PendingReasonOptions } from "@deps/models/case/enums";
-function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: () => void, getTasks?: () => void, taskStatus: TaskStatus, taskId: string }) {
+import { useSideSheetContext } from "@deps/contexts/SideSheetContext";
+import GlobalTaskSideSheet from "../case-overview/tasks-table/sidesheet/global-task-sidesheet-content";
+
+function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription }: { onClose: () => void, getTasks?: () => void, taskStatus: TaskStatus, taskId: string, taskDescription?: string }) {
   const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
   const [date, setDate] = useState(tomorrow)
   const [timer] = useState(performance.now());
   const [pendingReason, setPendingReason] = useState('')
-  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue.updateTaskStatusDrawer' });
+  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: '' });
+  const TaskTitle: Record<string, string> = {
+    [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReviewIssues'),
+  };
   const router = useRouter();
+  const sideSheet = useSideSheetContext();
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(e.target.value);
   };
@@ -30,16 +37,20 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: (
   }
 
   const pendingReasonOptions = [
-    { value: PendingReasonOptions.AwaitingAdditionalInformation, label: t('pendingReasonOptions.awaitingAdditionalInformation') },
+    { value: PendingReasonOptions.AwaitingAdditionalInformation, label: t('taskManagementQueue.updateTaskStatusDrawer.pendingReasonOptions.awaitingAdditionalInformation') },
     {
-      value: PendingReasonOptions.AwaitingApproval, label: t('pendingReasonOptions.awaitingApproval')
+      value: PendingReasonOptions.AwaitingApproval, label: t('taskManagementQueue.updateTaskStatusDrawer.pendingReasonOptions.awaitingApproval')
     },
-    { value: PendingReasonOptions.AwaitingApplication, label: t('pendingReasonOptions.awaitingApplication') },
+    { value: PendingReasonOptions.AwaitingApplication, label: t('taskManagementQueue.updateTaskStatusDrawer.pendingReasonOptions.awaitingApplication') },
   ];
 
 
 
-
+  const openSideSheet = () => {
+    const content = <GlobalTaskSideSheet taskId={taskId} taskDescription={taskDescription as TaskType} />;
+    sideSheet.changeSideSheetContent(`${t('sideSheet.task.taskHeading')}: ${TaskTitle[taskDescription as TaskType]}`, content);
+    sideSheet.handleOpen(true);
+  };
   const updateTaskStatus = async () => {
     if (!taskId) {
       browserLogError('task-queue:handleStartTask::Missing taskId', {
@@ -107,10 +118,10 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: (
   return (
     <div className="m-10 flex flex-col gap-5">
       <Typography variant={TypographyVariant.H4}>
-        {t(`${'setTaskAsPending'}`)}
+        {t(`${'taskManagementQueue.updateTaskStatusDrawer.setTaskAsPending'}`)}
       </Typography>
       <FieldDateSelect
-        label={(t(`followUpDate`) as string)}
+        label={(t(`taskManagementQueue.updateTaskStatusDrawer.followUpDate`) as string)}
         onChange={handleDateChange}
         size={FieldSize.Small}
         type={FieldType.BaseActive}
@@ -120,11 +131,11 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: (
       />
       <SelectSimple
         className="max-w-lg placeholder:text-gray-400"
-        label={t('reason') as string}
+        label={t('taskManagementQueue.updateTaskStatusDrawer.reason') as string}
         options={pendingReasonOptions}
         onChange={handleReasonChange}
         size={FieldSize.Small}
-        placeholder={t('selectReason') as string}
+        placeholder={t('taskManagementQueue.updateTaskStatusDrawer.selectReason') as string}
         value={pendingReason}
         name="form-type"
       />
@@ -132,7 +143,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: (
       <div className="flex justify-end align-middle">
         <Button
           className="mr-4"
-          onClick={onClose}
+          onClick={() => openSideSheet()}
           size={ButtonSize.Small}
           type={ButtonType.Secondary}
         >
@@ -147,7 +158,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks }: { onClose: (
           disabled={!pendingReason || !date}
           type={ButtonType.Primary}
         >
-          {t('updateStatus')}
+          {t('taskManagementQueue.updateTaskStatusDrawer.updateStatus')}
         </Button>
       </div>
 
