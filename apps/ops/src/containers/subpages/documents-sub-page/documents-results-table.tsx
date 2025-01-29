@@ -98,14 +98,13 @@ export default function DocumentsResultsTable({
     policyNumber,
     results,
     captionTitle,
-    ...rest
 }: DocumentsResultsTableProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
 
     const captionText = captionTitle || `${policyNumber} ${t('documents')}`;
 
     return (
-        <Table className="my-8" stickyColumn={TableStickyColumn.End} {...rest}>
+        <Table className="my-8" stickyColumn={TableStickyColumn.End}>
             <caption className={`${captionTitle ? '' : 'hidden'} bg-gray-50 text-left px-2 sm:px-6 pt-2`}>
                 <Typography variant={TypographyVariant.BodyBold}>{captionText}</Typography>
             </caption>
