@@ -46,7 +46,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
 
 
 
-  const openSideSheet = () => {
+  const openGlobalSideSheet = () => {
     const content = <GlobalTaskSideSheet taskId={taskId} taskDescription={taskDescription as TaskType} />;
     sideSheet.changeSideSheetContent(`${t('sideSheet.task.taskHeading')}: ${TaskTitle[taskDescription as TaskType]}`, content);
     sideSheet.handleOpen(true);
@@ -143,7 +143,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
       <div className="flex justify-end align-middle">
         <Button
           className="mr-4"
-          onClick={() => openSideSheet()}
+          onClick={() => openGlobalSideSheet()}
           size={ButtonSize.Small}
           type={ButtonType.Secondary}
         >
