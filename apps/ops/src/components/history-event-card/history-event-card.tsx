@@ -113,7 +113,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
                             </div>
                         )}
                     </div>
-                    <div className="flex flex-col flex-shrink items-end">
+                    <div className={"flex flex-col flex-shrink items-end " + (isClickable ? '' : 'mr-[40px]')}>
                         {amount !== undefined && (
                             <div className="font-bold md:text-content-value">
                                 <AccessibleFormattedAmount amount={amount} />
