@@ -17,6 +17,7 @@ import { writeToCache } from "@deps/utils/cache";
 import { PendingReasonOptions } from "@deps/models/case/enums";
 import { useSideSheetContext } from "@deps/contexts/SideSheetContext";
 import GlobalTaskSideSheet from "../case-overview/tasks-table/sidesheet/global-task-sidesheet-content";
+import { NUMERIC_DATE_FORMAT } from "@deps/types/constants";
 
 function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription }: { onClose: () => void, getTasks?: () => void, taskStatus: TaskStatus, taskId: string, taskDescription?: string }) {
   const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
@@ -69,7 +70,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
       router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
       return;
     }
-    const formattedDate = dayjs(date, 'MMDDYYYY').toISOString();
+    const formattedDate = dayjs(date, NUMERIC_DATE_FORMAT).toISOString();
 
     try {
       const body = {
