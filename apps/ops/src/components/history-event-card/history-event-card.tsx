@@ -113,13 +113,13 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
                             </div>
                         )}
                     </div>
-                    <div className="flex flex-col flex-shrink items-start">
+                    <div className="flex flex-col flex-shrink items-end">
                         {amount !== undefined && (
                             <div className="font-bold md:text-content-value">
                                 <AccessibleFormattedAmount amount={amount} />
                             </div>
                         )}
-                        {requestedAmount && (
+                        {requestedAmount != null && (
                             <div className="font-secondary text-body-sm text-gray-500">
                                 {`${t('policy.history.requested')}: `}
                                 <AccessibleFormattedAmount amount={requestedAmount} />
