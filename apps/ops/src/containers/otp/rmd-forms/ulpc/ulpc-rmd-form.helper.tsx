@@ -319,6 +319,16 @@ export default function getUlpcRmdConfig(t: TFunction) {
         { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
     ];
 
+    const beneficiaryConfig: BeneficiaryConfig = {
+        isYourSpouseYoungerThanYouLabel: t('beneficiaryInfo.isYourSpouseYoungerThanYouLabel'),
+        fields: [
+            {
+                fieldName: PartyFields.Dob,
+                fieldLabel: t('beneficiaryInfo.dob'),
+            },
+        ],
+    };
+
     return {
         formPartyConfigs,
         signaturesConfig,
@@ -328,7 +338,8 @@ export default function getUlpcRmdConfig(t: TFunction) {
         irsSignatureConfig,
         w4pSignaturesConfig,
         disbursementOptions,
-        isBeneSpouseOption
+        isBeneSpouseOption,
+        beneficiaryConfig
     };
 }
 

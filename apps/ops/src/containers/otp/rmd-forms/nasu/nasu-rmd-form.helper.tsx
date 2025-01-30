@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
+import { BeneficiaryConfig } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import {
     BankingFields,
     DisbursementFields,
@@ -141,16 +142,6 @@ export default function getNasuRmdConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                 },
-                /*{
-                    fieldName: BankingFields.BankFurtherCreditName,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditName'),
-                    component: DisbursementFields.BankTextField,
-                },
-                {
-                    fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
-                    component: DisbursementFields.BankTextField,
-                },*/
                 {
                     fieldName: BankingFields.BankRoutingNumber,
                     fieldLabel: t('distributionMethod.bankRoutingNumber'),
@@ -175,8 +166,6 @@ export default function getNasuRmdConfig(t: TFunction) {
                     accountNumber: selectedBank.accountNumber ?? '',
                     accountType: selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
-                    //bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    //bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
                     consentAvailable: disbursmentConsent?.isConsent?.text ?? null,
                 };
@@ -189,8 +178,6 @@ export default function getNasuRmdConfig(t: TFunction) {
                 accountHolder,
                 bankRoutingNumber,
                 consentAvailable,
-                //bankFurtherCreditAccount,
-                //bankFurtherCreditName,
                 maskedAccountNumber,
                 isDirectDeposit,
             }: DisbursementParts) => {
@@ -206,8 +193,6 @@ export default function getNasuRmdConfig(t: TFunction) {
                             bankName,
                             nameOnBankAccount: accountHolder ?? '',
                             routingNumber: bankRoutingNumber,
-                            //bankFurtherCreditAccount,
-                            //bankFurtherCreditName,
                             isDirectDeposit: { text: true },
                             isDirectDepositValid: { text: isDirectDepositValid },
                         },
@@ -398,6 +383,31 @@ export default function getNasuRmdConfig(t: TFunction) {
         { label: t('beneficiaryInfo.isBeneficiarySpouse.no'), value: stringifyTrueFalseNull(false) },
     ];
 
+    const beneficiaryConfig: BeneficiaryConfig = {
+        fields: [
+            {
+                fieldName: PartyFields.FirstName,
+                fieldLabel: t('beneficiaryInfo.firstName'),
+            },
+            {
+                fieldName: PartyFields.MiddleName,
+                fieldLabel: t('beneficiaryInfo.middleName'),
+            },
+            {
+                fieldName: PartyFields.LastName,
+                fieldLabel: t('beneficiaryInfo.lastName'),
+            },
+            {
+                fieldName: PartyFields.Dob,
+                fieldLabel: t('beneficiaryInfo.dob'),
+            },
+            {
+                fieldName: PartyFields.TaxId,
+                fieldLabel: t('beneficiaryInfo.taxId'),
+            },
+        ],
+    };
+
     return {
         formPartyConfigs,
         signaturesConfig,
@@ -408,6 +418,7 @@ export default function getNasuRmdConfig(t: TFunction) {
         w4pSignaturesConfig,
         disbursementOptions,
         isBeneSpouseOption,
+        beneficiaryConfig
     };
 }
 

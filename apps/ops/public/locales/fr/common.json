@@ -2118,6 +2118,10 @@
                     "yes": "Oui",
                     "no": "Non"
                 },
+                "firstName": "Prénom",
+                "lastName": "Nom de famille",
+                "middleName": "Deuxième prénom",
+                "taxId": "SSN",
                 "dob": "Date de naissance",
                 "isYourSpouseYoungerThanYou": "Votre conjoint a-t-il 10 ans de moins que vous?"
             }

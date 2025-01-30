@@ -29,7 +29,8 @@ export default function NasuRmdWithdrawalForm() {
         w4pSignaturesConfig,
         disbursementOptions,
         isBeneSpouseOption,
-        handleShouldShowDOBInOl4573
+        handleShouldShowDOBInOl4573,
+        beneficiaryConfig
     } = getNasuRmdConfig(t);
 
     const {
@@ -83,6 +84,7 @@ export default function NasuRmdWithdrawalForm() {
                 beneInfo={formBeneInfo}
                 onBeneChange={setFormBeneInfo}
                 isBeneSpouseOption={isBeneSpouseOption}
+                configs={beneficiaryConfig}
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
