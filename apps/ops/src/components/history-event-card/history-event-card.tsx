@@ -121,7 +121,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
                         )}
                         {requestedAmount && (
                             <div className="font-secondary text-body-sm text-gray-500">
-                                {`${t('history.Requested')}': `}
+                                {`${t('policy.history.requested')}: `}
                                 <AccessibleFormattedAmount amount={requestedAmount} />
                             </div>
                         )}
