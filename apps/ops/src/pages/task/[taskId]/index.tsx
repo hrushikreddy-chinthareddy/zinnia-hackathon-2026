@@ -114,7 +114,7 @@ export const getServerSideProps = withPageAuthRequired({
                 logWarn('task/:id::task is not assigned to user', { assignee: task.assignee, user: user.email });
                 return {
                     redirect: {
-                        destination: '/home',
+                        destination: '/',
                         permanent: false,
                     },
                 };
