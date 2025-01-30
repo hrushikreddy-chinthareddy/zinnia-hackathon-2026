@@ -225,7 +225,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     };
     const statuses = [
         {
-            label: 'Pending',
+            label: TaskStatus.Pending,
             icon: <Pause width={16} height={16} />,
             onSelect: () => {
                 openSideSheet()
