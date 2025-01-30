@@ -99,7 +99,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
             {/* TODO MG: warning about aria-disabled not being set correctly */}
             <button aria-disabled={isClickable} className={containerClasses} onClick={openTransactionSidesheet}>
                 <div className="flex min-h-[62px] w-full items-center justify-between gap-4">
-                    <div className="flex grow flex-col items-start flex-grow">
+                    <div className="flex grow flex-col items-start">
                         <div className="text-content-caption font-medium text-gray-500">{caption}</div>
 
                         <div className="flex items-center gap-2">
@@ -121,7 +121,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
                         )}
                         {requestedAmount && (
                             <div className="font-secondary text-body-sm text-gray-500">
-                                {`Requested: `}
+                                {`${t('history.Requested')}': `}
                                 <AccessibleFormattedAmount amount={requestedAmount} />
                             </div>
                         )}

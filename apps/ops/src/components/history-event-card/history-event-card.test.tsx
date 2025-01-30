@@ -4,7 +4,6 @@ import { toTitleCase } from '@zinnia/utils';
 import { SideSheetContext } from '@deps/contexts/SideSheetContext';
 import { mockPolicy, mockPremiumSystematicProgram } from '@deps/jest/data/mockPolicy';
 import { Transaction, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
-import { } from '@deps/setupTests';
 
 import HistoryEventCard from './history-event-card';
 import { getHistoryEventCardValues } from './history-event-card.helper';
