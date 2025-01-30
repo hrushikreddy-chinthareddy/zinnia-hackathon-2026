@@ -1,6 +1,8 @@
+import { IChangeEvent } from '@rjsf/core';
 import {
     dataURItoBlob,
     FormContextType,
+    GenericObjectType,
     getTemplate,
     Registry,
     RJSFSchema,
@@ -8,10 +10,16 @@ import {
     UIOptionsType,
     WidgetProps,
 } from '@rjsf/utils';
-import { ChangeEvent, useCallback, useMemo } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
+import { TranslationFiles } from '@deps/config/translations';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 
 import style from './file-widget.module.css';
-
 function addNameToDataURL(dataURL: string, name: string) {
     if (dataURL === null) {
         return null;
@@ -59,7 +67,6 @@ function processFiles(files: FileList) {
 function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     filesInfo,
     registry,
-    onRemove,
     options,
 }: {
     filesInfo: FileInfoType[];
@@ -76,13 +83,15 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
     const { RemoveButton } = getTemplate<'ButtonTemplates', T, S, F>('ButtonTemplates', registry, options);
 
     return (
-        <ul className="file-info mt-2 pl-4">
+        <ul className="file-info mt-2">
             {filesInfo.map((fileInfo, key) => {
-                const { name, size, type } = fileInfo;
-                const handleRemove = () => onRemove(key);
+                const { name } = fileInfo;
                 return (
-                    <li key={key}>
-                        <div className="typography-content-body-sm-bold">{name !== undefined ? name : 'No file chosen'}</div>
+                    <li key={key} className="p-2 border-1 border-gray-100 my-4 max-w-sm">
+                        <div className="typography-content-body-sm-bold flex gap-2 ">
+                            <UploadIcon height={25} width={25} />
+                            {name !== undefined ? name : 'No file chosen'}
+                        </div>
                         {/* <div>{translateString(TranslatableString.FilesInfo, [name, type, String(size)])}</div> */}
                         {/* {preview && <FileInfoPreview<T, S, F> fileInfo={fileInfo} registry={registry} />} */}
                         {/* <RemoveButton onClick={handleRemove} registry={registry} /> */}
@@ -117,8 +126,37 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
 }
 
 function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: WidgetProps<T, S, F>) {
-    const { disabled, readonly, required, multiple, onChange, value, options, registry } = props;
+    const { disabled, readonly, required, multiple, onChange, value, options, name, registry, schema, uiSchema, formContext } = props;
+    console.log('🚀 ~ formContext:', formContext);
+
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'general' });
     const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
+    const sideSheet = useSideSheetContext();
+    const [uploadSelection, setUploadSelection] = useState({});
+
+    const onSubmit = (data: any) => {
+        const payload = replacePlaceholders(data.formData, formContext || {});
+        console.log('🚀 ~ onSubmit ~ payload:', name, value, formContext);
+
+        // const metaData = {
+        //     sourceFileName: 'name',
+        //     documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
+        //     docCategory: data,
+        //     fileType: 'blob.type',
+        //     formType: 'NB Application',
+        // };
+        // const uploadDocuments = uploadDocumentV2(metaData, data?.formData, formContext?.correlationId || '');
+    };
+
+    const uploadChangeHandler = useCallback(
+        (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+            setUploadSelection(ogData => ({
+                ...ogData,
+                ...event.formData,
+            }));
+        },
+        [setUploadSelection]
+    );
 
     const handleChange = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
@@ -130,17 +168,75 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
             // file in each event and concatenate them together ourselves
             processFiles(event.target.files).then(filesInfoEvent => {
                 const newValue = filesInfoEvent.map(fileInfo => fileInfo.dataURL);
+
+                const values = '';
                 if (multiple) {
                     onChange(value.concat(newValue[0]));
+
+                    // Ensure newValue is an array
+                    // const newFiles = Array.isArray(newValue) ? newValue : [newValue];
+
+                    // // Concatenate the existing values with new files
+                    // values = values + newFiles.join(',');
+                    // console.log('🚀 ~ processFiles ~ values:', values);
+
+                    // Call onChange with the updated array of files
+                    onChange(values);
                 } else {
-                    onChange(newValue[0]);
+                    // For single file upload, just take the first element if newValue is an array
+                    const singleFile = Array.isArray(newValue) ? newValue[0] : newValue;
+
+                    // Call onChange with the single file (or an empty string if no file)
+                    onChange(singleFile ?? '');
                 }
+
+                const content = (
+                    <div className="p-6">
+                        <FilesInfo<T, S, F>
+                            filesInfo={filesInfoEvent}
+                            onRemove={rmFile}
+                            registry={registry}
+                            preview={options.filePreview}
+                            options={values as any}
+                        />
+                        <DynamicForm
+                            taskMetadata={{
+                                formSchema: (schema.items as any)?.upload as RJSFSchema | {} as RJSFSchema,
+                                uiSchema: {
+                                    options: {
+                                        'ui:label': false,
+                                    },
+                                    zinniaLiveCaseId: {
+                                        'ui:widget': 'hidden',
+                                    },
+                                    correlationId: {
+                                        'ui:widget': 'hidden',
+                                    },
+                                    parentCarrierCode: {
+                                        'ui:widget': 'hidden',
+                                    },
+                                    docClassification: {
+                                        'ui:widget': 'hidden',
+                                    },
+                                    docAccessLevel: {
+                                        'ui:widget': 'hidden',
+                                    },
+                                },
+                            }}
+                            onSubmit={onSubmit}
+                            formData={uploadSelection}
+                            onChange={uploadChangeHandler}
+                        />
+                    </div>
+                );
+
+                sideSheet.changeSideSheetContent(t('uploadDocument'), content);
+                sideSheet.handleOpen(true);
             });
         },
-        [multiple, value, onChange]
+        [multiple, onChange, value, onSubmit, options.filePreview]
     );
 
-    const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
     const rmFile = useCallback(
         (index: number) => {
             if (multiple) {
@@ -152,29 +248,32 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         },
         [multiple, value, onChange]
     );
+
     return (
-        <div>
-            <label htmlFor={props.id} className={style.customFileUpload}>
-                Add Attachment {props.title}
-            </label>
-            <BaseInputTemplate
-                {...props}
-                disabled={disabled || readonly}
-                type="file"
-                required={value ? false : required} // this turns off HTML required validation when a value exists
-                onChangeOverride={handleChange}
-                value=""
-                accept={options.accept ? String(options.accept) : undefined}
-                className={style.input}
-            />
-            <FilesInfo<T, S, F>
+        <>
+            <div className="mt-1">
+                <label htmlFor={props.id} className={style.customFileUpload}>
+                    {schema?.title ?? t('upload')}
+                </label>
+                <BaseInputTemplate
+                    {...props}
+                    disabled={disabled || readonly}
+                    type="file"
+                    required={value ? false : required}
+                    onChangeOverride={handleChange}
+                    value=""
+                    accept={options.accept ? String(options.accept) : undefined}
+                    className={style.input}
+                />
+            </div>
+            {/* <FilesInfo<T, S, F>
                 filesInfo={filesInfo}
                 onRemove={rmFile}
                 registry={registry}
                 preview={options.filePreview}
                 options={options}
-            />
-        </div>
+            /> */}
+        </>
     );
 }
 

@@ -10,13 +10,12 @@ import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
-import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
+import { getCaseTaskById } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
-import { getCaseDetailsSSR, getReferenceDataSSR } from '@deps/queries/api/cases';
+import { getCaseDetailsSSR } from '@deps/queries/api/cases';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
@@ -110,16 +109,6 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            if (task.assignee !== user.email) {
-                logWarn('task/:id::task is not assigned to user', { assignee: task.assignee, user: user.email });
-                return {
-                    redirect: {
-                        destination: '/home',
-                        permanent: false,
-                    },
-                };
-            }
-
             const { taskType, carrier, caseId, process } = task;
             const caseDetails = await getCaseDetailsSSR(caseId, accessToken as string);
             const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
@@ -133,18 +122,349 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-            const taskMetadata = await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken);
+            const taskMetadata = {
+                formId: '004c97a1-d97c-4faa-9b7f-8ff9105b4c29',
+                process: 'New Business',
+                carrier: 'WELB',
+                taskType: 'SUITABILITY_REVIEW',
+                title: '',
+                formSchema: {
+                    $schema: 'http://json-schema.org/draft-07/schema#',
+                    type: 'object',
+                },
+                uiSchema: {
+                    type: 'object',
+                },
+                schemaContent: {
+                    tabSchemas: [
+                        {
+                            title: 'Review Suitability',
+                            formSchema: {
+                                $schema: 'http://json-schema.org/draft-07/schema#',
+                                type: 'object',
+                                definitions: {
+                                    suitabilityStatus: {
+                                        enum: ['ACCEPT', 'DECLINE'],
+                                    },
+                                    declineReason: {
+                                        enum: [
+                                            'SPIF_DECLINED',
+                                            'BENEFIT_LOSS',
+                                            'LOW_INCOME',
+                                            'LOW_ASSETS',
+                                            'HIGH_DEBT',
+                                            'HIGH_ANNUITY_RATIO',
+                                            'LOW_NET_WORTH',
+                                            'RECENT_REPLACEMENT',
+                                            'MISSING_REQUIREMENTS',
+                                            'SURRENDER_FEES',
+                                            'TRUST_ISSUE',
+                                            'NON_COMPLIANT_INHERITANCE',
+                                            'INHERITED_SURRENDER',
+                                            'SAME_AGENT_REPLACEMENT',
+                                            'AGENT_NO_RESPONSE',
+                                            'NON_RESIDENT_SALE',
+                                            'TAX_ISSUE',
+                                            'NEG_DISPOSABLE_INCOME',
+                                            'NEG_NET_WORTH',
+                                            'INCOME_GOAL',
+                                            'REPLACEMENT_HISTORY',
+                                            'UNEMPLOYED',
+                                            'NY_RESIDENT',
+                                            'ASSISTED_LIVING',
+                                            'OVER_ISSUE_AGE',
+                                            'OUTSTANDING_LOAN',
+                                            'RECENT_ISSUED_REPLACEMENT',
+                                            'CONFLICTING_GOALS',
+                                            'REVERSE_MORTGAGE',
+                                        ],
+                                    },
+                                },
+                                properties: {
+                                    suitabilityRules: {
+                                        type: 'array',
+                                        title: '',
+                                        items: {
+                                            type: 'object',
+                                            title: '',
+                                            properties: {
+                                                issue: {
+                                                    type: 'string',
+                                                    title: 'Issue',
+                                                },
+                                                rule: {
+                                                    type: 'string',
+                                                    title: 'Rule',
+                                                },
+                                                applicationValue: {
+                                                    type: 'string',
+                                                    title: 'Additional Info',
+                                                },
+                                                nmid: {
+                                                    type: 'string',
+                                                    title: 'Additional Info',
+                                                },
+                                                externalId: {
+                                                    type: 'string',
+                                                    title: 'Additional Info',
+                                                },
+                                            },
+                                        },
+                                    },
+                                    suitabilityReviewStatus: {
+                                        type: 'object',
+                                        required: ['suitabilityStatus'],
+                                        properties: {
+                                            suitabilityStatus: {
+                                                type: 'string',
+                                                title: 'Suitability decision',
+                                                $ref: '#/definitions/suitabilityStatus',
+                                                default: 'ACCEPT',
+                                            },
+                                        },
+                                        allOf: [
+                                            {
+                                                if: {
+                                                    properties: {
+                                                        suitabilityStatus: {
+                                                            const: 'DECLINE',
+                                                        },
+                                                    },
+                                                },
+                                                then: {
+                                                    properties: {
+                                                        declineReason: {
+                                                            type: 'array',
+                                                            title: 'Reason for decline',
+                                                            items: {
+                                                                type: 'string',
+                                                                $ref: '#/definitions/declineReason',
+                                                            },
+                                                            uniqueItems: true,
+                                                        },
+                                                    },
+                                                    required: ['declineReason'],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                    // attachment: {
+                                    //     type: 'array',
+                                    //     items: {
+                                    //         title: 'upload',
+                                    //         type: 'string',
+                                    //         format: 'data-url',
+                                    //     },
+                                    // },
+                                    // testing: {
+                                    //     type: 'string',
+                                    //     title: 'Find existing documents...',
+                                    // },
+                                    documents: {
+                                        type: 'object',
+                                        title: 'Link or upload document',
+                                        properties: {
+                                            upload1: {
+                                                type: 'string',
+                                                placeholder: 'Find existing documents...',
+                                            },
+                                            or: {
+                                                type: 'string',
+                                                title: 'or',
+                                            },
+                                            attachment: {
+                                                type: 'array',
+                                                items: {
+                                                    title: 'upload',
+                                                    type: 'string',
+                                                    format: 'data-url',
+                                                    upload: {
+                                                        type: 'object',
+                                                        properties: {
+                                                            docCategory: {
+                                                                type: 'string',
+                                                                title: 'Document category',
+                                                                enum: ['NEW_BUSINESS', 'EXISTING_BUSINESS', 'OTHERS'],
+                                                            },
+                                                            formType: {
+                                                                type: 'string',
+                                                                title: 'Form type',
+                                                                enum: ['NB Application', 'RMD Application', 'Other Application'],
+                                                            },
+                                                            zinniaLiveCaseId: {
+                                                                type: 'string',
+                                                                default: '{{customData.caseId}}',
+                                                            },
+                                                            correlationId: {
+                                                                type: 'string',
+                                                                default: '{{customData.correlationId}}',
+                                                            },
+                                                            parentCarrierCode: {
+                                                                type: 'string',
+                                                                default: '{{customData.carrier}}',
+                                                            },
+                                                            docClassification: {
+                                                                type: 'string',
+                                                                default: 'INBOUND',
+                                                            },
+                                                            docAccessLevel: {
+                                                                type: 'string',
+                                                                default: 'CLIENT_COPY',
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            uiSchema: {
+                                $schema: 'http: //json-schema.org/draft-07/schema#',
+                                'ui:globalOptions': {
+                                    duplicateKeySuffixSeparator: '_',
+                                    orderable: false,
+                                    copyable: false,
+                                },
+                                'ui:submitButtonOptions': {
+                                    norender: true,
+                                },
+                                'ui:options': {
+                                    semantic: {
+                                        errorOptions: {
+                                            size: 'small',
+                                            pointing: 'above',
+                                        },
+                                    },
+                                },
+                                suitabilityRules: {
+                                    'ui:options': {
+                                        label: false,
+                                        ArrayFieldTemplate: 'ArrayFieldTableTemplate',
+                                    },
+                                    items: {
+                                        'ui:options': {
+                                            canAdd: false,
+                                        },
+                                        issue: {
+                                            'ui:placeholder': 'Issue',
+                                            'ui:helpText': 'Issue',
+                                            'ui:options': {
+                                                label: false,
+                                            },
+                                        },
+                                        rule: {
+                                            'ui:options': {
+                                                label: false,
+                                            },
+                                        },
+                                        applicationValue: {
+                                            'ui:options': {
+                                                label: false,
+                                            },
+                                        },
+                                        nmid: {
+                                            'ui:options': {
+                                                label: false,
+                                                widget: 'hidden',
+                                            },
+                                        },
+                                        externalId: {
+                                            'ui:options': {
+                                                label: false,
+                                                widget: 'hidden',
+                                            },
+                                        },
+                                    },
+                                },
+                                suitabilityReviewStatus: {
+                                    'ui:options': {
+                                        label: false,
+                                    },
+                                    suitabilityStatus: {
+                                        'ui:options': {
+                                            widget: 'radio',
+                                            help: 'Select suitability review decision',
+                                            enumNames: ['Accept', 'Decline'],
+                                        },
+                                    },
+                                    declineReason: {
+                                        'ui:options': {
+                                            label: false,
+                                            help: 'Provide decline reason',
+                                            class: 'mt-0',
+                                            enumNames: [
+                                                'Declined SPIF on internal transfer',
+                                                'Loss of benefit base',
+                                                'Low Income',
+                                                'Low liquid asset',
+                                                'High Debt',
+                                                'High % of net worth in annuities/life',
+                                                'Low net worth',
+                                                'Replacement less than 1 year',
+                                                'Requirements not received',
+                                                'Surrender Charges',
+                                                'Trust structure not accepted',
+                                                'Inherited distributions not compliant',
+                                                'Inherited liquidated while in surrender',
+                                                'Recently written replacement by same agent',
+                                                'Lack of response from agent',
+                                                'Non-resident sale not acceptable',
+                                                'Tax qualification not acceptable',
+                                                'Negative disposable income',
+                                                'Negative net worth',
+                                                'Goal is income',
+                                                'Replacement history',
+                                                'Unemployed',
+                                                'New York resident',
+                                                'Assisted living or nursing home',
+                                                'Over max issue age',
+                                                'Outstanding loan',
+                                                'Recently issued replacement',
+                                                "Goals conflicting or don't match explanation",
+                                                'Reverse mortgage',
+                                            ],
+                                        },
+                                    },
+                                },
+                                documents: {
+                                    inline: true,
+                                    'ui:options': {
+                                        label: false,
+                                    },
+                                    upload1: {
+                                        'ui:widget': 'AutoCompleteWidget',
+                                        'ui:options': {
+                                            label: false,
+                                            icon: 'Search',
+                                        },
+                                    },
+                                    or: {
+                                        'ui:options': {
+                                            label: false,
+                                            inline: true,
+                                        },
+                                    },
+                                    attachment: {
+                                        label: false,
+                                        'ui:options': {
+                                            'ui:title': null,
+                                            label: false,
+                                        },
+                                        items: {
+                                            'ui:options': {
+                                                label: false,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                },
+            };
 
             const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
-
-            if (!currentTaskMetadata.length) {
-                const fallbackMetadata: FormMetadata = {
-                    title: '',
-                    formSchema: taskMetadata?.formSchema ?? {},
-                    uiSchema: taskMetadata?.uiSchema ?? {},
-                };
-                currentTaskMetadata.push(fallbackMetadata ?? {});
-            }
 
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],
@@ -155,20 +475,6 @@ export const getServerSideProps = withPageAuthRequired({
             const nigoExceptionResponse = await getNigoExceptions(nigoFilters, accessToken);
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
             const taskInfoLink = buildCaseLink(caseId);
-            if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
-                const filters = {
-                    carrier: [task.carrier],
-                    keys: ['processList'] as ('processList' | 'requestSubType' | 'productName')[],
-                };
-
-                const caseTypeOptions = await getReferenceDataSSR(filters, accessToken);
-
-                if (currentTaskMetadata[0]?.formSchema?.definitions) {
-                    currentTaskMetadata[0].formSchema.definitions.caseTypeEnum = {
-                        enum: caseTypeOptions?.referenceData.processList || ['Case Type Not Found'],
-                    };
-                }
-            }
 
             return {
                 props: {

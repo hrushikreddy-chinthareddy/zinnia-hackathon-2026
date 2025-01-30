@@ -712,7 +712,10 @@
         "view": "View",
         "with": "with",
         "approved": "Approved",
-        "unapproved": "Unapproved"
+        "unapproved": "Unapproved",
+        "uploadDocument": "Upload document",
+        "upload": "Upload",
+        "submit": "Submit"
     },
     "dashboard": {
         "h1": "Policy Search",

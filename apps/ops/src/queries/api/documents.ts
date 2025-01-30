@@ -4,8 +4,13 @@ import dayjs from 'dayjs';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { PolicyDocumentApiRequest, DocumentData, DocumentErrorResponse, EDSDocumentResponse } from '@deps/models/case/document';
-import { ManagementTask } from '@deps/models/case/task-instance';
+import {
+    PolicyDocumentApiRequest,
+    DocumentData,
+    DocumentErrorResponse,
+    EDSDocumentResponse,
+    EDSDocumentRequestBody,
+} from '@deps/models/case/document';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
@@ -30,7 +35,11 @@ export const getDocumentV2 = async (documentNumber: string, docType: string, cli
     }
 };
 
-export const uploadDocumentV2 = async (task: ManagementTask, document: any, correlationId: string): Promise<EDSDocumentResponse | null> => {
+export const uploadDocumentV2 = async (
+    task: EDSDocumentRequestBody,
+    document: any,
+    correlationId: string
+): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/upload`;
         const { blob, name } = dataURItoBlob(document);

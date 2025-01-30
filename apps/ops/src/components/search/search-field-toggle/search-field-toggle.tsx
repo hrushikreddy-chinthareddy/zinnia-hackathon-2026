@@ -1,7 +1,7 @@
 import { AssistiveText, AssistiveTextVariant, Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { ChangeEvent, useContext, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
+import { ChangeEvent, useContext, useRef } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
@@ -16,9 +16,10 @@ interface SearchFieldToggleProps {
     activeLabels: LabelValue<PolicySearchKeys>;
     onClear?: (searchField: PolicySearchKeys | undefined) => void;
     values: SearchViewQuery;
+    inputClasses?: string;
 }
 
-export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, values }: SearchFieldToggleProps) => {
+export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, values, inputClasses }: SearchFieldToggleProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { showFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { value: policyKey, label = '', placeholder, errorMessage } = activeLabels;
@@ -60,7 +61,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, valu
                 aria-labelledby="case-search-label"
                 type={inputType()}
                 placeholder={placeholder ? placeholder : toSentenceCase(label)}
-                className={clsx(styles.input, inputClass(), 'text-body-sm focus:!ring-0')}
+                className={clsx(styles.input, inputClass(), 'text-body-sm focus:!ring-0', inputClasses)}
                 onChange={e => {
                     const text = (e.target as HTMLInputElement).value;
                     handleChange(e, text, policyKey as PolicySearchKeys);

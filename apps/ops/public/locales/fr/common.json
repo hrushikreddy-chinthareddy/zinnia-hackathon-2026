@@ -736,7 +736,9 @@
         "view": "Afficher",
         "with": "avec",
         "approved": "Approuvé",
-        "unapproved": "Désapprouvé"
+        "unapproved": "Désapprouvé",
+        "uploadDocument": "Téléverser le document",
+        "upload": "Téléverser"
     },
     "dashboard": {
         "h1": "Recherche de politique",

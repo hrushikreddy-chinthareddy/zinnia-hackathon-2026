@@ -22,8 +22,16 @@
     cursor: pointer;
 
     background-color: var(--color-button-primary-button-primary-default-fill, #fff);
-    border: var(--button-border-width) var(--button-border-style) var(--color-button-primary-button-primary-border);
+    border: var(--button-border-width) var(--button-border-style) var(--color-base-border-border-subtle);
     color: var(--color-button-primary-button-primary-default-text);
+}
+
+.linkDocumentInput {
+    border-radius: var(--measure-border-radius-radius-md);
+    border-left-width: var(--measure-border-width-stroke-sm);
+}
+.linkedDocument {
+    width: 400px;
 }
 
 .input {
