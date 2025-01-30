@@ -21,6 +21,7 @@ import { chunkArray } from '@deps/utils/array';
 import { Legend } from './legend';
 import styles from './submission-type.module.css';
 import { submissionTypeQuery, transformData, generateSeries, startDates, TimeframeFilterOptions, getDateRangeText } from './utils';
+import { getPieChartData } from '../distribution-charts/distribution-pie-chart-small-api-based';
 import CaseStatBlock from '../stat-blocks/case-stat-block';
 
 export const SubmissionType: FC = () => {
@@ -111,6 +112,16 @@ export const SubmissionType: FC = () => {
         };
     });
 
+    const pieChartData = getPieChartData(pieChartStats);
+    const pieChartDataColors = pieChartData.map(pieChart => {
+        return {
+            ...pieChart,
+            color: pieChart.name === 'Digital' ? '#00628B' : pieChart.name === 'Electronic' ? '#85BCD3' : '#021936',
+            type: 'pie',
+        };
+    });
+    const pieChartSeriesData: Highcharts.SeriesOptionsType[] = [{ data: pieChartDataColors, name: 'cases', type: 'pie' }];
+
     const timeframeOptions = Object.values(TimeframeFilterOptions).map(option => ({
         label: option,
         ariaLabel: option,
@@ -173,6 +184,7 @@ export const SubmissionType: FC = () => {
             color: '#021936',
         },
     ];
+
     return (
         <div className={styles.container}>
             {applicationTypeLoading2 || applicationTypeLoading ? (
@@ -198,7 +210,7 @@ export const SubmissionType: FC = () => {
                             variant="single"
                             labelTooltip={submissionMethodTooltip}
                             loading={applicationTypeLoading2 || applicationTypeLoading}
-                            chartConfig={{ colors: ['#85BCD3', '#00628B', '#021936'] }}
+                            chartConfig={{ series: pieChartSeriesData }}
                         />
                         <div className={clsx('w-3/4', styles.chartContainer)}>
                             <div className={styles.filterContainer}>
