@@ -7,7 +7,6 @@ import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { addBankRequest } from '@/actions/bpm/bank-actions';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
-import { useUser } from '@/hooks/use-user';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
@@ -33,7 +32,6 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
   partyId,
   policyOwner,
 }) => {
-  const { user } = useUser();
   const { data: featureFlagData } = useFeatureFlags();
   const checkIdentityCode =
     featureFlagData?.[FEATURE_FLAGS.TRANSACTION_LEVEL_CODE_ADD_BANK];
@@ -64,8 +62,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
 
   const handleAdd = async (requestValues: BankFormFields) => {
     setStep(FormSteps.LOADING);
-    // TODO: add check here to accessToken for property CIAM is adding?
-    console.log(user);
+    // TODO: add check here to accessToken for property CIAM is adding and make it a hook
     if (checkIdentityCode) {
       setStep(FormSteps.VERIFY_IDENTITY);
       return;

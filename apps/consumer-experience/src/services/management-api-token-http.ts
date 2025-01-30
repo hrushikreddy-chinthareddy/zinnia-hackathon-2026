@@ -45,8 +45,6 @@ class ManagementTokenHttp extends HttpRequest {
       Authorization: `Bearer ${this.token}`,
     };
 
-    console.log('machine token', this.token);
-
     return fetch(input, requestInit);
   };
 
@@ -62,7 +60,6 @@ class ManagementTokenHttp extends HttpRequest {
     access_token: string | null;
     expires_in: number | null;
   }> {
-    console.log('are you regenerating this token?');
     try {
       const authRes = await fetch(
         `${process.env.AUTH0_ISSUER_BASE_URL}/oauth/token`,

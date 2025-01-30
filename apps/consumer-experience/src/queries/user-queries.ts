@@ -9,6 +9,5 @@ export const getUserAuthenticationMethods = async () => {
   if (response.error || !response) {
     throw response.error;
   }
-  console.log('response in query', response);
   return response;
 };

@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
@@ -17,14 +16,7 @@ export const VerifyIdentity = ({
   closeCallback,
   transactionDescription,
 }: VerifyIdentityProps) => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, defaultValues },
-  } = useForm({});
-
   const [verifyStep, setVerifyStep] = useState(FormSteps.VERIFY_IDENTITY);
-  console.log(verifyStep);
 
   if (verifyStep === FormSteps.VERIFY_IDENTITY) {
     return (

@@ -54,10 +54,7 @@ export const SelectAuthenticationMethod = ({
     },
   });
 
-  console.log('here in user authentication', userAuthentication);
-
   const onSubmit: SubmitHandler<FieldValues> = async data => {
-    console.log('FORM DATA', data);
     await verifyTransactionMfa(data);
 
     // TODO: when to set this?

@@ -13,7 +13,6 @@ export async function GET() {
     );
     const userResponse = await authenticatorsRequest.json();
 
-    console.log(userResponse);
     return NextResponse.json({
       data: userResponse,
       error: null,
