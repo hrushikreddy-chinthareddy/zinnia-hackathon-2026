@@ -14,6 +14,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import DlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/dlic/dlic-rmd-form';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
+import GdmnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/gdmn/gdmn-rmd-form';
 import GlcoRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/glco-rmd-form';
 import MassMutualRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/mm-rmd-form';
 import SbgcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/sbgc-rmd-form';
@@ -77,6 +78,8 @@ const determineFormToRender = (clientId: string, qualType: QualTypes | ''): Reac
             return <GlcoRmdWithdrawalForm />;
         case Carrier.ULPC:
             return <UlpcRmdWithdrawalForm />;
+        case Carrier.GDMN:
+            return <GdmnRmdWithdrawalForm />;
         case Carrier.DLIC:
             return <DlicRmdWithdrawalForm />;
         case Carrier.USAA:
