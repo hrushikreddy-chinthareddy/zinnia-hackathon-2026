@@ -49,7 +49,6 @@ export default function GdmnRmdWithdrawalForm() {
     }, [initialForm]);
 
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
-    const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const shouldStateW4pRender = isAllowedState(contractIssueState);
 
     return (
@@ -64,7 +63,7 @@ export default function GdmnRmdWithdrawalForm() {
                 isDerivedMethodFromFunds={true}
                 defaultMethod={FundWithdrawnMethod.Prorata}
             />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
+            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />
             <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
