@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.25rem 0.5rem; /* px-2 py-1 */
+    padding: 0.25rem 0.5rem;
     color: #ac0091;
     border-radius: 9999px;
     cursor: pointer;
