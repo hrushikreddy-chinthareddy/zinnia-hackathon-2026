@@ -57,6 +57,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     const [showAdditionalDocuments, setShowAdditionalDocuments] = useState(false);
     const [errorDocuments, setErrorDocuments] = useState(false);
     const [startLoader, setStartLoader] = useState(false);
+    const [additionalLoader, setAdditionalLoader] = useState(false);
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
     const [timer] = useState(performance.now());
@@ -88,8 +89,8 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
             parentCarrierCode: carrier,
         };
         try {
+            setAdditionalLoader(true);
             const { data, error } = await searchDocumentsV3({ limit: DocumentsLimit, offset: 0, searchBody });
-
             if (data?.documents) {
                 const filteredDocuments = transformDocument(data.documents);
                 setAdditionalDocuments(filteredDocuments);
@@ -110,6 +111,8 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                 caseId,
                 fileName: 'global-task-sidesheet-content',
             });
+        } finally {
+            setAdditionalLoader(false);
         }
     };
 
@@ -268,7 +271,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         </div>
     );
 
-
     const EmptyState = ({ content }: { content: string }) => {
         return (
             <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
@@ -424,13 +426,19 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
         return (
             <>
                 {documentsList.length === 0 ? (
-                    <EmptyState
-                        content={
-                            documentsListType === 'additional' && errorDocuments
-                                ? t('sideSheet.task.errorAdditionalDocuments')
-                                : t('sideSheet.task.noDocuments')
-                        }
-                    />
+                    documentsListType === 'additional' && additionalLoader ? (
+                        <div className="flex justify-center items-center">
+                            <Loader />
+                        </div>
+                    ) : (
+                        <EmptyState
+                            content={
+                                documentsListType === 'additional' && errorDocuments
+                                    ? t('sideSheet.task.errorAdditionalDocuments')
+                                    : t('sideSheet.task.noDocuments')
+                            }
+                        />
+                    )
                 ) : (
                     documentsList.map((document: DocumentData) =>
                         document.documentId ? (
