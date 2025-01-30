@@ -1,0 +1,15 @@
+.h1 {
+    composes: h1 from '../globalStyles.module.css';
+}
+
+.subtext {
+    composes: subtext from '../globalStyles.module.css';
+}
+
+.cardHeader {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: baseline;
+    padding: var(--measure-dimension-padding-4xl);
+    gap: var(--measure-dimension-padding-lg);
+}

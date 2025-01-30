@@ -26,10 +26,9 @@ interface StaticContentProviderProps extends PropsWithChildren {
 export const StaticContentProvider = ({ children, policy }: StaticContentProviderProps) => {
     const { t } = useTranslation();
 
-    // BPB - Can we use this in all the places where we need to get the global values?
     const globalValuesData = useMemo(() => {
         return policyDataToGlobalValues(new PolicyDetails(policy), t);
-    }, [policy]);
+    }, [policy, t]);
 
     return <StaticContentContext.Provider value={{ globalValuesData }}>{children}</StaticContentContext.Provider>;
 };

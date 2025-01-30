@@ -74,7 +74,7 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             );
         }
 
-        if (res.status === 'COMPLETED') {
+        if (res && res?.status === 'COMPLETED') {
             setIsLoading(false);
             setIsFormSubmitted(true);
         } else {

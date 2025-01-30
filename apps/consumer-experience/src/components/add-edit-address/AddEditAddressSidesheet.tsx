@@ -32,6 +32,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   partyId,
   addressId,
   fullAddressData,
+  disableEditingPreferredAddress,
 }) => {
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
@@ -202,7 +203,11 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
       closeCallback={onClose}
       trigger={
         <Button
-          className={actionType === FormActionType.ADD ? styles.addAddress : ''}
+          className={
+            actionType === FormActionType.ADD
+              ? styles.addAddress
+              : styles.editAddress
+          }
           size="small"
           mode="link"
           onClick={() => setOpen(true)}
@@ -224,6 +229,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           submitCallback={handleAddEdit}
           actionType={actionType}
           removeCallback={handleRemoveClick}
+          disableEditingPreferredAddress={disableEditingPreferredAddress}
         />
       )}
       {step === FormSteps.CONFIRM && (

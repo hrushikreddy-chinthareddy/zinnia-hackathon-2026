@@ -11,7 +11,7 @@ import { ProcessesToCaseTypeMap } from '@deps/constants/case';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Processes } from '@deps/models/case/case';
 import { ProcessType } from '@deps/models/case/enums';
-import { TaskSource } from '@deps/models/case/task';
+import { EarlyTaskType, TaskSource, TaskType } from '@deps/models/case/task';
 import { AssignedTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { unassignTask } from '@deps/queries/api/v1/task';
@@ -22,6 +22,7 @@ import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { removeFromCache } from '@deps/utils/cache';
 
 type TaskQueueTableRowProps = {
     task: AssignedTask;
@@ -41,13 +42,14 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
     const carrierName = getCarrierNameByClientId(task?.carrier) || task?.carrier?.toUpperCase();
     const transactionType = task.process || '';
 
-    const handleStartTask = async (taskId: string, taskStatus: TaskStatus) => {
+    const handleStartTask = async (taskId: string, taskStatus: TaskStatus, taskType: string) => {
+        const newTask = !Object.values(EarlyTaskType).includes(taskType as EarlyTaskType);
         if (taskStatus === TaskStatus.InProgress) {
             browserLogInfo('task-queue:handleStartTask::Task is in progress', {
                 taskId: taskId,
                 taskStatus: taskStatus,
             });
-            router.push(`/nigo-entry?taskId=${taskId}`);
+            router.push(newTask ? `/task/${taskId}` : `/nigo-entry?taskId=${taskId}`);
             return;
         }
 
@@ -76,7 +78,11 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
         // If feature flag is not enabled, redirect to error page
         if (
             caseType.toUpperCase() !== 'RMD' &&
-            !isFormFeatureEnabled(caseType.toUpperCase() as ProcessType, taskData?.carrier, featureFlagDecisions)
+            !isFormFeatureEnabled(
+                newTask ? (taskType as TaskType) : (caseType.toUpperCase() as ProcessType),
+                taskData?.carrier,
+                featureFlagDecisions
+            )
         ) {
             browserLogInfo('task-queue:handleStartTask::Feature flag not enabled', {
                 taskId: taskData.id,
@@ -99,7 +105,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
                     clientCode: taskData?.carrier,
                     process: taskData?.process,
                 });
-                router.push(`/nigo-entry?taskId=${taskData.id}`);
+                router.push(newTask ? `/task/${taskData.id}` : `/nigo-entry?taskId=${taskData.id}`);
                 return;
             }
         } catch (e) {
@@ -123,10 +129,14 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
         try {
             const response = await unassignTask(taskData.caseId, taskData.id);
             if (response.status === TaskStatus.New) {
+                removeFromCache('getTaskInstance', { taskId });
                 browserLogInfo('task-queue:handleUnassignTask::Successfully un-assigned task', { taskId: taskId });
                 getTasks();
             } else {
-                browserLogInfo('task-queue:handleUnassignTask::An error occurred while un-assigning the task', { taskId: taskId, status: response?.status });
+                browserLogInfo('task-queue:handleUnassignTask::An error occurred while un-assigning the task', {
+                    taskId: taskId,
+                    status: response?.status,
+                });
                 setErrorMessage(t('unassignTaskError') + 'An error occurred while un-assigning the task');
             }
         } catch (e) {
@@ -179,7 +189,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
                     <Content
                         details={t('startTask') as string}
                         variant={ContentVariant.BodySm}
-                        onClick={() => handleStartTask(task?.id, task?.status)}
+                        onClick={() => handleStartTask(task?.id, task?.status, task?.taskType)}
                         className="mouse-pointer"
                     />
                 </a>

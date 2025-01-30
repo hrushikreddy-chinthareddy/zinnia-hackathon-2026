@@ -1,3 +1,4 @@
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import {
     Table,
     TableHeader,
@@ -19,7 +20,10 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TaxForm } from '@deps/models/case/send-tax-forms';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
-const toggleFormSelection = (selectedForm: TaxForm, setSelected: React.Dispatch<React.SetStateAction<TaxForm[]>>) => {
+const toggleFormSelection = (
+    selectedForm: TaxForm | TaxformResponse,
+    setSelected: React.Dispatch<React.SetStateAction<TaxForm[] | TaxformResponse[]>>
+) => {
     setSelected(prevForms => {
         const hasForm = prevForms.find(existingForm => existingForm.formId === selectedForm.formId);
         if (hasForm) {
@@ -35,19 +39,19 @@ const toggleFormSelection = (selectedForm: TaxForm, setSelected: React.Dispatch<
 };
 
 type TaxFormsListingProps = {
-    taxForms: TaxForm[];
+    taxForms: TaxForm[] | TaxformResponse[];
     carrierCode: string;
-    selectedTaxForms: TaxForm[];
-    setSelectedTaxForms: (selectedTaxForms: TaxForm[]) => void;
+    selectedTaxForms: TaxForm[] | TaxformResponse[];
+    setSelectedTaxForms: (selectedTaxForms: TaxForm[] | TaxformResponse[]) => void;
 };
 
 const TaxFormsListing = ({ taxForms, carrierCode, selectedTaxForms, setSelectedTaxForms }: TaxFormsListingProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: '' });
     const [selected, setSelected] = useState(selectedTaxForms || []);
-    const setCookies = (form: TaxForm) => {
+    const setCookies = (form: TaxForm | TaxformResponse) => {
         setCookie('carrierCode', carrierCode);
         setCookie('contractNumber', form?.contractNumber);
-        setCookie('fChar', form?.fChar);
+        setCookie('fChar', (form as TaxForm)?.fChar || (form as TaxformResponse)?.fchar);
         setCookie('taxYear', form?.taxYear);
     };
 
@@ -97,9 +101,9 @@ const TaxFormsListing = ({ taxForms, carrierCode, selectedTaxForms, setSelectedT
                                 <TableRow key={index}>
                                     <TableCell>
                                         <Checkbox
-                                            id={form.formId}
+                                            id={form.formId as string}
                                             onClick={() => toggleFormSelection(form, setSelected)}
-                                            isCheckedByDefault={isChecked(form.formId)}
+                                            isCheckedByDefault={isChecked(form.formId as string)}
                                         />
                                     </TableCell>
                                     <TableCell>

@@ -1,8 +1,18 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { PhoneType } from '@zinnia/api-types/types/sor';
+import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 
 import { Phones } from '../Phones';
-import { BestTimeType, PhoneProps } from '../types';
+import { PhoneProps } from '../types';
+
+const mockPhoneNumber: Phone = {
+  phoneId: '1',
+  phoneType: PhoneType.MOBILE,
+  startDate: '2024-01-30',
+  countryCode: '1',
+  areaCode: '542',
+  dialNumber: '7543111',
+  extension: '1628',
+};
 
 const meta: Meta<typeof Phones> = {
   component: Phones,
@@ -23,28 +33,12 @@ const meta: Meta<typeof Phones> = {
   args: {
     phones: [
       {
-        phoneId: '1',
-        startDate: '2024-01-30',
-        // endDate: null,
+        ...mockPhoneNumber,
         phoneType: PhoneType.BUSINESS,
-        // countryCode: null,
-        areaCode: '542',
-        dialNumber: '7543111',
-        extension: '1628',
-        // bestTime: null,
-        // timeZone: null,
       },
       {
-        phoneId: '1',
-        startDate: '2024-01-30',
-        // endDate: null,
-        phoneType: PhoneType.MOBILE,
-        // countryCode: null,
-        areaCode: '542',
-        dialNumber: '7543111',
-        // extension: null,
-        bestTime: BestTimeType.Morning,
-        // timeZone: null,
+        ...mockPhoneNumber,
+        phoneId: '2',
       },
     ],
     title: 'Phone',
@@ -59,19 +53,6 @@ export const Default: StoryType = {};
 
 export const Single: StoryType = {
   args: {
-    phones: [
-      {
-        phoneId: '1',
-        startDate: '2024-01-30',
-        // endDate: null,
-        phoneType: PhoneType.MOBILE,
-        // countryCode: null,
-        areaCode: '542',
-        dialNumber: '7543111',
-        extension: '1628',
-        // bestTime: null,
-        // timeZone: null,
-      },
-    ],
+    phones: [mockPhoneNumber],
   },
 };

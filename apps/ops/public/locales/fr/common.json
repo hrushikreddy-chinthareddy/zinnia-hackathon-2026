@@ -972,7 +972,7 @@
             "renewalFormValidation": "Valider le formulaire de renouvellement",
             "renewalRequestCompletion": "Terminer le traitement",
             "renewalTransactionProcessing": "Traiter la transaction",
-            "requestAck": "Préparer {{subType}} pour le traitement",
+            "requestAck": "Préparer la requête {{subType}} pour le traitement",
             "requestAcknowledgement": "Préparer {{subType}} pour le traitement",
             "requestCompletion": "Terminer le traitement",
             "requestProcessing": "Traiter la transaction",
@@ -990,9 +990,10 @@
             "requestAck.nbRequestReceived": "Réception de {{subType}}",
             "requestAck.caseProcessing": "Préparer {{subType}} pour le traitement",
             "requestAck.draftContractCreation": "Créer un contrat provisoire",
-            "requestAck.processFormRequestReceived": "Recevoir une demande de formulaire de service",
+            "requestAck.processFormRequestReceived": "Recevoir une demande d'envoi de {{subType}}",
+            "requestAck.processFormRequestProcessing": "Traitement de la requête {{subType}}",
             "requestCompletion.deliverLetter": "Recevoir la confirmation de livraison",
-            "requestCompletion.completeRequest": "Envoyer le formulaire demandé",
+            "requestCompletion.completeRequest": "Envoyer {{process}}  avec {{subType}}",
             "agentValidation.preValidationRules": "Confirmer l'exhaustivité des informations de l'agent",
             "agentValidation.agentAppointmentValidation": "Valider la nomination de l'agent",
             "agentValidation.agentLOBValidation": "Valider la ligne de produits de l'agent",
@@ -1376,7 +1377,9 @@
             "suitabilityReview": "suitability",
             "noDataAvailable": "Aucune donnée disponible.",
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
-            "suitabilityReviewIssues": "Revoir Suitability Problèmes"
+            "suitabilityReviewIssues": "Revoir Suitability Problèmes",
+            "purchaseDocumentMatchingIssues": "Document de correspondance",
+            "agentNigo": "Réviser les problèmes d'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -1520,7 +1523,8 @@
                 "defaultTitle": "Annuity Contract Withdrawal Request",
                 "nasu": "Demande de retrait de contrat de rente",
                 "gdmn": "Demande de retrait du Commonwealth",
-                "rsln": "Lincoln Benefit Life Withdrawal Request"
+                "rsln": "Lincoln Benefit Life Withdrawal Request",
+                "ulpc": "Unified Life Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Détails personnels",
@@ -1580,7 +1584,8 @@
                     "partial": "Partielle",
                     "totalFreeAmt": "Montant total gratuit",
                     "penaltyFreeAmount": "Montant sans pénalité",
-                    "annualFreeAmountBalance": "Solde annuel du montant gratuit"
+                    "annualFreeAmountBalance": "Solde annuel du montant gratuit",
+                    "maximumFreeAmount": "Montant maximum gratuit"
                 },
                 "fullWithdrawal": {
                     "contractHasBeenLostOrDestroyed": "Le contrat a été perdu ou détruit",
@@ -1605,7 +1610,8 @@
                     "specificAmount": "Montant spécifique brut$",
                     "specificAmountGross": "Specific Amount net$",
                     "percetageOfAccountValue": "% de la valeur du compte",
-                    "maximum": "Montant maximum"
+                    "maximum": "Montant maximum",
+                    "percentageOfAccumulatedValue": "% de valeur accumulée"
                 },
                 "processTimeframe": {
                     "selectOne": "Sélectionnez-en un",
@@ -1668,6 +1674,13 @@
                         "wife": "Femme",
                         "spouse": "Conjoint",
                         "na": "N/A"
+                    }
+                },
+                "payout": {
+                    "title": "Paiement",
+                    "payoutOptions": {
+                        "level": "Niveau",
+                        "increasing": "Croissant"
                     }
                 }
             },
@@ -1885,7 +1898,8 @@
                 "bankUpdateTitle": "Détails bancaires",
                 "cancel": "Annuler",
                 "submit": "Soumettre",
-                "submitedMessage": "La demande de mise à jour bancaire a été soumise."
+                "submitedMessage": "La demande de mise à jour bancaire a été soumise.",
+                "ussa": "USSA"
             },
             "neaBenefitsSensitivity": "Sensibilité aux avantages NEA",
             "distributionInstruction": {
@@ -2000,6 +2014,10 @@
                 "acknowledgement": "Reconnaissance de prêt",
                 "title": "Reconnaissance de prêt"
             },
+            "loanRepayment": {
+                "acknowledgement": "Je comprends que pour traiter la demande de rachat complet, tous les prêts du contrat doivent être entièrement payés par moi ou par rachat de charge.",
+                "title": "Remboursement du prêt"
+            },
             "cslnCheck": {
                 "title": "Valider le Child Support Lien Network (CSLN)",
                 "status": "État du Child Support Lien Network (CSLN)",
@@ -2107,7 +2125,17 @@
                 "OFTFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
                 "SSWFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },
-            "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
+            "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique.",
+            "beneficiaryInfo": {
+                "title": "Informations sur le bénéficiaire",
+                "isBeneficiarySpouse": {
+                    "title": "Votre bénéficiaire est-il votre conjoint?",
+                    "yes": "Oui",
+                    "no": "Non"
+                },
+                "dob": "Date de naissance",
+                "isYourSpouseYoungerThanYou": "Votre conjoint a-t-il 10 ans de moins que vous?"
+            }
         },
         "sidebar": {
             "contractStatusCode": "Statut de la politique",
@@ -2798,6 +2826,7 @@
             "noEventsTitle": "Aucun événement pour le moment.",
             "noEventsSubtitle": "On dirait que rien ne s'est encore passé.",
             "upcomingEvents": "Événements à venir",
+            "requested": "Demandé",
             "sidesheet": {
                 "accountNumber": "Numéro de compte",
                 "accountType": "Type de compte",
@@ -3164,12 +3193,22 @@
                 "closed": "fermée"
             },
             "createdLabel": "Date de création",
+            "newCreatedLabel": "Créée",
             "assigneeLabel": "Cessionnaire",
             "stepLabel": "Étape",
             "issueLabel": "Problème",
             "detailsLabel": "Détails",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
-            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat.."
+            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat..",
+            "reasonLabel": "Raison du statut",
+            "pendinglabel": "En attente jusqu'au",
+            "canceledLabel": "Annulé le",
+            "completedLabel": "Terminé le",
+            "additionalDocuments": "Documents supplémentaires",
+            "noAssignee": "Seul le responsable peut démarrer cette tâche",
+            "startTask": "Démarrer la tâche",
+            "claimTask": "Revendiquer la tâche",
+            "taskHeading": "Tâche"
         },
         "suitability": {
             "header": "Examen complet de l’adéquation",
@@ -4374,6 +4413,12 @@
             "label": "Personnes",
             "manageBeneficiaries": "Gérer les bénéficiaires"
         },
+        "documents": {
+            "label": "Envoyer des documents",
+            "sendForms": "Envoyer des formulaires",
+            "sendStatements": "Envoyer des relevés",
+            "sendTaxForms": "Envoyer des formulaires fiscaux"
+        },
         "transactions": {
             "label": "Transactions",
             "managePremiumAutopay": "Gérer le paiement automatique des primes",
@@ -4637,7 +4682,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "ID du document",
-            "noFormAvailable": "Aucun formulaire disponible."
+            "noFormAvailable": "Aucun formulaire disponible.",
+            "taskTitle": "Détails de la tâche"
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -4803,16 +4849,16 @@
             },
             "view": "Voir",
             "documentId": "ID du document",
-            "submitLabel": "Soumettre",
+            "submit": "Soumettre",
             "continueLabel": "Continuer",
-            "cancelLabel": "Annuler"
+            "cancel": "Annuler"
         },
         "taskForm": {
             "title": "Données d’adéquation des entrées",
             "subTitle": "Saisissez manuellement toutes les données d'adéquation. Notez que l'annulation à tout moment effacera toutes les données saisies.",
-            "submitLabel": "Soumettre",
+            "submit": "Soumettre",
             "continueLabel": "Continuer",
-            "cancelLabel": "Annuler"
+            "cancel": "Annuler"
         },
         "confirmStep": {
             "title": "Soumise!",
@@ -4843,8 +4889,8 @@
         "taskForm": {
             "title": "Évaluation de la pertinence",
             "subTitle": "La candidature de ce client a été marquée pour examen. Acceptez ou refusez chaque problème avant de soumettre une décision finale.",
-            "submitLabel": "Soumettre la décision",
-            "cancelLabel": "Annuler"
+            "submit": "Soumettre la décision",
+            "cancel": "Annuler"
         },
         "confirmStep": {
             "title": "Soumise!",
@@ -4852,6 +4898,42 @@
             "cta": "Aller à l'examen d'adéquation",
             "secondaryCta": "Fermer",
             "submitTask": "Soumettre les détails de l'examen d'adéquation"
+        }
+    },
+    "taskManagement": {
+        "taskForm": {
+            "title": "Gestion des tâches",
+            "submit": "Soumettre",
+            "cancel": "Annuler",
+            "confirm": "Confirmer",
+            "continue": "Continue",
+            "tabs": {
+                "start": "Démarrer",
+                "nigoDetails": "Informations manquantes",
+                "suitabilityForm": "Formulaire d'adéquation",
+                "summary": "Résumé"
+            }
+        }
+    },
+    "purchaseDocumentMatching": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche: Appariement de Document a été soumise.",
+            "cta": "Aller à la Qualification",
+            "secondaryCta": "Retour à l'accueil"
+        },
+        "formErrors": {
+            "caseNotFound": "Dossier non trouvé",
+            "correlationIdNotFount": "ID de corrélation non trouvé",
+            "transactionNotFound": "Transaction non trouvée"
+        }
+    },
+    "newbusinessAgentNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
         }
     },
     "unauthorized": {

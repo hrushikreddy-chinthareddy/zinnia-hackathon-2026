@@ -1,6 +1,7 @@
 .container {
     position: relative;
     background-color: var(--color-base-surface-surface-secondary);
+    z-index: 1;
 }
 
 .link {
@@ -37,23 +38,27 @@
     &.pinned {
         z-index: 4;
     }
-
 }
 
 .insightsHeader {
     position: sticky;
     top: var(--pinned-height);
-    z-index: 1;
+    z-index: 2;
     background-color: var(--color-base-surface-surface-secondary);
     margin-left: -32px;
     margin-right: -32px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
-.insightsHeaderDropdown {
-    width: 306px;
+.insightsHeaderDropdownContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    gap: var(--measure-dimension-gap-md);
 }
 
 .tooltip {
     border: 16px solid var(--color-base-surface-surface-primry);
-
 }

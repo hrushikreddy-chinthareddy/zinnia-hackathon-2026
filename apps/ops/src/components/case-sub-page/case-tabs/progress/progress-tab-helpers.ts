@@ -6,7 +6,7 @@ import utc from 'dayjs/plugin/utc';
 import { TFunction } from 'next-i18next';
 
 import { DocumentPreviewerProps } from '@deps/components/document-viewer/document-previewer';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { percentFormatify } from '@deps/helpers/numbers.helper';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
 import { Case, Statuses } from '@deps/models/case/case';
@@ -172,6 +172,7 @@ export class TransformedStep {
         }
         this.name = this.parentStage.parentCase.t([`caseManagementApiKeys.steps.${this.id}`, toSentenceCase(this.stepRaw.label)], {
             subType: this.parentStage.parentCase.processSubType,
+            process: this.parentStage.parentCase.process,
         });
         this.description =
             this.parentStage.parentCase.t([`caseManagementApiKeys.stepDescriptions.${this.id}`, ''], {
@@ -310,6 +311,7 @@ export class TransformedCase {
     documentsMap: { [key: string]: DocumentView };
     exceptionMap: { [key: string]: ExceptionInstance & { usedInStep?: boolean } };
     processSubType: string;
+    process: string;
     stages: TransformedStage[] = [];
     t: TFunction;
     taskMap: { [key: string]: TaskInstance };
@@ -350,6 +352,7 @@ export class TransformedCase {
             return acc;
         }, {} as { [key: string]: ExceptionInstance });
         this.processSubType = (caseDetails?.processSubType || caseDetails?.process)?.toLowerCase();
+        this.process = caseDetails?.process || '';
         this.taskMap = caseDetails?.tasks?.reduce((acc, task) => {
             acc[task.id] = task;
             return acc;
@@ -382,7 +385,7 @@ export class TransformedCase {
         }
         return {
             createdAt: foundTask.createdAt,
-            description: foundTask.label || foundTask.taskType, // BPB - taskType is where we get the info, but label is on the type?
+            description: foundTask.label || foundTask.taskType,
             id: foundTask.id,
             hasParentException: isFromException,
             parentExceptionStatus: status,

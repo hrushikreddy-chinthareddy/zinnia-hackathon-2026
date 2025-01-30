@@ -60,7 +60,7 @@ export const ExceptionInsights = ({
                 )} applications, but the ${dashboardChartTitleFormat(
                     processSubType,
                     false
-                )} applications encountered exceptions along their path to completion. The data is grouped by Exception Category and the values represent an exception that occurred for a ${dashboardChartTitleFormat(
+                )} applications encountered NIGOs along their path to completion. The data is grouped by NIGO Category and the values represent a NIGO that occurred for a ${dashboardChartTitleFormat(
                     processSubType,
                     false
                 )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to United States, including commas where appropriate. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
@@ -142,8 +142,10 @@ export const ExceptionInsights = ({
                             const seriesValues: Array<number> = this.series.valueData;
                             const total = seriesValues.reduce((sum, val) => sum + val, 0);
                             const len = (Number(value) / total) * 100;
-                            const ratio = `${value} / ${total}`;
                             const wrapper = document.createElement('div');
+                            // @ts-expect-error: this actually exists
+                            const dataLabel = this.point.dataLabel;
+                            const shape = this.point.shapeArgs;
                             wrapper.style.backgroundColor = 'var(--color-base-surface-surface-primary)';
                             wrapper.classList.add('rounded', 'typography-content-body');
                             wrapper.style.color = 'var(--color-base-text-text-primary)';
@@ -159,15 +161,19 @@ export const ExceptionInsights = ({
 
                             const nameSpan = document.createElement('span');
                             // const valueSpan = document.createElement('span');
-                            if (len < Math.max(name.length, ratio.length)) {
-                                nameSpan.innerText = len < name.length ? name.substring(0, Math.floor(len)) + '...' : name;
-                                // valueSpan.innerText = len < ratio.length ? ratio.substring(0, Math.floor(len)) + '...' : ratio;
+                            nameSpan.innerText = name;
+
+                            //TODO: For some reason, dataLabel can be undefined sometimes and cause issues
+                            if (dataLabel?.width + dataLabel?.padding >= shape?.width) {
+                                wrapper.style.whiteSpace = 'break-spaces';
+
                                 if (len < 1) {
                                     wrapper.style.visibility = 'hidden';
                                 }
-                            } else {
-                                nameSpan.innerText = name;
-                                // valueSpan.innerText = ratio;
+                            }
+
+                            if (dataLabel?.height + dataLabel?.padding >= shape?.height) {
+                                wrapper.style.visibility = 'hidden';
                             }
                             wrapper.appendChild(nameSpan);
                             // wrapper.appendChild(valueSpan);
@@ -235,7 +241,7 @@ export const ExceptionInsights = ({
                 }
             });
         } else {
-            setAiSummary(`No exceptions for ${dashboardChartTitleFormat(selectedSubprocess)} in the ${timeframe}.`);
+            setAiSummary(`No NIGOs for ${dashboardChartTitleFormat(selectedSubprocess)} in the ${timeframe}.`);
         }
     }, [exceptions, selectedSubprocess, shouldShowCaseInsights, timeframe]);
 
@@ -244,7 +250,7 @@ export const ExceptionInsights = ({
             <div className="basis-1/4 flex flex-col gap-4 items-start">
                 <div>
                     <Typography variant={TypographyVariant.H3}>{dashboardChartTitleFormat(selectedSubprocess, false)}</Typography>
-                    <Typography variant={TypographyVariant.Label}>Exception Distribution</Typography>
+                    <Typography variant={TypographyVariant.Label}>NIGO Distribution</Typography>
                 </div>
                 {loading ? (
                     <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
@@ -265,7 +271,7 @@ export const ExceptionInsights = ({
                             size="small"
                             className="mt-4 inline"
                             href={caseLink}
-                            text={`View all ${dashboardChartTitleFormat(selectedSubprocess)} exceptions`}
+                            text={`View all ${dashboardChartTitleFormat(selectedSubprocess)} NIGOs`}
                         />
                     </>
                 )}
@@ -284,7 +290,7 @@ export const ExceptionInsights = ({
                         <div className="flex flex-col gap-2 items-center">
                             <ChartBarsIcon height={'24px'} width={'24px'} />
                             <Typography variant={TypographyVariant.BodyBold}>
-                                No exceptions for {dashboardChartTitleFormat(selectedSubprocess)} in the {timeframe}
+                                No NIGOs for {dashboardChartTitleFormat(selectedSubprocess)} in the {timeframe}
                             </Typography>
                         </div>
                     ) : (

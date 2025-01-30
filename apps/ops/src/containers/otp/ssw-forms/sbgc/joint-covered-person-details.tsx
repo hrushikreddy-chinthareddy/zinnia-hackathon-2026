@@ -6,16 +6,23 @@ import AddressEntry from '@deps/components/otp-withdrawal-form/address-entry';
 import { SingleParty } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { Address, PartyRoles } from '@deps/models/case/withdrawal/case';
+import { Address, PartyRoles, PayoutOptions } from '@deps/models/case/withdrawal/case';
 
-import { DEFAULT_JOINT_PERSON_DATA, relationshipToCoveredPerson, RelationshipToCoveredPerson } from './joint-covered-person.helper';
+import {
+    DEFAULT_JOINT_PERSON_DATA,
+    payoutOptions,
+    relationshipToCoveredPerson,
+    RelationshipToCoveredPerson,
+} from './joint-covered-person.helper';
 import useSbgcConfig from './sbgc-ssw-form-helper';
 
 type JointCoveredPersonDetailsProps = {
     isReadOnly: boolean;
+    planCode?: string;
+    jointCoveredPlanCodes?: string[];
 };
 
-const JointCoveredPersonDetails = ({ isReadOnly }: JointCoveredPersonDetailsProps) => {
+const JointCoveredPersonDetails = ({ isReadOnly, planCode, jointCoveredPlanCodes }: JointCoveredPersonDetailsProps) => {
     const { formParty, setFormParty } = useContext(FormDataContext);
     const party = formParty?.parties?.find(item => item.partyRoleType === PartyRoles.JOINTCOVEREDPERSON);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -24,8 +31,8 @@ const JointCoveredPersonDetails = ({ isReadOnly }: JointCoveredPersonDetailsProp
         party?.relationshipToOwnerAnnutant || RelationshipToCoveredPerson.NA
     );
 
+    const [payoutOption, setPayoutOption] = useState(party?.withdrawalPayoutOption || '' as PayoutOptions);
     const { coveredPartyConfigs } = useSbgcConfig(t);
-
     const [partyInfo, setPartyInfo] = useState(party || DEFAULT_JOINT_PERSON_DATA);
 
     useEffect(() => {
@@ -47,6 +54,17 @@ const JointCoveredPersonDetails = ({ isReadOnly }: JointCoveredPersonDetailsProp
     const handleAddressUpdate = (addr: Address) => {
         setPartyInfo(party => ({ ...party, addresses: [addr] as Address | any }));
     };
+
+    const handlePayoutUpdate = (val: PayoutOptions) => {
+        setPayoutOption(val);
+        setPartyInfo(party => ({ ...party, withdrawalPayoutOption: val }));
+    };
+
+    const handleRelationshipUpdate = (val: RelationshipToCoveredPerson) => {
+        setRelationToCoveredPerson(val);
+        setPartyInfo(party => ({ ...party, relationshipToOwnerAnnutant: val }));
+    };
+
     return (
         <>
             <div className="my-3">
@@ -60,20 +78,29 @@ const JointCoveredPersonDetails = ({ isReadOnly }: JointCoveredPersonDetailsProp
                 onDataChange={val => setPartyInfo(val)}
             />
             <div className="my-6 mt-3 border-b-2 border-gray-100"></div>
-            <div className="my-4 grid w-full grid-cols-3 gap-4">
+            <div className="my-4 grid grid-cols-3 gap-2">
                 <SelectSimple
                     disabled={isReadOnly}
                     className="max-w-lg"
                     label={t('sswProgram.relationshipToCoveredPerson.label') as string}
                     options={relationshipToCoveredPerson(t)}
-                    onChange={val => {
-                        setRelationToCoveredPerson(val as RelationshipToCoveredPerson);
-                        setPartyInfo(party => ({ ...party, relationshipToOwnerAnnutant: val as RelationshipToCoveredPerson }));
-                    }}
+                    onChange={val => handleRelationshipUpdate(val as RelationshipToCoveredPerson)}
                     size={FieldSize.Small}
                     value={relationToCoveredPerson}
                     name="relationToCoveredPerson"
                 />
+                {jointCoveredPlanCodes && planCode && jointCoveredPlanCodes.includes(planCode) && (
+                    <SelectSimple
+                        disabled={isReadOnly}
+                        className="max-w-lg"
+                        label={t('sswProgram.payout.title') as string}
+                        options={payoutOptions(t)}
+                        onChange={val => handlePayoutUpdate(val as PayoutOptions)}
+                        size={FieldSize.Small}
+                        value={payoutOption}
+                        name="payoutOptions"
+                    />
+                )}
             </div>
             <div className="my-6 mt-3 border-b-2 border-gray-100"></div>
 

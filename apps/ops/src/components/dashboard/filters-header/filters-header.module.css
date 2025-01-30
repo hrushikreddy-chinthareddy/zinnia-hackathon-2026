@@ -42,7 +42,7 @@
 .insightsHeader {
     position: sticky;
     top: var(--pinned-height);
-    z-index: 1;
+    z-index: 2;
     background-color: var(--color-base-surface-surface-secondary);
 }
 

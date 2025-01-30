@@ -28,9 +28,9 @@ export function FieldTemplate(props: FieldTemplateProps) {
             )}
             <div className={styles.children}>
                 {displayLabel && (
-                    <div className="mb-1">
+                    <div className="mb-5">
                         <Label labelFor={id} interactiveElements={[helpInformation]}>
-                            {fieldLabel}
+                            <span className="text-md font-medium">{fieldLabel}</span>
                         </Label>
                     </div>
                 )}

@@ -43,7 +43,7 @@ export default function EventFeed({ isSideSheetOpen }: EventFeedProps) {
     }
 
     return (
-        <div className="flex h-full flex-1 flex-col gap-4 self-stretch overflow-x-auto pl-2 pr-4 md:pr-6 lg:pr-8">
+        <div className="flex h-full flex-1 flex-col gap-4 self-stretch pl-2 pr-4 md:pr-6 lg:pr-8">
             <div className="flex flex-col items-start gap-2 self-stretch">
                 <h2 className={labelMapping[LabelVariant.FieldLabel].styles}>
                     {t(`policy.history.${(historyFilters.statusFilter ?? 'all').replace(' ', '').toLowerCase()}Events`)}

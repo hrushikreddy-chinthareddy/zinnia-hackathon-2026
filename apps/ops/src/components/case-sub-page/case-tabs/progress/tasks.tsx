@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
-import NewTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/new-task-sidesheet-content';
+import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
 import TaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/task-sidesheet-content';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
@@ -12,7 +12,12 @@ import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow
 
 import { TaskView } from './progress-tab-types';
 
-const SupportedTaskMap = [TaskType.SuitabilityReview, TaskType.SuitabilityDataEntry];
+const SupportedTaskMap = [
+    TaskType.SuitabilityReview,
+    TaskType.SuitabilityDataEntry,
+    TaskType.PURCHASE_DOCUMENT_MATCHING,
+    TaskType.Agent_Nigo,
+];
 
 export function Task({ task }: { task: TaskView }) {
     const { t } = useTranslation();
@@ -20,6 +25,8 @@ export function Task({ task }: { task: TaskView }) {
 
     const TaskTitle: Record<string, string> = {
         [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReviewIssues'),
+        [TaskType.PURCHASE_DOCUMENT_MATCHING]: t('caseOverview.tabs.purchaseDocumentMatchingIssues'),
+        [TaskType.Agent_Nigo]: t('caseOverview.tabs.agentNigo'),
     };
 
     const TaskTypeMap: Record<string, string> = {
@@ -28,9 +35,9 @@ export function Task({ task }: { task: TaskView }) {
 
     const handleClick = (task: TaskView) => {
         sideSheet.changeSideSheetContent(
-            TaskTitle[task.description],
+            `${t('sideSheet.task.taskHeading')}: ${TaskTitle[task.description]}`,
             SupportedTaskMap.includes(task.description as TaskType) ? (
-                <NewTaskSideSheet taskId={task.id} />
+                <GlobalTaskSideSheet taskId={task.id} />
             ) : (
                 <TaskSideSheet taskId={task.id} />
             )

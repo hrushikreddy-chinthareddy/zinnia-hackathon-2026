@@ -2,7 +2,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
 import { lookup } from 'mime-types';
 
-import { DocumentDownload, DocumentDownloadWithMime } from '@deps/models/case/document';
+import { DocumentDownloadV2, DocumentDownloadV2WithMime } from '@deps/models/case/document';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { getUserInfoForLogging, logCompliance, logError, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
@@ -13,7 +13,7 @@ import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 const baseUrl = `${apiServerBaseUrl}/document/v2`;
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadWithMime | any | null>) => {
+    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadV2WithMime | any | null>) => {
         const { documentNumber, clientCode, source } = req.query;
         const session = await getSession(req, res);
         const userInfo = await getUserInfoForLogging(req, res);
@@ -36,7 +36,7 @@ export default withAuthAndLogging(
 
         logCompliance('Document Download Attempt', loggingContext);
         try {
-            const { data } = await serverApi.get<DocumentDownload, AxiosResponse>(
+            const { data } = await serverApi.get<DocumentDownloadV2, AxiosResponse>(
                 url,
                 {
                     authorization: `Bearer ${session?.accessToken}`,

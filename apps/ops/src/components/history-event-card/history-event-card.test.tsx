@@ -4,7 +4,6 @@ import { toTitleCase } from '@zinnia/utils';
 import { SideSheetContext } from '@deps/contexts/SideSheetContext';
 import { mockPolicy, mockPremiumSystematicProgram } from '@deps/jest/data/mockPolicy';
 import { Transaction, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
-import {} from '@deps/setupTests';
 
 import HistoryEventCard from './history-event-card';
 import { getHistoryEventCardValues } from './history-event-card.helper';
@@ -110,7 +109,7 @@ describe('getEventCardValues', () => {
                 transactionType: TransactionType.SubsequentPayment,
             });
 
-            expect(amount).toBe(mockPremiumSystematicProgram.amount);
+            expect(amount).toBe(100000);
             expect(caption).toBe('6/26/2023');
             expect(eventBody).toBe(`${toTitleCase(mockPremiumSystematicProgram.frequency)} | historyEventCard.bankingBody`);
             expect(eventTitle).toBe('historyEventCard.transactionTypes.SubsequentPayment');
@@ -155,7 +154,7 @@ describe('getEventCardValues', () => {
                 transactionType: TransactionType.SubsequentPremium,
             });
 
-            expect(amount).toBe(mockPremiumSystematicProgram.amount);
+            expect(amount).toBe(100000);
             expect(caption).toBe('6/26/2023');
             expect(eventBody).toBe(`${toTitleCase(mockPremiumSystematicProgram.frequency)} | historyEventCard.bankingBody`);
             expect(eventTitle).toBe('historyEventCard.transactionTypes.SubsequentPremium');

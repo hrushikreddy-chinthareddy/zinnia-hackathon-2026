@@ -27,7 +27,7 @@
 }
 
 .popoverContent {
-  > *:not(:last-child) {
+  >*:not(:last-child) {
     margin-bottom: var(--measure-dimension-padding-xl, 0.75rem);
   }
 }
@@ -50,7 +50,7 @@
 }
 
 .disabledTransaction {
-  color: var(--color-states-inactive-inactive-text-link);
+  color: var(--color-states-inactive-text-inactive-text-link);
   pointer-events: none;
 }
 

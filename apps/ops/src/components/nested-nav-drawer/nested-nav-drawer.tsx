@@ -37,7 +37,7 @@ export default function NestedNavDrawer({ navLinks, isFullHeight, pathname }: Ne
     useOutsideClick(ref, isNavDrawerOpen as boolean, handleOverlayClose);
 
     const semanticNavWindowClasses = clsx(
-        `${isFullHeight ? 'h-screen' : 'height-adjusted'} absolute z-20 bg-gray-900 transition-width duration-300`,
+        `min-h-[calc(100vh-80px)] h-full absolute z-20 bg-gray-900 transition-width duration-300`,
         {
             'w-[240px]': isNavDrawerOpen,
             'w-[52px]': !isNavDrawerOpen,

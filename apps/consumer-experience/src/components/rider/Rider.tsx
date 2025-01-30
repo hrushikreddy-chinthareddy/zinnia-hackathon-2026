@@ -1,5 +1,9 @@
 import { Status } from '@zinnia/api-types/types/sor';
-import { Label, Tag, TagVariant } from '@zinnia/bloom/components';
+import {
+  AssistiveText,
+  AssistiveTextVariant,
+  Label,
+} from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 
 import { FieldData } from '@/components/field-data/FieldData';
@@ -31,7 +35,11 @@ export const Rider = ({
       <h3 className="typography-titles-subtitle">{toSentenceCase(title)}</h3>
       <p>{description}</p>
       {status === Status.ACTIVE && (
-        <Tag variant={TagVariant.Information} text="Active" className="mt-lg" />
+        <AssistiveText
+          variant={AssistiveTextVariant.Success}
+          text="Active"
+          className="mt-lg"
+        />
       )}
       <div className={styles.riderDetails}>
         {isElected && (

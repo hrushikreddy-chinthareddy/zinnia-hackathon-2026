@@ -1,4 +1,4 @@
-import { SeriesOptionsType } from 'highcharts';
+import { SeriesOptionsType, XAxisOptions } from 'highcharts';
 
 export interface ChartSeriesData {
     x: string | Date | number;
@@ -216,6 +216,69 @@ const caseChartHelpers = {
         credits: {
             enabled: false,
         },
+    }),
+    getBaseBarChartConfiguration: (): Highcharts.Options => ({
+        navigation: { buttonOptions: { enabled: false } },
+        chart: {
+            type: 'bar',
+            height: 400,
+        },
+        colors: caseChartHelpers.getColors(),
+        title: {
+            align: 'left',
+            verticalAlign: 'top',
+            y: 0,
+            text: '',
+        },
+        xAxis: {
+            categories: [],
+            title: {
+                text: null,
+            },
+            gridLineWidth: 0,
+            lineWidth: 0,
+        } as XAxisOptions,
+        yAxis: {
+            min: 0,
+            labels: {
+                overflow: 'justify',
+            },
+            gridLineWidth: 1,
+            lineWidth: 0,
+            title: {
+                text: null,
+            },
+        },
+        tooltip: {},
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: false,
+                },
+                groupPadding: 0.1,
+                stacking: 'normal',
+                pointWidth: 20,
+            },
+        },
+        legend: {
+            layout: 'horizontal',
+            align: 'center',
+            verticalAlign: 'bottom',
+            floating: false,
+            title: {
+                text: 'Case submissions', // Legend title
+                style: {
+                    fontWeight: 'bold', // Bold font for title
+                    display: 'inline-block', // Keep inline with legend items
+                    marginRight: '10px', // Add spacing
+                },
+            },
+            useHTML: true, // Enable custom HTML for styling
+        },
+        credits: {
+            enabled: false,
+        },
+        series: [],
     }),
 };
 

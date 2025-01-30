@@ -1,7 +1,7 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
 
-import { DocumentDownload } from '@deps/models/case/document';
+import { DocumentDownloadV2 } from '@deps/models/case/document';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { logError, logTrace, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
@@ -11,7 +11,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 const baseUrl = `${apiServerBaseUrl}/document/v2`;
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<DocumentDownload | null>, loggingContext) => {
+    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadV2 | null>, loggingContext) => {
         const now = performance.now();
         const { documentNumber, clientCode, contractNumber, fChar, taxYear } = req.query;
         const accessToken = (await getAccessToken(req, res)).accessToken;
@@ -21,7 +21,7 @@ export default withAuthAndLogging(
         logTrace('documentPreview::start', loggingContext);
 
         try {
-            const { data } = await serverApi.get<DocumentDownload, AxiosResponse>(
+            const { data } = await serverApi.get<DocumentDownloadV2, AxiosResponse>(
                 url,
                 {
                     authorization: `Bearer ${accessToken}`,

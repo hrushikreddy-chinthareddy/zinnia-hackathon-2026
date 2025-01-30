@@ -46,7 +46,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
             setLoading(true);
             const summary = await getCaseInsights({
                 content: JSON.stringify(caseStats),
-                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
+                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. Avoid using phrases such as "the data". In your response, replace "exception" with "NIGO" and "exceptions" to "NIGOs". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
             });
             setLoading(false);
             return summary;
@@ -117,10 +117,12 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                             // @ts-expect-error: this actually exists
                             const value = this.point.value;
                             // @ts-expect-error: this actually exists
+                            const dataLabel = this.point.dataLabel;
+                            const shape = this.point.shapeArgs;
+                            // @ts-expect-error: this actually exists
                             const seriesValues: Array<number> = this.series.valueData;
                             const total = seriesValues.reduce((sum, val) => sum + val, 0);
                             const len = (Number(value) / total) * 100;
-                            const ratio = `${value} / ${total}`;
                             const wrapper = document.createElement('div');
                             wrapper.style.backgroundColor = 'var(--color-base-surface-surface-primary)';
                             wrapper.classList.add('rounded', 'typography-content-body');
@@ -134,18 +136,16 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                             wrapper.style.margin = 'var(--measure-dimension-margin-2xs)';
                             wrapper.style.padding = 'var(--measure-dimension-padding-xs)';
                             wrapper.style.alignItems = 'center';
-
                             const nameSpan = document.createElement('span');
                             // const valueSpan = document.createElement('span');
-                            if (len < Math.max(name.length, ratio.length)) {
-                                nameSpan.innerText = len < name.length ? name.substring(0, Math.floor(len)) + '...' : name;
-                                // valueSpan.innerText = len < ratio.length ? ratio.substring(0, Math.floor(len)) + '...' : ratio;
-                                if (len < 1) {
-                                    wrapper.style.visibility = 'hidden';
-                                }
-                            } else {
-                                nameSpan.innerText = name;
-                                // valueSpan.innerText = ratio;
+                            nameSpan.innerText = name;
+
+                            //TODO: For some reason, dataLabel can be undefined sometimes and cause issues
+                            if (dataLabel?.width + dataLabel?.padding >= shape?.width) {
+                                wrapper.style.whiteSpace = 'break-spaces';
+                            }
+                            if (len < 1 || dataLabel?.height + dataLabel?.padding >= shape?.height) {
+                                wrapper.style.visibility = 'hidden';
                             }
                             wrapper.appendChild(nameSpan);
                             // wrapper.appendChild(valueSpan);
@@ -202,7 +202,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                 }
             });
         } else {
-            setAiSummary('There are no exceptions.');
+            setAiSummary('There are no NIGOs.');
         }
     }, [seriesData, shouldShowCaseInsights]);
 
@@ -212,7 +212,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                 <div>
                     <Typography variant={TypographyVariant.H3}>{heading}</Typography>
                     <Typography variant={TypographyVariant.Label}>
-                        There are {wholeNumberFormatify(dashboardStatsData?.totalElements)} Exceptions
+                        There are {wholeNumberFormatify(dashboardStatsData?.totalElements)} NIGOs
                     </Typography>
                 </div>
                 {loading ? (
@@ -243,7 +243,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                     {noData ? (
                         <div className="flex flex-col gap-2 items-center">
                             <ChartBarsIcon height={'24px'} width={'24px'} />
-                            <Typography variant={TypographyVariant.BodyBold}>There are no exceptions</Typography>
+                            <Typography variant={TypographyVariant.BodyBold}>There are no NIGOs</Typography>
                         </div>
                     ) : (
                         <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chartCompomentRef} />

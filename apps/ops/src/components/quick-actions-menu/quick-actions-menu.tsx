@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { TFunction, useTranslation } from 'next-i18next';
 import React from 'react';
+import { v4 as uuidV4 } from 'uuid';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
@@ -17,7 +18,10 @@ import { ReactComponent as PaymentIcon } from '@deps/styles/elements/icons/conte
 import { ReactComponent as AutopayIcon } from '@deps/styles/elements/icons/currency/autopay.svg';
 import { ReactComponent as BankIcon } from '@deps/styles/elements/icons/icons_outlined/bank.svg';
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
+import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/icons_outlined/clipboard.svg';
+import { ReactComponent as DocumentReportIcon } from '@deps/styles/elements/icons/icons_outlined/document-report.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
+import { ReactComponent as TableIcon } from '@deps/styles/elements/icons/icons_outlined/table.svg';
 import loaderImage from '@deps/styles/images/loader-contrast.png';
 import { DropdownClickedEvent, PolicyClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -76,70 +80,107 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
     };
 
     return (
-        <MenuContextualLabel label={t('transactions.label')}>
-            {isLoading ? (
-                <div className="h-[104px] w-[248px] content-center">
-                    <Image alt={t('site.loader')} height={30} src={loaderImage} width={30} className="mx-auto my-[0px] animate-spin" />
-                </div>
-            ) : (
-                <>
-                    {eligibilityCheck?.eligibleFreeLookCancel && freeLookEnabled && (
+        <>
+            <MenuContextualLabel label={t('transactions.label')}>
+                {isLoading ? (
+                    <div className="h-[104px] w-[248px] content-center">
+                        <Image alt={t('site.loader')} height={30} src={loaderImage} width={30} className="mx-auto my-[0px] animate-spin" />
+                    </div>
+                ) : (
+                    <>
+                        {eligibilityCheck?.eligibleFreeLookCancel && freeLookEnabled && (
+                            <MenuContextualItem
+                                content={t('transactions.cancelPolicy')}
+                                href={`/policies/${planCode}/${policyNumber}/policy/freelook/cancel-freelook/`}
+                                icon={<CashIcon height={20} width={20} />}
+                                onClick={() => {
+                                    trackClick('Cancel Policy', `/policies/${planCode}/${policyNumber}/policy/freelook/cancel-freelook/`);
+                                }}
+                            />
+                        )}
                         <MenuContextualItem
-                            content={t('transactions.cancelPolicy')}
-                            href={`/policies/${planCode}/${policyNumber}/policy/freelook/cancel-freelook/`}
+                            disabled={!eligibilityCheck?.eligibleAutopay as boolean}
+                            content={t('transactions.managePremiumAutopay')}
+                            href={`/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay/`}
+                            icon={<AutopayIcon height={20} width={20} />}
+                            onClick={() => {
+                                trackClick(
+                                    'Manage Premium Autopay',
+                                    `/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay/`
+                                );
+                            }}
+                        />
+
+                        <MenuContextualItem
+                            disabled={!eligibilityCheck?.eligiblePremium as boolean}
+                            content={t('transactions.newPremium')}
+                            href={`/policies/${planCode}/${policyNumber}/policy/premiums/new-premium/`}
+                            icon={<PaymentIcon height={20} width={20} />}
+                            onClick={() => {
+                                trackClick('New Premium', `/policies/${planCode}/${policyNumber}/policy/premiums/new-premium/`);
+                            }}
+                        />
+
+                        <MenuContextualItem
+                            disabled={!eligibilityCheck?.eligibleWithdrawal as boolean}
+                            content={t('transactions.startAWithdrawal')}
+                            href={`/policies/${planCode}/${policyNumber}/policy/withdrawals/new-withdrawal/`}
                             icon={<CashIcon height={20} width={20} />}
                             onClick={() => {
-                                trackClick('Cancel Policy', `/policies/${planCode}/${policyNumber}/policy/freelook/cancel-freelook/`);
+                                trackClick(
+                                    'Start a Withdrawal',
+                                    `/policies/${planCode}/${policyNumber}/policy/withdrawals/new-withdrawal/`
+                                );
                             }}
                         />
-                    )}
-                    <MenuContextualItem
-                        disabled={!eligibilityCheck?.eligibleAutopay as boolean}
-                        content={t('transactions.managePremiumAutopay')}
-                        href={`/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay/`}
-                        icon={<AutopayIcon height={20} width={20} />}
-                        onClick={() => {
-                            trackClick(
-                                'Manage Premium Autopay',
-                                `/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay/`
-                            );
-                        }}
-                    />
 
-                    <MenuContextualItem
-                        disabled={!eligibilityCheck?.eligiblePremium as boolean}
-                        content={t('transactions.newPremium')}
-                        href={`/policies/${planCode}/${policyNumber}/policy/premiums/new-premium/`}
-                        icon={<PaymentIcon height={20} width={20} />}
-                        onClick={() => {
-                            trackClick('New Premium', `/policies/${planCode}/${policyNumber}/policy/premiums/new-premium/`);
-                        }}
-                    />
-
-                    <MenuContextualItem
-                        disabled={!eligibilityCheck?.eligibleWithdrawal as boolean}
-                        content={t('transactions.startAWithdrawal')}
-                        href={`/policies/${planCode}/${policyNumber}/policy/withdrawals/new-withdrawal/`}
-                        icon={<CashIcon height={20} width={20} />}
-                        onClick={() => {
-                            trackClick('Start a Withdrawal', `/policies/${planCode}/${policyNumber}/policy/withdrawals/new-withdrawal/`);
-                        }}
-                    />
-
-                    {newLoanEnabled && (
-                        <MenuContextualItem
-                            disabled={!eligibilityCheck?.eligibleNewLoan as boolean}
-                            content={t('transactions.newLoan')}
-                            href={`/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`}
-                            icon={<BankIcon height={20} width={20} />}
-                            onClick={() => {
-                                trackClick('New Loan', `/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`);
-                            }}
-                        />
-                    )}
-                </>
-            )}
-        </MenuContextualLabel>
+                        {newLoanEnabled && (
+                            <MenuContextualItem
+                                disabled={!eligibilityCheck?.eligibleNewLoan as boolean}
+                                content={t('transactions.newLoan')}
+                                href={`/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`}
+                                icon={<BankIcon height={20} width={20} />}
+                                onClick={() => {
+                                    trackClick('New Loan', `/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`);
+                                }}
+                            />
+                        )}
+                    </>
+                )}
+            </MenuContextualLabel>
+            <MenuContextualLabel label={t('documents.label')}>
+                <MenuContextualItem
+                    content={t('documents.sendForms')}
+                    href={`/contact-center/send-document?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
+                    icon={<ClipboardIcon height={20} width={20} />}
+                    onClick={() => {
+                        trackClick('Send Forms', `/contact-center/send-document?planCode=${planCode}&policyNumber=${policyNumber}`);
+                    }}
+                    openInNewTab={true}
+                />
+                <MenuContextualItem
+                    content={t('documents.sendStatements')}
+                    href={`/contact-center/send-correspondence?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
+                    icon={<DocumentReportIcon height={20} width={20} />}
+                    onClick={() => {
+                        trackClick(
+                            'Send Statements',
+                            `/contact-center/send-correspondence?planCode=${planCode}&policyNumber=${policyNumber}`
+                        );
+                    }}
+                    openInNewTab={true}
+                />
+                <MenuContextualItem
+                    content={t('documents.sendTaxForms')}
+                    href={`/contact-center/send-taxform?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
+                    icon={<TableIcon height={20} width={20} />}
+                    onClick={() => {
+                        trackClick('Send Tax Forms', `/contact-center/send-taxform?planCode=${planCode}&policyNumber=${policyNumber}`);
+                    }}
+                    openInNewTab={true}
+                />
+            </MenuContextualLabel>
+        </>
     );
 };
 

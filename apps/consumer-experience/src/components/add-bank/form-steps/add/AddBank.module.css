@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--measure-dimension-gap-3xl);
+  border-color: var(--color-status-border-status-error-border-alt, #db004f);
 }
 
 .formFields {
@@ -17,7 +18,7 @@
 }
 
 .remove {
-  border-color: var(--color-status-surface-status-error-border-alt, #db004f);
+  border-color: var(--color-status-border-status-error-border-alt, #db004f);
 }
 
 .cancel {

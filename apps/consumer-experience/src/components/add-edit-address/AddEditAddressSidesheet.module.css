@@ -4,3 +4,19 @@
   padding: 0 !important;
   gap: var(--measure-dimension-gap-sm, 0.25rem);
 }
+
+.editAddress {
+  color: var(--color-secondary-color-secondary);
+
+  &:hover:not(:disabled) {
+    color: var(--color-secondary-color-secondary);
+
+    &::after {
+      background-color: var(--color-secondary-color-secondary);
+    }
+  }
+
+  &::after {
+    color: currentColor;
+  }
+}

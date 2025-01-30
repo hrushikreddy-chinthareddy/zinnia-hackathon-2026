@@ -20,15 +20,13 @@ import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { AvailableFormsTransaction, SearchTransactionRequestBody } from '@deps/models/case/send-document';
-import { TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
 import { getSearchTransactionsSSR } from '@deps/queries/api/c2web';
 import { searchCasesSSR } from '@deps/queries/api/cases';
-import { getDocumentSSR } from '@deps/queries/api/documents';
-import { checkNigoExistsSSR } from '@deps/queries/api/integration';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
@@ -375,7 +373,7 @@ export const getServerSideProps = withPageAuthRequired({
 
             const [parties, document, searchCasesResponse] = await Promise.all([
                 await getPolicyPartiesSSR(contractNum, clientCode, accessToken as string),
-                await getDocumentSSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken),
+                await getDocumentV2SSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken),
                 await searchCasesSSR(filters, accessToken),
             ]);
             logInfo('nigo-entry::Retrieved parties, document and correspondence case search result', {
@@ -416,41 +414,6 @@ export const getServerSideProps = withPageAuthRequired({
                 user: userInfoForLogging.email,
             });
 
-            let isNigoCase = false;
-            const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-            if (shouldShowNewExperience) {
-                isNigoCase = await checkNigoExistsSSR(clientCode?.toUpperCase(), document.caseId, accessToken);
-                if (isNigoCase && form?.status !== TaskStatus.Completed) {
-                    logInfo('nigoEntry::Nigo exists for case', {
-                        taskId,
-                        documentNumber,
-                        clientCode,
-                        contractNum,
-                        caseId: document.caseId,
-                        file: 'pages/nigo-entry',
-                        function: 'getServerSideProps',
-                        user: userInfoForLogging.email,
-                    });
-                    return {
-                        redirect: {
-                            destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
-                            permanent: false,
-                        },
-                    };
-                } else {
-                    logInfo('nigoEntry::Skipping NIGO check', {
-                        taskId,
-                        documentNumber,
-                        documentType: docType,
-                        clientCode,
-                        contractNum,
-                        file: 'pages/nigo-entry',
-                        function: 'getServerSideProps',
-                        user: userInfoForLogging.email,
-                    });
-                }
-            }
-
             const latestForm =
                 !isNullEmptyOrUndefined(docType) &&
                 searchCasesResponse?.data?.find(item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase());
@@ -471,7 +434,7 @@ export const getServerSideProps = withPageAuthRequired({
                     document,
                     taskInfoLink,
                     prevTransactionDetails: latestForm ? latestForm?.additionalData || null : null,
-                    isNigoCase,
+                    isNigoCase: false,
                 },
             };
         } catch (error) {

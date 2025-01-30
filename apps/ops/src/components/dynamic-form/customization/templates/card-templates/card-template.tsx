@@ -1,0 +1,183 @@
+import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
+import { Icon, IconType } from '@zinnia/bloom/components';
+import Image from 'next/image';
+import { useTranslation } from 'next-i18next';
+import { MetadataSearchResponse } from 'node_modules/@zinnia/api-types/dist/generated-types/documents-v3/models/MetadataSearchResponse';
+
+import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import CardContainer from '@deps/containers/card-container/card-container';
+import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { formatSSN } from '@deps/helpers/string.helper';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
+import { CardTypes } from '@deps/models/case/task';
+import loadingImage from '@deps/styles/images/loader.png';
+
+export function CardTemplate(props: ObjectFieldTemplateProps) {
+    const { formData, uiSchema, schema, formContext } = props;
+
+    const { cardType, icon, sectionTitle } = getUiOptions(uiSchema);
+
+    return (
+        <>
+            <SingleCard
+                cardType={cardType as CardTypes}
+                icon={icon as IconType}
+                data={formData}
+                properties={schema?.properties}
+                sectionTitle={(sectionTitle as string) ?? ''}
+                formData={formContext?.customData}
+            />
+        </>
+    );
+}
+
+export type SingleCardProps = {
+    cardType: CardTypes;
+    icon: IconType;
+    data: any;
+    properties: any;
+    sectionTitle?: string;
+    className?: string;
+    formData?: any;
+};
+export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, className, formData }: SingleCardProps) => {
+    const { t } = useTranslation();
+
+    const sideSheet = useSideSheetContext();
+    const title = properties ? Object.keys(properties)[0] : 'title';
+    const subtitle = properties ? Object.keys(properties)[1] : 'subtitle';
+
+    const displayProperties = properties
+        ? Object.entries(properties)
+              .filter(([key, prop]: [string, any]) => !prop.__additional_property)
+              .map(([key, prop]: [string, any]) => ({ key, ...prop }))
+        : [];
+
+    const handleCardClick = () => {
+        const content = <DetailsCard details={data} sectionTitle={sectionTitle} properties={displayProperties} />;
+        sideSheet.changeSideSheetContent(data?.[title] || '', content);
+        sideSheet.handleOpen(true);
+    };
+
+    if (cardType === CardTypes.Document && !data?.documentId) {
+        return;
+    }
+
+    return (
+        <>
+            <div className={`flex w-[436px] rounded border border-gray-100 p-[12px] ${className}`}>
+                <div className="px-2">
+                    <Icon width={25} height={25} type={IconType[icon as string as keyof typeof IconType] || IconType.CIRCLE_USER} />{' '}
+                </div>
+                <div className="grow">
+                    <div className="text-sm font-bold">
+                        <PiiWrapper>{data?.[title] ?? replacePlaceholders(properties?.[title], data)?.default ?? ''}</PiiWrapper>
+                    </div>
+                    <div className="flex items-center text-sm font-normal text-gray-300">
+                        <PiiWrapper>
+                            {properties?.[subtitle] && typeof properties[subtitle] !== 'boolean' && 'title' in properties[subtitle]
+                                ? properties[subtitle].title
+                                : ''}{' '}
+                            {properties[subtitle].dataType === 'ssn'
+                                ? formatSSN(data?.[subtitle] ?? replacePlaceholders(properties[subtitle], data)?.default ?? '')
+                                : data?.[subtitle] ?? replacePlaceholders(properties[subtitle], data)?.default ?? ''}
+                        </PiiWrapper>
+                    </div>
+                </div>
+                {cardType === CardTypes.Detailed && <DetailAction handleCardClick={handleCardClick} formData={data} />}
+                {cardType === CardTypes.Document && (
+                    <DocumentActions document={replacePlaceholders(data, formData) || data} properties={displayProperties} t={t} />
+                )}
+            </div>
+        </>
+    );
+};
+
+export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
+    return (
+        <CardContainer classNames={'w-full'} containerClassNames="w-full content-divider">
+            <div className="flex flex-col w-full">
+                <Typography variant={TypographyVariant.H3} className="mb-3">
+                    {sectionTitle}
+                </Typography>
+                {properties?.map((schema: any) => {
+                    return (
+                        <Typography variant={TypographyVariant.BodySm} key={schema.key} className="p-1">
+                            {schema?.title}:{' '}
+                            {schema?.dataType === 'ssn'
+                                ? formatSSN(details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--')
+                                : details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--'}
+                        </Typography>
+                    );
+                })}
+            </div>
+        </CardContainer>
+    );
+};
+
+const DetailAction = ({ handleCardClick }: any) => {
+    return (
+        <div onClick={handleCardClick}>
+            <Icon width={25} height={25} type={IconType.CHEVRON_RIGHT} />
+        </div>
+    );
+};
+
+const DocumentActions = ({ document, t }: any) => {
+    const docId = document.documentId || ((document as DocumentWithSource).documentID as string);
+
+    const [loading, download] = useDocumentDownload(
+        docId,
+        (document as DocumentWithSource).documentSource || (document as MetadataSearchResponse).documentClassification,
+        document.carrier,
+        document.displayName || docId
+    );
+
+    const handleClick = (event: React.MouseEvent) => {
+        event.preventDefault();
+        download();
+    };
+
+    return (
+        <>
+            <div className="px-4 pt-1">
+                <DocumentPreviewer
+                    className="flex max-w-[234px] gap-1"
+                    activeDocType={DocumentTypeView.Case}
+                    carrier={document?.carrier || ''}
+                    displayName={document?.displayName || ''}
+                    documentId={document?.documentId ?? (document?.documentID as string)}
+                >
+                    {t('general.view')}
+                </DocumentPreviewer>
+            </div>
+            <div className="px-2">
+                <NavElement
+                    onClick={handleClick}
+                    size={NavElementSize.Small}
+                    title={`${t('general.download')} ${document?.displayName}`}
+                    type={NavElementType.Button}
+                    variant={NavElementVariant.Secondary}
+                >
+                    {loading ? (
+                        <Image
+                            alt={t('general.downloading')}
+                            className="transform-origin-center duration-2000 animate-spin ease-linear"
+                            height={20}
+                            src={loadingImage}
+                            width={20}
+                        />
+                    ) : (
+                        <Icon width={20} height={20} type={IconType.DOWNLOAD} />
+                    )}
+                </NavElement>
+            </div>
+        </>
+    );
+};
