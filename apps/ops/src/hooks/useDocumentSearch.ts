@@ -24,11 +24,11 @@ const buildV2SearchArgs = ({
         source: searchBody.documentClassification?.toLowerCase() === 'inbound' ? DocumentTypeView.Policy : DocumentTypeView.Correspondence,
         clientCode: searchBody?.parentCarrierCode || '',
         ...(searchBody?.policyNumber ? { contractNumber: searchBody?.policyNumber } : {}),
-        ...(searchBody?.zinniaLiveCaseId ? { contractNumber: searchBody?.zinniaLiveCaseId } : {}),
+        ...(searchBody?.zinniaLiveCaseId ? { zinniaLiveCaseId: searchBody?.zinniaLiveCaseId } : {}),
         ...(searchBody?.documentStatus ? { docStatus: searchBody?.documentStatus?.join(',') } : {}),
-        ...(searchBody?.documentDate ? { contractNumber: searchBody?.documentDate } : {}),
-        ...(searchBody?.documentStartDate ? { contractNumber: searchBody?.documentStartDate } : {}),
-        ...(searchBody?.documentEndDate ? { contractNumber: searchBody?.documentEndDate } : {}),
+        ...(searchBody?.documentDate ? { documentDate: searchBody?.documentDate } : {}),
+        ...(searchBody?.documentStartDate ? { documentStartDate: searchBody?.documentStartDate } : {}),
+        ...(searchBody?.documentEndDate ? { documentEndDate: searchBody?.documentEndDate } : {}),
         ...(searchBody?.periods ? { periods: searchBody?.periods } : {}),
         limit,
         offset,
@@ -36,7 +36,7 @@ const buildV2SearchArgs = ({
 };
 
 export const useDocumentSearch = (
-    searchBody: SearchRequest,
+    searchBody: SearchRequest | null,
     limit = 25,
     offset = 0
 ): [DocumentWithSource[] | V3DocumentWithSource[] | null, boolean, number, number | null] => {
@@ -49,6 +49,12 @@ export const useDocumentSearch = (
 
     const searchDocs = useCallback(async () => {
         if (loading || loadedForArgs === JSON.stringify({ searchBody, limit, offset })) return;
+        if (!searchBody) {
+            setDocs([]);
+            setTotal(0);
+            setResponseStatus(null);
+            return;
+        }
         setLoading(true);
         try {
             if (featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]) {

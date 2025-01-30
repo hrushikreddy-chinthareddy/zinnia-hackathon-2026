@@ -1345,6 +1345,8 @@
             "call-logs": "Call logs",
             "closedOn": "Closed on {{date}}",
             "documents": "Documents",
+            "caseDocuments": "Case Documents",
+            "policyDocuments": "Policy Documents",
             "issue": "Issue: {{issue}}",
             "issueCount_one": "{{count}} issue",
             "issueCount_other": "{{count}} issues",
