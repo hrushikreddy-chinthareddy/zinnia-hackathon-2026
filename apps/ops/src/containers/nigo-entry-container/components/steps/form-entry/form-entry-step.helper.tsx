@@ -7,12 +7,15 @@ import RSLNOftWithdrawalForm from '@deps/containers/otp/oft-forms/rsln/rsln-oft-
 import SbgcOftWithdrawalForm from '@deps/containers/otp/oft-forms/sbgc/sbgc-oft-form';
 import UlpcOftWithdrawalForm from '@deps/containers/otp/oft-forms/ulpc/ulpc-oft-form';
 import UsaaOftWithdrawalForm from '@deps/containers/otp/oft-forms/usaa/usaa-oft-form';
+import DlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/dlic/dlic-rmd-form';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
+import GdmnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/gdmn/gdmn-rmd-form';
 import GlcoRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/glco-rmd-form';
 import MassMutualRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/mm-rmd-form';
 import RslnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/rsln/rsln-rmd-form';
 import SbgcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/sbgc-rmd-form';
 import UlpcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/ulpc/ulpc-rmd-form';
+import UsaaRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/usaa/usaa-rmd-form';
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
 import { GlcoSSWForm } from '@deps/containers/otp/ssw-forms/glco/glco-ssw-form';
 import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-form';
@@ -73,7 +76,10 @@ export const getRMDFormComponentMap = (qualType: QualTypes | ''): Record<string,
     [Carrier.SBGC]: <SbgcRmdWithdrawalForm />,
     [Carrier.GLCO]: <GlcoRmdWithdrawalForm />,
     [Carrier.ULPC]: <UlpcRmdWithdrawalForm />,
-    [Carrier.RSLN]: <RslnRmdWithdrawalForm />
+    [Carrier.RSLN]: <RslnRmdWithdrawalForm />,
+    [Carrier.GDMN]: <GdmnRmdWithdrawalForm />,
+    [Carrier.DLIC]: <DlicRmdWithdrawalForm />,
+    [Carrier.USAA]: <UsaaRmdWithdrawalForm />,
 });
 
 const getSSWFormComponentMap = (qualType: QualTypes | '', planCode?: string): Record<string, React.ReactNode> => ({
