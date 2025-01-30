@@ -103,6 +103,7 @@ const OwnerInformation = ({ owner, ...rest }: { owner: PartyInfo } & HTMLAttribu
     if (!owner) {
         return null;
     }
+
     return (
         <li className="flex gap-4 rounded bg-white border-2 border-[#ededed] p-4" {...rest}>
             <Icon type={IconType.CIRCLE_USER} />
@@ -114,6 +115,7 @@ const OwnerInformation = ({ owner, ...rest }: { owner: PartyInfo } & HTMLAttribu
                     <Tag text={role} key={role} />
                 ))}
             </div>
+
             {owner.fields && (
                 <div className="mt-2 grid w-full grid-cols-2 gap-x-8 gap-y-2 md:grid-cols-4 lg:grid-cols-2">
                     <div>
@@ -178,7 +180,7 @@ export const Parties = ({
     const { owners = [], agents = [], brokers } = parties ?? {};
     const spacingAndBorderClasses = 'border-gray-100 py-4 [&:not(:last-child)]:border-b-2 last:pb-0';
     const listClasses = `${spacingAndBorderClasses} flex w-full flex-col gap-4`;
-
+    console.log(parties);
     return (
         <div className="flex w-full flex-col p-4 rounded bg-white shadow-elevation-light-04" {...rest}>
             <Title className="mb-2" variant={TitleVariant.SubTitle}>

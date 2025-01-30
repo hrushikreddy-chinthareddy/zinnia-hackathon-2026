@@ -168,7 +168,7 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
     const [aiSummary, setAiSummary] = useState<string | null>(null);
     const data = getSideNavData(caseDetails, caseActivityContext, t);
     const shouldShowCaseInsights = useCaseInsightsPermission();
-
+    console.log(caseDetails);
     const getOpenAiSummary = async (caseDetails: Case) => {
         if (!caseDetails) {
             return '';
