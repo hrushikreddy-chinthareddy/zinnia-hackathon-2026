@@ -13,6 +13,7 @@ import GdmnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/gdmn/gdmn-rmd-
 import GlcoRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/glco-rmd-form';
 import MassMutualRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/mm-rmd-form';
 import NasuRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/nasu/nasu-rmd-form';
+import PrdnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/prdn/prdn-rmd-form';
 import RslnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/rsln/rsln-rmd-form';
 import SbgcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/sbgc-rmd-form';
 import UlpcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/ulpc/ulpc-rmd-form';
@@ -82,6 +83,7 @@ export const getRMDFormComponentMap = (qualType: QualTypes | ''): Record<string,
     [Carrier.DLIC]: <DlicRmdWithdrawalForm />,
     [Carrier.USAA]: <UsaaRmdWithdrawalForm />,
     [Carrier.NASU]: <NasuRmdWithdrawalForm />,
+    [Carrier.PRDN]: <PrdnRmdWithdrawalForm />,
 });
 
 const getSSWFormComponentMap = (qualType: QualTypes | '', planCode?: string): Record<string, React.ReactNode> => ({

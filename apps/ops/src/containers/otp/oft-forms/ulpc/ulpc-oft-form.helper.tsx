@@ -208,10 +208,6 @@ export default function getUlpcOftConfig(t: TFunction) {
                     key: 'owner-type',
                 },
                 {
-                    component: SignatureFields.SignatureCityProvided,
-                    key: 'owner-city-state',
-                },
-                {
                     component: SignatureFields.SignatureSsn,
                     key: 'owner-ssn',
                 },
@@ -237,10 +233,6 @@ export default function getUlpcOftConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureType,
                     key: 'joint-type',
-                },
-                {
-                    component: SignatureFields.SignatureCityProvided,
-                    key: 'joint-city-state',
                 },
                 {
                     component: SignatureFields.SignatureSsn,

@@ -90,6 +90,7 @@ export enum FEATURE_FLAGS {
     NIGO_ENTRY_DLIC_RMD = 'nigo-entry_dlic_rmd',
     NIGO_ENTRY_USAA_RMD = 'nigo-entry_usaa_rmd',
     NIGO_ENTRY_NASU_RMD = 'nigo-entry_nasu_rmd',
+    NIGO_ENTRY_PRDN_RMD = 'nigo-entry_prdn_rmd',
     SEND_DOCUMENT_HIDE_MAIL_OPTION_ILNA = 'contact-center-send-document-arcus-mail-option',
     SEND_STATEMENT_EMAIL_MASS = 'contact-center-send-statement-email-mass',
     SEND_STATEMENT_EMAIL_DLIC = 'contact-center-send-statement-email-dlic',
