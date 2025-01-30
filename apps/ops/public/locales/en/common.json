@@ -2837,6 +2837,7 @@
             "noEventsTitle": "No events yet.",
             "noEventsSubtitle": "Looks like nothing's happened so far.",
             "upcomingEvents": "Upcoming events",
+            "requested": "Requested",
             "sidesheet": {
                 "accountNumber": "Account number",
                 "accountType": "Account type",
