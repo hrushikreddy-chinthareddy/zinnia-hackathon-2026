@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
+import { BeneficiaryConfig } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import {
     BankingFields,
     DisbursementFields,
@@ -345,6 +346,16 @@ export default function getGlcoRmdConfig(t: TFunction) {
         },
     ];
 
+    const beneficiaryConfig: BeneficiaryConfig = {
+        isYourSpouseYoungerThanYouLabel: t('beneficiaryInfo.isYourSpouseYoungerThanYouLabel'),
+        fields: [
+            {
+                fieldName: PartyFields.Dob,
+                fieldLabel: t('beneficiaryInfo.dob'),
+            },
+        ],
+    };
+
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -354,5 +365,6 @@ export default function getGlcoRmdConfig(t: TFunction) {
         w4pSignaturesConfig,
         disbursementOptions,
         isBeneSpouseOption,
+        beneficiaryConfig
     };
 }
