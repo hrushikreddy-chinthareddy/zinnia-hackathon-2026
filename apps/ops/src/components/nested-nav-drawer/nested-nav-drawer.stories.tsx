@@ -72,10 +72,10 @@ export const Default = () => {
             parentKey: ParentKeys.People,
         },
         {
-            text: t('site.navLinks.history.text'),
-            href: t('site.navLinks.history.link', { id: policyNumber, planCode }) || '',
+            text: t('site.navLinks.activity.text'),
+            href: t('site.navLinks.activity.link', { id: policyNumber, planCode }) || '',
             startIcon: <CalendarIcon key="history-icon" />,
-            parentKey: ParentKeys.History,
+            parentKey: ParentKeys.Activity,
         },
         {
             text: t('site.navLinks.documents.text'),

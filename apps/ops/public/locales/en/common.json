@@ -68,7 +68,8 @@
             "formData": "Form Data",
             "annuitization": "Annuitization",
             "dashboard": "Case Stats",
-            "newLoan": "New Loan"
+            "newLoan": "New Loan",
+            "activity": "Activity"
         },
         "navLinks": {
             "accessManagement": {
@@ -231,11 +232,25 @@
             },
             "history": {
                 "text": "History",
-                "link": "/policies/{{planCode}}/{{id}}/history"
+                "link": "/policies/{{planCode}}/{{id}}/activity"
             },
             "dashboard": {
                 "text": "Case Stats",
                 "link": "/dashboard"
+            },
+            "activity": {
+                "text": "Activity",
+                "link": "/policies/{{planCode}}/{{id}}/activity",
+                "subLinks": {
+                    "callLogs": {
+                        "text": "Call logs",
+                        "link": "/policies/{{planCode}}/{{id}}/activity/call-logs"
+                    },
+                    "transactions": {
+                        "text": "Transactions",
+                        "link": "/policies/{{planCode}}/{{id}}/activity/transactions"
+                    }
+                }
             }
         },
         "loader": "Loading..."
@@ -3418,6 +3433,9 @@
         },
         "history": {
             "headerText": "History"
+        },
+        "activity": {
+            "headerText": "Activity"
         }
     },
     "piiBreadcrumb": "Back to",
@@ -3942,7 +3960,8 @@
             "documents": "Documents",
             "caseDetails": "Case Details",
             "deliveryMethod": "Delivery method",
-            "correspondence": "Correspondence"
+            "correspondence": "Correspondence",
+            "activity": "Activity"
         }
     },
     "bannerAlert": {

@@ -67,7 +67,8 @@
             "newWithdrawal": "Nouveau Retrait",
             "formData": "Données du formulaire",
             "annuitization": "Annuitisation",
-            "dashboard": "Statistiques du dossier"
+            "dashboard": "Statistiques du dossier",
+            "activity": "Activité"
         },
         "navLinks": {
             "accessManagement": {
@@ -225,11 +226,25 @@
             },
             "history": {
                 "text": "Histoire",
-                "link": "/policies/{{planCode}}/{{id}}/history"
+                "link": "/policies/{{planCode}}/{{id}}/activity"
             },
             "dashboard": {
                 "text": "Statistiques du dossier",
                 "link": "/dashboard"
+            },
+            "activity": {
+                "text": "Activité",
+                "link": "/policies/{{planCode}}/{{id}}/activity",
+                "subLinks": {
+                    "callLogs": {
+                        "text": "Histoire d'appels",
+                        "link": "activity/call-logs"
+                    },
+                    "transactions": {
+                        "text": "Transactions",
+                        "link": "activity/transactions"
+                    }
+                }
             }
         },
         "loader": "Chargement..."
@@ -3391,6 +3406,9 @@
         },
         "history": {
             "headerText": "Histoire"
+        },
+        "activity": {
+            "headerText": "Activité"
         }
     },
     "piiBreadcrumb": "Retour à",
@@ -3914,7 +3932,8 @@
             "documents": "Documents",
             "caseDetails": "Détails du Dossier",
             "deliveryMethod": "Méthode de livraison",
-            "correspondence": "Correspondence"
+            "correspondence": "Correspondence",
+            "activity": "Activité"
         }
     },
     "bannerAlert": {
