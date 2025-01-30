@@ -58,7 +58,7 @@ const ProcessingTimeStamp = ({ data }: CaseSideNavProps) => {
     }
 
     return (
-        <div className="flex w-full flex-row items-center gap-2 rounded bg-white p-4 shadow-elevation-light-04 md:px-8">
+        <div className="flex w-full flex-row items-center gap-2 rounded bg-white p-4 shadow-elevation-light-04">
             <TimeIcon height={20} width={20} role="presentation" />
             <Typography variant={TypographyVariant.Body}>{statusText}</Typography>
         </div>
@@ -80,7 +80,7 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
     }, [loadingPolicy, policy]);
 
     return (
-        <div className="w-full gap-2 border-b-2 border-gray-100 p-4 md:px-8">
+        <div className="w-full gap-2 border-gray-100 p-4">
             <div className="flex flex-row gap-2">
                 <div className="h-12 w-12 shrink-0 rounded border-2 border-gray-200">
                     <Image src={imageSrc} alt={`${data?.carrier} icon`} width={48} height={48} role="presentation" aria-hidden="true" />
@@ -207,8 +207,11 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                 <ProcessingTimeStamp data={data} />
                 <div className="flex w-full flex-col rounded bg-white shadow-elevation-light-04">
                     <ContractDetails data={data} />
+                    {caseDetails.process === Processes.Correspondence && (
+                        <CaseDetailsSideNav CaseAdditionalDetails={caseDetails?.additionalData} carrier={caseDetails?.carrier} />
+                    )}
                     {shouldShowCaseInsights && (
-                        <div className="flex w-full flex-col p-4 md:px-8 border-b-2 border-gray-100">
+                        <div className="flex w-full flex-col p-4 border-t-2 border-gray-100">
                             <Title className="mb-2 flex items-center gap-2" variant={TitleVariant.SubTitle}>
                                 <LighBulb height={24} width={24} />
                                 Insight
@@ -227,12 +230,9 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                             </div>
                         </div>
                     )}
-                    {caseDetails.process === Processes.Correspondence && (
-                        <CaseDetailsSideNav CaseAdditionalDetails={caseDetails?.additionalData} carrier={caseDetails?.carrier} />
-                    )}
                     <Transactions caseDetails={caseDetails} />
-                    <Parties parties={data.parties} caseStatus={caseDetails.caseStatus} />
                 </div>
+                <Parties parties={data.parties} caseStatus={caseDetails.caseStatus} />
             </div>
         </div>
     );

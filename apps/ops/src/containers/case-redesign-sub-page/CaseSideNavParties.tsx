@@ -1,4 +1,4 @@
-import { Label, Tag } from '@zinnia/bloom/components';
+import { Label, Tag, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { HTMLAttributes } from 'react';
 
@@ -104,11 +104,12 @@ const OwnerInformation = ({ owner, ...rest }: { owner: PartyInfo } & HTMLAttribu
         return null;
     }
     return (
-        <li className="flex flex-col gap-1" {...rest}>
-            <Typography variant={TypographyVariant.LabelMdAlt}>
+        <li className="flex gap-4 rounded bg-white border-2 border-[#ededed] p-4" {...rest}>
+            <Icon type={IconType.CIRCLE_USER} />
+            <Typography variant={TypographyVariant.BodyBold}>
                 <PiiWrapper>{owner.fullName}</PiiWrapper>
             </Typography>
-            <div className="flex flex-row flex-wrap gap-1">
+            <div className="flex gap-4">
                 {owner.roles.map(role => (
                     <Tag text={role} key={role} />
                 ))}
@@ -179,7 +180,7 @@ export const Parties = ({
     const listClasses = `${spacingAndBorderClasses} flex w-full flex-col gap-4`;
 
     return (
-        <div className="flex w-full flex-col p-4 md:px-8" {...rest}>
+        <div className="flex w-full flex-col p-4 rounded bg-white shadow-elevation-light-04" {...rest}>
             <Title className="mb-2" variant={TitleVariant.SubTitle}>
                 {t('caseOverview.sidenav.people')}
             </Title>
