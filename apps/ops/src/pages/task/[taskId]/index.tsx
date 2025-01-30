@@ -110,16 +110,6 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            if (task.assignee !== user.email) {
-                logWarn('task/:id::task is not assigned to user', { assignee: task.assignee, user: user.email });
-                return {
-                    redirect: {
-                        destination: '/home',
-                        permanent: false,
-                    },
-                };
-            }
-
             const { taskType, carrier, caseId, process } = task;
             const caseDetails = await getCaseDetailsSSR(caseId, accessToken as string);
             const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
