@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import { BeneficiaryConfig } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
@@ -10,7 +9,6 @@ import {
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
-import { frequencyToValue } from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import {
     SignatureFields
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
@@ -35,7 +33,6 @@ import {
     FormDisbursementSelections,
     DisbursementToggleType,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import getFlicConfig from '../../withdrawal-forms/flic-withdrawal-form.helper';
 import { defaultDisbursmentConsent } from '../../withdrawal-forms/rsln/rsln-withdrawal-form.helper';
@@ -83,7 +80,6 @@ export default function getNasuRmdConfig(t: TFunction) {
                     ],
                 },
             ],
-
             addressFields: [
                 {
                     addressType: AddressTypes.DEFAULT,
@@ -307,50 +303,12 @@ export default function getNasuRmdConfig(t: TFunction) {
         },
     ];
 
-    const rmdformValidation = ({
-        formParty,
-        formDisbursement,
-        formSignature,
-        formProgram,
-    }: Partial<FormParts> = {}): FormValidationErrors => {
+    const rmdFormValidation = ({ formParty, formSignature, formDisbursement, formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
         const rmds = formProgram?.rmd?.rmdPrograms;
-        if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
-                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
-            }
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
-            }
-        }
 
         if (rmds && rmds?.length === 0) {
             errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
-        }
-
-        if (rmds && rmds?.length > 0) {
-            const sortedPrograms = rmds.sort((a, b) => a.startDate.text.localeCompare(b.startDate.text));
-
-            sortedPrograms.map((program, index) => {
-                const frequency = (program?.frequency?.text && frequencyToValue[program?.frequency?.text]) || frequencyToValue.Annually;
-                const calculatedEndDate = dayjs(program?.startDate?.text, ZAHARA_API_DATE_FORMAT)
-                    .add((Number(program?.duration?.text) - 1) * frequency, 'month')
-                    .add(1, 'day')
-                    .format(ZAHARA_API_DATE_FORMAT)
-                    .toString();
-
-                if (index < sortedPrograms.length - 1) {
-                    if (calculatedEndDate > sortedPrograms[index + 1].startDate.text) {
-                        errors['rmdDateOverlap'] = t('rmdMethod.rmdWarnings.dateOverlap');
-                    }
-
-                    if (Number(program?.duration?.text) === 0 && sortedPrograms[index + 1].startDate.text !== '') {
-                        errors['rmdDetectedDurationZero'] = t('rmdMethod.rmdWarnings.detectedDurationZero', {
-                            startDate: dayjs(program?.startDate?.text, ZAHARA_API_DATE_FORMAT).format(DEFAULT_DATE_FORMAT),
-                        });
-                    }
-                }
-            });
         }
 
         return errors;
@@ -412,7 +370,7 @@ export default function getNasuRmdConfig(t: TFunction) {
         formPartyConfigs,
         signaturesConfig,
         signaturesNotaryConfig,
-        formValidation: rmdformValidation,
+        formValidation: rmdFormValidation,
         cslnCheckStates,
         handleShouldShowDOBInOl4573,
         w4pSignaturesConfig,

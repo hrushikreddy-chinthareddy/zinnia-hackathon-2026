@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
+import { BeneficiaryConfig } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import {
     BankingFields,
     DisbursementFields,

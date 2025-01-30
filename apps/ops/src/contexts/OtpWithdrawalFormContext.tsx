@@ -135,7 +135,7 @@ export const defaultFormDataContext = {
     parties: [],
     currentFormState: CaseStatus.Draft,
     isFormStateReadOnly: false,
-    formBeneInfo: {},
+    formBeneInfo: {} as FormBeneInfo,
     setCurrentFormState: noop,
     setFormAdditionalWaivers: noop,
     setFormData: noop,

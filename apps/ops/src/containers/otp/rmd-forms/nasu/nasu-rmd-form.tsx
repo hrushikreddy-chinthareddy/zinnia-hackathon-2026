@@ -55,9 +55,9 @@ export default function NasuRmdWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.ULPC}_RMD_DIGITAL_FORM`,
+            formExtName: `${initialForm?.carrier || Carrier.NASU}_RMD_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.ULPC}_RMD_DIGITAL_FORM`,
+                formType: `${initialForm?.carrier || Carrier.NASU}_RMD_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },

@@ -173,12 +173,7 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
         const info = beneInfo && beneInfo?.isBeneSpouse
             ? { spouseFirstName, spouseMiddleName, spouseLastName, spouseDOB, spouseSSN, isBeneSpouse: beneInfo?.isBeneSpouse || false, isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false }
             : { ...DEFAULT_BENEFICIARY, isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false };
-        onBeneChange((prevState) => {
-            return {
-                ...prevState,
-                ...info,
-            };
-        });
+        onBeneChange(info);
     }, [beneInfo?.isBeneSpouse, spouseFirstName, spouseMiddleName,spouseLastName, spouseDOB, spouseSSN]);
 
 
@@ -186,24 +181,14 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
         const info = isBeneInfoProvided
             ? { spouseFirstName, spouseMiddleName,spouseLastName, spouseDOB, spouseSSN, isBeneSpouse: beneInfo?.isBeneSpouse || false, isBeneInfoProvided: isBeneInfoProvided }
             : DEFAULT_BENEFICIARY;
-        onBeneChange((prevState) => {
-            return {
-                ...prevState,
-                ...info,
-            };
-        });
+        onBeneChange(info);
     };
 
     const handleButtonClick = (isBeneSpouse: string) => {
         const info = isBeneSpouse === 'true'
             ? { spouseFirstName, spouseMiddleName, spouseLastName, spouseDOB, spouseSSN, isBeneSpouse: isBeneSpouse === 'true', isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false }
             : { ...DEFAULT_BENEFICIARY, isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false };
-        onBeneChange((prevState) => {
-            return {
-                ...prevState,
-                ...info,
-            };
-        });
+        onBeneChange(info);
     }
 
     return (
