@@ -21,7 +21,7 @@ import styles from '@/app/login/Login.module.css';
 import { MfaAuthenticator } from '@/types/auth';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
-import { PiiWrapper } from '../pii/PiiWrapper';
+import { MfaPhoneNumber } from '../mfa/phone-number/MfaPhoneNumber';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -39,14 +39,21 @@ const SubmitButton = () => {
   );
 };
 
+// TODO: move this to utils somewhere
+
 export const MfaChallenge = ({
   enrollment,
   id,
   postLogin,
+  selectedVerificationId,
 }: {
   enrollment?: string;
   id?: string;
   postLogin?: boolean;
+  /**
+   * If user selects a specific verification method, we can send in the method
+   */
+  selectedVerificationId?: string;
 }) => {
   const router = useRouter();
   const [resendCode, setResendCode] = useState(false);
@@ -103,7 +110,13 @@ export const MfaChallenge = ({
                 a.oob_channel === channelType &&
                 a.name?.includes(lastFourOfPhoneNumber || '')
             );
+          } else if (selectedVerificationId) {
+            authenticator = authenticators.find(
+              a => a.authenticator_type === selectedVerificationId
+            );
           } else {
+            // TODO: Uh-oh this implies that only one of these is active.
+            // need to verify that both enrolled are enrolled as active
             authenticator = authenticators.find(
               a => ['voice', 'sms'].includes(a.oob_channel || '') && a.active
             );
@@ -124,7 +137,7 @@ export const MfaChallenge = ({
       }
     };
     fetchAuthenticators();
-  }, [router, id, postLogin]);
+  }, [router, id, postLogin, selectedVerificationId]);
 
   const hasError = !!verifyMfaChallengeState.error;
   const inputStyles = clsx(`${styles.input}`, {
@@ -146,11 +159,6 @@ export const MfaChallenge = ({
   ) {
     setResendCode(false);
   }
-
-  const formatPhoneNumber = (phoneNumber: string) => {
-    const digits = phoneNumber.slice(-4);
-    return `1 (***) ***-${digits}`;
-  };
 
   const getDisclaimerText = (oobChannel: string) => {
     if (oobChannel === 'sms') {
@@ -186,11 +194,10 @@ export const MfaChallenge = ({
             value={authenticator?.authenticator_type}
           />
         )}
+        {/* //TODO: will need to make this style dynamic depending on whether in login experience or not */}
         <div className={styles.formGroup}>
           <div className="typography-content-value">
-            <PiiWrapper>
-              {formatPhoneNumber(authenticator?.name || '')}
-            </PiiWrapper>
+            <MfaPhoneNumber phoneNumber={authenticator?.name || ''} />
           </div>
         </div>
         <div>

@@ -225,3 +225,19 @@ export enum MfaVerificationType {
   SMS = 'sms',
   CALL = 'voice',
 }
+
+interface AuthenticationMethod {
+  id: string;
+  type: MfaVerificationType;
+}
+
+export interface UserAuthenticationMethod {
+  id: string;
+  type: string;
+  confirmed: boolean;
+  phone_number: string;
+  created_at: string;
+  last_auth_at: string;
+  preferred_authentication_method: MfaVerificationType;
+  authentication_methods: AuthenticationMethod[];
+}
