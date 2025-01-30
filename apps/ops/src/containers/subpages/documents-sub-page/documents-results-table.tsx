@@ -143,7 +143,7 @@ export default function DocumentsResultsTable({
                         >
                             <TableCell>
                                 <div className="flex flex-col items-start">
-                                    <PiiWrapper>{document.displayName}</PiiWrapper>
+                                    <PiiWrapper>{document?.displayName || ''}</PiiWrapper>
                                     <div>
                                         {linkedDocumentIdentifiers.includes(docDisplayId) ? (
                                             <Tooltip

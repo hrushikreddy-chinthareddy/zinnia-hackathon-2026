@@ -8,17 +8,24 @@ import { Statuses } from '@deps/models/case/case';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
 import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
-import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
 
 import { TaskView } from './progress-tab-types';
+import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
 
-const SupportedTaskMap = [TaskType.SuitabilityReview, TaskType.SuitabilityDataEntry];
+const SupportedTaskMap = [
+    TaskType.SuitabilityReview,
+    TaskType.SuitabilityDataEntry,
+    TaskType.PURCHASE_DOCUMENT_MATCHING,
+    TaskType.Agent_Nigo,
+];
 
 export function Task({ task }: { task: TaskView }) {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
     const TaskTitle: Record<string, string> = {
         [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReviewIssues'),
+        [TaskType.PURCHASE_DOCUMENT_MATCHING]: t('caseOverview.tabs.purchaseDocumentMatchingIssues'),
+        [TaskType.Agent_Nigo]: t('caseOverview.tabs.agentNigo'),
     };
 
     const TaskTypeMap: Record<string, string> = {

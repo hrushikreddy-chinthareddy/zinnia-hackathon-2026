@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
 import { ChipRadio } from '@deps/components/chip-radio/chip-radio';
@@ -13,22 +13,21 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { CarrierListItem } from '@deps/pages/dashboard';
 import { DashboardSearchFilter } from '@deps/queries/cases';
+import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
 
+import { Legend } from './legend';
 import styles from './submission-type.module.css';
 import { submissionTypeQuery, transformData, generateSeries, startDates, TimeframeFilterOptions, getDateRangeText } from './utils';
+import { getPieChartData } from '../distribution-charts/distribution-pie-chart-small-api-based';
 import CaseStatBlock from '../stat-blocks/case-stat-block';
 
-interface SubmissionTypeProps {
-    selectedCarriers: CarrierListItem;
-    selectedBrokerDealers: CarrierListItem;
-}
-export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, selectedBrokerDealers }) => {
+export const SubmissionType: FC = () => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
     const [submissionVs, setSubmissionVs] = useState<GroupByOptions>(GroupByOptions.Carrier);
+    const { selectedCarriers, selectedBrokerDealers, selectedProcess, selectedSubProcess } = useDashboardStore(state => state);
 
     const filter: DashboardSearchFilter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
@@ -44,6 +43,9 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
     if (selectedBrokerDealers && brokers.length) {
         filter.brokerDealerName = brokers;
     }
+
+    filter.process = [selectedProcess];
+    filter.requestSubType = selectedSubProcess;
 
     // If there is a selected carrier, default to the product name. Otherwise back to carrier
     useEffect(() => {
@@ -92,6 +94,9 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
             series,
             applicationTypeCategories,
             chartConfig: Highcharts.merge(caseChartHelpers.getBaseBarChartConfiguration(), {
+                legend: {
+                    enabled: false,
+                },
                 chart: {
                     height: 300,
                 },
@@ -101,10 +106,21 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
                 yAxis: {
                     allowDecimals: false,
                 },
+
                 series,
             }),
         };
     });
+
+    const pieChartData = getPieChartData(pieChartStats);
+    const pieChartDataColors = pieChartData.map(pieChart => {
+        return {
+            ...pieChart,
+            color: pieChart.name === 'Digital' ? '#00628B' : pieChart.name === 'Electronic' ? '#85BCD3' : '#021936',
+            type: 'pie',
+        };
+    });
+    const pieChartSeriesData: Highcharts.SeriesOptionsType[] = [{ data: pieChartDataColors, name: 'cases', type: 'pie' }];
 
     const timeframeOptions = Object.values(TimeframeFilterOptions).map(option => ({
         label: option,
@@ -137,6 +153,38 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
         </>
     );
 
+    const chunkedResponseLengths = chunkedResponse.map(chunk => chunk.length);
+
+    const eachChunkPortionOfTotal = useMemo(
+        () =>
+            chunkedResponseLengths.map((chunkLength, index) => {
+                const total = chunkedResponseLengths.reduce((acc, val) => acc + val, 0);
+                const chunkStartIndex = chunkedResponseLengths.slice(0, index).reduce((acc, val) => acc + val, 1);
+                const chunkEndIndex = chunkStartIndex + chunkLength - 1;
+                return {
+                    start: chunkStartIndex,
+                    end: chunkEndIndex,
+                    total,
+                };
+            }),
+        [chunkedResponseLengths]
+    );
+
+    const legendItems = [
+        {
+            label: 'Electronic',
+            color: '#85BCD3',
+        },
+        {
+            label: 'Digital',
+            color: '#00628B',
+        },
+        {
+            label: 'Paper',
+            color: '#021936',
+        },
+    ];
+
     return (
         <div className={styles.container}>
             {applicationTypeLoading2 || applicationTypeLoading ? (
@@ -162,7 +210,7 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
                             variant="single"
                             labelTooltip={submissionMethodTooltip}
                             loading={applicationTypeLoading2 || applicationTypeLoading}
-                            chartConfig={{ colors: ['#85BCD3', '#00628B', '#021936'] }}
+                            chartConfig={{ series: pieChartSeriesData }}
                         />
                         <div className={clsx('w-3/4', styles.chartContainer)}>
                             <div className={styles.filterContainer}>
@@ -187,7 +235,7 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
                                 />
                             </div>
                             <Carousel
-                                slideStyle="my-8 px-8 pt-6"
+                                slideStyle="my-8 pt-6"
                                 slides={statsWithChartData.map((stat, index) => {
                                     return (
                                         <HighchartsReact
@@ -197,6 +245,10 @@ export const SubmissionType: FC<SubmissionTypeProps> = ({ selectedCarriers, sele
                                         />
                                     );
                                 })}
+                                slideItemsCount={eachChunkPortionOfTotal}
+                                bottomContent={
+                                    <Legend title="Case Submissions" items={legendItems} containerClass={styles.legendContainer} />
+                                }
                             />
                         </div>
                     </div>
