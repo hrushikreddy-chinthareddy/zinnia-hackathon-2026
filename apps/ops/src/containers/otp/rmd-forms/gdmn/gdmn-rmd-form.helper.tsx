@@ -1,11 +1,9 @@
-import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import { BankingFields, DisbursementFields, getDefaultFormDisbursementValues } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
-import { frequencyToValue } from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import {
     SignatureFields
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
@@ -26,7 +24,6 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { ZAHARA_API_DATE_FORMAT, DEFAULT_DATE_FORMAT } from '@deps/types/constants';
 
 import { createValidator } from '../../utils/helper-utils';
 import getSbgcConfig from '../../withdrawal-forms/sbgc-withdrawal-form.helper';
@@ -38,50 +35,11 @@ export default function getGdmnRmdConfig(t: TFunction) {
     const rmdFormValidation = ({ formParty, formSignature, formDisbursement, formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
         const rmds = formProgram?.rmd?.rmdPrograms;
-        if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
-                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
-            }
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
-            }
-        }
 
         if (rmds && rmds?.length === 0) {
             errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
         }
 
-        if (rmds && rmds?.length > 0) {
-            const sortedPrograms = rmds.sort((a, b) => a.startDate.text.localeCompare(b.startDate.text));
-
-            sortedPrograms.map((program, index) => {
-                const frequency = (program?.frequency?.text && frequencyToValue[program?.frequency?.text]) || frequencyToValue.Annually;
-                const calculatedEndDate = dayjs(program?.startDate?.text, ZAHARA_API_DATE_FORMAT)
-                    .add((Number(program?.duration?.text) - 1) * frequency, 'month')
-                    .add(1, 'day')
-                    .format(ZAHARA_API_DATE_FORMAT)
-                    .toString();
-
-                if (
-                    Number(program?.duration?.text) !== 1 &&
-                    [29, 30, 31].includes(dayjs(program?.startDate?.text, ZAHARA_API_DATE_FORMAT).get('D'))
-                ) {
-                    errors['rmdSystematicStartDate'] = t('rmdMethod.rmdWarnings.rmdSystematicStartDate');
-                } // CMW-13160  RMD start date must be 1st through the 28th
-
-                if (index < sortedPrograms.length - 1) {
-                    if (calculatedEndDate > sortedPrograms[index + 1].startDate.text) {
-                        errors['rmdDateOverlap'] = t('rmdMethod.rmdWarnings.dateOverlap');
-                    }
-
-                    if (Number(program?.duration?.text) === 0 && sortedPrograms[index + 1].startDate.text !== '') {
-                        errors['rmdDetectedDurationZero'] = t('rmdMethod.rmdWarnings.detectedDurationZero', {
-                            startDate: dayjs(program?.startDate?.text, ZAHARA_API_DATE_FORMAT).format(DEFAULT_DATE_FORMAT),
-                        });
-                    }
-                }
-            });
-        }
         return errors;
     };
 
