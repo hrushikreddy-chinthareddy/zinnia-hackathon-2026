@@ -333,6 +333,10 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                     component: SignatureFields.SignatureDate,
                     key: 'owner-date',
                 },
+                {
+                    component: SignatureFields.SignGuaranteeStamp,
+                    key: 'owner-sign-guarantee-stamp',
+                },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
         },
@@ -354,6 +358,10 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'beneficiary-date',
+                },
+                {
+                    component: SignatureFields.SignGuaranteeStamp,
+                    key: 'owner-sign-guarantee-stamp',
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
