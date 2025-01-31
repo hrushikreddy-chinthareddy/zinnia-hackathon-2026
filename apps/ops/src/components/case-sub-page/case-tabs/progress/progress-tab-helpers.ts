@@ -385,7 +385,7 @@ export class TransformedCase {
         }
         return {
             createdAt: foundTask.createdAt,
-            description: foundTask.label ?? '',
+            description: foundTask.label || foundTask.taskType,
             id: foundTask.id,
             hasParentException: isFromException,
             parentExceptionStatus: status,
