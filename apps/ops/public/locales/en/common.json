@@ -1381,7 +1381,8 @@
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source of Premium: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}",
-                "ceding carrier": "Ceding Carrier: {{label}}"
+                "ceding carrier": "Ceding Carrier: {{label}}",
+                "premium source": "Premium Source: {{label}}"
             },
             "reviewIssues": "Review {{taskType}}",
             "suitabilityReview": "suitability",
@@ -3228,7 +3229,6 @@
             "detailsLabel": "Details",
             "noDataAvailable": "No data available.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
-            "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
             "reasonLabel": "Status reason",
             "pendinglabel": "Pending until",
             "canceledLabel": "Canceled on",
@@ -3237,7 +3237,12 @@
             "noAssignee": "Only the assignee can start this task",
             "startTask": "Start task",
             "claimTask": "Claim task",
-            "taskHeading": "Task"
+            "taskHeading": "Task",
+            "taskDetails": {
+                "purchaseDocumentMatching": "As part of the document matching process for the purchase document, one or more documents require review and confirmation to ensure proper alignment before proceeding with contract issuance",
+                "suitabilityReview": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
+                "newbusinessAgentNigo": "As part of the {{caseType}} process, an review is required to ensure accuracy and completeness before proceeding with the next steps due to the inability to complete systematic validation and processing"
+            }
         },
         "suitability": {
             "header": "Complete Suitability Review",
