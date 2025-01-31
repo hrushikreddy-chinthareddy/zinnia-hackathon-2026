@@ -1321,6 +1321,10 @@
                 "statusTooltip": "Pas commencé",
                 "detailedReason": "Ce cas est actuellement en attente pour que le travail commence. Vous pouvez revenir plus tard pour des mises à jour en recherchant le cas."
             },
+            "withdrawn": {
+                "badgeText": "Retiré",
+                "tooltip": "Le statut est retiré."
+            },
             "unknown": {
                 "badgeText": "Inconnu",
                 "tooltip": "Le statut est inconnu."
