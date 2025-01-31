@@ -1381,7 +1381,8 @@
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source of Premium: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}",
-                "ceding carrier": "Ceding Carrier: {{label}}"
+                "ceding carrier": "Ceding Carrier: {{label}}",
+                "premium source": "Premium Source: {{label}}"
             },
             "reviewIssues": "Review {{taskType}}",
             "suitabilityReview": "suitability",
