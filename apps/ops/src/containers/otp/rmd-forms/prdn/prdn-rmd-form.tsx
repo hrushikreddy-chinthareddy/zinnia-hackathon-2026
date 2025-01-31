@@ -34,9 +34,9 @@ const PrdnRmdWithdrawalForm = () => {
         if (formSubtype) {
             setFormData(fs => ({
                 ...fs,
-                formExtName: `${initialForm?.carrier || Carrier.PRDN}_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`, //get client code & withdrawal type from index
+                formExtName: `${initialForm?.carrier || Carrier.PRDN}_RMD_DIGITAL_FORM`,
                 metaData: {
-                    formType: `${initialForm?.carrier || Carrier.PRDN}_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
+                    formType: `${initialForm?.carrier || Carrier.PRDN}_RMD_DIGITAL_FORM`,
                     formId: null,
                     formNumber: '',
                 },
