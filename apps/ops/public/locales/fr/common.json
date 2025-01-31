@@ -3202,7 +3202,6 @@
             "issueLabel": "Problème",
             "detailsLabel": "Détails",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
-            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat..",
             "reasonLabel": "Raison du statut",
             "pendinglabel": "En attente jusqu'au",
             "canceledLabel": "Annulé le",
@@ -3211,7 +3210,12 @@
             "noAssignee": "Seul le responsable peut démarrer cette tâche",
             "startTask": "Démarrer la tâche",
             "claimTask": "Revendiquer la tâche",
-            "taskHeading": "Tâche"
+            "taskHeading": "Tâche",
+            "taskDetails": {
+                "purchaseDocumentMatching": "Dans le cadre du processus de mise en correspondance des documents pour le document d'achat, un ou plusieurs documents nécessitent un examen et une confirmation pour garantir un alignement approprié avant de procéder à l'émission du contrat",
+                "suitabilityReview": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par Carrier et annulés pour émettre le contrat.",
+                "newbusinessAgentNigo": "Dans le cadre du processus {{caseType}}, un examen est nécessaire pour garantir l'exactitude et l'exhaustivité avant de passer aux étapes suivantes en raison de l'impossibilité d'effectuer une validation et un traitement systématiques"
+            }
         },
         "suitability": {
             "header": "Examen complet de l’adéquation",
