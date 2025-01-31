@@ -11,13 +11,10 @@ import {
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
-import { JointLifeExpectancyConfig } from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import {
-    SignatureBonusFields,
     SignatureFieldNames,
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
-import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
@@ -43,26 +40,12 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
 
 export default function getDlicRmdWithdrawalConfig(t: TFunction) {
     const formValidation = useCallback(
-        ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+        ({ formSignature }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
-            if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
-                ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
-                }
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
-                ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
-                }
-            }
+
             const ownerSignature = formSignature?.signatures?.find(
                 sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
             );
@@ -73,12 +56,7 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                     'formValidation.signaturePresentOptionMustBeSelected'
                 );
             }
-            if (
-                formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
-            ) {
-                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
-            }
+
             return errors;
         },
         [t]
@@ -299,6 +277,10 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                     fieldLabel: t('personalDetails.lastName'),
                 },
                 {
+                    fieldName: PartyFields.Dob,
+                    fieldLabel: t('personalDetails.dob'),
+                },
+                {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
                 },
@@ -364,28 +346,6 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
         { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
     ];
 
-    const jointLifeExpectancyConfigs: JointLifeExpectancyConfig = {
-        checkboxLabel: t('rmdMethod.jointLifeExpectancy.label.flic'),
-        fields: [
-            {
-                fieldName: PartyFields.FirstName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.firstName'),
-            },
-            {
-                fieldName: PartyFields.MiddleName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.middleName'),
-            },
-            {
-                fieldName: PartyFields.LastName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.lastName'),
-            },
-            {
-                fieldName: PartyFields.Dob,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.dob.flic'),
-            },
-        ],
-    };
-
     const irsSignatureConfig = [
         {
             component: SignatureFields.SignaturePresent,
@@ -396,7 +356,7 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
             key: 'irs-signature-sign-date',
         },
     ];
-    const signaturesConfig: SignatureValidationConfig[] = [
+    const signaturesConfig = [
         {
             key: `sig-val-owner`,
             fields: [
@@ -416,52 +376,41 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                     component: SignatureFields.SignatureDate,
                     key: 'owner-date',
                 },
+                {
+                    component: SignatureFields.SignGuaranteeStamp,
+                    key: 'owner-sign-guarantee-stamp',
+                },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
         },
         {
-            key: `sig-val-beneficiary`,
+            key: `sig-val-joint`,
             fields: [
                 {
                     component: SignatureFields.SignatureType,
-                    key: 'beneficiary-type',
+                    key: 'joint-type',
                 },
                 {
                     component: SignatureFields.SignaturePresent,
-                    key: 'beneficiary-present',
+                    key: 'joint-sign-present',
                 },
                 {
                     component: SignatureFields.SignatureTitle,
-                    key: 'beneficiary-title',
+                    key: 'joint-title',
                 },
                 {
                     component: SignatureFields.SignatureDate,
-                    key: 'beneficiary-date',
+                    key: 'joint-date',
+                },
+                {
+                    component: SignatureFields.SignGuaranteeStamp,
+                    key: 'joint-sign-guarantee-stamp',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-        },
-        {
-            key: `sig-val-spouse`,
-            bonusField: SignatureBonusFields.SpousalConsent,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'spouse-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'spouse-present',
-                },
-                {
-                    component: SignatureFields.SignatureDate,
-                    key: 'spouse-date',
-                },
-            ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            signatureType: SignatureValidationTypeWithdrawal.JointOwner,
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
+                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
             },
-            signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
     ];
 
@@ -489,7 +438,6 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.Notary,
         },
     ];
-
     const cslnCheckStates = ['CA', 'CO', 'TX'];
 
     return {
@@ -499,7 +447,6 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
         fundWithdrawnMethodOptions,
         irsSignatureConfig,
         signaturesConfig,
-        jointLifeExpectancyConfigs,
         additionalWithholdingAmountConfig,
         signaturesNotaryConfig,
         cslnCheckStates,
