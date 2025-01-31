@@ -43,22 +43,9 @@ import { createValidator } from '../../utils/helper-utils';
 
 export default function getDlicRmdWithdrawalConfig(t: TFunction) {
     const formValidation = useCallback(
-        ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+        ({ formSignature }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
-            if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
-                ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
-                }
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
-                ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
-                }
-            }
+
             const ownerSignature = formSignature?.signatures?.find(
                 sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
             );
@@ -69,12 +56,7 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                     'formValidation.signaturePresentOptionMustBeSelected'
                 );
             }
-            if (
-                formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
-            ) {
-                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
-            }
+
             return errors;
         },
         [t]
