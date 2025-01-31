@@ -6,7 +6,7 @@ import HistoryEventCard from '@deps/components/history-event-card/history-event-
 import { LabelVariant, labelMapping } from '@deps/components/label/label';
 import DividerLabel from '@deps/components/tailwind-components/divider-label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { getTransactions } from '@deps/containers/subpages/history-sub-page/event-feed/event-feed.helpers';
+import { getTransactions } from '@deps/containers/subpages/activity-sub-page/event-feed/event-feed.helpers';
 import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { Transaction } from '@deps/models/policy/sor-policy';
@@ -43,7 +43,7 @@ export default function EventFeed({ isSideSheetOpen }: EventFeedProps) {
     }
 
     return (
-        <div className="flex h-full flex-1 flex-col gap-4 self-stretch overflow-x-auto pl-2 pr-4 md:pr-6 lg:pr-8">
+        <div className="flex h-full flex-1 flex-col gap-4 self-stretch pl-2 pr-4 md:pr-6 lg:pr-8">
             <div className="flex flex-col items-start gap-2 self-stretch">
                 <h2 className={labelMapping[LabelVariant.FieldLabel].styles}>
                     {t(`policy.history.${(historyFilters.statusFilter ?? 'all').replace(' ', '').toLowerCase()}Events`)}

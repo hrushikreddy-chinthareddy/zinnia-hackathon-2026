@@ -10,6 +10,7 @@ export default function DocumentResultsPagination(props: {
     total: number;
     limit: number;
     loading: boolean | null;
+    className?: string;
 }) {
     const { t } = useTranslation();
     const [goToPage, setGoToPage] = useState(() => {
@@ -41,8 +42,8 @@ export default function DocumentResultsPagination(props: {
     return (
         <>
             {!!total && (
-                <div className="align-center mx-auto grid grid-cols-4 lg:grid-cols-12">
-                    <div className="order-2 col-span-4 mt-8 flex items-center justify-center gap-1 pb-[120px] lg:order-1 lg:col-span-2 lg:mt-0 lg:justify-start lg:pb-0">
+                <div className={`align-center mx-auto grid grid-cols-4 lg:grid-cols-12 ${props.className || ''}`}>
+                    <div className="order-2 col-span-4 mt-8 flex items-center justify-center gap-1 lg:order-1 lg:col-span-2 lg:mt-0 lg:justify-start lg:pb-0">
                         <Typography variant={TypographyVariant.BodySm} className="pb-1">
                             {t('policy.documents.xToYOfZ', { x: offset + 1, y: Math.min(offset + limit, total), z: total })}
                         </Typography>
@@ -55,10 +56,12 @@ export default function DocumentResultsPagination(props: {
                 </div>
             )}
             {!total && !loading && (
-                <div>
-                    <Typography variant={TypographyVariant.BodySm} className="pb-1">
-                        {t('policy.documents.results', { total })}
-                    </Typography>
+                <div className={`align-center mx-auto grid grid-cols-4 lg:grid-cols-12 ${props.className || ''}`}>
+                    <div className="order-2 col-span-4 mt-8 flex items-center justify-center gap-1 lg:order-1 lg:col-span-2 lg:mt-0 lg:justify-start lg:pb-0">
+                        <Typography variant={TypographyVariant.BodySm} className="pb-1">
+                            {t('policy.documents.results', { total })}
+                        </Typography>
+                    </div>
                 </div>
             )}
         </>

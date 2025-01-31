@@ -53,7 +53,7 @@ const PolicyLayout: React.FC<PageLayoutProps> = ({
         return getNavLinks(policy, t);
     }, [navLinks, policy, t]);
 
-    const classes = 'height-adjusted flex w-full';
+    const classes = 'flex w-full';
 
     const openSideSheet = () => {
         if (globalValuesData) {

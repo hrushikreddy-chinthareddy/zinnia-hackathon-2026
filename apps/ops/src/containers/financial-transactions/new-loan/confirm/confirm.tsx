@@ -77,7 +77,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
                         <CardInfo
                             cta={{
                                 action: () => {
-                                    router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/history`);
+                                    router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/activity/transactions`);
                                 },
                                 text: t('cta'),
                             }}
@@ -85,9 +85,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
                             secondaryCta={
                                 <NavElement
                                     aria-label={t('secondaryCta') as string}
-                                    onClick={() =>
-                                        router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans`)
-                                    }
+                                    onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans`)}
                                     size={NavElementSize.Small}
                                     type={NavElementType.Button}
                                     variant={NavElementVariant.Default}

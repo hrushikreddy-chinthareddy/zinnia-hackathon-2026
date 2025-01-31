@@ -36,7 +36,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
     const sideSheet = useSideSheetContext();
 
     const { processDate, status } = transaction || {};
-    const { amount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(
+    const { amount, requestedAmount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(
         policy as Policy,
         transaction as Transaction
     );
@@ -113,12 +113,19 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
                             </div>
                         )}
                     </div>
-                    {amount !== undefined && (
-                        <div className="font-bold md:text-content-value">
-                            <AccessibleFormattedAmount amount={amount} />
-                        </div>
-                    )}
-
+                    <div className={"flex flex-col flex-shrink items-end " + (isClickable ? '' : 'mr-[40px]')}>
+                        {amount !== undefined && (
+                            <div className="font-bold md:text-content-value">
+                                <AccessibleFormattedAmount amount={amount} />
+                            </div>
+                        )}
+                        {requestedAmount != null && (
+                            <div className="font-secondary text-body-sm text-gray-500">
+                                {`${t('policy.history.requested')}: `}
+                                <AccessibleFormattedAmount amount={requestedAmount} />
+                            </div>
+                        )}
+                    </div>
                     {isClickable && <ChevronRightIcon className="text-secondary" height={24} width={24} />}
                 </div>
             </button>

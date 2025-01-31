@@ -1,7 +1,12 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { useEffect, useState } from 'react';
 
+import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
+import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
+import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
 import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import QuickActionsMenu, { QuickActionsMenuProps } from '@deps/components/quick-actions-menu/quick-actions-menu';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
@@ -20,6 +25,7 @@ export interface QuickLinksProps extends QuickActionsMenuProps {
     links: {
         href: string;
         name: string;
+        subLinks?: { href: string; name: string }[];
     }[];
     policy: PolicyDetails;
     sessionId: string;
@@ -118,7 +124,16 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
             checkWithdrawalEligibility();
             checkNewLoanEligibility();
         }
-    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife, isAnnuity, newLoanEnabled, policy.loanValues?.maximumLoanAmount]);
+    }, [
+        planCode,
+        policyNumber,
+        arrangementId,
+        fireEligibilityChecks,
+        isLife,
+        isAnnuity,
+        newLoanEnabled,
+        policy.loanValues?.maximumLoanAmount,
+    ]);
 
     useEffect(() => {
         if (autopayChecked && newPremiumChecked && withdrawalChecked && newLoanChecked) {
@@ -142,18 +157,42 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
 
     return (
         <div className="flex flex-wrap gap-x-8 gap-y-4 text-md" data-testid="quick-links">
-            {links.map(({ name, href }) => (
-                <NavElement
-                    className="font-primary text-md"
-                    data-testid={name}
-                    href={href}
-                    key={name + href}
-                    onClick={() => trackClick(SegmentTrackedEventName.PolicyClicked, name, href, policyNumber, sessionId, userPartyId)}
-                    type={NavElementType.Link}
-                >
-                    {name}
-                </NavElement>
-            ))}
+            {links.map(({ name, href, subLinks }) => {
+                if (subLinks) {
+                    return (
+                        <MenuContextual
+                            key={name + href}
+                            trigger={
+                                <Typography variant={TypographyVariant.BodySmBold} className="text-secondary ">
+                                    {name}
+                                    <Icon type={IconType.CHEVRON} height={16} width={16} className="ml-1" />
+                                </Typography>
+                            }
+                        >
+                            <MenuContextualLabel label={name}>
+                                {subLinks.map(subLink => {
+                                    return <MenuContextualItem content={subLink.name} href={subLink.href} key={subLink.name} />;
+                                })}
+                            </MenuContextualLabel>
+                        </MenuContextual>
+                    );
+                } else {
+                    return (
+                        <NavElement
+                            className="font-primary text-md"
+                            data-testid={name}
+                            href={href}
+                            key={name + href}
+                            onClick={() =>
+                                trackClick(SegmentTrackedEventName.PolicyClicked, name, href, policyNumber, sessionId, userPartyId)
+                            }
+                            type={NavElementType.Link}
+                        >
+                            {name}
+                        </NavElement>
+                    );
+                }
+            })}
 
             {(isLife || isAnnuity) && (
                 <>

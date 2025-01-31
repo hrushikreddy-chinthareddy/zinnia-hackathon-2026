@@ -1,6 +1,9 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Button, Icon, IconType, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import { convertToCamelCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
+import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -8,12 +11,18 @@ import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
 import Content, { ContentVariant } from '@deps/components/content/content';
+import CustomLoader from '@deps/components/loader/customLoader';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { DocumentsLimit } from '@deps/constants/case';
+import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
+import { TaskSource } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus, TaskLabel, DocumentData } from '@deps/models/case/task-instance';
+import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { claimTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
@@ -23,18 +32,10 @@ import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/con
 import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
 import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
 import { DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_DISPLAY_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { writeToCache } from '@deps/utils/cache';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import router from 'next/router';
-import { TaskSource } from '@deps/models/case/task';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
-import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
-import { V3DocumentWithSource } from '@deps/types/documents-v3';
-import CustomLoader from '@deps/components/loader/customLoader';
-import { DocumentsLimit } from '@deps/constants/case';
 
 export enum TabOptions {
     Details = 'Details',
@@ -83,7 +84,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     };
 
     const fetchAdditionalDocuments = async ({ carrier, caseId }: { carrier: string; caseId: string }) => {
-        let searchBody: SearchRequest = {
+        const searchBody: SearchRequest = {
             documentClassification: SearchRequest.documentClassification.INBOUND,
             zinniaLiveCaseId: caseId,
             parentCarrierCode: carrier,
@@ -385,8 +386,9 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
 
                         <div className="col-span-1 text-[--color-base-text-text-secondary]">{t('sideSheet.task.detailsLabel')}</div>
                         <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                            {t('sideSheet.task.taskDetails', {
+                            {t(`sideSheet.task.taskDetails.${convertToCamelCase(task.taskType)}`, {
                                 taskType: toSentenceCase(task.taskName),
+                                caseType: task.process,
                             })}
                         </Typography>
                     </>

@@ -2,16 +2,16 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
+import UnauthorizedCard from '@deps/components/card/card-unauthorized';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { NoteInstance } from '@deps/models/case/note-instance';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ReactComponent as AnnotationsIcon } from '@deps/styles/elements/icons/communications/annotations.svg';
 import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import UnauthorizedCard from '@deps/components/card/card-unauthorized';
-import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
 const NoteItem = ({ note }: { note: NoteInstance }) => {
     const { t } = useTranslation();
@@ -39,6 +39,7 @@ const NoteItem = ({ note }: { note: NoteInstance }) => {
 export default function NotesTab() {
     const { t } = useTranslation();
     const { caseNotes, loadingNotes, notesStatusCode } = useCaseActivityContext();
+
     return (
         <CardContainer>
             <div>
