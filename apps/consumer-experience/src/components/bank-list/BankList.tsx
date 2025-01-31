@@ -43,7 +43,7 @@ export const BankList: FC<BankListProps> = ({
     });
   };
   const { data } = useQuery({
-    queryKey: [QueryKeys.POLICY_PROFILE, 'banks'],
+    queryKey: [QueryKeys.POLICY_PROFILE, 'banks', policyNumber],
     refetchInterval: ({ state }) => {
       return refetchHandler({
         data: state.data?.bankDetails || [],
