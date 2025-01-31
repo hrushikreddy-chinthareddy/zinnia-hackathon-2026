@@ -1,0 +1,27 @@
+/* @TODO: figure out how to import styling from zinnia/bloom */
+.h1 {
+  font-family: var(--font-family-primary);
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 44px;
+}
+
+.subtext {
+  font-family: var(font-family-primary);
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.h2 {
+  font-family: var(--font-family-primary);
+  font-size: 26px;
+  font-weight: 500;
+}
+
+.span {
+  font-family: var(--font-family-secondary);
+  font-size: 14px;
+  font-weight: 400;
+}
