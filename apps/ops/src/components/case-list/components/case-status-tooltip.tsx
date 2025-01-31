@@ -20,22 +20,25 @@ interface CaseStatusTooltipProps {
 }
 
 export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
-    const { caseStatus, processSubType, process, createdAt, exceptions, updatedAt, caseResultDetail: rawCaseResultDetail } = singleCase;
+    const { caseStatus, processSubType, process, createdAt, exceptions, updatedAt, caseResult: rawCaseResult } = singleCase;
     const daysAgo = calculateDaysAgo(new Date(singleCase.createdAt));
 
     let statusTooltip = '';
     let statusVariant = '';
     let statusText = '';
 
-    const caseResultDetail = rawCaseResultDetail ? ` ${rawCaseResultDetail}` : '';
+    const caseResult = rawCaseResult ? rawCaseResult.toLowerCase() : '';
+
+    const caseResultDetail = caseResult ? ` ${t(`caseOverview.caseStatus.canceled.${caseResult}`, { defaultValue: '' }) ?? ''}` : '';
 
     switch (caseStatus) {
         case Statuses.InProgress:
             statusVariant = BadgeVariant.INFO;
             statusTooltip = `${t('caseOverview.caseStatus.inProgress.tooltip', {
                 processSubType: processSubType ? toTitleCase(processSubType) : toTitleCase(process),
-            })}${dayjs(createdAt).format('MM/DD/YYYY')}
-            ${t('caseOverview.caseStatus.inProgress.tooltip2', { daysAgo: daysAgo })}${caseResultDetail}`;
+            })}${dayjs(createdAt).format('MM/DD/YYYY')}${t('caseOverview.caseStatus.inProgress.tooltip2', {
+                daysAgo: daysAgo,
+            })}`;
             statusText = t('caseOverview.caseStatus.inProgress.badgeText');
             break;
 
@@ -44,11 +47,11 @@ export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
             if (exceptions.length !== 0) {
                 statusTooltip = `${t('caseOverview.caseStatus.exception.tooltip', {
                     processSubType: processSubType ? toTitleCase(processSubType) : toTitleCase(process),
-                })}${t('caseOverview.caseStatus.exception.tooltip2', { exceptions: exceptions.length })}${caseResultDetail}`;
+                })}${t('caseOverview.caseStatus.exception.tooltip2', { exceptions: exceptions.length })}`;
             } else {
-                statusTooltip = `${t('caseOverview.caseStatus.zeroException.tooltip', {
+                statusTooltip = t('caseOverview.caseStatus.zeroException.tooltip', {
                     requestSubType: processSubType ? toTitleCase(processSubType) : toTitleCase(process),
-                })}${caseResultDetail}`;
+                });
             }
             statusText = t('caseOverview.caseStatus.exception.badgeText');
             break;
@@ -65,17 +68,17 @@ export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
             statusVariant = BadgeVariant.SUCCESS;
             statusTooltip = `${t('caseOverview.caseStatus.completed.tooltip', {
                 processSubType: processSubType ? toTitleCase(processSubType) : toTitleCase(process),
-            })}${dayjs(updatedAt).format('MM/DD/YYYY')}.${caseResultDetail}`;
+            })}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
             statusText = t('caseOverview.caseStatus.completed.badgeText');
             break;
         case Statuses.NotStarted:
             statusVariant = BadgeVariant.DEFAULT;
-            statusTooltip = `${t('caseOverview.caseStatus.notStarted.statusTooltip')}${caseResultDetail}`;
+            statusTooltip = t('caseOverview.caseStatus.notStarted.statusTooltip');
             statusText = t('caseOverview.caseStatus.notStarted.statusTooltip');
             break;
         default:
             statusVariant = BadgeVariant.DEFAULT;
-            statusTooltip = `${t('caseOverview.caseStatus.unknown.tooltip')}${caseResultDetail}`;
+            statusTooltip = t('caseOverview.caseStatus.unknown.tooltip');
             statusText = t('caseOverview.caseStatus.unknown.badgeText');
             break;
     }

@@ -52,6 +52,7 @@ export type Case = {
     tasks: TaskInstance[];
     templateId: string;
     updatedAt: string;
+    caseResult?: string;
     caseResultDetail?: string;
 };
 
