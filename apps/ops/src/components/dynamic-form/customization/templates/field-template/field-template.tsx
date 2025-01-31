@@ -5,10 +5,26 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 
 import styles from './field-template.module.css';
 
-export function FieldTemplate(props: FieldTemplateProps) {
-    const { id, label, displayLabel, required, description, errors, children, readonly, formData, classNames, uiSchema } = props;
-    const uiOptions = getUiOptions(uiSchema);
-    const helpText = uiOptions.help;
+export function FieldTemplate({
+    id,
+    label,
+    displayLabel,
+    required,
+    description,
+    errors,
+    children,
+    readonly,
+    formData,
+    classNames,
+    uiSchema,
+    schema,
+}: FieldTemplateProps) {
+    const { help, label: arrayLabel } = getUiOptions(uiSchema);
+
+    // todo: array label display conditionally
+    displayLabel = schema.type === 'array' ? arrayLabel : displayLabel;
+
+    const helpText = help;
 
     const helpInformation = helpText && (
         <Tooltip

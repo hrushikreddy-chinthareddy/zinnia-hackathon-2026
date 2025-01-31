@@ -7,7 +7,7 @@ import FileWidget from './file-widget/file-widget';
 import HyperLinkWidget from './hyper-link-widget/hyper-link-widget';
 import RadioWidget from './radio-widget/radio-widget';
 import SelectWidget from './select-widget/select-widget';
-import AutoCompleteWidget from './text-widget/auto-compete-widget';
+import AutoCompleteWidget from './file-widget/autocomplete-widget';
 import TextWidget from './text-widget/text-widget';
 import ValueWidget from './text-widget/value-widget';
 

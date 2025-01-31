@@ -122,6 +122,7 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
+
             const taskMetadata = {
                 formId: '004c97a1-d97c-4faa-9b7f-8ff9105b4c29',
                 process: 'New Business',
@@ -266,7 +267,6 @@ export const getServerSideProps = withPageAuthRequired({
                                         properties: {
                                             upload1: {
                                                 type: 'string',
-                                                placeholder: 'Find existing documents...',
                                             },
                                             or: {
                                                 type: 'string',
@@ -274,6 +274,7 @@ export const getServerSideProps = withPageAuthRequired({
                                             },
                                             attachment: {
                                                 type: 'array',
+                                                title: 'upload',
                                                 items: {
                                                     title: 'upload',
                                                     type: 'string',
@@ -314,6 +315,19 @@ export const getServerSideProps = withPageAuthRequired({
                                                         },
                                                     },
                                                 },
+                                            },
+                                        },
+                                    },
+                                    attachments: {
+                                        type: 'array',
+                                        items: {
+                                            documentName: {
+                                                title: 'Name',
+                                                type: 'string',
+                                            },
+                                            documentId: {
+                                                title: 'Document Id',
+                                                type: 'string',
                                             },
                                         },
                                     },
@@ -434,6 +448,7 @@ export const getServerSideProps = withPageAuthRequired({
                                     },
                                     upload1: {
                                         'ui:widget': 'AutoCompleteWidget',
+                                        'ui:placeholder': 'Find existing documents...',
                                         'ui:options': {
                                             label: false,
                                             icon: 'Search',
@@ -446,16 +461,17 @@ export const getServerSideProps = withPageAuthRequired({
                                         },
                                     },
                                     attachment: {
-                                        label: false,
                                         'ui:options': {
-                                            'ui:title': null,
                                             label: false,
                                         },
-                                        items: {
-                                            'ui:options': {
-                                                label: false,
-                                            },
-                                        },
+                                    },
+                                },
+                                attachments: {
+                                    'ui:options': {
+                                        label: false,
+                                        addable: false,
+                                        removable: true,
+                                        ArrayFieldTemplate: 'FileInfoTemplate',
                                     },
                                 },
                             },

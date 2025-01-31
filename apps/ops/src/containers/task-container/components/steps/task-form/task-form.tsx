@@ -134,12 +134,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
-            console.log('🚀 ~ event:', event);
-            setTask({
-                ...task,
-
+            setTask(ogTask => ({
+                ...ogTask,
                 data: event.formData,
-            });
+            }));
         },
 
         [setTask, task]

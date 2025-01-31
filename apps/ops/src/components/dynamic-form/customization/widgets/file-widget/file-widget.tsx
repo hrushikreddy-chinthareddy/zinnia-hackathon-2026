@@ -10,16 +10,19 @@ import {
     UIOptionsType,
     WidgetProps,
 } from '@rjsf/utils';
-import { ChangeEvent, useCallback, useState } from 'react';
+import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 
 import style from './file-widget.module.css';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
+import dayjs from 'dayjs';
+import { uploadDocumentV2 } from '@deps/queries/api/documents';
 function addNameToDataURL(dataURL: string, name: string) {
     if (dataURL === null) {
         return null;
@@ -64,7 +67,7 @@ function processFiles(files: FileList) {
     return Promise.all(Array.from(files).map(processFile));
 }
 
-function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     filesInfo,
     registry,
     options,
@@ -127,33 +130,37 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
 
 function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: WidgetProps<T, S, F>) {
     const { disabled, readonly, required, multiple, onChange, value, options, name, registry, schema, uiSchema, formContext } = props;
-    console.log('🚀 ~ formContext:', formContext);
 
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'general' });
     const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
     const sideSheet = useSideSheetContext();
     const [uploadSelection, setUploadSelection] = useState({});
 
-    const onSubmit = (data: any) => {
-        const payload = replacePlaceholders(data.formData, formContext || {});
-        console.log('🚀 ~ onSubmit ~ payload:', name, value, formContext);
+    const onSubmit = useCallback(
+        (data: any, files: any) => {
+            const attachments = [...formContext?.customData?.attachments];
+            Object.keys(files).map((key: any) => {
+                const { blob, name } = dataURItoBlob(files[key]);
+                const processedData = replacePlaceholders(data.formData, formContext ?? {});
+                const metaData = {
+                    ...processedData,
+                    sourceFileName: name,
+                    documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
+                    fileType: blob.type,
+                    formType: 'NB Application',
+                };
 
-        // const metaData = {
-        //     sourceFileName: 'name',
-        //     documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
-        //     docCategory: data,
-        //     fileType: 'blob.type',
-        //     formType: 'NB Application',
-        // };
-        // const uploadDocuments = uploadDocumentV2(metaData, data?.formData, formContext?.correlationId || '');
-    };
+                uploadDocumentV2(metaData, files[key], formContext?.correlationId || '');
+                attachments.push({ documentName: name, documentType: blob.type });
+                formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
+            });
+        },
+        [formContext, value]
+    );
 
     const uploadChangeHandler = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
-            setUploadSelection(ogData => ({
-                ...ogData,
-                ...event.formData,
-            }));
+            setUploadSelection({ ...event.formData });
         },
         [setUploadSelection]
     );
@@ -169,27 +176,15 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
             processFiles(event.target.files).then(filesInfoEvent => {
                 const newValue = filesInfoEvent.map(fileInfo => fileInfo.dataURL);
 
-                const values = '';
+                let values = '';
                 if (multiple) {
-                    onChange(value.concat(newValue[0]));
-
-                    // Ensure newValue is an array
-                    // const newFiles = Array.isArray(newValue) ? newValue : [newValue];
-
-                    // // Concatenate the existing values with new files
-                    // values = values + newFiles.join(',');
-                    // console.log('🚀 ~ processFiles ~ values:', values);
-
-                    // Call onChange with the updated array of files
-                    onChange(values);
+                    values = value?.concat(newValue);
+                    onChange(value?.concat(newValue));
                 } else {
+                    values = newValue[0] ?? '';
                     // For single file upload, just take the first element if newValue is an array
-                    const singleFile = Array.isArray(newValue) ? newValue[0] : newValue;
-
-                    // Call onChange with the single file (or an empty string if no file)
-                    onChange(singleFile ?? '');
+                    onChange(newValue[0]);
                 }
-
                 const content = (
                     <div className="p-6">
                         <FilesInfo<T, S, F>
@@ -223,7 +218,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                                     },
                                 },
                             }}
-                            onSubmit={onSubmit}
+                            onSubmit={(data: any) => onSubmit(data, values)}
                             formData={uploadSelection}
                             onChange={uploadChangeHandler}
                         />
@@ -248,7 +243,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         },
         [multiple, value, onChange]
     );
-
+    const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
     return (
         <>
             <div className="mt-1">
