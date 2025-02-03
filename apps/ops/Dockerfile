@@ -20,8 +20,8 @@ COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN --mount=type=secret,id=npmtoken echo "//npm.pkg.github.com/:_authToken=$(cat /run/secrets/npmtoken)" > /root/.npmrc
-RUN COREPACK_INTEGRITY_KEYS=0 corepack prepare
-RUN corepack enable pnpm && pnpm i
+RUN npm install -g corepack@latest
+RUN RUN corepack enable && corepack prepare pnpm@latest --activate && pnpm i
 
 # Build the project
 COPY --from=builder /app/out/full/ .
