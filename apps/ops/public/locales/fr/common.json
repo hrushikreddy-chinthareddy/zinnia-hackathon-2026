@@ -2449,7 +2449,8 @@
         "reversed": "Reversé",
         "reversedOn": "Reversé le {{date}}",
         "pendingReversal": "En Attente de Reversal",
-        "pendingReversalOn": "En Attente de Reversal le {{date}}"
+        "pendingReversalOn": "En Attente de Reversal le {{date}}",
+        "withdrawn": "Retiré"
     },
     "placeHolder": {
         "globalSelectSearch": "par exemple. Montant du remboursement du prêt, coût de base..."
