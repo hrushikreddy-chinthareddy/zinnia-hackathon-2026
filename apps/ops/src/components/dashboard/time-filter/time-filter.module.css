@@ -1,4 +1,10 @@
-.chipRadioItem {
+.timeframeContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.timeRadioItem {
     align-items: center;
     background: var(--color-chip-surface-chip-default-fill);
     border-color: var(--color-chip-border-chip-default-border);
@@ -10,20 +16,4 @@
     padding: var(--measure-dimension-padding-xs) var(--measure-dimension-padding-2xl);
     white-space: nowrap;
     width: fit-content;
-    height: 32px;
-
-    &[data-state='checked'] {
-        background: var(--color-chip-surface-chip-selected-fill);
-        border-color: var(--color-chip-border-chip-selected-border);
-        color: #ffffff;
-    }
-
-    &:last-of-type {
-        margin-right: 0;
-    }
-}
-
-.chipRadioGroup {
-    flex-direction: row-reverse;
-    gap: var(--measure-dimension-gap-md);
 }

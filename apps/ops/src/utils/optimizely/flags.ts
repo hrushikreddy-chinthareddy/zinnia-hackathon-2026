@@ -129,4 +129,5 @@ export enum FEATURE_FLAGS {
     NEW_LOAN_TRANSACTION = 'new_loan_transaction',
     DOCUMENTS_V3 = 'documents-v3-update',
     CASE_ADVISORS_EXCEL_ADDITIONAL_CARRIER_SUPPORT = 'case_advisors_excel_additional_carrier_support',
+    DASHBOARD_CASE_TIMING_CHART = 'dashboard_case_timing_chart',
 }
