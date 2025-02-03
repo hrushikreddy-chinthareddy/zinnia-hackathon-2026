@@ -265,7 +265,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     const NoAssigneeComp = (
         <div className="flex gap-2 text-gray-600">
             <span>No assignee</span>
-            {1 &&
+            {task.status === TaskStatus.New &&
                 (!claimTaskLoader ? (
                     <button className="text-blue-600 hover:text-blue-700 hover:underline focus:outline-none" onClick={handleClaimTask}>
                         {t('sideSheet.task.claimTask')}
@@ -370,7 +370,9 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     <Typography variant={TypographyVariant.BodySm}>
                         {task.assignee ? task.assignee : task.prefferedAssignee ? task.prefferedAssignee : NoAssigneeComp}
                     </Typography>
-                   {errorClaimingTask? <AssistiveText variant={AssistiveTextVariant.Error} text={t('sideSheet.task.claimTaskError')} />: null}
+                    {errorClaimingTask ? (
+                        <AssistiveText variant={AssistiveTextVariant.Error} text={t('sideSheet.task.claimTaskError')} />
+                    ) : null}
                 </div>
 
                 <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.newCreatedLabel')} </div>
