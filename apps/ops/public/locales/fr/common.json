@@ -3212,6 +3212,7 @@
             "noAssignee": "Seul le responsable peut démarrer cette tâche",
             "startTask": "Démarrer la tâche",
             "claimTask": "Revendiquer la tâche",
+            "claimTaskError": "Le système a rencontré une erreur temporaire. Veuillez réessayer.",
             "taskHeading": "Tâche",
             "taskDetails": {
                 "purchaseDocumentMatching": "Dans le cadre du processus de mise en correspondance des documents pour le document d'achat, un ou plusieurs documents nécessitent un examen et une confirmation pour garantir un alignement approprié avant de procéder à l'émission du contrat",
