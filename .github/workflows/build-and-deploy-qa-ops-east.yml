@@ -7,7 +7,7 @@ on:
 
 jobs:
   dev-deploy-east:
-    if: github.ref_name == 'feat/depu-4063--remove-corepack-integrity'
+    if: github.ref_name == 'dev'
     uses: ./.github/workflows/deploy-ops-east.yml
     with:
       environment-level: qa
