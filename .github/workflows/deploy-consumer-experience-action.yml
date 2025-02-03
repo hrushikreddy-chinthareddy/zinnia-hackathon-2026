@@ -33,7 +33,9 @@ jobs:
       - name: Download task definition (east)
         run: |
           aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_NAME_CONSUMER_EXPERIENCE }} --query taskDefinition > east-task-definition.json
-
+      - name: Set alternate npm integrity keys
+        run: |
+          echo COREPACK_INTEGRITY_KEYS="$(curl https://registry.npmjs.org/-/npm/v1/keys | jq -c '{npm: .keys}')" >> $GITHUB_ENV
       - name: Build, tag, and push image to Amazon ECR with action
         id: build_image
         uses: docker/build-push-action@v5
