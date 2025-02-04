@@ -1,5 +1,0 @@
-.tabTitle {
-    display: flex;
-    align-items: center;
-    gap: var(--measure-dimension-gap-md);
-}

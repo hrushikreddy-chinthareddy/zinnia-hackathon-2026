@@ -1,7 +1,7 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { clsx } from 'clsx';
 
-import { ProducerType } from '../types';
+import { ProducerType } from '../../types/types';
 
 import { default as styles } from './CardHeader.module.css';
 
@@ -27,14 +27,14 @@ export const CardHeader = ({
         };
   return (
     <div className={clsx(styles.cardHeader)}>
-      <Icon type={iconType} className={styles.icon} />
       <div>
-        <h1 className={styles.h1}>
+        <Icon type={iconType} className={styles.icon} />
+      </div>
+      <div>
+        <h1 className="mb-sm">
           {title} {id}
         </h1>
-        <span aria-label={subtext} className={styles.subtext}>
-          {subtext}
-        </span>
+        <p className="typography-content-body">{subtext}</p>
       </div>
     </div>
   );
