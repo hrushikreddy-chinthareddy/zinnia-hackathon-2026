@@ -1,7 +1,7 @@
 import { Label } from '@zinnia/bloom/components';
 import { clsx } from 'clsx';
 
-import { ProducerType } from '../types';
+import { ProducerType } from '../../types';
 
 import { default as styles } from './Identification.module.css';
 
@@ -37,17 +37,13 @@ export const Identification = ({
   })();
 
   return (
-    <div className={clsx(styles.cardSubSection)}>
-      <h2 className={clsx(styles.cardSubSectionHeader, styles.h2)}>
-        Identification
-      </h2>
+    <div className="content-section">
+      <h2>Identification</h2>
       <div className={clsx(styles.cardSubSectionContent)}>
         {identificationFields.map((field) => (
           <div key={field.label}>
             <Label>{field.label}</Label>
-            <span className={clsx(styles.span)} aria-label={field.label}>
-              {field.value}
-            </span>
+            <span>{field.value}</span>
           </div>
         ))}
       </div>

@@ -1,16 +1,18 @@
 import {
+  Icon,
   IconType,
   TabContent,
   TabGroup,
   TabList,
+  TabTrigger,
 } from '@zinnia/bloom/components';
 import { ProducerType } from './types';
-import { TabTitle } from './tab-title/TabTitle';
 import { CardHeader } from './card-header/CardHeader';
 import clsx from 'clsx';
-import { default as styles } from './Pom.module.css';
+import styles from './Pom.module.css';
 import { HashRouter, Route, Routes, useParams } from 'react-router';
-import PersonalInfo from './personal-info/PersonalInfo';
+import '../styles/globals.css';
+import EntityInformation from './entity-information/EntityInformation';
 
 export const Pom = ({
   translations,
@@ -48,7 +50,7 @@ const Producer = ({ producerType }: { producerType: ProducerType }) => {
       label: 'Entity Information',
       icon: IconType.IDENTIFICATION,
       value: 'personalInfo',
-      content: <PersonalInfo producerType={producerType} />,
+      content: <EntityInformation producerType={producerType} />,
     },
     {
       label: 'Licenses and Appointments',
@@ -71,21 +73,31 @@ const Producer = ({ producerType }: { producerType: ProducerType }) => {
   ];
 
   return (
-    <div className={clsx(styles.cardContainer)}>
-      {/* @todo: will remove this once we have the api integration */}
-      <CardHeader producerType={producerType} id={id} />
-      <TabGroup defaultValue={tabs[0].value}>
-        <TabList className={clsx(styles.tabList)}>
-          {tabs.map(({ label, icon, value }) => (
-            <TabTitle key={value} value={value} icon={icon} label={label} />
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div
+        className={clsx(styles.cardContainer, 'typography-content-body-sm')}
+        id="producer-onboarding-maintenance"
+      >
+        {/* @todo: will remove this once we have the api integration */}
+        <CardHeader producerType={producerType} id={id} />
+        <TabGroup defaultValue={tabs[0].value}>
+          <TabList className={styles.tabList}>
+            {tabs.map(({ label, icon, value }) => (
+              <TabTrigger value={value} className={clsx(styles.tabTitle)}>
+                <div>
+                  <Icon type={icon} />
+                </div>
+                {label}
+              </TabTrigger>
+            ))}
+          </TabList>
+          {tabs.map(({ value, content }: { value: string; content: any }) => (
+            <TabContent key={value} value={value}>
+              {content}
+            </TabContent>
           ))}
-        </TabList>
-        {tabs.map(({ value, content }: { value: string; content: any }) => (
-          <TabContent key={value} value={value}>
-            {content}
-          </TabContent>
-        ))}
-      </TabGroup>
+        </TabGroup>
+      </div>
     </div>
   );
 };

@@ -2,82 +2,33 @@
   border-radius: var(--measure-dimension-radius-sm);
   background-color: var(--color-base-surface-surface-primary);
   box-shadow: var(--shadow-elevation-elevation-light-sm);
+  padding: var(--dimesion-padding-mobile);
+  min-width: 380px;
+  margin: var(--measure-spacing-gap-lg);
 }
 
-.cardHeader {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: baseline;
-  padding: var(--measure-dimension-padding-4xl);
+/* Between 768px and 124px */
+@media (width > 767px) {
+  .cardContainer {
+    margin: var(--measure-spacing-gap-2xl);
+    padding: var(--dimesion-padding-tablet);
+  }
 }
 
-.tabList {
-  margin-bottom: 0;
-  margin-left: var(--measure-dimension-margin-md);
+/* Desktop */
+@media (width > 1024px) {
+  .cardContainer {
+    max-width: 1130px;
+    margin-right: var(--measure-spacing-gap-2xl);
+    margin-left: var(--measure-spacing-gap-2xl);
+    padding: var(--dimesion-padding-desktop);
+  }
 }
 
 @media screen and (max-width: 768px) {
   .tabList {
-    margin-left: var(--measure-dimension-margin-sm);
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-  }
-}
-
-.cardSubSection {
-  padding-top: var(--measure-dimension-padding-4xl);
-  padding-bottom: var(--measure-dimension-padding-4xl);
-}
-
-.cardSubSectionHeader {
-  margin-bottom: var(--measure-dimension-gap-lg);
-}
-
-.cardSubSectionContent {
-  display: flex;
-  gap: var(--measure-dimension-gap-2xl);
-}
-
-.cardContainer {
-  margin-right: var(--measure-dimension-margin-xs);
-  margin-left: var(--measure-dimension-margin-xs);
-  margin-bottom: var(--measure-dimension-margin-md);
-  margin-top: var(--measure-dimension-margin-xl);
-}
-
-@media (min-width: 640px) {
-  .cardContainer {
-    margin-top: var(--measure-dimension-margin-sm);
-  }
-}
-
-@media (min-width: 768px) {
-  .cardContainer {
-    margin-right: var(--measure-dimension-margin-sm);
-    margin-left: var(--measure-dimension-margin-sm);
-    margin-top: var(--measure-dimension-margin-xl);
-  }
-}
-
-@media (min-width: 1024px) {
-  .cardContainer {
-    margin-left: var(--measure-dimension-margin-md);
-    margin-right: var(--measure-dimension-margin-md);
-  }
-}
-
-@media (min-width: 1194px) {
-  .cardContainer {
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-@media (min-width: 1194px) {
-  .cardContainer {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 1130px;
   }
 }
