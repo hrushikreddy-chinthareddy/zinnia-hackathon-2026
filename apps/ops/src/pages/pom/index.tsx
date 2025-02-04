@@ -10,11 +10,7 @@ import nextI18nextConfig from 'next-i18next.config';
 
 function POM() {
     const { t } = useTranslation('pom');
-    return (
-        <>
-            <Pom translations={t} />
-        </>
-    );
+    return <Pom translations={t} />;
 }
 
 export default POM;
