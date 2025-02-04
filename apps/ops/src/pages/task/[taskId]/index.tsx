@@ -110,11 +110,17 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            if (task.assignee !== user.email) {
+            if (
+                !(
+                    user.email &&
+                    ((task.assignee && task.assignee.toLowerCase() == user.email.toLowerCase()) ||
+                        (!task.assignee && task.prefferedAssignee && task.prefferedAssignee.toLowerCase() == user.email.toLowerCase()))
+                )
+            ) {
                 logWarn('task/:id::task is not assigned to user', { assignee: task.assignee, user: user.email });
                 return {
                     redirect: {
-                        destination: '/',
+                        destination: '/403',
                         permanent: false,
                     },
                 };
