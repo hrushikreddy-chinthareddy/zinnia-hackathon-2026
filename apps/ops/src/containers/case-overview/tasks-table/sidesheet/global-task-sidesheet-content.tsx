@@ -132,6 +132,11 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     let badgeIcon, badgeVariant, badgeLabel;
 
     switch (task.status) {
+        case TaskStatus.InProgress:
+            badgeIcon = <Progress width={16} height={16} />;
+            badgeVariant = BadgeVariant.Info;
+            badgeLabel = TaskLabel.InProgress;
+            break;
         case TaskStatus.Completed:
             badgeIcon = <CircleCheckIcon height={16} width={16} />;
             badgeVariant = BadgeVariant.Success;
@@ -241,23 +246,25 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     {t('sideSheet.task.status.label')}{' '}
                 </div>
                 <div className="col-span-2 mt-2 align-self">
-
-                    {task?.status != TaskStatus.InProgress && <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
-                        <Badge
-                            icon={badgeIcon}
-                            variant={badgeVariant}
-                            label={badgeLabel}
-                            rounded={true}
-                            className="flex gap-1 items-center"
-                        />
-                    </Typography>}
-                    {task?.status === TaskStatus.InProgress && <Dropdown
-                        triggerIcon={<div className='pb-1'><Progress width={16} height={16} /></div>}
-                        triggerLabel="In Progress"
-                        options={statuses}
-                    />}
-
-
+                    {
+                        task?.status === TaskStatus.InProgress && task.assignee === user?.email ? (
+                            <Dropdown
+                                triggerIcon={<div className='pb-1'><Progress width={16} height={16} /></div>}
+                                triggerLabel="In Progress"
+                                options={statuses}
+                            />
+                        ) : (
+                            <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6">
+                                <Badge
+                                    icon={badgeIcon}
+                                    variant={badgeVariant}
+                                    label={badgeLabel}
+                                    rounded={true}
+                                    className="flex gap-1 items-center"
+                                />
+                            </Typography>
+                        )
+                    }
                 </div>
 
                 {((task.status === TaskStatus.Pending && task.impededReason) ||
