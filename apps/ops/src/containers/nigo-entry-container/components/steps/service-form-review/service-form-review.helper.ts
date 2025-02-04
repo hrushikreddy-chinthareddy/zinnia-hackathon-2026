@@ -28,7 +28,7 @@ export const useGetPolicyTypeDocs = (
                     item => item.documentNumber === documentNumber && item.documentType.toLowerCase() === docType.toLowerCase()
                 );
                 const relatedDoc = items.filter(
-                    item => item.documentNumber !== documentNumber && item.documentType.toLowerCase() === docType.toLowerCase()
+                    item => item.documentNumber !== documentNumber
                 );
                 setWorkingDocument(workingDoc);
                 setRelatedDocument(relatedDoc);

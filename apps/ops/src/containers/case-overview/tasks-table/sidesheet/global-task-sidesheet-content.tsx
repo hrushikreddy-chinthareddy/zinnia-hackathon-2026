@@ -1,5 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { Button, Icon, IconType, Link, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import { convertToCamelCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -330,8 +331,9 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
                         <div className="col-span-1 text-[--color-base-text-text-secondary]">{t('sideSheet.task.detailsLabel')}</div>
                         <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                            {t('sideSheet.task.taskDetails', {
+                            {t(`sideSheet.task.taskDetails.${convertToCamelCase(task.taskType)}`, {
                                 taskType: toSentenceCase(task.taskName),
+                                caseType: task.process,
                             })}
                         </Typography>
                     </>

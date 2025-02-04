@@ -197,6 +197,7 @@
                         }
                     },
                     "caseId": {
+                        "ui:placeholder": "eg: CA1234567890",
                         "ui:options": {
                             "label": true
                         }

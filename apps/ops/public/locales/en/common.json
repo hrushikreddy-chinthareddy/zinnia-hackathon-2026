@@ -68,7 +68,8 @@
             "formData": "Form Data",
             "annuitization": "Annuitization",
             "dashboard": "Case Stats",
-            "newLoan": "New Loan"
+            "newLoan": "New Loan",
+            "activity": "Activity"
         },
         "navLinks": {
             "accessManagement": {
@@ -231,11 +232,25 @@
             },
             "history": {
                 "text": "History",
-                "link": "/policies/{{planCode}}/{{id}}/history"
+                "link": "/policies/{{planCode}}/{{id}}/activity"
             },
             "dashboard": {
                 "text": "Case Stats",
                 "link": "/dashboard"
+            },
+            "activity": {
+                "text": "Activity",
+                "link": "/policies/{{planCode}}/{{id}}/activity",
+                "subLinks": {
+                    "callLogs": {
+                        "text": "Call logs",
+                        "link": "/policies/{{planCode}}/{{id}}/activity/call-logs"
+                    },
+                    "transactions": {
+                        "text": "Transactions",
+                        "link": "/policies/{{planCode}}/{{id}}/activity/transactions"
+                    }
+                }
             }
         },
         "loader": "Loading..."
@@ -1344,6 +1359,8 @@
             "call-logs": "Call logs",
             "closedOn": "Closed on {{date}}",
             "documents": "Documents",
+            "caseDocuments": "Case Documents",
+            "policyDocuments": "Policy Documents",
             "issue": "Issue: {{issue}}",
             "issueCount_one": "{{count}} issue",
             "issueCount_other": "{{count}} issues",
@@ -1378,7 +1395,8 @@
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source of Premium: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}",
-                "ceding carrier": "Ceding Carrier: {{label}}"
+                "ceding carrier": "Ceding Carrier: {{label}}",
+                "premium source": "Premium Source: {{label}}"
             },
             "reviewIssues": "Review {{taskType}}",
             "suitabilityReview": "suitability",
@@ -2851,6 +2869,7 @@
             "noEventsTitle": "No events yet.",
             "noEventsSubtitle": "Looks like nothing's happened so far.",
             "upcomingEvents": "Upcoming events",
+            "requested": "Requested",
             "sidesheet": {
                 "accountNumber": "Account number",
                 "accountType": "Account type",
@@ -3224,7 +3243,6 @@
             "detailsLabel": "Details",
             "noDataAvailable": "No data available.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
-            "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
             "reasonLabel": "Status reason",
             "pendinglabel": "Pending until",
             "canceledLabel": "Canceled on",
@@ -3233,7 +3251,12 @@
             "noAssignee": "Only the assignee can start this task",
             "startTask": "Start task",
             "claimTask": "Claim task",
-            "taskHeading": "Task"
+            "taskHeading": "Task",
+            "taskDetails": {
+                "purchaseDocumentMatching": "As part of the document matching process for the purchase document, one or more documents require review and confirmation to ensure proper alignment before proceeding with contract issuance",
+                "suitabilityReview": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
+                "newbusinessAgentNigo": "One or more Not in Good Order (NIGO) issues were identified during the review of the {{caseType}} application. These issues must be reviewed and resolved to ensure the application meets all requirements before proceeding with contract issuance"
+            }
         },
         "suitability": {
             "header": "Complete Suitability Review",
@@ -3431,6 +3454,9 @@
         },
         "history": {
             "headerText": "History"
+        },
+        "activity": {
+            "headerText": "Activity"
         }
     },
     "piiBreadcrumb": "Back to",
@@ -3955,7 +3981,8 @@
             "documents": "Documents",
             "caseDetails": "Case Details",
             "deliveryMethod": "Delivery method",
-            "correspondence": "Correspondence"
+            "correspondence": "Correspondence",
+            "activity": "Activity"
         }
     },
     "bannerAlert": {

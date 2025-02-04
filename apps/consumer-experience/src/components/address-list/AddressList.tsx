@@ -44,7 +44,7 @@ export const AddressList: FC<AddressListProps> = ({
     });
   };
   const { data: addresses } = useQuery({
-    queryKey: [QueryKeys.POLICY_PROFILE, 'addresses'],
+    queryKey: [QueryKeys.POLICY_PROFILE, 'addresses', policyNumber],
     refetchInterval: ({ state }) => {
       const addresses = filterItemsWithPastEndDate(state.data?.addresses);
       return refetchHandler({

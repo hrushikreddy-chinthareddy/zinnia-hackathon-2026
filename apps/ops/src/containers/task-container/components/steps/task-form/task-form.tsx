@@ -7,13 +7,12 @@ import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.healpers';
-import { removeFromCache } from '@deps/utils/cache';
-import { Case } from '@deps/models/case/case';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { EntityTypes, MatchingCase } from '@deps/models/case/task/doc-matching-payment';
-import { getCases } from '@deps/queries/api/cases';
+import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
 import { browserLogWarn } from '@deps/utils/browser-logging';
+import { removeFromCache } from '@deps/utils/cache';
 import { buildTaskPayload } from '@deps/utils/tasks/task-payload-helper';
 
 type TaskFormProps = {
@@ -37,25 +36,16 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
             if (correlationId === MatchingCase.ENTERED && task.data.caseId) {
                 try {
-                    const caseRequestBody = {
-                        caseIds: [task.data.caseId],
-                        notInCaseStatus: [],
-                        limit: 25,
-                        offset: 0,
-                        sortDirection: 'desc',
-                        sortBy: 'createdAt',
-                    };
-                    const response = await getCases(caseRequestBody);
-                    const cases = response.data as Case[];
+                    const matchedCase = await getCaseDetails(task.data.caseId);
 
-                    if (!cases.length || !cases?.[0]?.correlationId) {
-                        const error = !cases.length ? 'caseNotFound' : 'correlationIdNotFount';
+                    if (!matchedCase || !matchedCase?.correlationId) {
+                        const error = !matchedCase ? 'caseNotFound' : 'correlationIdNotFount';
                         browserLogWarn(`task:: ${t(error)}`, task.data.caseId);
                         onSubmit(t(error));
                         return;
                     }
 
-                    const transactionResponse = await getTransactionsByCorrelationId(cases?.[0]?.correlationId || '', {
+                    const transactionResponse = await getTransactionsByCorrelationId(matchedCase?.correlationId || '', {
                         entityType: EntityTypes.NB_PAYMENT_RECORD,
                     });
                     if (!transactionResponse || !transactionResponse.length) {
@@ -77,8 +67,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         data: {
                             ...previousTask.data,
                             transactionOptions: paymentCards,
-                            caseId: cases[0].id,
-                            matchingResult: cases[0].correlationId,
+                            caseId: matchedCase.id,
+                            matchingResult: matchedCase.correlationId,
                             isDuplicate: MatchingCase.MATCH_FOUND,
                         },
                     }));

@@ -111,7 +111,7 @@ const App = (props: AppProps) => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <main className={`${poppins.variable} ${lato.variable}`}>
+            <main className={`${poppins.variable} ${lato.variable} relative`}>
                 <UserProvider>
                     <AppHead />
                     <AppBody {...props} />

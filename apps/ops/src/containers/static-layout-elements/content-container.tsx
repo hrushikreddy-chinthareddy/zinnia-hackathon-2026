@@ -51,9 +51,8 @@ const ContentContainer = ({
         'colDefs:policyDetails'
     );
 
-    const containerScreenHeight = isFullHeight ? 'h-screen' : 'height-adjusted';
     const containerClasses = clsx(
-        `${containerScreenHeight} flex w-full flex-col overflow-auto py-4 pl-[52px] transition-[padding] duration-300 sm:pr-4 md:py-6 md:pr-6 lg:py-8 lg:pr-8 [&>div]:max-w-[1130px]`,
+        `flex w-full flex-col py-4 pl-[52px] transition-[padding] duration-300 sm:pr-4 md:py-6 md:pr-6 lg:py-8 lg:pr-8 [&>div]:max-w-[1130px]`,
         {
             'lg:pl-[240px]': isNavDrawerOpen,
         }

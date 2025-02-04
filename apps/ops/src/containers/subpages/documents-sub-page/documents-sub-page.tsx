@@ -136,7 +136,14 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                                 <EventsLoader message={t('policy.documents.loadingDocuments')} />
                             </div>
                         )}
-                        <DocumentResultsPagination goToPage={goToPage} loading={loading} limit={limit} total={total} offset={offset} />
+                        <DocumentResultsPagination
+                            goToPage={goToPage}
+                            loading={loading}
+                            limit={limit}
+                            total={total}
+                            offset={offset}
+                            className="pb-[120px] lg:pb-0"
+                        />
                     </>
                 )}
             </CardContainer>

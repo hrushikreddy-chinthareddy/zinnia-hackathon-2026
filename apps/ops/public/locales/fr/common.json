@@ -67,7 +67,8 @@
             "newWithdrawal": "Nouveau Retrait",
             "formData": "Données du formulaire",
             "annuitization": "Annuitisation",
-            "dashboard": "Statistiques du dossier"
+            "dashboard": "Statistiques du dossier",
+            "activity": "Activité"
         },
         "navLinks": {
             "accessManagement": {
@@ -225,11 +226,25 @@
             },
             "history": {
                 "text": "Histoire",
-                "link": "/policies/{{planCode}}/{{id}}/history"
+                "link": "/policies/{{planCode}}/{{id}}/activity"
             },
             "dashboard": {
                 "text": "Statistiques du dossier",
                 "link": "/dashboard"
+            },
+            "activity": {
+                "text": "Activité",
+                "link": "/policies/{{planCode}}/{{id}}/activity",
+                "subLinks": {
+                    "callLogs": {
+                        "text": "Histoire d'appels",
+                        "link": "activity/call-logs"
+                    },
+                    "transactions": {
+                        "text": "Transactions",
+                        "link": "activity/transactions"
+                    }
+                }
             }
         },
         "loader": "Chargement..."
@@ -1339,6 +1354,8 @@
             "call-logs": "Journal des appels",
             "closedOn": "Fermé le {{date}}",
             "documents": "Documents",
+            "caseDocuments": "Documents du Dossier",
+            "policyDocuments": "Documents de la Police",
             "issue": "Problème: {{issue}}",
             "issueCount_one": "{{count}} problème",
             "issueCount_other": "{{count}} problemes",
@@ -1373,7 +1390,8 @@
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source de prétium: {{label}}",
                 "transfer of assets": "Transfert d'actifs: {{label}}",
-                "ceding carrier": "Transporteur cédant: {{label}}"
+                "ceding carrier": "Transporteur cédant: {{label}}",
+                "premium source": "Source Premium: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
             "suitabilityReview": "suitability",
@@ -2828,6 +2846,7 @@
             "noEventsTitle": "Aucun événement pour le moment.",
             "noEventsSubtitle": "On dirait que rien ne s'est encore passé.",
             "upcomingEvents": "Événements à venir",
+            "requested": "Demandé",
             "sidesheet": {
                 "accountNumber": "Numéro de compte",
                 "accountType": "Type de compte",
@@ -3200,7 +3219,6 @@
             "issueLabel": "Problème",
             "detailsLabel": "Détails",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
-            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat..",
             "reasonLabel": "Raison du statut",
             "pendinglabel": "En attente jusqu'au",
             "canceledLabel": "Annulé le",
@@ -3209,7 +3227,12 @@
             "noAssignee": "Seul le responsable peut démarrer cette tâche",
             "startTask": "Démarrer la tâche",
             "claimTask": "Revendiquer la tâche",
-            "taskHeading": "Tâche"
+            "taskHeading": "Tâche",
+            "taskDetails": {
+                "purchaseDocumentMatching": "Dans le cadre du processus de mise en correspondance des documents pour le document d'achat, un ou plusieurs documents nécessitent un examen et une confirmation pour garantir un alignement approprié avant de procéder à l'émission du contrat",
+                "suitabilityReview": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par Carrier et annulés pour émettre le contrat.",
+                "newbusinessAgentNigo": "Un ou plusieurs problèmes de type « non conforme » (NIGO) ont été identifiés lors de l'examen de la demande {{caseType}}. Ces problèmes doivent être examinés et résolus pour garantir que la demande répond à toutes les exigences avant de procéder à l'émission du contrat."
+            }
         },
         "suitability": {
             "header": "Examen complet de l’adéquation",
@@ -3407,6 +3430,9 @@
         },
         "history": {
             "headerText": "Histoire"
+        },
+        "activity": {
+            "headerText": "Activité"
         }
     },
     "piiBreadcrumb": "Retour à",
@@ -3930,7 +3956,8 @@
             "documents": "Documents",
             "caseDetails": "Détails du Dossier",
             "deliveryMethod": "Méthode de livraison",
-            "correspondence": "Correspondence"
+            "correspondence": "Correspondence",
+            "activity": "Activité"
         }
     },
     "bannerAlert": {
