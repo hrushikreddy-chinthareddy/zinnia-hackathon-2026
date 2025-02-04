@@ -126,8 +126,8 @@ export enum FEATURE_FLAGS {
     SUITABILITY_REVIEW_WELB = 'task-queue_feature_welb_suitability_review',
     PURCHASE_DOCUMENT_MATCHING_WELB = 'task-queue_feature_welb_purchase_document_matching',
     NEWBUSINESS_AGENT_NIGO_WELB = 'task-queue_feature_welb_newbusiness_agent',
-    NEW_LOAN_TRANSACTION = 'new_loan_transaction',
     DOCUMENTS_V3 = 'documents-v3-update',
     CASE_ADVISORS_EXCEL_ADDITIONAL_CARRIER_SUPPORT = 'case_advisors_excel_additional_carrier_support',
     DASHBOARD_CASE_TIMING_CHART = 'dashboard_case_timing_chart',
+    LOAN_PAYMENT_TRANSACTION = 'loan_payment_transaction',
 }

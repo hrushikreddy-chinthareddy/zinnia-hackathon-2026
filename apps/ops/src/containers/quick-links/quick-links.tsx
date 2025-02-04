@@ -12,6 +12,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Reason } from '@deps/models/policy/sor-policy';
 import {
+    checkEligibilityLoanRepaymentOneTime,
     checkEligibilityNewLoan,
     checkEligibilityOneTimePremium,
     checkEligibilityPartialWithdrawalOneTime,
@@ -55,7 +56,6 @@ const trackClick = (
 
 const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPartyId }: QuickLinksProps) => {
     const { featureFlags } = useOptimizely();
-    const newLoanEnabled = featureFlags?.[FEATURE_FLAGS.NEW_LOAN_TRANSACTION];
 
     // BPB - systematic programs work
     const systematicProgram = policy.policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
@@ -69,12 +69,15 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
     const [withdrawalChecked, setWithdrawalChecked] = useState(false);
     const [isEligibleNewLoan, setIsEligibleNewLoan] = useState(false);
     const [newLoanChecked, setNewLoanChecked] = useState(false);
+    const [isEligibleLoanPayment, setIsEligibleLoanPayment] = useState(false);
+    const [loanPaymentChecked, setLoanPaymentChecked] = useState(false);
 
     const [isLoading, setIsLoading] = useState(true);
     const [fireEligibilityChecks, setFireEligibilityChecks] = useState(false);
 
     const [isLife] = useState(policy.isLife);
     const [isAnnuity] = useState(policy.isAnnuity);
+    const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
 
     // this should only run once after fireEligibilityChecks && isLife are both true
     useEffect(() => {
@@ -107,10 +110,6 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
             };
 
             const checkNewLoanEligibility = async () => {
-                if (!newLoanEnabled) {
-                    setNewLoanChecked(true);
-                    return;
-                }
                 const newLoanEligibility = await checkEligibilityNewLoan(planCode, policyNumber, policy.loanValues?.maximumLoanAmount);
 
                 if (newLoanEligibility?.status === TransactionResponseStatus.Success) {
@@ -119,30 +118,38 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
                 setNewLoanChecked(true);
             };
 
+            const checkLoanPaymentEligibility = async () => {
+                if (!loanPaymentEnabled) {
+                    setIsEligibleLoanPayment(false);
+                    setLoanPaymentChecked(true);
+
+                    return;
+                }
+                const loanPaymentEligibility = await checkEligibilityLoanRepaymentOneTime(planCode, policyNumber);
+
+                if (loanPaymentEligibility?.status === TransactionResponseStatus.Success) {
+                    setIsEligibleLoanPayment(true);
+                }
+                setLoanPaymentChecked(true);
+            };
+
             checkManageAutopayEligibility();
             checkOneTimeEligibility();
             checkWithdrawalEligibility();
             checkNewLoanEligibility();
+            checkLoanPaymentEligibility();
         }
-    }, [
-        planCode,
-        policyNumber,
-        arrangementId,
-        fireEligibilityChecks,
-        isLife,
-        isAnnuity,
-        newLoanEnabled,
-        policy.loanValues?.maximumLoanAmount,
-    ]);
+    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife, isAnnuity, policy.loanValues?.maximumLoanAmount, loanPaymentEnabled]);
 
     useEffect(() => {
-        if (autopayChecked && newPremiumChecked && withdrawalChecked && newLoanChecked) {
+        if (autopayChecked && newPremiumChecked && withdrawalChecked && newLoanChecked && loanPaymentChecked) {
             setIsLoading(false);
         }
-    }, [autopayChecked, newLoanChecked, newLoanEnabled, newPremiumChecked, withdrawalChecked]);
+    }, [autopayChecked, loanPaymentChecked, newLoanChecked, newPremiumChecked, withdrawalChecked]);
 
     const eligibilityCheck = {
         eligibleAutopay: isEligibleManageAutopay,
+        eligibleLoanPayment: isEligibleLoanPayment,
         eligibleNewLoan: isEligibleNewLoan,
         eligiblePremium: isEligibleNewPremium,
         eligibleWithdrawal: isEligibleWithdrawal,

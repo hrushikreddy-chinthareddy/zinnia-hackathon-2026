@@ -68,6 +68,7 @@
             "formData": "Form Data",
             "annuitization": "Annuitization",
             "dashboard": "Case Stats",
+            "loanPayment": "Loan Payment",
             "newLoan": "New Loan",
             "activity": "Activity"
         },
@@ -3071,6 +3072,7 @@
                 "viewLoanTransactionHistory": "Go to loan transaction history",
                 "eligiblePopover": "The owner can take a loan from the account value on this policy. Owners can borrow at any time, as long as the funds are available. A loan can reduce the death benefit unless and until it is paid back.",
                 "ineligiblePopover": "This policy doesn't have enough account value for a loan. Owners can borrow from their policy at any time, as long as the funds are available.",
+                "loanPayment": "Make a one-time payment",
                 "startLoan": "Start a loan"
             },
             "detailCards": {
@@ -4255,6 +4257,56 @@
         "taken": "taken",
         "left": "left"
     },
+    "loanPayment": {
+        "amount": {
+            "label": "Amount",
+            "dateLabel": "Effective date",
+            "paymentLabel": "Loan payment amount",
+            "invalidDateError": "Enter a valid effective date.",
+            "invalidPaymentAmountError": "Payment amount must be at least $1."
+        },
+        "confirm": {
+            "cta": "Go to transaction history",
+            "label": "Confirm",
+            "secondaryCta": "Close",
+            "subtitle": {
+                "0": "A ",
+                "1": " one-time loan payment from ",
+                "2": " was submitted.",
+                "NIGO": " one-time loan payment was submitted for",
+                "NIGO1": " NIGO processing."
+            },
+            "title": "Submitted!"
+        },
+        "payment": {
+            "label": "Payment Method",
+            "title": "Where should we send the payment?"
+        },
+        "payor": {
+            "label": "Payor"
+        },
+        "start": {
+            "label": "Start",
+            "title": "Make a Loan Payment",
+            "subtitle": "Need to submit a one-time loan payment? Let's do it. First up, let's make sure we can keep track of this transaction in OnBase."
+        },
+        "summary": {
+            "label": "Summary",
+            "bpm500Error": "BPM 500 error",
+            "submitPayment": "Submit payment",
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "loanPaymentAmount": "Loan payment amount",
+            "effectiveDate": "Effective date",
+            "payor": "Payor",
+            "validationStatusLabel": "Validation status",
+            "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
+            "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+            "internal500CTAlinkText": "Submit a help desk ticket",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
+        }
+    },
     "newLoan": {
         "amount": {
             "disbursementType": {
@@ -4471,6 +4523,7 @@
         },
         "transactions": {
             "label": "Transactions",
+            "loanPayment": "Start a one-time loan payment",
             "managePremiumAutopay": "Manage premium autopay",
             "newLoan": "Start a loan",
             "newPremium": "Start a one-time premium",
@@ -4635,6 +4688,7 @@
                 "text": "submit a help desk ticket"
             },
             "leaveTransaction": "Leave this transaction",
+            "submitLoanPayment": "Submit loan payment",
             "submitNewLoan": "Submit loan",
             "submitPayment": "Submit payment",
             "submitWithdrawal": "Submit withdrawal",

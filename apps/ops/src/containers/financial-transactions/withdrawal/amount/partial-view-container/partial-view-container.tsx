@@ -9,7 +9,7 @@ import Radio, { RadioItem, RadioVariant } from '@deps/components/radio/radio';
 import { radioClasses } from '@deps/components/radio/radio.helper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { useWithdrawal } from '@deps/contexts/WithdrawalContext';
+import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { Policy } from '@deps/models/policy/sor-policy';

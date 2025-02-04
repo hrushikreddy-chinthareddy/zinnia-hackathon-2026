@@ -68,6 +68,7 @@
             "formData": "Données du formulaire",
             "annuitization": "Annuitisation",
             "dashboard": "Statistiques du dossier",
+            "loanPayment": "Paiement de prêts",
             "activity": "Activité"
         },
         "navLinks": {
@@ -4230,6 +4231,56 @@
         "taken": "pris",
         "left": "restants"
     },
+    "loanPayment": {
+        "amount": {
+            "label": "Montant",
+            "dateLabel": "Date d'effet",
+            "paymentLabel": "Montant du paiement de prêt",
+            "invalidDateError": "Entrez une date d'effet valide.",
+            "invalidPaymentAmountError": "Le montant du paiement doit être d'au moins 1 $."
+        },
+        "confirm": {
+            "cta": "Aller à l'historique des transactions",
+            "label": "Confirmer",
+            "secondaryCta": "Fermer",
+            "subtitle": {
+                "0": "Un ",
+                "1": " paiement unique de prêt de ",
+                "2": " a été soumis.",
+                "NIGO": " le paiement unique du prêt a été soumis pour",
+                "NIGO1": " traitement NIGO."
+            },
+            "title": "Soumis!"
+        },
+        "payment": {
+            "label": "Méthode de paiement",
+            "title": "Où devrions-nous envoyer le paiement?"
+        },
+        "payor": {
+            "label": "Payeur"
+        },
+        "start": {
+            "label": "Démarrer",
+            "title": "Faire un paiement de prêt",
+            "subtitle": "Besoin de soumettre un paiement de prêt unique? Faisons-le. Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans OnBase."
+        },
+        "summary": {
+            "label": "Résumé",
+            "bpm500Error": "Erreur BPM 500",
+            "submitPayment": "Soumettre le paiement",
+            "status200subtitle": "Ça a l'air bien! Assurez-vous de vérifier vos entrées avant de soumettre.",
+            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette politique. Consultez l'erreur ci-dessous.",
+            "loanPaymentAmount": "Montant du paiement du prêt",
+            "effectiveDate": "Date effective",
+            "payor": "Payeur",
+            "validationStatusLabel": "Statut de validation",
+            "internal500Error": "Les services sont en panne, nous ne pouvons donc pas continuer. Vous pouvez soumettre un ticket de help desk. Veuillez quitter cette transaction et réessayer plus tard.",
+            "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+            "internal500CTAlinkText": "Soumettre un ticket de help desk",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée effectue un suivi.",
+            "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO."
+        }
+    },
     "newLoan": {
         "amount": {
             "disbursementType": {
@@ -4445,6 +4496,7 @@
         },
         "transactions": {
             "label": "Transactions",
+            "loanPayment": "Commencer un paiement unique de prêt",
             "managePremiumAutopay": "Gérer le paiement automatique des primes",
             "newLoan": "Démarrer un prêt",
             "newPremium": "Démarrez un abonnement premium unique",
@@ -4609,6 +4661,7 @@
                 "text": "soumettre un billet au centre d'assistance"
             },
             "leaveTransaction": "Quitter cette transaction",
+            "submitLoanPayment": "Soumettre le paiement du prêt",
             "submitNewLoan": "Soumettre un prêt",
             "submitPayment": "Soumettre le paiement",
             "submitWithdrawal": "Soumettre le retrait",
