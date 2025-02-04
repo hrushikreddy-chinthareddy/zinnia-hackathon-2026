@@ -11,11 +11,12 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     fieldSize?: 'small' | 'large';
     status?: 'success' | 'error';
     disabled?: boolean;
+    placeholder?: string;
     onChange: (value: any, es?: ErrorSchema<any> | undefined, id?: string) => void;
 }
 
 const TextField = (props: TextFieldProps) => {
-    const { id, label, value, className, disabled, onChange, onBlur, onFocus } = props;
+    const { id, label, value, className, disabled, placeholder, onChange, onBlur, onFocus } = props;
 
     const classes = clsx(
         styles.textField,
@@ -32,7 +33,7 @@ const TextField = (props: TextFieldProps) => {
                 className={`${classes}`}
                 disabled={disabled}
                 onChange={e => onChange(e.target.value)}
-                placeholder={label}
+                placeholder={placeholder ?? label}
                 value={value}
                 onBlur={onBlur}
                 onFocus={onFocus}
