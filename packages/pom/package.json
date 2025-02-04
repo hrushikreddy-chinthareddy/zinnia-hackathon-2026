@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "exports": {
-    ".": "./src/components/index.ts"
+    ".": "./src/index.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

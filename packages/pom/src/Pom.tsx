@@ -6,13 +6,13 @@ import {
   TabList,
   TabTrigger,
 } from '@zinnia/bloom/components';
-import { ProducerType } from './types';
-import { CardHeader } from './card-header/CardHeader';
+import { ProducerType } from './types/types';
+import { CardHeader } from './components/card-header/CardHeader';
 import clsx from 'clsx';
 import styles from './Pom.module.css';
 import { HashRouter, Route, Routes, useParams } from 'react-router';
-import '../styles/globals.css';
-import EntityInformation from './entity-information/EntityInformation';
+import './styles/globals.css';
+import EntityInformation from './views/entity-information/EntityInformation';
 
 export const Pom = ({
   translations,
@@ -73,7 +73,7 @@ const Producer = ({ producerType }: { producerType: ProducerType }) => {
   ];
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div className={styles.container}>
       <div
         className={clsx(styles.cardContainer, 'typography-content-body-sm')}
         id="producer-onboarding-maintenance"
@@ -87,10 +87,12 @@ const Producer = ({ producerType }: { producerType: ProducerType }) => {
                 <div>
                   <Icon type={icon} />
                 </div>
-                {label}
+                <span style={{ whiteSpace: 'nowrap' }}>{label}</span>
               </TabTrigger>
             ))}
           </TabList>
+          {/* TODO: why is this letting us push to the repo, shouldn't linting catch this? */}
+          {/* TODO: fix this type */}
           {tabs.map(({ value, content }: { value: string; content: any }) => (
             <TabContent key={value} value={value}>
               {content}

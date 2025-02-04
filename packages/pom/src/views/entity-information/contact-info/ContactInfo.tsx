@@ -2,7 +2,7 @@ import { Address, Label } from '@zinnia/bloom/components';
 import { clsx } from 'clsx';
 
 import { default as styles } from './ContactInfo.module.css';
-import { ProducerType } from '../../types';
+import { ProducerType } from '../../../types/types';
 
 export const ContactInfo = ({
   producerType,
@@ -10,7 +10,7 @@ export const ContactInfo = ({
   producerType: ProducerType;
 }) => {
   return (
-    <div className="content-section">
+    <div className="card-section">
       <h2>Contact Info</h2>
       <div className={clsx(styles.cardSubSectionContent)}>
         <div>

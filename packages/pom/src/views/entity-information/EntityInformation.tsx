@@ -1,6 +1,6 @@
 import { ContactInfo } from './contact-info/ContactInfo';
 import { Identification } from './identification/Identification';
-import { ProducerType } from '../types';
+import { ProducerType } from '../../types/types';
 import { BackgroundCheck } from './background-check/BackgroundCheck';
 
 const EntityInformation = ({

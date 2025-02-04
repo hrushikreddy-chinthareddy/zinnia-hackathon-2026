@@ -13,7 +13,7 @@ import {
 
 export const BackgroundCheck = () => {
   return (
-    <div className="content-section">
+    <div className="card-section">
       <h2>Background Check</h2>
       <div>
         <Table>

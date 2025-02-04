@@ -1,7 +1,7 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { clsx } from 'clsx';
 
-import { ProducerType } from '../types';
+import { ProducerType } from '../../types/types';
 
 import { default as styles } from './CardHeader.module.css';
 
