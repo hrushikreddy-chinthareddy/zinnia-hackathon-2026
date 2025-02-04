@@ -17,9 +17,13 @@
         border-color: var(--color-chip-border-chip-selected-border);
         color: #ffffff;
     }
+
+    &:last-of-type {
+        margin-right: 0;
+    }
 }
 
 .chipRadioGroup {
     flex-direction: row-reverse;
-    gap: var(--measure-dimension-gap-sm);
+    gap: var(--measure-dimension-gap-md);
 }

@@ -1,11 +1,11 @@
 .container {
     position: relative;
-    background-color: var(--color-base-surface-surface-secondary);
+    background-color: var(--color-base-surface-surface-primary);
+    padding-top: var(--measure-dimension-padding-4xl);
 }
 
 .chartContainer {
     flex: 1 auto;
-    margin: var(--measure-dimension-padding-4xl) 0 var(--measure-dimension-padding-4xl) 0;
     padding: 0 var(--measure-dimension-padding-4xl) 0 var(--measure-dimension-padding-4xl);
     border-left: 1px solid var(--color-base-border-border-light);
 }
@@ -16,36 +16,21 @@
 
 .filterContainer {
     display: flex;
-    gap: 16px;
+    gap: var(--measure-dimension-gap-lg);
     align-items: center;
+    margin-bottom: var(--measure-dimension-gap-2xl);
 }
 
 .submissionMethodSelect {
     max-width: 208px;
 }
 
-.timeframeContainer {
+.legendContainer {
+    margin-bottom: var(--measure-dimension-gap-lg);
+}
+
+.timeFilterContainer {
     display: flex;
     justify-content: space-between;
     align-items: end;
-    /* TODO: replace this with css var */
-    margin-top: 35px;
-}
-
-.timeRadioItem {
-    align-items: center;
-    background: var(--color-chip-surface-chip-default-fill);
-    border-color: var(--color-chip-border-chip-default-border);
-    border-radius: var(--measure-dimension-radius-max);
-    border-width: var(--measure-dimension-stroke-sm);
-    color: var(--color-base-text-text-primary);
-    display: flex;
-    gap: var(--measure-dimension-gap-md);
-    padding: var(--measure-dimension-padding-xs) var(--measure-dimension-padding-2xl);
-    white-space: nowrap;
-    width: fit-content;
-}
-
-.legendContainer {
-    margin-bottom: var(--measure-dimension-gap-lg);
 }

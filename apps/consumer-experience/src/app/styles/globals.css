@@ -8,6 +8,9 @@
 /* TODO: this should be a token, right now setting it here prior to theme setting it */
 :root {
   --color-avatar-avatar-text: #fff;
+  /* dirty override that will probably be overridden by bloom later */
+  --button-border-radius: 8px;
+  --measure-dimension-button-button-default-radius: 8px;
 }
 
 /*

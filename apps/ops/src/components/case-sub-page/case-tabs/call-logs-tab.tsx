@@ -3,13 +3,13 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
+import UnauthorizedCard from '@deps/components/card/card-unauthorized';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
-import UnauthorizedCard from '@deps/components/card/card-unauthorized';
+import { CallLog } from '@deps/models/case/call-log';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 export const NoSummaryCard = ({ content }: { content: string }) => (
     <div className="flex items-center gap-1 rounded-sm border border-dashed border-gray-100 bg-gray-50 p-4">
@@ -83,9 +83,14 @@ const CallLogCard = ({
     );
 };
 
-export default function CallLogsTab() {
+interface CallLogsTabProps {
+    loadingCallLogs: boolean;
+    callLogs: CallLog[];
+    callLogsStatusCode: number | null;
+}
+
+export default function CallLogsTab({ loadingCallLogs, callLogs, callLogsStatusCode }: CallLogsTabProps) {
     const { t } = useTranslation();
-    const { loadingCallLogs, callLogs, callLogsStatusCode } = useCaseActivityContext();
     return (
         <CardContainer>
             <div>

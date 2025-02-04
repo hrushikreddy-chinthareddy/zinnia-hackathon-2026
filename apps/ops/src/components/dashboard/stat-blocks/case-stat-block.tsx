@@ -30,6 +30,7 @@ interface Props {
     loading?: boolean;
     chartConfig?: Highcharts.Options;
     labelTooltip?: ReactNode | string;
+    showStatDetails?: boolean;
 }
 
 const CaseStatBlock = ({
@@ -44,6 +45,7 @@ const CaseStatBlock = ({
     filterParams = {},
     loading = true,
     chartConfig,
+    showStatDetails = true,
 }: Props) => {
     const [aiSummary, setAiSummary] = useState<string | null>(null);
     const shouldShowCaseInsights = useCaseInsightsPermission();
@@ -142,7 +144,7 @@ const CaseStatBlock = ({
         return (
             <>
                 {renderLabel()}
-                {renderStatValue()}
+                {showStatDetails && renderStatValue()}
                 {renderChart()}
                 {renderAISummary()}
                 {renderShowMore()}

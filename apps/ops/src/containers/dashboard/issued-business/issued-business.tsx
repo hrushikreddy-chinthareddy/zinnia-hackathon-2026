@@ -7,12 +7,14 @@ import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 
 import { CaseTimeseries } from '@deps/components/dashboard/case-timeseries/case-timeseries';
+import { CaseToCloseTimeChart } from '@deps/components/dashboard/case-to-close-time-chart/case-to-close-time-chart';
 import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
 import { convertToQueryString } from '@deps/helpers/routing.helper';
 import { Processes, Statuses } from '@deps/models/case/case';
@@ -20,6 +22,7 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { ExceptionInsights } from '../../../components/dashboard/exception-insights';
 
@@ -42,7 +45,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
     const [selectedProcessType] = useState<Processes>(Processes.NewBusiness);
     const [selectedException, setSelectedException] = useState<string | undefined>();
-
+    const { featureFlags } = useOptimizely();
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
     const carrierOrBrokerDealer = useMemo(() => {
         if (selectedCarriers && authorizedCarriers.length > 1) {
@@ -124,10 +127,12 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
 
     return (
         <CardContainer
-            classNames="relative !p-0 flex flex-col flex-1 !border-none gap-16 mb-16"
+            classNames={clsx('relative !p-0 flex flex-col flex-1 !border-none ')}
             containerClassNames="mt-none !p-0  border-t-2 border-[--color-base-border-border-light]"
         >
-            <div className=" bg-white flex flex-col gap-8 pt-8 rounded relative">
+            {featureFlags[FEATURE_FLAGS.DASHBOARD_CASE_TIMING_CHART] && <CaseToCloseTimeChart />}
+
+            <div className=" bg-white flex flex-col gap-8 pt-8 rounded relative py-12">
                 <div className="w-52">
                     <Select options={timeframeOptions} value={timeframe} onChange={handleTimeFrameChange} />
                 </div>
@@ -183,7 +188,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
             </div>
             {selectedSubprocess && (
                 <>
-                    <div className="lg:px-8">
+                    <div className="lg:px-8 py-8">
                         <CaseTimeseries
                             timeframe={timeframe}
                             selectedSubprocess={selectedSubprocess}
@@ -199,7 +204,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                             showSubtitle={false}
                         />
                     </div>
-                    <div className="lg:px-8">
+                    <div className="lg:px-8 py-8">
                         <CaseTimeseries
                             timeframe={timeframe}
                             selectedSubprocess={selectedSubprocess}
@@ -216,7 +221,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                     </div>
                 </>
             )}
-            <div className="lg:px-8">
+            <div className="lg:px-8 py-8">
                 <ExceptionInsights
                     timeframe={timeframe}
                     completedCasesByProcessSubType={caseDashboardStatsData}

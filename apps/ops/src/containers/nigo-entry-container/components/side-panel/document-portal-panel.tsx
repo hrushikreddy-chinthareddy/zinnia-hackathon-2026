@@ -3,13 +3,13 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { PolicyDocument } from '@deps/models/case/document';
 import { Policy } from '@deps/models/policy/sor-policy';
 
 import { useGetPolicyTypeDocs } from '../steps/service-form-review/service-form-review.helper';
-import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 
 export enum TabOptions {
     Working = 'Working',

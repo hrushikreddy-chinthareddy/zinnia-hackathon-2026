@@ -2,10 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
-import { ChipRadio } from '@deps/components/chip-radio/chip-radio';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Select from '@deps/components/select/select';
@@ -20,9 +19,12 @@ import { chunkArray } from '@deps/utils/array';
 
 import { Legend } from './legend';
 import styles from './submission-type.module.css';
-import { submissionTypeQuery, transformData, generateSeries, startDates, TimeframeFilterOptions, getDateRangeText } from './utils';
+import { submissionTypeQuery, transformData, generateSeries } from './utils';
+import { ChartHeader } from '../chart-header';
 import { getPieChartData } from '../distribution-charts/distribution-pie-chart-small-api-based';
 import CaseStatBlock from '../stat-blocks/case-stat-block';
+import { TimeFilter } from '../time-filter/time-filter';
+import { TimeframeFilterOptions, generateCarouselDataLengths, startDates } from '../utils';
 
 export const SubmissionType: FC = () => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
@@ -122,20 +124,11 @@ export const SubmissionType: FC = () => {
     });
     const pieChartSeriesData: Highcharts.SeriesOptionsType[] = [{ data: pieChartDataColors, name: 'cases', type: 'pie' }];
 
-    const timeframeOptions = Object.values(TimeframeFilterOptions).map(option => ({
-        label: option,
-        ariaLabel: option,
-        value: option,
-        displayText: option,
-    }));
-
     const submissionVsOptions = [
         { label: 'Carrier', value: GroupByOptions.Carrier, disabled: carriers.length === 1 },
         { label: 'Product', value: GroupByOptions.ProductName },
         { label: 'Distribution Partner', value: GroupByOptions.BrokerDealerName },
     ];
-
-    const timerangeText = getDateRangeText(timeframe);
 
     const submissionMethodTooltip = (
         <>
@@ -155,20 +148,7 @@ export const SubmissionType: FC = () => {
 
     const chunkedResponseLengths = chunkedResponse.map(chunk => chunk.length);
 
-    const eachChunkPortionOfTotal = useMemo(
-        () =>
-            chunkedResponseLengths.map((chunkLength, index) => {
-                const total = chunkedResponseLengths.reduce((acc, val) => acc + val, 0);
-                const chunkStartIndex = chunkedResponseLengths.slice(0, index).reduce((acc, val) => acc + val, 1);
-                const chunkEndIndex = chunkStartIndex + chunkLength - 1;
-                return {
-                    start: chunkStartIndex,
-                    end: chunkEndIndex,
-                    total,
-                };
-            }),
-        [chunkedResponseLengths]
-    );
+    const eachChunkPortionOfTotal = generateCarouselDataLengths(chunkedResponseLengths);
 
     const legendItems = [
         {
@@ -185,8 +165,15 @@ export const SubmissionType: FC = () => {
         },
     ];
 
+    const totalCaseCount = graphStats?.data?.map(stat => stat.count).reduce((a, b) => a + b, 0);
+
     return (
         <div className={styles.container}>
+            <ChartHeader
+                title="Submission Method"
+                subtitle={`${totalCaseCount?.toLocaleString()} total cases`}
+                titleToolTip={submissionMethodTooltip}
+            />
             {applicationTypeLoading2 || applicationTypeLoading ? (
                 <div className="grid place-content-center h-full w-full min-h-[400px]">
                     <PageLoader />
@@ -203,37 +190,34 @@ export const SubmissionType: FC = () => {
                     <div className="flex bg-[--color-base-surface-surface-primary]">
                         <CaseStatBlock
                             dashboardStatsResponse={pieChartStats}
-                            blockLabel="Submission method"
+                            blockLabel="All submissions"
                             timeFrameLabel={''}
                             statMeasurementLabel="case"
                             classNames={styles.statBlock}
                             variant="single"
-                            labelTooltip={submissionMethodTooltip}
                             loading={applicationTypeLoading2 || applicationTypeLoading}
                             chartConfig={{ series: pieChartSeriesData }}
+                            showStatDetails={false}
                         />
                         <div className={clsx('w-3/4', styles.chartContainer)}>
-                            <div className={styles.filterContainer}>
-                                <h3 className="headline-3-d">Submission Vs</h3>
-                                <Select
-                                    className={styles.submissionMethodSelect}
-                                    options={submissionVsOptions}
-                                    value={submissionVs}
-                                    onChange={val => setSubmissionVs(val as GroupByOptions)}
-                                />
-                            </div>
-                            <div className={styles.timeframeContainer}>
-                                <div>
-                                    <p className="typography-labels-label-lg-alt">Total case submissions</p>
-                                    <p className="typography-labels-label-sm">{timerangeText}</p>
+                            <div className={styles.timeFilterContainer}>
+                                <div className="w-1/4">
+                                    <Select
+                                        label="Group by"
+                                        className={styles.submissionMethodSelect}
+                                        options={submissionVsOptions}
+                                        value={submissionVs}
+                                        onChange={val => setSubmissionVs(val as GroupByOptions)}
+                                    />
                                 </div>
-                                <ChipRadio
-                                    id="timeframe-select"
-                                    options={timeframeOptions}
-                                    defaultValue={timeframe}
-                                    onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
-                                />
+                                <div className="w-3/4">
+                                    <TimeFilter
+                                        defaultValue={timeframe}
+                                        onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
+                                    />
+                                </div>
                             </div>
+
                             <Carousel
                                 slideStyle="my-8 pt-6"
                                 slides={statsWithChartData.map((stat, index) => {

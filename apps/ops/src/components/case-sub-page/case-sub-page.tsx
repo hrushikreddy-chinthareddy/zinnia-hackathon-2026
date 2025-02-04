@@ -2,6 +2,7 @@
 import { Icon, IconType, TabGroup, TabList, TabTrigger, TabContent } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
+import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { toTitleCase } from '@deps/helpers/string.helper';
 import { Case } from '@deps/models/case/case';
 import { ReactComponent as AnnotationsIcon } from '@deps/styles/elements/icons/communications/annotations.svg';
@@ -23,6 +24,7 @@ export default function CaseSubPage({
     handleTabChange: (val: string) => void;
 }) {
     const { t } = useTranslation();
+    const { loadingCallLogs, callLogs, callLogsStatusCode } = useCaseActivityContext();
 
     return (
         <div className="w-full rounded bg-white shadow-elevation-light-04 lg:w-2/3">
@@ -55,7 +57,7 @@ export default function CaseSubPage({
                     <NotesTab />
                 </TabContent>
                 <TabContent className="w-full" value={CaseDetailsTabValues['call-logs']}>
-                    <CallLogsTab />
+                    <CallLogsTab loadingCallLogs={loadingCallLogs} callLogs={callLogs} callLogsStatusCode={callLogsStatusCode} />
                 </TabContent>
             </TabGroup>
         </div>

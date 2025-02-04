@@ -276,7 +276,7 @@ export const ExceptionInsights = ({
                     </>
                 )}
             </div>
-            <div className="basis-3/4 pt-4 flex flex-col">
+            <div className="basis-3/4 flex flex-col">
                 <Typography className="ml-2" variant={TypographyVariant.LabelMd}>
                     {toTitleCase(timeframe)}
                 </Typography>
