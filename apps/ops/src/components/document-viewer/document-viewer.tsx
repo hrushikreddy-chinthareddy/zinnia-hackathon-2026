@@ -1,3 +1,5 @@
+// TODO: This files is obsolete at the moment. Keeping it for a short period until we determine if we want to restrict downloads again
+
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect } from 'react';
