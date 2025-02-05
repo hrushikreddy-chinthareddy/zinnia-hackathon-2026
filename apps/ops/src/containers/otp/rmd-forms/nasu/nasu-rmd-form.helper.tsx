@@ -35,6 +35,7 @@ import {
     DisbursementToggleType,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
+import { createValidator } from '../../utils/helper-utils';
 import { defaultDisbursmentConsent } from '../../withdrawal-forms/rsln/rsln-withdrawal-form.helper';
 
 export default function getNasuRmdConfig(t: TFunction) {
@@ -122,11 +123,40 @@ export default function getNasuRmdConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
                     isBankingField: true,
+                    maskOnBlur: true,
+                    disableCopyPaste: true,
+                },
+                {
+                    fieldName: BankingFields.ReEnterAccountNumber,
+                    fieldLabel: t('distributionMethod.reEnterAccountNumber'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-2',
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                },
+                {
+                    fieldName: BankingFields.BankRoutingNumber,
+                    fieldLabel: t('distributionMethod.bankRoutingNumber'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    maskOnBlur: true,
+                    classNames: 'col-start-1',
+                    disableCopyPaste: true,
+                },
+                {
+                    fieldName: BankingFields.ReEnterBankRoutingNumber,
+                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
                 },
                 {
                     fieldName: BankingFields.AccountHolder,
                     fieldLabel: t('distributionMethod.accountName'),
                     component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
                     isBankingField: true,
                 },
                 {
@@ -136,15 +166,10 @@ export default function getNasuRmdConfig(t: TFunction) {
                     isBankingField: true,
                 },
                 {
-                    fieldName: BankingFields.BankRoutingNumber,
-                    fieldLabel: t('distributionMethod.bankRoutingNumber'),
-                    component: DisbursementFields.BankTextField,
-                    isBankingField: true,
-                },
-                {
                     fieldName: BankingFields.ConsentAvailable,
                     fieldLabel: t('distributionMethod.consentAvailable'),
                     component: DisbursementFields.BankBooleanButtonGroup,
+                    classNames: 'col-start-1',
                 },
             ],
             getDefaultPayload({ paymentMethod, disbursmentConsent, bank }: FormDisbursement) {
@@ -173,6 +198,8 @@ export default function getNasuRmdConfig(t: TFunction) {
                 consentAvailable,
                 maskedAccountNumber,
                 isDirectDeposit,
+                reEnterAccountNumber,
+                reEnterBankRoutingNumber,
             }: DisbursementParts) => {
                 const bank = isDirectDeposit
                     ? [
@@ -188,6 +215,8 @@ export default function getNasuRmdConfig(t: TFunction) {
                             routingNumber: bankRoutingNumber,
                             isDirectDeposit: { text: true },
                             isDirectDepositValid: { text: isDirectDepositValid },
+                            reEnterAccountNumber,
+                            reEnterBankRoutingNumber,
                         },
                     ]
                     : [
@@ -328,6 +357,7 @@ export default function getNasuRmdConfig(t: TFunction) {
     ];
 
     const beneficiaryConfig: BeneficiaryConfig = {
+        isBeneficiarySpouseTitle: t('beneficiaryInfo.isBeneficiarySpouse.nasu'),
         fields: [
             {
                 fieldName: PartyFields.FirstName,
