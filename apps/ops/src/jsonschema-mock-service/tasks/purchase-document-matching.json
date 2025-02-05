@@ -14,7 +14,11 @@
                     "type": "object",
                     "definitions": {
                         "caseTypeEnum": {},
-                        "caseSubTypeEnum": {}
+                        "caseSubTypeEnum": {},
+                        "isDuplicateEnum": {
+                            "enumNames": ["Yes", "No"],
+                            "enum": ["DUPLICATE", "MATCH_FOUND"]
+                        }
                     },
                     "properties": {
                         "sectionHeader": {
@@ -113,7 +117,8 @@
                                     "properties": {
                                         "isDuplicate": {
                                             "type": "string",
-                                            "title": "Is this document a duplicate?"
+                                            "title": "Is this document a duplicate?",
+                                            "$ref": "#/definitions/isDuplicateEnum"
                                         }
                                     }
                                 }
@@ -226,19 +231,7 @@
                         }
                     },
                     "isDuplicate": {
-                        "ui:widget": "radio",
-                        "ui:options": {
-                            "customOptions": [
-                                {
-                                    "label": "Yes",
-                                    "value": "DUPLICATE"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "MATCH_FOUND"
-                                }
-                            ]
-                        }
+                        "ui:widget": "radio"
                     }
                 }
             },
