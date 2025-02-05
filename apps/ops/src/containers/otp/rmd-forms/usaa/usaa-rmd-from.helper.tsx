@@ -1,5 +1,4 @@
 import { TFunction } from 'next-i18next';
-import { useCallback } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
@@ -29,6 +28,7 @@ import {
     AddressTypes,
     FormDisbursement,
     AccountType,
+    LifeCadPartyRoles,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -42,43 +42,36 @@ import { createValidator } from '../../utils/helper-utils';
 import { FormSubtype, spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
 
 export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
-    const formValidation = useCallback(
-        ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
-            const errors = {} as FormValidationErrors;
-            if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
-                ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
-                }
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
-                ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
-                }
-            }
-            const ownerSignature = formSignature?.signatures?.find(
-                sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
-            );
+    const rmdFormValidation = ({ formSignature, formDisbursement, formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
 
-            // No choice made for signature
-            if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-                errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+        if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
+                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
             }
-            if (
-                formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
-            ) {
-                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
+            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
             }
-            return errors;
-        },
-        [t]
-    );
+        }
+        const ownerSignature = formSignature?.signatures?.find(
+            sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+        );
+
+        const rmds = formProgram?.rmd?.rmdPrograms;
+
+        if (rmds && rmds?.length === 0) {
+            errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
+        }
+
+        // No choice made for signature
+        if (ownerSignature && ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+            errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
+                'formValidation.signaturePresentOptionMustBeSelected'
+            );
+        }
+
+        return errors;
+    };
 
     const disbursementOptions: PaymentMethodOption[] = [
         {
@@ -370,6 +363,31 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.Owner,
         },
         {
+            key: `sig-val-joint`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'joint-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'joint-sign-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'joint-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'joint-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.JointOwner,
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
+                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+            },
+        },
+        {
             key: `sig-val-beneficiary`,
             fields: [
                 {
@@ -390,6 +408,9 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
+                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
+            },
         },
         {
             key: `sig-val-spouse`,
@@ -418,7 +439,7 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
     return {
         disbursementOptions,
         formPartyConfigs,
-        formValidation,
+        formValidation: rmdFormValidation,
         fundWithdrawnMethodOptions,
         irsSignatureConfig,
         signaturesConfig,

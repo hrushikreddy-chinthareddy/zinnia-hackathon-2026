@@ -10,6 +10,7 @@ import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/for
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import {
+    SignatureFieldNames,
     SignatureFields
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -34,13 +35,9 @@ import {
     DisbursementToggleType,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import getFlicConfig from '../../withdrawal-forms/flic-withdrawal-form.helper';
 import { defaultDisbursmentConsent } from '../../withdrawal-forms/rsln/rsln-withdrawal-form.helper';
 
 export default function getNasuRmdConfig(t: TFunction) {
-    // importing base configuration from FLIC form helper.
-    const { formValidation } = getFlicConfig(t);
-
     const cslnCheckStates = ['CA'];
 
     const formPartyConfigs: PartyConfig[] = [
@@ -303,17 +300,6 @@ export default function getNasuRmdConfig(t: TFunction) {
         },
     ];
 
-    const rmdFormValidation = ({ formParty, formSignature, formDisbursement, formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({ formParty, formSignature, formDisbursement });
-        const rmds = formProgram?.rmd?.rmdPrograms;
-
-        if (rmds && rmds?.length === 0) {
-            errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
-        }
-
-        return errors;
-    };
-
     const handleShouldShowDOBInOl4573 = (parties: LifeCadParty[] | undefined): boolean => {
         const partyDetails = parties?.find((party: LifeCadParty) => party.Role === LifeCadPartyRoles.PrimaryOwner);
         const personTypeIndividual = partyDetails?.PersonType === LifeCadPartyPersonType.Individual;
@@ -364,6 +350,37 @@ export default function getNasuRmdConfig(t: TFunction) {
                 fieldLabel: t('beneficiaryInfo.taxId'),
             },
         ],
+    };
+
+    const rmdFormValidation = ({ formSignature, formDisbursement, formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
+
+        if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
+                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+            }
+            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+            }
+        }
+        const ownerSignature = formSignature?.signatures?.find(
+            sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+        );
+
+        const rmds = formProgram?.rmd?.rmdPrograms;
+
+        if (rmds && rmds?.length === 0) {
+            errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
+        }
+
+        // No choice made for signature
+        if (ownerSignature && ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+            errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
+                'formValidation.signaturePresentOptionMustBeSelected'
+            );
+        }
+
+        return errors;
     };
 
     return {

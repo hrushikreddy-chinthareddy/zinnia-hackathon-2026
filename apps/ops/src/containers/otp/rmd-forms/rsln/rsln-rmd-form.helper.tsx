@@ -6,8 +6,12 @@ import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import { JointLifeExpectancyConfig } from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import {
+    SignatureBonusFields,
+    SignatureFieldNames,
     SignatureFields
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     PartyRoles,
     AddressTypes,
@@ -16,7 +20,8 @@ import {
     AccountType,
     FundWithdrawnMethod,
     FormParts,
-    FormValidationErrors
+    FormValidationErrors,
+    LifeCadPartyRoles
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -27,18 +32,132 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import getSbgcConfig from '../../withdrawal-forms/sbgc-withdrawal-form.helper';
+import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
 
 export default function getRslnRmdConfig(t: TFunction) {
-    // importing base configuration from FLIC form helper.
-    const { formValidation, signaturesConfig } = getSbgcConfig(t);
+    const signaturesConfig = [
+        {
+            key: `sig-val-owner`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'owner-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'owner-sign-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'owner-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'owner-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.Owner,
+        },
+        {
+            key: `sig-val-joint`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'joint-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'joint-sign-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'joint-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'joint-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.JointOwner,
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
+                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+            },
+        },
+        {
+            key: `sig-val-beneficiary`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'beneficiary-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'beneficiary-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'beneficiary-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'beneficiary-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
+                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
+            },
+        },
+        {
+            key: `sig-val-spouse`,
+            bonusField: SignatureBonusFields.SpousalConsent,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'spouse-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'spouse-present',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'spouse-date',
+                },
+            ],
+            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
+                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            },
+            signatureType: SignatureValidationTypeWithdrawal.Spouse,
+        },
+    ];
 
-    const rmdFormValidation = ({ formParty, formSignature, formDisbursement, formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({ formParty, formSignature, formDisbursement });
+    const rmdFormValidation = ({ formSignature, formDisbursement, formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
+
+        if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
+                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+            }
+            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+            }
+        }
+        const ownerSignature = formSignature?.signatures?.find(
+            sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+        );
+
         const rmds = formProgram?.rmd?.rmdPrograms;
 
         if (rmds && rmds?.length === 0) {
             errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
+        }
+
+        // No choice made for signature
+        if (ownerSignature && ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+            errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
+                'formValidation.signaturePresentOptionMustBeSelected'
+            );
         }
 
         return errors;
