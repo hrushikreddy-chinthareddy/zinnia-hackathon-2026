@@ -2133,6 +2133,7 @@
                 "title": "Informations sur le bénéficiaire",
                 "isBeneficiarySpouse": {
                     "title": "Votre bénéficiaire est-il votre conjoint?",
+                    "nasu": "Votre conjoint est-il le principal bénéficiaire?",
                     "yes": "Oui",
                     "no": "Non"
                 },

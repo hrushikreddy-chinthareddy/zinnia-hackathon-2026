@@ -2153,6 +2153,7 @@
                 "title": "Beneficiary Information",
                 "isBeneficiarySpouse": {
                     "title": "Is your beneficiary your spouse?",
+                    "nasu": "Is your spouse the primary beneficiary?",
                     "yes": "Yes",
                     "no": "No"
                 },

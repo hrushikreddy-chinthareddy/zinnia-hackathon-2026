@@ -26,6 +26,7 @@ export type FormBeneInfo = {
 
 export interface BeneficiaryConfig {
     isYourSpouseYoungerThanYouLabel?: string | null;
+    isBeneficiarySpouseTitle?: string | null;
     fields: {
         fieldName: PartyFields;
         fieldLabel: string;
@@ -204,7 +205,7 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
             {beneInfo?.isBeneInfoProvided && (
                 <>
                     <div className="my-3">
-                        <Label label={t('beneficiaryInfo.isBeneficiarySpouse.title')} variant={LabelVariant.FieldLabel} />
+                        <Label label={configs.isBeneficiarySpouseTitle || t('beneficiaryInfo.isBeneficiarySpouse.title')} variant={LabelVariant.FieldLabel} />
                         <ButtonGroup
                             activeValue={
                                 beneInfo?.isBeneInfoProvided
