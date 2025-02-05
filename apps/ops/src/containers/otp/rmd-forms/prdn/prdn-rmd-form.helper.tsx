@@ -69,12 +69,7 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                     'formValidation.signaturePresentOptionMustBeSelected'
                 );
             }
-            if (
-                formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
-            ) {
-                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
-            }
+
             return errors;
         },
         [t]
