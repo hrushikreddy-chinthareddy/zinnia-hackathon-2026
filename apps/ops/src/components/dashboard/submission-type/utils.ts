@@ -56,7 +56,7 @@ export const generateSeries = (transformedData: TransformedData): SeriesOptionsT
         });
 
         return {
-            name: applicationType,
+            name: applicationType === 'Electronic' ? 'Electronic (E-App)' : applicationType,
             color: applicationTypeColors[applicationType],
             type: 'bar',
             data,
