@@ -3,6 +3,7 @@ import {
     enumOptionsIsSelected,
     enumOptionsSelectValue,
     FormContextType,
+    getUiOptions,
     optionId,
     RJSFSchema,
     StrictRJSFSchema,
@@ -20,10 +21,11 @@ export default function CheckboxesWidget<T = any, S extends StrictRJSFSchema = R
     value,
     onChange,
     readonly,
+    uiSchema,
 }: WidgetProps<T, S, F>) {
     const { enumOptions, enumDisabled } = options;
     const checkboxesValues = Array.isArray(value) ? value : [value];
-
+    const { label } = getUiOptions(uiSchema);
     const _onChange =
         (index: number) =>
         ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +51,7 @@ export default function CheckboxesWidget<T = any, S extends StrictRJSFSchema = R
                             <CheckboxText
                                 id={optionId(id, index)}
                                 key={option.value}
-                                label={option.label}
+                                label={label ? option.label : ''}
                                 onChange={checked => _onChange(index)({ target: { checked } } as ChangeEvent<HTMLInputElement>)}
                                 checked={isChecked}
                                 isDisabled={itemDisabled}
