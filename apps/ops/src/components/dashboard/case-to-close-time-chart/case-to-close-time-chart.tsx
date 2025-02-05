@@ -22,7 +22,7 @@ import { chunkArray } from '@deps/utils/array';
 
 import { formatProcessListOptions, generateCarouselDataLengths, startDates, TimeframeFilterOptions } from '../utils';
 import styles from './case-to-close-time-chart.module.css';
-import { caseTimingQuery, CaseTimingData, generateSeries } from './utils';
+import { caseTimingQuery, CaseTimingData, generateSeries, generateTooltip, generateLabel, getDaysFromSeconds } from './utils';
 import { ChartHeader } from '../chart-header';
 import { TimeFilter } from '../time-filter/time-filter';
 
@@ -83,9 +83,11 @@ export const CaseToCloseTimeChart: FC = () => {
     // get 5 items for each slide
     const chunkedResponse: CaseTimingData[][] = chunkArray(caseTimingData || [], 5);
 
+    // When generating the time axis, we take raw time in seconds, but we convert the seconds to hours or days and display that on the chart.
     const chartConfig = chunkedResponse.map(chunk => {
         const xAxis = chunk.map(item => item.name);
         const series = generateSeries(chunk);
+        const isSeriesShowingDays = getDaysFromSeconds(series[0]?.data?.[0]?.y) >= 1;
         const baseChartConfiguration = caseChartHelpers.getBaseBarChartConfiguration();
         return {
             ...Highcharts.merge(baseChartConfiguration, {
@@ -98,29 +100,24 @@ export const CaseToCloseTimeChart: FC = () => {
                 xAxis: {
                     ...baseChartConfiguration.xAxis,
                     categories: xAxis,
+                    labels: {
+                        useHTML: false,
+                    },
                 },
                 colors: ['#67A2E9'],
 
                 tooltip: {
                     formatter: function (this: Highcharts.TooltipFormatterContextObject) {
-                        // @ts-expect-error: this actually exists
-                        const count = this.point.count;
-
-                        const tooltipString = `<div>
-                                    <span><b>&nbsp;${this.point.name}</b></span><br />
-                                    <span>Median time: ${this.y?.toFixed(1)} day${this.y !== 1 ? 's' : ''}</span><br />
-                                    <span>Total cases: ${count}</span>
-                                </div>`;
-
-                        return tooltipString;
+                        return generateTooltip(this);
                     },
                     useHtml: true,
                 },
                 yAxis: {
                     allowDecimals: false,
+                    tickAmount: 5,
                     labels: {
                         formatter: function (this: Highcharts.AxisLabelsFormatterContextObject) {
-                            return `${this.value} day${this.value !== 1 ? 's' : ''}`;
+                            return generateLabel(this, isSeriesShowingDays);
                         },
                     },
                 },
