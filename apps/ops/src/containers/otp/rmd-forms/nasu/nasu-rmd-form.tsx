@@ -3,36 +3,35 @@ import { useContext, useEffect } from 'react';
 
 import BeneficiaryInfo from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
-import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
-import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
+import TaxOL4753Attachment from '@deps/components/otp-withdrawal-form/tax-ol4753-attachment';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
-import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import getUlpcRmdConfig from './ulpc-rmd-form.helper';
+import getNasuRmdConfig from './nasu-rmd-form.helper';
 
-export default function UlpcRmdWithdrawalForm() {
+export default function NasuRmdWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
-        signaturesConfig,
         formPartyConfigs,
         cslnCheckStates,
-        irsSignatureConfig,
+        signaturesConfig,
+        signaturesNotaryConfig,
         formValidation,
         w4pSignaturesConfig,
         disbursementOptions,
         isBeneSpouseOption,
-        fundWithdrawnMethodOptions,
+        handleShouldShowDOBInOl4573,
         beneficiaryConfig
-    } = getUlpcRmdConfig(t);
+    } = getNasuRmdConfig(t);
 
     const {
         formParty,
@@ -46,6 +45,7 @@ export default function UlpcRmdWithdrawalForm() {
         isFormStateReadOnly,
         formBeneInfo,
         setFormBeneInfo,
+        parties
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -55,9 +55,9 @@ export default function UlpcRmdWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.ULPC}_RMD_DIGITAL_FORM`,
+            formExtName: `${initialForm?.carrier || Carrier.NASU}_RMD_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.ULPC}_RMD_DIGITAL_FORM`,
+                formType: `${initialForm?.carrier || Carrier.NASU}_RMD_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -71,8 +71,9 @@ export default function UlpcRmdWithdrawalForm() {
         }
     }, [formParty]);
 
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
 
+    const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties);
+    const shouldStateW4pRender = isAllowedState(contractIssueState)
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -85,22 +86,23 @@ export default function UlpcRmdWithdrawalForm() {
                 isBeneSpouseOption={isBeneSpouseOption}
                 configs={beneficiaryConfig}
             />
-            <FormDistribution
-                isFormStateReadOnly={isFormStateReadOnly}
-                fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.distributionInstruction') as string}
-                isDerivedMethodFromFunds={true}
-                defaultMethod={FundWithdrawnMethod.Prorata}
-            />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
+            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
+            <TaxOL4753Attachment
+                isFormStateReadOnly={isFormStateReadOnly}
+                shouldShowDOBInOl4573={shouldShowDOBInOl4573}
+            />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             {(ownerStateOfResidence || contractIssueState) &&
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
                 )}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                headerTranslationKey={'notaryHeader'}
+                config={signaturesNotaryConfig}
+            />
         </>
     );
 }

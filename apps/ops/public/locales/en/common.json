@@ -2171,6 +2171,10 @@
                     "yes": "Yes",
                     "no": "No"
                 },
+                "firstName": "First name",
+                "lastName": "Last name",
+                "middleName": "Middle name",
+                "taxId": "SSN",
                 "dob": "Date of birth",
                 "isYourSpouseYoungerThanYou": "Is your spouse 10 years younger than you?"
             }

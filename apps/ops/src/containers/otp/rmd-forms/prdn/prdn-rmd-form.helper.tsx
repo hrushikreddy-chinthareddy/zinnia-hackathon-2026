@@ -1,7 +1,6 @@
-import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
+import { useCallback } from 'react';
 
-import { BeneficiaryConfig } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import {
     BankingFields,
     DisbursementFields,
@@ -9,20 +8,27 @@ import {
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
-import { frequencyToValue } from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
-import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
+import { JointLifeExpectancyConfig } from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
+import {
+    SignatureBonusFields,
+    SignatureFieldNames,
+    SignatureFields,
+} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
-import { stringifyTrueFalseNull } from '@deps/helpers/string.helper';
+import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
-    FormValidationErrors,
-    PartyRoles,
-    AddressTypes,
     FormParts,
-    PaymentMethod,
+    FormValidationErrors,
+    FundWithdrawnMethod,
+    PartyRoles,
     PaymentMailType,
-    AccountType,
+    PaymentMethod,
+    PhoneTypes,
+    AddressTypes,
     FormDisbursement,
+    AccountType,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -31,24 +37,57 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import { createValidator } from '../utils/helper-utils';
-import getGlcoConfig from '../withdrawal-forms/flic-withdrawal-form.helper';
+import { createValidator } from '../../utils/helper-utils';
+import { FormSubtype, spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
 
-export default function getGlcoRmdConfig(t: TFunction) {
-    // importing base configuration from GLCO form helper.
-    const { cslnCheckStates, irsSignatureConfig, formValidation } = getGlcoConfig(t);
+export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
+    const formValidation = useCallback(
+        ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+            const errors = {} as FormValidationErrors;
+            if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+                if (
+                    formDisbursement?.bank[0].bankName === '' &&
+                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                ) {
+                    errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                }
+                if (
+                    formDisbursement?.bank[0].bankName === '' &&
+                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                ) {
+                    errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                }
+            }
+            const ownerSignature = formSignature?.signatures?.find(
+                sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+            );
 
-    // CMW-13796 remove further credit info
+            // No choice made for signature
+            if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+                errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
+                    'formValidation.signaturePresentOptionMustBeSelected'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].accountType?.text === '' &&
+                [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
+            ) {
+                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
+            }
+            return errors;
+        },
+        [t]
+    );
+
     const disbursementOptions: PaymentMethodOption[] = [
         {
             label: t('distributionMethod.eft'),
             value: FormDisbursementSelections.EFT,
             fields: [
                 {
-                    fieldName: BankingFields.Bank,
                     fieldLabel: t('distributionMethod.chooseTheBank'),
+                    fieldName: BankingFields.Bank,
                     component: DisbursementFields.SelectBank,
                 },
                 {
@@ -87,13 +126,12 @@ export default function getGlcoRmdConfig(t: TFunction) {
                     disableCopyPaste: true,
                     validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
                 },
-
                 {
                     fieldName: BankingFields.BankRoutingNumber,
                     fieldLabel: t('distributionMethod.bankRoutingNumber'),
                     component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
                     isBankingField: true,
+                    classNames: 'col-start-1',
                     maskOnBlur: true,
                     disableCopyPaste: true,
                 },
@@ -122,18 +160,19 @@ export default function getGlcoRmdConfig(t: TFunction) {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
                     doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
-                    accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
-                    bankName: selectedBank?.bankName ?? '',
-                    bankRoutingNumber: selectedBank?.routingNumber ?? '',
+                    accountHolder: selectedBank.nameOnBankAccount ?? '',
+                    accountNumber: selectedBank.accountNumber ?? '',
+                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    bankName: selectedBank.bankName ?? '',
+                    bankRoutingNumber: selectedBank.routingNumber ?? '',
                 };
             },
             generatePayloadFromSelection: ({
                 accountNumber,
                 accountType,
                 bankName,
-                accountHolder,
                 bankRoutingNumber,
+                accountHolder,
                 isVoidCheckAttached,
                 doesCheckMeetSecurityRequirements,
                 reEnterAccountNumber,
@@ -179,95 +218,6 @@ export default function getGlcoRmdConfig(t: TFunction) {
         },
     ];
 
-    const signaturesConfig: SignatureValidationConfig[] = [
-        {
-            key: `sig-val-owner`,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'owner-type',
-                },
-                {
-                    component: SignatureFields.SignatureCityProvided,
-                    key: 'owner-city-state',
-                },
-                {
-                    component: SignatureFields.SignatureSsn,
-                    key: 'owner-ssn',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'owner-sign-present',
-                },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
-                },
-                {
-                    component: SignatureFields.SignatureDate,
-                    key: 'owner-date',
-                },
-            ],
-            signatureType: SignatureValidationTypeWithdrawal.Owner,
-            partyRole: PartyRoles.OWNER,
-        },
-    ];
-
-    const rmdformValidation = ({
-        formParty,
-        formDisbursement,
-        formSignature,
-        formProgram,
-    }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({ formParty, formSignature, formDisbursement });
-        const rmds = formProgram?.rmd?.rmdPrograms;
-        if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-            if (
-                formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
-            ) {
-                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
-            }
-            if (
-                formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
-            ) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
-            }
-        }
-
-        if (rmds && rmds?.length === 0) {
-            errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
-        }
-
-        if (rmds && rmds?.length > 0) {
-            const sortedPrograms = rmds.sort((a, b) => a.startDate.text.localeCompare(b.startDate.text));
-
-            sortedPrograms.map((program, index) => {
-                const frequency = (program?.frequency?.text && frequencyToValue[program?.frequency?.text]) || frequencyToValue.Annually;
-                const calculatedEndDate = dayjs(program?.startDate?.text, ZAHARA_API_DATE_FORMAT)
-                    .add((Number(program?.duration?.text) - 1) * frequency, 'month')
-                    .add(1, 'day')
-                    .format(ZAHARA_API_DATE_FORMAT)
-                    .toString();
-
-                if (index < sortedPrograms.length - 1) {
-                    if (calculatedEndDate > sortedPrograms[index + 1].startDate.text) {
-                        errors['rmdDateOverlap'] = t('rmdMethod.rmdWarnings.dateOverlap');
-                    }
-
-                    if (Number(program?.duration?.text) === 0 && sortedPrograms[index + 1].startDate.text !== '') {
-                        errors['rmdDetectedDurationZero'] = t('rmdMethod.rmdWarnings.detectedDurationZero', {
-                            startDate: dayjs(program?.startDate?.text, ZAHARA_API_DATE_FORMAT).format(DEFAULT_DATE_FORMAT),
-                        });
-                    }
-                }
-            });
-        }
-
-        return errors;
-    };
-
     const formPartyConfigs: PartyConfig[] = [
         {
             partyRoleType: PartyRoles.OWNER,
@@ -285,23 +235,40 @@ export default function getGlcoRmdConfig(t: TFunction) {
                     fieldName: PartyFields.LastName,
                     fieldLabel: t('personalDetails.lastName'),
                 },
-
                 {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
                 },
+                {
+                    fieldName: PartyFields.Dob,
+                    fieldLabel: t('personalDetails.dob'),
+                },
             ],
-
+            phones: [
+                {
+                    phoneType: PhoneTypes.Owner_Phone_Day,
+                    fields: [
+                        {
+                            fieldName: PhoneFields.phoneNumber,
+                            fieldLabel: t('phoneDetails.telephoneNumber'),
+                        },
+                    ],
+                },
+            ],
             addressFields: [
                 {
                     addressType: AddressTypes.DEFAULT,
-                    title: t('addressDetails.residentialAddressTitle'),
+                    title: t('addressDetails.title'),
                 },
             ],
+            agentRecommendation: {
+                label: t('additionalInformation.isAgentOrBrokerRecommended'),
+                shouldDisplay: (formSubtype: FormSubtype) => formSubtype === FormSubtype.FullWithdrawal,
+            },
         },
         {
-            partyRoleType: PartyRoles.ANNUITANT,
-            title: t('Annuitant.title'),
+            partyRoleType: PartyRoles.JOINT_OWNER,
+            title: t('jointOwner.title'),
             fields: [
                 {
                     fieldName: PartyFields.FirstName,
@@ -316,55 +283,142 @@ export default function getGlcoRmdConfig(t: TFunction) {
                     fieldLabel: t('personalDetails.lastName'),
                 },
                 {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+                {
                     fieldName: PartyFields.Dob,
                     fieldLabel: t('personalDetails.dob'),
                 },
                 {
-                    fieldName: PartyFields.TaxId,
-                    fieldLabel: t('personalDetails.ssn'),
+                    fieldName: PartyFields.Email,
+                    fieldLabel: t('personalDetails.email'),
                 },
             ],
         },
     ];
 
-    const isBeneSpouseOption = [
-        { label: t('beneficiaryInfo.isBeneficiarySpouse.yes'), value: stringifyTrueFalseNull(true) },
-        { label: t('beneficiaryInfo.isBeneficiarySpouse.no'), value: stringifyTrueFalseNull(false) },
+    const fundWithdrawnMethodOptions = [
+        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
+        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
     ];
-    const w4pSignaturesConfig = [
+
+    const irsSignatureConfig = [
         {
             component: SignatureFields.SignaturePresent,
-            key: 'w4p-signature-sign-present',
+            key: 'irs-signature-sign-present',
         },
         {
             component: SignatureFields.SignatureDate,
-            key: 'w4p-signature-sign-date',
+            key: 'irs-signature-sign-date',
+        },
+    ];
+    const signaturesConfig: SignatureValidationConfig[] = [
+        {
+            key: `sig-val-owner`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'owner-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'owner-sign-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'owner-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'owner-date',
+                },
+                {
+                    component: SignatureFields.SignGuaranteeStamp,
+                    key: 'owner-sign-guarantee-stamp',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.Owner,
         },
         {
-            component: SignatureFields.SignatureType,
-            key: 'w4p-owner-type',
+            key: `sig-val-beneficiary`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'beneficiary-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'beneficiary-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'beneficiary-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'beneficiary-date',
+                },
+                {
+                    component: SignatureFields.SignGuaranteeStamp,
+                    key: 'owner-sign-guarantee-stamp',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+        },
+        {
+            key: `sig-val-spouse`,
+            bonusField: SignatureBonusFields.SpousalConsent,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'spouse-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'spouse-present',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'spouse-date',
+                },
+            ],
+            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
+                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            },
+            signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
     ];
 
-    const beneficiaryConfig: BeneficiaryConfig = {
-        isYourSpouseYoungerThanYouLabel: t('beneficiaryInfo.isYourSpouseYoungerThanYouLabel'),
+    const jointLifeExpectancyConfigs: JointLifeExpectancyConfig = {
+        checkboxLabel: t('rmdMethod.jointLifeExpectancy.label.flic'),
         fields: [
             {
+                fieldName: PartyFields.FirstName,
+                fieldLabel: t('rmdMethod.jointLifeExpectancy.firstName'),
+            },
+            {
+                fieldName: PartyFields.MiddleName,
+                fieldLabel: t('rmdMethod.jointLifeExpectancy.middleName'),
+            },
+            {
+                fieldName: PartyFields.LastName,
+                fieldLabel: t('rmdMethod.jointLifeExpectancy.lastName'),
+            },
+            {
                 fieldName: PartyFields.Dob,
-                fieldLabel: t('beneficiaryInfo.dob'),
+                fieldLabel: t('rmdMethod.jointLifeExpectancy.dob.flic'),
             },
         ],
     };
 
     return {
-        signaturesConfig,
-        formPartyConfigs,
-        formValidation: rmdformValidation,
-        cslnCheckStates,
-        irsSignatureConfig,
-        w4pSignaturesConfig,
         disbursementOptions,
-        isBeneSpouseOption,
-        beneficiaryConfig
+        formPartyConfigs,
+        formValidation,
+        fundWithdrawnMethodOptions,
+        irsSignatureConfig,
+        jointLifeExpectancyConfigs,
+        signaturesConfig,
     };
 }

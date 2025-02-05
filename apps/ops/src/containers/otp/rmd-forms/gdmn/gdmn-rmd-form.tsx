@@ -1,9 +1,8 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
-import BeneficiaryInfo from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
-import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
@@ -13,40 +12,25 @@ import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import getUlpcRmdConfig from './ulpc-rmd-form.helper';
+import getGdmnRmdConfig from './gdmn-rmd-form.helper';
 
-export default function UlpcRmdWithdrawalForm() {
+export default function GdmnRmdWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
-        signaturesConfig,
-        formPartyConfigs,
-        cslnCheckStates,
-        irsSignatureConfig,
-        formValidation,
-        w4pSignaturesConfig,
-        disbursementOptions,
-        isBeneSpouseOption,
-        fundWithdrawnMethodOptions,
-        beneficiaryConfig
-    } = getUlpcRmdConfig(t);
+      formValidation,
+      formPartyConfigs,
+      fundWithdrawnMethodOptions,
+      irsSignatureConfig,
+      w4pSignaturesConfig,
+      disbursementOptions,
+      signaturesConfig
+    } = getGdmnRmdConfig(t);
 
-    const {
-        formParty,
-        setFormData,
-        formData,
-        initialForm,
-        setFormValidator,
-        ownerStateOfResidence,
-        setOwnerStateOfResidence,
-        contractIssueState,
-        isFormStateReadOnly,
-        formBeneInfo,
-        setFormBeneInfo,
-    } = useContext(FormDataContext);
+    const { setFormData, formData, initialForm, setFormValidator, formTpaAuthorization, isFormStateReadOnly, contractIssueState } =
+        useContext(FormDataContext);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -55,22 +39,16 @@ export default function UlpcRmdWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.ULPC}_RMD_DIGITAL_FORM`,
+            formExtName: `${initialForm?.carrier || Carrier.GDMN}_RMD_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.ULPC}_RMD_DIGITAL_FORM`,
+                formType: `${initialForm?.carrier || Carrier.GDMN}_RMD_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
         });
     }, [initialForm]);
 
-    useEffect(() => {
-        const newOwnerStateOfResidence = getOwnerStateOfResidence(formParty);
-        if (newOwnerStateOfResidence !== ownerStateOfResidence) {
-            setOwnerStateOfResidence(newOwnerStateOfResidence);
-        }
-    }, [formParty]);
-
+    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     const shouldStateW4pRender = isAllowedState(contractIssueState);
 
     return (
@@ -78,13 +56,6 @@ export default function UlpcRmdWithdrawalForm() {
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
-            <BeneficiaryInfo
-                isFormStateReadOnly={isFormStateReadOnly}
-                beneInfo={formBeneInfo}
-                onBeneChange={setFormBeneInfo}
-                isBeneSpouseOption={isBeneSpouseOption}
-                configs={beneficiaryConfig}
-            />
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
@@ -96,11 +67,8 @@ export default function UlpcRmdWithdrawalForm() {
             <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
-            {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
-                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
-                )}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
         </>
     );
 }
