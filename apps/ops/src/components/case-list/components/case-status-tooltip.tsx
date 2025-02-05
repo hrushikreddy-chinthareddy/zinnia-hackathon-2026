@@ -72,6 +72,11 @@ export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
             statusTooltip = t('caseOverview.caseStatus.notStarted.statusTooltip');
             statusText = t('caseOverview.caseStatus.notStarted.statusTooltip');
             break;
+        case Statuses.Withdrawn:
+            statusVariant = BadgeVariant.DEFAULT;
+            statusTooltip = t('caseOverview.caseStatus.withdrawn.tooltip');
+            statusText = t('caseOverview.caseStatus.withdrawn.badgeText');
+            break;
         default:
             statusVariant = BadgeVariant.DEFAULT;
             statusTooltip = t('caseOverview.caseStatus.unknown.tooltip');

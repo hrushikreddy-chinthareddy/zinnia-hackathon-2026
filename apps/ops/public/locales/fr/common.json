@@ -1339,6 +1339,10 @@
                 "statusTooltip": "Pas commencé",
                 "detailedReason": "Ce cas est actuellement en attente pour que le travail commence. Vous pouvez revenir plus tard pour des mises à jour en recherchant le cas."
             },
+            "withdrawn": {
+                "badgeText": "Retiré",
+                "tooltip": "Le statut est retiré."
+            },
             "unknown": {
                 "badgeText": "Inconnu",
                 "tooltip": "Le statut est inconnu."
@@ -2468,7 +2472,8 @@
         "reversed": "Reversé",
         "reversedOn": "Reversé le {{date}}",
         "pendingReversal": "En Attente de Reversal",
-        "pendingReversalOn": "En Attente de Reversal le {{date}}"
+        "pendingReversalOn": "En Attente de Reversal le {{date}}",
+        "withdrawn": "Retiré"
     },
     "placeHolder": {
         "globalSelectSearch": "par exemple. Montant du remboursement du prêt, coût de base..."

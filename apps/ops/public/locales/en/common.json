@@ -1344,6 +1344,10 @@
                 "statusTooltip": "Not started",
                 "detailedReason": "This case is currently in the queue for work to begin. You can check back later for updates by searching for the case."
             },
+            "withdrawn": {
+                "badgeText": "Withdrawn",
+                "tooltip": "Status is Withdrawn."
+            },
             "unknown": {
                 "badgeText": "Unknown",
                 "tooltip": "Status is unknown."
@@ -2490,7 +2494,8 @@
         "reversed": "Reversed",
         "reversedOn": "Reversed on {{date}}",
         "pendingReversal": "Pending Reversal",
-        "pendingReversalOn": "Pending Reversal on {{date}}"
+        "pendingReversalOn": "Pending Reversal on {{date}}",
+        "withdrawn": "Withdrawn"
     },
     "placeHolder": {
         "globalSelectSearch": "e.g. Loan Payoff Amount, Cost Basis..."
