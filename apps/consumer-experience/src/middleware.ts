@@ -7,7 +7,6 @@ import {
   ACKNOWLEDGEMENT_COOKIE_KEY,
   FROM_LOGIN_QUERY_KEY,
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
-  LOGIN_EMAIL_COOKIE_KEY,
   MFA_OOB_CODE_COOKIE_KEY,
   MFA_TOKEN_COOKIE_KEY,
   MOCK_COOKIE_KEY,
@@ -26,7 +25,6 @@ import { CarrierId } from './types/policy';
 import {
   deleteCookie,
   deleteSession,
-  getCookie,
   getMfaCookie,
   getOobMfaCookie,
   getReturnUrlCookie,
@@ -336,17 +334,6 @@ export async function middleware(req: NextRequest) {
   if (req.cookies.has(HAD_PREVIOUS_SESSION_COOKIE_KEY) && !isSessionPage) {
     const res = NextResponse.redirect(new URL(`/session`, req.url));
     return res;
-  }
-
-  // This is to protect against the edge case where a user has this step saved in their
-  // history and are trying to login but have not yet entered their email
-  // we don't want to show a blank email field on the enter a code page
-  if (pathname === '/login/passwordless-email-challenge') {
-    const userEmailCookie = await getCookie(LOGIN_EMAIL_COOKIE_KEY);
-    console.log(userEmailCookie);
-    if (!userEmailCookie) {
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
   }
 
   if (pathname === '/login/mfa/mfa-enrollment') {
