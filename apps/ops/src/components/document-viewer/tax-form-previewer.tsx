@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import { TaxForm } from '@deps/models/case/send-tax-forms';
 
