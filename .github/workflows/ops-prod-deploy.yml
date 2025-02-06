@@ -5,7 +5,7 @@ on:
 
 jobs:
   prod-deploy-east:
-    if: startsWith(github.ref_name, 'release/ops/')
+    if: startsWith(github.ref_name, 'release/')
     uses: ./.github/workflows/deploy-ops-east.yml
     with:
       environment-level: production
