@@ -18,7 +18,8 @@ type AddressProps = {
     showAddressLines?: boolean;
     isOL4753?: boolean;
     combinedAddress?: string;
-    className?: string,
+    className?: string;
+    isW4pTaxAddress?: boolean;
 };
 
 export const DEFAULT_ADDRESS = {
@@ -33,6 +34,7 @@ export const DEFAULT_ADDRESS = {
     zip: '',
     zipPlusFour: null,
     isAddressChanged: false,
+    ssn: '',
 };
 
 const zipFormat = { format: '#####' };
@@ -46,6 +48,7 @@ export default function AddressEntry({
     isOL4753 = false,
     combinedAddress = '',
     className = '',
+    isW4pTaxAddress = false,
 }: AddressProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.addressDetails' });
 
@@ -56,6 +59,8 @@ export default function AddressEntry({
     const [state, setState] = useState(initialAddress.state || '');
     const [zip, setZip] = useState(initialAddress.zip || '');
     const [zipPlusFour, setZipPlusFour] = useState(initialAddress.zipPlusFour || '');
+    const [ssn, setSsn] = useState(initialAddress.ssn || '');
+
     const stateOptions = getStateCodes().map(state => ({ label: state, value: state }));
     useEffect(() => {
         onDataChange({ ...DEFAULT_ADDRESS, ...initialAddress, addressLine1, addressLine2, addressLine3, city, state, zip, zipPlusFour });
@@ -160,6 +165,22 @@ export default function AddressEntry({
                         maxLength={4}
                         disabled={isFormStateReadOnly}
                         data-testid="zipPlusFour"
+                    />
+                )}
+
+                {isW4pTaxAddress && (
+                    <Field
+                        // label={t(`ssn`) as string}
+                        label="SSN"
+                        message={errors.ssn}
+                        onChange={e => setSsn(xss(e.target.value))}
+                        size={FieldSize.Small}
+                        type={FieldType.BaseActive}
+                        value={ssn}
+                        variant={selectVarientByConfig({ value: ssn, isFormStateReadOnly, error: errors.ssn })}
+                        maxLength={4}
+                        disabled={isFormStateReadOnly}
+                        data-testid="ssn"
                     />
                 )}
             </div>

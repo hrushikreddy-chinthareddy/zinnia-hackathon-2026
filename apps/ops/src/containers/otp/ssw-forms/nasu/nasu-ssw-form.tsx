@@ -19,6 +19,7 @@ import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import SswEditSelection from '../ssw-edit-selection';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import { isAllowedState } from '@deps/utils/renderStateW4';
+import W4pTaxForm from '@deps/components/w4p-tax-form/w4p-tax-form';
 
 export function NassauSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -36,7 +37,7 @@ export function NassauSSWForm() {
         cslnCheckStates,
         defaultValues,
         handleShouldShowDOBInOl4573,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
     } = useNassauConfig(t);
 
     useEffect(() => {
@@ -57,7 +58,7 @@ export function NassauSSWForm() {
 
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties);
-    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
+    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -78,7 +79,7 @@ export function NassauSSWForm() {
                 defaultValue={defaultValues.disbursementOption}
             />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-
+            <W4pTaxForm isFormStateReadOnly={isFormStateReadOnly} />
             {(ownerStateOfResidence || contractIssueState) &&
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />

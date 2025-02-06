@@ -444,6 +444,7 @@ export interface Address {
     state: string;
     zip: string;
     zipPlusFour?: string | null;
+    ssn?: string;
 }
 
 export interface BankDetails {
