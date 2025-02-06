@@ -39,7 +39,20 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
+import { statesAndTerritories } from '@deps/helpers/states.helper';
+
+const spousalSignatureStateCodes = [
+    statesAndTerritories.ARIZONA,
+    statesAndTerritories.CALIFORNIA,
+    statesAndTerritories.IDAHO,
+    statesAndTerritories.LOUISIANA,
+    statesAndTerritories['NEW MEXICO'],
+    statesAndTerritories.NEVADA,
+    statesAndTerritories.TEXAS,
+    statesAndTerritories.WASHINGTON,
+    statesAndTerritories.WISCONSIN,
+    statesAndTerritories.MINNESOTA,
+];
 
 export default function getRslnRmdConfig(t: TFunction) {
     const signaturesConfig = [
