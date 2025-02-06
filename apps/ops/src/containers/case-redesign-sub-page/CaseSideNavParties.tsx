@@ -96,7 +96,7 @@ const PartyInformation = ({ party, ...rest }: { party: PartyInfo } & HTMLAttribu
     }
 
     return (
-        <li className="flex gap-md rounded bg-white border-2 border-[#ededed] p-4" {...rest}>
+        <li className="flex gap-md rounded bg-white border-2 border-[#ededed] p-4 mb-2" {...rest}>
             <Icon className="flex-shrink" type={IconType.CIRCLE_USER} />
             <div className="flex-grow">
                 <div className="flex gap-md">
@@ -126,8 +126,6 @@ export const Parties = ({
     const { t } = useTranslation();
     const { loadingPolicy } = useCaseActivityContext();
     const { owners = [], agents = [], brokers } = parties ?? {};
-    const spacingAndBorderClasses = 'border-gray-100 py-4 [&:not(:last-child)]:border-b-2 last:pb-0';
-    const listClasses = `${spacingAndBorderClasses} flex w-full flex-col gap-4`;
 
     return (
         <div className="flex w-full flex-col p-4 rounded bg-white shadow-elevation-light-04" {...rest}>
@@ -135,7 +133,7 @@ export const Parties = ({
                 {t('caseOverview.sidenav.people')}
             </Title>
             {owners.length ? (
-                <ul className={`${listClasses} pt-0`}>
+                <ul className="flex w-full flex-col">
                     {owners.map(owner => (
                         <PartyInformation party={owner} key={owner.fullName} />
                     ))}
@@ -144,21 +142,21 @@ export const Parties = ({
                 <NoPartiesStatus
                     caseStatus={caseStatus}
                     partyType="owner"
-                    className={`${spacingAndBorderClasses} pt-0`}
+                    className="gap-md"
                     spinLoader={loadingPolicy}
                 />
             )}
             {agents.length ? (
-                <ul className={listClasses}>
+                <ul className="flex w-full flex-col">
                     {agents.map(agent => (
                         <PartyInformation party={agent} key={agent.fullName} />
                     ))}
                 </ul>
             ) : (
-                <NoPartiesStatus caseStatus={caseStatus} partyType="agent" className={spacingAndBorderClasses} spinLoader={loadingPolicy} />
+                <NoPartiesStatus caseStatus={caseStatus} partyType="agent" className="gap-md" spinLoader={loadingPolicy} />
             )}
             {!!brokers?.length && (
-                <ul className={listClasses}>
+                <ul className="flex w-full flex-col">
                     {brokers.map(broker => (
                         <PartyInformation party={broker} key={broker.fullName} />
                     ))}
