@@ -1,0 +1,35 @@
+.selectContent {
+  z-index: 600;
+}
+
+.wrapper {
+  .mobileSelect {
+    min-height: 42px;
+
+    &:hover {
+      border-color: var(--color-fields-border-field-hover-border);
+    }
+
+    &:focus-visible {
+      outline-width: var(--measure-dimension-stroke-xs);
+      outline-offset: var(--measure-dimension-stroke-md);
+      outline-color: var(--color-fields-border-field-active-border);
+    }
+
+    border-radius: var(--measure-dimension-radius-md);
+    border-style: solid;
+    border-width: var(--measure-dimension-stroke-sm);
+    border-color: var(--color-fields-border-field-default-border);
+    padding: var(--measure-dimension-padding-lg) var(--measure-dimension-padding-2xl);
+
+    &.error {
+      --indicator-color: var(--color-status-border-status-error-border);
+      border-color: var(--color-status-border-status-error-border);
+      margin-bottom: var(--measure-dimension-padding-lg);
+    }
+  }
+
+  .errorText {
+    word-wrap: break-word;
+  }
+}
