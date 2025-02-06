@@ -232,6 +232,12 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
     const showStartButton = task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending;
     const statusReason = task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason;
 
+    const details = t(`sideSheet.task.taskDetails.${convertToCamelCase(task.taskType)}`, {
+        taskType: toSentenceCase(task.taskName),
+        caseType: task.process,
+        defaultValue: '',
+    });
+
     let badgeIcon, badgeVariant, badgeLabel;
 
     switch (task.status) {
@@ -388,16 +394,17 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case' }: { taskId:
                     <>
                         <div className="col-span-1 text-[--color-base-text-text-secondary]">{t('sideSheet.task.stepLabel')}</div>
                         <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                            {toSentenceCase(task.taskName)}
+                            {task.taskName}
                         </Typography>
 
-                        <div className="col-span-1 text-[--color-base-text-text-secondary]">{t('sideSheet.task.detailsLabel')}</div>
-                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                            {t(`sideSheet.task.taskDetails.${convertToCamelCase(task.taskType)}`, {
-                                taskType: toSentenceCase(task.taskName),
-                                caseType: task.process,
-                            })}
-                        </Typography>
+                        {details && (
+                            <>
+                                <div className="col-span-1 text-[--color-base-text-text-secondary]">{t('sideSheet.task.detailsLabel')}</div>
+                                <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                                    {details}
+                                </Typography>
+                            </>
+                        )}
                     </>
                 )}
             </div>

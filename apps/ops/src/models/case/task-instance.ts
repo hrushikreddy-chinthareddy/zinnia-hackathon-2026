@@ -26,6 +26,7 @@ export enum TaskLabel {
 }
 
 export type TaskInstance = {
+    taskName?: string;
     additionalData: AdditionalDataInstance;
     assignee: string;
     createdAt: string;

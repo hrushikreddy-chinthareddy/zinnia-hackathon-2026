@@ -35,7 +35,7 @@ export function Task({ task }: { task: TaskView }) {
 
     const handleClick = (task: TaskView) => {
         sideSheet.changeSideSheetContent(
-            `${t('sideSheet.task.taskHeading')}: ${TaskTitle[task.description] ? TaskTitle[task.description] : task?.description ?? ''}`,
+            `${task.taskName ? `${t('sideSheet.task.taskHeading')}: ${task.taskName}` : t('sideSheet.task.taskHeading')}`,
             SupportedTaskMap.includes(task.description as TaskType) ? (
                 <GlobalTaskSideSheet taskId={task.id} />
             ) : (
