@@ -4,13 +4,9 @@ import { TFunction } from 'next-i18next';
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { CaseActivityContextProps } from '@deps/contexts/CaseActivityContext';
 import { calculateDaysAgo } from '@deps/helpers/case-management';
-import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
-import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { formatPhone, toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase } from '@deps/helpers/string.helper';
 import { AgingTimeRangesKeysExtended, Case, StatCount, Statuses } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';
-import { IdentificationType, PartyRole } from '@deps/models/policy/sor-policy';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { CaseSideNavProps } from './CaseSideNav';
 import { PartiesProps, PartyInfo } from './CaseSideNavParties';
@@ -30,8 +26,14 @@ export const getPartiesFromCase = ({ parties = [] }: Case, t: TFunction): Partie
         const key = createPartyKey({ firstName, lastName, fullName, ssn });
         if (!acc[key]) {
             const createdFullName = toTitleCase(fullName ?? `${firstName ?? ''} ${lastName ?? ''}`);
-            acc[key] = { id: key, fullName: createdFullName, roles: [] };
+            acc[key] = { id: key, fullName: createdFullName, roles: [], fields: {
+                ssn: {
+                    label: t('colDefs:owner.ssnAbbreviated'),
+                    value: ssn,
+                }
+            }};
         }
+        // if there's two of the same person, just add the roles to the first found
         acc[key].roles.push(convertToChipText(partyRole, t));
         return acc;
     }, {} as Record<string, PartyInfo>);
@@ -98,92 +100,11 @@ export const getPartiesFromCase = ({ parties = [] }: Case, t: TFunction): Partie
     return { owners, agents, brokers: brokers.length ? brokers : undefined };
 };
 
-export const getPartiesFromPolicy = (policyDetails: PolicyDetails, t: TFunction): PartiesProps => {
-    const policyOwners = policyDetails.allOwners;
-    const policyAgents = Array.from(
-        new Set([
-            ...policyDetails.getPartiesWithRole(PartyRole.AGENT),
-            ...policyDetails.getPartiesWithRole(PartyRole.PRIMARYSERVICINGAGENT),
-            ...policyDetails.getPartiesWithRole(PartyRole.PRIMARYWRITINGAGENT),
-            ...policyDetails.getPartiesWithRole('ADDITIONALSERVICINGAGENT' as PartyRole),
-            ...policyDetails.getPartiesWithRole('ADDITIONALWRITINGAGENT' as PartyRole),
-        ])
-    );
-
-    const getPartyRoles = (party: PolicyParty) => {
-        return party.partyRoles.map(role => convertToChipText(role.partyRole, t));
-    };
-
-    const owners = policyOwners
-        .map((owner, index): PartyInfo | undefined => {
-            if (!owner) {
-                return;
-            }
-            const address = owner.bestAvailableAddress;
-            const dob = owner.formattedBirthDate;
-            const email = owner.bestAvailableEmail;
-            const fullName = owner.fullName;
-            const phone = owner.bestAvailablePhone;
-            const fields = {
-                address: { label: t('colDefs:owner.mailingAddress'), value: address },
-                dob: { label: t('colDefs:owner.birthDate'), value: dob ?? DEFAULT_ERROR_STRING },
-                email: { label: t('colDefs:owner.email'), value: email?.emailAddress ?? DEFAULT_ERROR_STRING },
-                phone: {
-                    label: phone?.phoneType
-                        ? t(`people.card.phone.phoneOptions.${phone.phoneType.toLocaleLowerCase()}`)
-                        : t('colDefs:owner.primaryPhone'),
-                    value: phone ? formatPhone(phone) : DEFAULT_ERROR_STRING,
-                },
-                ssn: {
-                    label: t('colDefs:owner.ssnAbbreviated'),
-                    value:
-                        owner?.identifications?.find(id => id.identificationType === IdentificationType.SSN)?.identificationValue ||
-                        DEFAULT_ERROR_STRING,
-                },
-            };
-            const roles = getPartyRoles(owner);
-
-            return {
-                id: owner.partyId ?? fullName ?? index,
-                fields,
-                fullName,
-                roles,
-            };
-        })
-        .filter(Boolean) as PartyInfo[];
-
-    const agents = policyAgents
-        .map((agent): PartyInfo | undefined => {
-            if (!agent) {
-                return;
-            }
-            const fullName = agent.fullName;
-            const roles = getPartyRoles(agent);
-            return {
-                id: agent.partyId ?? fullName,
-                fullName,
-                roles,
-            };
-        })
-        .filter(Boolean) as PartyInfo[];
-
-    return { owners, agents, brokers: [] };
-};
-
 export const getSideNavData = (
     caseDetails: Case,
     caseActivityContext: CaseActivityContextProps,
     t: TFunction
 ): CaseSideNavProps['data'] => {
-    let parties;
-    if (caseActivityContext.isNewBusinessCase) {
-        parties = getPartiesFromCase(caseDetails, t);
-    } else {
-        if (caseActivityContext.policy) {
-            parties = getPartiesFromPolicy(caseActivityContext.policy, t);
-        }
-    }
-
     const daysAgo = calculateDaysAgo(new Date(caseDetails.createdAt));
     const daysAgoText = t('temporal.daysAgo', { count: daysAgo });
     const process = caseDetails?.process;
@@ -191,7 +112,7 @@ export const getSideNavData = (
     return {
         carrier: caseDetails.carrier,
         createdDate: daysAgoText,
-        parties,
+        parties: getPartiesFromCase(caseDetails, t),
         policyNumber: caseDetails.policyNumber,
         processType: process,
         productName: caseDetails.productName,
