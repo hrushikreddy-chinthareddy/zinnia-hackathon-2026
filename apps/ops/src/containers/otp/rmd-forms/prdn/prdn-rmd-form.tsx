@@ -28,10 +28,9 @@ const PrdnRmdWithdrawalForm = () => {
         jointLifeExpectancyConfigs,
         irsSignatureConfig,
         signaturesConfig,
-        contractIssueState,
         w4pSignaturesConfig
     } = getPrdnWithdrawalConfig(t);
-    const { formParty, setFormValidator, setFormData, formSubtype, initialForm, isFormStateReadOnly, formTpaAuthorization } =
+    const { formParty, setFormValidator, setFormData, formSubtype, initialForm, isFormStateReadOnly, formTpaAuthorization, contractIssueState } =
         useContext(FormDataContext);
 
     useEffect(() => {
