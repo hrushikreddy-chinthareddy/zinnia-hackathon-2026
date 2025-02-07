@@ -13,6 +13,7 @@ import styles from './Pom.module.css';
 import { HashRouter, Route, Routes, useParams } from 'react-router';
 import './styles/globals.css';
 import EntityInformation from './views/entity-information/EntityInformation';
+import LicensesAppointments from './views/licenses-appointments/LicensesAppointments';
 
 export const Pom = ({
   translations,
@@ -56,7 +57,7 @@ const Producer = ({ producerType }: { producerType: ProducerType }) => {
       label: 'Licenses and Appointments',
       icon: IconType.CALENDAR,
       value: 'licenses',
-      content: <div>Section 2</div>,
+      content: <LicensesAppointments />,
     },
     {
       label: 'Training and Education',
