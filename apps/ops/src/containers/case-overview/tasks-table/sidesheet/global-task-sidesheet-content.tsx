@@ -35,7 +35,6 @@ import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { writeToCache } from '@deps/utils/cache';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import Dropdown from '@deps/components/dropdown/Dropdown';
 
@@ -314,7 +313,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             </div>
         );
     };
-    const sideSheet = useSideSheetContext();
 
     const openSideSheet = () => {
         const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} taskDescription={taskDescription} />;
