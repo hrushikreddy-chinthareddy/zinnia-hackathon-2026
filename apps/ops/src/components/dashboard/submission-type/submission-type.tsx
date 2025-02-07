@@ -197,6 +197,15 @@ export const SubmissionType: FC = () => {
         },
     };
 
+    const totalCases =
+        applicationTypeFetching || applicationTypeFetching2 ? (
+            <div className="blur">
+                <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+            </div>
+        ) : (
+            <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+        );
+
     return (
         <div className={styles.container}>
             <ChartHeader

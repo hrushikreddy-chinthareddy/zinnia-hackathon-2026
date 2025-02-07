@@ -14,29 +14,30 @@ import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
+import { CaseTimingData } from '@deps/queries/api/cases';
 import { DashboardSearchFilter } from '@deps/queries/cases';
-import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { getCaseDashboardStatsQuery, getCaseDashboardTimingQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
 
 import { formatProcessListOptions, generateCarouselDataLengths, startDates, TimeframeFilterOptions } from '../utils';
 import styles from './case-to-close-time-chart.module.css';
-import { caseTimingQuery, CaseTimingData, generateSeries, generateTooltip, generateLabel, getDaysFromSeconds } from './utils';
+import { generateLabel, generateSeries, generateTooltip, getDaysFromSeconds } from './utils';
 import { ChartHeader } from '../chart-header';
 import { TimeFilter } from '../time-filter/time-filter';
 
 export const CaseToCloseTimeChart: FC = () => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
-    const [selectedProcess, setSelectedProcess] = useState<Processes | undefined>();
+    const [selectedProcess, setSelectedProcess] = useState<Processes | 'all' | undefined>();
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
 
     const filter: DashboardSearchFilter = {
-        caseStatus: [Statuses.Completed, Statuses.Exception],
+        caseStatus: [Statuses.Completed],
         createdDateStart: startDates[timeframe],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
-        process: selectedProcess ? [selectedProcess] : [],
+        process: selectedProcess && selectedProcess !== 'all' ? [selectedProcess] : [],
     };
 
     // Get select dropdown options for process list options
@@ -62,7 +63,14 @@ export const CaseToCloseTimeChart: FC = () => {
                 return response;
             }
         },
-        select: ({ data }) => formatProcessListOptions(data),
+        select: ({ data }) => {
+            const options = formatProcessListOptions(data);
+            options.unshift({
+                value: 'all',
+                label: 'All case types',
+            });
+            return options;
+        },
         enabled: Object.keys(filter).length > 0,
     });
 
@@ -74,7 +82,7 @@ export const CaseToCloseTimeChart: FC = () => {
         error: caseTimingDataError,
     } = useQuery({
         queryKey: ['caseTimingChart', filter],
-        queryFn: () => caseTimingQuery(filter, [GroupByOptions.ProcessSubType]),
+        queryFn: () => getCaseDashboardTimingQuery(filter, [GroupByOptions.ProcessSubType]),
         select: data => data.data?.sort((a, b) => a.secondMedian - b.secondMedian) || data,
         placeholderData: previousData => previousData,
         enabled: Object.keys(filter).length > 0,
@@ -152,13 +160,21 @@ export const CaseToCloseTimeChart: FC = () => {
         [selectedProcess, timeframe]
     );
 
+    const totalCases = caseTimingDataFetching ? (
+        <div className="blur">
+            <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+        </div>
+    ) : (
+        <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+    );
+
     return (
         <div className={styles.container}>
-            <ChartHeader title="Median Case Processing Times" subtitle={`${totalCaseCount?.toLocaleString()} total cases`} />
+            <ChartHeader title="Median Case Processing Times" subtitle={totalCases} />
 
             <BlurOverlayLoader loading={caseTimingDataFetching || processListOptionsFetching}>
                 <div className=" flex bg-[--color-base-surface-surface-primar">
-                    {caseTimingDataError || !caseTimingData?.length ? (
+                    {caseTimingDataError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
@@ -191,25 +207,35 @@ export const CaseToCloseTimeChart: FC = () => {
                                         />
                                     </div>
                                 </div>
-
-                                <Carousel
-                                    slideStyle="my-8 pt-6"
-                                    slides={chartConfig.map((chartConfig, index) => {
-                                        return (
-                                            <HighchartsReact
-                                                key={`submission-type-slide-${index}`}
-                                                highcharts={Highcharts}
-                                                options={chartConfig}
-                                            />
-                                        );
-                                    })}
-                                    bottomContent={
-                                        <div className={styles.legend}>
-                                            <p className={'typography-labels-label-sm'}>Processing time</p>
-                                        </div>
-                                    }
-                                    slideItemsCount={eachChunkPortionOfTotal}
-                                />
+                                {caseTimingData?.length === 0 ? (
+                                    <div className=" h-[19rem] flex flex-col gap-2 items-center justify-center">
+                                        <>
+                                            <ChartBarsIcon height={'24px'} width={'24px'} />
+                                            <Typography variant={TypographyVariant.BodyBold}>
+                                                There is no data for this selection
+                                            </Typography>
+                                        </>
+                                    </div>
+                                ) : (
+                                    <Carousel
+                                        slideStyle="my-8 pt-6"
+                                        slides={chartConfig.map((chartConfig, index) => {
+                                            return (
+                                                <HighchartsReact
+                                                    key={`submission-type-slide-${index}`}
+                                                    highcharts={Highcharts}
+                                                    options={chartConfig}
+                                                />
+                                            );
+                                        })}
+                                        bottomContent={
+                                            <div className={styles.legend}>
+                                                <p className={'typography-labels-label-sm'}>Processing time</p>
+                                            </div>
+                                        }
+                                        slideItemsCount={eachChunkPortionOfTotal}
+                                    />
+                                )}
                             </div>
                         </>
                     )}

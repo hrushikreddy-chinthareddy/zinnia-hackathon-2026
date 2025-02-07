@@ -1,7 +1,7 @@
 import { Statuses, CaseDashboardStatsResponse, DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 
-import { getCaseDashboardStats } from '../../api/cases';
+import { CaseTimingData, getCaseDashboardStats, getCaseTimingData } from '../../api/cases';
 import { CaseDashboardStatsQuery, DashboardSearchFilter } from '../../cases';
 
 /**************************
@@ -43,6 +43,23 @@ export const getCaseDashboardStatsQuery = async (baseFilter: DashboardSearchFilt
     // Recursively filter out objects with name: "NOT_APPLICABLE"
 
     const filteredData = recursivelyFilter(statsResponse.data || [], null, 'NOT_APPLICABLE');
+    statsResponse.data = filteredData.sort((a, b) => b.count - a.count);
+
+    return statsResponse;
+};
+
+export const getCaseDashboardTimingQuery = async (baseFilter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
+    const statsResponse = await getCaseTimingData({
+        filter: baseFilter,
+        groupBy,
+    });
+    if (!statsResponse || 'status' in statsResponse) {
+        throw statsResponse;
+    }
+
+    // Recursively filter out objects with name: "NOT_APPLICABLE"
+
+    const filteredData = recursivelyFilter(statsResponse.data || [], null, 'NOT_APPLICABLE') as CaseTimingData[];
     statsResponse.data = filteredData.sort((a, b) => b.count - a.count);
 
     return statsResponse;

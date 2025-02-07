@@ -23,10 +23,16 @@ export const ChartHeader: FC<ChartHeaderProps> = ({ title, subtitle, titleToolTi
                     <Tooltip trigger={<CircleInfoIcon height={'16px'} width={'16px'} className="text-primary" />}>{titleToolTip}</Tooltip>
                 )}
             </div>
-            <div className="flex flex-col gap-2">
-                <p className={'typography-titles-subtitle'}>{subtitle}</p>
-                {description && typeof description === 'string' ? <p className={'typography-content-body'}>{description}</p> : description}
-            </div>
+            {(description || subtitle) && (
+                <div className="flex flex-col gap-2">
+                    {typeof subtitle === 'string' ? <p className={'typography-titles-subtitle'}>{subtitle}</p> : subtitle}
+                    {description && typeof description === 'string' ? (
+                        <p className={'typography-content-body'}>{description}</p>
+                    ) : (
+                        description
+                    )}
+                </div>
+            )}
         </div>
     );
 };

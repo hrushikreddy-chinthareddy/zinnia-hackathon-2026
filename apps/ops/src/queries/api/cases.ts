@@ -35,6 +35,28 @@ export type ReferenceDataQuery = {
     keys?: ('requestSubType' | 'productName' | 'processList')[];
     process?: string[];
 };
+export interface CaseTimingResponse {
+    data: CaseTimingData[];
+    totalElements: number;
+}
+
+export interface CaseTimingErrorResponse {
+    data: {
+        err: string;
+    };
+    status: number;
+}
+
+//TODO: Replace this with actual api spec when api publishes
+export interface CaseTimingData {
+    key: string;
+    name: string;
+    secondLow: number;
+    secondMedian: number;
+    secondMean: number;
+    secondHigh: number;
+    count: number;
+}
 
 export const createCase = async (query: CreateCaseBody): Promise<CreateCaseResponse> => {
     try {
@@ -141,6 +163,29 @@ export const getCaseDashboardStats = async (
         return { data: [], totalElements: 0 };
     } catch (error: any) {
         console.error('getCaseDashboardStats::An error occurred while getting case dashboard stats results', error);
+        if ('response' in error) {
+            return error.response;
+        }
+        return error;
+    }
+};
+
+export const getCaseTimingData = async (query: CaseDashboardStatsQuery): Promise<CaseTimingResponse | CaseTimingErrorResponse> => {
+    try {
+        const { data } = await client.post<CaseDashboardStatsQuery, AxiosResponse<CaseTimingResponse | CaseTimingErrorResponse>>(
+            `${baseAppUrl}/api/dashboard/case-timing`,
+            query
+        );
+
+        if (Array.isArray(data?.data) && data?.data?.length > 0) {
+            const filteredData = recursivelyFilter(data.data || [], null, 'NOT_APPLICABLE') as CaseTimingData[];
+
+            data.data = filteredData;
+            return data;
+        }
+        return { data: [], totalElements: 0 };
+    } catch (error: any) {
+        console.error('getCaseTimingData::An error occurred while getting case dashboard stats results', error);
         if ('response' in error) {
             return error.response;
         }
