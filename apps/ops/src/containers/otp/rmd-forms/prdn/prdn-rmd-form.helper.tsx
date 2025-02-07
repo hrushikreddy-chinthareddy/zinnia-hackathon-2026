@@ -423,18 +423,6 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
         checkboxLabel: t('rmdMethod.jointLifeExpectancy.label.flic'),
         fields: [
             {
-                fieldName: PartyFields.FirstName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.firstName'),
-            },
-            {
-                fieldName: PartyFields.MiddleName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.middleName'),
-            },
-            {
-                fieldName: PartyFields.LastName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.lastName'),
-            },
-            {
                 fieldName: PartyFields.Dob,
                 fieldLabel: t('rmdMethod.jointLifeExpectancy.dob.flic'),
             },
