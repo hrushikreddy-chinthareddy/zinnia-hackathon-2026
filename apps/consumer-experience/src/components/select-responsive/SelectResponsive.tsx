@@ -2,6 +2,8 @@ import {
   AssistiveText,
   AssistiveTextVariant,
   FieldStatus,
+  Icon,
+  IconType,
   Select,
   type SelectProps,
 } from '@zinnia/bloom/components';
@@ -53,6 +55,11 @@ export const SelectResponsive = ({
               <option key={option.value}>{option.textValue}</option>
             ))}
           </select>
+          <Icon
+            color="var(--color-base-icon-icon-action)"
+            className={styles.chevron}
+            type={IconType.CHEVRON}
+          />
           {!!errorMessage?.length && (
             <AssistiveText
               className={styles.errorText}
