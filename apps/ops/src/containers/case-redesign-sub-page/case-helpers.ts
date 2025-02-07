@@ -21,17 +21,30 @@ const createPartyKey = ({ firstName, lastName, fullName, ssn }: Partial<PartyIns
     return `${firstName}-${lastName}-${fullName}-${ssn?.slice(-4)}`;
 };
 
-export const getPartiesFromCase = ({ parties = [] }: Case, t: TFunction): PartiesProps => {
+export const getPartiesFromCase = (caseDetails: Case, t: TFunction): PartiesProps => {
+    const brokerDealerName = caseDetails?.additionalData?.brokerDealerName;
+    const parties = caseDetails?.parties;
     const partyRecord = parties.reduce((acc, { partyRole, firstName, lastName, fullName, ssn }) => {
         const key = createPartyKey({ firstName, lastName, fullName, ssn });
         if (!acc[key]) {
             const createdFullName = toTitleCase(fullName ?? `${firstName ?? ''} ${lastName ?? ''}`);
-            acc[key] = { id: key, fullName: createdFullName, roles: [], fields: {
-                ssn: {
+            acc[key] = { id: key, fullName: createdFullName, roles: [], fields: {}};
+            if (ssn) {
+                acc[key].fields.ssn = {
                     label: t('colDefs:owner.ssnAbbreviated'),
                     value: ssn,
-                }
-            }};
+                };
+            }
+            if (brokerDealerName && partyRole?.toLowerCase().includes('agent')) {
+                const titleCaseBrokerDealer = brokerDealerName.toLowerCase()
+                    .split(' ')
+                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                    .join(' ');
+                acc[key].fields.brokerDealer = {
+                    label: "",
+                    value: titleCaseBrokerDealer,
+                };
+            }
         }
         // if there's two of the same person, just add the roles to the first found
         acc[key].roles.push(convertToChipText(partyRole, t));

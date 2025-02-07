@@ -202,7 +202,7 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
     const loadingClasses = 'transform-origin-center duration-5000 animate-spin ease-linear';
 
     return (
-        <div className="flex-column flex w-full gap-2 lg:w-[354px]">
+        <div className="flex-column flex w-full gap-2 lg:w-[456px]">
             <div className="flex w-full flex-col gap-2 rounded">
                 <ProcessingTimeStamp data={data} />
                 <div className="flex w-full flex-col rounded bg-white shadow-elevation-light-04">

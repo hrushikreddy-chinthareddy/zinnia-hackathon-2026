@@ -16,12 +16,13 @@ type PartyDataPoint<T> = {
 };
 
 export type PartyInfo = {
-    fields?: {
+    fields: {
         address?: PartyDataPoint<Address | undefined>;
         dob?: PartyDataPoint<string>;
         email?: PartyDataPoint<string>;
         phone?: PartyDataPoint<string>;
         ssn?: PartyDataPoint<string>;
+        brokerDealer?: PartyDataPoint<string>;
     };
     fullName: string;
     id: string;
@@ -90,6 +91,29 @@ const RoleTags = ({ party }: { party: PartyInfo }) => {
     );
 };
 
+const AdditionalInfo = ({ party }: { party: PartyInfo }) => {
+    let infoString = "";
+
+    if (party.fields) {
+        if (party.fields.brokerDealer?.value) {
+            infoString += party.fields.brokerDealer.value;
+            //if both are true, seperate with a dot
+            if (party.fields.ssn?.value) {
+                infoString += " &#183; "
+            }
+        }
+        if (party.fields.ssn?.value) {
+            infoString += party.fields.ssn.label + ': ' + party.fields.ssn.value;
+        }
+    }
+
+    return (
+        <PiiWrapper className={"body-sm text-[#676767]"}>
+            {infoString}
+        </PiiWrapper>
+    )
+};
+
 const PartyInformation = ({ party, ...rest }: { party: PartyInfo } & HTMLAttributes<HTMLLIElement>) => {
     if (!party) {
         return null;
@@ -97,7 +121,7 @@ const PartyInformation = ({ party, ...rest }: { party: PartyInfo } & HTMLAttribu
 
     return (
         <li className="flex gap-md rounded bg-white border-2 border-[#ededed] p-4 mb-2" {...rest}>
-            <Icon className="flex-shrink" type={IconType.CIRCLE_USER} />
+            <Icon className="flex-shrink min-w-[24px]" type={IconType.CIRCLE_USER} />
             <div className="flex-grow">
                 <div className="flex gap-md">
                     <Typography variant={TypographyVariant.BodySmBold}>
@@ -105,13 +129,7 @@ const PartyInformation = ({ party, ...rest }: { party: PartyInfo } & HTMLAttribu
                     </Typography>
                     <RoleTags party={party} />
                 </div>
-                {party.fields && (
-                        party.fields.ssn && (
-                            <PiiWrapper className={"body-sm text-[#676767]"}>
-                                {party.fields.ssn.label + ': ' + party.fields.ssn.value}
-                            </PiiWrapper>
-                        )
-                )}
+                <AdditionalInfo party={party} />
             </div>
             <Icon className="self-center min-w-[24px]" type={IconType.CHEVRON_RIGHT} />
         </li>
