@@ -26,6 +26,7 @@ export enum TaskLabel {
 }
 
 export type TaskInstance = {
+    taskName?: string;
     additionalData: AdditionalDataInstance;
     assignee: string;
     createdAt: string;
@@ -110,4 +111,15 @@ export type AssignedTask<T = TaskStatus> = {
     updatedByPartyId: string;
     updatedAt: string;
     identifiers: IdentifierInstance[];
+};
+
+export type DocumentData = {
+    documentId?: string;
+    displayName?: string;
+    documentSource?: string;
+    fileType?: string;
+    documentName?: string;
+    documentNumber?: string;
+    documentID?: string;
+    sourceFileName?: string;
 };

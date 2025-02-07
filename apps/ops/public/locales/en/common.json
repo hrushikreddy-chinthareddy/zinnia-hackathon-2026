@@ -3254,6 +3254,8 @@
             "issueLabel": "Issue",
             "detailsLabel": "Details",
             "noDataAvailable": "No data available.",
+            "noDocuments": "No documents available",
+            "errorAdditionalDocuments": "Error fetching additional documents.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
             "reasonLabel": "Status reason",
             "pendinglabel": "Pending until",
@@ -3263,6 +3265,7 @@
             "noAssignee": "Only the assignee can start this task",
             "startTask": "Start task",
             "claimTask": "Claim task",
+            "claimTaskError": "The system has encountered a temporary error. Please try again.",
             "taskHeading": "Task",
             "taskDetails": {
                 "purchaseDocumentMatching": "As part of the document matching process for the purchase document, one or more documents require review and confirmation to ensure proper alignment before proceeding with contract issuance",

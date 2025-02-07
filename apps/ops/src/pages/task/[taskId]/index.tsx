@@ -110,6 +110,22 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
+            if (
+                !(
+                    user.email &&
+                    ((task.assignee && task.assignee.toLowerCase() == user.email.toLowerCase()) ||
+                        (!task.assignee && task.prefferedAssignee && task.prefferedAssignee.toLowerCase() == user.email.toLowerCase()))
+                )
+            ) {
+                logWarn('task/:id::task is not assigned to user', { assignee: task.assignee, user: user.email });
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
+
             const { taskType, carrier, caseId, process } = task;
             const caseDetails = await getCaseDetailsSSR(caseId, accessToken as string);
             const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
