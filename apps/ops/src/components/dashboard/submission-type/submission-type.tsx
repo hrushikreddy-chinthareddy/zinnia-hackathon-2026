@@ -203,6 +203,7 @@ export const SubmissionType: FC = () => {
                 title="Submission Method"
                 subtitle={`${totalCaseCount?.toLocaleString()} total cases`}
                 titleToolTip={submissionMethodTooltip}
+                description="The distribution of incoming case requests by submission method, comparing eApp, paper, and digital submissions."
             />
             {applicationTypeLoading2 || applicationTypeLoading ? (
                 <div className="grid place-content-center h-full w-full min-h-[400px]">
@@ -217,7 +218,7 @@ export const SubmissionType: FC = () => {
                 </div>
             ) : (
                 <BlurOverlayLoader loading={applicationTypeFetching || applicationTypeFetching2}>
-                    <div className="flex bg-[--color-base-surface-surface-primary]">
+                    <div className="flex bg-[--color-base-surface-surface-primary] mt-6">
                         <CaseStatBlock
                             dashboardStatsResponse={pieChartStats}
                             blockLabel="All submissions"
