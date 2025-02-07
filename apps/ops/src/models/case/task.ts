@@ -30,6 +30,14 @@ export enum EarlyTaskType {
 export enum TaskSource {
     ZinniaTaskManagement = 'Zinnia.TaskManagement',
 }
+
+export enum MessageType {
+    Default = 'default',
+    Success = 'success',
+    Info = 'info',
+    Error = 'error',
+}
+
 export interface Signature {
     signaturePresent: string;
     type: string | null;
