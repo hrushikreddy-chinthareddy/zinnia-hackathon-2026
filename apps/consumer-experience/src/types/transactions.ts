@@ -29,6 +29,8 @@ export enum FormSteps {
   ERROR = 'ERROR',
   SUCCESS = 'SUCCESS',
   CONFIRM = 'CONFIRM',
+  VERIFY_IDENTITY = 'VERIFY_IDENTITY',
+  VERIFY_IDENTITY_CODE = 'VERIFY_IDENTITY_CODE',
 }
 
 export interface BPMResponse {
