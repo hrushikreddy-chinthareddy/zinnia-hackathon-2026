@@ -64,6 +64,9 @@
     "@zinnia/utils#build": {
       "dependsOn": ["^build"]
     },
+    "@zinnia/pom#build": {
+      "dependsOn": ["^build"]
+    },
     "lint": {},
     "consumer-experience#lint": {
       "dependsOn": ["^lint"]

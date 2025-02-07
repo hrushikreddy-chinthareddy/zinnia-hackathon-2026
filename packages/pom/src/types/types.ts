@@ -16,18 +16,35 @@ export interface Appointment {
   state: string;
   resident: string;
   status: AppointmentStatus;
+  effectiveDate: string;
+  company: string;
+  licenseNumber: string;
 }
 
 export interface License {
-  licenseNumber: string;
+  number: string;
+  type: string;
   state: string;
   resident: string;
   status: LicenseStatus;
   effectiveDate: string;
   expiryDate: string;
+  suspensionStartDate: string;
+  suspensionEndDate: string;
+  expirationDate: string;
+  inactivationReason: string;
+  lineOfAuthorities: LineOfAuthority[];
 }
 
 export enum LicenseStatus {
   ACTIVE = 'Active',
   INACTIVE = 'Inactive',
+}
+
+export interface LineOfAuthority {
+  type: string;
+  label: string;
+  status: string;
+  effectiveDate: string;
+  expiryDate: string;
 }

@@ -22,7 +22,8 @@
     "preset": "@zinnia/jest-presets/node"
   },
   "dependencies": {
-    "@zinnia/api-types": "workspace:*"
+    "@zinnia/api-types": "workspace:*",
+    "dayjs": "^1.11.13"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

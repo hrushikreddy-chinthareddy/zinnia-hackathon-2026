@@ -87,3 +87,14 @@
     }
   }
 }
+
+.pom_content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+}
+
+.pom_ordered-list {
+  list-style-position: inside;
+  list-style-type: decimal;
+}
