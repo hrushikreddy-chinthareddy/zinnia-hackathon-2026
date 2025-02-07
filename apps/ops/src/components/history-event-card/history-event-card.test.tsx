@@ -53,13 +53,14 @@ describe.skip('HistoryEventCard Component', () => {
         render(
             <SideSheetContext.Provider
                 value={{
-                    changeSideSheetContent: () => {},
-                    handleLocation: () => {},
-                    handleOpen: () => {},
-                    openSecondarySideSheet: () => {},
+                    changeSideSheetContent: () => { },
+                    handleLocation: () => { },
+                    handleOpen: () => { },
+                    openSecondarySideSheet: () => { },
+                    onClose: () => { },
                 }}
             >
-                <HistoryEventCard policy={mockPolicy} refreshTransactions={() => {}} transaction={sample} />
+                <HistoryEventCard policy={mockPolicy} refreshTransactions={() => { }} transaction={sample} />
             </SideSheetContext.Provider>
         );
 

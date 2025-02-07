@@ -6,9 +6,9 @@ This allows each feature to determine the Provider context used and leaves the n
 
 ```
 return (
-    <PremiumProvider>
+    <NewPremiumProvider>
         <WorkflowContainer policy={policy} steps={steps} />
-    </PremiumProvider>
+    </NewPremiumProvider>
 );
 ```
 

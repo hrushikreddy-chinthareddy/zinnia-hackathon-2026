@@ -7,7 +7,7 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { useWithdrawal } from '@deps/contexts/WithdrawalContext';
+import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { submitFreeLookCancel } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';

@@ -1,0 +1,4 @@
+.cardSubSectionContent {
+  display: flex;
+  gap: var(--measure-dimension-gap-2xl);
+}

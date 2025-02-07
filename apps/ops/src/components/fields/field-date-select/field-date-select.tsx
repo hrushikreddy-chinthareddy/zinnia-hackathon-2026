@@ -1,10 +1,10 @@
 import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import localData from 'dayjs/plugin/localeData';
-import React, { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 
 import DatePicker, { DatePickerTypes, DateQuarter, Quarter } from '@deps/components/date-picker/date-picker';
-import Field, { FieldType , FieldProps } from '@deps/components/fields/field';
+import Field, { FieldType, FieldProps } from '@deps/components/fields/field';
 import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { FieldDateSelectTest } from '@deps/jest/constants/test-id-constants';
 import { ReactComponent as CalendarIcon } from '@deps/styles/elements/icons/icons_outlined/calendar.svg';
@@ -103,6 +103,7 @@ export default function FieldDateSelect({
                     handleCustomSelection={handleCustomSelection}
                     datePickerType={datePickerType}
                     showMonths={showMonths}
+
                 />
             </div>
         </div>

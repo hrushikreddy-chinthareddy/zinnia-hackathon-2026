@@ -1,3 +1,5 @@
+// TODO: This files is obsolete at the moment. Keeping it for a short period until we determine if we want to restrict downloads again
+
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect } from 'react';
@@ -13,7 +15,7 @@ import { supportedExtensions, supportedImgExtensions } from '@deps/models/case/d
 import { getDocumentPreviewV2 } from '@deps/queries/api/client/documents/v2/preview';
 import { getDocumentPreviewV3 } from '@deps/queries/api/client/documents/v3/preview';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-
+import TxtPreview from '@deps/containers/documents-page/txt-preview';
 import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
 
 export interface DocumentViewerProps {
@@ -102,6 +104,10 @@ const DocumentViewer = (props: DocumentViewerProps) => {
 
     if (fileExtension === 'pdf' && documentBinary) {
         return <PdfPreview documentBinary={documentBinary} />;
+    }
+
+    if (['txt', 'text/plain'].includes(fileExtension || '') && documentBinary) {
+        return <TxtPreview documentBinary={documentBinary} />;
     }
 
     return (

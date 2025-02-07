@@ -9,7 +9,7 @@ export enum ParentPage {
     Premiums = 'premiums',
     Withdrawals = 'withdrawals',
     CreateCase = 'create-case',
-    NewLoan = 'new-loan',
+    Loans = 'loans',
 }
 
 interface TransactionNavigationButtonsProps {

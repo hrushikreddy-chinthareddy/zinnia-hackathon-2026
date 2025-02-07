@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { SeriesOptionsType } from 'highcharts';
 
 import { DashboardStatsElementResponse } from '@deps/models/case/case';
@@ -57,7 +56,7 @@ export const generateSeries = (transformedData: TransformedData): SeriesOptionsT
         });
 
         return {
-            name: applicationType,
+            name: applicationType === 'Electronic' ? 'Electronic (E-App)' : applicationType,
             color: applicationTypeColors[applicationType],
             type: 'bar',
             data,
@@ -66,30 +65,4 @@ export const generateSeries = (transformedData: TransformedData): SeriesOptionsT
     });
 
     return series;
-};
-
-export enum TimeframeFilterOptions {
-    Trailing12Months = '12M',
-    Last6Months = '6M',
-    Last3Months = '3M',
-    Last1Month = '1M',
-    LastWeek = '1W',
-}
-
-const defaultDateFormat = 'YYYY-MM-DD';
-
-const friendlyDateFormat = 'MMM D, YYYY';
-
-export const startDates: Record<TimeframeFilterOptions, string> = {
-    [TimeframeFilterOptions.Trailing12Months]: dayjs().subtract(12, 'month').format(defaultDateFormat),
-    [TimeframeFilterOptions.Last6Months]: dayjs().subtract(6, 'month').format(defaultDateFormat),
-    [TimeframeFilterOptions.Last3Months]: dayjs().subtract(3, 'month').format(defaultDateFormat),
-    [TimeframeFilterOptions.Last1Month]: dayjs().subtract(1, 'month').format(defaultDateFormat),
-    [TimeframeFilterOptions.LastWeek]: dayjs().subtract(1, 'week').format(defaultDateFormat),
-};
-
-export const getDateRangeText = (timeframe: TimeframeFilterOptions) => {
-    const startDate = dayjs(startDates[timeframe]).format(friendlyDateFormat);
-    const endDate = dayjs().format(friendlyDateFormat);
-    return `${startDate} - ${endDate}`;
 };

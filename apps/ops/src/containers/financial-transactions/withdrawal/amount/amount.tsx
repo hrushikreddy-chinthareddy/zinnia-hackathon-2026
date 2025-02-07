@@ -11,7 +11,7 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { WithdrawalType, useWithdrawal } from '@deps/contexts/WithdrawalContext';
+import { WithdrawalType, useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { DisbursementType } from '@deps/models/policy/sor-policy';

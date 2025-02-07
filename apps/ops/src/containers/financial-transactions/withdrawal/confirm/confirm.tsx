@@ -9,7 +9,7 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { buildWithdrawalsRequestBody } from '@deps/containers/financial-transactions/withdrawal/withdrawals.helpers';
-import { WithdrawalType, useWithdrawal } from '@deps/contexts/WithdrawalContext';
+import { WithdrawalType, useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitFullSurrenderWithdrawal, submitPartialWithdrawalOneTime } from '@deps/queries/api/bpm';

@@ -43,9 +43,6 @@
   }
 }
 
-.selectContent {
-  z-index: 600;
-}
 
 .remove {
   border-color: var(--color-status-border-status-error-border-alt, #db004f);

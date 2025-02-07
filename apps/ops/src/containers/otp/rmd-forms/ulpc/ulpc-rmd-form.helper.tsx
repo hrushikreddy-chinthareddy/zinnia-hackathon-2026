@@ -1,6 +1,6 @@
-import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
+import { BeneficiaryConfig } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import {
     BankingFields,
     DisbursementFields,
@@ -8,7 +8,6 @@ import {
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
-import { frequencyToValue } from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import {
     SignatureFields
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
@@ -31,7 +30,6 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { createValidator } from '../../utils/helper-utils';
 import getFlicConfig from '../../withdrawal-forms/flic-withdrawal-form.helper';
@@ -265,31 +263,6 @@ export default function getUlpcRmdConfig(t: TFunction) {
             errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
         }
 
-        if (rmds && rmds?.length > 0) {
-            const sortedPrograms = rmds.sort((a, b) => a.startDate.text.localeCompare(b.startDate.text));
-
-            sortedPrograms.map((program, index) => {
-                const frequency = (program?.frequency?.text && frequencyToValue[program?.frequency?.text]) || frequencyToValue.Annually;
-                const calculatedEndDate = dayjs(program?.startDate?.text, ZAHARA_API_DATE_FORMAT)
-                    .add((Number(program?.duration?.text) - 1) * frequency, 'month')
-                    .add(1, 'day')
-                    .format(ZAHARA_API_DATE_FORMAT)
-                    .toString();
-
-                if (index < sortedPrograms.length - 1) {
-                    if (calculatedEndDate > sortedPrograms[index + 1].startDate.text) {
-                        errors['rmdDateOverlap'] = t('rmdMethod.rmdWarnings.dateOverlap');
-                    }
-
-                    if (Number(program?.duration?.text) === 0 && sortedPrograms[index + 1].startDate.text !== '') {
-                        errors['rmdDetectedDurationZero'] = t('rmdMethod.rmdWarnings.detectedDurationZero', {
-                            startDate: dayjs(program?.startDate?.text, ZAHARA_API_DATE_FORMAT).format(DEFAULT_DATE_FORMAT),
-                        });
-                    }
-                }
-            });
-        }
-
         return errors;
     };
 
@@ -319,6 +292,16 @@ export default function getUlpcRmdConfig(t: TFunction) {
         { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
     ];
 
+    const beneficiaryConfig: BeneficiaryConfig = {
+        isYourSpouseYoungerThanYouLabel: t('beneficiaryInfo.isYourSpouseYoungerThanYouLabel'),
+        fields: [
+            {
+                fieldName: PartyFields.Dob,
+                fieldLabel: t('beneficiaryInfo.dob'),
+            },
+        ],
+    };
+
     return {
         formPartyConfigs,
         signaturesConfig,
@@ -328,7 +311,8 @@ export default function getUlpcRmdConfig(t: TFunction) {
         irsSignatureConfig,
         w4pSignaturesConfig,
         disbursementOptions,
-        isBeneSpouseOption
+        isBeneSpouseOption,
+        beneficiaryConfig
     };
 }
 

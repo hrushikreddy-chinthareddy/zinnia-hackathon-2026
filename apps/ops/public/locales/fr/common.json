@@ -68,6 +68,7 @@
             "formData": "Données du formulaire",
             "annuitization": "Annuitisation",
             "dashboard": "Statistiques du dossier",
+            "loanPayment": "Paiement de prêts",
             "activity": "Activité"
         },
         "navLinks": {
@@ -275,6 +276,20 @@
         "unassignTaskError": "Erreur de désattribution de tâche :",
         "startTask": "Démarrer la tâche",
         "transaction": "Transaction: {{transactionType}}",
+        "updateTaskStatusDrawer": {
+            "updateTaskStatus": "Mettre à jour l'état de la tâche",
+            "setTaskAsPending": "Définir la tâche comme en attente",
+            "followUpDate": "Date de suivi",
+            "reason": "Raison",
+            "selectReason": "Sélectionner une raison",
+            "cancel": "Annuler",
+            "updateStatus": "Mettre à jour le statut",
+            "pendingReasonOptions": {
+                "awaitingAdditionalInformation": "En attente d'informations supplémentaires",
+                "awaitingApproval": "En attente d'approbation",
+                "awaitingApplication": "En attente de candidature"
+            }
+        },
         "tasksListing": {
             "taskSubmittedAgo": "Soumise {{updatedCount}} {{updatedUnit}} il y a",
             "taskCompletedAgo": "Complété {{updatedCount}} {{updatedUnit}} il y a",
@@ -284,7 +299,10 @@
                 "closed": "Fermée",
                 "new": "Nouvelle",
                 "completed": "Complété",
-                "inProgress": "En cours"
+                "inProgress": "En cours",
+                "reason": "Raison",
+                "selectReason": "Sélectionner la raison",
+                "cancel": "Annuler"
             }
         },
         "caseId": "Numéro du cas: ",
@@ -1321,6 +1339,10 @@
                 "statusTooltip": "Pas commencé",
                 "detailedReason": "Ce cas est actuellement en attente pour que le travail commence. Vous pouvez revenir plus tard pour des mises à jour en recherchant le cas."
             },
+            "withdrawn": {
+                "badgeText": "Retiré",
+                "tooltip": "Le statut est retiré."
+            },
             "unknown": {
                 "badgeText": "Inconnu",
                 "tooltip": "Le statut est inconnu."
@@ -2135,9 +2157,14 @@
                 "title": "Informations sur le bénéficiaire",
                 "isBeneficiarySpouse": {
                     "title": "Votre bénéficiaire est-il votre conjoint?",
+                    "nasu": "Votre conjoint est-il le principal bénéficiaire?",
                     "yes": "Oui",
                     "no": "Non"
                 },
+                "firstName": "Prénom",
+                "lastName": "Nom de famille",
+                "middleName": "Deuxième prénom",
+                "taxId": "SSN",
                 "dob": "Date de naissance",
                 "isYourSpouseYoungerThanYou": "Votre conjoint a-t-il 10 ans de moins que vous?"
             }
@@ -2447,7 +2474,8 @@
         "reversed": "Reversé",
         "reversedOn": "Reversé le {{date}}",
         "pendingReversal": "En Attente de Reversal",
-        "pendingReversalOn": "En Attente de Reversal le {{date}}"
+        "pendingReversalOn": "En Attente de Reversal le {{date}}",
+        "withdrawn": "Retiré"
     },
     "placeHolder": {
         "globalSelectSearch": "par exemple. Montant du remboursement du prêt, coût de base..."
@@ -3217,7 +3245,7 @@
             "taskDetails": {
                 "purchaseDocumentMatching": "Dans le cadre du processus de mise en correspondance des documents pour le document d'achat, un ou plusieurs documents nécessitent un examen et une confirmation pour garantir un alignement approprié avant de procéder à l'émission du contrat",
                 "suitabilityReview": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par Carrier et annulés pour émettre le contrat.",
-                "newbusinessAgentNigo": "Dans le cadre du processus {{caseType}}, un examen est nécessaire pour garantir l'exactitude et l'exhaustivité avant de passer aux étapes suivantes en raison de l'impossibilité d'effectuer une validation et un traitement systématiques"
+                "newbusinessAgentNigo": "Un ou plusieurs problèmes de type « non conforme » (NIGO) ont été identifiés lors de l'examen de la demande {{caseType}}. Ces problèmes doivent être examinés et résolus pour garantir que la demande répond à toutes les exigences avant de procéder à l'émission du contrat."
             }
         },
         "suitability": {
@@ -4216,6 +4244,56 @@
         "taken": "pris",
         "left": "restants"
     },
+    "loanPayment": {
+        "amount": {
+            "label": "Montant",
+            "dateLabel": "Date d'effet",
+            "paymentLabel": "Montant du paiement de prêt",
+            "invalidDateError": "Entrez une date d'effet valide.",
+            "invalidPaymentAmountError": "Le montant du paiement doit être d'au moins 1 $."
+        },
+        "confirm": {
+            "cta": "Aller à l'historique des transactions",
+            "label": "Confirmer",
+            "secondaryCta": "Fermer",
+            "subtitle": {
+                "0": "Un ",
+                "1": " paiement unique de prêt de ",
+                "2": " a été soumis.",
+                "NIGO": " le paiement unique du prêt a été soumis pour",
+                "NIGO1": " traitement NIGO."
+            },
+            "title": "Soumis!"
+        },
+        "payment": {
+            "label": "Méthode de paiement",
+            "title": "Où devrions-nous envoyer le paiement?"
+        },
+        "payor": {
+            "label": "Payeur"
+        },
+        "start": {
+            "label": "Démarrer",
+            "title": "Faire un paiement de prêt",
+            "subtitle": "Besoin de soumettre un paiement de prêt unique? Faisons-le. Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans OnBase."
+        },
+        "summary": {
+            "label": "Résumé",
+            "bpm500Error": "Erreur BPM 500",
+            "submitPayment": "Soumettre le paiement",
+            "status200subtitle": "Ça a l'air bien! Assurez-vous de vérifier vos entrées avant de soumettre.",
+            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette politique. Consultez l'erreur ci-dessous.",
+            "loanPaymentAmount": "Montant du paiement du prêt",
+            "effectiveDate": "Date effective",
+            "payor": "Payeur",
+            "validationStatusLabel": "Statut de validation",
+            "internal500Error": "Les services sont en panne, nous ne pouvons donc pas continuer. Vous pouvez soumettre un ticket de help desk. Veuillez quitter cette transaction et réessayer plus tard.",
+            "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+            "internal500CTAlinkText": "Soumettre un ticket de help desk",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée effectue un suivi.",
+            "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO."
+        }
+    },
     "newLoan": {
         "amount": {
             "disbursementType": {
@@ -4431,6 +4509,7 @@
         },
         "transactions": {
             "label": "Transactions",
+            "loanPayment": "Commencer un paiement unique de prêt",
             "managePremiumAutopay": "Gérer le paiement automatique des primes",
             "newLoan": "Démarrer un prêt",
             "newPremium": "Démarrez un abonnement premium unique",
@@ -4595,6 +4674,7 @@
                 "text": "soumettre un billet au centre d'assistance"
             },
             "leaveTransaction": "Quitter cette transaction",
+            "submitLoanPayment": "Soumettre le paiement du prêt",
             "submitNewLoan": "Soumettre un prêt",
             "submitPayment": "Soumettre le paiement",
             "submitWithdrawal": "Soumettre le retrait",

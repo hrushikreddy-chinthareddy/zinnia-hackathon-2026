@@ -2,13 +2,13 @@ import { Radio } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
 import styles from './chip-radio.module.css';
-interface RadioOption {
+export interface RadioOption {
     label: string;
     ariaLabel: string;
     value: string;
 }
 
-interface ChipRadioProps {
+export interface ChipRadioProps {
     options: RadioOption[];
     defaultValue: string;
     onValueChange: (value: string) => void;

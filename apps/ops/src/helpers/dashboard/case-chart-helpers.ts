@@ -237,6 +237,19 @@ const caseChartHelpers = {
             },
             gridLineWidth: 0,
             lineWidth: 0,
+            labels: {
+                useHTML: true, //Set to true
+                style: {
+                    width: 150,
+                    whiteSpace: 'normal', //set to normal
+                    textAlign: 'right',
+                },
+                step: 1,
+                formatter: function (this: Highcharts.AxisLabelsFormatterContextObject) {
+                    //use formatter to break word.
+                    return '<div align="center" style="word-wrap: break-word;width:150px">' + this.value + '</div>';
+                },
+            },
         } as XAxisOptions,
         yAxis: {
             min: 0,

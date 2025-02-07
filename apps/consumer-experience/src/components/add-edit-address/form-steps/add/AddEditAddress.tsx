@@ -7,7 +7,6 @@ import {
   Checkbox,
   Icon,
   IconType,
-  Select,
 } from '@zinnia/bloom/components';
 import { FC } from 'react';
 import {
@@ -17,6 +16,7 @@ import {
   useForm,
 } from 'react-hook-form';
 
+import { SelectResponsive } from '@/components/select-responsive/SelectResponsive';
 import { getDirtyValues } from '@/utils/forms';
 import { isNumberOrHyphen } from '@/utils/regex';
 import { states } from '@/utils/states';
@@ -209,17 +209,13 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
               <div className={styles.state}>
                 {/* TODO: Remove label and add to prop when bloom updates */}
                 <Label labelFor="select-state">State</Label>
-                <Select
+                <SelectResponsive
                   id="select-state"
-                  onValueChange={field.onChange}
+                  onChange={field.onChange}
                   options={states}
                   defaultValue={defaultValues?.state}
                   errorMessage={errors.state?.message}
-                  contentClassName={styles.selectContent}
                   fieldSize="small"
-                  fieldStatus={
-                    errors.state ? FieldStatus.ERROR : FieldStatus.DEFAULT
-                  }
                 />
               </div>
             )}

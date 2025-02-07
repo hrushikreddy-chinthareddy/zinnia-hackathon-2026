@@ -3,7 +3,7 @@ import { getUiOptions, WidgetProps } from '@rjsf/utils';
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
 
 export const TextWidget = function (props: WidgetProps) {
-    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label } = props;
+    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder } = props;
     const { inline, prefix } = getUiOptions(uiSchema);
 
     if (inline) {
@@ -22,6 +22,7 @@ export const TextWidget = function (props: WidgetProps) {
     ) : (
         <div className="max-w-sm flex w-full flex-col">
             <TextField
+                placeholder={placeholder}
                 id={id}
                 value={value || ''}
                 required={required}

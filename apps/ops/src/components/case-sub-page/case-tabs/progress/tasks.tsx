@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
-import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
 import TaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/task-sidesheet-content';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
@@ -11,6 +10,7 @@ import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
 import { TaskView } from './progress-tab-types';
+import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
 
 const SupportedTaskMap = [
     TaskType.SuitabilityReview,
@@ -22,7 +22,6 @@ const SupportedTaskMap = [
 export function Task({ task }: { task: TaskView }) {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
-
     const TaskTitle: Record<string, string> = {
         [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReviewIssues'),
         [TaskType.PURCHASE_DOCUMENT_MATCHING]: t('caseOverview.tabs.purchaseDocumentMatchingIssues'),
@@ -37,7 +36,7 @@ export function Task({ task }: { task: TaskView }) {
         sideSheet.changeSideSheetContent(
             `${task.taskName ? `${t('sideSheet.task.taskHeading')}: ${task.taskName}` : t('sideSheet.task.taskHeading')}`,
             SupportedTaskMap.includes(task.description as TaskType) ? (
-                <GlobalTaskSideSheet taskId={task.id} />
+                <GlobalTaskSideSheet taskId={task.id} taskDescription={task.description} />
             ) : (
                 <TaskSideSheet taskId={task.id} />
             )
@@ -53,9 +52,8 @@ export function Task({ task }: { task: TaskView }) {
 
     // if the task is part of an exception, add a dot before the task and change the color depending on the status
     if (task.hasParentException) {
-        beforeClasses = `before:text-[32px] before:content-["·"] ${
-            task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
-        }`;
+        beforeClasses = `before:text-[32px] before:content-["·"] ${task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
+            }`;
     }
 
     return (

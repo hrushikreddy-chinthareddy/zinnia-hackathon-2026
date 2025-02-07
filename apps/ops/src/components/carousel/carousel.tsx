@@ -131,7 +131,7 @@ export const Carousel: FC<CarouselProps> = ({
                 )}
 
                 {slideItemsCount.length > 0 && (
-                    <span className="typography-labels-label-md">
+                    <span className={clsx('typography-labels-label-md', styles.pageNumber)}>
                         {slideItemsCount?.[selectedSlide]?.start}-{slideItemsCount?.[selectedSlide]?.end} of{' '}
                         {slideItemsCount?.[selectedSlide]?.total}
                     </span>

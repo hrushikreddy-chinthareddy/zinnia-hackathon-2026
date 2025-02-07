@@ -1,3 +1,4 @@
+// TODO MG: this isnt used
 import { useTranslation } from 'next-i18next';
 import React, { useCallback } from 'react';
 

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { t } from 'i18next';
 import { FC, CSSProperties } from 'react';
 
-import { MultiselectOption, SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
+import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import { ButtonSize } from '@deps/components/button/button';
 import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
@@ -14,7 +14,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
-import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { DashboardSearchFilter } from '@deps/queries/cases';
@@ -26,6 +26,7 @@ import ActiveAging from '../active-aging/active-aging';
 import CaseStatBlock from '../stat-blocks/case-stat-block';
 import { SubmissionType } from '../submission-type/submission-type';
 import { TreeMapInsights } from '../tree-map-insights';
+import { formatProcessListOptions } from '../utils';
 
 interface OpenTransactionsProps {
     carrierHeaderHeight?: number;
@@ -33,20 +34,6 @@ interface OpenTransactionsProps {
     authorizedCarriers: string[];
 }
 
-const formatProcessListOptions = (data: DashboardStatsElementResponse[] | undefined) => {
-    if (!data || !data.length) throw new Error('No data');
-    return (
-        data
-            .reduce<SimpleOption[]>((prev, curr) => {
-                if (curr.name && !prev.some(item => item.value === curr.name)) {
-                    prev.push({ value: curr.name, label: `${dashboardChartTitleFormat(curr.name, 16)} (${curr.count})` });
-                }
-                return prev;
-            }, [])
-            // alphabetize
-            .sort((item1, item2) => item1.label.localeCompare(item2.label))
-    );
-};
 const createBaseQuery = async (baseInsightQueryFilter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
     const response = await getCaseDashboardStatsQuery(baseInsightQueryFilter, groupBy);
     if (!response?.data) {

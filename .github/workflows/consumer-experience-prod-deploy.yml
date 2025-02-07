@@ -5,7 +5,7 @@ on:
 
 jobs:
   prod-deploy:
-    if: startsWith(github.ref_name, 'release/consumer-experience/')
+    if: startsWith(github.ref_name, 'release/')
     uses: ./.github/workflows/deploy-consumer-experience-action.yml
     with:
       environment-level: production

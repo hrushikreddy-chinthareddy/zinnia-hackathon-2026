@@ -68,6 +68,7 @@
             "formData": "Form Data",
             "annuitization": "Annuitization",
             "dashboard": "Case Stats",
+            "loanPayment": "Loan Payment",
             "newLoan": "New Loan",
             "activity": "Activity"
         },
@@ -825,6 +826,20 @@
         "unassignTask": "Unassign Task",
         "startTask": "Start Task",
         "transaction": "Transaction: {{transactionType}}",
+        "updateTaskStatusDrawer": {
+            "updateTaskStatus": "Update Task Status",
+            "setTaskAsPending": "Set Task as Pending",
+            "followUpDate": "Follow-Up Date",
+            "reason": "Reason",
+            "selectReason": "Select Reason",
+            "cancel": "Cancel",
+            "updateStatus": "Update Status",
+            "pendingReasonOptions": {
+                "awaitingAdditionalInformation": "Awaiting additional information",
+                "awaitingApproval": "Awaiting approval",
+                "awaitingApplication": "Awaiting application"
+            }
+        },
         "tasksListing": {
             "taskSubmittedAgo": "Submitted {{updatedCount}} {{updatedUnit}} ago",
             "taskCompletedAgo": "Completed {{updatedCount}} {{updatedUnit}} ago",
@@ -1328,6 +1343,10 @@
                 "reasonNoExceptions": "Not yet started",
                 "statusTooltip": "Not started",
                 "detailedReason": "This case is currently in the queue for work to begin. You can check back later for updates by searching for the case."
+            },
+            "withdrawn": {
+                "badgeText": "Withdrawn",
+                "tooltip": "Status is Withdrawn."
             },
             "unknown": {
                 "badgeText": "Unknown",
@@ -2153,9 +2172,14 @@
                 "title": "Beneficiary Information",
                 "isBeneficiarySpouse": {
                     "title": "Is your beneficiary your spouse?",
+                    "nasu": "Is your spouse the primary beneficiary?",
                     "yes": "Yes",
                     "no": "No"
                 },
+                "firstName": "First name",
+                "lastName": "Last name",
+                "middleName": "Middle name",
+                "taxId": "SSN",
                 "dob": "Date of birth",
                 "isYourSpouseYoungerThanYou": "Is your spouse 10 years younger than you?"
             }
@@ -2470,7 +2494,8 @@
         "reversed": "Reversed",
         "reversedOn": "Reversed on {{date}}",
         "pendingReversal": "Pending Reversal",
-        "pendingReversalOn": "Pending Reversal on {{date}}"
+        "pendingReversalOn": "Pending Reversal on {{date}}",
+        "withdrawn": "Withdrawn"
     },
     "placeHolder": {
         "globalSelectSearch": "e.g. Loan Payoff Amount, Cost Basis..."
@@ -3057,6 +3082,7 @@
                 "viewLoanTransactionHistory": "Go to loan transaction history",
                 "eligiblePopover": "The owner can take a loan from the account value on this policy. Owners can borrow at any time, as long as the funds are available. A loan can reduce the death benefit unless and until it is paid back.",
                 "ineligiblePopover": "This policy doesn't have enough account value for a loan. Owners can borrow from their policy at any time, as long as the funds are available.",
+                "loanPayment": "Make a one-time payment",
                 "startLoan": "Start a loan"
             },
             "detailCards": {
@@ -3244,7 +3270,7 @@
             "taskDetails": {
                 "purchaseDocumentMatching": "As part of the document matching process for the purchase document, one or more documents require review and confirmation to ensure proper alignment before proceeding with contract issuance",
                 "suitabilityReview": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
-                "newbusinessAgentNigo": "As part of the {{caseType}} process, an review is required to ensure accuracy and completeness before proceeding with the next steps due to the inability to complete systematic validation and processing"
+                "newbusinessAgentNigo": "One or more Not in Good Order (NIGO) issues were identified during the review of the {{caseType}} application. These issues must be reviewed and resolved to ensure the application meets all requirements before proceeding with contract issuance"
             }
         },
         "suitability": {
@@ -4244,6 +4270,56 @@
         "taken": "taken",
         "left": "left"
     },
+    "loanPayment": {
+        "amount": {
+            "label": "Amount",
+            "dateLabel": "Effective date",
+            "paymentLabel": "Loan payment amount",
+            "invalidDateError": "Enter a valid effective date.",
+            "invalidPaymentAmountError": "Payment amount must be at least $1."
+        },
+        "confirm": {
+            "cta": "Go to transaction history",
+            "label": "Confirm",
+            "secondaryCta": "Close",
+            "subtitle": {
+                "0": "A ",
+                "1": " one-time loan payment from ",
+                "2": " was submitted.",
+                "NIGO": " one-time loan payment was submitted for",
+                "NIGO1": " NIGO processing."
+            },
+            "title": "Submitted!"
+        },
+        "payment": {
+            "label": "Payment Method",
+            "title": "Where should we send the payment?"
+        },
+        "payor": {
+            "label": "Payor"
+        },
+        "start": {
+            "label": "Start",
+            "title": "Make a Loan Payment",
+            "subtitle": "Need to submit a one-time loan payment? Let's do it. First up, let's make sure we can keep track of this transaction in OnBase."
+        },
+        "summary": {
+            "label": "Summary",
+            "bpm500Error": "BPM 500 error",
+            "submitPayment": "Submit payment",
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "loanPaymentAmount": "Loan payment amount",
+            "effectiveDate": "Effective date",
+            "payor": "Payor",
+            "validationStatusLabel": "Validation status",
+            "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
+            "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+            "internal500CTAlinkText": "Submit a help desk ticket",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
+        }
+    },
     "newLoan": {
         "amount": {
             "disbursementType": {
@@ -4460,6 +4536,7 @@
         },
         "transactions": {
             "label": "Transactions",
+            "loanPayment": "Start a one-time loan payment",
             "managePremiumAutopay": "Manage premium autopay",
             "newLoan": "Start a loan",
             "newPremium": "Start a one-time premium",
@@ -4624,6 +4701,7 @@
                 "text": "submit a help desk ticket"
             },
             "leaveTransaction": "Leave this transaction",
+            "submitLoanPayment": "Submit loan payment",
             "submitNewLoan": "Submit loan",
             "submitPayment": "Submit payment",
             "submitWithdrawal": "Submit withdrawal",
