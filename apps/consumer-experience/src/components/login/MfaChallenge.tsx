@@ -117,8 +117,6 @@ export const MfaChallenge = ({
               a => a.authenticator_type === selectedVerificationId
             );
           } else {
-            // TODO: Uh-oh this implies that only one of these is active.
-            // need to verify that both enrolled are enrolled as active
             authenticator = authenticators.find(
               a => ['voice', 'sms'].includes(a.oob_channel || '') && a.active
             );
@@ -199,8 +197,11 @@ export const MfaChallenge = ({
         )}
         {/* //TODO: will need to make this style dynamic depending on whether in login experience or not */}
         <div className={styles.formGroup}>
-          <div className="typography-content-value">
-            <MfaPhoneNumber phoneNumber={authenticator?.name || ''} />
+          <div>
+            <p>
+              Please enter the verification code sent to{' '}
+              <MfaPhoneNumber phoneNumber={authenticator?.name || ''} />
+            </p>
           </div>
         </div>
         <div>

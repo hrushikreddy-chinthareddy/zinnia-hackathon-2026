@@ -19,11 +19,15 @@ export const VerifyIdentity = ({
 }: VerifyIdentityProps) => {
   const [verifyStep, setVerifyStep] = useState(FormSteps.VERIFY_IDENTITY);
 
+  const moveToCodeStep = () => {
+    setVerifyStep(FormSteps.VERIFY_IDENTITY_CODE);
+  };
+
   if (verifyStep === FormSteps.VERIFY_IDENTITY) {
     return (
       <SelectAuthenticationMethod
         transactionDescription={transactionDescription}
-        moveToNextStep={() => setVerifyStep(FormSteps.VERIFY_IDENTITY_CODE)}
+        moveToNextStep={moveToCodeStep}
         closeCallback={closeCallback}
       />
     );
