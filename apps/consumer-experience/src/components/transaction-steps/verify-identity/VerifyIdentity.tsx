@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 
+import { MfaChallenge } from '@/components/login/MfaChallenge';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 
@@ -29,7 +30,6 @@ export const VerifyIdentity = ({
   }
 
   if (verifyStep === FormSteps.VERIFY_IDENTITY_CODE) {
-    // return <MfaChallenge enrollment="false" id={mfaToken}/>;
-    return <div>ENTER IN CODE</div>;
+    return <MfaChallenge enrollment="false" postLogin />;
   }
 };

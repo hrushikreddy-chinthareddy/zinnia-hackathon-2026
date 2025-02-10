@@ -92,6 +92,7 @@ export const MfaChallenge = ({
       let redirectToErrorPage = false;
       try {
         const token = getMfaToken();
+        console.log('mfa token in mfa challenge', token);
         const response = await fetch('/api/auth/mfa/authenticators', {
           credentials: 'include',
           headers: {
@@ -99,6 +100,7 @@ export const MfaChallenge = ({
           },
         });
         const data = await response.json();
+        console.log('mfa token in mfa challenge', data);
         if (response.status === 200) {
           const authenticators = data as MfaAuthenticator[];
           let authenticator: MfaAuthenticator | undefined;
@@ -127,6 +129,7 @@ export const MfaChallenge = ({
         }
       } catch (error) {
         if (postLogin) {
+          console.log('error in mfa challenge', error);
           // log user out
         } else {
           redirectToErrorPage = true;
