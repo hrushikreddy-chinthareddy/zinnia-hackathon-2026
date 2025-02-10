@@ -137,6 +137,7 @@ export interface Permissions {
 export interface UserClaims {
   'https://dev.api.zinnia.io/permissions': Permissions;
   partyId: string;
+  stepUpTime: string;
   app_metadata: object;
   nickname: string;
   name: string;

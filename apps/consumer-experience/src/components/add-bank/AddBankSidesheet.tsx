@@ -6,11 +6,10 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { addBankRequest } from '@/actions/bpm/bank-actions';
-import { useFeatureFlags } from '@/hooks/use-feature-flags';
+import { useCheckStepUp } from '@/hooks/use-check-step-up';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './AddBankSidesheet.module.css';
 import { AddBank } from './form-steps/add/AddBank';
@@ -32,9 +31,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
   partyId,
   policyOwner,
 }) => {
-  const { data: featureFlagData } = useFeatureFlags();
-  const checkIdentityCode =
-    featureFlagData?.[FEATURE_FLAGS.TRANSACTION_LEVEL_CODE_ADD_BANK];
+  const requiresIdentityCode = useCheckStepUp();
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
     planCode: string;
@@ -62,8 +59,8 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
 
   const handleAdd = async (requestValues: BankFormFields) => {
     setStep(FormSteps.LOADING);
-    // TODO: add check here to accessToken for property CIAM is adding and make it a hook
-    if (checkIdentityCode) {
+
+    if (requiresIdentityCode) {
       setStep(FormSteps.VERIFY_IDENTITY);
       return;
     }

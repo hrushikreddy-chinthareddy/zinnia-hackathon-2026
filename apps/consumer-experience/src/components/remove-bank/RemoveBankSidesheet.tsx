@@ -6,13 +6,12 @@ import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
 import { putEndDateBankAccount } from '@/actions/bpm/bank-actions';
-import { useFeatureFlags } from '@/hooks/use-feature-flags';
+import { useCheckStepUp } from '@/hooks/use-check-step-up';
 import { useUser } from '@/hooks/use-user';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { Error } from './form-steps/error/Error';
 import { Loading } from './form-steps/loading/Loading';
@@ -35,9 +34,8 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   autopayEnabled,
   numberOfAccounts,
 }) => {
-  const { data: featureFlagData } = useFeatureFlags();
-  const checkIdentityCode =
-    featureFlagData?.[FEATURE_FLAGS.TRANSACTION_LEVEL_CODE_ADD_BANK];
+  const requiresIdentityCode = useCheckStepUp();
+
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
     planCode: string;
@@ -57,7 +55,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   );
 
   const handleRemove = async () => {
-    if (checkIdentityCode) {
+    if (requiresIdentityCode) {
       setStep(FormSteps.VERIFY_IDENTITY);
       return;
     }
