@@ -1336,7 +1336,15 @@
                 "reason": "Canceled",
                 "reasonNoExceptions": "TBD",
                 "badgeText": "Canceled",
-                "tooltip": "This {{processSubType}} was canceled on "
+                "tooltip": "This {{processSubType}} was canceled on ",
+                "application expired": "The application expired due to 30 days of inactivity.",
+                "application withdrawn": "The applicant withdrew this application.",
+                "underwriting declined": "The underwriter denied this application.",
+                "offer expired": "The offer expired due to 30 days of inactivity.",
+                "offer rejected": "The applicant rejected the offer.",
+                "underwriting expired": "The application expired due to no response from the underwriter in 30 days.",
+                "underwriting declined at initial review": "The underwriter denied this application as risk is not acceptable.",
+                "identity validation expired": "Identity verification is not completed within 30 days, the request is marked as expired."
             },
             "notStarted": {
                 "reason": "Not started",
