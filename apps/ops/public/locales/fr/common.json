@@ -2705,8 +2705,10 @@
             "fileType": "Type de fichier",
             "filter": "Filtrer par année :",
             "filterByCategory": "Filtrer par catégorie",
+            "formId": "ID du formulaire",
             "linkedTo": "Ce document est lié à ce blah {{type}}.",
             "loadingDocuments": "Chargement des documents...",
+            "name": "Nom",
             "noResults": "Il semble qu'il n'y ait aucun document à afficher.",
             "received": "Reçu",
             "receivedDate": "Date de réception",
@@ -2714,6 +2716,8 @@
             "rowsPerPage": "Lignes par page: {{limit}}",
             "sent": "Envoyé",
             "sentDate": "Date d'envoi",
+            "taxDocuments": "Documents fiscaux",
+            "taxYear": "Année fiscale",
             "view": "Voir"
         },
         "funds": {
