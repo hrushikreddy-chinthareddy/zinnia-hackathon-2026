@@ -131,7 +131,10 @@ const PartyInformation = ({ party, ...rest }: { party: PartyInfo } & HTMLAttribu
                 </div>
                 <AdditionalInfo party={party} />
             </div>
-            <Icon className="self-center min-w-[24px]" type={IconType.CHEVRON_RIGHT} />
+            {
+                // This functionaility will be added in future ticket
+                //<Icon className="self-center min-w-[24px]" type={IconType.CHEVRON_RIGHT} />
+            }
         </li>
     );
 };
