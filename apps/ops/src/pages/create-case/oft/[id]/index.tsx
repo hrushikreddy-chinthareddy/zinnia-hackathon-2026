@@ -53,6 +53,7 @@ import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { ERROR_CODES } from '../../error';
+import PrdnOftWithdrawalForm from '@deps/containers/otp/oft-forms/prdn/prdn-oft-form';
 
 interface OftCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -82,6 +83,7 @@ const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): R
     [Carrier.USAA]: <UsaaOftWithdrawalForm />,
     [Carrier.NASU]: <NasuOftWithdrawalForm />,
     [Carrier.ULPC]: <UlpcOftWithdrawalForm />,
+    [Carrier.PRDN]: <PrdnOftWithdrawalForm
 });
 
 export default function OftCase({ document, form, featureFlagDecisions, user }: OftCaseProps) {
