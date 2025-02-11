@@ -4,11 +4,11 @@ import { SideSheetProps } from '@zinnia/bloom/components';
 
 import { SideSheet } from '@zinnia/bloom/components';
 
-import { License, LicenseStatus, LineOfAuthority } from '../../../types/types';
+import { License, LicenseStatus } from '../../../types/types';
 import { standardDateMonthDayYear } from '@zinnia/utils';
 export interface LicenseSidesheetProps
   extends Omit<SideSheetProps, 'children' | 'header'> {
-  data: { license: License; lineOfAuthorities: LineOfAuthority[] };
+  license: License;
 }
 
 const getBadgeVariant = (status: LicenseStatus): BadgeVariant => {
@@ -24,13 +24,12 @@ const getBadgeVariant = (status: LicenseStatus): BadgeVariant => {
 
 export const LicenseSidesheet = ({
   trigger,
-  data,
+  license,
   ...props
 }: LicenseSidesheetProps) => {
-  const { license, lineOfAuthorities } = data;
   return (
     <SideSheet header={license.number} trigger={trigger} {...props}>
-      <div className="pom_content-wrapper">
+      <div className="pom_content-wrapper typography-content-body-sm">
         <div>
           <Label>Status</Label>
           <Badge
@@ -57,7 +56,7 @@ export const LicenseSidesheet = ({
         <div>
           <Label>Lines of authority</Label>
           <ol className="pom_ordered-list">
-            {lineOfAuthorities.map((lineOfAuthority) => (
+            {license.lineOfAuthorities.map((lineOfAuthority) => (
               <li key={lineOfAuthority.type}>{lineOfAuthority.type}</li>
             ))}
           </ol>

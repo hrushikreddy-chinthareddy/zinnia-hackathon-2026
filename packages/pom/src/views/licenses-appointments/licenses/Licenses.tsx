@@ -11,6 +11,7 @@ import {
 import { License, LicenseStatus } from '../../../types/types';
 import clsx from 'clsx';
 import { default as styles } from './Licenses.module.css';
+import { LicenseSidesheet } from './LicenseSidesheet';
 
 // @TODO: move this once we properly set up data structures for pom
 const licenses: License[] = [
@@ -115,11 +116,19 @@ const Licenses = () => {
           {licenses.map((license) => (
             <TableRow key={license.number}>
               <TableCell>
-                <span
-                  className={clsx(styles.cta, 'typography-nav-links-sm-inline')}
-                >
-                  {license.number}
-                </span>
+                <LicenseSidesheet
+                  trigger={
+                    <span
+                      className={clsx(
+                        styles.cta,
+                        'typography-nav-links-sm-inline'
+                      )}
+                    >
+                      {license.number}
+                    </span>
+                  }
+                  license={license}
+                />
               </TableCell>
               <TableCell>{license.state}</TableCell>
               <TableCell>{license.resident}</TableCell>

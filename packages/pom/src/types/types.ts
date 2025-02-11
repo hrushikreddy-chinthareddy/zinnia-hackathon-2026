@@ -12,6 +12,7 @@ export enum AppointmentStatus {
 }
 
 export interface Appointment {
+  id: string;
   carrier: string;
   state: string;
   resident: string;
@@ -19,6 +20,7 @@ export interface Appointment {
   effectiveDate: string;
   company: string;
   licenseNumber: string;
+  lineOfAuthorities: LineOfAuthority[];
 }
 
 export interface License {
