@@ -1331,7 +1331,15 @@
                 "reason": "Annulé",
                 "reasonNoExceptions": "À déterminer",
                 "badgeText": "Annulé",
-                "tooltip": "Ce {{processSubType}} a été annulé le "
+                "tooltip": "Ce {{processSubType}} a été annulé le ",
+                "application expired": "La candidature a expiré en raison de 30 jours d'inactivité.",
+                "application withdrawn": "Le demandeur a retiré cette demande.",
+                "underwriting declined": "Le souscripteur a refusé cette demande.",
+                "offer expired": "L'offre a expiré en raison de 30 jours d'inactivité.",
+                "offer rejected": "Le demandeur a rejeté l'offre.",
+                "underwriting expired": "La demande a expiré en raison de l'absence de réponse du souscripteur dans les 30 jours.",
+                "underwriting declined at initial review": "Le souscripteur a refusé cette demande car le risque n'est pas acceptable",
+                "identity validation expired": "La vérification de l'identité n'est pas terminée dans les 30 jours, la demande est marquée comme expirée."
             },
             "notStarted": {
                 "reason": "Non débuté",
@@ -2698,8 +2706,10 @@
             "fileType": "Type de fichier",
             "filter": "Filtrer par année :",
             "filterByCategory": "Filtrer par catégorie",
+            "formId": "ID du formulaire",
             "linkedTo": "Ce document est lié à ce blah {{type}}.",
             "loadingDocuments": "Chargement des documents...",
+            "name": "Nom",
             "noResults": "Il semble qu'il n'y ait aucun document à afficher.",
             "received": "Reçu",
             "receivedDate": "Date de réception",
@@ -2707,6 +2717,8 @@
             "rowsPerPage": "Lignes par page: {{limit}}",
             "sent": "Envoyé",
             "sentDate": "Date d'envoi",
+            "taxDocuments": "Documents fiscaux",
+            "taxYear": "Année fiscale",
             "view": "Voir"
         },
         "funds": {

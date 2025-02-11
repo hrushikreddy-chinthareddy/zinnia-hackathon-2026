@@ -256,9 +256,9 @@ export default async function Withdrawals({
         callToAction={
           withdrawalEligibilityData
             ? 'Taking a withdrawal is coming soon. For now, '
-            : 'For questions about withdrawals, please call '
+            : 'For questions about withdrawals, please '
         }
-        contactPrompt={withdrawalEligibilityData ? 'call' : undefined}
+        contactPrompt="call"
         customInstruction="."
       />
     </div>
