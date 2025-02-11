@@ -10,15 +10,13 @@ import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/for
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import {
-    SignatureBonusFields,
     SignatureFieldNames,
-    SignatureFields,
+    SignatureFields
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helper';
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
-import { statesAndTerritories } from '@deps/helpers/states.helper';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     AccountType,
@@ -431,18 +429,6 @@ export default function getUsaaConfig(t: TFunction) {
       },
     ];
 
-    const spousalSignatureStateCodes = [
-        statesAndTerritories.ARIZONA,
-        statesAndTerritories.CALIFORNIA,
-        statesAndTerritories.IDAHO,
-        statesAndTerritories.LOUISIANA,
-        statesAndTerritories['NEW MEXICO'],
-        statesAndTerritories.NEVADA,
-        statesAndTerritories.TEXAS,
-        statesAndTerritories.WASHINGTON,
-        statesAndTerritories.WISCONSIN,
-    ];
-
     const signaturesConfig: SignatureValidationConfig[] = [
         {
             key: `sig-val-owner`,
@@ -515,28 +501,6 @@ export default function getUsaaConfig(t: TFunction) {
             shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
                 return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
             },
-        },
-        {
-            key: `sig-val-spouse`,
-            bonusField: SignatureBonusFields.SpousalConsent,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'spouse-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'spouse-present',
-                },
-                {
-                    component: SignatureFields.SignatureDate,
-                    key: 'spouse-date',
-                },
-            ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
-            },
-            signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
     ];
 
