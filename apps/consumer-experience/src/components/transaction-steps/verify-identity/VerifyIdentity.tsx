@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
 
-import { MfaChallenge } from '@/components/login/MfaChallenge';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 
+import { MfaChallenge } from './MfaChallenge';
 import { SelectAuthenticationMethod } from './SelectAuthenticationMethod';
 
 interface VerifyIdentityProps {
@@ -18,9 +18,19 @@ export const VerifyIdentity = ({
   transactionDescription,
 }: VerifyIdentityProps) => {
   const [verifyStep, setVerifyStep] = useState(FormSteps.VERIFY_IDENTITY);
+  const [selectedMethodId, setSelectedMethodId] = useState<string>();
 
-  const moveToCodeStep = () => {
+  const moveToCodeStep = (selectedMethodId: string) => {
+    setSelectedMethodId(selectedMethodId);
     setVerifyStep(FormSteps.VERIFY_IDENTITY_CODE);
+  };
+
+  const backToTransactionStep = () => {
+    setVerifyStep(FormSteps.CONFIRM);
+  };
+
+  const transactionError = () => {
+    setVerifyStep(FormSteps.CONFIRM);
   };
 
   if (verifyStep === FormSteps.VERIFY_IDENTITY) {
@@ -34,6 +44,13 @@ export const VerifyIdentity = ({
   }
 
   if (verifyStep === FormSteps.VERIFY_IDENTITY_CODE) {
-    return <MfaChallenge enrollment="false" postLogin />;
+    return (
+      <MfaChallenge
+        onChallengeSuccess={backToTransactionStep}
+        onChallengeFailure={transactionError}
+        // closeCallback={closeCallback}
+        selectedVerificationId={selectedMethodId}
+      />
+    );
   }
 };

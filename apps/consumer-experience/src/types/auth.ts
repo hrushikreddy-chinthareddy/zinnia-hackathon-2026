@@ -19,6 +19,7 @@ export interface Auth0ErrorResponse {
   error: string;
   error_description: string;
   mfa_token?: string;
+  success?: boolean;
 }
 
 export interface PasswordlessCodeMfaResponse {

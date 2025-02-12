@@ -2,13 +2,14 @@
 import { RedirectType, redirect } from 'next/navigation';
 
 import { ServerApi } from '@/services';
-import { ROOT_URL_PATH } from '@/types';
+import { sendMfaChallenge } from '@/services/auth';
 import {
   Auth0ErrorResponse,
   MfaAssoicateResponse,
   MfaAuthenticator,
   MfaChallengeResponse,
   MfaResendChallangeResponse,
+  MfaSendChallengeInputs,
   OauthToken,
   PasswordlessCodeMfaResponse,
 } from '@/types/auth';
@@ -271,7 +272,7 @@ export async function verifyPasswordlessStartChallenge(
             authenticatorId: authenticator.id,
           });
           const data = await sendMfaChallengeResponse.json();
-
+          console.log('sendMfaChallengeResponse', sendMfaChallengeResponse);
           if (sendMfaChallengeResponse.status === 200) {
             const challengeData = data as MfaChallengeResponse;
             // the OOB code is needed to send the mfa challenge
@@ -393,23 +394,24 @@ export async function associateMfa(
  * @return {Promise<Auth0ErrorResponse | never>} Redirects the user based on the verification result.
  */
 export async function verifyMfaChallenge(
-  _: Auth0ErrorResponse,
-  formData: FormData
+  // TODO: fix this type
+  mfaData: any
 ): Promise<Auth0ErrorResponse | never> {
   const loggingContext = {
     file: 'login-actions.ts',
     function: 'verifyMfaChallenge',
   };
   logTrace('start', { ...loggingContext });
-  let redirectToErrorPage = false;
+  const redirectToErrorPage = false;
   let data: Auth0ErrorResponse | OauthToken;
   try {
+    console.log(mfaData);
     // We need to know if this is an enrollment or not because it changes how we pass the MFA token to auth0
     // for non enrolled user we need to pass the token as an authorization header
     // for enrolled users we pass it as an input to the API
-    const isEnrollment = formData.get('isEnrollment')?.toString() === 'true';
+    // const isEnrollment = mfaData.get('isEnrollment')?.toString() === 'true';
     const mfaToken = await getMfaCookie();
-    const code = formData.get('code')?.toString() || '';
+    const code = mfaData?.code || '';
     const oobCode = await getOobMfaCookie();
     // if somehow we get here and we do not have an MFA or OOBCode token we throw an error
     // the error capture will set reDirectToErrorPage to true and redirect to the error page
@@ -422,19 +424,19 @@ export async function verifyMfaChallenge(
       throw new Error('No MFA or OOB Token found');
     }
 
-    if (code.length < 6) {
-      logTrace('invalid-code', { ...loggingContext });
-      return {
-        error: 'bad.request',
-        error_description: 'Code must be 6 digits.',
-      };
-    }
+    // if (code.length < 6) {
+    //   logTrace('invalid-code', { ...loggingContext });
+    //   return {
+    //     error: 'bad.request',
+    //     error_description: 'Code must be 6 digits.',
+    //   };
+    // }
 
     const response = await ServerApi.verifyMfaChallenge({
       mfaToken,
       bindingCode: code,
       oobCode,
-      isEnrollment,
+      isEnrollment: false,
     });
 
     data = await response.json();
@@ -448,6 +450,7 @@ export async function verifyMfaChallenge(
   } catch (e) {
     // we need to check if the error thrown was in the try or if an generic error happened
     // if there was a generic error, we need to redirect to the error page
+    console.log('inside of login-action error', e);
     if (!(e instanceof Error)) {
       const error = e as Auth0ErrorResponse;
       logTrace('Auth0 Error Response', {
@@ -463,7 +466,12 @@ export async function verifyMfaChallenge(
         return error;
       }
     }
-    redirectToErrorPage = true;
+
+    return {
+      success: false,
+      error: 'bad-response',
+      error_description: 'something else went wrong',
+    };
   }
 
   if (redirectToErrorPage) {
@@ -473,43 +481,31 @@ export async function verifyMfaChallenge(
   const tokenData = data! as OauthToken;
   await setLoginCookies(tokenData);
 
-  return redirect(`/${ROOT_URL_PATH}?${FROM_LOGIN_QUERY_KEY}=true`);
+  return {
+    success: true,
+    error: '',
+    error_description: '',
+  };
 }
 
-export async function resendMfaChallenge(
-  _: MfaResendChallangeResponse,
-  formData: FormData
-): Promise<MfaResendChallangeResponse> {
+export async function resendMfaChallenge({
+  challengeType,
+  authenticatorId,
+}: Partial<MfaSendChallengeInputs>): Promise<MfaResendChallangeResponse> {
   const loggingContext = {
     file: 'login-actions.ts',
     function: 'resendMfaChallenge',
   };
   logTrace('start', { ...loggingContext });
   try {
-    const mfaToken = (await getMfaCookie()) || '';
-    const challengeType = formData.get('challengeType')?.toString() || '';
-    const authenticatorId = formData.get('authenticatorId')?.toString() || '';
-    const response = await ServerApi.sendMfaChallenge({
+    await sendMfaChallenge({
       authenticatorId,
       challengeType,
-      mfaToken,
+      loggingContext,
     });
-    const data = await response.json();
-
-    if (response.status === 200) {
-      logTrace('successful-response', { ...loggingContext });
-      await setMfaOobCookie({
-        value: data.oob_code,
-      });
-      return {
-        success: true,
-      };
-    }
-    logTrace('unsuccessful-response', {
-      ...loggingContext,
-      reqStatus: response.status,
-    });
-    throw data;
+    return {
+      success: true,
+    };
   } catch (error) {
     return {
       success: false,

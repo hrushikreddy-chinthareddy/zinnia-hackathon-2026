@@ -24,12 +24,13 @@ export const SelectAuthenticationMethod = ({
   closeCallback,
 }: {
   transactionDescription?: string;
-  moveToNextStep: () => void;
+  moveToNextStep: (selectedMethodId: string) => void;
   closeCallback: () => void;
 }) => {
   const {
     control,
     handleSubmit,
+    getValues,
     formState: { isSubmitting },
   } = useForm();
 
@@ -60,7 +61,7 @@ export const SelectAuthenticationMethod = ({
     // TODO: when to set this?
     // may not even need to wait for success from verifyTransaction?
     // i guess unless apis are down, we could return an error
-    moveToNextStep();
+    moveToNextStep(getValues()?.verificationType);
   };
 
   if (isLoading || isSubmitting) {

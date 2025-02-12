@@ -1,8 +1,11 @@
 import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
-import { MfaChallenge } from '@/components/login/MfaChallenge';
+import { MfaChallenge } from '@/components/transaction-steps/verify-identity/MfaChallenge';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { ROOT_URL_PATH } from '@/types';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { FROM_LOGIN_QUERY_KEY } from '@/utils/serverClientUtils';
 
+import { handleRedirection } from './redirect';
 import { GenericLoginPage } from '../../GenericLoginPage';
 
 export default async function MfaChallengePage({
@@ -21,6 +24,12 @@ export default async function MfaChallengePage({
           <MfaChallenge
             enrollment={searchParams.enrollment}
             id={searchParams.id}
+            onChallengeSuccess={() =>
+              handleRedirection(
+                `/${ROOT_URL_PATH}?${FROM_LOGIN_QUERY_KEY}=true`
+              )
+            }
+            onChallengeFailure={() => handleRedirection(`/login/error`)}
           />
         }
       />
@@ -35,6 +44,10 @@ export default async function MfaChallengePage({
         <MfaChallenge
           enrollment={searchParams.enrollment}
           id={searchParams.id}
+          onChallengeSuccess={() =>
+            handleRedirection(`/${ROOT_URL_PATH}?${FROM_LOGIN_QUERY_KEY}=true`)
+          }
+          onChallengeFailure={() => handleRedirection(`/login/error`)}
         />
       }
     />

@@ -3,8 +3,8 @@
 import { FieldValues } from 'react-hook-form';
 
 import { ServerApi } from '@/services';
-import { setMfaCookie, setMfaOobCookie } from '@/utils/auth';
-import { logTrace } from '@/utils/logging/server-logging';
+import { sendMfaChallenge } from '@/services/auth';
+import { setMfaCookie } from '@/utils/auth';
 
 export const verifyTransactionMfa = async (formData: FieldValues) => {
   const loggingContext = {
@@ -19,34 +19,20 @@ export const verifyTransactionMfa = async (formData: FieldValues) => {
 
     if ('mfa_token' in data) {
       //TODO: need to clear this after the code has been entered!!
+      // the clearing happens in the verifyMfaChallenge method in setLoginCookies
+      // will that work for this version of this?
       await setMfaCookie({
         value: data.mfa_token,
       });
 
       try {
-        const mfaChallengeResponse = await ServerApi.sendMfaChallenge({
+        await sendMfaChallenge({
           authenticatorId: formData.verificationType,
           challengeType: 'oob',
-          mfaToken: data.mfa_token,
+          loggingContext,
         });
-        console.log('send mfa challenge in transaction mfa actions', response);
-        if (mfaChallengeResponse.status === 200) {
-          const mfaChallengeData = await mfaChallengeResponse.json();
-          logTrace('successful-response', { ...loggingContext });
-          await setMfaOobCookie({
-            value: mfaChallengeData.oob_code,
-          });
-          return {
-            success: true,
-          };
-        }
-        logTrace('unsuccessful-response', {
-          ...loggingContext,
-          reqStatus: response.status,
-        });
-        throw data;
       } catch (e) {
-        console.log('send mfa no bueno');
+        console.log('here in error', e);
       }
     } else {
       // TODO: what happens here???
