@@ -29,7 +29,7 @@ const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier }: CaseDetailsSideN
             : `/documents/${CaseAdditionalDetails[CaseAdditionalDataKeys.formId]}`;
 
     return (
-        <div className="flex w-full flex-col border-b-2 border-gray-100 p-4 md:px-8">
+        <div className="flex w-full flex-col border-t-2 border-gray-100 p-4">
             <Title className="mb-2" variant={TitleVariant.SubTitle}>
                 {t('sidenav.navButtons.caseDetails')}
             </Title>
