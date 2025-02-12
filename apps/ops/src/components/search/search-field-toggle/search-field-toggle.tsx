@@ -26,12 +26,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, valu
     const inputValue = values[activeLabels?.value || ''] || '';
 
     const inputType = () => {
-        switch (activeLabels.value) {
-            case 'ssn':
-                return 'number';
-            default:
-                return 'text';
-        }
+        return 'text';
     };
 
     const inputClass = () => {
@@ -52,6 +47,10 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, valu
     };
     const hasValue = !!inputRef.current?.value;
 
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.target.value = e.target.value.replace(/[^0-9-]/g, '');
+    };
+
     return (
         <div className={clsx(styles.inputContainer)}>
             <Icon type={IconType.SEARCH} className={styles.icon} color="#676767" />
@@ -68,6 +67,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, valu
                 key={activeLabels.value}
                 ref={inputRef}
                 value={inputValue}
+                onInput={activeLabels.value === 'ssn' ? handleInput : undefined}
             />
             {hasValue && (
                 <Button className={styles.close} onClick={handleClear} mode="link">
@@ -84,6 +84,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, valu
 
 const SearchFieldToggle = ({ activeLabels, values, ...rest }: SearchFieldToggleProps) => {
     let fields;
+
     if (activeLabels) {
         const { group } = activeLabels;
 
