@@ -52,7 +52,6 @@ export default function getUlpcConfig(t: TFunction) {
         formParty,
         formSignature,
         formDisbursement,
-        formProgram,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
         if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
