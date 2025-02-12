@@ -52,6 +52,7 @@ import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 
 import { ERROR_CODES } from '../../error';
+import { GdmnSSWForm } from '@deps/containers/otp/ssw-forms/gdmn/gdmn-ssw-form';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -88,6 +89,7 @@ const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Recor
     [Carrier.NASU]: <NassauSSWForm />,
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
     [Carrier.ULPC]: <UlpcSSWForm planCode={planCode} />,
+    [Carrier.GDMN]: <GdmnSSWForm />,
 });
 
 export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user, planCode }: SSWCaseProps) {

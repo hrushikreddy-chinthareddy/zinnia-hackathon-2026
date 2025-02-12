@@ -19,6 +19,7 @@ import SbgcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/sbgc-rmd-form'
 import UlpcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/ulpc/ulpc-rmd-form';
 import UsaaRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/usaa/usaa-rmd-form';
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
+import { GdmnSSWForm } from '@deps/containers/otp/ssw-forms/gdmn/gdmn-ssw-form';
 import { GlcoSSWForm } from '@deps/containers/otp/ssw-forms/glco/glco-ssw-form';
 import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-form';
 import { NassauSSWForm } from '@deps/containers/otp/ssw-forms/nasu/nasu-ssw-form';
@@ -93,6 +94,7 @@ const getSSWFormComponentMap = (qualType: QualTypes | '', planCode?: string): Re
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
     [Carrier.GLCO]: <GlcoSSWForm planCode={planCode} />,
     [Carrier.ULPC]: <UlpcSSWForm planCode={planCode} />,
+    [Carrier.GDMN]: <GdmnSSWForm />,
 });
 
 export const getFormParts = (caseType: CaseType, clientCode: string, qualType: QualTypes | '', planCode: string = '') => {
