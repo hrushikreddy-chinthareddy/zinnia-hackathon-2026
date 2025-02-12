@@ -24,9 +24,7 @@ import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/sig
 import {
     AccountType, AmountType, FormDisbursement,
     FormParts,
-    FormValidationErrors, Frequency, FundWithdrawnMethod,
-    LifeCadPartyRoles,
-    PartyRoles,
+    FormValidationErrors, Frequency, FundWithdrawnMethod, LifeCadPartyRoles, PartyRoles,
     PaymentMailType,
     PaymentMethod,
     PhoneTypes,
@@ -80,80 +78,107 @@ export default function getGdmnConfig(t: TFunction) {
     };
 
     const formPartyConfigs: PartyConfig[] = [
-      {
-          partyRoleType: PartyRoles.OWNER,
-          title: t('personalDetails.title'),
-          fields: [
-              {
-                  fieldName: PartyFields.FirstName,
-                  fieldLabel: t('personalDetails.firstName'),
-              },
-              {
-                  fieldName: PartyFields.MiddleName,
-                  fieldLabel: t('personalDetails.middleName'),
-              },
-              {
-                  fieldName: PartyFields.LastName,
-                  fieldLabel: t('personalDetails.lastName'),
-              },
-          ],
-          phones: [
-              {
-                  phoneType: PhoneTypes.Owner_Phone_Day,
-                  fields: [
-                      {
-                          fieldName: PhoneFields.phoneNumber,
-                          fieldLabel: t('phoneDetails.daytimePhone'),
-                      },
-                  ],
-              },
-              {
-                  phoneType: PhoneTypes.Owner_Phone_Home,
-                  fields: [
-                      {
-                          fieldName: PhoneFields.phoneNumber,
-                          fieldLabel: t('phoneDetails.homePhone'),
-                      },
-                  ],
-              },
-          ],
-      },
-      {
-          partyRoleType: PartyRoles.JOINT_OWNER,
-          title: t('jointOwner.title'),
-          fields: [
-              {
-                  fieldName: PartyFields.FirstName,
-                  fieldLabel: t('personalDetails.firstName'),
-              },
-              {
-                  fieldName: PartyFields.MiddleName,
-                  fieldLabel: t('personalDetails.middleName'),
-              },
-              {
-                  fieldName: PartyFields.LastName,
-                  fieldLabel: t('personalDetails.lastName'),
-              },
-          ],
-      },
-      {
-          partyRoleType: PartyRoles.ANNUITANT,
-          title: t('Annuitant.title'),
-          fields: [
-              {
-                  fieldName: PartyFields.FirstName,
-                  fieldLabel: t('personalDetails.firstName'),
-              },
-              {
-                  fieldName: PartyFields.MiddleName,
-                  fieldLabel: t('personalDetails.middleName'),
-              },
-              {
-                  fieldName: PartyFields.LastName,
-                  fieldLabel: t('personalDetails.lastName'),
-              },
-          ],
-      },
+        {
+            partyRoleType: PartyRoles.OWNER,
+            title: t('personalDetails.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+                {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+                {
+                    fieldName: PartyFields.Dob,
+                    fieldLabel: t('personalDetails.dob'),
+                },
+                {
+                    fieldName: PartyFields.Email,
+                    fieldLabel: t('personalDetails.email'),
+                },
+            ],
+            phones: [
+                {
+                    phoneType: PhoneTypes.Owner_Phone_Day,
+                    fields: [
+                        {
+                            fieldName: PhoneFields.phoneNumber,
+                            fieldLabel: t('phoneDetails.telephoneNumber'),
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            partyRoleType: PartyRoles.JOINT_OWNER,
+            title: t('jointOwner.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+                {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+                {
+                    fieldName: PartyFields.Dob,
+                    fieldLabel: t('personalDetails.dob'),
+                },
+                {
+                    fieldName: PartyFields.Email,
+                    fieldLabel: t('personalDetails.email'),
+                },
+            ],
+        },
+        {
+            partyRoleType: PartyRoles.ANNUITANT,
+            title: t('Annuitant.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+                {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+                {
+                    fieldName: PartyFields.Dob,
+                    fieldLabel: t('personalDetails.dob'),
+                },
+                {
+                    fieldName: PartyFields.Email,
+                    fieldLabel: t('personalDetails.email'),
+                },
+            ],
+        },
     ];
 
     const generateSSWPayload = (val: SSWProgram, subType: SSWType) => ({
@@ -176,16 +201,6 @@ export default function getGdmnConfig(t: TFunction) {
             label: t('sswProgram.sswOptions.fixedDollar'),
             value: SSWType.FixDollar,
             generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.FixDollar),
-        },
-        {
-          label: t('sswProgram.sswOptions.fixedPeriodIncome'),
-          value: SSWType.FixPeriod,
-          generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.FixPeriod),
-        },
-        {
-            label: t('sswProgram.sswOptions.percentageOfAccountValue'),
-            value: SSWType.PercentOfAmountValue,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.PercentOfAmountValue),
         },
     ];
 
@@ -631,6 +646,7 @@ export default function getGdmnConfig(t: TFunction) {
         { label: t('distributionReason.reasonOptions.age595'), value: RestrictionOption.Age595 },
         { label: t('distributionReason.reasonOptions.disability'), value: RestrictionOption.Disabled },
         { label: t('distributionReason.reasonOptions.severance'), value: RestrictionOption.Severance, subElement: <ReasonDate /> },
+        { label: t('distributionReason.reasonOptions.other'), value: RestrictionOption.Empty },
     ];
 
     return {
