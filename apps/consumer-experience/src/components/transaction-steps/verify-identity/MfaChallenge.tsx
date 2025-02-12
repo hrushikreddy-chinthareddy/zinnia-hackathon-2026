@@ -2,7 +2,6 @@
 import {
   Button,
   FieldStatus,
-  Label,
   Loader,
   LoaderVariant,
   SpinnerButton,
@@ -43,6 +42,7 @@ export const MfaChallenge = ({
   onChallengeFailure,
   enrollment,
   id,
+  onCancel,
 }: {
   /**
    * If user selects a specific verification method, we can send in the method
@@ -52,6 +52,7 @@ export const MfaChallenge = ({
   onChallengeFailure?: () => void;
   enrollment?: string;
   id?: string;
+  onCancel?: () => void;
 }) => {
   const [resendCode, setResendCode] = useState(false);
   const [authenticator, setAuthenticators] = useState<MfaAuthenticator>();
@@ -125,7 +126,9 @@ export const MfaChallenge = ({
       ...data,
       enrollment,
     });
+    console.log('submit mfa challenge response', response);
     if (!response.error) {
+      console.log('mfa challenge success');
       onChallengeSuccess?.();
     }
     if (response.error === 'invalid_grant') {
@@ -195,12 +198,7 @@ export const MfaChallenge = ({
           render={({ field }) => (
             <FieldDataActive
               {...field}
-              label={
-                // This is dumb, but label in bloom doesn't currently take className
-                <div className="sr-only">
-                  <Label>Code</Label>
-                </div>
-              }
+              label={<label className="sr-only">Code</label>}
               value={field.value || ''}
               inputMode="numeric"
               fieldStatus={
@@ -241,8 +239,11 @@ export const MfaChallenge = ({
         >
           <span>Continue</span>
         </SpinnerButton>
-        {/* // TODO: add handling for this click, conditional to only show in postLogin */}
-        <Button mode="link">Cancel</Button>
+        {onCancel && (
+          <Button mode="link" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
       </div>
     </form>
   );

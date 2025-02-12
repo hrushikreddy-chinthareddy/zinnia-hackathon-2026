@@ -41,12 +41,15 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
   const [step, setStep] = useState<FormSteps>();
   const [errorTitle, setErrorTitle] = useState('An error occurred');
   const [errorMessage, setErrorMessage] = useState<ReactNode>(
-    'Some generic messaging that will get updated based on the api response'
+    'Something went wrong. Please try again.'
   );
   const [isServerError, setIsServerError] = useState(false);
   const [successTitle, setSuccessTitle] = useState('Success!');
   const [successMessage, setSuccessMessage] = useState(
-    'Some generic messaging that will get updated based on the api response'
+    'Something went wrong. Please try again.'
+  );
+  const [requestValues, setRequestValues] = useState<BankFormFields | null>(
+    null
   );
 
   const search = useSearchParams();
@@ -57,13 +60,18 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
     }
   }, [search]);
 
-  const handleAdd = async (requestValues: BankFormFields) => {
-    setStep(FormSteps.LOADING);
-
+  const confirmAdd = (requestValues: BankFormFields) => {
+    setRequestValues(requestValues);
     if (requiresIdentityCode) {
       setStep(FormSteps.VERIFY_IDENTITY);
       return;
     }
+
+    handleAdd();
+  };
+
+  const handleAdd = async () => {
+    setStep(FormSteps.LOADING);
 
     const { data, error } = await addBankRequest({
       planCode: params.planCode,
@@ -93,7 +101,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
         actionType: ActionTypes.ADD,
         propertyKey: PropertyKeys.BANK_DETAILS,
         itemKey: 'routingNumber',
-        itemValue: requestValues.routingNumber,
+        itemValue: requestValues?.routingNumber,
       });
       return;
     }
@@ -101,12 +109,17 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
 
   const onClose = () => {
     setOpen(false);
+    setStep(undefined);
 
     // Timeout is here to prevent the flash of the internal sidesheet component from showing
     // as the animation happens
     setTimeout(() => {
       setStep(undefined);
     }, 300);
+  };
+
+  const addBankFail = () => {
+    setStep(FormSteps.ERROR);
   };
 
   return (
@@ -126,7 +139,9 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
         </Button>
       }
     >
-      {!step && <AddBank cancelCallback={onClose} submitCallback={handleAdd} />}
+      {!step && (
+        <AddBank cancelCallback={onClose} submitCallback={confirmAdd} />
+      )}
       {step === FormSteps.LOADING && <Loading />}
       {step === FormSteps.ERROR && (
         <Error
@@ -147,6 +162,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
         <VerifyIdentity
           closeCallback={onClose}
           onSuccess={handleAdd}
+          onFailure={addBankFail}
           transactionDescription="managing your bank account."
         />
       )}

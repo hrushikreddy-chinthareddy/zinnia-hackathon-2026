@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 
-import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 
 import { MfaChallenge } from './MfaChallenge';
@@ -9,13 +8,16 @@ import { SelectAuthenticationMethod } from './SelectAuthenticationMethod';
 
 interface VerifyIdentityProps {
   closeCallback: () => void;
-  onSuccess: (requestValues: BankFormFields) => Promise<void>;
+  onSuccess: any;
+  onFailure: any;
   transactionDescription: string;
 }
 
 export const VerifyIdentity = ({
   closeCallback,
   transactionDescription,
+  onSuccess,
+  onFailure,
 }: VerifyIdentityProps) => {
   const [verifyStep, setVerifyStep] = useState(FormSteps.VERIFY_IDENTITY);
   const [selectedMethodId, setSelectedMethodId] = useState<string>();
@@ -23,14 +25,6 @@ export const VerifyIdentity = ({
   const moveToCodeStep = (selectedMethodId: string) => {
     setSelectedMethodId(selectedMethodId);
     setVerifyStep(FormSteps.VERIFY_IDENTITY_CODE);
-  };
-
-  const backToTransactionStep = () => {
-    setVerifyStep(FormSteps.CONFIRM);
-  };
-
-  const transactionError = () => {
-    setVerifyStep(FormSteps.CONFIRM);
   };
 
   if (verifyStep === FormSteps.VERIFY_IDENTITY) {
@@ -46,9 +40,9 @@ export const VerifyIdentity = ({
   if (verifyStep === FormSteps.VERIFY_IDENTITY_CODE) {
     return (
       <MfaChallenge
-        onChallengeSuccess={backToTransactionStep}
-        onChallengeFailure={transactionError}
-        // closeCallback={closeCallback}
+        onChallengeSuccess={onSuccess}
+        onChallengeFailure={onFailure}
+        onCancel={closeCallback}
         selectedVerificationId={selectedMethodId}
       />
     );

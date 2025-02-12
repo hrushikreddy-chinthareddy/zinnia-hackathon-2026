@@ -32,6 +32,7 @@ export const SelectAuthenticationMethod = ({
     handleSubmit,
     getValues,
     formState: { isSubmitting },
+    reset,
   } = useForm();
 
   const { data: userAuthentication, isLoading } = useQuery({
@@ -62,6 +63,11 @@ export const SelectAuthenticationMethod = ({
     // may not even need to wait for success from verifyTransaction?
     // i guess unless apis are down, we could return an error
     moveToNextStep(getValues()?.verificationType);
+  };
+
+  const onCancel = () => {
+    reset();
+    closeCallback();
   };
 
   if (isLoading || isSubmitting) {
@@ -116,7 +122,7 @@ export const SelectAuthenticationMethod = ({
       </p>
       <div className={styles.buttonContainer}>
         <Button type="submit">Send code</Button>
-        <Button onClick={closeCallback} mode="link">
+        <Button onClick={onCancel} mode="link">
           Cancel
         </Button>
       </div>

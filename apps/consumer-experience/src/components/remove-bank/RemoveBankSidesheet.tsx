@@ -44,22 +44,26 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   const [open, setOpen] = useState(false);
   const { user } = useUser();
   const [step, setStep] = useState<FormSteps>();
-  const [, setErrorTitle] = useState('An error occurred');
-  const [, setErrorMessage] = useState<ReactNode>(
-    'Some generic messaging that will get updated based on the api response'
+  const [errorTitle, setErrorTitle] = useState('An error occurred');
+  const [errorMessage, setErrorMessage] = useState<ReactNode>(
+    'Something went wrong. Please try again.'
   );
   const [isServerError, setIsServerError] = useState(false);
   const [successTitle, setSuccessTitle] = useState('Success!');
   const [successMessage, setSuccessMessage] = useState(
-    'Some generic messaging that will get updated based on the api response'
+    'Something went wrong. Please try again.'
   );
 
-  const handleRemove = async () => {
+  const checkVerificationAndRemove = async () => {
     if (requiresIdentityCode) {
       setStep(FormSteps.VERIFY_IDENTITY);
       return;
     }
 
+    handleRemove();
+  };
+
+  const handleRemove = async () => {
     setStep(FormSteps.LOADING);
     const { data, error } = await putEndDateBankAccount({
       planCode: params.planCode,
@@ -98,6 +102,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
 
   const onClose = () => {
     setOpen(false);
+    setStep(undefined);
   };
 
   const sidesheetInner = () => {
@@ -149,7 +154,19 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
         <VerifyIdentity
           closeCallback={onClose}
           onSuccess={handleRemove}
+          onFailure={() => setStep(FormSteps.ERROR)}
           transactionDescription="managing your bank account."
+        />
+      );
+    }
+
+    if (step === FormSteps.ERROR) {
+      return (
+        <Error
+          errorTitle={errorTitle}
+          isServerError={true}
+          errorMessage={errorMessage}
+          closeCallback={onClose}
         />
       );
     }
@@ -159,7 +176,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
         accountNumber={values?.accountNumber}
         bankNickname={values?.branchName}
         cancelCallback={onClose}
-        confirmCallback={handleRemove}
+        confirmCallback={checkVerificationAndRemove}
       />
     );
   };

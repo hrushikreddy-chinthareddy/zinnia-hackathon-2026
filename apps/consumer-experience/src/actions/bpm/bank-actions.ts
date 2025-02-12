@@ -175,6 +175,9 @@ export const putEndDateBankAccount = async (
           parsedResponse: parsedResponse,
         })
       );
+      // TODO: make sure this is working as expected, was seeing error return
+      // as data at some point or i'm just losing it
+      console.log('response not okay', rawResponse);
       throw rawResponse;
     }
 
@@ -186,7 +189,7 @@ export const putEndDateBankAccount = async (
     return { data: { ...parsedResponse, messages }, error: null };
   } catch (e) {
     logError('Error deleting bank', e);
-
+    console.log(e, 'it is getting here');
     return {
       data: null,
       error: {
