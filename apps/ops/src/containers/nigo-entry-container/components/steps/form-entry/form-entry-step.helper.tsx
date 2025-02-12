@@ -25,6 +25,7 @@ import { GdmnSSWForm } from '@deps/containers/otp/ssw-forms/gdmn/gdmn-ssw-form';
 import { GlcoSSWForm } from '@deps/containers/otp/ssw-forms/glco/glco-ssw-form';
 import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-form';
 import { NassauSSWForm } from '@deps/containers/otp/ssw-forms/nasu/nasu-ssw-form';
+import { RslnSSWForm } from '@deps/containers/otp/ssw-forms/rsln/rsln-ssw-form';
 import { PrdnSSWForm } from '@deps/containers/otp/ssw-forms/prdn/prdn-ssw-form';
 import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 import { UlpcSSWForm } from '@deps/containers/otp/ssw-forms/ulpc/ulpc-ssw-form';
@@ -100,6 +101,7 @@ const getSSWFormComponentMap = (qualType: QualTypes | '', planCode?: string): Re
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
     [Carrier.GLCO]: <GlcoSSWForm planCode={planCode} />,
     [Carrier.ULPC]: <UlpcSSWForm planCode={planCode} />,
+    [Carrier.RSLN]: <RslnSSWForm />,
     [Carrier.PRDN]: <PrdnSSWForm />,
     [Carrier.GDMN]: <GdmnSSWForm />,
     [Carrier.USAA]: <UsaaSSWForm />,
