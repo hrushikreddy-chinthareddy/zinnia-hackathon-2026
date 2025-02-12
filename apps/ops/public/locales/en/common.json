@@ -1995,7 +1995,8 @@
                     "otherEligibleDistributedPermittedPlan": "Other eligible distributions permitted by the plan",
                     "qualifiedReservist": "Qualified reservist distribution",
                     "hardship": "Hardship",
-                    "financialHardship": "Financial Hardship"
+                    "financialHardship": "Financial Hardship",
+                    "other": "Other"
                 },
                 "unforeseeableEmergency": "Unforeseeable emergency",
                 "unforeseeableEmergencyOptions": {
