@@ -1,6 +1,11 @@
 /** @type {import("eslint").Linter.Config} */
 
 module.exports = {
+    settings: {
+        react: {
+            version: 'detect',
+        },
+    },
     root: true,
     env: {
         browser: true,

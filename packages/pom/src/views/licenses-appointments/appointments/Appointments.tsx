@@ -10,7 +10,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { default as styles } from './Appointments.module.css';
-import { Appointment, AppointmentStatus } from '../../../types/types';
+import { Appointment, AppointmentStatus } from '../../../types';
 import { AppointmentSidesheet } from './AppointmentSidesheet';
 
 // @TODO: move this once we properly set up data structures for pom

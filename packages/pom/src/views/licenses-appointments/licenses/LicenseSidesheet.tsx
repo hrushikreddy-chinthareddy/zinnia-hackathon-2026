@@ -4,7 +4,7 @@ import { SideSheetProps } from '@zinnia/bloom/components';
 
 import { SideSheet } from '@zinnia/bloom/components';
 
-import { License, LicenseStatus } from '../../../types/types';
+import { License, LicenseStatus } from '../../../types';
 import { standardDateMonthDayYear } from '@zinnia/utils';
 export interface LicenseSidesheetProps
   extends Omit<SideSheetProps, 'children' | 'header'> {

@@ -5,7 +5,7 @@ import { SideSheetProps } from '@zinnia/bloom/components';
 import { SideSheet } from '@zinnia/bloom/components';
 
 import { standardDateMonthDayYear, toTitleCase } from '@zinnia/utils';
-import { Appointment, AppointmentStatus } from '../../../types/types';
+import { Appointment, AppointmentStatus } from '../../../types';
 export interface AppointmentSidesheetProps
   extends Omit<SideSheetProps, 'children' | 'header'> {
   appointment: Appointment;

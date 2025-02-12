@@ -8,7 +8,7 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@zinnia/bloom/components';
-import { License, LicenseStatus } from '../../../types/types';
+import { License, LicenseStatus } from '../../../types';
 import clsx from 'clsx';
 import { default as styles } from './Licenses.module.css';
 import { LicenseSidesheet } from './LicenseSidesheet';

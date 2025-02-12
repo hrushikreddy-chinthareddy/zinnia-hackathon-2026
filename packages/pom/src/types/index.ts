@@ -1,3 +1,5 @@
+import type TrainingEducation from "../views/training-education/TrainingEducation";
+
 // @TODO: this is temporary, until we import api types
 export enum ProducerType {
   INDIVIDUAL = 'individual',
@@ -50,3 +52,6 @@ export interface LineOfAuthority {
   effectiveDate: string;
   expiryDate: string;
 }
+
+
+export { TrainingEducation };
