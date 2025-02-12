@@ -26,6 +26,7 @@ interface FormViewerProps extends SegmentTrackedPageProps {
     taxYear: string;
 }
 
+// NOTE!  This FormViewer is now shared between Policy Management and Contact Center.  If substantial changes are made to this page, they should be made to both places
 const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear }: FormViewerProps) => {
     const [pdf, setPdf] = useState<string | null>(null);
     const [pdfError, setPdfError] = useState<boolean>(false);
@@ -44,6 +45,7 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear 
                     { contractNumber, clientCode: carrierCode, fChar, taxYear },
                     featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]
                 );
+
                 if (response?.binaryData) {
                     setPdf(response?.binaryData);
                 } else {
@@ -70,8 +72,8 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear 
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    width: '100%',
-                    height: '100%',
+                    width: '100vw',
+                    height: '100vh',
                     border: 'none',
                 }}
             />

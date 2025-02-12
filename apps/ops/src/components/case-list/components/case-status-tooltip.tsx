@@ -20,12 +20,16 @@ interface CaseStatusTooltipProps {
 }
 
 export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
-    const { caseStatus, processSubType, process, createdAt, exceptions, updatedAt } = singleCase;
+    const { caseStatus, processSubType, process, createdAt, exceptions, updatedAt, caseResult: rawCaseResult } = singleCase;
     const daysAgo = calculateDaysAgo(new Date(singleCase.createdAt));
 
     let statusTooltip = '';
     let statusVariant = '';
     let statusText = '';
+
+    const caseResult = rawCaseResult ? rawCaseResult.toLowerCase() : '';
+
+    const caseResultDetail = caseResult ? ` ${t(`caseOverview.caseStatus.canceled.${caseResult}`, { defaultValue: '' }) ?? ''}` : '';
 
     switch (caseStatus) {
         case Statuses.InProgress:
@@ -56,7 +60,7 @@ export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
             statusVariant = BadgeVariant.INACTIVE;
             statusTooltip = `${t('caseOverview.caseStatus.canceled.tooltip', {
                 processSubType: processSubType ? toTitleCase(processSubType) : toTitleCase(process),
-            })}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
+            })}${dayjs(updatedAt).format('MM/DD/YYYY')}.${caseResultDetail}`;
             statusText = t('caseOverview.caseStatus.canceled.badgeText');
             break;
 

@@ -1,8 +1,10 @@
 import OftDlicForm from '@deps/containers/otp/oft-forms/dlic/dlic-oft-form';
 import FlicOftWithdrawalForm from '@deps/containers/otp/oft-forms/flic/flic-oft-form';
+import GdmnOftWithdrawalForm from '@deps/containers/otp/oft-forms/gdmn/gdmn-oft-form';
 import GlcoOftWithdrawalForm from '@deps/containers/otp/oft-forms/gilico/glco-oft-form';
 import MassOftWithdrawalForm from '@deps/containers/otp/oft-forms/mass/mass-oft-form';
 import NasuOftWithdrawalForm from '@deps/containers/otp/oft-forms/nasu/nasu-oft-form';
+import PrdnOftWithdrawalForm from '@deps/containers/otp/oft-forms/prdn/prdn-oft-form';
 import RSLNOftWithdrawalForm from '@deps/containers/otp/oft-forms/rsln/rsln-oft-form';
 import SbgcOftWithdrawalForm from '@deps/containers/otp/oft-forms/sbgc/sbgc-oft-form';
 import UlpcOftWithdrawalForm from '@deps/containers/otp/oft-forms/ulpc/ulpc-oft-form';
@@ -25,6 +27,7 @@ import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-
 import { NassauSSWForm } from '@deps/containers/otp/ssw-forms/nasu/nasu-ssw-form';
 import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 import { UlpcSSWForm } from '@deps/containers/otp/ssw-forms/ulpc/ulpc-ssw-form';
+import { UsaaSSWForm } from '@deps/containers/otp/ssw-forms/usaa/usaa-ssw-form';
 import DlicWithdrawalForm from '@deps/containers/otp/withdrawal-forms/dlic/dlic-withdrawal-form';
 import FlicWithdrawalForm from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form';
 import GdmnWithdrawalForm from '@deps/containers/otp/withdrawal-forms/gdmn/gdmn-withdrawal-form';
@@ -67,10 +70,12 @@ export const getOFTFormComponentMap = (planCode: string | '', qualType: QualType
     [Carrier.SBGC]: <SbgcOftWithdrawalForm planCode={planCode} />,
     [Carrier.DLIC]: <OftDlicForm qualType={qualType} />,
     [Carrier.RSLN]: <RSLNOftWithdrawalForm qualType={qualType} />,
+    [Carrier.GDMN]: <GdmnOftWithdrawalForm qualType={qualType} />,
     [Carrier.GLCO]: <GlcoOftWithdrawalForm />,
     [Carrier.USAA]: <UsaaOftWithdrawalForm />,
     [Carrier.NASU]: <NasuOftWithdrawalForm />,
     [Carrier.ULPC]: <UlpcOftWithdrawalForm />,
+    [Carrier.PRDN]: <PrdnOftWithdrawalForm />,
 });
 
 export const getRMDFormComponentMap = (qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
@@ -95,6 +100,7 @@ const getSSWFormComponentMap = (qualType: QualTypes | '', planCode?: string): Re
     [Carrier.GLCO]: <GlcoSSWForm planCode={planCode} />,
     [Carrier.ULPC]: <UlpcSSWForm planCode={planCode} />,
     [Carrier.GDMN]: <GdmnSSWForm />,
+    [Carrier.USAA]: <UsaaSSWForm />
 });
 
 export const getFormParts = (caseType: CaseType, clientCode: string, qualType: QualTypes | '', planCode: string = '') => {
