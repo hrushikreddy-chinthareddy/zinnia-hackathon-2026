@@ -1690,6 +1690,7 @@
                     "fixedDollar": "Dollar fixe",
                     "fixedPeriodIncome": "Revenu à durée déterminée",
                     "annualFreeWithdrawal": "Retrait annuel gratuit",
+                    "maximumFreeWithdrawal": "Retrait gratuit maximum",
                     "percentageOfAccountValue": "Pourcentage de la valeur du compte",
                     "interestEarningDividendsGains": "Interset/Gains/Dividendes/Gains",
                     "gmwb": "GMWB",
@@ -1982,7 +1983,8 @@
                     "otherEligibleDistributedPermittedPlan": "Autres distributions admissibles autorisées par le régime",
                     "qualifiedReservist": "Répartition des réservistes qualifiés",
                     "hardship": "Difficultés financières",
-                    "financialHardship": "Difficultés financières"
+                    "financialHardship": "Difficultés financières",
+                    "other": "Autre"
                 },
                 "unforeseeableEmergency": "Urgence imprévisible",
                 "unforeseeableEmergencyOptions": {
@@ -2705,8 +2707,10 @@
             "fileType": "Type de fichier",
             "filter": "Filtrer par année :",
             "filterByCategory": "Filtrer par catégorie",
+            "formId": "ID du formulaire",
             "linkedTo": "Ce document est lié à ce blah {{type}}.",
             "loadingDocuments": "Chargement des documents...",
+            "name": "Nom",
             "noResults": "Il semble qu'il n'y ait aucun document à afficher.",
             "received": "Reçu",
             "receivedDate": "Date de réception",
@@ -2714,6 +2718,8 @@
             "rowsPerPage": "Lignes par page: {{limit}}",
             "sent": "Envoyé",
             "sentDate": "Date d'envoi",
+            "taxDocuments": "Documents fiscaux",
+            "taxYear": "Année fiscale",
             "view": "Voir"
         },
         "funds": {

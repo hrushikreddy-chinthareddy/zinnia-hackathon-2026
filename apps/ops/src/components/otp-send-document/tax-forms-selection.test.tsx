@@ -88,7 +88,7 @@ describe('TaxFormsSelection component', () => {
     });
 
     it('should display a warning message when API returns an empty array response', async () => {
-        mockedSearchTaxForms.mockResolvedValue(Promise.resolve({ count: 0, items: [] }));
+        mockedSearchTaxForms.mockResolvedValue(Promise.resolve({ data: { count: 0, items: [] }, error: null }));
 
         let setMethodArgs;
         const mockSetTaxFormSelectionDetails = jest.fn(cb => {
@@ -137,16 +137,19 @@ describe('TaxFormsSelection component', () => {
 
         mockedSearchTaxForms.mockResolvedValue(
             Promise.resolve({
-                count: 1,
-                items: [
-                    {
-                        contractNumber: '7003304118',
-                        name: '5498',
-                        fChar: '5',
-                        formId: '5646',
-                        taxYear: '2022',
-                    },
-                ],
+                data: {
+                    count: 1,
+                    items: [
+                        {
+                            contractNumber: '7003304118',
+                            name: '5498',
+                            fChar: '5',
+                            formId: '5646',
+                            taxYear: '2022',
+                        },
+                    ],
+                },
+                error: null,
             })
         );
 

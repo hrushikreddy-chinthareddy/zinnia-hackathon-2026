@@ -5,6 +5,8 @@ import Cookies from 'js-cookie';
 import { CompanyName } from '@/types/carriers';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
 
+import { SkeletonLoader } from '../skeleton-loader/SkeletonLoader';
+
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
 export const WELLABE_CONTACT_PHONE_NUMBER = '1-888-222-3003';
 
@@ -21,10 +23,19 @@ const phoneByCarrier = (name?: CompanyName | string) => {
 
 export const CarrierPhoneNumber = () => {
   const currentTheme = Cookies.get(THEME_COOKIE);
+  const phoneNumber = phoneByCarrier(currentTheme);
+  if (!phoneNumber || phoneNumber.length < 1) {
+    return (
+      <SkeletonLoader
+        className="bg-red-100"
+        style={{
+          marginBottom: '-4px',
+        }}
+        width="12ch"
+        height="14px"
+      />
+    );
+  }
 
-  return (
-    <a href={`tel:+${phoneByCarrier(currentTheme)}`}>
-      {phoneByCarrier(currentTheme)}
-    </a>
-  );
+  return <a href={`tel:+${phoneNumber}`}>{phoneNumber}</a>;
 };
