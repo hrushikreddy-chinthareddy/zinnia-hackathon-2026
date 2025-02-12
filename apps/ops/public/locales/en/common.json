@@ -1697,6 +1697,7 @@
                     "fixedDollar": "Fixed dollar",
                     "fixedPeriodIncome": "Fixed period income",
                     "annualFreeWithdrawal": "Annual free withdrawal",
+                    "maximumFreeWithdrawal": "Maximum free withdrawal",
                     "percentageOfAccountValue": "Percent of account value",
                     "interestEarningDividendsGains": "Interest/Earnings/Dividends/Gains",
                     "gmwb": "GMWB",
@@ -1995,7 +1996,8 @@
                     "qualifiedReservist": "Qualified reservist distribution",
                     "hardship": "Hardship",
                     "financialHardship": "Financial Hardship",
-                    "others": "Others"
+                    "others": "Others",
+                    "other": "Other"
                 },
                 "unforeseeableEmergency": "Unforeseeable emergency",
                 "unforeseeableEmergencyOptions": {

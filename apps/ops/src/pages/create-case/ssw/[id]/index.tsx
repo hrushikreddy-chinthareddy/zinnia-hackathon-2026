@@ -47,6 +47,8 @@ import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
 import { GlcoSSWForm } from '@deps/containers/otp/ssw-forms/glco/glco-ssw-form';
 import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 import { UlpcSSWForm } from '@deps/containers/otp/ssw-forms/ulpc/ulpc-ssw-form';
+import { GdmnSSWForm } from '@deps/containers/otp/ssw-forms/gdmn/gdmn-ssw-form';
+import { UsaaSSWForm } from '@deps/containers/otp/ssw-forms/usaa/usaa-ssw-form';
 import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
@@ -89,6 +91,8 @@ const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Recor
     [Carrier.NASU]: <NassauSSWForm />,
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
     [Carrier.ULPC]: <UlpcSSWForm planCode={planCode} />,
+    [Carrier.GDMN]: <GdmnSSWForm />,
+    [Carrier.USAA]: <UsaaSSWForm />,
     [Carrier.RSLN]: <RslnSSWForm />,
 });
 
