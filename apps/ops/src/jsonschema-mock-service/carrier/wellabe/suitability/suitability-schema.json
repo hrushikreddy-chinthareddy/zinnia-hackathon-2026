@@ -176,25 +176,7 @@
                 "enum": ["YES", "NO"]
             },
             "sourceOfIncomeEnum": {
-                "enum": [
-                    "FIXED_ANNUITY",
-                    "LIFE_INSURENCE",
-                    "CHECKING_SAVING_ACCOUNT",
-                    "SALARY",
-                    "VARIABLE_ANNUITY",
-                    "REVERSE_MORTGAGE",
-                    "SAVING_ACCOUNT",
-                    "DEATH_BENEFIT",
-                    "INHERITED_IRA",
-                    "INHERITANCE",
-                    "401K_ROLLOVER",
-                    "RETIREMENT_PLAN",
-                    "INDEXED_ANNUITY",
-                    "STOCKS_BONDS_MF",
-                    "OTHERS",
-                    "RENTAL_INCOME",
-                    "SOCIAL_SECURITY"
-                ]
+                "enum": ["SALARY", "401K_ROLLOVER", "SOCIAL_SECURITY", "RENTAL_INCOME", "403(b)", "ALIMONY_AND_OR_CHILD_SUPPORT", "OTHERS"]
             },
             "materialChangeExpEnum": {
                 "enum": ["YES", "NO"]
@@ -209,21 +191,19 @@
                 "enum": [
                     "FIXED_ANNUITY",
                     "LIFE_INSURENCE",
-                    "CHECKING_SAVING_ACCOUNT",
                     "CD",
-                    "VARIABLE_ANNUITY",
-                    "REVERSE_MORTGAGE",
-                    "SAVING_ACCOUNT",
-                    "DEATH_BENEFIT",
-                    "INHERITED_IRA",
-                    "INHERITANCE",
-                    "401K_ROLLOVER",
-                    "RETIREMENT_PLAN",
                     "INDEXED_ANNUITY",
+                    "CHECKING_SAVING_ACCOUNT",
                     "STOCKS_BONDS_MF",
+                    "VARIABLE_ANNUITY",
+                    "INHERITANCE",
+                    "DEATH_BENEFIT",
+                    "REVERSE_MORTGAGE",
+                    "401K_ROLLOVER",
+                    "SPOUSAL CONTRIBUTION",
                     "OTHERS",
-                    "RENTAL_INCOME",
-                    "SOCIAL_SECURITY"
+                    "RETIREMENT_PLAN",
+                    "INHERITED_IRA"
                 ]
             },
             "financialProducts_assetsDistribution_productTypeEnum": {
@@ -259,6 +239,16 @@
             },
             "financialObjectives_buyingReasonEnum": {
                 "enum": ["INCOME", "TAX_DEFERRAL", "GURANTEES", "GROWTH", "PRINCIPAL_PROTECTION", "OTHERS"]
+            },
+
+            "liquidityOptions_distributionOptionEnum": {
+                "enum": [
+                    "PENALTY-FREE-WITHDRWAWAL",
+                    "ANNUITIZATION",
+                    "LUMP SUM",
+                    "REQUIRED_MINIMUM_DISTRIBUTION",
+                    "NO_CURRENT_PLANS_TO_ACCESS"
+                ]
             },
             "financialObjectives_annuityMeetsFinancialNeedsEnum": {
                 "enum": ["YES", "NO"]
@@ -621,7 +611,7 @@
                         "type": "array",
                         "title": "Source of funds",
                         "items": {
-                            "$ref": "#/definitions/sourceOfIncomeEnum"
+                            "$ref": "#/definitions/sourceOfFundsEnum"
                         },
                         "uniqueItems": true
                     },
@@ -739,7 +729,17 @@
                         "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
                     }
                 },
-                "required": ["riskTolerance", "riskToleranceDesc"]
+                "required": ["riskTolerance"],
+                "if": {
+                    "properties": {
+                        "riskTolerance": {
+                            "const": "AGGRESSIVE"
+                        }
+                    }
+                },
+                "then": {
+                    "required": ["riskToleranceDesc"]
+                }
             },
             "financialObjectives": {
                 "type": "object",
@@ -764,7 +764,19 @@
                         "$ref": "#/definitions/financialObjectives_annuityMeetsFinancialNeedsEnum"
                     }
                 },
-                "required": ["buyingReason", "buyingReasonDetails", "annuityMeetsFinancialNeeds"]
+                "required": ["buyingReason", "annuityMeetsFinancialNeeds"],
+                "if": {
+                    "properties": {
+                        "buyingReason": {
+                            "contains": {
+                                "const": "OTHERS"
+                            }
+                        }
+                    }
+                },
+                "then": {
+                    "required": ["buyingReasonDetails"]
+                }
             },
             "liquidityOptions": {
                 "type": "object",
@@ -779,7 +791,7 @@
                         "title": "Distribution methods",
                         "items": {
                             "type": "string",
-                            "$ref": "#/definitions/financialObjectives_buyingReasonEnum"
+                            "$ref": "#/definitions/liquidityOptions_distributionOptionEnum"
                         },
                         "uniqueItems": true
                     },
@@ -1540,21 +1552,19 @@
                     "enumNames": [
                         "Fixed annuity",
                         "Life insurance",
-                        "Checking saving account",
                         "CD",
-                        "Variable annuity",
-                        "Reverse mortgage",
-                        "Saving account",
-                        "Death benefit",
-                        "Inherited IRA",
-                        "Inheritance",
-                        "401(k) rollover",
-                        "Retirement plan",
                         "Indexed annuity",
+                        "Checking saving account",
                         "Stocks bonds MF",
+                        "Variable annuity",
+                        "Inheritance",
+                        "Death benefit",
+                        "Reverse mortgage",
+                        "401(k) rollover",
+                        "Spousal contribution",
                         "Others",
-                        "Rental income",
-                        "Social security"
+                        "Retirement plan",
+                        "Inherited IRA"
                     ]
                 }
             },
@@ -1688,8 +1698,14 @@
             "fundsAccessExplanation": {},
             "distributionMethods": {
                 "ui:options": {
-                    "enumNames": ["Income", "Tax deferal", "Gurantees", "Growth", "Principal protection", "Others"],
-                    "label": false
+                    "enumNames": [
+                        "Penalty-Free Withdrawal",
+                        "Annuitization",
+                        "Lump Sum",
+                        "Required Minimum Distribution",
+                        "No Current Plans to Access"
+                    ],
+                    "label": true
                 }
             },
             "firstPayoutOption": {},
@@ -1978,23 +1994,13 @@
                         },
                         "sourceOfIncomeEnum": {
                             "enum": [
-                                "FIXED_ANNUITY",
-                                "LIFE_INSURENCE",
-                                "CHECKING_SAVING_ACCOUNT",
                                 "SALARY",
-                                "VARIABLE_ANNUITY",
-                                "REVERSE_MORTGAGE",
-                                "SAVING_ACCOUNT",
-                                "DEATH_BENEFIT",
-                                "INHERITED_IRA",
-                                "INHERITANCE",
                                 "401K_ROLLOVER",
-                                "RETIREMENT_PLAN",
-                                "INDEXED_ANNUITY",
-                                "STOCKS_BONDS_MF",
-                                "OTHERS",
+                                "SOCIAL_SECURITY",
                                 "RENTAL_INCOME",
-                                "SOCIAL_SECURITY"
+                                "403(b)",
+                                "ALIMONY_AND_OR_CHILD_SUPPORT",
+                                "OTHERS"
                             ]
                         },
                         "materialChangeExpEnum": {
@@ -2010,21 +2016,19 @@
                             "enum": [
                                 "FIXED_ANNUITY",
                                 "LIFE_INSURENCE",
-                                "CHECKING_SAVING_ACCOUNT",
                                 "CD",
-                                "VARIABLE_ANNUITY",
-                                "REVERSE_MORTGAGE",
-                                "SAVING_ACCOUNT",
-                                "DEATH_BENEFIT",
-                                "INHERITED_IRA",
-                                "INHERITANCE",
-                                "401K_ROLLOVER",
-                                "RETIREMENT_PLAN",
                                 "INDEXED_ANNUITY",
+                                "CHECKING_SAVING_ACCOUNT",
                                 "STOCKS_BONDS_MF",
+                                "VARIABLE_ANNUITY",
+                                "INHERITANCE",
+                                "DEATH_BENEFIT",
+                                "REVERSE_MORTGAGE",
+                                "401K_ROLLOVER",
+                                "SPOUSAL CONTRIBUTION",
                                 "OTHERS",
-                                "RENTAL_INCOME",
-                                "SOCIAL_SECURITY"
+                                "RETIREMENT_PLAN",
+                                "INHERITED_IRA"
                             ]
                         },
                         "financialProducts_assetsDistribution_productTypeEnum": {
@@ -2060,6 +2064,16 @@
                         },
                         "financialObjectives_buyingReasonEnum": {
                             "enum": ["INCOME", "TAX_DEFERRAL", "GURANTEES", "GROWTH", "PRINCIPAL_PROTECTION", "OTHERS"]
+                        },
+
+                        "liquidityOptions_distributionOptionEnum": {
+                            "enum": [
+                                "PENALTY-FREE-WITHDRWAWAL",
+                                "ANNUITIZATION",
+                                "LUMP SUM",
+                                "REQUIRED_MINIMUM_DISTRIBUTION",
+                                "NO_CURRENT_PLANS_TO_ACCESS"
+                            ]
                         },
                         "financialObjectives_annuityMeetsFinancialNeedsEnum": {
                             "enum": ["YES", "NO"]
@@ -2427,7 +2441,7 @@
                                     "title": "Source of funds",
                                     "items": {
                                         "type": "string",
-                                        "$ref": "#/definitions/sourceOfIncomeEnum"
+                                        "$ref": "#/definitions/sourceOfFundsEnum"
                                     },
                                     "uniqueItems": true
                                 },
@@ -2569,7 +2583,19 @@
                                     "$ref": "#/definitions/financialObjectives_annuityMeetsFinancialNeedsEnum"
                                 }
                             },
-                            "required": ["buyingReason", "buyingReasonDetails", "annuityMeetsFinancialNeeds"]
+                            "required": ["buyingReason", "annuityMeetsFinancialNeeds"],
+                            "if": {
+                                "properties": {
+                                    "buyingReason": {
+                                        "contains": {
+                                            "const": "OTHERS"
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": ["buyingReasonDetails"]
+                            }
                         },
                         "liquidityOptions": {
                             "type": "object",
@@ -2584,7 +2610,7 @@
                                     "title": "Distribution methods",
                                     "items": {
                                         "type": "string",
-                                        "$ref": "#/definitions/financialObjectives_buyingReasonEnum"
+                                        "$ref": "#/definitions/liquidityOptions_distributionOptionEnum"
                                     },
                                     "uniqueItems": true
                                 },
@@ -3274,23 +3300,13 @@
                             "ui:options": {
                                 "label": true,
                                 "enumNames": [
-                                    "Fixed annuity",
-                                    "Life insurance",
-                                    "Checking saving account",
-                                    "Salary",
-                                    "Variable annuity",
-                                    "Reverse mortgage",
-                                    "Saving account",
-                                    "Death benefit",
-                                    "Inherited IRA",
-                                    "Inheritance",
-                                    "401(k) rollover",
-                                    "Retirememt plan",
-                                    "Indexed aannuity",
-                                    "Stocks bonds MF",
-                                    "Others",
+                                    "Household wage/Salary",
+                                    "401(k)/Pension",
+                                    "Social security",
                                     "Rental income",
-                                    "Social security"
+                                    "403(b)",
+                                    "Alimony and/or child support",
+                                    "Others"
                                 ]
                             }
                         },
@@ -3359,21 +3375,19 @@
                                 "enumNames": [
                                     "Fixed annuity",
                                     "Life insurance",
-                                    "Checking saving account",
                                     "CD",
-                                    "Variable annuity",
-                                    "Reverse mortgage",
-                                    "Saving account",
-                                    "Death benefit",
-                                    "Inherited IRA",
-                                    "Inheritance",
-                                    "401(k) rollover",
-                                    "Retirement plan",
                                     "Indexed annuity",
+                                    "Checking saving account",
                                     "Stocks bonds MF",
+                                    "Variable annuity",
+                                    "Inheritance",
+                                    "Death benefit",
+                                    "Reverse mortgage",
+                                    "401(k) rollover",
+                                    "Spousal contribution",
                                     "Others",
-                                    "Rental income",
-                                    "Social security"
+                                    "Retirement plan",
+                                    "Inherited IRA"
                                 ]
                             }
                         },
@@ -3507,8 +3521,14 @@
                         "fundsAccessExplanation": {},
                         "distributionMethods": {
                             "ui:options": {
-                                "enumNames": ["Income", "Tax deferal", "Gurantees", "Growth", "Principal protection", "Others"],
-                                "label": false
+                                "enumNames": [
+                                    "Penalty-Free Withdrawal",
+                                    "Annuitization",
+                                    "Lump Sum",
+                                    "Required Minimum Distribution",
+                                    "No Current Plans to Access"
+                                ],
+                                "label": true
                             }
                         },
                         "firstPayoutOption": {},
