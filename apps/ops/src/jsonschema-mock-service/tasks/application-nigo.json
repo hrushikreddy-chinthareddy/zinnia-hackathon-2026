@@ -1,0 +1,181 @@
+{
+  "formId": "",
+  "process": "New Business",
+  "carrier": "WELB",
+  "taskType": "NB_APPLICATION_NIGO",
+  "formSchema": {
+    "type": "object"
+  },
+  "uiSchema": {
+    "type": "object"
+  },
+  "schemaContent": {
+    "tabSchemas": [
+      {
+        "title": "Review Application Issues",
+        "formSchema": {
+          "type": "object",
+          "properties": {
+            "sectionHeader": {
+              "type": "object",
+              "title": "Processing Instructions"
+            },
+            "issuesList": {
+              "type": "array",
+              "title": "Issues",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "details": {
+              "type": "object",
+              "title": "Supporting Information",
+              "properties": {
+                "onwerDetails": {
+                  "type": "object",
+                  "properties": {
+                    "firstName": {
+                      "type": "string",
+                      "title": "First Name"
+                    },
+                    "ssn": {
+                      "type": "string",
+                      "title": "SSN"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "title": "Last Name"
+                    }
+                  }
+                },
+                "documentDetails": {
+                  "type": "object",
+                  "properties": {
+                    "documentId": {
+                      "type": "string"
+                    },
+                    "documentSource": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "issueResolved": {
+              "type": "boolean",
+              "enumNames": [
+                "Yes",
+                "No"
+              ],
+              "enum": [
+                true,
+                false
+              ],
+              "title": "Can you resolve the issues?"
+            }
+          },
+          "dependencies": {
+            "issueResolved": {
+              "oneOf": [
+                {
+                  "properties": {
+                    "issueResolved": {
+                      "enum": [
+                        true
+                      ]
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "issueResolved": {
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "issueReason": {
+                      "type": "object",
+                      "title": "The status reason for the task will be set to:"
+                    }
+                  },
+                  "required": [
+                    "issueResolved"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "uiSchema": {
+          "ui:globalOptions": {
+            "duplicateKeySuffixSeparator": "_",
+            "orderable": false,
+            "copyable": false
+          },
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "ui:submitButtonOptions": {
+            "norender": true
+          },
+          "sectionHeader": {
+            "props": {
+              "description": "Application form may be missing or mismatched for the signed state. Review the application and confirm that we can resolve the issue."
+            },
+            "ui:options": {
+              "label": true,
+              "ObjectFieldTemplate": "InstructionsTemplate"
+            }
+          },
+          "issuesList": {
+            "ui:options": {
+              "ArrayFieldTemplate": "TextListTemplate",
+              "keyName": "processingReason"
+            }
+          },
+          "details": {
+            "ui:options": {
+              "label": true
+            },
+            "onwerDetails": {
+              "ui:options": {
+                "cardtype": "Detailed",
+                "icon": "CIRCLE_USER",
+                "label": false,
+                "ObjectFieldTemplate": "CardTemplate",
+                "key": "onwerDetails"
+              }
+            },
+            "documentDetails": {
+              "ui:options": {
+                "canAdd": false,
+                "label": false,
+                "cardType": "Document",
+                "icon": "DOCUMENT_TEXT",
+                "ObjectFieldTemplate": "CardTemplate"
+              }
+            }
+          },
+          "issueResolved": {
+            "ui:widget": "radio",
+            "ui:options": {
+              "inline": true
+            }
+          },
+          "issueReason": {
+            "props": {
+              "description": "NIGO's unable to be resolved"
+            },
+            "ui:options": {
+              "label": true,
+              "ObjectFieldTemplate": "InstructionsTemplate"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
