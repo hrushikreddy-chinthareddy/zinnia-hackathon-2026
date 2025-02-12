@@ -47,7 +47,12 @@ export const getPartiesFromCase = (caseDetails: Case, t: TFunction): PartiesProp
             }
         }
         // if there's two of the same person, just add the roles to the first found
-        acc[key].roles.push(convertToChipText(partyRole, t));
+        if (partyRole?.toLowerCase().includes('owner')){
+            acc[key].roles.unshift(convertToChipText(partyRole, t));
+        } else {
+            acc[key].roles.push(convertToChipText(partyRole, t));
+        }
+
         return acc;
     }, {} as Record<string, PartyInfo>);
     const ownerParties: Set<PartyInfo> = new Set();
