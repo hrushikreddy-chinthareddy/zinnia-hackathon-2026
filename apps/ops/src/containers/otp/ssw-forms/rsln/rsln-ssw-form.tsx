@@ -16,6 +16,8 @@ import SswEditSelection from '../ssw-edit-selection';
 import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import getRslnConfig from './rsln-ssw-form.helper';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
+import { isAllowedState } from '@deps/utils/renderStateW4';
 
 export function RslnSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -28,6 +30,7 @@ export function RslnSSWForm() {
         disbursementOptions,
         signaturesConfig,
         fundWithdrawnMethodOptions,
+        w4pSignaturesConfig,
     } = getRslnConfig(t);
     const {
         formParty,
@@ -38,6 +41,7 @@ export function RslnSSWForm() {
         isFormStateReadOnly,
         ownerStateOfResidence,
         setOwnerStateOfResidence,
+        contractIssueState,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -60,6 +64,8 @@ export function RslnSSWForm() {
             setOwnerStateOfResidence(newOwnerStateOfResidence);
         }
     }, [formParty]);
+
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -76,6 +82,8 @@ export function RslnSSWForm() {
                 title={t('distributionInstruction.investmentSelectionForDistribution') as string}
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
+            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
+
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
         </>
