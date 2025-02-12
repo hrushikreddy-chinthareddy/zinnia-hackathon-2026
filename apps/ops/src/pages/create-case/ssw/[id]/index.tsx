@@ -55,6 +55,7 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 
 import { ERROR_CODES } from '../../error';
 import { RslnSSWForm } from '@deps/containers/otp/ssw-forms/rsln/rsln-ssw-form';
+import { PrdnSSWForm } from '@deps/containers/otp/ssw-forms/prdn/prdn-ssw-form';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -91,6 +92,7 @@ const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Recor
     [Carrier.NASU]: <NassauSSWForm />,
     [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
     [Carrier.ULPC]: <UlpcSSWForm planCode={planCode} />,
+    [Carrier.PRDN]: <PrdnSSWForm />,
     [Carrier.GDMN]: <GdmnSSWForm />,
     [Carrier.USAA]: <UsaaSSWForm />,
     [Carrier.RSLN]: <RslnSSWForm />,
