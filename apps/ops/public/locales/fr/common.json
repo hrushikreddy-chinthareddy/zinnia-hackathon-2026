@@ -3257,7 +3257,7 @@
             "taskDetails": {
                 "purchaseDocumentMatching": "Dans le cadre du processus de mise en correspondance des documents pour le document d'achat, un ou plusieurs documents nécessitent un examen et une confirmation pour garantir un alignement approprié avant de procéder à l'émission du contrat",
                 "suitabilityReview": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par Carrier et annulés pour émettre le contrat.",
-                "newbusinessAgentNigo": "Un ou plusieurs problèmes de type « non conforme » (NIGO) ont été identifiés lors de l'examen de la demande {{caseType}}. Ces problèmes doivent être examinés et résolus pour garantir que la demande répond à toutes les exigences avant de procéder à l'émission du contrat."
+                "nbAgentNigo": "Un ou plusieurs problèmes de type « non conforme » (NIGO) ont été identifiés lors de l'examen de la demande {{caseType}}. Ces problèmes doivent être examinés et résolus pour garantir que la demande répond à toutes les exigences avant de procéder à l'émission du contrat."
             }
         },
         "suitability": {
@@ -5030,7 +5030,7 @@
             "transactionNotFound": "Transaction non trouvée"
         }
     },
-    "newbusinessAgentNigo": {
+    "nbAgentNigo": {
         "confirmStep": {
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
