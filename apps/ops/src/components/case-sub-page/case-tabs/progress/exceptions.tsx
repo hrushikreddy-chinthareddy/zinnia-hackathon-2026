@@ -4,10 +4,10 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
 
 import { formatTimestamp } from './progress-tab-helpers';
-import { ExceptionView } from './progress-tab-types';
+import { ExceptionView, TaskView } from './progress-tab-types';
 import Tasks from './tasks';
 
-const renderException = (exception: ExceptionView, isSingleTask: boolean, t: TFunction, unmapped?: boolean) => {
+const renderException = (exception: ExceptionView, t: TFunction, unmapped?: boolean) => {
     return (
         <>
             <div className="flex w-full flex-col justify-between lg:flex-row">
@@ -36,29 +36,42 @@ export default function Exceptions({ exceptions, unmapped = false }: { exception
         return null;
     }
 
-    const isSingleTask = exceptions.every(
-        exception => exception.tasks.length > 0 && exception.tasks.every(task => task.id === exceptions[0].tasks[0].id)
-    );
+    interface GroupedExceptions {
+        [taskId: string]: { tasks: TaskView[]; exceptions: ExceptionView[] };
+    }
+
+    const groupedExceptions: GroupedExceptions = exceptions.reduce((acc: GroupedExceptions, exception: ExceptionView) => {
+        if (exception.tasks.length === 0) {
+            if (!acc['no-task']) {
+                acc['no-task'] = { tasks: [], exceptions: [] };
+            }
+            acc['no-task'].exceptions.push(exception);
+        } else {
+            exception.tasks.forEach(task => {
+                if (!acc[task.id]) {
+                    acc[task.id] = { tasks: [], exceptions: [] };
+                }
+                if (!acc[task.id].tasks.some(t => t.id === task.id)) {
+                    acc[task.id].tasks.push(task);
+                }
+                if (!acc[task.id].exceptions.some(e => e.id === exception.id)) {
+                    acc[task.id].exceptions.push(exception);
+                }
+            });
+        }
+        return acc;
+    }, {});
 
     return (
         <ul>
-            {!isSingleTask &&
-                exceptions.map(exception => (
-                    <li className="flex w-full flex-col" key={exception.id}>
-                        {renderException(exception, isSingleTask, t, unmapped)}
-                        <Tasks tasks={exception.tasks} />
-                    </li>
-                ))}
-            {isSingleTask && (
-                <>
-                    {exceptions.map(exception => (
-                        <li className="flex w-full flex-col" key={exception.id}>
-                            {renderException(exception, isSingleTask, t, unmapped)}
-                        </li>
+            {Object.entries(groupedExceptions).map(([taskId, group]) => (
+                <li className="flex w-full flex-col" key={taskId}>
+                    {group.exceptions.map(exception => (
+                        <div key={exception.id}>{renderException(exception, t, unmapped)}</div>
                     ))}
-                    <Tasks tasks={exceptions[0].tasks} />
-                </>
-            )}
+                    {group.tasks.length > 0 && <Tasks tasks={group.tasks} />}
+                </li>
+            ))}
         </ul>
     );
 }
