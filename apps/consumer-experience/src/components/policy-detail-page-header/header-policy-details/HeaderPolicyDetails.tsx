@@ -1,14 +1,16 @@
+'use client';
+import { useQuery } from '@tanstack/react-query';
 import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
 
-import { getPolicyForHeaderDetails } from '@/services/policy';
+import { SkeletonLoader } from '@/components/skeleton-loader/SkeletonLoader';
+import { getPolicyDetails } from '@/queries/policy-queries';
 import { isAnnuity, policyStatusDisplayText } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './HeaderPolicyDetails.module.css';
-import { PolicyNumber } from './PolicyNumber';
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   planCode: string;
@@ -16,23 +18,19 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
   lineOfBusiness?: LineOfBusiness;
 }
 
-export const HeaderPolicyDetails = async ({
+export const HeaderPolicyDetails = ({
   className,
   lineOfBusiness = LineOfBusiness.LIFE,
   planCode,
   policyNumber,
 }: Props) => {
-  const { data, error } = await getPolicyForHeaderDetails({
-    planCode,
-    policyNumber,
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['policyData', planCode, policyNumber],
+    queryFn: () => getPolicyDetails(planCode, policyNumber),
   });
 
-  if (error || !data) {
-    return null;
-  }
-
   const badgeVariant = () => {
-    switch (data.policyStatus) {
+    switch (data?.policyStatus) {
       case PolicyStatus.PENDINGISSUED:
       case PolicyStatus.ACTIVE:
         return BadgeVariant.SUCCESS;
@@ -47,6 +45,19 @@ export const HeaderPolicyDetails = async ({
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="stacked-items my-sm">
+        <SkeletonLoader width="150px" height="14px" className="mb-sm" />
+        <SkeletonLoader width="150px" height="14px" className="mb-sm" />
+      </div>
+    );
+  }
+
+  if (!data || error) {
+    return null;
+  }
+
   return (
     <div
       className={clsx(
@@ -57,24 +68,24 @@ export const HeaderPolicyDetails = async ({
     >
       <div className={`mr-md ${styles.mobileBadge}`}>
         <Badge
-          label={toSentenceCase(policyStatusDisplayText[data.policyStatus])}
+          label={toSentenceCase(
+            policyStatusDisplayText[data?.policyStatus as PolicyStatus]
+          )}
           variant={badgeVariant()}
         />
       </div>
       <div>
-        <p>{data.marketingName}</p>
+        <p>{data?.product?.marketingName}</p>
         <p>
           <span>{isAnnuity(lineOfBusiness) ? 'Contract' : 'Policy'} #: </span>
-          <PolicyNumber
-            planCode={planCode}
-            policyNumber={policyNumber}
-            lineOfBusiness={lineOfBusiness}
-          />
+          <span>{policyNumber}</span>
         </p>
       </div>
       <div className={`ml-md ${styles.desktopBadge}`}>
         <Badge
-          label={toSentenceCase(policyStatusDisplayText[data.policyStatus])}
+          label={toSentenceCase(
+            policyStatusDisplayText[data?.policyStatus as PolicyStatus]
+          )}
           variant={badgeVariant()}
         />
       </div>

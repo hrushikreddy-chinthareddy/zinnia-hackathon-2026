@@ -1,5 +1,9 @@
 .breadcrumbs {
   a {
+    font: var(----typography-nav-links-sm);
+  }
+
+  span {
     position: relative;
 
     &::after {
@@ -12,7 +16,7 @@
       text-decoration: underline;
     }
 
-    &:last-of-type {
+    &:last-child {
       &::after {
         content: none;
       }

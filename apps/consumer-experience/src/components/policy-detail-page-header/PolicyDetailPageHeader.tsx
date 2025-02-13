@@ -1,9 +1,20 @@
+'use client';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+import { toTitleCase } from '@zinnia/utils';
+import Link from 'next/link';
+import { useParams, usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Layout.module.css';
-import { BreadCrumbs } from '@/components/breadcrumbs/Breadcrumbs';
-import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
-import { HeaderPolicyDetails } from '@/components/header-policy-details/HeaderPolicyDetails';
+import breadcrumbStyles from '@/components/breadcrumbs/Breadcrumbs.module.css';
+import { HeaderPolicyDetails } from '@/components/policy-detail-page-header/header-policy-details/HeaderPolicyDetails';
+import { RouteKey, getPageTitle } from '@/route-map';
+import { LineOfBusinessPath } from '@/types';
+
+interface Breadcrumb {
+  url: string;
+  title: string;
+}
 
 export const PolicyDetailPageHeader = ({
   planCode,
@@ -14,11 +25,80 @@ export const PolicyDetailPageHeader = ({
   policyNumber: string;
   lineOfBusiness?: LineOfBusiness;
 }) => {
+  const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[] | null>(null);
+  const pathname = usePathname();
+  const [pageTitle, setPageTitle] = useState('');
+  const params = useParams<{
+    planCode: string;
+    policyNumber: string;
+    beneficiary: string;
+  }>();
+  const overviewTitle =
+    lineOfBusiness === LineOfBusiness.ANNUITY
+      ? 'contract overview'
+      : 'policy overview';
+
+  useEffect(() => {
+    const pathParts = pathname.split('/');
+    const pathPartsCount = pathParts.length;
+    if (pathParts[pathPartsCount - 1] === params.policyNumber) {
+      setPageTitle(toTitleCase(overviewTitle));
+      setBreadcrumbs(null);
+      return;
+    }
+
+    const breadcrumbsList = [];
+    for (let i = pathPartsCount - 1; i >= 0; i--) {
+      const currentPathPart = pathParts[i];
+      const breadcrumbUrl = pathParts.slice(0, i + 1).join('/');
+      // if the current path part is the policy number it means we have reached the policy overview
+      // and we can return after adding this breadcrumb
+      if (currentPathPart === params.policyNumber) {
+        breadcrumbsList.unshift({
+          title: toTitleCase(overviewTitle),
+          url: breadcrumbUrl,
+        });
+        break;
+        // if the beneficiary id is the route key it means we are on a Beneficiary Detail page
+      } else if (currentPathPart === params.beneficiary) {
+        breadcrumbsList.unshift({
+          title: getPageTitle(RouteKey.BENEFICIARY),
+          url: breadcrumbUrl,
+        });
+      } else {
+        const title = getPageTitle(
+          `/${currentPathPart}` as RouteKey,
+          pathParts[2] as LineOfBusinessPath
+        );
+        breadcrumbsList.unshift({ title, url: breadcrumbUrl });
+      }
+    }
+    setBreadcrumbs(breadcrumbsList);
+    setPageTitle(breadcrumbsList[breadcrumbsList.length - 1]?.title || '');
+  }, [pathname, params.beneficiary, params.policyNumber, overviewTitle]);
+
   return (
     <div>
-      <BreadCrumbs />
+      {breadcrumbs && breadcrumbs.length > 0 && (
+        <div className={`${breadcrumbStyles.breadcrumbs} mb-xl`}>
+          {breadcrumbs?.map((breadcrumb, index) => {
+            // If on current page, breadcrumb doesn't need to be a link
+            if (index === breadcrumbs.length - 1) {
+              return <span key={breadcrumb.title}>{breadcrumb.title}</span>;
+            }
+
+            return (
+              <span key={breadcrumb.title}>
+                <Link href={breadcrumb.url} prefetch>
+                  {breadcrumb.title}
+                </Link>
+              </span>
+            );
+          })}
+        </div>
+      )}
       <div className={styles.headerContainer}>
-        <HeaderBreadcrumb />
+        <h1 className="typography-desktop-headline-1d">{pageTitle}</h1>
         <HeaderPolicyDetails
           className={styles.policyDetails}
           planCode={planCode}

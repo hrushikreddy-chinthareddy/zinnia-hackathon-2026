@@ -1,7 +1,30 @@
+import { Policy } from '@zinnia/api-types/types/sor';
+
 import { ApiResponse } from '@/services';
 import { ClientApi } from '@/services/client-http';
 import { Fund } from '@/services/funds';
 import { PolicyProfile, PolicyStatusDetail } from '@/types/policy';
+
+/**
+ *
+ * @param planCode
+ * @param policyNumber
+ * @returns Top level or basic policy information
+ */
+export const getPolicyDetails = async (
+  planCode: string,
+  policyNumber: string
+) => {
+  const response: ApiResponse<Partial<Policy>> = await (
+    await ClientApi.get(`/api/policies/${planCode}/${policyNumber}`)
+  ).json();
+  if (response.error || !response) {
+    throw response.error;
+  }
+
+  console.log(response.data);
+  return response.data;
+};
 
 export const getPolicyProfile = async (
   planCode: string,
