@@ -1,0 +1,21 @@
+.breadcrumbs {
+  a {
+    position: relative;
+
+    &::after {
+      content: '/';
+      right: 0;
+      margin: 0 var(--measure-dimension-gap-md);
+    }
+
+    &.active {
+      text-decoration: underline;
+    }
+
+    &:last-of-type {
+      &::after {
+        content: none;
+      }
+    }
+  }
+}

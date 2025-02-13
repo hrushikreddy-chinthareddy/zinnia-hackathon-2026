@@ -6,8 +6,6 @@ import { ReactNode, useEffect, useState } from 'react';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { LineOfBusinessPath } from '@/types';
 
-import { HeaderLink } from '../header-link/HeaderLink';
-
 interface PopoverInfo {
   content: ReactNode;
   title: string;
@@ -24,11 +22,7 @@ export interface HeaderBreadcrumbProps {
   preventReturnToPrevious?: boolean;
 }
 
-export const HeaderBreadcrumb = ({
-  title,
-  className,
-  preventReturnToPrevious,
-}: HeaderBreadcrumbProps) => {
+export const HeaderBreadcrumb = ({ title }: HeaderBreadcrumbProps) => {
   const [formatTitle, setFormatTitle] = useState(toTitleCase(title));
   const pathname = usePathname();
   const paths = (usePathname() || '').split('/');
@@ -75,30 +69,5 @@ export const HeaderBreadcrumb = ({
     title,
   ]);
 
-  const currentPath = paths[paths.length - 1];
-
-  let previousPath: string;
-
-  if (currentPath === params.policyNumber) {
-    previousPath = 'coverage';
-  } else {
-    // we need to remove the first item which is an empty string
-    // we remove the last item because we want to go back up one level
-    previousPath = paths.slice(1, -1).join('/');
-  }
-  const previousPathName = previousPath || defaultTitle;
-  const previousPathRoute = previousPath ? `/${previousPath}` : '/';
-
-  return (
-    <HeaderLink
-      link={
-        preventReturnToPrevious
-          ? undefined
-          : { url: previousPathRoute, label: previousPathName }
-      }
-      title={formatTitle}
-      className={className}
-      policyNumber={params.policyNumber}
-    />
-  );
+  return <h1 className="typography-desktop-headline-1d">{formatTitle}</h1>;
 };
