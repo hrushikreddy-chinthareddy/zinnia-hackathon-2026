@@ -59,6 +59,15 @@ export interface ReverseRecreateRequestQuery {
     caseID: string;
 }
 
+export interface SystematicProgramUpdateResponse {
+    status: number;
+    data?: {
+        caseId: string;
+        caseStatus: string;
+        correlationId: string;
+    };
+}
+
 export interface SubmitPremiumResponse {
     status: number;
     data?: {
@@ -68,7 +77,7 @@ export interface SubmitPremiumResponse {
     };
 }
 
-export interface CancelTransactionResponse extends SubmitPremiumResponse {}
+export interface CancelTransactionResponse extends SystematicProgramUpdateResponse {}
 
 export interface TransactionResponse {
     status: string | number;
@@ -94,9 +103,21 @@ export enum TransactionResponseStatus {
 
 export const checkEligibilityLoanRepaymentOneTime = async (
     planCode: string | undefined,
-    policyNumber: string | undefined
+    policyNumber: string | undefined,
+    totalLoanBalance: number | undefined
 ): Promise<TransactionResponse> => {
     try {
+        if (!totalLoanBalance || totalLoanBalance <= 0) {
+            return {
+                status: TransactionResponseStatus.Failure,
+                validationResult: [{
+                    resolution: 'Total loan balance is 0',
+                    attribute: null,
+                    error: '',
+                    errorCode: ''
+                }]
+            };
+        }
         const { data } = await client.post<TransactionResponse, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/loanrepaymentonetime/eligibilitycheck`,
             {} as AxiosResponse
@@ -381,7 +402,6 @@ export const submitLoanPayment = async (
     }
 };
 
-
 export const submitNewLoan = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
@@ -420,14 +440,14 @@ export const submitSystematicProgramUpdate = async (
     policyNumber: string | undefined,
     arrangementId: string,
     query: SystematicProgramUpdateRequestQuery
-): Promise<SubmitPremiumResponse> => {
+): Promise<SystematicProgramUpdateResponse> => {
     try {
-        const data = await client.post<SystematicProgramUpdateRequestQuery, AxiosResponse>(
+        const response = await client.post<SystematicProgramUpdateRequestQuery, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}`,
             query
         );
 
-        return data;
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitSystematicProgramUpdate::an error occurred during validation', error);
 

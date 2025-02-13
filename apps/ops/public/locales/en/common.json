@@ -68,6 +68,7 @@
             "formData": "Form Data",
             "annuitization": "Annuitization",
             "dashboard": "Case Stats",
+            "loanAutopay": "Loan Autopay",
             "loanPayment": "Loan Payment",
             "newLoan": "New Loan",
             "activity": "Activity"
@@ -4066,7 +4067,7 @@
         "federalTax": "Federal tax",
         "stateTax": "State tax ({{ state }})",
         "totalPayment": "Total payment",
-        "paymentMethod": "Payment method",
+        "paymentMethod": "Payment Method",
         "paymentType": {
             "eft": "EFT",
             "check": "Check"
@@ -4281,6 +4282,71 @@
         "withdrawals": "Withdrawals",
         "taken": "taken",
         "left": "left"
+    },
+    "loanAutopay": {
+        "start": {
+            "label": "Start",
+            "titleStart": "Set Up Loan Autopay",
+            "titleManage": "Manage Loan Autopay"
+        },
+        "amount": {
+            "label": "Amount",
+            "paymentAmount": "Loan autopay amount",
+            "paymentFrequency": "Payment frequency",
+            "paymentStartDate": "Payment start date",
+            "nextPaymentDate": "Next payment date",
+            "casesLabel": "Select a case",
+            "missingFrequencyError": "Payment frequency is missing.",
+            "missingNextPaymentDateError": "Next payment date is missing.",
+            "invalidNextPaymentDateError": "Enter a valid next payment date.",
+            "missingStartDateError": "Payment start date is missing.",
+            "invalidStartDateError": "Enter a valid payment start date.",
+            "missingAmountError": "Loan autopay amount is missing.",
+            "invalidAmountError": "Loan autopay amount must be greater than $1.00",
+            "annually": "Annually",
+            "biAnnually": "Bi-Annually",
+            "monthly": "Monthly",
+            "quarterly": "Quarterly"
+        },
+        "payor": {
+            "label": "Payor"
+        },
+        "payment": {
+            "label": "Payment Method"
+        },
+        "summary": {
+            "amount": "Amount",
+            "current": "Current",
+            "frequency": "Frequency",
+            "paymentFrequency": "Payment frequency",
+            "label": "Summary",
+            "loanAutopayAmount": "Loan autopay amount",
+            "newAutopayDetails": "New loan autopay details",
+            "nextPaymentDate": "Next payment date",
+            "paymentStartDate": "Payment start date",
+            "payor": "Payor",
+            "submit": "Submit payment",
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "updateAutopay": "Update loan autopay",
+            "validationStatusLabel": "Validation status",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
+        },
+        "confirm": {
+            "cta": "Go to case",
+            "label": "Confirm",
+            "secondaryCta": "Close",
+            "subtitle": {
+                "0": "A",
+                "1": " loan repayment autopay",
+                "2": " request was received.",
+                "2NIGO": " request was received and a NIGO issue was created.",
+                "3": " It should complete overnight. ",
+                "4": " You can track the progress by viewing the case."
+            },
+            "title": "Got it!"
+        }
     },
     "loanPayment": {
         "amount": {
@@ -4696,7 +4762,8 @@
         "nextPaymentDate": "Next payment date",
         "payor": "Payor",
         "bankDetails": "Banking details",
-        "checkingEndingIn": "Checking ending in "
+        "checkingEndingIn": "Checking ending in ",
+        "new": "New"
     },
     "tasks": {
         "open": "Open",
@@ -4742,7 +4809,7 @@
             "add": "Add new banking details",
             "error": "Select a bank account to make this payment.",
             "heading": "Payment Method",
-            "label": "Bank details",
+            "label": "Select payment account",
             "bankDataCard": {
                 "accountNumber": "Account number",
                 "endingIn": "Ending in "

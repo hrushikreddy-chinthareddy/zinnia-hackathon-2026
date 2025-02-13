@@ -6,9 +6,10 @@ import { ParentPage } from '@deps/components/transaction-navigation-buttons/tran
 import PaymentStep, { PaymentStepSetState } from '@deps/components/workflows/payment-step/payment-step';
 import PayorStep, { PayorStepSetState } from '@deps/components/workflows/payor-step/payor-step';
 import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
+import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
-import { ACH, useUpdatePremiumAutopay } from '@deps/contexts/transactions/UpdatePremiumAutopayContext';
+import { ACH, useLoanAutopay } from '@deps/contexts/transactions/LoanAutopayContext';
 import { Processes } from '@deps/models/case/case';
 import { AmountType, ArrangementType, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { validateSystematicProgramUpdate } from '@deps/queries/api/bpm';
@@ -16,28 +17,31 @@ import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constan
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
-import Summary from './summary/summary';
+import ManageSummary from './summary/manage-summary';
+import SetUpSummary from './summary/set-up-summary';
 
-export type UpdatePremiumAutopayContainerProps = {
+export type LoanAutopayContainerProps = {
+    isSetUp?: boolean;
     policy: Policy;
 };
 
-const UpdatePremiumAutopayContainer = ({ policy }: UpdatePremiumAutopayContainerProps) => {
-    const { t } = useTranslation();
-    const { autopay, setAutopay } = useUpdatePremiumAutopay();
+const LoanAutopayContainer = ({ policy, isSetUp = false }: LoanAutopayContainerProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'loanAutopay' });
+    const { autopay, setAutopay } = useLoanAutopay();
 
-    const startLabel = t('autopay.start.label');
-    const amountLabel = t('autopay.amount.label');
-    const payorLabel = t('autopay.payor.label');
-    const paymentLabel = t('autopay.payment.label');
-    const summaryLabel = t('autopay.summary.label');
-    const confirmLabel = t('autopay.confirm.label');
+    const startLabel = t('start.label');
+    const amountLabel = t('amount.label');
+    const payorLabel = t('payor.label');
+    const paymentLabel = t('payment.label');
+    const summaryLabel = t('summary.label');
+    const confirmLabel = t('confirm.label');
 
     const validateCall = () => {
         const effectiveDateFormatted = dayjs(autopay.effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
-        const systematicProgram = policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
+        const systematicProgram = policy.systematicPrograms?.find(sp => sp.reason === Reason.LOANREPAYMENT);
         const arrangementId = systematicProgram?.arrangementId || '';
 
+        // TODO MG: helper function to get the body for these
         return validateSystematicProgramUpdate(policy.product?.planCode, policy.policyNumber || '', arrangementId, {
             caseId: autopay.caseId || '',
             correlationId: uuidV4(),
@@ -45,12 +49,12 @@ const UpdatePremiumAutopayContainer = ({ policy }: UpdatePremiumAutopayContainer
             reverseInitiator: autopay.reverseInitiator,
             systematicProgram: {
                 amount: Number(autopay.paymentAmount),
-                arrangementType: ArrangementType.PAYMENT,
+                arrangementType: ArrangementType.LOANREPAYMENT,
                 paymentForm: ACH,
                 amountType: AmountType.AMOUNT,
                 frequency: autopay.frequency,
-                startDate: effectiveDateFormatted,
-                endDate: systematicProgram?.endDate || dayjs().add(25, 'year').format(ZAHARA_API_DATE_FORMAT),
+                startDate: systematicProgram?.startDate,
+                endDate: systematicProgram?.endDate,
                 previousProgramDate: systematicProgram?.previousProgramDate,
                 nextProgramDate: effectiveDateFormatted,
                 party: {
@@ -66,13 +70,12 @@ const UpdatePremiumAutopayContainer = ({ policy }: UpdatePremiumAutopayContainer
             ariaLabel: startLabel,
             component: (
                 <StartStep
-                    parentPage={ParentPage.Premiums}
+                    parentPage={ParentPage.Loans}
                     policy={policy}
                     processType={Processes.SSW}
                     setState={setAutopay as StartStepSetState}
                     state={autopay}
-                    title={t('autopay.start.title')}
-                    subtitle={t('autopay.start.subtitle') as string}
+                    title={isSetUp ? t('start.titleStart') : t('start.titleManage')}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -81,7 +84,7 @@ const UpdatePremiumAutopayContainer = ({ policy }: UpdatePremiumAutopayContainer
         },
         {
             ariaLabel: amountLabel,
-            component: <Amount policy={policy} />,
+            component: <Amount isSetUp={isSetUp} policy={policy} />,
             screenReaderLabel: amountLabel,
             index: 1,
             text: amountLabel,
@@ -89,7 +92,7 @@ const UpdatePremiumAutopayContainer = ({ policy }: UpdatePremiumAutopayContainer
         {
             ariaLabel: payorLabel,
             component: (
-                <PayorStep parentPage={ParentPage.Premiums} policy={policy} setState={setAutopay as PayorStepSetState} state={autopay} />
+                <PayorStep parentPage={ParentPage.Loans} policy={policy} setState={setAutopay as PayorStepSetState} state={autopay} />
             ),
             screenReaderLabel: payorLabel,
             index: 2,
@@ -99,7 +102,7 @@ const UpdatePremiumAutopayContainer = ({ policy }: UpdatePremiumAutopayContainer
             ariaLabel: paymentLabel,
             component: (
                 <PaymentStep
-                    parentPage={ParentPage.Premiums}
+                    parentPage={ParentPage.Loans}
                     policy={policy}
                     setState={setAutopay as unknown as PaymentStepSetState}
                     state={autopay}
@@ -112,7 +115,7 @@ const UpdatePremiumAutopayContainer = ({ policy }: UpdatePremiumAutopayContainer
         },
         {
             ariaLabel: summaryLabel,
-            component: <Summary policy={policy} />,
+            component: isSetUp ? <SetUpSummary policy={policy} /> : <ManageSummary policy={policy} />,
             screenReaderLabel: summaryLabel,
             index: 4,
             text: summaryLabel,
@@ -129,4 +132,4 @@ const UpdatePremiumAutopayContainer = ({ policy }: UpdatePremiumAutopayContainer
     return <WorkflowContainer policy={policy} steps={steps} />;
 };
 
-export default UpdatePremiumAutopayContainer;
+export default LoanAutopayContainer;

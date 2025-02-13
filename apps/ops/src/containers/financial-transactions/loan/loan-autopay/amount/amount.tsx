@@ -1,7 +1,7 @@
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
@@ -9,7 +9,7 @@ import Radio, { RadioItem } from '@deps/components/radio/radio';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { useUpdatePremiumAutopay } from '@deps/contexts/transactions/UpdatePremiumAutopayContext';
+import { useLoanAutopay } from '@deps/contexts/transactions/LoanAutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
@@ -17,6 +17,7 @@ import { Policy, Frequency, Reason } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 interface AmountProps {
+    isSetUp?: boolean;
     policy: Policy;
 }
 
@@ -33,36 +34,36 @@ type Errors = {
     paymentAmount?: string;
 };
 
-export type ReverseInitiatorType = {
-    reverseInitiator: boolean;
-};
-
-const Amount = ({ policy }: AmountProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'autopay.amount' });
-    const { autopay, setAutopay } = useUpdatePremiumAutopay();
+const Amount = ({ policy, isSetUp = false }: AmountProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'loanAutopay.amount' });
+    const { autopay, setAutopay } = useLoanAutopay();
     const [errors, setErrors] = useState<Errors>({});
-    const { systematicPrograms, policyNumber, product } = policy;
-    const systematicProgramData = systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
+    const { systematicPrograms, policyDates, policyNumber, product } = policy;
+
+    const systematicProgramData = useMemo(() => systematicPrograms?.find(sp => sp.reason === Reason.LOANREPAYMENT), [systematicPrograms]);
     const { goToNext } = useWorkflow();
+    const dateLabel = useMemo(() => isSetUp ? t('paymentStartDate') : t('nextPaymentDate'), [isSetUp, t])
 
     useEffect(() => {
-        if (autopay.initValues === false) {
-            setAutopay(() => ({
-                ...autopay,
-                effectiveDate: String(dayjs(systematicProgramData?.nextProgramDate).format(NUMERIC_DATE_FORMAT)),
-                frequency: systematicProgramData?.frequency as Frequency,
-                initValues: true,
-                paymentAmount: systematicProgramData ? String(systematicProgramData.amount) : '',
-            }));
+        if (autopay.initValues) {
+            return;
         }
-    }, [autopay, setAutopay, systematicProgramData?.amount, systematicProgramData]);
+        const effectiveDate = systematicProgramData?.nextProgramDate || policyDates?.nextMonthiversaryDate;
+
+        setAutopay(() => ({
+            ...autopay,
+            effectiveDate: String(dayjs(effectiveDate).format(NUMERIC_DATE_FORMAT)),
+            frequency: systematicProgramData?.frequency as Frequency,
+            initValues: true,
+            paymentAmount: systematicProgramData?.amount ? String(systematicProgramData.amount) : '',
+        }));
+    }, [autopay, setAutopay, systematicProgramData, policyDates?.nextMonthiversaryDate, isSetUp]);
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const dateValue = event.target.value;
         const { effectiveDate, ...remainingErrors } = errors;
 
-        const today = new Date();
-        const isReverseInitiator = dayjs(dateValue, DATE_PICKER_FORMAT).isBefore(dayjs(today).format(ZAHARA_API_DATE_FORMAT));
+        const isReverseInitiator = dayjs(dateValue, DATE_PICKER_FORMAT).isBefore(dayjs().format(ZAHARA_API_DATE_FORMAT));
 
         setAutopay({ ...autopay, effectiveDate: String(dateValue), reverseInitiator: isReverseInitiator });
         setErrors(remainingErrors);
@@ -81,9 +82,9 @@ const Amount = ({ policy }: AmountProps) => {
         let errors: Errors = {};
 
         if (isNullEmptyOrUndefined(effectiveDate)) {
-            errors = { ...errors, effectiveDate: `${t('missingDateError')}` };
+            errors = { ...errors, effectiveDate: isSetUp ? `${t('missingStartDateError')}` : `${t('missingNextPaymentDateError')}` };
         } else if (!dayjs(effectiveDate, NUMERIC_DATE_FORMAT).isValid()) {
-            errors = { ...errors, effectiveDate: `${t('invalidDateError')}` };
+            errors = { ...errors, effectiveDate: isSetUp ? `${t('invalidStartDateError')}` : `${t('invalidNextPaymentDateError')}` };
         }
 
         if (!frequency) {
@@ -101,15 +102,17 @@ const Amount = ({ policy }: AmountProps) => {
         return Object.keys(errors).length === 0;
     };
 
-    // TODO MG: why is this async?
     const handleContinue = async () => {
-        if (validateFields(autopay.effectiveDate, autopay.frequency, String(autopay.paymentAmount))) {
-            goToNext();
-        } else return;
+        if (!validateFields(autopay.effectiveDate, autopay.frequency, String(autopay.paymentAmount))) {
+            return;
+        }
+
+        goToNext();
     };
 
     const handleFrequencyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFrequency = event.target.value as Frequency;
+
         setAutopay({ ...autopay, frequency: selectedFrequency });
     };
 
@@ -128,11 +131,11 @@ const Amount = ({ policy }: AmountProps) => {
                     handleContinue={handleContinue}
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
-                    parentPage={ParentPage.Premiums}
+                    parentPage={ParentPage.Loans}
                 />
             }
         >
-            <div className="mt-6 flex flex-col gap-10">
+            <div className="flex flex-col gap-6">
                 <Field
                     data-testid={t('paymentAmount') as string}
                     size={FieldSize.Small}
@@ -160,9 +163,9 @@ const Amount = ({ policy }: AmountProps) => {
                 {errors.frequency && <AssistiveText text={errors.frequency} variant={AssistiveTextVariant.Error} />}
 
                 <FieldDateSelect
-                    data-testid={t('nextPaymentDate') as string}
+                    data-testid={dateLabel}
                     className="flex max-w-[155px]"
-                    label={t('nextPaymentDate') as string}
+                    label={dateLabel}
                     value={String(autopay.effectiveDate)}
                     onChange={handleDateChange}
                     size={FieldSize.Small}

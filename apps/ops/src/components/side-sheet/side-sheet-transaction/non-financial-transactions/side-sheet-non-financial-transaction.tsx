@@ -61,7 +61,6 @@ const changeTable = (vals: { updated: ReactNode; original: ReactNode; label: str
     );
 };
 
-// TODO MG: move this somewhere party related
 const getAddressChanges = (policy: Policy, transaction: Transaction, t: TFunction): ReactNode => {
     if (!policy || !transaction) {
         return null;

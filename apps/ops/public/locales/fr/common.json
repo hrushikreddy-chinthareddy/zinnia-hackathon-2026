@@ -68,6 +68,7 @@
             "formData": "Données du formulaire",
             "annuitization": "Annuitisation",
             "dashboard": "Statistiques du dossier",
+            "loanAutopay": "Paiement automatique du prêt",
             "loanPayment": "Paiement de prêts",
             "activity": "Activité"
         },
@@ -4042,7 +4043,7 @@
         "federalTax": "Impôt fédéral",
         "stateTax": "Taxe d'État ({{ state }})",
         "totalPayment": "Paiement total",
-        "paymentMethod": "Mode de paiement",
+        "paymentMethod": "Mode de Paiement",
         "paymentType": {
             "eft": "EFT",
             "check": "Chèque"
@@ -4256,6 +4257,71 @@
         "taken": "pris",
         "left": "restants"
     },
+    "loanAutopay": {
+        "start": {
+            "label": "Commencer",
+            "titleStart": "Configurer le paiement automatique du prêt",
+            "titleManage": "Gérer le paiement automatique du prêt"
+        },
+        "amount": {
+            "label": "Montant",
+            "paymentAmount": "Montant de paiement automatique du prêt",
+            "paymentFrequency": "Fréquence de paiement",
+            "paymentStartDate": "Date de début de paiement",
+            "nextPaymentDate": "Date du prochain paiement",
+            "casesLabel": "Sélectionnez un cas",
+            "missingFrequencyError": "La fréquence de paiement est manquante.",
+            "missingNextPaymentDateError": "La date du prochain paiement est manquante.",
+            "invalidNextPaymentDateError": "Entrez une date valide pour le prochain paiement.",
+            "missingStartDateError": "La date de début de paiement est manquante.",
+            "invalidStartDateError": "Entrez une date de début de paiement valide.",
+            "missingAmountError": "Le montant de paiement automatique du prêt est manquant.",
+            "invalidAmountError": "Le montant de paiement automatique du prêt doit être supérieur à 1,00 $",
+            "annually": "Annuellement",
+            "biAnnually": "Semi-annuellement",
+            "monthly": "Mensuellement",
+            "quarterly": "Trimestriellement"
+        },
+        "payor": {
+            "label": "Payeur"
+        },
+        "payment": {
+            "label": "Méthode de paiement"
+        },
+        "summary": {
+            "amount": "Montant",
+            "current": "Actuel",
+            "frequency": "Fréquence",
+            "paymentFrequency": "Fréquence des paiements",
+            "label": "Résumé",
+            "loanAutopayAmount": "Montant de paiement automatique de prêt",
+            "newAutopayDetails": "Nouveaux détails du paiement automatique du prêt",
+            "nextPaymentDate": "Date du prochain paiement",
+            "paymentStartDate": "Date de début du paiement",
+            "payor": "Payeur",
+            "submit": "Soumettre le paiement",
+            "status200subtitle": "Tout est bon! Assurez-vous de revoir vos informations avant de soumettre.",
+            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette politique. Veuillez revoir l'erreur ci-dessous.",
+            "updateAutopay": "Mettre à jour le paiement automatique du prêt",
+            "validationStatusLabel": "Statut de validation",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée fasse un suivi.",
+            "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO."
+        },
+        "confirm": {
+            "cta": "Aller au dossier",
+            "label": "Confirmer",
+            "secondaryCta": "Fermer",
+            "subtitle": {
+                "0": "Une",
+                "1": " demande de paiement automatique de remboursement de prêt",
+                "2": " a été reçue.",
+                "2NIGO": " la demande a été reçue et un problème NIGO a été créé.",
+                "3": " Elle devrait être complétée pendant la nuit.",
+                "4": " Vous pouvez suivre la progression en consultant le dossier."
+            },
+            "title": "Compris!"
+        }
+    },    
     "loanPayment": {
         "amount": {
             "label": "Montant",
@@ -4460,6 +4526,7 @@
             "invalidDateError": "Saisissez une prochaine date de paiement valide.",
             "missingAmountError": "Le montant du prélèvement automatique de prime est manquant.",
             "invalidAmountError": "Le montant du prélèvement automatique de prime doit être supérieur à 1,00 $",
+            "missingFrequencyError": "La fréquence de paiement est manquante.",
             "annually": "Annuellement",
             "biAnnually": "Bi-Annuellement",
             "monthly": "Mensuel",
@@ -4669,7 +4736,8 @@
         "nextPaymentDate": "Prochaine date de paiement",
         "payor": "Payeur",
         "bankDetails": "Informations Bancaires",
-        "checkingEndingIn": "Vérification se terminant par "
+        "checkingEndingIn": "Vérification se terminant par ",
+        "new": "Nouveau"
     },
     "tasks": {
         "open": "Ouvert",
@@ -4714,7 +4782,7 @@
             "add": "Ajouter de nouveaux détails bancaires",
             "error": "Sélectionnez un compte bancaire pour effectuer ce paiement.",
             "heading": "Méthode de paiement",
-            "label": "Coordonnées bancaires",
+            "label": "Sélectionnez le compte de paiement",
             "bankDataCard": {
                 "accountNumber": "Numéro de compte",
                 "endingIn": "Se terminant par "

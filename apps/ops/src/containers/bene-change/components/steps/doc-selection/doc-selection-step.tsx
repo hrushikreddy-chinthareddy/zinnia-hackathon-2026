@@ -23,7 +23,7 @@ const DocSelectionStep = ({ policy }: DocSelectionStepProps) => {
                 setState={setFormData as StartStepSetState}
                 state={formData}
                 title={t('start.title')}
-                subtitle={t('start.subtitle')}
+                subtitle={t('start.subtitle') as string}
                 processType={Processes.BeneficiaryChange}
             />
         </>

@@ -16,7 +16,6 @@ import { TransactionSideSheetValues } from './types';
 import { getFreeLookCancellationSideSheetValues, getWithdrawalSideSheetValues } from './withdrawal/side-sheet-withdrawal.helper';
 import { WithdrawalSideSheetValues } from './withdrawal/types';
 
-// TODO MG: move somewhere payment specific and consolidate with whats used in history-event-card.helper
 export const getPaymentMethod = (policy: Policy, payors: TransactionPayor[], t: TFunction): string => {
     const [paymentMethod] = getPaymentMethods(policy, payors) ?? [];
 

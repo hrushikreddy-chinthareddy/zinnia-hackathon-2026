@@ -9,7 +9,6 @@ import { calculateProcessDate, calculateProcessedAmount } from './side-sheet-new
 import { NewLoanTransactionSideSheetValues } from './types';
 import { PayeePaymentDetails } from '../types';
 
-// TODO MG: consolidate with withdrawals getPayeePaymentDetails
 const getLoanPayeePaymentDetails = (policy: Policy, transaction: Transaction): PayeePaymentDetails[] => {
     const results: PayeePaymentDetails[] = [];
 

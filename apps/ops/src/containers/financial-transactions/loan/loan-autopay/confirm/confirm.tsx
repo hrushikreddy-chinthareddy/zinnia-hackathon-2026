@@ -7,27 +7,24 @@ import { v4 as uuidV4 } from 'uuid';
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
-import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
-import { ACH, useUpdatePremiumAutopay } from '@deps/contexts/transactions/UpdatePremiumAutopayContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { getFrequency } from '@deps/helpers/systematic-program.helper';
+import { TranslationFiles } from '@deps/config/translations';
+import { ACH, useLoanAutopay } from '@deps/contexts/transactions/LoanAutopayContext';
 import { AmountType, ArrangementType, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitSystematicProgramUpdate } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
-import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
-import { DEFAULT_EXTENDED_DAY_DATE_FORMAT, NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 interface ConfirmProps {
     policy: Policy;
 }
 
 const Confirm = ({ policy }: ConfirmProps) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'loanAutopay.confirm' });
     const { t: defaultT } = useTranslation();
 
     const router = useRouter();
-    const { autopay } = useUpdatePremiumAutopay();
+    const { autopay } = useLoanAutopay();
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -38,15 +35,15 @@ const Confirm = ({ policy }: ConfirmProps) => {
         effectiveDate,
         paymentBankId,
         payorPartyId,
-        payorFullName,
         validationResponse,
         reverseInitiator,
     } = autopay;
     const { policyNumber, product } = policy;
+    const [newCaseId, setNewCaseId] = useState<string | undefined>(caseId);
 
     const effectiveDateFormatted = dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
     const systematicProgram = useMemo(
-        () => policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM),
+        () => policy.systematicPrograms?.find(sp => sp.reason === Reason.LOANREPAYMENT),
         [policy.systematicPrograms]
     );
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
@@ -61,12 +58,12 @@ const Confirm = ({ policy }: ConfirmProps) => {
             reverseInitiator: reverseInitiator,
             systematicProgram: {
                 amount: Number(paymentAmount),
-                arrangementType: ArrangementType.PAYMENT,
+                arrangementType: ArrangementType.LOANREPAYMENT,
                 paymentForm: ACH,
                 amountType: AmountType.AMOUNT,
                 frequency,
-                startDate: effectiveDateFormatted,
-                endDate: systematicProgram?.endDate || dayjs().add(25, 'year').format(ZAHARA_API_DATE_FORMAT),
+                startDate: systematicProgram?.startDate,
+                endDate: systematicProgram?.endDate,
                 previousProgramDate: systematicProgram?.previousProgramDate,
                 nextProgramDate: effectiveDateFormatted,
                 party: {
@@ -78,23 +75,12 @@ const Confirm = ({ policy }: ConfirmProps) => {
 
         if (response.status !== StatusCode.Accepted) {
             setSubmitFailed(true);
+        } else {
+            setNewCaseId(response?.data?.caseId);
         }
 
         setIsLoading(false);
-    }, [
-        systematicProgram?.arrangementId,
-        systematicProgram?.endDate,
-        systematicProgram?.previousProgramDate,
-        product?.planCode,
-        policyNumber,
-        caseId,
-        effectiveDateFormatted,
-        reverseInitiator,
-        paymentAmount,
-        frequency,
-        paymentBankId,
-        payorPartyId,
-    ]);
+    }, [systematicProgram?.arrangementId, systematicProgram?.startDate, systematicProgram?.endDate, systematicProgram?.previousProgramDate, product?.planCode, policyNumber, caseId, reverseInitiator, paymentAmount, frequency, effectiveDateFormatted, paymentBankId, payorPartyId]);
 
     useEffect(() => {
         submit();
@@ -111,10 +97,10 @@ const Confirm = ({ policy }: ConfirmProps) => {
     if (submitFailed) {
         return (
             <ApiErrorCard
-                leaveRoute={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/premiums`}
+                leaveRoute={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans`}
                 submit={{
                     action: submit,
-                    text: defaultT('workflows.apiErrorCard.submitWithdrawal'),
+                    text: defaultT('workflows.apiErrorCard.submitPayment'),
                 }}
             />
         );
@@ -125,57 +111,62 @@ const Confirm = ({ policy }: ConfirmProps) => {
             <>
                 {validationSucceeded ? (
                     <CardInfo
-                        cta={{
+                        cta={newCaseId ? {
                             action: () => {
-                                router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/activity/transactions`);
+                                router.push(`/cases/${newCaseId}/progress`);
                             },
-                            text: t('autopay.confirm.cta'),
-                        }}
-                        icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
+                            text: t('cta'),
+                        } : undefined}
                         secondaryCta={
                             <NavElement
-                                aria-label={t('autopay.confirm.secondaryCta') as string}
-                                onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/premiums`)}
+                                aria-label={t('secondaryCta') as string}
+                                onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans`)}
                                 size={NavElementSize.Small}
                                 type={NavElementType.Button}
                                 variant={NavElementVariant.Default}
                             >
-                                {t('autopay.confirm.secondaryCta')}
+                                {t('secondaryCta')}
                             </NavElement>
                         }
                         subtitle={
                             <>
-                                {t('autopay.confirm.subtitle.0')} <PiiWrapper className="font-bold">{payorFullName}</PiiWrapper>
-                                {t('autopay.confirm.subtitle.1')}
-                                <span className="font-bold"> {getFrequency(frequency, t)}</span> {t('autopay.confirm.subtitle.2')}{' '}
-                                <span className="font-bold">{numberFormatify(paymentAmount)} </span>
-                                {t('autopay.confirm.subtitle.3')}{' '}
-                                <span className="font-bold">
-                                    {dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(DEFAULT_EXTENDED_DAY_DATE_FORMAT)}.
-                                </span>
+                                {t('subtitle.0')}
+                                <span className="font-bold">{t('subtitle.1')}</span>
+                                {t('subtitle.2')}
+                                {t('subtitle.3')}
+                                {t('subtitle.4')}
                             </>
                         }
-                        title={t('autopay.confirm.title')}
+                        title={t('title')}
                     />
                 ) : (
                     <CardInfo
-                        cta={{
+                        cta={newCaseId ? {
                             action: () => {
-                                router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/premiums`);
+                                router.push(`/cases/${newCaseId}/progress`);
                             },
-                            text: t('autopay.confirm.secondaryCta'),
-                        }}
-                        icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
+                            text: t('cta'),
+                        } : undefined}
+                        secondaryCta={
+                            <NavElement
+                                aria-label={t('secondaryCta') as string}
+                                onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans`)}
+                                size={NavElementSize.Small}
+                                type={NavElementType.Button}
+                                variant={NavElementVariant.Default}
+                            >
+                                {t('secondaryCta')}
+                            </NavElement>
+                        }
                         subtitle={
                             <>
-                                <PiiWrapper className="font-bold">
-                                    {payorFullName}'s {numberFormatify(paymentAmount)}
-                                </PiiWrapper>
-                                {t('autopay.confirm.subtitle.NIGO')}
-                                <span className="font-bold">{t('autopay.confirm.subtitle.NIGO1')}</span>
+                                {t('subtitle.0')}
+                                <span className="font-bold">{t('subtitle.1')}</span>
+                                {t('subtitle.2NIGO')}
+                                {t('subtitle.4')}
                             </>
                         }
-                        title={t('autopay.confirm.title')}
+                        title={t('title')}
                     />
                 )}
             </>
