@@ -1,4 +1,4 @@
-import { formatWithHash } from "@zinnia/utils/src/strings";
+import { formatWithHash } from "@zinnia/utils";
 import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 import React, { useEffect } from "react";

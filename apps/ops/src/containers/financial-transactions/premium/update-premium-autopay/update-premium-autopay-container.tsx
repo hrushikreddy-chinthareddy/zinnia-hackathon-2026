@@ -41,7 +41,7 @@ const UpdatePremiumAutopayContainer = ({ policy }: UpdatePremiumAutopayContainer
         return validateSystematicProgramUpdate(policy.product?.planCode, policy.policyNumber || '', arrangementId, {
             caseId: autopay.caseId || '',
             correlationId: uuidV4(),
-            effectiveDate: effectiveDateFormatted,
+            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
             reverseInitiator: autopay.reverseInitiator,
             systematicProgram: {
                 amount: Number(autopay.paymentAmount),

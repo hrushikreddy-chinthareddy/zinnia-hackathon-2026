@@ -5,17 +5,10 @@ import { SideSheetProps } from '@zinnia/bloom/components';
 import { SideSheet } from '@zinnia/bloom/components';
 
 import { standardDateMonthDayYear, toTitleCase } from '@zinnia/utils';
-import {
-  Appointment,
-  AppointmentStatus,
-  LineOfAuthority,
-} from '../../../types/types';
+import { Appointment, AppointmentStatus } from '../../../types';
 export interface AppointmentSidesheetProps
   extends Omit<SideSheetProps, 'children' | 'header'> {
-  data: {
-    appointment: Appointment;
-    lineOfAuthorities: LineOfAuthority[];
-  };
+  appointment: Appointment;
 }
 
 const getBadgeVariant = (status: AppointmentStatus): BadgeVariant => {
@@ -33,13 +26,12 @@ const getBadgeVariant = (status: AppointmentStatus): BadgeVariant => {
 
 export const AppointmentSidesheet = ({
   trigger,
-  data,
+  appointment,
   ...props
 }: AppointmentSidesheetProps) => {
-  const { appointment, lineOfAuthorities } = data;
   return (
     <SideSheet header={appointment.licenseNumber} trigger={trigger} {...props}>
-      <div className="pom_content-wrapper">
+      <div className="pom_content-wrapper typography-content-body-sm">
         <div>
           <Label>Status</Label>
           <Badge
@@ -70,7 +62,7 @@ export const AppointmentSidesheet = ({
         <div>
           <Label>Lines of authority</Label>
           <ol className="pom_ordered-list">
-            {lineOfAuthorities.map((lineOfAuthority) => (
+            {appointment.lineOfAuthorities.map((lineOfAuthority) => (
               <li
                 key={lineOfAuthority.type}
                 className="typography-content-body-sm"

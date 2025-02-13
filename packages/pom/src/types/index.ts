@@ -1,3 +1,5 @@
+import type TrainingEducation from "../views/training-education/TrainingEducation";
+
 // @TODO: this is temporary, until we import api types
 export enum ProducerType {
   INDIVIDUAL = 'individual',
@@ -12,6 +14,7 @@ export enum AppointmentStatus {
 }
 
 export interface Appointment {
+  id: string;
   carrier: string;
   state: string;
   resident: string;
@@ -19,6 +22,7 @@ export interface Appointment {
   effectiveDate: string;
   company: string;
   licenseNumber: string;
+  lineOfAuthorities: LineOfAuthority[];
 }
 
 export interface License {
@@ -48,3 +52,6 @@ export interface LineOfAuthority {
   effectiveDate: string;
   expiryDate: string;
 }
+
+
+export { TrainingEducation };

@@ -3284,7 +3284,7 @@
             "taskDetails": {
                 "purchaseDocumentMatching": "As part of the document matching process for the purchase document, one or more documents require review and confirmation to ensure proper alignment before proceeding with contract issuance",
                 "suitabilityReview": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
-                "newbusinessAgentNigo": "One or more Not in Good Order (NIGO) issues were identified during the review of the {{caseType}} application. These issues must be reviewed and resolved to ensure the application meets all requirements before proceeding with contract issuance"
+                "nbAgentNigo": "One or more Not in Good Order (NIGO) issues were identified during the review of the {{caseType}} application. These issues must be reviewed and resolved to ensure the application meets all requirements before proceeding with contract issuance"
             }
         },
         "suitability": {
@@ -5062,7 +5062,7 @@
             "secondaryCta": "Back to home"
         }
     },
-    "newbusinessAgentNigo": {
+    "nbAgentNigo": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review Agent Issues was submitted.",

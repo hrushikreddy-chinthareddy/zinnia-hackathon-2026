@@ -10,11 +10,13 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { default as styles } from './Appointments.module.css';
-import { Appointment, AppointmentStatus } from '../../../types/types';
+import { Appointment, AppointmentStatus } from '../../../types';
+import { AppointmentSidesheet } from './AppointmentSidesheet';
 
 // @TODO: move this once we properly set up data structures for pom
 const appointments: Appointment[] = [
   {
+    id: '1',
     carrier: 'AAA Insurance',
     state: 'CA',
     resident: 'Yes',
@@ -22,8 +24,25 @@ const appointments: Appointment[] = [
     effectiveDate: '01/01/2023',
     company: 'PBC Health Benefits Society',
     licenseNumber: '0012149A',
+    lineOfAuthorities: [
+      {
+        type: 'lineOfAuthority1',
+        label: 'Line of Authority 1',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+      {
+        type: 'lineOfAuthority2',
+        label: 'Line of Authority 2',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+    ],
   },
   {
+    id: '2',
     carrier: 'PBC Health Benefits Society',
     state: 'AL',
     resident: 'Yes',
@@ -31,8 +50,25 @@ const appointments: Appointment[] = [
     effectiveDate: '01/01/2023',
     company: 'PBC Health Benefits Society',
     licenseNumber: '0012149A',
+    lineOfAuthorities: [
+      {
+        type: 'lineOfAuthority1',
+        label: 'Line of Authority 1',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+      {
+        type: 'lineOfAuthority2',
+        label: 'Line of Authority 2',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+    ],
   },
   {
+    id: '3',
     carrier: 'PBC Health Benefits Society',
     state: 'AZ',
     resident: 'Yes',
@@ -40,8 +76,25 @@ const appointments: Appointment[] = [
     effectiveDate: '01/01/2023',
     company: 'AAA Insurance',
     licenseNumber: '128815C',
+    lineOfAuthorities: [
+      {
+        type: 'lineOfAuthority1',
+        label: 'Line of Authority 1',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+      {
+        type: 'lineOfAuthority2',
+        label: 'Line of Authority 2',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+    ],
   },
   {
+    id: '4',
     carrier: 'PBC Health Benefits Society',
     state: 'UT',
     resident: 'Yes',
@@ -49,8 +102,25 @@ const appointments: Appointment[] = [
     effectiveDate: '01/01/2023',
     company: 'PBC Health Benefits Society',
     licenseNumber: '0012149A',
+    lineOfAuthorities: [
+      {
+        type: 'lineOfAuthority1',
+        label: 'Line of Authority 1',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+      {
+        type: 'lineOfAuthority2',
+        label: 'Line of Authority 2',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+    ],
   },
   {
+    id: '5',
     carrier: 'PBC Health Benefits Society',
     state: 'UT',
     resident: 'Yes',
@@ -58,6 +128,22 @@ const appointments: Appointment[] = [
     effectiveDate: '01/01/2023',
     company: 'PBC Health Benefits Society',
     licenseNumber: '0012149A',
+    lineOfAuthorities: [
+      {
+        type: 'lineOfAuthority1',
+        label: 'Line of Authority 1',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+      {
+        type: 'lineOfAuthority2',
+        label: 'Line of Authority 2',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+    ],
   },
 ];
 
@@ -99,13 +185,21 @@ const Appointments = () => {
         </TableHeader>
         <TableBody>
           {appointments.map((appointment) => (
-            <TableRow key={appointment.carrier}>
+            <TableRow key={appointment.id}>
               <TableCell>
-                <span
-                  className={clsx(styles.cta, 'typography-nav-links-sm-inline')}
-                >
-                  {appointment.carrier}
-                </span>
+                <AppointmentSidesheet
+                  trigger={
+                    <span
+                      className={clsx(
+                        styles.cta,
+                        'typography-nav-links-sm-inline'
+                      )}
+                    >
+                      {appointment.carrier}
+                    </span>
+                  }
+                  appointment={appointment}
+                ></AppointmentSidesheet>
               </TableCell>
               <TableCell>{appointment.state}</TableCell>
               <TableCell>{appointment.resident}</TableCell>

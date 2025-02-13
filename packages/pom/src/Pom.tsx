@@ -6,7 +6,7 @@ import {
   TabList,
   TabTrigger,
 } from '@zinnia/bloom/components';
-import { ProducerType } from './types/types';
+import { ProducerType } from './types';
 import { CardHeader } from './components/card-header/CardHeader';
 import clsx from 'clsx';
 import styles from './Pom.module.css';
@@ -14,6 +14,8 @@ import { HashRouter, Route, Routes, useParams } from 'react-router';
 import './styles/globals.css';
 import EntityInformation from './views/entity-information/EntityInformation';
 import LicensesAppointments from './views/licenses-appointments/LicensesAppointments';
+import TrainingEducation from './views/training-education/TrainingEducation';
+import React from 'react';
 
 export const Pom = ({
   translations,
@@ -63,7 +65,7 @@ const Producer = ({ producerType }: { producerType: ProducerType }) => {
       label: 'Training and Education',
       icon: IconType.BOOKMARK_ALT,
       value: 'training',
-      content: <div>Section 3</div>,
+      content: <TrainingEducation />,
     },
     {
       label: 'Hierarchies',
@@ -94,11 +96,36 @@ const Producer = ({ producerType }: { producerType: ProducerType }) => {
           </TabList>
           {/* TODO: why is this letting us push to the repo, shouldn't linting catch this? */}
           {/* TODO: fix this type */}
-          {tabs.map(({ value, content }: { value: string; content: any }) => (
-            <TabContent key={value} value={value}>
-              {content}
-            </TabContent>
-          ))}
+          {tabs.map(
+            ({
+              value,
+              content,
+            }: {
+              value: string;
+              content: React.ReactNode;
+            }) => (
+              <TabContent
+                className={styles.tabContent}
+                key={value}
+                value={value}
+              >
+                {content}
+              </TabContent>
+            )
+          )}
+          {tabs.map(
+            ({
+              value,
+              content,
+            }: {
+              value: string;
+              content: React.ReactNode;
+            }) => (
+              <TabContent key={value} value={value}>
+                {content}
+              </TabContent>
+            )
+          )}
         </TabGroup>
       </div>
     </div>
