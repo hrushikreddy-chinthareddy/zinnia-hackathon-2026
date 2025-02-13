@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
@@ -11,6 +10,7 @@ import {
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
+import { ReasonDate } from '@deps/components/otp-withdrawal-form/form-restriction/reason-date';
 import {
     SignatureFieldNames,
     SignatureBonusFields,
@@ -45,11 +45,9 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
-import { ReasonDate } from '@deps/components/otp-withdrawal-form/form-restriction/reason-date';
 
 export default function getRslnConfig(t: TFunction) {
     const formValidation = useCallback(
@@ -101,13 +99,8 @@ export default function getRslnConfig(t: TFunction) {
         formDisbursement,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
-        const sswProgramStartDate = formProgram?.programFrequency?.beginDate?.text || null;
         const sswType = formProgram?.programSubType?.text || '';
         const funds = formDistribution?.funds.filter(fund => !!fund.amount.text);
-
-        if (sswProgramStartDate && [29, 30, 31].includes(dayjs(sswProgramStartDate, ZAHARA_API_DATE_FORMAT).get('D'))) {
-            errors['systematicStartDate'] = t('sswProgram.warnings.systematicStartDate', { startDate: 1, endDate: 28 });
-        }
 
         if (sswType === SSWType.PercentOfAmountValue && funds?.length === 0) {
             errors['specifyFundsRequired'] = t('sswProgram.warnings.specifyFundsRequired');
