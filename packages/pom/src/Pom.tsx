@@ -94,8 +94,6 @@ const Producer = ({ producerType }: { producerType: ProducerType }) => {
               </TabTrigger>
             ))}
           </TabList>
-          {/* TODO: why is this letting us push to the repo, shouldn't linting catch this? */}
-          {/* TODO: fix this type */}
           {tabs.map(
             ({
               value,
@@ -109,19 +107,6 @@ const Producer = ({ producerType }: { producerType: ProducerType }) => {
                 key={value}
                 value={value}
               >
-                {content}
-              </TabContent>
-            )
-          )}
-          {tabs.map(
-            ({
-              value,
-              content,
-            }: {
-              value: string;
-              content: React.ReactNode;
-            }) => (
-              <TabContent key={value} value={value}>
                 {content}
               </TabContent>
             )
