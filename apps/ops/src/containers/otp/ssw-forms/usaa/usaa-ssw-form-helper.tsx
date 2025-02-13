@@ -209,11 +209,6 @@ export default function getUsaaConfig(t: TFunction) {
             value: SSWType.AnnualFree,
             generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.AnnualFree),
         },
-        {
-            label: t('sswProgram.sswOptions.percentageOfAccountValue'),
-            value: SSWType.PercentOfAmountValue,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.PercentOfAmountValue),
-        },
     ];
 
     const fundWithdrawnMethodOptions = [
