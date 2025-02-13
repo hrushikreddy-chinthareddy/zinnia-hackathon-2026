@@ -22,12 +22,14 @@ const statusMap: Partial<Record<ChipStatusText, string>> = {
     [Statuses.Completed]: 'completed',
     [Statuses.Canceled]: 'canceled',
     [Statuses.NotStarted]: 'notStarted',
+    [Statuses.Withdrawn]: 'withdrawn',
 };
 
 const variantMap: Partial<Record<ChipStatusText, BadgeVariant>> = {
     [Statuses.Canceled]: BadgeVariant.WARNING,
     [Statuses.Exception]: BadgeVariant.ERROR,
     [Statuses.InProgress]: BadgeVariant.INFO,
+    [Statuses.Withdrawn]: BadgeVariant.DEFAULT,
     [TransactionStatus.Canceled]: BadgeVariant.ERROR,
     [TransactionStatus.Reversed]: BadgeVariant.ERROR,
 };

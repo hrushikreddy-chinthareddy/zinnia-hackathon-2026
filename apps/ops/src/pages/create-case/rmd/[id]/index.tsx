@@ -12,9 +12,17 @@ import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawa
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import DlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/dlic/dlic-rmd-form';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
+import GdmnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/gdmn/gdmn-rmd-form';
+import GlcoRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/glco-rmd-form';
 import MassMutualRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/mm-rmd-form';
+import NasuRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/nasu/nasu-rmd-form';
+import PrdnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/prdn/prdn-rmd-form';
+import RslnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/rsln/rsln-rmd-form';
 import SbgcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/sbgc-rmd-form';
+import UlpcRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/ulpc/ulpc-rmd-form';
+import UsaaRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/usaa/usaa-rmd-form';
 import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/form-controls';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
@@ -33,7 +41,7 @@ import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
-import { getDocumentSSR } from '@deps/queries/api/documents';
+import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
@@ -69,6 +77,22 @@ const determineFormToRender = (clientId: string, qualType: QualTypes | ''): Reac
             return <MassMutualRmdWithdrawalForm qualType={qualType} />;
         case Carrier.SBGC:
             return <SbgcRmdWithdrawalForm />;
+        case Carrier.GLCO:
+            return <GlcoRmdWithdrawalForm />;
+        case Carrier.ULPC:
+            return <UlpcRmdWithdrawalForm />;
+        case Carrier.NASU:
+            return <NasuRmdWithdrawalForm />;
+        case Carrier.PRDN:
+            return <PrdnRmdWithdrawalForm />;
+        case Carrier.RSLN:
+            return <RslnRmdWithdrawalForm />;
+        case Carrier.GDMN:
+            return <GdmnRmdWithdrawalForm />;
+        case Carrier.DLIC:
+            return <DlicRmdWithdrawalForm />;
+        case Carrier.USAA:
+            return <UsaaRmdWithdrawalForm />;
         default:
             console.error('determineFormToRender::unsupported clientId', clientId);
             return null;
@@ -248,7 +272,7 @@ export const getServerSideProps = withPageAuthRequired({
 
         const [translations, document] = await Promise.all([
             serverSideTranslations(locale, [TranslationFiles.COMMON]),
-            getDocumentSSR(documentNumber, DocumentType.Rmd, clientId.toUpperCase(), accessToken),
+            getDocumentV2SSR(documentNumber, DocumentType.Rmd, clientId.toUpperCase(), accessToken),
         ]);
 
         if (!document?.contract) {

@@ -4,8 +4,11 @@ import { logError } from '@/utils/logging/server-logging';
 import { HttpRequest } from './http';
 
 /**
- * This class is used to hit endpoints that user specific tokens wouldn't have access to.
- * For instance, the fund information API.
+ * This class is used to hit endpoints that user specific tokens wouldn't have access to on the Zinnia API.
+ * For instance, the fund information API. This uses the machine to machine auth token which
+ * means that the machine (server) is communicating with the auth0 management api.
+ * Read more [here](https://auth0.com/blog/using-m2m-authorization/)
+ * Specifically: https://auth0.com/blog/using-m2m-authorization/#:~:text=The%20key%20aspect,don%27t%20make%20sense.
  *
  * WARNING: Use sparingly. This class should only be used if you need data that is not
  * provided by a user token.

@@ -3,9 +3,14 @@ import { useCallback, useState } from 'react';
 import { CaseType } from '@deps/models/case/case';
 import { PolicyDocuments, PolicyDocument } from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';
-import { getPolicyTypeDocs } from '@deps/queries/api/documents';
+import { getPolicyTypeDocsV2 } from '@deps/queries/api/documents';
 
-export const useGetPolicyTypeDocs = (id: string, clientCode: string, docType: string, documentNumber: string): [boolean, () => void, any, any] => {
+export const useGetPolicyTypeDocs = (
+    id: string,
+    clientCode: string,
+    docType: string,
+    documentNumber: string
+): [boolean, () => void, any, any] => {
     const [loading, setLoading] = useState(false);
     const [workingDocument, setWorkingDocument] = useState<PolicyDocument>();
     const [relatedDocument, setRelatedDocument] = useState<PolicyDocument[]>();
@@ -15,12 +20,16 @@ export const useGetPolicyTypeDocs = (id: string, clientCode: string, docType: st
         try {
             setLoading(true);
 
-            const response = await getPolicyTypeDocs(id, clientCode);
+            const response = await getPolicyTypeDocsV2(id, clientCode);
             const items = (response?.data as PolicyDocuments)?.items || [];
 
             if (items) {
-                const workingDoc = items.find(item => item.documentNumber === documentNumber && item.documentType.toLowerCase() === docType.toLowerCase());
-                const relatedDoc = items.filter(item => item.documentNumber !== documentNumber && item.documentType.toLowerCase() === docType.toLowerCase());
+                const workingDoc = items.find(
+                    item => item.documentNumber === documentNumber && item.documentType.toLowerCase() === docType.toLowerCase()
+                );
+                const relatedDoc = items.filter(
+                    item => item.documentNumber !== documentNumber
+                );
                 setWorkingDocument(workingDoc);
                 setRelatedDocument(relatedDoc);
             }
@@ -44,20 +53,22 @@ export const getWithdrawalFormData = (carrier: string, formSubtype: string | und
                     formType: `${carrier}_WD_REDEMPTION_DIGITAL_FORM`,
                     formId: null,
                     formNumber: '',
-                }
+                },
             };
             break;
         case Carrier.FLIC:
         case Carrier.NASU:
         case Carrier.RSLN:
         case Carrier.GDMN:
+        case Carrier.ULPC:
+        case Carrier.GLCO:
             formData = {
                 formExtName: `${carrier}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
                 metaData: {
                     formType: `${carrier}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
                     formId: null,
                     formNumber: '',
-                }
+                },
             };
             break;
         case Carrier.DLIC:
@@ -67,7 +78,7 @@ export const getWithdrawalFormData = (carrier: string, formSubtype: string | und
                     formType: `${carrier}_REDEMPTION_DIGITAL_FORM`,
                     formId: null,
                     formNumber: '',
-                }
+                },
             };
             break;
         case Carrier.MASS:

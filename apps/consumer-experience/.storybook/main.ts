@@ -19,7 +19,7 @@ const config: StorybookConfig = {
     options: {},
   },
 
-  staticDirs: ['../public', '../src/app/styles'],
+  staticDirs: ['../public', '../src/app/styles', './assets'],
 
   docs: {},
 

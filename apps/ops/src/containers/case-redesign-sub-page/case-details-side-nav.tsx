@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/documents-content';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { toTitleCase } from '@deps/helpers/string.helper';
@@ -29,7 +29,7 @@ const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier }: CaseDetailsSideN
             : `/documents/${CaseAdditionalDetails[CaseAdditionalDataKeys.formId]}`;
 
     return (
-        <div className="flex w-full flex-col border-b-2 border-gray-100 p-4 md:px-8">
+        <div className="flex w-full flex-col border-t-2 border-gray-100 p-4">
             <Title className="mb-2" variant={TitleVariant.SubTitle}>
                 {t('sidenav.navButtons.caseDetails')}
             </Title>

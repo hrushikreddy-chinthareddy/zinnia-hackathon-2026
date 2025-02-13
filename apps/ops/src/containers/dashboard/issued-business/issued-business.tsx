@@ -7,12 +7,14 @@ import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 
 import { CaseTimeseries } from '@deps/components/dashboard/case-timeseries/case-timeseries';
+import { CaseToCloseTimeChart } from '@deps/components/dashboard/case-to-close-time-chart/case-to-close-time-chart';
 import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import PageLoader from '@deps/components/page-loader/page-loader';
+import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
 import { convertToQueryString } from '@deps/helpers/routing.helper';
 import { Processes, Statuses } from '@deps/models/case/case';
@@ -20,6 +22,7 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { ExceptionInsights } from '../../../components/dashboard/exception-insights';
 
@@ -42,11 +45,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
     const [selectedSubprocess, setSelectedSubprocess] = useState<string>('');
     const [selectedProcessType] = useState<Processes>(Processes.NewBusiness);
     const [selectedException, setSelectedException] = useState<string | undefined>();
-
-    const handleSelectedSubprocess = (subprocess: string) => {
-        setSelectedException(undefined);
-        setSelectedSubprocess(subprocess);
-    };
+    const { featureFlags } = useOptimizely();
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
     const carrierOrBrokerDealer = useMemo(() => {
         if (selectedCarriers && authorizedCarriers.length > 1) {
@@ -58,10 +57,6 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
         }
         return GroupByOptions.Carrier;
     }, [authorizedCarriers, selectedBrokerDealers, selectedCarriers]);
-
-    const handleTimeFrameChange = (value: string) => {
-        setTimeframe(value as TimeframeFilterOptions);
-    };
 
     const createdDateStart = useMemo(() => {
         const startDates: Record<TimeframeFilterOptions, string> = {
@@ -86,8 +81,13 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
         return baseFilter;
     }, [selectedCarriers, createdDateStart, selectedBrokerDealers]);
 
-    const { data: caseDashboardStatsData, isLoading } = useQuery({
+    const {
+        data: caseDashboardStatsData,
+        isFetching,
+        isLoading,
+    } = useQuery({
         queryKey: ['getCases', baseDashboardQueryFilter],
+        placeholderData: previousData => previousData,
         queryFn: () =>
             getCaseDashboardStatsQuery(baseDashboardQueryFilter, [GroupByOptions.ProcessSubType, GroupByOptions.ExceptionCategory]),
         select: ({ data }) => {
@@ -117,75 +117,78 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
         displayText: toTitleCase(option),
     }));
 
+    const handleTimeFrameChange = (value: string) => {
+        setTimeframe(value as TimeframeFilterOptions);
+    };
+    const handleSelectedSubprocess = (subprocess: string) => {
+        setSelectedException(undefined);
+        setSelectedSubprocess(subprocess);
+    };
+
     return (
         <CardContainer
-            classNames="relative !p-0 flex flex-col flex-1 !border-none gap-16 mb-16"
+            classNames={clsx('relative !p-0 flex flex-col flex-1 !border-none ')}
             containerClassNames="mt-none !p-0  border-t-2 border-[--color-base-border-border-light]"
         >
-            <div className=" bg-white flex flex-col gap-8 pt-8 rounded">
+            {featureFlags[FEATURE_FLAGS.DASHBOARD_CASE_TIMING_CHART] && <CaseToCloseTimeChart />}
+
+            <div className=" bg-white flex flex-col gap-8 pt-8 rounded relative py-12">
                 <div className="w-52">
                     <Select options={timeframeOptions} value={timeframe} onChange={handleTimeFrameChange} />
                 </div>
                 <Typography variant={TypographyVariant.H2}>Top Processes by Volume</Typography>
-                <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess} value={selectedSubprocess}>
-                    <div className=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 px-8  lg:px-12 xl:px-16 !items-stretch !border-b-0 !after:content-none [& .indicator]">
-                        {isLoading
-                            ? Array.from({ length: 5 }).map((_, index) => (
-                                  <Skeleton key={index} className="h-40 w-full border-2 border-[--color-base-border-border-subtle]" />
-                              ))
-                            : caseDashboardStatsData?.map((element, index) => {
-                                  return (
-                                      <RadioGroup.Item
-                                          defaultChecked={index === 0}
-                                          value={element.name}
-                                          key={index}
-                                          className={clsx(
-                                              'p-4',
-                                              'flex',
-                                              'flex-col',
-                                              'rounded',
-                                              'gap-4',
-                                              'border-2',
-                                              '!after:content-none',
-                                              '!mb-0',
-                                              'border-[--color-base-border-border-subtle]',
-                                              'data-[state=checked]:border-[--color-base-border-border-primary-color]',
-                                              'data-[state=checked]:[& .indicator]:height-0',
-                                              'hover:border-[--color-base-border-border-secondary-color]',
-                                              'items-start justify-between'
-                                          )}
-                                      >
-                                          {isLoading ? (
-                                              <>
-                                                  <PageLoader />
-                                                  <Typography variant={TypographyVariant.BodyBold}>Loading...</Typography>
-                                              </>
-                                          ) : (
-                                              <>
-                                                  <div className="flex flex-row justify-between items-center align-middle self-stretch text-ellipsis overflow-hidden">
-                                                      <div className="text-ellipsis text-left">
-                                                          <Label
-                                                              variant={LabelVariant.LabelLg}
-                                                              label={dashboardChartTitleFormat(element.name, false)}
-                                                          />
-                                                      </div>
+                <BlurOverlayLoader loading={isFetching}>
+                    <RadioGroup.Root asChild onValueChange={handleSelectedSubprocess} value={selectedSubprocess}>
+                        <div className=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 px-8  lg:px-12 xl:px-16 !items-stretch !border-b-0 !after:content-none [& .indicator]">
+                            {isLoading
+                                ? Array.from({ length: 5 }).map((_, index) => (
+                                      <Skeleton key={index} className="h-40 w-full border-2 border-[--color-base-border-border-subtle]" />
+                                  ))
+                                : caseDashboardStatsData?.map((element, index) => {
+                                      return (
+                                          <RadioGroup.Item
+                                              defaultChecked={index === 0}
+                                              value={element.name}
+                                              key={index}
+                                              className={clsx(
+                                                  'p-4',
+                                                  'flex',
+                                                  'flex-col',
+                                                  'rounded',
+                                                  'gap-4',
+                                                  'border-2',
+                                                  '!after:content-none',
+                                                  '!mb-0',
+                                                  'border-[--color-base-border-border-subtle]',
+                                                  'data-[state=checked]:border-[--color-base-border-border-primary-color]',
+                                                  'data-[state=checked]:[& .indicator]:height-0',
+                                                  'hover:border-[--color-base-border-border-secondary-color]',
+                                                  'items-start justify-between'
+                                              )}
+                                          >
+                                              <div className="flex flex-row justify-between items-center align-middle self-stretch text-ellipsis overflow-hidden">
+                                                  <div className="text-ellipsis text-left">
+                                                      <Label
+                                                          variant={LabelVariant.LabelLg}
+                                                          label={dashboardChartTitleFormat(element.name, false)}
+                                                      />
                                                   </div>
-                                                  <div className="flex flex-row flex-wrap gap-4">
-                                                      <FieldData variant={FieldDataVariant.Large} label="cases">
-                                                          {element.count.toLocaleString('en-US')}
-                                                      </FieldData>
-                                                  </div>
-                                              </>
-                                          )}
-                                      </RadioGroup.Item>
-                                  );
-                              })}
-                    </div>
-                </RadioGroup.Root>
+                                              </div>
+                                              <div className="flex flex-row flex-wrap gap-4">
+                                                  <FieldData variant={FieldDataVariant.Large} label="cases">
+                                                      {element.count.toLocaleString('en-US')}
+                                                  </FieldData>
+                                              </div>
+                                          </RadioGroup.Item>
+                                      );
+                                  })}
+                        </div>
+                    </RadioGroup.Root>
+                </BlurOverlayLoader>
             </div>
             {selectedSubprocess && (
                 <>
-                    <div className="lg:px-8">
+                    <div className="lg:px-8 py-8">
                         <CaseTimeseries
                             timeframe={timeframe}
                             selectedSubprocess={selectedSubprocess}
@@ -201,7 +204,7 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                             showSubtitle={false}
                         />
                     </div>
-                    <div className="lg:px-8">
+                    <div className="lg:px-8 py-8">
                         <CaseTimeseries
                             timeframe={timeframe}
                             selectedSubprocess={selectedSubprocess}
@@ -218,22 +221,14 @@ export const IssuedBusiness: FC<{ authorizedCarriers: string[] }> = ({ authorize
                     </div>
                 </>
             )}
-            <div className="lg:px-8">
-                {isLoading ? (
-                    <>
-                        <div className="min-h-[600px] grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
-                            <PageLoader />
-                        </div>
-                    </>
-                ) : (
-                    <ExceptionInsights
-                        timeframe={timeframe}
-                        completedCasesByProcessSubType={caseDashboardStatsData}
-                        selectedSubprocess={selectedSubprocess}
-                        selectedException={selectedException}
-                        carrierOrBrokerDealer={undefined}
-                    />
-                )}
+            <div className="lg:px-8 py-8">
+                <ExceptionInsights
+                    timeframe={timeframe}
+                    completedCasesByProcessSubType={caseDashboardStatsData}
+                    selectedSubprocess={selectedSubprocess}
+                    selectedException={selectedException}
+                    carrierOrBrokerDealer={undefined}
+                />
             </div>
         </CardContainer>
     );

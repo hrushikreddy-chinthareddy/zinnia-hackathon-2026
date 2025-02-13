@@ -7,7 +7,6 @@ import {
   Checkbox,
   Icon,
   IconType,
-  Select,
 } from '@zinnia/bloom/components';
 import { FC } from 'react';
 import {
@@ -17,6 +16,7 @@ import {
   useForm,
 } from 'react-hook-form';
 
+import { SelectResponsive } from '@/components/select-responsive/SelectResponsive';
 import { getDirtyValues } from '@/utils/forms';
 import { isNumberOrHyphen } from '@/utils/regex';
 import { states } from '@/utils/states';
@@ -47,6 +47,10 @@ export interface AddEditAddressProps {
     dirtyFields: AddressFormFields
   ) => void;
   removeCallback?: () => void;
+  /**
+   * If the user only has one address, we need to prevent editing the preferred address setting
+   */
+  disableEditingPreferredAddress?: boolean;
 }
 export const AddEditAddress: FC<AddEditAddressProps> = ({
   values,
@@ -54,6 +58,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
   submitCallback,
   removeCallback,
   actionType,
+  disableEditingPreferredAddress,
 }) => {
   const {
     control,
@@ -89,7 +94,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
   };
 
   const buttonText =
-    actionType === FormActionType.ADD ? 'Save address' : 'Edit address';
+    actionType === FormActionType.ADD ? 'Save address' : 'Update address';
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -172,8 +177,8 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             onClick={() => append({ addressVal: '' })}
             size="small"
           >
-            <Icon type={IconType.ADD} /> Add address line (e.g. unit, floor,
-            suite, etc)
+            <Icon type={IconType.ADD} />
+            Add address line (e.g.&nbsp;apt,&nbsp;, suite,&nbsp;etc)
           </Button>
         )}
 
@@ -204,17 +209,13 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
               <div className={styles.state}>
                 {/* TODO: Remove label and add to prop when bloom updates */}
                 <Label labelFor="select-state">State</Label>
-                <Select
+                <SelectResponsive
                   id="select-state"
-                  onValueChange={field.onChange}
+                  onChange={field.onChange}
                   options={states}
                   defaultValue={defaultValues?.state}
                   errorMessage={errors.state?.message}
-                  contentClassName={styles.selectContent}
                   fieldSize="small"
-                  fieldStatus={
-                    errors.state ? FieldStatus.ERROR : FieldStatus.DEFAULT
-                  }
                 />
               </div>
             )}
@@ -241,6 +242,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             render={({ field }) => (
               <div className={styles.zip}>
                 <FieldDataActive
+                  inputMode="numeric"
                   errorMessage={errors.zipCode?.message}
                   fieldStatus={
                     errors.zipCode ? FieldStatus.ERROR : FieldStatus.DEFAULT
@@ -271,8 +273,8 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
                 id="checkbox-default-address"
                 onClick={field.onChange}
                 isCheckedByDefault={field.value}
+                isDisabled={disableEditingPreferredAddress}
               >
-                {' '}
                 Set this address as my mailing address
               </Checkbox>
             </div>
@@ -288,7 +290,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             className={styles.delete}
             mode="error"
           >
-            Delete
+            Remove address
           </Button>
         )}
         <Button onClick={handleCancel} className={styles.cancel} mode="link">

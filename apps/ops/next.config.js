@@ -14,7 +14,10 @@ const nextConfig = {
     },
     output: 'standalone',
     async rewrites() {
-        return [{ source: '/storybook-static/:slug*', destination: '/api/storybookstatic' }];
+        return [
+            { source: '/storybook-static/:slug*', destination: '/api/storybookstatic' },
+            { source: '/robots.txt', destination: '/api/robots' },
+        ];
     },
     async redirects() {
         // In case someone had the old page bookmarked, the links will still work.

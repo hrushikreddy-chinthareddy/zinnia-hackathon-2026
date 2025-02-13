@@ -1,14 +1,16 @@
 @import '~@zinnia/bloom/css';
+@import '~@zinnia/bloom/themes/bloom';
+@import '~@zinnia/bloom/themes/everly';
+@import '~@zinnia/bloom/themes/wellabe';
 @import './spacing.css';
 @import './borders.css';
-/* TODO: THIS NEEDS TO BE DYNAMIC!!!! */
-@import './everly/theme.css';
-@import './wellabe/theme.css';
-@import './colors.css';
 
 /* TODO: this should be a token, right now setting it here prior to theme setting it */
 :root {
-  --user-badge-text-color: #fff;
+  --color-avatar-avatar-text: #fff;
+  /* dirty override that will probably be overridden by bloom later */
+  --button-border-radius: 8px;
+  --measure-dimension-button-button-default-radius: 8px;
 }
 
 /*
@@ -28,8 +30,7 @@ body {
 
 body,
 main {
-  --border-style: var(--measure-dimension-stroke-sm, 2px) solid
-    var(--color-base-border-border-light, #ededed);
+  --border-style: var(--measure-dimension-stroke-sm, 2px) solid var(--color-base-border-border-light, #ededed);
 }
 
 main {
@@ -74,7 +75,8 @@ h1 {
   font-size: 28px;
   font-style: normal;
   font-weight: 500;
-  line-height: 36px; /* 128.571% */
+  line-height: 36px;
+  /* 128.571% */
 }
 
 h2 {
@@ -93,7 +95,8 @@ h2 {
     font-size: 36px;
     font-style: normal;
     font-weight: 500;
-    line-height: 44px; /* 122.222% */
+    line-height: 44px;
+    /* 122.222% */
   }
 
   h2 {
@@ -164,16 +167,17 @@ a:focus-visible {
 }
 
 .card-container {
-  > *:not(:last-child) {
+  >*:not(:last-child) {
     margin-bottom: 8px;
   }
 }
 
 .info-card-container {
-  > * {
+  >* {
     padding: var(--measure-dimension-padding-2xl) 0;
   }
-  > *:not(:last-of-type) {
+
+  >*:not(:last-of-type) {
     border-bottom: var(--border-style);
   }
 }
@@ -259,8 +263,7 @@ input[type='radio'] {
 .input-with-interaction {
   width: 100%;
   background-color: white;
-  border: var(--measure-dimension-stroke-sm) solid
-    var(--color-base-border-border-light);
+  border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-light);
   border-radius: var(--measure-dimension-radius-sm);
   padding: var(--measure-dimension-padding-lg);
   display: flex;

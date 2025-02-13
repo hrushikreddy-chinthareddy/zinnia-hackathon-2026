@@ -17,10 +17,12 @@ type DynamicFormProps = {
     taskMetadata: FormMetadata;
     readonly?: boolean;
     formButtons?: any;
+    formContext?: { customData: any; setCustomData: (data: any) => void };
 };
 
 const DynamicForm = React.forwardRef(function DynamicFormComponent(
-    { formData, taskMetadata, readonly = false, onChange, onSubmit, formButtons }: DynamicFormProps,
+    { formData, taskMetadata, readonly = false, onChange, onSubmit, formButtons, formContext }: DynamicFormProps,
+
     forwardedRef: ForwardedRef<Form>
 ) {
     ApplyUITemplates(taskMetadata.uiSchema);
@@ -40,6 +42,7 @@ const DynamicForm = React.forwardRef(function DynamicFormComponent(
                 templates={templates}
                 readonly={readonly}
                 showErrorList={false}
+                formContext={formContext}
             >
                 {formButtons}
             </Form>

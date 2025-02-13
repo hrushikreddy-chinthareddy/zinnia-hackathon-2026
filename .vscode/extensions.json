@@ -4,6 +4,7 @@
     "foxundermoon.shell-format",
     "bierner.markdown-mermaid",
     "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "maattdd.gitless"
   ]
 }

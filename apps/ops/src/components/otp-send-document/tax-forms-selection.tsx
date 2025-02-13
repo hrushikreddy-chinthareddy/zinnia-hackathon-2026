@@ -1,14 +1,17 @@
 import 'react-pdf/dist/Page/TextLayer.css';
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 
 import Select from '@deps/components/select/select';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaxForm, TaxFormSelectionDetails } from '@deps/models/case/send-tax-forms';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import { MultiselectOption } from '../autocomplete/autocomplete.types';
@@ -34,6 +37,7 @@ const TaxFormsSelection = ({
     const [error, setError] = useState<FormValidationErrors>({});
     const [loader, setLoader] = useState(false);
     const { goToNext } = useWorkflow();
+    const { featureFlags } = useOptimizely();
     const abortControllerRef = useRef<Map<string, AbortController>>(new Map());
 
     const handleContinue = async () => {
@@ -61,14 +65,14 @@ const TaxFormsSelection = ({
             };
             abortControllerRef.current.set(selected, newAbortController);
 
-            const response = await searchTaxForms(requestData, newAbortController.signal);
-            if (!response.items.length) {
+            const response = await searchTaxForms(requestData, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3], newAbortController.signal);
+            if (!response?.data?.items?.length) {
                 setError({ submit: t('sendTaxForms.errors.noTaxForms', { year: selected }) as string });
             }
 
             setTaxFormSelectionDetails(prev => {
                 const existingTaxForms = prev?.taxForms || [];
-                const newTaxForms = response?.items?.filter(
+                const newTaxForms = (response?.data?.items || []).filter(
                     form => !existingTaxForms.find(existingForm => existingForm.taxYear === form.taxYear)
                 );
                 return {
@@ -122,7 +126,7 @@ const TaxFormsSelection = ({
         });
     };
 
-    const setSelectedTaxForms = (selectedTaxForms: TaxForm[]) => {
+    const setSelectedTaxForms = (selectedTaxForms: TaxForm[] | TaxformResponse[]) => {
         setTaxFormSelectionDetails(prev => ({
             ...prev,
             selectedTaxForms: selectedTaxForms,

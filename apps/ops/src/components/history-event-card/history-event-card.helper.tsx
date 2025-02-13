@@ -102,6 +102,7 @@ export const getEventTitle = (transaction: Transaction, t: TFunction): string =>
 
 export interface EventCardValues {
     amount?: number;
+    requestedAmount?: number;
     caption: string;
     eventBody?: string;
     eventTitle?: string;
@@ -160,7 +161,7 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
         case TransactionType.SubsequentPremium: {
             const systematicProgram = systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
 
-            amount = systematicProgram?.amount;
+            amount = appliedAmount || systematicProgram?.amount;
             eventBody = toTitleCase(systematicProgram?.frequency);
 
             if (bankingBody) eventBody += ` | ${bankingBody}`;
@@ -204,7 +205,7 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
 
         case TransactionType.PaymentSystematicLoanRepayment:
         case TransactionType.SystematicLoanRepayment: {
-            amount = requestedAmount;
+            amount = appliedAmount || requestedAmount;
             eventBody = bankingBody ?? '';
             break;
         }
@@ -252,14 +253,13 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
         default:
             if (!isNullEmptyOrUndefined(appliedAmount)) {
                 amount = appliedAmount;
-            } else if (!isNullEmptyOrUndefined(requestedAmount)) {
-                amount = requestedAmount;
             }
             break;
     }
 
     return {
         amount,
+        requestedAmount,
         caption,
         eventBody,
         eventTitle,

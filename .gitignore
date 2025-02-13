@@ -48,3 +48,6 @@ tsconfig.tsbuildinfo
 /copilot
 
 cached-package-json/
+
+# tokens script output
+tokens-diff-*.txt

@@ -18,6 +18,7 @@ import { CaseDashboardStatsQuery, CaseStatsQuery } from '@deps/queries/cases';
 import { isMockCaseDetailsRequestEnabled } from '@deps/services/api-config';
 import { mockCaseDetails } from '@deps/services/mocks/case-details';
 import { CaseSearchBody, CaseSearchErrorResponse, CaseSearchResponse } from '@deps/types/search';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { caseSanitizer } from '@deps/utils/sanitizers';
 import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
@@ -25,7 +26,6 @@ import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-log
 import { baseAppUrl, se2ApiServerUrl } from '../api-config';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
-import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const ssrCasesUrl = `${se2ApiServerUrl}/cases`;
@@ -35,6 +35,28 @@ export type ReferenceDataQuery = {
     keys?: ('requestSubType' | 'productName' | 'processList')[];
     process?: string[];
 };
+export interface CaseTimingResponse {
+    data: CaseTimingData[];
+    totalElements: number;
+}
+
+export interface CaseTimingErrorResponse {
+    data: {
+        err: string;
+    };
+    status: number;
+}
+
+//TODO: Replace this with actual api spec when api publishes
+export interface CaseTimingData {
+    key: string;
+    name: string;
+    secondLow: number;
+    secondMedian: number;
+    secondMean: number;
+    secondHigh: number;
+    count: number;
+}
 
 export const createCase = async (query: CreateCaseBody): Promise<CreateCaseResponse> => {
     try {
@@ -148,6 +170,29 @@ export const getCaseDashboardStats = async (
     }
 };
 
+export const getCaseTimingData = async (query: CaseDashboardStatsQuery): Promise<CaseTimingResponse | CaseTimingErrorResponse> => {
+    try {
+        const { data } = await client.post<CaseDashboardStatsQuery, AxiosResponse<CaseTimingResponse | CaseTimingErrorResponse>>(
+            `${baseAppUrl}/api/dashboard/case-timing`,
+            query
+        );
+
+        if (Array.isArray(data?.data) && data?.data?.length > 0) {
+            const filteredData = recursivelyFilter(data.data || [], null, 'NOT_APPLICABLE') as CaseTimingData[];
+
+            data.data = filteredData;
+            return data;
+        }
+        return { data: [], totalElements: 0 };
+    } catch (error: any) {
+        console.error('getCaseTimingData::An error occurred while getting case dashboard stats results', error);
+        if ('response' in error) {
+            return error.response;
+        }
+        return error;
+    }
+};
+
 export const getCaseDetails = async (id: string): Promise<Case | null> => {
     try {
         const url = `${baseCasesUrl}/case-by-id/${id}`;
@@ -223,6 +268,29 @@ export const getReferenceData = async (query: ReferenceDataQuery): Promise<CaseR
         const { data } = await client.post<ReferenceDataQuery, AxiosResponse>(`${baseAppUrl}/api/case/v1/refdata`, query);
 
         writeToCache('getReferenceData', query, data, 10);
+
+        return data;
+    } catch (error: any) {
+        console.error('getReferenceData::An error occurred while getting reference data', error);
+        return error.response;
+    }
+};
+
+export const getReferenceDataSSR = async (
+    query: ReferenceDataQuery,
+    accessToken: string | undefined
+): Promise<CaseReferenceResponse | null> => {
+    try {
+        const refUrl = `${se2ApiServerUrl}/refdata`;
+        const { data } = await serverApi.post<any>(refUrl, query, {
+            authorization: `Bearer ${accessToken}`,
+            headers: {
+                Accept: '*/*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                Connection: 'keep-alive',
+                'Access-Control-Allow-Origin': '*',
+            },
+        });
 
         return data;
     } catch (error: any) {

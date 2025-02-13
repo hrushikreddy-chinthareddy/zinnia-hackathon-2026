@@ -1,16 +1,31 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { clsx } from 'clsx';
 
+import { ProducerType } from '@deps/components/pom/types';
+
 import { default as styles } from './CardHeader.module.css';
 
-export const CardHeader = () => {
+export const CardHeader = ({ producerType }: { producerType: ProducerType }) => {
+    // @TODO: this will change once we integrate with the api
+    const { iconType, title, subtext } =
+        producerType === ProducerType.CORPORATION
+            ? {
+                  iconType: IconType.OFFICEBUILDING,
+                  title: 'Acme Corporation',
+                  subtext: 'National producer number: 821694063',
+              }
+            : {
+                  iconType: IconType.USER,
+                  title: 'Ethan Conners',
+                  subtext: 'National producer number: 987654321',
+              };
     return (
         <div className={clsx(styles.cardHeader)}>
-            <Icon type={IconType.DOCUMENT_TEXT} />
+            <Icon type={iconType} className={styles.icon} />
             <div>
-                <h1 className={styles.h1}>Acme Corporation</h1>
-                <span aria-label="Company tax identification number" className={styles.caption}>
-                    Tax identification number: 669-45-6789
+                <h1 className={styles.h1}>{title}</h1>
+                <span aria-label={subtext} className={styles.subtext}>
+                    {subtext}
                 </span>
             </div>
         </div>

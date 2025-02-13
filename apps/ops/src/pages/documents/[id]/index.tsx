@@ -1,46 +1,24 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { deleteCookie, getCookies } from 'cookies-next';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { GetServerSidePropsContext } from 'next';
-import dynamic from 'next/dynamic';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import { DocumentViewerProps } from '@deps/components/document-viewer/document-viewer';
-import { PageHead } from '@deps/components/page-title';
-import { TranslationFiles } from '@deps/config/translations';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
-import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { UserPermission } from '@deps/models/user-profile';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import { getUserData } from '@deps/helpers/query-data.helper';
+import documentDownloadV2 from '@deps/queries/server/documents/v2/download';
+import documentDownload from '@deps/queries/server/documents/v3/download';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
-import nextI18nextConfig from 'next-i18next.config';
 
-const DocumentViewer = dynamic(() => import('@deps/components/document-viewer/document-viewer'), {
-    ssr: false,
-});
-
-interface DocumentViewerPageProps extends DocumentViewerProps,SegmentTrackedPageProps { }
-
-const DocumentViewerPage = (props: DocumentViewerPageProps) => {
-    useSegmentPageTracker(props.user, SegmentPageName.DocumentViewer, {
-        id: props.id,
-        documentType: props.documentType,
-        carrierCode: props.carrierCode
-    });
-
-    return (
-        <>
-            <PageHead titleKey="formData" />
-            <DocumentViewer {...props} />
-        </>
-    );
+const DocumentViewerPage = () => {
+    return null;
 };
 
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
         const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, params, res, req } = context;
+        const { params, res, req, query } = context;
         let accessToken;
         try {
             accessToken = (await getAccessToken(req, res)).accessToken;
@@ -53,21 +31,19 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
 
-        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadCaseManagement);
-        if (!hasPermissionToReadCaseManagement) {
+        const id = (params?.id as string) || '';
+
+        if (!accessToken) {
             return {
                 redirect: {
-                    destination: '/403',
+                    destination: '/',
                     permanent: false,
                 },
             };
         }
 
-        const { documentType, carrierCode } = getCookies({ req, res });
-        const id = (params?.id as string) || '';
-
-        deleteCookie('carrierCode');
-        deleteCookie('documentType');
+        const documentType = query.documentType as string;
+        const carrierCode = query.carrierCode as string;
 
         if (!documentType || !carrierCode || !id) {
             return {
@@ -78,22 +54,62 @@ export const getServerSideProps = withPageAuthRequired({
             };
         }
 
-        const translations = await serverSideTranslations(
-            locale,
-            [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-            nextI18nextConfig,
-            ALL_LOCALES
-        );
+        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+
+        let docDownload;
+        if (featureFlagDecisions[FEATURE_FLAGS.DOCUMENTS_V3]) {
+            let docClass;
+            switch (documentType) {
+                case DocumentTypeView.Correspondence:
+                    docClass = SearchRequest.documentClassification.OUTBOUND;
+                    break;
+                case DocumentTypeView.Policy:
+                default:
+                    docClass = SearchRequest.documentClassification.INBOUND;
+                    break;
+            }
+            docDownload = await documentDownload({
+                accessToken: accessToken,
+                partyId: user.partyId,
+                documentId: id,
+                parentCarrierCode: carrierCode,
+                documentClassification: docClass,
+            });
+        } else {
+            docDownload = await documentDownloadV2({
+                accessToken: accessToken,
+                partyId: user.partyId,
+                documentId: id,
+                clientCode: carrierCode,
+                source: documentType,
+            });
+        }
+
+        if (!docDownload) {
+            return {
+                redirect: {
+                    destination: '/404',
+                    permanent: false,
+                },
+            };
+        }
+
+        if (docDownload.error) {
+            return {
+                redirect: {
+                    destination: '/406',
+                    permanent: false,
+                },
+            };
+        }
+
+        res.setHeader('Content-Type', docDownload.mimeType);
+        res.setHeader('Content-Disposition', `inline; filename=document.${docDownload.fileExtension}`);
+
+        res.end(Buffer.from(docDownload.binaryData, 'base64'));
 
         return {
-            props: {
-                locale,
-                ...translations,
-                id,
-                documentType,
-                carrierCode,
-                user,
-            },
+            props: {},
         };
     },
 });

@@ -68,7 +68,9 @@
             "formData": "Form Data",
             "annuitization": "Annuitization",
             "dashboard": "Case Stats",
-            "newLoan": "New Loan"
+            "loanPayment": "Loan Payment",
+            "newLoan": "New Loan",
+            "activity": "Activity"
         },
         "navLinks": {
             "accessManagement": {
@@ -231,11 +233,25 @@
             },
             "history": {
                 "text": "History",
-                "link": "/policies/{{planCode}}/{{id}}/history"
+                "link": "/policies/{{planCode}}/{{id}}/activity"
             },
             "dashboard": {
                 "text": "Case Stats",
                 "link": "/dashboard"
+            },
+            "activity": {
+                "text": "Activity",
+                "link": "/policies/{{planCode}}/{{id}}/activity",
+                "subLinks": {
+                    "callLogs": {
+                        "text": "Call logs",
+                        "link": "/policies/{{planCode}}/{{id}}/activity/call-logs"
+                    },
+                    "transactions": {
+                        "text": "Transactions",
+                        "link": "/policies/{{planCode}}/{{id}}/activity/transactions"
+                    }
+                }
             }
         },
         "loader": "Loading..."
@@ -810,6 +826,20 @@
         "unassignTask": "Unassign Task",
         "startTask": "Start Task",
         "transaction": "Transaction: {{transactionType}}",
+        "updateTaskStatusDrawer": {
+            "updateTaskStatus": "Update Task Status",
+            "setTaskAsPending": "Set Task as Pending",
+            "followUpDate": "Follow-Up Date",
+            "reason": "Reason",
+            "selectReason": "Select Reason",
+            "cancel": "Cancel",
+            "updateStatus": "Update Status",
+            "pendingReasonOptions": {
+                "awaitingAdditionalInformation": "Awaiting additional information",
+                "awaitingApproval": "Awaiting approval",
+                "awaitingApplication": "Awaiting application"
+            }
+        },
         "tasksListing": {
             "taskSubmittedAgo": "Submitted {{updatedCount}} {{updatedUnit}} ago",
             "taskCompletedAgo": "Completed {{updatedCount}} {{updatedUnit}} ago",
@@ -965,7 +995,7 @@
             "renewalFormValidation": "Validate renewal form",
             "renewalRequestCompletion": "Complete processing",
             "renewalTransactionProcessing": "Process transaction",
-            "requestAck": "Prepare {{subType}} for processing",
+            "requestAck": "Prepare {{subType}} request for processing",
             "requestAcknowledgement": "Prepare {{subType}} for processing",
             "requestCompletion": "Complete processing",
             "requestProcessing": "Process transaction",
@@ -983,9 +1013,10 @@
             "requestAck.nbRequestReceived": "Receive {{subType}}",
             "requestAck.caseProcessing": "Set up {{subType}} for processing",
             "requestAck.draftContractCreation": "Create draft contract",
-            "requestAck.processFormRequestReceived": "Receive Service Form Request",
+            "requestAck.processFormRequestReceived": "Receive request to send {{subType}}",
+            "requestAck.processFormRequestProcessing": "Processing {{subType}} request",
             "requestCompletion.deliverLetter": "Receive Delivery Confirmation",
-            "requestCompletion.completeRequest": "Send Requested Form",
+            "requestCompletion.completeRequest": "Send {{process}} with {{subType}}",
             "agentValidation.preValidationRules": "Confirm completeness of agent details",
             "agentValidation.agentAppointmentValidation": "Validate appointment",
             "agentValidation.agentLOBValidation": "Validate line of business",
@@ -1305,13 +1336,25 @@
                 "reason": "Canceled",
                 "reasonNoExceptions": "TBD",
                 "badgeText": "Canceled",
-                "tooltip": "This {{processSubType}} was canceled on "
+                "tooltip": "This {{processSubType}} was canceled on ",
+                "application expired": "The application expired due to 30 days of inactivity.",
+                "application withdrawn": "The applicant withdrew this application.",
+                "underwriting declined": "The underwriter denied this application.",
+                "offer expired": "The offer expired due to 30 days of inactivity.",
+                "offer rejected": "The applicant rejected the offer.",
+                "underwriting expired": "The application expired due to no response from the underwriter in 30 days.",
+                "underwriting declined at initial review": "The underwriter denied this application as risk is not acceptable.",
+                "identity validation expired": "Identity verification is not completed within 30 days, the request is marked as expired."
             },
             "notStarted": {
                 "reason": "Not started",
                 "reasonNoExceptions": "Not yet started",
                 "statusTooltip": "Not started",
                 "detailedReason": "This case is currently in the queue for work to begin. You can check back later for updates by searching for the case."
+            },
+            "withdrawn": {
+                "badgeText": "Withdrawn",
+                "tooltip": "Status is Withdrawn."
             },
             "unknown": {
                 "badgeText": "Unknown",
@@ -1329,6 +1372,8 @@
             "call-logs": "Call logs",
             "closedOn": "Closed on {{date}}",
             "documents": "Documents",
+            "caseDocuments": "Case Documents",
+            "policyDocuments": "Policy Documents",
             "issue": "Issue: {{issue}}",
             "issueCount_one": "{{count}} issue",
             "issueCount_other": "{{count}} issues",
@@ -1363,12 +1408,15 @@
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source of Premium: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}",
-                "ceding carrier": "Ceding Carrier: {{label}}"
+                "ceding carrier": "Ceding Carrier: {{label}}",
+                "premium source": "Premium Source: {{label}}"
             },
             "reviewIssues": "Review {{taskType}}",
             "suitabilityReview": "suitability",
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
-            "suitabilityReviewIssues": "Review Suitability"
+            "suitabilityReviewIssues": "Review Suitability",
+            "purchaseDocumentMatchingIssues": "Match Document",
+            "agentNigo": "Review Agent Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -1513,7 +1561,8 @@
                 "nasu": "Annuity Contract Withdrawal Request ",
                 "gdmn": "Commonwealth Withdrawal Request",
                 "rsln": "Lincoln Benefit Life Withdrawal Request",
-                "glco": "Annuity Contract Withdrawal Request"
+                "glco": "Annuity Contract Withdrawal Request",
+                "ulpc": "Unified Life Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Personal Details",
@@ -1574,7 +1623,8 @@
                     "partial": "Partial",
                     "totalFreeAmt": "Total free amount",
                     "penaltyFreeAmount": "Penalty free amount",
-                    "annualFreeAmountBalance": "Annual free amount balance"
+                    "annualFreeAmountBalance": "Annual free amount balance",
+                    "maximumFreeAmount": "Maximum Free Amount"
                 },
                 "fullWithdrawal": {
                     "contractHasBeenLostOrDestroyed": "Contract has been lost or destroyed",
@@ -1602,7 +1652,8 @@
                     "grossDoller": "Gross $",
                     "percetageOfAccountValue": "% of Account value",
                     "maximum": "Maximum amount",
-                    "maturingGuranteePeriod": "Maturing guarantee period"
+                    "maturingGuranteePeriod": "Maturing guarantee period",
+                    "percentageOfAccumulatedValue": "% of accumulated value"
                 },
                 "processTimeframe": {
                     "selectOne": "Select one",
@@ -1665,6 +1716,13 @@
                         "wife": "Wife",
                         "spouse": "Spouse",
                         "na": "NA"
+                    }
+                },
+                "payout": {
+                    "title": "Payout",
+                    "payoutOptions": {
+                        "level": "Level",
+                        "increasing": "Increasing"
                     }
                 }
             },
@@ -1885,7 +1943,8 @@
                 "bankUpdateTitle": "Bank Details",
                 "cancel": "Cancel",
                 "submit": "Submit",
-                "submitedMessage": "Bank Update Request has been submitted."
+                "submitedMessage": "Bank Update Request has been submitted.",
+                "ussa": "USSA"
             },
             "neaBenefitsSensitivity": "NEA Benefit Sensitivity",
             "distributionInstruction": {
@@ -2003,6 +2062,10 @@
                 "acknowledgement": "Loan acknowledgement",
                 "title": "Loan Acknowledgement"
             },
+            "loanRepayment": {
+                "acknowledgement": "I understand in order to process the full surrender request all loans on the contract must be paid in full by me or throgh load surrender.",
+                "title": "Loan Repayment"
+            },
             "cslnCheck": {
                 "title": "Validate Child Support Lien Network (CSLN)",
                 "label": "Child Support Lien Network (CSLN) status",
@@ -2112,7 +2175,22 @@
                 "OFTFormInputTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
                 "SSWFormInputTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
             },
-            "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal."
+            "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal.",
+            "beneficiaryInfo": {
+                "title": "Beneficiary Information",
+                "isBeneficiarySpouse": {
+                    "title": "Is your beneficiary your spouse?",
+                    "nasu": "Is your spouse the primary beneficiary?",
+                    "yes": "Yes",
+                    "no": "No"
+                },
+                "firstName": "First name",
+                "lastName": "Last name",
+                "middleName": "Middle name",
+                "taxId": "SSN",
+                "dob": "Date of birth",
+                "isYourSpouseYoungerThanYou": "Is your spouse 10 years younger than you?"
+            }
         },
         "sidebar": {
             "contractStatusCode": "Policy Status",
@@ -2424,7 +2502,8 @@
         "reversed": "Reversed",
         "reversedOn": "Reversed on {{date}}",
         "pendingReversal": "Pending Reversal",
-        "pendingReversalOn": "Pending Reversal on {{date}}"
+        "pendingReversalOn": "Pending Reversal on {{date}}",
+        "withdrawn": "Withdrawn"
     },
     "placeHolder": {
         "globalSelectSearch": "e.g. Loan Payoff Amount, Cost Basis..."
@@ -2646,8 +2725,10 @@
             "fileType": "File type",
             "filter": "Filter by year:",
             "filterByCategory": "Filter by category:",
+            "formId": "Form ID",
             "linkedTo": "This document is linked to this {{type}}.",
             "loadingDocuments": "Loading documents...",
+            "name": "Name",
             "noResults": "Looks like there aren't any documents to display.",
             "received": "Received",
             "receivedDate": "Date received",
@@ -2655,6 +2736,8 @@
             "rowsPerPage": "Rows per page: {{limit}}",
             "sent": "Sent",
             "sentDate": "Date sent",
+            "taxDocuments": "Tax documents",
+            "taxYear": "Tax year",
             "view": "View",
             "xToYOfZ": "Results: {{x}}-{{y}} of {{z}}"
         },
@@ -2809,6 +2892,7 @@
             "noEventsTitle": "No events yet.",
             "noEventsSubtitle": "Looks like nothing's happened so far.",
             "upcomingEvents": "Upcoming events",
+            "requested": "Requested",
             "sidesheet": {
                 "accountNumber": "Account number",
                 "accountType": "Account type",
@@ -3010,6 +3094,7 @@
                 "viewLoanTransactionHistory": "Go to loan transaction history",
                 "eligiblePopover": "The owner can take a loan from the account value on this policy. Owners can borrow at any time, as long as the funds are available. A loan can reduce the death benefit unless and until it is paid back.",
                 "ineligiblePopover": "This policy doesn't have enough account value for a loan. Owners can borrow from their policy at any time, as long as the funds are available.",
+                "loanPayment": "Make a one-time payment",
                 "startLoan": "Start a loan"
             },
             "detailCards": {
@@ -3175,13 +3260,30 @@
                 "closed": "Closed"
             },
             "createdLabel": "Date Created",
+            "newCreatedLabel": "Created",
             "assigneeLabel": "Assignee",
             "stepLabel": "Step",
             "issueLabel": "Issue",
             "detailsLabel": "Details",
             "noDataAvailable": "No data available.",
+            "noDocuments": "No documents available",
+            "errorAdditionalDocuments": "Error fetching additional documents.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
-            "taskDetails": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract."
+            "reasonLabel": "Status reason",
+            "pendinglabel": "Pending until",
+            "canceledLabel": "Canceled on",
+            "completedLabel": "Completed on",
+            "additionalDocuments": "Additional Documents",
+            "noAssignee": "Only the assignee can start this task",
+            "startTask": "Start task",
+            "claimTask": "Claim task",
+            "claimTaskError": "The system has encountered a temporary error. Please try again.",
+            "taskHeading": "Task",
+            "taskDetails": {
+                "purchaseDocumentMatching": "As part of the document matching process for the purchase document, one or more documents require review and confirmation to ensure proper alignment before proceeding with contract issuance",
+                "suitabilityReview": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
+                "nbAgentNigo": "One or more Not in Good Order (NIGO) issues were identified during the review of the {{caseType}} application. These issues must be reviewed and resolved to ensure the application meets all requirements before proceeding with contract issuance"
+            }
         },
         "suitability": {
             "header": "Complete Suitability Review",
@@ -3379,6 +3481,9 @@
         },
         "history": {
             "headerText": "History"
+        },
+        "activity": {
+            "headerText": "Activity"
         }
     },
     "piiBreadcrumb": "Back to",
@@ -3903,7 +4008,8 @@
             "documents": "Documents",
             "caseDetails": "Case Details",
             "deliveryMethod": "Delivery method",
-            "correspondence": "Correspondence"
+            "correspondence": "Correspondence",
+            "activity": "Activity"
         }
     },
     "bannerAlert": {
@@ -4176,6 +4282,56 @@
         "taken": "taken",
         "left": "left"
     },
+    "loanPayment": {
+        "amount": {
+            "label": "Amount",
+            "dateLabel": "Effective date",
+            "paymentLabel": "Loan payment amount",
+            "invalidDateError": "Enter a valid effective date.",
+            "invalidPaymentAmountError": "Payment amount must be at least $1."
+        },
+        "confirm": {
+            "cta": "Go to transaction history",
+            "label": "Confirm",
+            "secondaryCta": "Close",
+            "subtitle": {
+                "0": "A ",
+                "1": " one-time loan payment from ",
+                "2": " was submitted.",
+                "NIGO": " one-time loan payment was submitted for",
+                "NIGO1": " NIGO processing."
+            },
+            "title": "Submitted!"
+        },
+        "payment": {
+            "label": "Payment Method",
+            "title": "Where should we send the payment?"
+        },
+        "payor": {
+            "label": "Payor"
+        },
+        "start": {
+            "label": "Start",
+            "title": "Make a Loan Payment",
+            "subtitle": "Need to submit a one-time loan payment? Let's do it. First up, let's make sure we can keep track of this transaction in OnBase."
+        },
+        "summary": {
+            "label": "Summary",
+            "bpm500Error": "BPM 500 error",
+            "submitPayment": "Submit payment",
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "loanPaymentAmount": "Loan payment amount",
+            "effectiveDate": "Effective date",
+            "payor": "Payor",
+            "validationStatusLabel": "Validation status",
+            "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
+            "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+            "internal500CTAlinkText": "Submit a help desk ticket",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
+        }
+    },
     "newLoan": {
         "amount": {
             "disbursementType": {
@@ -4384,8 +4540,15 @@
             "label": "People",
             "manageBeneficiaries": "Manage beneficiaries"
         },
+        "documents": {
+            "label": "Send Documents",
+            "sendForms": "Send forms",
+            "sendStatements": "Send statements",
+            "sendTaxForms": "Send tax forms"
+        },
         "transactions": {
             "label": "Transactions",
+            "loanPayment": "Start a one-time loan payment",
             "managePremiumAutopay": "Manage premium autopay",
             "newLoan": "Start a loan",
             "newPremium": "Start a one-time premium",
@@ -4550,6 +4713,7 @@
                 "text": "submit a help desk ticket"
             },
             "leaveTransaction": "Leave this transaction",
+            "submitLoanPayment": "Submit loan payment",
             "submitNewLoan": "Submit loan",
             "submitPayment": "Submit payment",
             "submitWithdrawal": "Submit withdrawal",
@@ -4648,7 +4812,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "Document ID",
-            "noFormAvailable": "No form available."
+            "noFormAvailable": "No form available.",
+            "taskTitle": "Task details"
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -4829,16 +4994,16 @@
             },
             "view": "View",
             "documentId": "Document ID",
-            "submitLabel": "Submit",
-            "continueLabel": "Continue",
-            "cancelLabel": "Cancel"
+            "submit": "Submit",
+            "continue": "Continue",
+            "cancel": "Cancel"
         },
         "taskForm": {
             "title": "Input Suitability Data",
             "subTitle": "Manually enter all suitability data. Note that canceling at any point will erase all the entered data.",
-            "submitLabel": "Submit",
-            "continueLabel": "Continue",
-            "cancelLabel": "Cancel"
+            "submit": "Submit",
+            "continue": "Continue",
+            "cancel": "Cancel"
         },
         "confirmStep": {
             "title": "Submitted!",
@@ -4856,8 +5021,8 @@
         "taskForm": {
             "title": "Review Suitability",
             "subTitle": "This customer's application was flagged for review. Accept or Decline each issue before submitting a final decision.",
-            "submitLabel": "Submit decision",
-            "cancelLabel": "Cancel"
+            "submit": "Submit decision",
+            "cancel": "Cancel"
         },
         "confirmStep": {
             "title": "Submitted!",
@@ -4865,6 +5030,42 @@
             "cta": "Go to suitability review",
             "secondaryCta": "Close",
             "submitTask": "Submit suitability review details"
+        }
+    },
+    "taskManagement": {
+        "taskForm": {
+            "title": "Task Management",
+            "submit": "Continue",
+            "cancel": "Cancel",
+            "confirm": "Confirm",
+            "continue": "Continue",
+            "tabs": {
+                "start": "Start",
+                "nigoDetails": "Missing Information",
+                "suitabilityForm": "Suitability form",
+                "summary": "Summary"
+            }
+        },
+        "formErrors": {
+            "caseNotFound": "Case not found",
+            "correlationIdNotFount": "Correlation ID not found",
+            "transactionNotFound": "Transaction not found"
+        }
+    },
+    "purchaseDocumentMatching": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Match Document was submitted.",
+            "cta": "Go to Qualification ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "nbAgentNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Agent Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
         }
     },
     "unauthorized": {

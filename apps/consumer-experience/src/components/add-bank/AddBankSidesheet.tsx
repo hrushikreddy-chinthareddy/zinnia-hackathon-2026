@@ -6,15 +6,18 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { addBankRequest } from '@/actions/bpm/bank-actions';
+import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './AddBankSidesheet.module.css';
 import { AddBank } from './form-steps/add/AddBank';
 import { Error } from '../transaction-steps/error/Error';
 import { Loading } from '../transaction-steps/loading/Loading';
 import { Success } from '../transaction-steps/success/Success';
+import { VerifyIdentity } from '../transaction-steps/verify-identity/VerifyIdentity';
 
 export interface AddBankSidesheet {
   partyId: string;
@@ -26,11 +29,12 @@ export interface AddBankSidesheet {
 }
 
 export const AddBankSidesheet: FC<AddBankSidesheet> = ({
-  values,
   partyId,
-  bankId,
   policyOwner,
 }) => {
+  const { data: featureFlagData } = useFeatureFlags();
+  const checkIdentityCode =
+    featureFlagData?.[FEATURE_FLAGS.TRANSACTION_LEVEL_CODE_ADD_BANK];
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
     planCode: string;
@@ -58,11 +62,16 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
 
   const handleAdd = async (requestValues: BankFormFields) => {
     setStep(FormSteps.LOADING);
+    // TODO: add check here to accessToken for property CIAM is adding and make it a hook
+    if (checkIdentityCode) {
+      setStep(FormSteps.VERIFY_IDENTITY);
+      return;
+    }
+
     const { data, error } = await addBankRequest({
       planCode: params.planCode,
       policyNumber: params.policyNumber,
       partyId,
-      bankId,
       bankAccountChangeRequest: {
         bankAccount: {
           ...requestValues,
@@ -116,17 +125,11 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
           onClick={() => setOpen(true)}
         >
           <Icon small type={IconType.ADD} />
-          Add another bank account
+          Add a bank account
         </Button>
       }
     >
-      {!step && (
-        <AddBank
-          values={values}
-          cancelCallback={onClose}
-          submitCallback={handleAdd}
-        />
-      )}
+      {!step && <AddBank cancelCallback={onClose} submitCallback={handleAdd} />}
       {step === FormSteps.LOADING && <Loading />}
       {step === FormSteps.ERROR && (
         <Error
@@ -141,6 +144,13 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
           successTitle={successTitle}
           successMessage={successMessage}
           closeCallback={onClose}
+        />
+      )}
+      {step === FormSteps.VERIFY_IDENTITY && (
+        <VerifyIdentity
+          closeCallback={onClose}
+          onSuccess={handleAdd}
+          transactionDescription="managing your bank account."
         />
       )}
     </SideSheet>

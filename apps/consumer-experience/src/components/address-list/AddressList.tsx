@@ -44,7 +44,7 @@ export const AddressList: FC<AddressListProps> = ({
     });
   };
   const { data: addresses } = useQuery({
-    queryKey: [QueryKeys.POLICY_PROFILE, 'addresses'],
+    queryKey: [QueryKeys.POLICY_PROFILE, 'addresses', policyNumber],
     refetchInterval: ({ state }) => {
       const addresses = filterItemsWithPastEndDate(state.data?.addresses);
       return refetchHandler({
@@ -62,12 +62,12 @@ export const AddressList: FC<AddressListProps> = ({
   });
 
   if (addresses && addresses.length) {
-    const currentAddresses = filterItemsWithPastEndDate(addresses);
+    const currentAddresses: Address[] = filterItemsWithPastEndDate(addresses);
 
     if (currentAddresses && currentAddresses.length) {
       return (
         <Addresses
-          addresses={currentAddresses as Address[]}
+          addresses={currentAddresses}
           title="Address"
           preferredAddressIndicator={
             initialProfileData?.preferredAddressIndicator || ''

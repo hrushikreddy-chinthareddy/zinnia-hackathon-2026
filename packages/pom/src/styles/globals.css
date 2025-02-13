@@ -1,0 +1,88 @@
+/* do we just rely on ops heading styles? or do we set our own in this project? */
+@import url(./fonts/index.css);
+@import '@zinnia/bloom/css';
+/* TODO: uh oh this will prolly conflict with tailwind. I don't want to lose my utility spacing classes :( */
+@import './spacing.css';
+
+#producer-onboarding-maintenance {
+  /* TODO: Kinda guessing at these names */
+  --dimesion-padding-mobile: var(--measure-dimension-padding-2xl);
+  --dimesion-padding-tablet: var(--measure-dimension-padding-3xl);
+  --dimesion-padding-desktop: var(--measure-dimension-padding-4xl);
+
+  /* TODO: once the typography variables are exported from bloom, replace these with font: var(--typography-desktop-headline-1-d) */
+  h1 {
+    font: var(--typography-desktop-headline-1-d);
+  }
+
+  /* TODO: once the typography variables are exported from bloom, replace these with font: var(--typography-desktop-headline-2-d) */
+  h2 {
+    font: var(--typography-desktop-headline-2-d);
+  }
+
+  .card-section {
+    position: relative;
+    padding: var(--dimesion-padding-mobile) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg);
+
+    &:first-of-type {
+      padding-top: 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: calc(var(--dimesion-padding-mobile) * -1);
+      left: calc(var(--dimesion-padding-mobile) * -1);
+      bottom: 0;
+      height: var(--measure-dimension-stroke-sm, 2px);
+      background-color: var(--Base-Border-border-light, #ededed);
+    }
+
+    &:last-of-type {
+      padding-bottom: 0;
+
+      &::after {
+        content: none;
+      }
+    }
+  }
+
+  /* Between 768px and 124px */
+  @media (width > 767px) {
+    .card-section {
+      padding: var(--dimesion-padding-tablet) 0;
+      width: 100;
+
+      &::after {
+        right: calc(var(--dimesion-padding-tablet) * -1);
+        left: calc(var(--dimesion-padding-tablet) * -1);
+      }
+    }
+  }
+
+  /* Desktop */
+  @media (width > 1024px) {
+    .card-section {
+      padding: var(--dimesion-padding-desktop) 0;
+
+      &::after {
+        right: calc(var(--dimesion-padding-desktop) * -1);
+        left: calc(var(--dimesion-padding-desktop) * -1);
+      }
+    }
+  }
+}
+
+.pom_content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+}
+
+.pom_ordered-list {
+  list-style-position: inside;
+  list-style-type: decimal;
+}

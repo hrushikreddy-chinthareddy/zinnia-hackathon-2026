@@ -1,11 +1,16 @@
 import { useTranslation } from 'next-i18next';
+import { useEffect, useState } from 'react';
 
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helper';
 import { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
 import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { Policy, Reason } from '@deps/models/policy/sor-policy';
+import { checkEligibilityLoanRepaymentOneTime, TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import LoanRulesCard from './cards/loan-rules-card';
 import OutstandingLoansCard from './cards/outstanding-loans-card';
@@ -20,6 +25,29 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'premium.upcoming',
     });
+    const { featureFlags } = useOptimizely();
+
+    const [isLoanRepaymentEligible, setIsLoanRepaymentEligible] = useState<boolean | null>(null);
+    const [loanRepaymentIneligibilityMessage, setLoanRepaymentIneligibilityMessage] = useState('');
+    const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
+
+    useEffect(() => {
+        const checkEligibility = async () => {
+            if (!loanPaymentEnabled) {
+                setIsLoanRepaymentEligible(false);
+                setLoanRepaymentIneligibilityMessage('');
+
+                return;
+            }
+            const eligibilityResponse = await checkEligibilityLoanRepaymentOneTime(policy.product?.planCode, policy.policyNumber);
+            const eligible = eligibilityResponse.status === TransactionResponseStatus.Success;
+
+            setIsLoanRepaymentEligible(eligible);
+
+            !eligible && setLoanRepaymentIneligibilityMessage(formatValidationResult(eligibilityResponse?.validationResult));
+        };
+        checkEligibility();
+    }, [loanPaymentEnabled, policy.policyNumber, policy.product?.planCode]);
 
     const { coverage, currency, parties, systematicPrograms = [], loanValues, allocation } = policy;
 
@@ -58,26 +86,22 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                     footerLinks={[
                         upcomingPayment?.nextProgramDate
                             ? {
-                                  href: '#',
-                                  text: t('manageAutopay'),
-                                  tooltip: isStillInactive.loanPageManageAutopay,
-                                  tempInactive: !!isStillInactive.loanPageManageAutopay,
-                              }
+                                    href: '#',
+                                    text: t('manageAutopay'),
+                                    tooltip: isStillInactive.loanPageManageAutopay,
+                                    tempInactive: !!isStillInactive.loanPageManageAutopay,
+                                }
                             : {
-                                  href: '#',
-                                  text: t('setUpAutopay'),
-                                  tooltip: isStillInactive.loanPageSetUpAutopay,
-                                  tempInactive: !!isStillInactive.loanPageSetUpAutopay,
-                              },
+                                    href: '#',
+                                    text: t('setUpAutopay'),
+                                    tooltip: isStillInactive.loanPageSetUpAutopay,
+                                    tempInactive: !!isStillInactive.loanPageSetUpAutopay,
+                                },
                         {
-                            href: '#',
+                            href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/loan-payment`,
                             text: t('oneTimePaymentText'),
-                            tooltip: isStillInactive.loanPageOTP,
-                            tempInactive: !!isStillInactive.loanPageOTP,
-                        },
-                        {
-                            href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/new-loan`,
-                            text: t('startNew'),
+                            isDisabled: !isLoanRepaymentEligible,
+                            tooltip: !isLoanRepaymentEligible ? loanRepaymentIneligibilityMessage : undefined,
                         },
                     ]}
                 />

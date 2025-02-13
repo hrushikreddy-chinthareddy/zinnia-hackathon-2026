@@ -13,9 +13,20 @@ export enum TaskStatus {
     'Completed' = 'COMPLETED',
     'New' = 'NEW',
     'InProgress' = 'INPROGRESS',
+    'Pending' = 'IMPEDED',
+    'Canceled' = 'CANCELED',
+}
+
+export enum TaskLabel {
+    'New' = 'To do',
+    'Completed' = 'Completed',
+    'Pending' = 'Pending',
+    'Canceled' = 'Canceled',
+    'InProgress' = 'In Progress',
 }
 
 export type TaskInstance = {
+    taskName?: string;
     additionalData: AdditionalDataInstance;
     assignee: string;
     createdAt: string;
@@ -45,6 +56,14 @@ export type ManagementTask<T = TaskStatus> = {
     updatedAt: string;
     data: any;
     documents?: TaskDocument[];
+    statusReason?: string;
+    impededTillDate?: string;
+    prefferedAssignee?: string;
+    mappedDocuments?: TaskDocument[];
+    additionalDocuments?: TaskDocument[];
+    assignee?: string;
+    impededReason?: string;
+    cancellationReason?: string;
 };
 
 export type TaskDocument = {
@@ -92,4 +111,15 @@ export type AssignedTask<T = TaskStatus> = {
     updatedByPartyId: string;
     updatedAt: string;
     identifiers: IdentifierInstance[];
+};
+
+export type DocumentData = {
+    documentId?: string;
+    displayName?: string;
+    documentSource?: string;
+    fileType?: string;
+    documentName?: string;
+    documentNumber?: string;
+    documentID?: string;
+    sourceFileName?: string;
 };

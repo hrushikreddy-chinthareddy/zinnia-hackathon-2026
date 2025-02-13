@@ -12,7 +12,7 @@ These are consumer-facing end products that are deployable or deliverable in som
 
 ### Packages
 
-These consist of shared libraries, components, utilities, or any common code that is used by multiple apps within the monorepo. Packages are not meant to be deployed independently; instead, they are included as dependencies in apps or other packages. They can, however, optionally be published to our [NPM respository](https://github.com/orgs/zinnia/packages).
+These consist of shared libraries, components, utilities, or any common code that is used by multiple apps within the monorepo. Packages are not meant to be deployed independently; instead, they are included as dependencies in apps or other packages.
 
 - [API Types](packages/utils/README.md)
 - [ESlint Config](packages/eslint-config/README.md)
@@ -78,7 +78,11 @@ To simplify the development process, we have created two helper scripts to run e
 
 #### Setting up env variables
 
-Mae sure to copy `.env` to `.env.development.local` into each project and fill in the values
+Options:
+
+1. If you have vercel secrets permissions (don't be surprised if you don't), use `vercel env pull [file]` to retrieve the secrets from vercel. More details [here](https://vercel.com/docs/cli/env). `env` here is the name of the file to copy into. They are different per project, so follow that standard.
+
+2. Otherwise, copy `.env` to `.env.development.local` for each project and request values from developer
 
 #### Running Ops
 
@@ -95,6 +99,10 @@ To run Consumer Experience, use the following command:
 ```bash
 pnpm run dev:consumer-experience
 ```
+
+#### Contributing
+
+- PRs should be opened off of dev and branches must use
 
 ### Troubleshooting
 

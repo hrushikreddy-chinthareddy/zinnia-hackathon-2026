@@ -20,7 +20,10 @@ COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN --mount=type=secret,id=npmtoken echo "//npm.pkg.github.com/:_authToken=$(cat /run/secrets/npmtoken)" > /root/.npmrc
-RUN corepack enable pnpm && pnpm i
+RUN npm install -g corepack && corepack enable
+ENV COREPACK_INTEGRITY_KEYS=0
+ENV COREPACK_DEFAULT_TO_LATEST=0
+RUN pnpm i
 
 # Build the project
 COPY --from=builder /app/out/full/ .
@@ -39,6 +42,7 @@ ARG NEXT_PUBLIC_GOOGLEANALYTICS_ENV
 ARG NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY
 ARG NEXT_PUBLIC_GIT_SHA
 ARG DATADOG_API_KEY
+ARG NEXT_PUBLIC_DATA_API_BASE_URL
 
 # Save the public enviroment variables NEXTjs requires for the frontend.
 # THESE SHOULD NOT BE SECRETS
@@ -56,6 +60,7 @@ RUN echo "NEXT_PUBLIC_GOOGLEANALYTICS_ENV=${NEXT_PUBLIC_GOOGLEANALYTICS_ENV}" >>
 RUN echo "NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY=${NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY}" >> .env.production
 RUN echo "NEXT_PUBLIC_GIT_SHA=${NEXT_PUBLIC_GIT_SHA}" >> .env.production
 RUN echo "DATADOG_API_KEY=${DATADOG_API_KEY}" >> .env.production
+RUN echo "NEXT_PUBLIC_DATA_API_BASE_URL=${NEXT_PUBLIC_DATA_API_BASE_URL}" >> .env.production
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN pnpm turbo run build --filter=ops

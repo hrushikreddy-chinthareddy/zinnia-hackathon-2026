@@ -64,13 +64,7 @@ const DashboardPage = ({
                     <DashboardTabNav>
                         <div ref={tabContentRef}>
                             <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
-                                <ActiveApplications
-                                    handleSetLoading={setLoading}
-                                    loading={loading}
-                                    carrierHeaderRef={carrierHeaderRef}
-                                    authorizedCarriers={authorizedCarriers}
-                                    brokerDealersSSR={brokerDealersSSR}
-                                />
+                                <ActiveApplications carrierHeaderRef={carrierHeaderRef} authorizedCarriers={authorizedCarriers} />
                             </TabContent>
                             <TabContent value={DashboardTabs.ISSUED_BUSINESS}>
                                 <IssuedBusiness authorizedCarriers={authorizedCarriers} />

@@ -1,0 +1,6 @@
+.textContainer {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: var(--measure-dimension-padding-2xl, 1rem);
+}

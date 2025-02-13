@@ -1,0 +1,202 @@
+{
+    "data": [
+        {
+            "key": "processSubType",
+            "name": "",
+            "secondLow": 9245,
+            "secondMedian": 600537,
+            "secondMean": 4858021,
+            "secondHigh": 18694994,
+            "count": 14466
+        },
+        {
+            "key": "processSubType",
+            "name": "ADDRESS CHANGE",
+            "secondLow": 187872,
+            "secondMedian": 378898,
+            "secondMean": 390196,
+            "secondHigh": 600166,
+            "count": 221
+        },
+        {
+            "key": "processSubType",
+            "name": "ANNUITY APPLICATION",
+            "secondLow": 219033,
+            "secondMedian": 1258021,
+            "secondMean": 2086847,
+            "secondHigh": 6072277,
+            "count": 8877
+        },
+        {
+            "key": "processSubType",
+            "name": "Address Change",
+            "secondLow": 4,
+            "secondMedian": 269357,
+            "secondMean": 581079,
+            "secondHigh": 2604155,
+            "count": 3228
+        },
+        {
+            "key": "processSubType",
+            "name": "Beneficiary Change",
+            "secondLow": 1298,
+            "secondMedian": 522225,
+            "secondMean": 516446,
+            "secondHigh": 718464,
+            "count": 291
+        },
+        {
+            "key": "processSubType",
+            "name": "EXCHANGE",
+            "secondLow": 8608,
+            "secondMedian": 34681,
+            "secondMean": 419856,
+            "secondHigh": 1286996,
+            "count": 14673
+        },
+        {
+            "key": "processSubType",
+            "name": "INCOMING TRANSFER",
+            "secondLow": 1083641,
+            "secondMedian": 2380868,
+            "secondMean": 3679478,
+            "secondHigh": 9512858,
+            "count": 37793
+        },
+        {
+            "key": "processSubType",
+            "name": "INTERNAL CONVERSION",
+            "secondLow": 385486,
+            "secondMedian": 2971769,
+            "secondMean": 13484630,
+            "secondHigh": 69559109,
+            "count": 2002
+        },
+        {
+            "key": "processSubType",
+            "name": "NB PURCHASE W APP",
+            "secondLow": 118603,
+            "secondMedian": 376200,
+            "secondMean": 678035,
+            "secondHigh": 2279486,
+            "count": 7061
+        },
+        {
+            "key": "processSubType",
+            "name": "NB REG 60",
+            "secondLow": 840980,
+            "secondMedian": 3141864,
+            "secondMean": 4166013,
+            "secondHigh": 13375235,
+            "count": 25
+        },
+        {
+            "key": "processSubType",
+            "name": "OUTGOING TRANSFER",
+            "secondLow": 3374,
+            "secondMedian": 16049,
+            "secondMean": 303143,
+            "secondHigh": 505444,
+            "count": 34878
+        },
+        {
+            "key": "processSubType",
+            "name": "REDEMPTION",
+            "secondLow": 10893,
+            "secondMedian": 73314,
+            "secondMean": 688948,
+            "secondHigh": 1227462,
+            "count": 30682
+        },
+        {
+            "key": "processSubType",
+            "name": "REQUIRED MINIMUM DISTRIBUTION",
+            "secondLow": 9730,
+            "secondMedian": 29082,
+            "secondMean": 1033829,
+            "secondHigh": 11840559,
+            "count": 8272
+        },
+        {
+            "key": "processSubType",
+            "name": "Redemption",
+            "secondLow": 5064,
+            "secondMedian": 71203,
+            "secondMean": 228933,
+            "secondHigh": 865141,
+            "count": 18262
+        },
+        {
+            "key": "processSubType",
+            "name": "Renewal",
+            "secondLow": 8548,
+            "secondMedian": 57695,
+            "secondMean": 161473,
+            "secondHigh": 529227,
+            "count": 8202
+        },
+        {
+            "key": "processSubType",
+            "name": "Required Minimum Distribution",
+            "secondLow": 3730,
+            "secondMedian": 27964,
+            "secondMean": 153576,
+            "secondHigh": 632209,
+            "count": 7479
+        },
+        {
+            "key": "processSubType",
+            "name": "SERVICE FORM REQUEST",
+            "secondLow": 8,
+            "secondMedian": 16,
+            "secondMean": 682641,
+            "secondHigh": 5435064,
+            "count": 11857
+        },
+        {
+            "key": "processSubType",
+            "name": "SYSTEMATIC",
+            "secondLow": 9214,
+            "secondMedian": 26954,
+            "secondMean": 532821,
+            "secondHigh": 1203354,
+            "count": 17525
+        },
+        {
+            "key": "processSubType",
+            "name": "Service Form",
+            "secondLow": 7,
+            "secondMedian": 14,
+            "secondMean": 2032,
+            "secondHigh": 6532,
+            "count": 1140
+        },
+        {
+            "key": "processSubType",
+            "name": "Statement",
+            "secondLow": 3211,
+            "secondMedian": 4951,
+            "secondMean": 5969,
+            "secondHigh": 14739,
+            "count": 8
+        },
+        {
+            "key": "processSubType",
+            "name": "Systematic Program Update",
+            "secondLow": 4769,
+            "secondMedian": 35050,
+            "secondMean": 201904,
+            "secondHigh": 830776,
+            "count": 12073
+        },
+        {
+            "key": "processSubType",
+            "name": "Tax Form",
+            "secondLow": 3097,
+            "secondMedian": 5226,
+            "secondMean": 11455,
+            "secondHigh": 56604,
+            "count": 10
+        }
+    ]
+}

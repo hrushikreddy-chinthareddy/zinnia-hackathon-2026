@@ -18,6 +18,7 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
         formRestriction,
         formSignature,
         formSource,
+        formBeneInfo,
         formTaxWithholding,
         formTpaAuthorization,
         formSurrenderingCompany,
@@ -62,6 +63,7 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
             formNigos,
             formReindexingData,
             formComment,
+            formBeneInfo,
         },
     };
 };

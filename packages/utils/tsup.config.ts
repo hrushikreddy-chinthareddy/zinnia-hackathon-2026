@@ -1,9 +1,11 @@
-import { defineConfig, type Options } from "tsup";
+import { defineConfig } from 'tsup';
 
-export default defineConfig((options: Options) => ({
-  entryPoints: ["src/index.ts"],
-  clean: true,
+export default defineConfig({
+  entry: ['src/index.ts'],
+  format: ['cjs', 'esm'],
   dts: true,
-  format: ["cjs"],
-  ...options,
-}));
+  clean: true,
+  external: ['@zinnia/api-types'],
+  sourcemap: true,
+  treeshake: true,
+});

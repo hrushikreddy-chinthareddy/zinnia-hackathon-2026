@@ -62,7 +62,7 @@ export const InsightSummary = ({ content = '', prompt = '', dependencies = [], c
         <div className={clsx('flex flex-col gap-2', className)}>
             <div className="flex flow-col items-center align-middle gap-2">
                 <LightBulbIcon height={'24px'} width={'24px'} />
-                <Typography variant={TypographyVariant.LabelLg}>Insight</Typography>
+                <Typography variant={TypographyVariant.LabelLg}>Insights</Typography>
             </div>
             {insightLoading ? (
                 <div className="grow">

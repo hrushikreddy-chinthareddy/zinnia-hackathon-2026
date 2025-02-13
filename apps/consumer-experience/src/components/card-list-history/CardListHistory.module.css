@@ -13,6 +13,6 @@
   }
 
   li {
-    border: var(--stroke-sm, 2px) solid var(--Base-Border-border-light, #ededed);
+    border: var(--measure-dimension-stroke-sm, 2px) solid var(--color-base-border-border-light, #ededed);
   }
 }

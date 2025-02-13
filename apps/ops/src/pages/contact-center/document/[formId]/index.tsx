@@ -1,10 +1,10 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import PageLoader from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
-import PdfPreview from '@deps/containers/documents-page/pdf-preview';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
@@ -17,10 +17,11 @@ import nextI18nextConfig from 'next-i18next.config';
 
 interface FormViewerProps extends SegmentTrackedPageProps {
     formId: number;
-};
+}
 
 const FormViewer = ({ formId, user }: FormViewerProps) => {
     const [pdf, setPdf] = useState<string | null>(null);
+    const [pdfError, setPdfError] = useState<boolean>(false);
 
     useSegmentPageTracker(user, SegmentPageName.FormViewer, { formId });
 
@@ -31,6 +32,7 @@ const FormViewer = ({ formId, user }: FormViewerProps) => {
 
                 setPdf(response);
             } catch (e: any) {
+                setPdfError(true);
                 console.error('GetCallCenterForms::Error call center forms', e);
             }
         };
@@ -38,7 +40,24 @@ const FormViewer = ({ formId, user }: FormViewerProps) => {
         getForms();
     }, [formId]);
 
-    return <>{pdf && <PdfPreview documentBinary={pdf} />}</>;
+    if (!pdf) return <PageLoader />;
+    if (pdfError) return <p>An error occured while loading the PDF.</p>;
+
+    return (
+        <iframe
+            src={`data:application/pdf;base64,${pdf}`}
+            width="100%"
+            height="100%"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                border: 'none',
+            }}
+        />
+    );
 };
 
 export const getServerSideProps = withPageAuthRequired({

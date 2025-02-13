@@ -14,11 +14,30 @@ export enum TaskType {
     REG60 = 'NBReg60Comparision',
     SuitabilityDataEntry = 'SUITABILITY_DATA_ENTRY',
     SuitabilityReview = 'SUITABILITY_REVIEW',
+    PURCHASE_DOCUMENT_MATCHING = 'PURCHASE_DOCUMENT_MATCHING',
+    Agent_Nigo = 'NB_AGENT_NIGO',
+}
+
+export enum EarlyTaskType {
+    Withdrawal = 'WithdrawalFormInputTask',
+    OFT = 'OFTFormInputTask',
+    RMD = 'RMDFormInputTask',
+    SSW = 'SSWFormInputTask',
+    RENEWAL = 'RenewalTask',
+    REG60 = 'NBReg60Comparision',
 }
 
 export enum TaskSource {
     ZinniaTaskManagement = 'Zinnia.TaskManagement',
 }
+
+export enum MessageType {
+    Default = 'default',
+    Success = 'success',
+    Info = 'info',
+    Error = 'error',
+}
+
 export interface Signature {
     signaturePresent: string;
     type: string | null;
@@ -101,6 +120,36 @@ export interface renewalsFormParts {
 }
 
 export type FormMetadata = {
+    title?: string;
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
+    schemaContent?: {
+        tabSchemas: [
+            {
+                title?: string;
+                formSchema: RJSFSchema;
+                uiSchema: UiSchema;
+            }
+        ];
+    };
+};
+
+export enum CardTypes {
+    Detailed = 'Detailed',
+    Hyperlink = 'Hyperlink',
+    Download = 'Download',
+    Preview = 'Preview',
+    Document = 'Document',
+}
+
+export type ApiProps = {
+    apiUrl: string;
+    apiMethod: 'get' | 'post';
+    apiBody: any;
+    apiHeaders: any;
+    apiResponse: any;
+    apiError: any;
+    responseKey: string;
+    apiPayload: any;
+    responseData: string;
 };

@@ -103,7 +103,6 @@ export default function getFlicOftConfig(t: TFunction) {
                 return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
             },
         },
-
         {
             key: `sig-val-beneficiary`,
             fields: [

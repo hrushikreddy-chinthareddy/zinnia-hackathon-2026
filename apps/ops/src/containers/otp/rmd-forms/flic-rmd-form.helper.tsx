@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import {
@@ -10,7 +9,6 @@ import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/for
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import { JointLifeExpectancyConfig } from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
-import { frequencyToValue } from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import {
     SignatureBonusFields,
     SignatureFields,
@@ -37,7 +35,6 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { createValidator } from '../utils/helper-utils';
 import getFlicConfig, { spousalSignatureStateCodes } from '../withdrawal-forms/flic-withdrawal-form.helper';
@@ -413,31 +410,6 @@ export default function getFlicRmdConfig(t: TFunction) {
 
         if (rmds && rmds?.length === 0) {
             errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
-        }
-
-        if (rmds && rmds?.length > 0) {
-            const sortedPrograms = rmds.sort((a, b) => a.startDate.text.localeCompare(b.startDate.text));
-
-            sortedPrograms.map((program, index) => {
-                const frequency = (program?.frequency?.text && frequencyToValue[program?.frequency?.text]) || frequencyToValue.Annually;
-                const calculatedEndDate = dayjs(program?.startDate?.text, ZAHARA_API_DATE_FORMAT)
-                    .add((Number(program?.duration?.text) - 1) * frequency, 'month')
-                    .add(1, 'day')
-                    .format(ZAHARA_API_DATE_FORMAT)
-                    .toString();
-
-                if (index < sortedPrograms.length - 1) {
-                    if (calculatedEndDate > sortedPrograms[index + 1].startDate.text) {
-                        errors['rmdDateOverlap'] = t('rmdMethod.rmdWarnings.dateOverlap');
-                    }
-
-                    if (Number(program?.duration?.text) === 0 && sortedPrograms[index + 1].startDate.text !== '') {
-                        errors['rmdDetectedDurationZero'] = t('rmdMethod.rmdWarnings.detectedDurationZero', {
-                            startDate: dayjs(program?.startDate?.text, ZAHARA_API_DATE_FORMAT).format(DEFAULT_DATE_FORMAT),
-                        });
-                    }
-                }
-            });
         }
 
         return errors;

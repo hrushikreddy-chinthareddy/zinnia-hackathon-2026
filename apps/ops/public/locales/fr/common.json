@@ -67,7 +67,9 @@
             "newWithdrawal": "Nouveau Retrait",
             "formData": "Données du formulaire",
             "annuitization": "Annuitisation",
-            "dashboard": "Statistiques du dossier"
+            "dashboard": "Statistiques du dossier",
+            "loanPayment": "Paiement de prêts",
+            "activity": "Activité"
         },
         "navLinks": {
             "accessManagement": {
@@ -225,11 +227,25 @@
             },
             "history": {
                 "text": "Histoire",
-                "link": "/policies/{{planCode}}/{{id}}/history"
+                "link": "/policies/{{planCode}}/{{id}}/activity"
             },
             "dashboard": {
                 "text": "Statistiques du dossier",
                 "link": "/dashboard"
+            },
+            "activity": {
+                "text": "Activité",
+                "link": "/policies/{{planCode}}/{{id}}/activity",
+                "subLinks": {
+                    "callLogs": {
+                        "text": "Histoire d'appels",
+                        "link": "activity/call-logs"
+                    },
+                    "transactions": {
+                        "text": "Transactions",
+                        "link": "activity/transactions"
+                    }
+                }
             }
         },
         "loader": "Chargement..."
@@ -260,6 +276,20 @@
         "unassignTaskError": "Erreur de désattribution de tâche :",
         "startTask": "Démarrer la tâche",
         "transaction": "Transaction: {{transactionType}}",
+        "updateTaskStatusDrawer": {
+            "updateTaskStatus": "Mettre à jour l'état de la tâche",
+            "setTaskAsPending": "Définir la tâche comme en attente",
+            "followUpDate": "Date de suivi",
+            "reason": "Raison",
+            "selectReason": "Sélectionner une raison",
+            "cancel": "Annuler",
+            "updateStatus": "Mettre à jour le statut",
+            "pendingReasonOptions": {
+                "awaitingAdditionalInformation": "En attente d'informations supplémentaires",
+                "awaitingApproval": "En attente d'approbation",
+                "awaitingApplication": "En attente de candidature"
+            }
+        },
         "tasksListing": {
             "taskSubmittedAgo": "Soumise {{updatedCount}} {{updatedUnit}} il y a",
             "taskCompletedAgo": "Complété {{updatedCount}} {{updatedUnit}} il y a",
@@ -269,7 +299,10 @@
                 "closed": "Fermée",
                 "new": "Nouvelle",
                 "completed": "Complété",
-                "inProgress": "En cours"
+                "inProgress": "En cours",
+                "reason": "Raison",
+                "selectReason": "Sélectionner la raison",
+                "cancel": "Annuler"
             }
         },
         "caseId": "Numéro du cas: ",
@@ -957,7 +990,7 @@
             "renewalFormValidation": "Valider le formulaire de renouvellement",
             "renewalRequestCompletion": "Terminer le traitement",
             "renewalTransactionProcessing": "Traiter la transaction",
-            "requestAck": "Préparer {{subType}} pour le traitement",
+            "requestAck": "Préparer la requête {{subType}} pour le traitement",
             "requestAcknowledgement": "Préparer {{subType}} pour le traitement",
             "requestCompletion": "Terminer le traitement",
             "requestProcessing": "Traiter la transaction",
@@ -975,9 +1008,10 @@
             "requestAck.nbRequestReceived": "Réception de {{subType}}",
             "requestAck.caseProcessing": "Préparer {{subType}} pour le traitement",
             "requestAck.draftContractCreation": "Créer un contrat provisoire",
-            "requestAck.processFormRequestReceived": "Recevoir une demande de formulaire de service",
+            "requestAck.processFormRequestReceived": "Recevoir une demande d'envoi de {{subType}}",
+            "requestAck.processFormRequestProcessing": "Traitement de la requête {{subType}}",
             "requestCompletion.deliverLetter": "Recevoir la confirmation de livraison",
-            "requestCompletion.completeRequest": "Envoyer le formulaire demandé",
+            "requestCompletion.completeRequest": "Envoyer {{process}}  avec {{subType}}",
             "agentValidation.preValidationRules": "Confirmer l'exhaustivité des informations de l'agent",
             "agentValidation.agentAppointmentValidation": "Valider la nomination de l'agent",
             "agentValidation.agentLOBValidation": "Valider la ligne de produits de l'agent",
@@ -1297,13 +1331,25 @@
                 "reason": "Annulé",
                 "reasonNoExceptions": "À déterminer",
                 "badgeText": "Annulé",
-                "tooltip": "Ce {{processSubType}} a été annulé le "
+                "tooltip": "Ce {{processSubType}} a été annulé le ",
+                "application expired": "La candidature a expiré en raison de 30 jours d'inactivité.",
+                "application withdrawn": "Le demandeur a retiré cette demande.",
+                "underwriting declined": "Le souscripteur a refusé cette demande.",
+                "offer expired": "L'offre a expiré en raison de 30 jours d'inactivité.",
+                "offer rejected": "Le demandeur a rejeté l'offre.",
+                "underwriting expired": "La demande a expiré en raison de l'absence de réponse du souscripteur dans les 30 jours.",
+                "underwriting declined at initial review": "Le souscripteur a refusé cette demande car le risque n'est pas acceptable",
+                "identity validation expired": "La vérification de l'identité n'est pas terminée dans les 30 jours, la demande est marquée comme expirée."
             },
             "notStarted": {
                 "reason": "Non débuté",
                 "reasonNoExceptions": "Pas encore commencé",
                 "statusTooltip": "Pas commencé",
                 "detailedReason": "Ce cas est actuellement en attente pour que le travail commence. Vous pouvez revenir plus tard pour des mises à jour en recherchant le cas."
+            },
+            "withdrawn": {
+                "badgeText": "Retiré",
+                "tooltip": "Le statut est retiré."
             },
             "unknown": {
                 "badgeText": "Inconnu",
@@ -1321,6 +1367,8 @@
             "call-logs": "Journal des appels",
             "closedOn": "Fermé le {{date}}",
             "documents": "Documents",
+            "caseDocuments": "Documents du Dossier",
+            "policyDocuments": "Documents de la Police",
             "issue": "Problème: {{issue}}",
             "issueCount_one": "{{count}} problème",
             "issueCount_other": "{{count}} problemes",
@@ -1355,13 +1403,18 @@
                 "pre-note": "Pre-Note: {{label}}",
                 "source of premium": "Source de prétium: {{label}}",
                 "transfer of assets": "Transfert d'actifs: {{label}}",
-                "ceding carrier": "Transporteur cédant: {{label}}"
+                "ceding carrier": "Transporteur cédant: {{label}}",
+                "premium source": "Source Premium: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
             "suitabilityReview": "suitability",
             "noDataAvailable": "Aucune donnée disponible.",
+            "noDocuments": "Aucun document disponible",
+            "errorAdditionalDocuments": "Erreur lors de la récupération de documents supplémentaires.",
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
-            "suitabilityReviewIssues": "Revoir Suitability Problèmes"
+            "suitabilityReviewIssues": "Revoir Suitability Problèmes",
+            "purchaseDocumentMatchingIssues": "Document de correspondance",
+            "agentNigo": "Réviser les problèmes d'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -1505,7 +1558,8 @@
                 "defaultTitle": "Annuity Contract Withdrawal Request",
                 "nasu": "Demande de retrait de contrat de rente",
                 "gdmn": "Demande de retrait du Commonwealth",
-                "rsln": "Lincoln Benefit Life Withdrawal Request"
+                "rsln": "Lincoln Benefit Life Withdrawal Request",
+                "ulpc": "Unified Life Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Détails personnels",
@@ -1565,7 +1619,8 @@
                     "partial": "Partielle",
                     "totalFreeAmt": "Montant total gratuit",
                     "penaltyFreeAmount": "Montant sans pénalité",
-                    "annualFreeAmountBalance": "Solde annuel du montant gratuit"
+                    "annualFreeAmountBalance": "Solde annuel du montant gratuit",
+                    "maximumFreeAmount": "Montant maximum gratuit"
                 },
                 "fullWithdrawal": {
                     "contractHasBeenLostOrDestroyed": "Le contrat a été perdu ou détruit",
@@ -1590,7 +1645,8 @@
                     "specificAmount": "Montant spécifique brut$",
                     "specificAmountGross": "Specific Amount net$",
                     "percetageOfAccountValue": "% de la valeur du compte",
-                    "maximum": "Montant maximum"
+                    "maximum": "Montant maximum",
+                    "percentageOfAccumulatedValue": "% de valeur accumulée"
                 },
                 "processTimeframe": {
                     "selectOne": "Sélectionnez-en un",
@@ -1653,6 +1709,13 @@
                         "wife": "Femme",
                         "spouse": "Conjoint",
                         "na": "N/A"
+                    }
+                },
+                "payout": {
+                    "title": "Paiement",
+                    "payoutOptions": {
+                        "level": "Niveau",
+                        "increasing": "Croissant"
                     }
                 }
             },
@@ -1870,7 +1933,8 @@
                 "bankUpdateTitle": "Détails bancaires",
                 "cancel": "Annuler",
                 "submit": "Soumettre",
-                "submitedMessage": "La demande de mise à jour bancaire a été soumise."
+                "submitedMessage": "La demande de mise à jour bancaire a été soumise.",
+                "ussa": "USSA"
             },
             "neaBenefitsSensitivity": "Sensibilité aux avantages NEA",
             "distributionInstruction": {
@@ -1985,6 +2049,10 @@
                 "acknowledgement": "Reconnaissance de prêt",
                 "title": "Reconnaissance de prêt"
             },
+            "loanRepayment": {
+                "acknowledgement": "Je comprends que pour traiter la demande de rachat complet, tous les prêts du contrat doivent être entièrement payés par moi ou par rachat de charge.",
+                "title": "Remboursement du prêt"
+            },
             "cslnCheck": {
                 "title": "Valider le Child Support Lien Network (CSLN)",
                 "status": "État du Child Support Lien Network (CSLN)",
@@ -2092,7 +2160,22 @@
                 "OFTFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de transfert de fonds sortants pour{{documentNumber}} et {{contractNumber}}",
                 "SSWFormInputTask": "Bonne nouvelle! Nous avons lancé une tâche de retrait systématique pour {{documentNumber}} et {{contractNumber}}"
             },
-            "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique."
+            "openNigoExists": "Un cas de base comprend un NIGO. Veuillez résoudre le problème ouvert NIGO avant de soumettre une autre demande via le portail numérique.",
+            "beneficiaryInfo": {
+                "title": "Informations sur le bénéficiaire",
+                "isBeneficiarySpouse": {
+                    "title": "Votre bénéficiaire est-il votre conjoint?",
+                    "nasu": "Votre conjoint est-il le principal bénéficiaire?",
+                    "yes": "Oui",
+                    "no": "Non"
+                },
+                "firstName": "Prénom",
+                "lastName": "Nom de famille",
+                "middleName": "Deuxième prénom",
+                "taxId": "SSN",
+                "dob": "Date de naissance",
+                "isYourSpouseYoungerThanYou": "Votre conjoint a-t-il 10 ans de moins que vous?"
+            }
         },
         "sidebar": {
             "contractStatusCode": "Statut de la politique",
@@ -2399,7 +2482,8 @@
         "reversed": "Reversé",
         "reversedOn": "Reversé le {{date}}",
         "pendingReversal": "En Attente de Reversal",
-        "pendingReversalOn": "En Attente de Reversal le {{date}}"
+        "pendingReversalOn": "En Attente de Reversal le {{date}}",
+        "withdrawn": "Retiré"
     },
     "placeHolder": {
         "globalSelectSearch": "par exemple. Montant du remboursement du prêt, coût de base..."
@@ -2621,8 +2705,10 @@
             "fileType": "Type de fichier",
             "filter": "Filtrer par année :",
             "filterByCategory": "Filtrer par catégorie",
+            "formId": "ID du formulaire",
             "linkedTo": "Ce document est lié à ce blah {{type}}.",
             "loadingDocuments": "Chargement des documents...",
+            "name": "Nom",
             "noResults": "Il semble qu'il n'y ait aucun document à afficher.",
             "received": "Reçu",
             "receivedDate": "Date de réception",
@@ -2630,6 +2716,8 @@
             "rowsPerPage": "Lignes par page: {{limit}}",
             "sent": "Envoyé",
             "sentDate": "Date d'envoi",
+            "taxDocuments": "Documents fiscaux",
+            "taxYear": "Année fiscale",
             "view": "Voir"
         },
         "funds": {
@@ -2783,6 +2871,7 @@
             "noEventsTitle": "Aucun événement pour le moment.",
             "noEventsSubtitle": "On dirait que rien ne s'est encore passé.",
             "upcomingEvents": "Événements à venir",
+            "requested": "Demandé",
             "sidesheet": {
                 "accountNumber": "Numéro de compte",
                 "accountType": "Type de compte",
@@ -3149,12 +3238,27 @@
                 "closed": "fermée"
             },
             "createdLabel": "Date de création",
+            "newCreatedLabel": "Créée",
             "assigneeLabel": "Cessionnaire",
             "stepLabel": "Étape",
             "issueLabel": "Problème",
             "detailsLabel": "Détails",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
-            "taskDetails": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par le transporteur et ignorés pour émettre le contrat.."
+            "reasonLabel": "Raison du statut",
+            "pendinglabel": "En attente jusqu'au",
+            "canceledLabel": "Annulé le",
+            "completedLabel": "Terminé le",
+            "additionalDocuments": "Documents supplémentaires",
+            "noAssignee": "Seul le responsable peut démarrer cette tâche",
+            "startTask": "Démarrer la tâche",
+            "claimTask": "Revendiquer la tâche",
+            "claimTaskError": "Le système a rencontré une erreur temporaire. Veuillez réessayer.",
+            "taskHeading": "Tâche",
+            "taskDetails": {
+                "purchaseDocumentMatching": "Dans le cadre du processus de mise en correspondance des documents pour le document d'achat, un ou plusieurs documents nécessitent un examen et une confirmation pour garantir un alignement approprié avant de procéder à l'émission du contrat",
+                "suitabilityReview": "Un ou plusieurs problèmes ont été détectés lors de Zinnia {{taskType}}. Ces problèmes doivent être examinés par Carrier et annulés pour émettre le contrat.",
+                "nbAgentNigo": "Un ou plusieurs problèmes de type « non conforme » (NIGO) ont été identifiés lors de l'examen de la demande {{caseType}}. Ces problèmes doivent être examinés et résolus pour garantir que la demande répond à toutes les exigences avant de procéder à l'émission du contrat."
+            }
         },
         "suitability": {
             "header": "Examen complet de l’adéquation",
@@ -3352,6 +3456,9 @@
         },
         "history": {
             "headerText": "Histoire"
+        },
+        "activity": {
+            "headerText": "Activité"
         }
     },
     "piiBreadcrumb": "Retour à",
@@ -3875,7 +3982,8 @@
             "documents": "Documents",
             "caseDetails": "Détails du Dossier",
             "deliveryMethod": "Méthode de livraison",
-            "correspondence": "Correspondence"
+            "correspondence": "Correspondence",
+            "activity": "Activité"
         }
     },
     "bannerAlert": {
@@ -4148,6 +4256,56 @@
         "taken": "pris",
         "left": "restants"
     },
+    "loanPayment": {
+        "amount": {
+            "label": "Montant",
+            "dateLabel": "Date d'effet",
+            "paymentLabel": "Montant du paiement de prêt",
+            "invalidDateError": "Entrez une date d'effet valide.",
+            "invalidPaymentAmountError": "Le montant du paiement doit être d'au moins 1 $."
+        },
+        "confirm": {
+            "cta": "Aller à l'historique des transactions",
+            "label": "Confirmer",
+            "secondaryCta": "Fermer",
+            "subtitle": {
+                "0": "Un ",
+                "1": " paiement unique de prêt de ",
+                "2": " a été soumis.",
+                "NIGO": " le paiement unique du prêt a été soumis pour",
+                "NIGO1": " traitement NIGO."
+            },
+            "title": "Soumis!"
+        },
+        "payment": {
+            "label": "Méthode de paiement",
+            "title": "Où devrions-nous envoyer le paiement?"
+        },
+        "payor": {
+            "label": "Payeur"
+        },
+        "start": {
+            "label": "Démarrer",
+            "title": "Faire un paiement de prêt",
+            "subtitle": "Besoin de soumettre un paiement de prêt unique? Faisons-le. Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans OnBase."
+        },
+        "summary": {
+            "label": "Résumé",
+            "bpm500Error": "Erreur BPM 500",
+            "submitPayment": "Soumettre le paiement",
+            "status200subtitle": "Ça a l'air bien! Assurez-vous de vérifier vos entrées avant de soumettre.",
+            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette politique. Consultez l'erreur ci-dessous.",
+            "loanPaymentAmount": "Montant du paiement du prêt",
+            "effectiveDate": "Date effective",
+            "payor": "Payeur",
+            "validationStatusLabel": "Statut de validation",
+            "internal500Error": "Les services sont en panne, nous ne pouvons donc pas continuer. Vous pouvez soumettre un ticket de help desk. Veuillez quitter cette transaction et réessayer plus tard.",
+            "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+            "internal500CTAlinkText": "Soumettre un ticket de help desk",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée effectue un suivi.",
+            "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO."
+        }
+    },
     "newLoan": {
         "amount": {
             "disbursementType": {
@@ -4355,8 +4513,15 @@
             "label": "Personnes",
             "manageBeneficiaries": "Gérer les bénéficiaires"
         },
+        "documents": {
+            "label": "Envoyer des documents",
+            "sendForms": "Envoyer des formulaires",
+            "sendStatements": "Envoyer des relevés",
+            "sendTaxForms": "Envoyer des formulaires fiscaux"
+        },
         "transactions": {
             "label": "Transactions",
+            "loanPayment": "Commencer un paiement unique de prêt",
             "managePremiumAutopay": "Gérer le paiement automatique des primes",
             "newLoan": "Démarrer un prêt",
             "newPremium": "Démarrez un abonnement premium unique",
@@ -4521,6 +4686,7 @@
                 "text": "soumettre un billet au centre d'assistance"
             },
             "leaveTransaction": "Quitter cette transaction",
+            "submitLoanPayment": "Soumettre le paiement du prêt",
             "submitNewLoan": "Soumettre un prêt",
             "submitPayment": "Soumettre le paiement",
             "submitWithdrawal": "Soumettre le retrait",
@@ -4618,7 +4784,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "ID du document",
-            "noFormAvailable": "Aucun formulaire disponible."
+            "noFormAvailable": "Aucun formulaire disponible.",
+            "taskTitle": "Détails de la tâche"
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -4784,16 +4951,16 @@
             },
             "view": "Voir",
             "documentId": "ID du document",
-            "submitLabel": "Soumettre",
+            "submit": "Soumettre",
             "continueLabel": "Continuer",
-            "cancelLabel": "Annuler"
+            "cancel": "Annuler"
         },
         "taskForm": {
             "title": "Données d’adéquation des entrées",
             "subTitle": "Saisissez manuellement toutes les données d'adéquation. Notez que l'annulation à tout moment effacera toutes les données saisies.",
-            "submitLabel": "Soumettre",
+            "submit": "Soumettre",
             "continueLabel": "Continuer",
-            "cancelLabel": "Annuler"
+            "cancel": "Annuler"
         },
         "confirmStep": {
             "title": "Soumise!",
@@ -4824,8 +4991,8 @@
         "taskForm": {
             "title": "Évaluation de la pertinence",
             "subTitle": "La candidature de ce client a été marquée pour examen. Acceptez ou refusez chaque problème avant de soumettre une décision finale.",
-            "submitLabel": "Soumettre la décision",
-            "cancelLabel": "Annuler"
+            "submit": "Soumettre la décision",
+            "cancel": "Annuler"
         },
         "confirmStep": {
             "title": "Soumise!",
@@ -4833,6 +5000,42 @@
             "cta": "Aller à l'examen d'adéquation",
             "secondaryCta": "Fermer",
             "submitTask": "Soumettre les détails de l'examen d'adéquation"
+        }
+    },
+    "taskManagement": {
+        "taskForm": {
+            "title": "Gestion des tâches",
+            "submit": "Soumettre",
+            "cancel": "Annuler",
+            "confirm": "Confirmer",
+            "continue": "Continue",
+            "tabs": {
+                "start": "Démarrer",
+                "nigoDetails": "Informations manquantes",
+                "suitabilityForm": "Formulaire d'adéquation",
+                "summary": "Résumé"
+            }
+        }
+    },
+    "purchaseDocumentMatching": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche: Appariement de Document a été soumise.",
+            "cta": "Aller à la Qualification",
+            "secondaryCta": "Retour à l'accueil"
+        },
+        "formErrors": {
+            "caseNotFound": "Dossier non trouvé",
+            "correlationIdNotFount": "ID de corrélation non trouvé",
+            "transactionNotFound": "Transaction non trouvée"
+        }
+    },
+    "nbAgentNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
         }
     },
     "unauthorized": {

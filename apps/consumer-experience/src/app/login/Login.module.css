@@ -37,7 +37,7 @@
   background-color: var(--color-fields-surface-field-default-fill);
 
   &::placeholder {
-    color: var(--color-states-inactive-inactive-text);
+    color: var(--color-states-inactive-text-inactive-text);
   }
 
   &:hover {
@@ -124,6 +124,31 @@
 .footer {
   text-align: left;
   border-top: var(--border-style);
+}
+
+.mfaOptionsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg);
+  }
+}
+
+.mfaOptions {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mfaOption {
+  display: flex;
+  gap: var(--measure-dimension-gap-md);
+  align-items: center;
 }
 
 @media (width >=767px) {
