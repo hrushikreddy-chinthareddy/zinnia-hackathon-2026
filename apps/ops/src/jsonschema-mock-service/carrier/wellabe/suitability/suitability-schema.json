@@ -176,7 +176,7 @@
                 "enum": ["YES", "NO"]
             },
             "sourceOfIncomeEnum": {
-                "enum": ["SALARY", "401K_ROLLOVER", "SOCIAL_SECURITY", "RENTAL_INCOME", "403(b)", "ALIMONY_AND_OR_CHILD_SUPPORT", "OTHERS"]
+                "enum": ["SALARY", "OPTION_401K_ROLLOVER", "SOCIAL_SECURITY", "RENTAL_INCOME", "OPTION_403B", "ALIMONY", "OTHERS"]
             },
             "materialChangeExpEnum": {
                 "enum": ["YES", "NO"]
@@ -199,8 +199,8 @@
                     "INHERITANCE",
                     "DEATH_BENEFIT",
                     "REVERSE_MORTGAGE",
-                    "401K_ROLLOVER",
-                    "SPOUSAL CONTRIBUTION",
+                    "OPTION_401K_ROLLOVER",
+                    "SPOUSAL_CONTRIBUTION",
                     "OTHERS",
                     "RETIREMENT_PLAN",
                     "INHERITED_IRA"
@@ -242,13 +242,7 @@
             },
 
             "liquidityOptions_distributionOptionEnum": {
-                "enum": [
-                    "PENALTY-FREE-WITHDRWAWAL",
-                    "ANNUITIZATION",
-                    "LUMP SUM",
-                    "REQUIRED_MINIMUM_DISTRIBUTION",
-                    "NO_CURRENT_PLANS_TO_ACCESS"
-                ]
+                "enum": ["PENALTY-FREE-WITHDRWAWAL", "ANNUITIZE", "LUMP_SUM", "REQUIRED_MINIMUM_DISTRIBUTION", "NO_PLANS_TO_ACCESS"]
             },
             "financialObjectives_annuityMeetsFinancialNeedsEnum": {
                 "enum": ["YES", "NO"]
@@ -418,12 +412,9 @@
                             "required": ["employmentStatus"],
                             "properties": {
                                 "employmentStatus": {
-                                    "type": "array",
+                                    "type": "string",
                                     "title": "Employment status",
-                                    "items": {
-                                        "type": "string",
-                                        "$ref": "#/definitions/employmentStatusEnum"
-                                    },
+                                    "$ref": "#/definitions/employmentStatusEnum",
                                     "uniqueItems": true
                                 },
                                 "occupation": {
@@ -1361,7 +1352,6 @@
                     "employmentStatus": {
                         "ui:options": {
                             "label": true,
-                            "widget": "checkboxes",
                             "enumNames": ["Active", "Retired", "Disabled", "Terminated", "Others"]
                         }
                     },
@@ -1995,11 +1985,11 @@
                         "sourceOfIncomeEnum": {
                             "enum": [
                                 "SALARY",
-                                "401K_ROLLOVER",
+                                "OPTION_401K_ROLLOVER",
                                 "SOCIAL_SECURITY",
                                 "RENTAL_INCOME",
-                                "403(b)",
-                                "ALIMONY_AND_OR_CHILD_SUPPORT",
+                                "OPTION_403B",
+                                "ALIMONY",
                                 "OTHERS"
                             ]
                         },
@@ -2024,8 +2014,8 @@
                                 "INHERITANCE",
                                 "DEATH_BENEFIT",
                                 "REVERSE_MORTGAGE",
-                                "401K_ROLLOVER",
-                                "SPOUSAL CONTRIBUTION",
+                                "OPTION_401K_ROLLOVER",
+                                "SPOUSAL_CONTRIBUTION",
                                 "OTHERS",
                                 "RETIREMENT_PLAN",
                                 "INHERITED_IRA"
@@ -2069,10 +2059,10 @@
                         "liquidityOptions_distributionOptionEnum": {
                             "enum": [
                                 "PENALTY-FREE-WITHDRWAWAL",
-                                "ANNUITIZATION",
-                                "LUMP SUM",
+                                "ANNUITIZE",
+                                "LUMP_SUM",
                                 "REQUIRED_MINIMUM_DISTRIBUTION",
-                                "NO_CURRENT_PLANS_TO_ACCESS"
+                                "NO_PLANS_TO_ACCESS"
                             ]
                         },
                         "financialObjectives_annuityMeetsFinancialNeedsEnum": {
@@ -2243,12 +2233,9 @@
                                         "required": ["employmentStatus"],
                                         "properties": {
                                             "employmentStatus": {
-                                                "type": "array",
+                                                "type": "string",
                                                 "title": "Employment status",
-                                                "items": {
-                                                    "type": "string",
-                                                    "$ref": "#/definitions/employmentStatusEnum"
-                                                },
+                                                "$ref": "#/definitions/employmentStatusEnum",
                                                 "uniqueItems": true
                                             },
                                             "occupation": {
@@ -3194,7 +3181,6 @@
                                 "employmentStatus": {
                                     "ui:options": {
                                         "label": true,
-                                        "widget": "checkboxes",
                                         "enumNames": ["Active", "Retired", "Disabled", "TerminatedD", "Others"]
                                     }
                                 },
