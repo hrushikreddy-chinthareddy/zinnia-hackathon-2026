@@ -22,7 +22,6 @@ export const getPolicyDetails = async (
     throw response.error;
   }
 
-  console.log(response.data);
   return response.data;
 };
 
