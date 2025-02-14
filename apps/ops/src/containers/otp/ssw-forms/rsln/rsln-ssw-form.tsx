@@ -18,6 +18,7 @@ import getRslnConfig from './rsln-ssw-form.helper';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import { isAllowedState } from '@deps/utils/renderStateW4';
+import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 
 export function RslnSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -42,6 +43,7 @@ export function RslnSSWForm() {
         ownerStateOfResidence,
         setOwnerStateOfResidence,
         contractIssueState,
+        formTpaAuthorization,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -66,6 +68,8 @@ export function RslnSSWForm() {
     }, [formParty]);
 
     const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
+
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -86,6 +90,7 @@ export function RslnSSWForm() {
 
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
         </>
     );
 }

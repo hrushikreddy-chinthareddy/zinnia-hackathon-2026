@@ -15,7 +15,6 @@ import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case'
 import SswEditSelection from '../ssw-edit-selection';
 import getPrdnConfig from './prdn-ssw-from-helper';
 import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
-import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 
 export function PrdnSSWForm() {
@@ -39,7 +38,6 @@ export function PrdnSSWForm() {
         isFormStateReadOnly,
         ownerStateOfResidence,
         setOwnerStateOfResidence,
-        formTpaAuthorization,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -63,8 +61,6 @@ export function PrdnSSWForm() {
         }
     }, [formParty]);
 
-    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
-
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -83,7 +79,6 @@ export function PrdnSSWForm() {
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
         </>
     );
 }

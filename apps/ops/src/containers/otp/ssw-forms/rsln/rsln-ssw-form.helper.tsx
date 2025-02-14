@@ -227,15 +227,8 @@ export default function getRslnConfig(t: TFunction) {
         programFrequency: {
             frequency: val.frequency.text === Frequency.None ? { text: '' as Frequency } : val.frequency,
             beginDate: val.startDate,
-            fixedPeriodYear: [
-                SSWType.FixPeriod,
-                SSWType.FixDollar,
-                SSWType.AnnualFree,
-                SSWType.PercentOfAmountValue,
-                SSWType.InterestEarningDividendsGains,
-            ].includes(subType)
-                ? { text: null }
-                : { text: val.duration.text },
+            fixedPeriodYear: [SSWType.FixPeriod].includes(subType) ? val.depleteFundYears : { text: null },
+
             duration: val.duration,
         },
         ...(subType === SSWType.FixDollar && { programAmount: { text: val.amount?.text, amountType: AmountType.Dollar } }),
