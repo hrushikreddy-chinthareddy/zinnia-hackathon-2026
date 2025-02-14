@@ -10,18 +10,26 @@ import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdin
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
-import { Carrier } from '@deps/models/case/withdrawal/case';
+import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 
 import SswEditSelection from '../ssw-edit-selection';
 import getPrdnConfig from './prdn-ssw-from-helper';
 import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
+import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 
 export function PrdnSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
 
-    const { reasonOptions, formValidation, formPartyConfigs, systematicWithdrawalOptions, disbursementOptions, signaturesConfig } =
-        getPrdnConfig(t);
+    const {
+        reasonOptions,
+        formValidation,
+        formPartyConfigs,
+        systematicWithdrawalOptions,
+        disbursementOptions,
+        signaturesConfig,
+        fundWithdrawnMethodOptions,
+    } = getPrdnConfig(t);
     const {
         formParty,
         setFormValidator,
@@ -64,6 +72,13 @@ export function PrdnSSWForm() {
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <DistributionReason isFormStateReadOnly={isFormStateReadOnly} reasonOptions={reasonOptions} />
             <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
+            <FormDistribution
+                isDerivedMethodFromFunds={true}
+                isFormStateReadOnly={isFormStateReadOnly}
+                defaultMethod={FundWithdrawnMethod.Prorata}
+                fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
+                title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+            />
             <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
