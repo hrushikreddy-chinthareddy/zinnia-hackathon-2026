@@ -2,7 +2,7 @@
     "formId": "8f6c435b-9827-430f-b776-dd6101d1cfd3",
     "process": "New Business",
     "carrier": "WELB",
-    "taskType": "NEWBUSINESS_AGENT_NIGO",
+    "taskType": "NB_AGENT_NIGO",
     "formSchema": {
         "type": "object"
     },
@@ -12,10 +12,6 @@
     "schemaContent": {
         "tabSchemas": [
             {
-                "formId": "004c97a1-d97c-4faa-9b7f-8ff9105b4c29",
-                "process": "New Business",
-                "carrier": "WELB",
-                "taskType": "SUITABILITY_REVIEW",
                 "title": "Review Agent Issues",
                 "formSchema": {
                     "type": "object",
@@ -46,11 +42,13 @@
                                     "properties": {
                                         "firstName": {
                                             "type": "string",
-                                            "title": "First Name"
+                                            "title": "First Name",
+                                            "ui:field": "title"
                                         },
                                         "agentExternalId": {
                                             "type": "string",
-                                            "title": "External Id"
+                                            "title": "External Id",
+                                            "ui:field": "subTitle"
                                         },
                                         "taxId": {
                                             "type": "string",
@@ -59,7 +57,8 @@
                                         },
                                         "lastName": {
                                             "type": "string",
-                                            "title": "Last Name"
+                                            "title": "Last Name",
+                                            "ui:field": "title"
                                         }
                                     }
                                 },
@@ -144,11 +143,12 @@
                         },
                         "agentDetails": {
                             "ui:options": {
-                                "type": "Detailed",
+                                "cardType": "Detailed",
                                 "icon": "CIRCLE_USER",
                                 "label": true,
                                 "ObjectFieldTemplate": "CardTemplate",
-                                "key": "agentDetails"
+                                "key": "agentDetails",
+                                "sectionTitle": "Details"
                             }
                         },
                         "agentDocument": {
