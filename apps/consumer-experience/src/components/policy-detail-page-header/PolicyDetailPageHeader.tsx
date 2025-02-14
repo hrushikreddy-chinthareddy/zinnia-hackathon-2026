@@ -6,15 +6,10 @@ import { useParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Layout.module.css';
-import breadcrumbStyles from '@/components/breadcrumbs/Breadcrumbs.module.css';
 import { HeaderPolicyDetails } from '@/components/policy-detail-page-header/header-policy-details/HeaderPolicyDetails';
-import { RouteKey, getPageTitle } from '@/route-map';
-import { LineOfBusinessPath } from '@/types';
 
-interface Breadcrumb {
-  url: string;
-  title: string;
-}
+import breadcrumbStyles from './PolicyDetailPageHeader.module.css';
+import { Breadcrumb, generateBreadcrumbs } from './utils';
 
 export const PolicyDetailPageHeader = ({
   planCode,
@@ -47,32 +42,13 @@ export const PolicyDetailPageHeader = ({
       return;
     }
 
-    const breadcrumbsList = [];
-    for (let i = pathPartsCount - 1; i >= 0; i--) {
-      const currentPathPart = pathParts[i];
-      const breadcrumbUrl = pathParts.slice(0, i + 1).join('/');
-      // if the current path part is the policy number it means we have reached the policy overview
-      // and we can return after adding this breadcrumb
-      if (currentPathPart === params.policyNumber) {
-        breadcrumbsList.unshift({
-          title: toTitleCase(overviewTitle),
-          url: breadcrumbUrl,
-        });
-        break;
-        // if the beneficiary id is the route key it means we are on a Beneficiary Detail page
-      } else if (currentPathPart === params.beneficiary) {
-        breadcrumbsList.unshift({
-          title: getPageTitle(RouteKey.BENEFICIARY),
-          url: breadcrumbUrl,
-        });
-      } else {
-        const title = getPageTitle(
-          `/${currentPathPart}` as RouteKey,
-          pathParts[2] as LineOfBusinessPath
-        );
-        breadcrumbsList.unshift({ title, url: breadcrumbUrl });
-      }
-    }
+    const breadcrumbsList = generateBreadcrumbs({
+      pathParts,
+      policyNumber: params.policyNumber,
+      beneficiaryKey: params.beneficiary,
+      rootPageTitle: overviewTitle,
+    });
+
     setBreadcrumbs(breadcrumbsList);
     setPageTitle(breadcrumbsList[breadcrumbsList.length - 1]?.title || '');
   }, [pathname, params.beneficiary, params.policyNumber, overviewTitle]);
