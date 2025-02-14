@@ -35,6 +35,7 @@ import {
     FormDisbursement,
     AccountType,
     RestrictionOption,
+    FundWithdrawnMethod,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -497,6 +498,11 @@ export default function getPrdnConfig(t: TFunction) {
         },
     ];
 
+    const fundWithdrawnMethodOptions = [
+        { label: t(`distributionInstruction.prorata`), value: FundWithdrawnMethod.Prorata },
+        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+    ];
+
     return {
         reasonOptions,
         formValidation: sswFormValidation,
@@ -504,5 +510,6 @@ export default function getPrdnConfig(t: TFunction) {
         systematicWithdrawalOptions,
         disbursementOptions,
         signaturesConfig,
+        fundWithdrawnMethodOptions,
     };
 }
