@@ -11,13 +11,11 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import {
-  resendMfaChallenge,
-  verifyMfaChallenge,
-} from '@/actions/login-actions';
+import { verifyMfaChallenge } from '@/actions/login-actions';
 import styles from '@/app/login/Login.module.css';
 import { FieldDataActive } from '@/components/field/data-active/FieldDataActive';
 import { MfaPhoneNumber } from '@/components/mfa/phone-number/MfaPhoneNumber';
+import { sendMfaChallenge } from '@/services/auth';
 import { MfaAuthenticator } from '@/types/auth';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
@@ -111,7 +109,6 @@ export const MfaChallenge = ({
         }
         setAuthenticators(authenticator);
       } catch (error) {
-        console.log('error in mfa challenge', error);
         onChallengeFailure?.();
         return;
         // TODO: set to show error component in sidesheet
@@ -126,9 +123,7 @@ export const MfaChallenge = ({
       ...data,
       enrollment,
     });
-    console.log('submit mfa challenge response', response);
     if (!response.error) {
-      console.log('mfa challenge success');
       onChallengeSuccess?.();
     }
     if (response.error === 'invalid_grant') {
@@ -143,14 +138,15 @@ export const MfaChallenge = ({
 
   const handleResendCode = async () => {
     setResendCode(true);
-    const resendResponse = await resendMfaChallenge({
+    const resendResponse = await sendMfaChallenge({
       challengeType: authenticator?.authenticator_type,
       authenticatorId: authenticator?.id,
     });
 
-    if (resendCode && 'success' in resendResponse && resendResponse.success) {
+    if ('success' in resendResponse && resendResponse.success) {
       setResendCode(false);
     } else {
+      setResendCode(false);
       // TODO: what happens if this does return an error?
       // I hit the rate limit and it just spun...think it needs to redirect to error
       onChallengeFailure?.();

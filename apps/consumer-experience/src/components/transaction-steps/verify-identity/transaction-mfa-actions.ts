@@ -6,16 +6,14 @@ import { ServerApi } from '@/services';
 import { sendMfaChallenge } from '@/services/auth';
 import { setMfaCookie } from '@/utils/auth';
 
-export const verifyTransactionMfa = async (formData: FieldValues) => {
+export const submitMfaVerification = async (formData: FieldValues) => {
   const loggingContext = {
     file: 'transaction-mfa-actions.ts',
-    function: 'verifyTransactionMfa',
+    function: 'submitMfaVerification',
   };
-  console.log(formData);
   try {
     const response = await ServerApi.refreshToken();
     const data = await response.json();
-    console.log('mfa_token' in data, data);
 
     if ('mfa_token' in data) {
       //TODO: need to clear this after the code has been entered!!

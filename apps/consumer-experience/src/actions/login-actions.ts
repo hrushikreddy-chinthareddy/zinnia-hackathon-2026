@@ -272,7 +272,6 @@ export async function verifyPasswordlessStartChallenge(
             authenticatorId: authenticator.id,
           });
           const data = await sendMfaChallengeResponse.json();
-          console.log('sendMfaChallengeResponse', sendMfaChallengeResponse);
           if (sendMfaChallengeResponse.status === 200) {
             const challengeData = data as MfaChallengeResponse;
             // the OOB code is needed to send the mfa challenge
@@ -405,7 +404,6 @@ export async function verifyMfaChallenge(
   const redirectToErrorPage = false;
   let data: Auth0ErrorResponse | OauthToken;
   try {
-    console.log(mfaData);
     // We need to know if this is an enrollment or not because it changes how we pass the MFA token to auth0
     // for non enrolled user we need to pass the token as an authorization header
     // for enrolled users we pass it as an input to the API
@@ -450,7 +448,6 @@ export async function verifyMfaChallenge(
   } catch (e) {
     // we need to check if the error thrown was in the try or if an generic error happened
     // if there was a generic error, we need to redirect to the error page
-    console.log('inside of login-action error', e);
     if (!(e instanceof Error)) {
       const error = e as Auth0ErrorResponse;
       logTrace('Auth0 Error Response', {

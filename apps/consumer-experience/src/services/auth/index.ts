@@ -1,3 +1,4 @@
+'use server';
 import { getMfaCookie, setMfaOobCookie } from '@/utils/auth';
 import { logTrace } from '@/utils/logging/server-logging';
 
@@ -7,6 +8,7 @@ export const sendMfaChallenge = async ({
   authenticatorId,
   challengeType,
   ...loggingContext
+  //TODO: fix type
 }: any) => {
   try {
     const mfaToken = (await getMfaCookie()) || '';
@@ -22,10 +24,12 @@ export const sendMfaChallenge = async ({
       await setMfaOobCookie({
         value: data.oob_code,
       });
+
       return {
         success: true,
       };
     }
+
     logTrace('unsuccessful-response', {
       ...loggingContext,
       reqStatus: response.status,
