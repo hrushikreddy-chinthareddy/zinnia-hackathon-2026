@@ -3,13 +3,13 @@ import { useState } from 'react';
 
 import { FormSteps } from '@/types/transactions';
 
-import { MfaChallenge } from './MfaChallenge';
 import { SelectAuthenticationMethod } from './SelectAuthenticationMethod';
+import { MfaChallenge } from '../../mfa/mfa-challenge/MfaChallenge';
 
 interface VerifyIdentityProps {
   closeCallback: () => void;
-  onSuccess: any;
-  onFailure: any;
+  onSuccess: () => void;
+  onFailure: () => void;
   transactionDescription: string;
 }
 

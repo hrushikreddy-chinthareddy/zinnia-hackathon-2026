@@ -46,7 +46,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
   const [isServerError, setIsServerError] = useState(false);
   const [successTitle, setSuccessTitle] = useState('Success!');
   const [successMessage, setSuccessMessage] = useState(
-    'Something went wrong. Please try again.'
+    'Your request has been submitted.'
   );
   const [requestValues, setRequestValues] = useState<BankFormFields | null>(
     null
@@ -85,6 +85,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
         },
       },
     });
+    console.log('handleAdd', { data, error });
     if (error) {
       setIsServerError(error.status >= 500);
       setErrorTitle(error.name);
@@ -119,6 +120,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
   };
 
   const addBankFail = () => {
+    console.log('from add bank sidesheetaddBankFail');
     setStep(FormSteps.ERROR);
   };
 

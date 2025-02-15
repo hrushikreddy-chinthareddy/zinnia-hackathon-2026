@@ -11,11 +11,13 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { verifyMfaChallenge } from '@/actions/login-actions';
 import styles from '@/app/login/Login.module.css';
 import { FieldDataActive } from '@/components/field/data-active/FieldDataActive';
+import {
+  sendMfaChallenge,
+  verifyMfaChallenge,
+} from '@/components/mfa/mfa-actions';
 import { MfaPhoneNumber } from '@/components/mfa/phone-number/MfaPhoneNumber';
-import { sendMfaChallenge } from '@/services/auth';
 import { MfaAuthenticator } from '@/types/auth';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
@@ -66,10 +68,16 @@ export const MfaChallenge = ({
     },
   });
 
+  // It might be making this call a whole heck of a lot (3 times?)
+  // which means
   useEffect(() => {
+    // We have to call this even on post login (after calling the authentication_methods call) because
+    // this call retrieves more specific data about the authenticator chosen
     const fetchAuthenticators = async () => {
       try {
         const token = getMfaToken();
+        // This is being called here rather than using the ServerApi class because
+        // it needs the recently retrieve mfa token
         const response = await fetch('/api/auth/mfa/authenticators', {
           credentials: 'include',
           headers: {
@@ -77,7 +85,7 @@ export const MfaChallenge = ({
           },
         });
 
-        // TODO: test this
+        // TODO: what should this do on fail?
         if (response.status !== 200) {
           //TODO: Should this always log user out?
           // prolly not if it's just auth0 api is down for whatever reason
@@ -98,6 +106,8 @@ export const MfaChallenge = ({
               a.name?.includes(lastFourOfPhoneNumber || '')
           );
         } else if (selectedVerificationId) {
+          // TODO: what happens if the user doesn't have this active authenticator
+          // should we be checking for active as well?
           authenticator = authenticators.find(
             a => a.id === selectedVerificationId
           );
@@ -111,11 +121,13 @@ export const MfaChallenge = ({
       } catch (error) {
         onChallengeFailure?.();
         return;
-        // TODO: set to show error component in sidesheet
       }
     };
-    fetchAuthenticators();
-  }, [id, onChallengeFailure, selectedVerificationId]);
+
+    if (!authenticator) {
+      fetchAuthenticators();
+    }
+  }, [authenticator, id, onChallengeFailure, selectedVerificationId]);
 
   const onSubmit = async (data: any) => {
     const response = await verifyMfaChallenge({
@@ -123,15 +135,17 @@ export const MfaChallenge = ({
       ...data,
       enrollment,
     });
+
+    console.log('onSubmit', response);
     if (!response.error) {
       onChallengeSuccess?.();
-    }
-    if (response.error === 'invalid_grant') {
+    } else if (response.error === 'invalid_grant') {
       setError('code', {
         type: 'custom',
         message: 'This code’s not right. Try again.',
       });
     } else {
+      console.log('onSubmit but in the else');
       onChallengeFailure?.();
     }
   };
@@ -141,6 +155,10 @@ export const MfaChallenge = ({
     const resendResponse = await sendMfaChallenge({
       challengeType: authenticator?.authenticator_type,
       authenticatorId: authenticator?.id,
+      loggingContext: {
+        file: 'MfaChallenge.tsx',
+        function: 'handleResendCode',
+      },
     });
 
     if ('success' in resendResponse && resendResponse.success) {

@@ -10,12 +10,12 @@ import {
 
 import Loading from '@/app/loading';
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
+import { postLoginSendMfaChallenge } from '@/components/mfa/mfa-actions';
 import { MfaPhoneNumber } from '@/components/mfa/phone-number/MfaPhoneNumber';
 import { QueryKeys } from '@/queries/query-keys';
 import { getUserAuthenticationMethods } from '@/queries/user-queries';
 import { MfaVerificationType } from '@/types/auth';
 
-import { verifyTransactionMfa } from './transaction-mfa-actions';
 import styles from './VerifyIdentity.module.css';
 
 export const SelectAuthenticationMethod = ({
@@ -57,11 +57,11 @@ export const SelectAuthenticationMethod = ({
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async data => {
-    await verifyTransactionMfa(data);
+    await postLoginSendMfaChallenge(data);
 
-    // TODO: when to set this?
-    // may not even need to wait for success from verifyTransaction?
-    // i guess unless apis are down, we could return an error
+    // TODO: I think we just move to the next step here regardless of above?
+    // if sending mfa challenge fails...then it fails but user
+    // should still see the enter code step
     moveToNextStep(getValues()?.verificationType);
   };
 
@@ -88,7 +88,6 @@ export const SelectAuthenticationMethod = ({
       </p>
       <div className="my-lg">
         <p className="typography-labels-field-label">Mobile phone</p>
-        {/* TODO: add real phone number */}
         <MfaPhoneNumber
           phoneNumber={
             // this is making the assumption that there is only one phone object
@@ -99,7 +98,6 @@ export const SelectAuthenticationMethod = ({
           }
         />
       </div>
-      {/* <MfaOptions className="mb-xl" /> */}
       <Controller
         name="verificationType"
         control={control}
