@@ -35,12 +35,7 @@ export default async function AuthenticatedLayout({
         policyNumber={params.policyNumber}
         lineOfBusiness={LineOfBusiness.LIFE}
       />
-
-      <PolicyDetailPageHeader
-        planCode={params.planCode}
-        policyNumber={params.policyNumber}
-        lineOfBusiness={LineOfBusiness.LIFE}
-      />
+      <PolicyDetailPageHeader />
       <div className="container">{children}</div>
       <Footer />
     </>
