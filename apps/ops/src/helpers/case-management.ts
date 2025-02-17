@@ -44,7 +44,7 @@ export const getSearchValueObject = (
                 ...(agentLastName ? { agentLastName } : {}),
             };
         case 'firmName':
-            return firmName ? { brokerDealerName: firmName.trim() } : {};
+            return firmName.trim() ? { brokerDealerName: firmName.trim() } : {};
         default:
             return {};
     }
