@@ -7,6 +7,10 @@ import { formatTimestamp } from './progress-tab-helpers';
 import { ExceptionView, TaskView } from './progress-tab-types';
 import Tasks from './tasks';
 
+interface GroupedExceptions {
+    [taskId: string]: { tasks: TaskView[]; exceptions: ExceptionView[] };
+}
+
 const renderException = (exception: ExceptionView, t: TFunction, unmapped?: boolean) => {
     return (
         <>
@@ -30,17 +34,8 @@ const renderException = (exception: ExceptionView, t: TFunction, unmapped?: bool
     );
 };
 
-export default function Exceptions({ exceptions, unmapped = false }: { exceptions: ExceptionView[]; unmapped?: boolean }) {
-    const { t } = useTranslation();
-    if (!exceptions?.length) {
-        return null;
-    }
-
-    interface GroupedExceptions {
-        [taskId: string]: { tasks: TaskView[]; exceptions: ExceptionView[] };
-    }
-
-    const groupedExceptions: GroupedExceptions = exceptions.reduce((acc: GroupedExceptions, exception: ExceptionView) => {
+export function groupExceptions(exceptions: ExceptionView[]): GroupedExceptions {
+    return exceptions.reduce((acc: GroupedExceptions, exception: ExceptionView) => {
         if (exception.tasks.length === 0) {
             if (!acc['no-task']) {
                 acc['no-task'] = { tasks: [], exceptions: [] };
@@ -61,6 +56,15 @@ export default function Exceptions({ exceptions, unmapped = false }: { exception
         }
         return acc;
     }, {});
+}
+
+export default function Exceptions({ exceptions, unmapped = false }: { exceptions: ExceptionView[]; unmapped?: boolean }) {
+    const { t } = useTranslation();
+    if (!exceptions?.length) {
+        return null;
+    }
+
+    const groupedExceptions = groupExceptions(exceptions);
 
     return (
         <ul>
