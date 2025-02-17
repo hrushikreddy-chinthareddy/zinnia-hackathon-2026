@@ -43,7 +43,7 @@ export type RadioWidgetProps<T, S extends StrictRJSFSchema, F extends FormContex
 function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props1: RadioWidgetProps<T, S, F>) {
     const { options, value, disabled, onChange, id, uiSchema, formData, setFormData } = props1;
 
-    const { enumOptions } = options;
+    const { enumOptions, enumDisabled } = options;
     const { customOptions, props, properties, cardType, icon, sectionTitle } = getUiOptions<T, S, F>(uiSchema);
 
     const apiProps = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
@@ -55,10 +55,11 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     const newOptions = useMemo(() => {
         return Array.isArray(currentOptions)
             ? currentOptions.map((option: RadioItem) => ({
-                  label: option.label,
-                  value: option.value,
-                  subElement: option.subElement && renderSubElement(option.subElement, properties, cardType, icon, sectionTitle as string),
-              }))
+                label: option.label,
+                value: option.value,
+                disabled: enumDisabled?.includes(option.value) || false,
+                subElement: option.subElement && renderSubElement(option.subElement, properties, cardType, icon, sectionTitle as string),
+            }))
             : [];
     }, [currentOptions]);
 
