@@ -2,20 +2,22 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
+import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
+import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import SystematicWithdrawalProgram from '@deps/components/otp-withdrawal-form/ssw-program/ssw-program';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
+import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
 import getPrdnConfig from './prdn-ssw-from-helper';
-import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
-import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 
 export function PrdnSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -28,6 +30,7 @@ export function PrdnSSWForm() {
         disbursementOptions,
         signaturesConfig,
         fundWithdrawnMethodOptions,
+        w4pSignaturesConfig
     } = getPrdnConfig(t);
     const {
         formParty,
@@ -38,6 +41,7 @@ export function PrdnSSWForm() {
         isFormStateReadOnly,
         ownerStateOfResidence,
         setOwnerStateOfResidence,
+        contractIssueState,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -61,6 +65,8 @@ export function PrdnSSWForm() {
         }
     }, [formParty]);
 
+    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '')
+
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -77,6 +83,7 @@ export function PrdnSSWForm() {
             />
             <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
+            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
         </>

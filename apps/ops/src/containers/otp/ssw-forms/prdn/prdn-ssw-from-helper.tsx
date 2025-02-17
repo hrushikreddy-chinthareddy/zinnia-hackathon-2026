@@ -503,6 +503,21 @@ export default function getPrdnConfig(t: TFunction) {
         { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
     ];
 
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+    ];
+
     return {
         reasonOptions,
         formValidation: sswFormValidation,
@@ -511,5 +526,6 @@ export default function getPrdnConfig(t: TFunction) {
         disbursementOptions,
         signaturesConfig,
         fundWithdrawnMethodOptions,
+        w4pSignaturesConfig
     };
 }
