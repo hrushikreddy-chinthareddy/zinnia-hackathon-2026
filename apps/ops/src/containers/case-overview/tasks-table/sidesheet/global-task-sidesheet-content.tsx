@@ -33,7 +33,7 @@ import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outli
 import { DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_DISPLAY_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { writeToCache } from '@deps/utils/cache';
+import { removeFromCache, writeToCache } from '@deps/utils/cache';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import Dropdown from '@deps/components/dropdown/Dropdown';
@@ -183,6 +183,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 const response = await updateTask(taskData.caseId, taskData.id, body, timer);
                 if (response) {
                     await router.push(`/task/${taskId}`);
+                    removeFromCache('getTaskInstance', { taskId: taskId });
                     return;
                 }
             }
