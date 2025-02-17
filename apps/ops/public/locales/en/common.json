@@ -1418,7 +1418,8 @@
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
-            "applicationNigo":"Review Application Issues"
+            "applicationNigo": "Review Application Issues",
+            "agentReview": "Validate Agent"
         },
         "processDate": {
             "canceled": "Canceled on",
