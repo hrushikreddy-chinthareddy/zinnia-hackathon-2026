@@ -6,45 +6,17 @@ import {
   TabList,
   TabTrigger,
 } from '@zinnia/bloom/components';
-import { ProducerType } from './types';
-import { CardHeader } from './components/card-header/CardHeader';
+import { ProducerType } from '../../types';
+import { CardHeader } from '../../components/card-header/CardHeader';
 import clsx from 'clsx';
-import styles from './Pom.module.css';
-import { HashRouter, Route, Routes, useParams } from 'react-router';
-import './styles/globals.css';
-import EntityInformation from './views/entity-information/EntityInformation';
-import LicensesAppointments from './views/licenses-appointments/LicensesAppointments';
-import TrainingEducation from './views/training-education/TrainingEducation';
+import styles from './Producer.module.css';
+import { useParams } from 'react-router';
+import EntityInformation from '../entity-information/EntityInformation';
+import LicensesAppointments from '../licenses-appointments/LicensesAppointments';
+import TrainingEducation from '../training-education/TrainingEducation';
 import React from 'react';
 
-export const Pom = ({
-  translations,
-}: {
-  translations?: (key: string) => string;
-}) => {
-  return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<div>{translations?.('pomTitle')}</div>} />
-        <Route path="/agents">
-          <Route
-            path=":id"
-            element={<Producer producerType={ProducerType.INDIVIDUAL} />}
-          />
-        </Route>
-
-        <Route path="/agencies">
-          <Route
-            path=":id"
-            element={<Producer producerType={ProducerType.CORPORATION} />}
-          />
-        </Route>
-      </Routes>
-    </HashRouter>
-  );
-};
-
-const Producer = ({ producerType }: { producerType: ProducerType }) => {
+export const Producer = ({ producerType }: { producerType: ProducerType }) => {
   //@todo: play with react router's search params to set the selected tab in the url
   const { id } = useParams();
 
@@ -116,3 +88,5 @@ const Producer = ({ producerType }: { producerType: ProducerType }) => {
     </div>
   );
 };
+
+export default Producer;
