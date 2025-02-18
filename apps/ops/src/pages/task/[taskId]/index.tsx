@@ -23,7 +23,7 @@ import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
-import { applyDynamicOptions } from './task-handlers/handle-task';
+import { applyDynamicOptions } from '../../../containers/task-container/task-handlers/handle-task';
 
 type TaskPageProps = {
     task: ManagementTask;

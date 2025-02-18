@@ -1416,7 +1416,8 @@
             "suitabilityReviewIssues": "Revoir Suitability Problèmes",
             "purchaseDocumentMatchingIssues": "Document de correspondance",
             "agentNigo": "Réviser les problèmes d'agent",
-            "applicationNigo":"Réviser les problèmes d'agent"
+            "applicationNigo": "Réviser les problèmes d'agent",
+            "agentReview": "Valider l'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -4324,7 +4325,7 @@
             },
             "title": "Compris!"
         }
-    },    
+    },
     "loanPayment": {
         "amount": {
             "label": "Montant",
