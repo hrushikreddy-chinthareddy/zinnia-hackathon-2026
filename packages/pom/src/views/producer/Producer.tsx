@@ -50,7 +50,7 @@ export const Producer = ({ producerType }: { producerType: ProducerType }) => {
   return (
     <div className={styles.container}>
       <div
-        className={clsx(styles.cardContainer, 'typography-content-body-sm')}
+        className={clsx(styles.cardContainer)}
         id="producer-onboarding-maintenance"
       >
         {/* @todo: will remove this once we have the api integration */}
