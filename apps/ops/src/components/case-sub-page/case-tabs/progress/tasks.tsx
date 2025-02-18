@@ -12,7 +12,7 @@ import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow
 import { TaskView } from './progress-tab-types';
 import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
 
-const SupportedTaskMap = [
+export const SupportedTaskMap = [
     TaskType.SuitabilityReview,
     TaskType.SuitabilityDataEntry,
     TaskType.PURCHASE_DOCUMENT_MATCHING,
