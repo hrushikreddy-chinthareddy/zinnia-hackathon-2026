@@ -30,11 +30,13 @@
                                     "properties": {
                                         "firstName": {
                                             "title": "First name",
-                                            "type": "string"
+                                            "type": "string",
+                                            "ui:field": "title"
                                         },
                                         "lastName": {
                                             "title": "Last name",
-                                            "type": "string"
+                                            "type": "string",
+                                            "ui:field": "title"
                                         },
                                         "externalId": {
                                             "title": "External Id",
@@ -43,7 +45,8 @@
                                         "taxId": {
                                             "title": "Tax Id",
                                             "type": "string",
-                                            "dataType": "ssn"
+                                            "dataType": "ssn",
+                                            "ui:field": "subTitle"
                                         }
                                     }
                                 },
@@ -116,7 +119,8 @@
                         "declineReason": {
                             "enum": ["DEFAULT"]
                         }
-                    }
+                    },
+                    "required": ["issueResolved"]
                 },
                 "uiSchema": {
                     "ui:submitButtonOptions": {

@@ -108,6 +108,21 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         }
     };
 
+    /**
+     * Cleans form data by removing properties marked for omission in the UI schema.
+     *
+     * @param {any} formData - The original form data to be cleaned. Expected to have a 'data' property
+     * containing the form values.
+     *
+     * @returns {any} The cleaned form data with omitted properties removed from the data object.
+     *
+     * @remarks
+     * The function:
+     * 1. Filters properties from taskMetadata.uiSchema, excluding those containing 'ui'
+     * 2. Removes properties from formData.data where the corresponding uiSchema entry has
+     *    ui:options.omitValue set to true
+     */
+
     const cleanForm = (formData: any) => {
         let finalFormData = formData;
         let iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
