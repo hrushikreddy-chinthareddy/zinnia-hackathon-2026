@@ -3693,7 +3693,8 @@
                 "amount": "Amount",
                 "edit": "Edit",
                 "relationshipToInsured": "Relationship to insured",
-                "label": "Allocation"
+                "label": "Allocation",
+                "commissionAllocation": "Commission allocation"
             },
             "bank": {
                 "accountOptions": {
@@ -3734,6 +3735,13 @@
                     "showAdditional": "Show additional email addresses"
                 },
                 "label": "Email"
+            },
+            "firmInformation": {
+                "label": "Firm Information",
+                "name": "Name",
+                "business": "Business",
+                "address": "Address",
+                "empty": "No firm information."
             },
             "phone": {
                 "bestTimes": {
@@ -3800,7 +3808,9 @@
                     "trustDate": "Trust date",
                     "trustType": "Trust type",
                     "usCitizen": "United States citizen",
-                    "citizenCountry": "Citizenship country"
+                    "citizenCountry": "Citizenship country",
+                    "externalId": "External ID",
+                    "channel": "Channel"
                 }
             },
             "underwriting": "Underwriting",

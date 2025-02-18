@@ -3667,7 +3667,8 @@
                 "amount": "Montant",
                 "edit": "Éditer",
                 "label": "Allocation",
-                "relationshipToInsured": "Relation avec l'assuré"
+                "relationshipToInsured": "Relation avec l'assuré",
+                "commissionAllocation": "Attribution des commissions"
             },
             "bank": {
                 "accountOptions": {
@@ -3708,6 +3709,13 @@
                     "showAdditional": "Afficher des adresses e-mail supplémentaires"
                 },
                 "label": "Email"
+            },
+            "firmInformation": {
+                "label": "Informations sur l'entreprise",
+                "name": "Nom",
+                "business": "Entreprise",
+                "address": "Adresse",
+                "empty": "Aucune information précise"
             },
             "phone": {
                 "bestTimes": {
@@ -3774,7 +3782,9 @@
                     "trustDate": "Date du trust",
                     "trustType": "Type de trust",
                     "usCitizen": "citoyen des États-Unis",
-                    "citizenCountry": "pays de citoyenneté"
+                    "citizenCountry": "pays de citoyenneté",
+                    "externalId": "ID externe",
+                    "channel": "Canal"
                 }
             },
             "underwriting": "Souscription",

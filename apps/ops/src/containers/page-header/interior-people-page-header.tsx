@@ -34,6 +34,10 @@ const InteriorPeoplePageHeaderContainer = ({
     partyStatus,
 }: InteriorPeoplePageHeaderContainerProps) => {
     const { t } = useTranslation();
+    const selectedPartyRoles = selectedPolicyPartyRoles?.map(roleObject => {
+        return roleObject.partyRole?.toLowerCase();
+    });
+    const isAgent = selectedPartyRoles?.includes('primarywritingagent') || selectedPartyRoles?.includes('primaryservicingagent');
 
     // for header text siblings group one
     // pronouns and edit button
@@ -56,7 +60,7 @@ const InteriorPeoplePageHeaderContainer = ({
     // for header text siblings group two
     // date of birth
     const getDateOfBirth = (partyType: string | undefined, editable: boolean): JSX.Element | null => {
-        if (!partyType || partyType !== PartyType.INDIVIDUAL) {
+        if (!partyType || partyType !== PartyType.INDIVIDUAL || isAgent) {
             return null;
         } else {
             const ageInYears = calculateAgeNumber(selectedPolicyParty?.dateOfBirth);

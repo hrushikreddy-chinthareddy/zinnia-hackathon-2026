@@ -12,17 +12,18 @@ import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card'
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
 import { getStateName } from '@deps/helpers/states.helper';
 import { convertKebabedDateString, formatSSN, safeString } from '@deps/helpers/string.helper';
-import { PartyType } from '@deps/models/policy/sor-policy';
+import { PartyType, PolicyParties } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { ReactComponent as FingerprintIcon } from '@deps/styles/elements/icons/icons_outlined/fingerprint.svg';
 
 export interface IdentificationCardProps {
     editable?: boolean;
     selectedPolicyParty?: PolicyParty;
+    partyRoles?: PolicyParties[];
     isAnnuity?: boolean;
 }
 
-const IdentificationCard = ({ editable = false, selectedPolicyParty, isAnnuity }: IdentificationCardProps) => {
+const IdentificationCard = ({ editable = false, selectedPolicyParty, partyRoles, isAnnuity }: IdentificationCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.card.identification' });
 
     const {
@@ -49,6 +50,11 @@ const IdentificationCard = ({ editable = false, selectedPolicyParty, isAnnuity }
     const isIndividual = partyType === PartyType.INDIVIDUAL;
     const isOrganization = partyType === PartyType.ORGANIZATION;
     const isTrust = partyType === ('Trust' as PartyType);
+
+    const selectedPartyRoles = partyRoles?.map(roleObject => {
+        return roleObject.partyRole?.toLowerCase();
+    });
+    const isAgent = selectedPartyRoles?.includes('primarywritingagent') || selectedPartyRoles?.includes('primaryservicingagent');
 
     const hasAdditional = driversLicense || stateId || passports?.length;
 
@@ -162,6 +168,17 @@ const IdentificationCard = ({ editable = false, selectedPolicyParty, isAnnuity }
                                     {isUSCitizenText}
                                 </FieldData>
                                 {!isUSCitizen && <FieldData label={t('options.citizenCountry')}>{citizenCountry}</FieldData>}
+                            </>
+                        )}
+
+                        {isAgent && (
+                            <>
+                                <FieldData label={t('options.externalId')} sentenceCase={false}>
+                                    {}
+                                </FieldData>
+                                <FieldData label={t('options.channel')} sentenceCase={false}>
+                                    {}
+                                </FieldData>
                             </>
                         )}
                     </div>
