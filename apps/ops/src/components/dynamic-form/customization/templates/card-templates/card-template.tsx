@@ -15,7 +15,7 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatSSN } from '@deps/helpers/string.helper';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
-import { CardTypes, DataTypes } from '@deps/models/case/task';
+import { CardTypes, DataFormattingTypes } from '@deps/models/case/task';
 import loadingImage from '@deps/styles/images/loader.png';
 
 export function CardTemplate(props: ObjectFieldTemplateProps) {
@@ -71,7 +71,7 @@ const extractField = (properties: any, data: any, fieldName: string): { field: {
 
 const formatValueByDataType = (dataType: string, value: any) => {
     switch (dataType) {
-        case DataTypes.SSN:
+        case DataFormattingTypes.SSN:
             return formatSSN(value);
         default:
             return value;
