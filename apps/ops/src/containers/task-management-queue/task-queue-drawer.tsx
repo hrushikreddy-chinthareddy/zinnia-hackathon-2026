@@ -116,14 +116,11 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
   }
 
   const handleCancel = () => {
-    console.log("i am ")
     const currentLocation = window.location.pathname;
     const regex = /^\/cases\/CA\d+\/progress$/;
-
     if (regex.test(currentLocation)) {
       openGlobalSideSheet();
     } else {
-      console.log("i am here")
       onClose();
     }
   }
