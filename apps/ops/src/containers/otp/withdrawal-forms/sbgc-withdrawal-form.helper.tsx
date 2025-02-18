@@ -456,54 +456,6 @@ export default function getSbgcConfig(t: TFunction) {
                 };
             },
         },
-        {
-            label: t('distributionMethod.overnightCheck'),
-            value: FormDisbursementSelections.ExpressCheck,
-            fields: [
-                {
-                    fieldName: BankingFields.SelectIfPayeeIsDifferent,
-                    fieldLabel: t('distributionMethod.selectIfDifferentPayee'),
-                    component: DisbursementFields.BankCheckboxField,
-                    classNames: 'col-start-1 col-span-3',
-                },
-                {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    classNames: 'col-start-1 col-span-2 max-w-lg',
-                    component: DisbursementFields.BankTextField,
-                },
-                {
-                    fieldName: BankingFields.Address,
-                    fieldLabel: '',
-                    classNames: 'col-span-3',
-                    component: DisbursementFields.BankAddress,
-                },
-            ],
-            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
-                    return {
-                        ...DEFAULT_DISBURSEMENT_UPDATE,
-                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
-                        address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
-                        payeeName: payee?.name?.text ?? '',
-                    };
-                }
-                return DEFAULT_DISBURSEMENT_UPDATE;
-            },
-            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
-                return {
-                    ...getDefaultFormDisbursementValues(),
-                    paymentMethod: { text: PaymentMailType.Check },
-                    paymentMailType: { text: PaymentMailType.ExpressCheck },
-                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
-                    payee: {
-                        name: { text: payeeName || null },
-                        addresses: [address || DEFAULT_ADDRESS],
-                        contractNumber: { text: null },
-                    },
-                };
-            },
-        },
     ];
     const formPartyConfigs: PartyConfig[] = [
         {
