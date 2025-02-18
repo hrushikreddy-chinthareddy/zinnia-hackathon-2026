@@ -1417,7 +1417,8 @@
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
-            "agentNigo": "Review Agent Issues"
+            "agentNigo": "Review Agent Issues",
+            "attachmentNigo": "Review Application Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -5128,6 +5129,14 @@
         }
     },
     "nbAgentNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Agent Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "nbAttachmentNigo": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review Agent Issues was submitted.",
