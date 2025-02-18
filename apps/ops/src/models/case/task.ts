@@ -158,4 +158,5 @@ export type ApiProps = {
 export enum DataFormattingTypes {
     SSN = 'ssn',
     Date = 'date',
+    Amount = 'amount',
 }

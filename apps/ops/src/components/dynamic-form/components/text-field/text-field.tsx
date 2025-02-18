@@ -1,9 +1,7 @@
 import { ErrorSchema } from '@rjsf/utils';
-import { Label } from '@zinnia/bloom/components';
-import clsx from 'clsx';
 import { InputHTMLAttributes } from 'react';
 
-import styles from './text-field.module.css';
+import Field, { FieldFormat, FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     id: string;
@@ -13,32 +11,41 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     disabled?: boolean;
     placeholder?: string;
     type?: string;
+    startIcon?: React.ReactNode;
+    leading?: React.ReactNode;
+    endIcon?: React.ReactNode;
     onChange: (value: any, es?: ErrorSchema<any> | undefined, id?: string) => void;
 }
 
 const TextField = (props: TextFieldProps) => {
-    const { id, label, value, className, disabled, placeholder, onChange, onBlur, onFocus, type } = props;
+    const { id, label, value, disabled, placeholder, onChange, onBlur, onFocus, type, startIcon, endIcon, leading } = props;
 
-    const classes = clsx(
-        styles.textField,
-        styles[props.fieldSize || 'small'],
-        props.status && styles[props.status] ? styles[props.status] : '',
-        className
-    );
-
+    const formatOptions =
+        type === 'number'
+            ? {
+                  format: '',
+                  type: (type as FieldFormat) || 'string',
+                  decimalPlaces: 2,
+              }
+            : undefined;
     return (
         <>
-            {!!label && <Label labelFor={id}>{label}</Label>}
-            <input
+            <Field
                 id={id}
-                className={`${classes}`}
-                disabled={disabled}
+                label={label}
                 onChange={e => onChange(e.target.value)}
-                placeholder={placeholder ?? label}
-                value={value}
+                size={FieldSize.Small}
+                type={FieldType.BaseActive}
+                placeholder={placeholder}
+                leading={leading}
+                startIcon={startIcon}
+                endIcon={endIcon}
+                value={value?.toString()}
                 onBlur={onBlur}
                 onFocus={onFocus}
-                type={type || 'text'}
+                name={label}
+                formatOptions={formatOptions}
+                variant={disabled ? FieldVariant.Inactive : FieldVariant.Default}
             />
         </>
     );

@@ -37,15 +37,15 @@
                             "title": "Details",
                             "properties": {
                                 "grossAmount": {
-                                    "type": "string",
+                                    "type": "number",
                                     "title": "Gross Amount"
                                 },
                                 "netAmount": {
-                                    "type": "string",
+                                    "type": "number",
                                     "title": "Net amount"
                                 },
                                 "amountReceived": {
-                                    "type": "string",
+                                    "type": "number",
                                     "title": "Amount Received"
                                 },
                                 "document": {
@@ -78,6 +78,7 @@
                             "title": "Can you resolve the issues?"
                         }
                     },
+                    "required": ["issueResolved"],
                     "dependencies": {
                         "issueResolved": {
                             "oneOf": [
@@ -111,8 +112,7 @@
                                             "type": "object",
                                             "title": "The status reason for the task will be set to:"
                                         }
-                                    },
-                                    "required": ["issueResolved"]
+                                    }
                                 }
                             ]
                         }
@@ -141,13 +141,12 @@
                         "ui:options": {
                             "label": false
                         },
-
                         "grossAmount": {
                             "ui-widget": "ValueWidget",
                             "ui:options": {
                                 "label": false,
                                 "inline": true,
-                                "prefix": "$"
+                                "dataType": "amount"
                             }
                         },
                         "netAmount": {
@@ -155,7 +154,7 @@
                             "ui:options": {
                                 "label": false,
                                 "inline": true,
-                                "prefix": "$"
+                                "dataType": "amount"
                             }
                         },
                         "amountReceived": {
@@ -163,10 +162,9 @@
                             "ui:options": {
                                 "label": false,
                                 "inline": true,
-                                "prefix": "$"
+                                "dataType": "amount"
                             }
                         },
-
                         "document": {
                             "ui:options": {
                                 "canAdd": false,
@@ -190,6 +188,18 @@
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "amountToApply": {
+                        "grossAmount": {
+                            "ui:options": {
+                                "leading": "$"
+                            }
+                        },
+                        "netAmount": {
+                            "ui:options": {
+                                "leading": "$"
+                            }
                         }
                     }
                 }
