@@ -39,19 +39,16 @@
                                     "properties": {
                                         "payorName": {
                                             "type": "string",
-                                            "title": "Title"
+                                            "title": "Title",
+                                            "ui:field": "title"
                                         },
                                         "taxId": {
                                             "type": "string",
                                             "title": "SSN",
-                                            "dataType": "ssn"
-                                        },
-                                        "roles": {
-                                            "type": "string",
-                                            "title": "Role(s)"
+                                            "dataType": "ssn",
+                                            "ui:field": "subTitle"
                                         }
-                                    },
-                                    "additionalProperties": true
+                                    }
                                 },
                                 "purchaseDocument": {
                                     "type": "object",
@@ -259,12 +256,14 @@
                                     "properties": {
                                         "payorName": {
                                             "type": "string",
-                                            "title": "Title"
+                                            "title": "Title",
+                                            "ui:field": "title"
                                         },
                                         "taxId": {
                                             "type": "string",
                                             "title": "SSN",
-                                            "dataType": "ssn"
+                                            "dataType": "ssn",
+                                            "ui:field": "subTitle"
                                         }
                                     }
                                 },
@@ -363,12 +362,14 @@
                                 "companyName": {
                                     "type": "string",
                                     "title": "Company name",
-                                    "default": "{{entity.payment.exchangeReplace.companyName}}"
+                                    "default": "{{entity.payment.exchangeReplace.companyName}}",
+                                    "ui:field": "title"
                                 },
                                 "transferAmount": {
                                     "type": "string",
                                     "title": "Expected transfer amount",
-                                    "default": "${{entity.payment.exchangeReplace.amountRequested}}"
+                                    "default": "${{entity.payment.exchangeReplace.amountRequested}}",
+                                    "ui:field": "subTitle"
                                 },
                                 "paymentRecordId": {
                                     "type": "string",
