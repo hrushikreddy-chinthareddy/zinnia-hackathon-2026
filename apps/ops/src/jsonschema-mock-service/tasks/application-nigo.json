@@ -1,5 +1,5 @@
 {
-    "formId": "",
+    "formId": "bf4a42d8-696f-4407-ac96-3010a2b72097",
     "process": "New Business",
     "carrier": "WELB",
     "taskType": "NB_APPLICATION_NIGO",
@@ -41,15 +41,18 @@
                                     "properties": {
                                         "firstName": {
                                             "type": "string",
-                                            "title": "First Name"
+                                            "title": "First Name",
+                                            "ui:field": "title"
                                         },
                                         "ssn": {
                                             "type": "string",
-                                            "title": "SSN"
+                                            "title": "SSN",
+                                            "ui:field": "subTitle"
                                         },
                                         "lastName": {
                                             "type": "string",
-                                            "title": "Last Name"
+                                            "title": "Last Name",
+                                            "ui:field": "title"
                                         }
                                     }
                                 },
@@ -57,10 +60,12 @@
                                     "type": "object",
                                     "properties": {
                                         "documentId": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "ui:field": "subTitle"
                                         },
                                         "documentSource": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "ui:field": "title"
                                         }
                                     }
                                 }
