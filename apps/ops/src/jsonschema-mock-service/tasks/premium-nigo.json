@@ -1,0 +1,199 @@
+{
+    "formId": "aed4a1af-428d-4467-9fdd-07ecc3f3e239",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_PAYMENT_PROCESSING_NIGO",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Review Premium Issues",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions"
+                        },
+                        "issuesList": {
+                            "type": "array",
+                            "title": "Issues",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "reason": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Details",
+                            "properties": {
+                                "grossAmount": {
+                                    "type": "string",
+                                    "title": "Gross Amount"
+                                },
+                                "netAmount": {
+                                    "type": "string",
+                                    "title": "Net amount"
+                                },
+                                "amountReceived": {
+                                    "type": "string",
+                                    "title": "Amount Received"
+                                },
+                                "document": {
+                                    "type": "object",
+                                    "properties": {
+                                        "documentName": {
+                                            "type": "string"
+                                        },
+                                        "documentId": {
+                                            "type": "string"
+                                        },
+                                        "documentSource": {
+                                            "type": "string"
+                                        },
+                                        "createdDate": {
+                                            "type": "string"
+                                        },
+                                        "carrier": {
+                                            "type": "string",
+                                            "default": "{{carrier}}"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enumNames": ["Yes", "No"],
+                            "enum": [true, false],
+                            "title": "Can you resolve the issues?"
+                        }
+                    },
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": true
+                                        },
+                                        "amountToApply": {
+                                            "type": "object",
+                                            "title": "Amount to apply",
+                                            "properties": {
+                                                "grossAmount": {
+                                                    "type": "number",
+                                                    "title": "Gross Amount"
+                                                },
+                                                "netAmount": {
+                                                    "type": "number",
+                                                    "title": "Net amount"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": false
+                                        },
+                                        "reason": {
+                                            "type": "object",
+                                            "title": "The status reason for the task will be set to:"
+                                        }
+                                    },
+                                    "required": ["issueResolved"]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "props": {
+                            "description": "Update the amount on the application."
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "issuesList": {
+                        "ui:options": {
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "keyName": "processingReason"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+
+                        "grossAmount": {
+                            "ui-widget": "ValueWidget",
+                            "ui:options": {
+                                "label": false,
+                                "inline": true,
+                                "prefix": "$"
+                            }
+                        },
+                        "netAmount": {
+                            "ui-widget": "ValueWidget",
+                            "ui:options": {
+                                "label": false,
+                                "inline": true,
+                                "prefix": "$"
+                            }
+                        },
+                        "amountReceived": {
+                            "ui-widget": "ValueWidget",
+                            "ui:options": {
+                                "label": false,
+                                "inline": true,
+                                "prefix": "$"
+                            }
+                        },
+
+                        "document": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": false,
+                                "cardType": "Document",
+                                "icon": "DOCUMENT_TEXT",
+                                "ObjectFieldTemplate": "CardTemplate"
+                            }
+                        }
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "inline": true
+                        }
+                    },
+                    "reason": {
+                        "props": {
+                            "description": "NIGO's unable to be resolved"
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

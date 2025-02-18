@@ -3,7 +3,7 @@ import { getUiOptions, WidgetProps } from '@rjsf/utils';
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
 
 export const TextWidget = function (props: WidgetProps) {
-    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder } = props;
+    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder, schema } = props;
     const { inline, prefix } = getUiOptions(uiSchema);
 
     if (inline) {
@@ -29,6 +29,7 @@ export const TextWidget = function (props: WidgetProps) {
                 disabled={disabled}
                 onChange={onChange}
                 status={rawErrors && rawErrors?.length > 0 ? 'error' : undefined}
+                type={(schema?.type as string) || 'text'}
             />
         </div>
     );
