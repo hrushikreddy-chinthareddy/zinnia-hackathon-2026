@@ -857,37 +857,9 @@
                             "saleDetails": {
                                 "type": "string",
                                 "title": "Sale details"
-                            },
-                            "productDetails": {
-                                "type": "array",
-                                "title": "Product Details",
-                                "items": {
-                                    "type": "object",
-                                    "title": "",
-                                    "properties": {
-                                        "productType": {
-                                            "type": "string",
-                                            "title": "Product type",
-                                            "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
-                                        },
-                                        "companyName": {
-                                            "type": "string",
-                                            "title": "Company name"
-                                        },
-                                        "policyNumber": {
-                                            "type": "string",
-                                            "title": "Policy number"
-                                        },
-                                        "issueDate": {
-                                            "type": "string",
-                                            "format": "date",
-                                            "title": "Issue date"
-                                        }
-                                    },
-                                    "required": ["productType", "companyName", "policyNumber", "issueDate"]
-                                }
                             }
-                        }
+                        },
+                        "required": ["soldPoliciesToApplicant"]
                     },
                     "financialAcknowledgement": {
                         "type": "object",
@@ -965,6 +937,56 @@
                         ]
                     }
                 },
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "maApplicationQuestionnaire": {
+                                    "properties": {
+                                        "saleInLast5Years": { "const": "YES" }
+                                    }
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "maApplicationQuestionnaire": {
+                                    "properties": {
+                                        "productDetails": {
+                                            "type": "array",
+                                            "title": "Product Details",
+                                            "items": {
+                                                "type": "object",
+                                                "title": "",
+                                                "properties": {
+                                                    "productType": {
+                                                        "type": "string",
+                                                        "title": "Product type",
+                                                        "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
+                                                    },
+                                                    "companyName": {
+                                                        "type": "string",
+                                                        "title": "Company name"
+                                                    },
+                                                    "policyNumber": {
+                                                        "type": "string",
+                                                        "title": "Policy number"
+                                                    },
+                                                    "issueDate": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "title": "Issue date"
+                                                    }
+                                                },
+                                                "required": ["productType", "companyName", "policyNumber", "issueDate"]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
                 "required": ["maApplicationQuestionnaire", "financialAcknowledgement", "disclosureAcknowledgement"]
             },
             "additionalInfo": {
@@ -2672,35 +2694,6 @@
                                         "saleDetails": {
                                             "type": "string",
                                             "title": "Sale details"
-                                        },
-                                        "productDetails": {
-                                            "type": "array",
-                                            "title": "Product Details",
-                                            "items": {
-                                                "type": "object",
-                                                "title": "",
-                                                "properties": {
-                                                    "productType": {
-                                                        "type": "string",
-                                                        "title": "Product type",
-                                                        "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
-                                                    },
-                                                    "companyName": {
-                                                        "type": "string",
-                                                        "title": "Company name"
-                                                    },
-                                                    "policyNumber": {
-                                                        "type": "string",
-                                                        "title": "Policy number"
-                                                    },
-                                                    "issueDate": {
-                                                        "type": "string",
-                                                        "format": "date",
-                                                        "title": "Issue date"
-                                                    }
-                                                },
-                                                "required": ["productType", "companyName", "policyNumber", "issueDate"]
-                                            }
                                         }
                                     }
                                 },
@@ -2780,6 +2773,56 @@
                                     ]
                                 }
                             },
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "maApplicationQuestionnaire": {
+                                                "properties": {
+                                                    "saleInLast5Years": { "const": "YES" }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "maApplicationQuestionnaire": {
+                                                "properties": {
+                                                    "productDetails": {
+                                                        "type": "array",
+                                                        "title": "Product Details",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "title": "",
+                                                            "properties": {
+                                                                "productType": {
+                                                                    "type": "string",
+                                                                    "title": "Product type",
+                                                                    "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
+                                                                },
+                                                                "companyName": {
+                                                                    "type": "string",
+                                                                    "title": "Company name"
+                                                                },
+                                                                "policyNumber": {
+                                                                    "type": "string",
+                                                                    "title": "Policy number"
+                                                                },
+                                                                "issueDate": {
+                                                                    "type": "string",
+                                                                    "format": "date",
+                                                                    "title": "Issue date"
+                                                                }
+                                                            },
+                                                            "required": ["productType", "companyName", "policyNumber", "issueDate"]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
                             "required": ["maApplicationQuestionnaire", "financialAcknowledgement", "disclosureAcknowledgement"]
                         },
                         "additionalInfo": {
