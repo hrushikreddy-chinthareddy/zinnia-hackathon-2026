@@ -1417,7 +1417,7 @@
             "purchaseDocumentMatchingIssues": "Document de correspondance",
             "agentNigo": "Réviser les problèmes d'agent",
             "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements",
-            "applicationNigo":"Réviser les problèmes d'agent"
+            "applicationNigo": "Réviser les problèmes d'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -5110,17 +5110,18 @@
             "secondaryCta": "Retour à l'accueil"
         }
     },
-<<<<<<< HEAD
     "nbPaymentProcessingNigo": {
         "confirmStep": {
             "title": "Compris !",
             "subTitle": "Tâche : Examen de la prime initiale soumis.",
-=======
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
     "nbApplicationNigo": {
         "confirmStep": {
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
->>>>>>> 7638be75d78ca2cd913b9aad35cb1ab9db3b6f82
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
         }

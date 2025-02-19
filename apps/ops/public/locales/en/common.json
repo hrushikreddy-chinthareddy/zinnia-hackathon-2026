@@ -1419,7 +1419,7 @@
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
             "PaymentProcessingNigo": "Review Premium Issues",
-            "applicationNigo":"Review Application Issues"
+            "applicationNigo": "Review Application Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -5139,25 +5139,24 @@
             "secondaryCta": "Back to home"
         }
     },
-<<<<<<< HEAD
     "nbPaymentProcessingNigo": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review initial premium was submitted.",
-=======
-    "nbApplicationNigo": {
-        "confirmStep": {
-            "title": "Got It!",
-            "subTitle": "Task: Review Agent Issues was submitted.",
->>>>>>> 7638be75d78ca2cd913b9aad35cb1ab9db3b6f82
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }
     },
-<<<<<<< HEAD
 
-=======
->>>>>>> 7638be75d78ca2cd913b9aad35cb1ab9db3b6f82
+    "nbApplicationNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Agent Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."
