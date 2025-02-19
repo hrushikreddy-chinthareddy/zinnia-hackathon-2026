@@ -80,24 +80,8 @@ export const NavMenu = ({
           align="end"
         >
           <div className="typography-nav-nav-drawer">
+            <p>My Coverage</p>
             <ul>
-              <li
-                className={clsx({
-                  [styles.active as string]: pathname === navUrls.account,
-                })}
-              >
-                <span>
-                  <Icon type={IconType.CIRCLE_USER} width={20} height={20} />
-                </span>
-                <Link
-                  href="/my-account"
-                  onClick={() => {
-                    setIsOpen(false);
-                  }}
-                >
-                  Account
-                </Link>
-              </li>
               {!showAnnuities && (
                 <li
                   className={clsx({
@@ -134,7 +118,9 @@ export const NavMenu = ({
                       className={clsx({
                         [styles.active as string]:
                           // companyName might be an empty string
-                          companyName && currentUrl.includes(companyName),
+                          companyName &&
+                          currentUrl.includes(companyName) &&
+                          pathname === navUrls.allPolicies,
                       })}
                     >
                       <span>
@@ -155,14 +141,38 @@ export const NavMenu = ({
                   );
                 })}
             </ul>
-            <div style={{ position: 'relative' }}>
-              <a href="/api/logout">
+            <p>My Account</p>
+            <ul>
+              <li
+                className={clsx({
+                  [styles.active as string]: pathname === navUrls.account,
+                })}
+              >
                 <span>
-                  <Icon type={IconType.LOGOUT} width={20} height={20} />
+                  <Icon type={IconType.CIRCLE_USER} width={20} height={20} />
                 </span>
-                Sign out
-              </a>
-            </div>
+                <Link
+                  href="/my-account"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                >
+                  Account Profile
+                </Link>
+              </li>
+              {/* This is kind of lazy, but because the nav menu is fixed, when i try to remove the bottom
+              padding on the container, it is removing the bottom margin on the last li too, i can't
+              target this last li without also targeting the last li in the ul above, so i'm just
+              explicitly setting the marginBottom here */}
+              <li style={{ marginBottom: 0 }}>
+                <a href="/api/logout">
+                  <span>
+                    <Icon type={IconType.LOGOUT} width={20} height={20} />
+                  </span>
+                  Sign out
+                </a>
+              </li>
+            </ul>
           </div>
         </Popover.Content>
       </Popover.Portal>

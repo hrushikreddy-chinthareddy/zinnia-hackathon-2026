@@ -9,40 +9,40 @@ div:has(.navMenuContainer) {
 
 .navMenuContainer {
   --radix-popper-available-width: 100vw;
+  --menu-item-left-padding: var(--measure-dimension-padding-2xl);
+  --menu-item-bottom-spacing: var(--measure-dimension-gap-lg);
   background-color: var(--color-base-surface-surface-darker);
   color: white;
   width: var(--radix-popper-available-width);
   height: var(--radix-popper-available-height);
-  padding: var(--measure-dimension-padding-2xl, 1rem)
-    var(--measure-dimension-padding-lg, 0.5rem);
+  padding: var(--measure-dimension-padding-2xl, 1rem) 0;
+
+  p {
+    padding-left: var(--menu-item-left-padding);
+    margin-bottom: var(--menu-item-bottom-spacing);
+  }
 
   li,
   a {
     display: flex;
     color: var(--color-nav-menu-icon-menu-icon-default-fill);
     align-items: center;
+    gap: var(--measure-dimension-gap-md);
 
     span {
       padding: var(--measure-dimension-padding-sm);
-      padding-left: var(--measure-dimension-padding-lg);
-      margin-right: var(--measure-dimension-gap-md);
-    }
-  }
-
-  a {
-    &:hover {
-      color: var(--color-nav-menu-icon-menu-icon-default-fill);
-      text-decoration: underline;
-      text-decoration-color: var(--color-nav-menu-icon-menu-icon-default-fill);
+      padding-left: var(--menu-item-left-padding);
     }
   }
 
   ul {
-    border-bottom: 2px solid var(--color-base-border-border-dark);
-    margin-bottom: var(--measure-dimension-gap-lg);
+    &:not(:last-of-type) {
+      border-bottom: 2px solid var(--color-base-border-border-dark);
+      margin-bottom: var(--menu-item-bottom-spacing);
+    }
 
     li {
-      margin-bottom: var(--measure-dimension-gap-md);
+      margin-bottom: var(--menu-item-bottom-spacing);
       position: relative;
 
       &.active {

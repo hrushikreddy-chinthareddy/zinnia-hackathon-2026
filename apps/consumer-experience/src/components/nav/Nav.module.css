@@ -15,11 +15,5 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding: var(--measure-dimension-padding-2xl);
-}
-
-@media (width >= 768px) {
-  .content {
-    padding-inline: var(--measure-dimension-padding-4xl);
-  }
+  padding: var(--measure-dimension-padding-2xl) 0;
 }
