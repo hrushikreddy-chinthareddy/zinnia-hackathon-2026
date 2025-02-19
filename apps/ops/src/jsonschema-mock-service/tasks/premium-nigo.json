@@ -36,18 +36,24 @@
                             "type": "object",
                             "title": "Details",
                             "properties": {
-                                "grossAmount": {
-                                    "type": "number",
-                                    "title": "Gross Amount"
+                                "paymentRecord": {
+                                    "type": "object",
+                                    "properties": {
+                                        "grossAmount": {
+                                            "type": "number",
+                                            "title": "Gross Amount"
+                                        },
+                                        "netAmount": {
+                                            "type": "number",
+                                            "title": "Net amount"
+                                        },
+                                        "amountReceived": {
+                                            "type": "number",
+                                            "title": "Amount Received"
+                                        }
+                                    }
                                 },
-                                "netAmount": {
-                                    "type": "number",
-                                    "title": "Net amount"
-                                },
-                                "amountReceived": {
-                                    "type": "number",
-                                    "title": "Amount Received"
-                                },
+
                                 "document": {
                                     "type": "object",
                                     "properties": {
@@ -141,28 +147,33 @@
                         "ui:options": {
                             "label": false
                         },
-                        "grossAmount": {
-                            "ui-widget": "ValueWidget",
+                        "paymentRecord": {
                             "ui:options": {
-                                "label": false,
-                                "inline": true,
-                                "dataType": "amount"
-                            }
-                        },
-                        "netAmount": {
-                            "ui-widget": "ValueWidget",
-                            "ui:options": {
-                                "label": false,
-                                "inline": true,
-                                "dataType": "amount"
-                            }
-                        },
-                        "amountReceived": {
-                            "ui-widget": "ValueWidget",
-                            "ui:options": {
-                                "label": false,
-                                "inline": true,
-                                "dataType": "amount"
+                                "label": false
+                            },
+                            "grossAmount": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true,
+                                    "dataType": "amount"
+                                }
+                            },
+                            "netAmount": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true,
+                                    "dataType": "amount"
+                                }
+                            },
+                            "amountReceived": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true,
+                                    "dataType": "amount"
+                                }
                             }
                         },
                         "document": {
