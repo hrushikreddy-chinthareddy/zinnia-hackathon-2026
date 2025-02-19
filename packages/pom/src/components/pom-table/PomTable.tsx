@@ -22,11 +22,7 @@ const createExpandedContent = <T,>(rows: PomTableRow<T>[]) => {
     return (
       <TableRow>
         {Object.entries(row).map(([key, value]) => {
-          return (
-            <TableCell className="typography-content-body-sm" key={key}>
-              {value}
-            </TableCell>
-          );
+          return <TableCell key={key}>{value}</TableCell>;
         })}
       </TableRow>
     );
@@ -48,7 +44,7 @@ const PomTable = <T,>({
             return (
               <TableHeaderCell
                 key={key + '-' + index}
-                className="typography-content-body-sm"
+                className="typography-content-body-sm-b"
               >
                 {columnLabel}
               </TableHeaderCell>

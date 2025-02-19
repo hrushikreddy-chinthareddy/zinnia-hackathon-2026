@@ -69,4 +69,9 @@ export enum BackgroundCheckStatus {
   CANT_COMPLETE = 'Unable to complete',
 }
 
+export enum YesNo {
+  YES = 'Yes',
+  NO = 'No',
+}
+
 export { TrainingEducation };

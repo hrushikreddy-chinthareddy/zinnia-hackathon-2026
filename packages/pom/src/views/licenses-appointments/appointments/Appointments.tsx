@@ -1,25 +1,13 @@
-import { Badge, BadgeVariant } from '@zinnia/bloom/components';
-import { Appointment, AppointmentStatus } from '../../../types';
+import { Badge } from '@zinnia/bloom/components';
+import clsx from 'clsx';
+import { default as styles } from './Appointments.module.css';
+import { Appointment } from '../../../types';
+import { AddAppointmentSidesheet } from './add/AddAppointmentSidesheet';
 import CardSection from '../../../components/card-section/CardSection';
 import PomTable from '../../../components/pom-table/PomTable';
 import { AppointmentSidesheet } from './AppointmentSidesheet';
-import clsx from 'clsx';
-import { default as styles } from './Appointments.module.css';
 import { generateAppointments } from './__mocks';
-const getBadgeVariant = (status: AppointmentStatus): BadgeVariant => {
-  switch (status) {
-    case AppointmentStatus.PENDING:
-      return BadgeVariant.PENDING;
-    case AppointmentStatus.APPROVED:
-      return BadgeVariant.SUCCESS;
-    case AppointmentStatus.TERMINATED:
-      return BadgeVariant.ERROR;
-    case AppointmentStatus.JUST_IN_TIME:
-      return BadgeVariant.INFO;
-    default:
-      return BadgeVariant.DEFAULT;
-  }
-};
+import { getBadgeVariant } from './utils';
 
 const tableHeaders = {
   carrier: 'Carrier',
@@ -28,29 +16,68 @@ const tableHeaders = {
   status: 'Status',
 };
 
-const tableRows = (data: Appointment[]) =>
-  data.map((appointment) => ({
-    carrier: (
-      <AppointmentSidesheet
-        trigger={
-          <span className={clsx(styles.cta)}>{appointment.carrier}</span>
-        }
-        appointment={appointment}
-      ></AppointmentSidesheet>
-    ),
-    state: appointment.state,
-    resident: appointment.resident,
-    status: (
-      <Badge
-        variant={getBadgeVariant(appointment.status)}
-        label={appointment.status}
-      />
-    ),
-  }));
+const appointmentRow = (appointment: Appointment) => ({
+  carrier: (
+    <AppointmentSidesheet
+      trigger={<span className={clsx(styles.cta)}>{appointment.carrier}</span>}
+      appointment={appointment}
+    />
+  ),
+  state: appointment.state,
+  resident: appointment.resident,
+  status: (
+    <Badge
+      variant={getBadgeVariant(appointment.status)}
+      label={appointment.status}
+    />
+  ),
+});
+
+const expandableAppointmentRow = (
+  carrier: string,
+  appointments: Appointment[]
+) => {
+  const uniqueStates = new Set(appointments.map((app) => app.state));
+
+  return {
+    carrier: <span className={clsx(styles.cta)}>{carrier}</span>,
+    state: `${uniqueStates.size} State${uniqueStates.size > 1 ? 's' : ''}`,
+    resident: '',
+    status: '', // Empty status for summary row
+  };
+};
+
+const tableRows = (data: Appointment[]) => {
+  // 1- Group appointments by carrier '{Carrier: [Appointment, ...]}'
+  const grouped = data.reduce(
+    (acc, appointment) => {
+      const carrier = appointment.carrier;
+      if (!acc[carrier]) {
+        acc[carrier] = [];
+      }
+      acc[carrier].push(appointment);
+      return acc;
+    },
+    {} as Record<string, Appointment[]>
+  );
+
+  // 2- Create a row for grouped appointments
+  return Object.entries(grouped).map(([carrier, appointments]) => {
+    if (appointments.length === 1) {
+      return appointmentRow(appointments[0]);
+    }
+
+    // 3- If there are multiple appointments, create an expandable row with appointments under it
+    return [
+      expandableAppointmentRow(carrier, appointments),
+      ...appointments.map(appointmentRow),
+    ];
+  });
+};
 
 const Appointments = () => {
   return (
-    <CardSection title="Appointments">
+    <CardSection title="Appointments" action={<AddAppointmentSidesheet />}>
       <PomTable
         headers={tableHeaders}
         rows={tableRows(generateAppointments())}

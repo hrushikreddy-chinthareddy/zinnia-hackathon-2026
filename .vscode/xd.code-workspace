@@ -1,0 +1,20 @@
+{
+  "folders": [
+    {
+      "name": "root",
+      "path": "..",
+    },
+    {
+      "name": "ops",
+      "path": "../apps/ops",
+    },
+    {
+      "name": "cui",
+      "path": "../apps/consumer-experience",
+    },
+    {
+      "name": "pom",
+      "path": "../packages/pom",
+    },
+  ],
+}

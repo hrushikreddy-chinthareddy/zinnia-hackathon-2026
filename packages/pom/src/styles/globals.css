@@ -10,6 +10,8 @@
   --dimesion-padding-tablet: var(--measure-dimension-padding-3xl);
   --dimesion-padding-desktop: var(--measure-dimension-padding-4xl);
 
+  font: var(--typography-content-body-sm);
+
   /* TODO: once the typography variables are exported from bloom, replace these with font: var(--typography-desktop-headline-1-d) */
   h1 {
     font: var(--typography-desktop-headline-1-d);
@@ -85,4 +87,20 @@
 .pom_ordered-list {
   list-style-position: inside;
   list-style-type: decimal;
+}
+
+.pom_flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+#sidesheet-content {
+  font: var(--typography-content-body-sm);
+
+  h2 {
+    font: var(--typography-desktop-headline-2-d);
+  }
+  h3 {
+    font: var(--typography-desktop-headline-3-d);
+  }
 }

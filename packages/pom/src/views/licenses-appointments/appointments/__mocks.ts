@@ -63,7 +63,7 @@ export const generateAppointments = (): Appointment[] => [
     resident: 'Yes',
     status: AppointmentStatus.TERMINATED,
     effectiveDate: '01/01/2023',
-    company: 'AAA Insurance',
+    company: 'PBC Health Benefits Society',
     licenseNumber: '128815C',
     lineOfAuthorities: [
       {
@@ -110,12 +110,38 @@ export const generateAppointments = (): Appointment[] => [
   },
   {
     id: '5',
-    carrier: 'PBC Health Benefits Society',
+    carrier: 'AAA Insurance',
     state: 'UT',
     resident: 'Yes',
     status: AppointmentStatus.JUST_IN_TIME,
     effectiveDate: '01/01/2023',
-    company: 'PBC Health Benefits Society',
+    company: 'AAA Insurance',
+    licenseNumber: '0012149A',
+    lineOfAuthorities: [
+      {
+        type: 'lineOfAuthority1',
+        label: 'Line of Authority 1',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+      {
+        type: 'lineOfAuthority2',
+        label: 'Line of Authority 2',
+        status: 'Active',
+        effectiveDate: '01/01/2023',
+        expiryDate: '01/01/2027',
+      },
+    ],
+  },
+  {
+    id: '6',
+    carrier: 'Acme Insurance',
+    state: 'UT',
+    resident: 'Yes',
+    status: AppointmentStatus.TERMINATED,
+    effectiveDate: '01/01/2023',
+    company: 'Acme Insurance',
     licenseNumber: '0012149A',
     lineOfAuthorities: [
       {
@@ -135,3 +161,17 @@ export const generateAppointments = (): Appointment[] => [
     ],
   },
 ];
+
+export const groupedAppointments = generateAppointments().reduce(
+  (grouped, appointment) => {
+    const company = appointment.company;
+    if (!grouped[company]) {
+      grouped[company] = [];
+    }
+    grouped[company].push(appointment);
+    return grouped;
+  },
+  {} as Record<string, Appointment[]>
+);
+
+console.log(groupedAppointments);
