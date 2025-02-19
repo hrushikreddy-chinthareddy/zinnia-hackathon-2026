@@ -24,9 +24,13 @@ export const MfaChallengeLogin = ({
       enrollment={enrollment}
       id={id}
       onChallengeSuccess={() =>
-        router.push(`/${ROOT_URL_PATH}?${FROM_LOGIN_QUERY_KEY}=true`)
+        router.push(
+          `${window.location.origin}/${ROOT_URL_PATH}?${FROM_LOGIN_QUERY_KEY}=true`
+        )
       }
-      onChallengeFailure={() => router.push(`/login/error`)}
+      onChallengeFailure={() =>
+        router.push(`${window.location.origin}/login/error`)
+      }
     />
   );
 };
