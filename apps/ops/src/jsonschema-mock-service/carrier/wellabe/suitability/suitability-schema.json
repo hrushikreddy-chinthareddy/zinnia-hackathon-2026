@@ -237,7 +237,7 @@
             "investProduct_annuityFitsRiskToleranceEnum": {
                 "enum": ["YES", "NO"]
             },
-            "financialObjectives_buyingReasonEnum": {
+            "financialObjectives_purchaseReasonEnum": {
                 "enum": ["INCOME", "TAX_DEFERRAL", "GURANTEES", "GROWTH", "PRINCIPAL_PROTECTION", "OTHERS"]
             },
 
@@ -264,6 +264,30 @@
             },
             "signatureInfo_signatoryDesignationEnum": {
                 "enum": ["TRUSTEE", "EXECUTOR", "CUSTODIAN", "GUARDIAN", "ATTORNEY_IN_FACT"]
+            },
+            "productConsDiscussed_byAgentEnum": {
+                "enum": [
+                    "SURRENDER_CHARGE",
+                    "TAX_PENALTY",
+                    "INVESTMENT_ADVISORY_FEES",
+                    "RIDER_CHARGES",
+                    "INTEREST_LIMITATIONS",
+                    "NON_GUARANTEED_CHANGES",
+                    "INSURANCE_INVESTMENT_COMPONENTS",
+                    "OTHERS"
+                ]
+            },
+            "productConsDiscussed_byApplicantEnum": {
+                "enum": [
+                    "SURRENDER_CHARGE",
+                    "TAX_PENALTY",
+                    "INVESTMENT_ADVISORY_FEES",
+                    "RIDER_CHARGES",
+                    "INTEREST_LIMITATIONS",
+                    "NON_GUARANTEED_CHANGES",
+                    "INSURANCE_INVESTMENT_COMPONENTS",
+                    "OTHERS"
+                ]
             }
         },
         "properties": {
@@ -489,7 +513,7 @@
                     },
                     "replacementReason": {
                         "type": "string",
-                        "title": "Replacement reason"
+                        "title": "ReplaPurchase reason"
                     },
                     "replacedContractType": {
                         "type": "string",
@@ -557,7 +581,7 @@
                     },
                     "materialChangeReason": {
                         "type": "string",
-                        "title": "Material change reason"
+                        "title": "Material Purchase reason"
                     },
                     "materialChangeDetails": {
                         "type": "array",
@@ -736,18 +760,18 @@
                 "type": "object",
                 "title": "Financial Objectives",
                 "properties": {
-                    "buyingReason": {
+                    "purchaseReason": {
                         "type": "array",
-                        "title": "Buying reason",
+                        "title": "Purchase reason",
                         "items": {
                             "type": "string",
-                            "$ref": "#/definitions/financialObjectives_buyingReasonEnum"
+                            "$ref": "#/definitions/financialObjectives_purchaseReasonEnum"
                         },
                         "uniqueItems": true
                     },
-                    "buyingReasonDetails": {
+                    "otherPurchaseReason": {
                         "type": "string",
-                        "title": "Buying reason details"
+                        "title": "Other purchase reason"
                     },
                     "annuityMeetsFinancialNeeds": {
                         "type": "string",
@@ -755,10 +779,10 @@
                         "$ref": "#/definitions/financialObjectives_annuityMeetsFinancialNeedsEnum"
                     }
                 },
-                "required": ["buyingReason", "annuityMeetsFinancialNeeds"],
+                "required": ["purchaseReason", "annuityMeetsFinancialNeeds"],
                 "if": {
                     "properties": {
-                        "buyingReason": {
+                        "purchaseReason": {
                             "contains": {
                                 "const": "OTHERS"
                             }
@@ -766,7 +790,7 @@
                     }
                 },
                 "then": {
-                    "required": ["buyingReasonDetails"]
+                    "required": ["otherPurchaseReason"]
                 }
             },
             "liquidityOptions": {
@@ -790,9 +814,9 @@
                         "type": "string",
                         "title": "First payout option"
                     },
-                    "surrenderChargeConsent": {
+                    "surrenderChargeConsentUnderAge": {
                         "type": "string",
-                        "title": "Surrender charge consent"
+                        "title": "Surrender charge consent Under Age"
                     },
                     "possibleReductionInValue": {
                         "type": "string",
@@ -830,7 +854,7 @@
                 },
                 "required": [
                     "distributionMethods",
-                    "surrenderChargeConsent",
+                    "surrenderChargeConsentUnderAge",
                     "planToHoldAnnuity",
                     "explainedOtherCharges",
                     "benefitAnnuityQuestions"
@@ -915,13 +939,29 @@
                                 "type": "string",
                                 "title": "Conflicts of interest"
                             },
-                            "productAdvantages": {
-                                "type": "string",
-                                "title": "Product advantages"
-                            },
-                            "productCons": {
-                                "type": "string",
-                                "title": "Product cons"
+                            "productConsDiscussed": {
+                                "type": "object",
+                                "properties": {
+                                    "byAgent": {
+                                        "type": "array",
+                                        "title": "Purchase reason",
+                                        "items": {
+                                            "type": "string",
+                                            "$ref": "#/definitions/productConsDiscussed_byAgentEnum"
+                                        },
+                                        "uniqueItems": true
+                                    },
+
+                                    "byApplicant": {
+                                        "type": "array",
+                                        "title": "Purchase reason",
+                                        "items": {
+                                            "type": "string",
+                                            "$ref": "#/definitions/productConsDiscussed_byApplicantEnum"
+                                        },
+                                        "uniqueItems": true
+                                    }
+                                }
                             }
                         },
                         "required": [
@@ -931,9 +971,7 @@
                             "compensationDescription",
                             "rightToRequestInfo",
                             "compensationEstimate",
-                            "conflictsOfInterest",
-                            "productAdvantages",
-                            "productCons"
+                            "conflictsOfInterest"
                         ]
                     }
                 },
@@ -1688,14 +1726,14 @@
             "ui:options": {
                 "classNames": "divider"
             },
-            "buyingReason": {
+            "purchaseReason": {
                 "ui:options": {
                     "label": "true",
                     "widget": "checkboxes",
                     "enumNames": ["Income", "Tax deferal", "Gurantees", "Growth", "Principal protection", "Others"]
                 }
             },
-            "buyingReasonDetails": {},
+            "otherPurchaseReason": {},
             "annuityMeetsFinancialNeeds": {
                 "ui:options": {
                     "inline": true,
@@ -1721,7 +1759,7 @@
                 }
             },
             "firstPayoutOption": {},
-            "surrenderChargeConsent": {},
+            "surrenderChargeConsentUnderAge": {},
             "possibleReductionInValue": {},
             "planToHoldAnnuity": {},
             "explainedOtherCharges": {},
@@ -1776,6 +1814,56 @@
                 }
             }
         },
+        "disclosureAcknowledgement": {
+            "ui:options": {
+                "classNames": "divider"
+            },
+            "scopeAndTerms": {},
+            "typesOfProducts": {},
+            "authorizedInsurers": {},
+            "compensationDescription": {},
+            "rightToRequestInfo": {},
+            "compensationEstimate": {},
+            "conflictsOfInterest": {},
+            "productConsDiscussed": {
+                "type": "object",
+                "properties": {
+                    "byAgent": {
+                        "ui:options": {
+                            "label": "true",
+                            "widget": "checkboxes",
+                            "enumNames": [
+                                "The surrender charge (including any market value adjustment) and surrender charge period",
+                                "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
+                                "Investment advisory fees Potential charges for and features of riders or other options of the annuity",
+                                "Limitations on interest returns",
+                                "Potential changes in non - guaranteed elements of the annuity",
+                                "Insurance and investment components and market risk",
+                                "Others"
+                            ]
+                        }
+                    },
+
+                    "byApplicant": {
+                        "ui:options": {
+                            "label": "true",
+                            "widget": "checkboxes",
+                            "enumNames": [
+                                "The surrender charge(including any market value adjustment) and surrender charge period",
+                                "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
+                                "Investment advisory fees",
+                                "Potential charges for and features of riders or other options of the annuity",
+                                "Limitations on interest returns",
+                                "Potential changes in non - guaranteed elements of the annuity",
+                                "Insurance and investment components and market risk",
+                                "Others"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+
         "additionalInfo": {
             "ui:options": {
                 "classNames": "divider"
@@ -2074,7 +2162,7 @@
                         "investProduct_annuityFitsRiskToleranceEnum": {
                             "enum": ["YES", "NO"]
                         },
-                        "financialObjectives_buyingReasonEnum": {
+                        "financialObjectives_purchaseReasonEnum": {
                             "enum": ["INCOME", "TAX_DEFERRAL", "GURANTEES", "GROWTH", "PRINCIPAL_PROTECTION", "OTHERS"]
                         },
 
@@ -2107,6 +2195,30 @@
                         },
                         "signatureInfo_signatoryDesignationEnum": {
                             "enum": ["TRUSTEE", "EXECUTOR", "CUSTODIAN", "GUARDIAN", "ATTORNEY_IN_FACT"]
+                        },
+                        "productConsDiscussed_byAgentEnum": {
+                            "enum": [
+                                "SURRENDER_CHARGE",
+                                "TAX_PENALTY",
+                                "INVESTMENT_ADVISORY_FEES",
+                                "RIDER_CHARGES",
+                                "INTEREST_LIMITATIONS",
+                                "NON_GUARANTEED_CHANGES",
+                                "INSURANCE_INVESTMENT_COMPONENTS",
+                                "OTHERS"
+                            ]
+                        },
+                        "productConsDiscussed_byApplicantEnum": {
+                            "enum": [
+                                "SURRENDER_CHARGE",
+                                "TAX_PENALTY",
+                                "INVESTMENT_ADVISORY_FEES",
+                                "RIDER_CHARGES",
+                                "INTEREST_LIMITATIONS",
+                                "NON_GUARANTEED_CHANGES",
+                                "INSURANCE_INVESTMENT_COMPONENTS",
+                                "OTHERS"
+                            ]
                         }
                     },
                     "properties": {
@@ -2336,7 +2448,7 @@
                                 },
                                 "replacementReason": {
                                     "type": "string",
-                                    "title": "Replacement reason"
+                                    "title": "ReplaPurchase reason"
                                 },
                                 "replacedContractType": {
                                     "type": "string",
@@ -2404,7 +2516,7 @@
                                 },
                                 "materialChangeReason": {
                                     "type": "string",
-                                    "title": "Material change reason"
+                                    "title": "Material Purchase reason"
                                 },
                                 "materialChangeDetails": {
                                     "type": "array",
@@ -2573,18 +2685,18 @@
                             "type": "object",
                             "title": "Financial Objectives",
                             "properties": {
-                                "buyingReason": {
+                                "purchaseReason": {
                                     "type": "array",
-                                    "title": "Buying reason",
+                                    "title": "Purchase reason",
                                     "items": {
                                         "type": "string",
-                                        "$ref": "#/definitions/financialObjectives_buyingReasonEnum"
+                                        "$ref": "#/definitions/financialObjectives_purchaseReasonEnum"
                                     },
                                     "uniqueItems": true
                                 },
-                                "buyingReasonDetails": {
+                                "otherPurchaseReason": {
                                     "type": "string",
-                                    "title": "Buying reason details"
+                                    "title": "Other purchase reason"
                                 },
                                 "annuityMeetsFinancialNeeds": {
                                     "type": "string",
@@ -2592,10 +2704,10 @@
                                     "$ref": "#/definitions/financialObjectives_annuityMeetsFinancialNeedsEnum"
                                 }
                             },
-                            "required": ["buyingReason", "annuityMeetsFinancialNeeds"],
+                            "required": ["purchaseReason", "annuityMeetsFinancialNeeds"],
                             "if": {
                                 "properties": {
-                                    "buyingReason": {
+                                    "purchaseReason": {
                                         "contains": {
                                             "const": "OTHERS"
                                         }
@@ -2603,7 +2715,7 @@
                                 }
                             },
                             "then": {
-                                "required": ["buyingReasonDetails"]
+                                "required": ["otherPurchaseReason"]
                             }
                         },
                         "liquidityOptions": {
@@ -2627,9 +2739,9 @@
                                     "type": "string",
                                     "title": "First payout option"
                                 },
-                                "surrenderChargeConsent": {
+                                "surrenderChargeConsentUnderAge": {
                                     "type": "string",
-                                    "title": "Surrender charge consent"
+                                    "title": "Surrender charge consent Under Age"
                                 },
                                 "possibleReductionInValue": {
                                     "type": "string",
@@ -2667,7 +2779,7 @@
                             },
                             "required": [
                                 "distributionMethods",
-                                "surrenderChargeConsent",
+                                "surrenderChargeConsentUnderAge",
                                 "planToHoldAnnuity",
                                 "explainedOtherCharges",
                                 "benefitAnnuityQuestions"
@@ -2751,13 +2863,29 @@
                                             "type": "string",
                                             "title": "Conflicts of interest"
                                         },
-                                        "productAdvantages": {
-                                            "type": "string",
-                                            "title": "Product advantages"
-                                        },
-                                        "productCons": {
-                                            "type": "string",
-                                            "title": "Product cons"
+                                        "productConsDiscussed": {
+                                            "type": "object",
+                                            "properties": {
+                                                "byAgent": {
+                                                    "type": "array",
+                                                    "title": "Purchase reason",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "$ref": "#/definitions/productConsDiscussed_byAgentEnum"
+                                                    },
+                                                    "uniqueItems": true
+                                                },
+
+                                                "byApplicant": {
+                                                    "type": "array",
+                                                    "title": "Purchase reason",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "$ref": "#/definitions/productConsDiscussed_byApplicantEnum"
+                                                    },
+                                                    "uniqueItems": true
+                                                }
+                                            }
                                         }
                                     },
                                     "required": [
@@ -2767,9 +2895,7 @@
                                         "compensationDescription",
                                         "rightToRequestInfo",
                                         "compensationEstimate",
-                                        "conflictsOfInterest",
-                                        "productAdvantages",
-                                        "productCons"
+                                        "conflictsOfInterest"
                                     ]
                                 }
                             },
@@ -3528,14 +3654,14 @@
                         "ui:options": {
                             "classNames": "divider"
                         },
-                        "buyingReason": {
+                        "purchaseReason": {
                             "ui:options": {
                                 "label": "true",
                                 "widget": "checkboxes",
                                 "enumNames": ["Income", "Tax deferal", "Gurantees", "Growth", "Principal protection", "Others"]
                             }
                         },
-                        "buyingReasonDetails": {},
+                        "otherPurchaseReason": {},
                         "annuityMeetsFinancialNeeds": {
                             "ui:options": {
                                 "inline": true,
@@ -3561,7 +3687,7 @@
                             }
                         },
                         "firstPayoutOption": {},
-                        "surrenderChargeConsent": {},
+                        "surrenderChargeConsentUnderAge": {},
                         "possibleReductionInValue": {},
                         "planToHoldAnnuity": {},
                         "explainedOtherCharges": {},
