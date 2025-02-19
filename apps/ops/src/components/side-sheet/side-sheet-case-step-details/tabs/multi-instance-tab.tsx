@@ -2,7 +2,7 @@ import { Button } from '@zinnia/bloom/components';
 import { useTranslation, TFunction } from 'next-i18next';
 
 import { formatTimestamp, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
-import { ExceptionView, TaskView } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
+import { ExceptionView, TaskView, GroupedExceptions } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import TaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/task-sidesheet-content';
@@ -13,7 +13,6 @@ import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
-import { groupExceptions } from '@deps/components/case-sub-page/case-tabs/progress/exceptions';
 
 const getStepStatusText = (step: TransformedStep, t: TFunction): { icon: React.ReactNode; text: string } => {
     switch (step.status) {
@@ -71,12 +70,10 @@ function SideSheetException({ exception }: { exception: ExceptionView }) {
     );
 }
 
-function Exceptions({ exceptions }: { exceptions: ExceptionView[] }) {
+function Exceptions({ exceptions, groupedExceptions }: { exceptions: ExceptionView[]; groupedExceptions: GroupedExceptions }) {
     if (!exceptions?.length) {
         return null;
     }
-
-    const groupedExceptions = groupExceptions(exceptions);
 
     return (
         <ul>
@@ -104,7 +101,7 @@ function SideSheetStep({ step }: { step: TransformedStep }) {
                 {step?.tasks?.map(task => (
                     <SideSheetTask task={task} key={task.id} />
                 ))}
-                <Exceptions exceptions={step.exceptions} />
+                <Exceptions exceptions={step.exceptions} groupedExceptions={step.exceptionsGroupedByTask} />
                 <Content className="text-gray-600" variant={ContentVariant.BodySm} details={text} />
             </div>
         </div>

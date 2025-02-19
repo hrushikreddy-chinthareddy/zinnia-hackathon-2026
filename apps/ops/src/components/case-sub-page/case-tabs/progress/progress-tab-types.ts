@@ -22,3 +22,7 @@ export type ExceptionView = {
 export type CaseAdditionalData = {
     [key: string]: { label: string; value: string; type: string };
 };
+
+export interface GroupedExceptions {
+    [taskId: string]: { tasks: TaskView[]; exceptions: ExceptionView[] };
+}
