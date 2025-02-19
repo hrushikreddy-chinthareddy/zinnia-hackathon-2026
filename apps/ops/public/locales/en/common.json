@@ -1419,6 +1419,7 @@
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
             "attachmentNigo": "Review Application Issues"
+            "applicationNigo":"Review Application Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -1699,6 +1700,7 @@
                     "fixedDollar": "Fixed dollar",
                     "fixedPeriodIncome": "Fixed period income",
                     "annualFreeWithdrawal": "Annual free withdrawal",
+                    "maximumFreeWithdrawal": "Maximum free withdrawal",
                     "percentageOfAccountValue": "Percent of account value",
                     "interestEarningDividendsGains": "Interest/Earnings/Dividends/Gains",
                     "gmwb": "GMWB",
@@ -1996,7 +1998,8 @@
                     "otherEligibleDistributedPermittedPlan": "Other eligible distributions permitted by the plan",
                     "qualifiedReservist": "Qualified reservist distribution",
                     "hardship": "Hardship",
-                    "financialHardship": "Financial Hardship"
+                    "financialHardship": "Financial Hardship",
+                    "other": "Other"
                 },
                 "unforeseeableEmergency": "Unforeseeable emergency",
                 "unforeseeableEmergencyOptions": {
@@ -5137,6 +5140,14 @@
         }
     },
     "nbAttachmentNigo": {
+      "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Agent Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "nbApplicationNigo": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review Agent Issues was submitted.",

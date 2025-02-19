@@ -17,7 +17,7 @@ export const buildLoanPaymentRequestBody = (loanPayment: LoanPayment): LoanRepay
             paymentForm: PaymentForm.ACH,
         },
         fundAllocation: {
-            allocationOption: AllocationOption.PRORATA
+            allocationOption: AllocationOption.DEFAULT
         },
         reverseInitiator: loanPayment.reverseInitiator,
         transactionAmounts: {

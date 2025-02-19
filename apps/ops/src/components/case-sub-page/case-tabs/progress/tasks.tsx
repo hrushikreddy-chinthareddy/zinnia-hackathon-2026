@@ -17,7 +17,8 @@ const SupportedTaskMap = [
     TaskType.SuitabilityDataEntry,
     TaskType.PURCHASE_DOCUMENT_MATCHING,
     TaskType.Agent_Nigo,
-    TaskType.Attachment_Nigo
+    TaskType.Attachment_Nigo,
+    TaskType.Application_Nigo
 ];
 
 export function Task({ task }: { task: TaskView }) {
@@ -28,6 +29,7 @@ export function Task({ task }: { task: TaskView }) {
         [TaskType.PURCHASE_DOCUMENT_MATCHING]: t('caseOverview.tabs.purchaseDocumentMatchingIssues'),
         [TaskType.Agent_Nigo]: t('caseOverview.tabs.agentNigo'),
         [TaskType.Attachment_Nigo]: t('caseOverview.tabs.attachmentNigo'),
+        [TaskType.Application_Nigo]: t('caseOverview.tabs.applicationNigo'),
     };
 
     const TaskTypeMap: Record<string, string> = {
