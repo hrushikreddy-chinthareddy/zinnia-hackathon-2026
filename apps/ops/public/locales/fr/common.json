@@ -1416,7 +1416,8 @@
             "suitabilityReviewIssues": "Revoir Suitability Problèmes",
             "purchaseDocumentMatchingIssues": "Document de correspondance",
             "agentNigo": "Réviser les problèmes d'agent",
-            "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements"
+            "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements",
+            "applicationNigo":"Réviser les problèmes d'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -1692,6 +1693,7 @@
                     "fixedDollar": "Dollar fixe",
                     "fixedPeriodIncome": "Revenu à durée déterminée",
                     "annualFreeWithdrawal": "Retrait annuel gratuit",
+                    "maximumFreeWithdrawal": "Retrait gratuit maximum",
                     "percentageOfAccountValue": "Pourcentage de la valeur du compte",
                     "interestEarningDividendsGains": "Interset/Gains/Dividendes/Gains",
                     "gmwb": "GMWB",
@@ -1984,7 +1986,8 @@
                     "otherEligibleDistributedPermittedPlan": "Autres distributions admissibles autorisées par le régime",
                     "qualifiedReservist": "Répartition des réservistes qualifiés",
                     "hardship": "Difficultés financières",
-                    "financialHardship": "Difficultés financières"
+                    "financialHardship": "Difficultés financières",
+                    "other": "Autre"
                 },
                 "unforeseeableEmergency": "Urgence imprévisible",
                 "unforeseeableEmergencyOptions": {
@@ -5107,10 +5110,17 @@
             "secondaryCta": "Retour à l'accueil"
         }
     },
+<<<<<<< HEAD
     "nbPaymentProcessingNigo": {
         "confirmStep": {
             "title": "Compris !",
             "subTitle": "Tâche : Examen de la prime initiale soumis.",
+=======
+    "nbApplicationNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
+>>>>>>> 7638be75d78ca2cd913b9aad35cb1ab9db3b6f82
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
         }

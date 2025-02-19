@@ -18,6 +18,7 @@ const SupportedTaskMap = [
     TaskType.PURCHASE_DOCUMENT_MATCHING,
     TaskType.Agent_Nigo,
     TaskType.PremiumNigo,
+    TaskType.Application_Nigo,
 ];
 
 export function Task({ task }: { task: TaskView }) {
@@ -28,6 +29,7 @@ export function Task({ task }: { task: TaskView }) {
         [TaskType.PURCHASE_DOCUMENT_MATCHING]: t('caseOverview.tabs.purchaseDocumentMatchingIssues'),
         [TaskType.Agent_Nigo]: t('caseOverview.tabs.agentNigo'),
         [TaskType.PremiumNigo]: t('caseOverview.tabs.PaymentProcessingNigo'),
+        [TaskType.Application_Nigo]: t('caseOverview.tabs.applicationNigo'),
     };
 
     const TaskTypeMap: Record<string, string> = {

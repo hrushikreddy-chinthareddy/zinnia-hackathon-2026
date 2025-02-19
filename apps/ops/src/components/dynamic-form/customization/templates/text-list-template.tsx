@@ -14,18 +14,18 @@ const getVariant = (value: string): AssistiveTextVariant => {
 export default function TextListTemplate(props: ArrayFieldTemplateProps): JSX.Element {
     const { formData, title, uiSchema } = props;
     const keyName = uiSchema?.['ui:options']?.keyName;
+    const listType = (uiSchema?.['ui:options']?.type as string) || 'error';
     let list = [];
     if (typeof keyName === 'string') {
         list = formData.map((item: { [key: string]: any }) => item[keyName]) ?? [];
     }
-    const type = 'error';
 
     return (
         <div>
             <label className="text-xs">{title}</label>
             <ul className="mt-2">
                 {list.map((text: string, index: number) => (
-                    <AssistiveText className="mb-2" key={index} text={text} variant={getVariant(type)} />
+                    <AssistiveText className="mb-2" key={index} text={text} variant={getVariant(listType)} />
                 ))}
             </ul>
         </div>

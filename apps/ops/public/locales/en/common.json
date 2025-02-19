@@ -1418,7 +1418,8 @@
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
-            "PaymentProcessingNigo": "Review Premium Issues"
+            "PaymentProcessingNigo": "Review Premium Issues",
+            "applicationNigo":"Review Application Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -1699,6 +1700,7 @@
                     "fixedDollar": "Fixed dollar",
                     "fixedPeriodIncome": "Fixed period income",
                     "annualFreeWithdrawal": "Annual free withdrawal",
+                    "maximumFreeWithdrawal": "Maximum free withdrawal",
                     "percentageOfAccountValue": "Percent of account value",
                     "interestEarningDividendsGains": "Interest/Earnings/Dividends/Gains",
                     "gmwb": "GMWB",
@@ -1996,7 +1998,8 @@
                     "otherEligibleDistributedPermittedPlan": "Other eligible distributions permitted by the plan",
                     "qualifiedReservist": "Qualified reservist distribution",
                     "hardship": "Hardship",
-                    "financialHardship": "Financial Hardship"
+                    "financialHardship": "Financial Hardship",
+                    "other": "Other"
                 },
                 "unforeseeableEmergency": "Unforeseeable emergency",
                 "unforeseeableEmergencyOptions": {
@@ -5136,15 +5139,25 @@
             "secondaryCta": "Back to home"
         }
     },
+<<<<<<< HEAD
     "nbPaymentProcessingNigo": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review initial premium was submitted.",
+=======
+    "nbApplicationNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Agent Issues was submitted.",
+>>>>>>> 7638be75d78ca2cd913b9aad35cb1ab9db3b6f82
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }
     },
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7638be75d78ca2cd913b9aad35cb1ab9db3b6f82
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."
