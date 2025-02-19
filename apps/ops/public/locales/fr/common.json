@@ -1415,7 +1415,8 @@
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
             "suitabilityReviewIssues": "Revoir Suitability Problèmes",
             "purchaseDocumentMatchingIssues": "Document de correspondance",
-            "agentNigo": "Réviser les problèmes d'agent"
+            "agentNigo": "Réviser les problèmes d'agent",
+            "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -4321,7 +4322,7 @@
             },
             "title": "Compris!"
         }
-    },    
+    },
     "loanPayment": {
         "amount": {
             "label": "Montant",
@@ -5102,6 +5103,14 @@
         "confirmStep": {
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbPaymentProcessingNigo": {
+        "confirmStep": {
+            "title": "Compris !",
+            "subTitle": "Tâche : Examen de la prime initiale soumis.",
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
         }

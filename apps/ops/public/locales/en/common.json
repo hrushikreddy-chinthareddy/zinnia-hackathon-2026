@@ -1417,7 +1417,8 @@
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
-            "agentNigo": "Review Agent Issues"
+            "agentNigo": "Review Agent Issues",
+            "PaymentProcessingNigo": "Review Premium Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -5135,6 +5136,15 @@
             "secondaryCta": "Back to home"
         }
     },
+    "nbPaymentProcessingNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review initial premium was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."

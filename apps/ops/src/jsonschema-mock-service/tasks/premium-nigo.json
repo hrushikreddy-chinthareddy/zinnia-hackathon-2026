@@ -87,7 +87,7 @@
                                         "issueResolved": {
                                             "const": true
                                         },
-                                        "amountToApply": {
+                                        "effectiveAmount": {
                                             "type": "object",
                                             "title": "Amount to apply",
                                             "properties": {
@@ -190,7 +190,7 @@
                             "ObjectFieldTemplate": "InstructionsTemplate"
                         }
                     },
-                    "amountToApply": {
+                    "effectiveAmount": {
                         "grossAmount": {
                             "ui:options": {
                                 "leading": "$"
