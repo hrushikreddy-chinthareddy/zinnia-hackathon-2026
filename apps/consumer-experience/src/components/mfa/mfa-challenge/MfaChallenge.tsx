@@ -2,7 +2,6 @@
 import {
   Button,
   FieldStatus,
-  Loader,
   LoaderVariant,
   SpinnerButton,
 } from '@zinnia/bloom/components';
@@ -11,6 +10,7 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import Loading from '@/app/loading';
 import styles from '@/app/login/Login.module.css';
 import { FieldDataActive } from '@/components/field/data-active/FieldDataActive';
 import {
@@ -184,7 +184,7 @@ export const MfaChallenge = ({
   };
 
   if (!authenticator) {
-    return <Loader />;
+    return <Loading />;
   }
 
   return (
@@ -254,7 +254,15 @@ export const MfaChallenge = ({
           <span>Continue</span>
         </SpinnerButton>
         {onCancel && (
-          <Button mode="link" onClick={onCancel}>
+          <Button
+            mode="link"
+            onClick={onCancel}
+            style={{
+              alignSelf: 'center',
+              width: 'fit-content',
+              marginTop: 'var(--measure-dimension-gap-lg)',
+            }}
+          >
             Cancel
           </Button>
         )}
