@@ -1,31 +1,25 @@
 .container {
+  width: 100%;
   background-color: white;
-  display: flex;
-  padding: var(--measure-dimension-padding-2xl, 1rem);
 
-  align-items: center;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    background-color: white;
+  }
+}
+
+.content {
+  display: flex;
   justify-content: space-between;
-  box-shadow: var(
-    --shadow-elevation-elevation-light-md,
-    0 3.200000047683716px 7.199999809265137px 0 rgba(0, 0, 0, 0.13)
-  );
+  width: 100%;
+  padding: var(--measure-dimension-padding-2xl);
 }
 
-.logoEverly {
-  align-self: center;
-  width: 6rem;
-  flex-shrink: 0;
-}
-
-.logoContainer {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-@media (width >=500px) {
-  .container {
-    padding: var(--measure-dimension-padding-2xl, 1rem)
-      var(--measure-dimension-padding-4xl, 2rem);
+@media (width >= 768px) {
+  .content {
+    padding-inline: var(--measure-dimension-padding-4xl);
   }
 }

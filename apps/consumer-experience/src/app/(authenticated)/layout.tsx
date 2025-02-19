@@ -49,25 +49,34 @@ export default async function AuthenticatedLayout({
             piiLevel: undefined,
           }}
         >
+          <div style={{ width: '100%', backgroundColor: 'white' }}>
+            <div className="main-content-wrapper">
+              <div className="main-content-inner">
+                <Nav
+                  planCode={params.planCode}
+                  policyNumber={params.policyNumber}
+                  userName={{
+                    firstName: undefined,
+                    lastName: undefined,
+                  }}
+                  themeCookie={themeCookie as CompanyName}
+                />
+              </div>
+            </div>
+          </div>
+
           <SessionManager>
             <RefreshRouterManager>
-              <Nav
-                planCode={params.planCode}
-                policyNumber={params.policyNumber}
-                userName={{
-                  firstName: undefined,
-                  lastName: undefined,
-                }}
-                themeCookie={themeCookie as CompanyName}
-              />
-
-              <div className={styles.container}>
-                <div className={styles.content}>
-                  <MourningBanner />
-                  <UserConsentManager>{children}</UserConsentManager>
-                  <Analytics />
+              <MourningBanner />
+              {/* TODO: fix naming of classes */}
+              <div className="main-content-wrapper">
+                <div className="main-content-inner">
+                  <div className={styles.mainContent}>
+                    <UserConsentManager>{children}</UserConsentManager>
+                  </div>
                 </div>
               </div>
+              <Analytics />
             </RefreshRouterManager>
           </SessionManager>
         </PiiProvider>
