@@ -1691,6 +1691,7 @@
                     "fixedDollar": "Dollar fixe",
                     "fixedPeriodIncome": "Revenu à durée déterminée",
                     "annualFreeWithdrawal": "Retrait annuel gratuit",
+                    "maximumFreeWithdrawal": "Retrait gratuit maximum",
                     "percentageOfAccountValue": "Pourcentage de la valeur du compte",
                     "interestEarningDividendsGains": "Interset/Gains/Dividendes/Gains",
                     "gmwb": "GMWB",
@@ -1983,7 +1984,8 @@
                     "otherEligibleDistributedPermittedPlan": "Autres distributions admissibles autorisées par le régime",
                     "qualifiedReservist": "Répartition des réservistes qualifiés",
                     "hardship": "Difficultés financières",
-                    "financialHardship": "Difficultés financières"
+                    "financialHardship": "Difficultés financières",
+                    "other": "Autre"
                 },
                 "unforeseeableEmergency": "Urgence imprévisible",
                 "unforeseeableEmergencyOptions": {
