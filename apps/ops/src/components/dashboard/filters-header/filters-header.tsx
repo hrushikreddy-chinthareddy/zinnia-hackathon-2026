@@ -1,4 +1,5 @@
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
+import { areObjectsEqual } from '@zinnia/utils';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { forwardRef, useEffect, useMemo, useState } from 'react';
@@ -11,17 +12,15 @@ import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { CarrierListItem } from '@deps/containers/dashboard/issued-business/issued-business';
+import { CarrierListItem } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { useDashboardStore } from '@deps/store/store';
 import { getCarrierNameByClientId, getClientIdsByCarrierName, getCarrierListItem } from '@deps/utils/carriers';
-
 interface FiltersHeaderProps {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
     carrierHeaderIsIntersecting: boolean;
     carrierHeaderEntry?: IntersectionObserverEntry;
-    loading: boolean;
 }
 
 const getUniqueCarrierFilterItems = (carrierFilterItems: MultiselectOption[]): MultiselectOption[] => {
@@ -40,20 +39,8 @@ const getUniqueCarrierFilterItems = (carrierFilterItems: MultiselectOption[]): M
     return uniqueCarrierFilterItems;
 };
 
-//TODO: Rename this
-
-//MONDAY TODO:
-/**
- * CODE REVIEW:
- * Chat about onOpenChange for the broker dealers
- * Chat about a better way to handle the temp state when opening the select and then closing it
- * Maybe refactor how the options get passed into the select dropdowns?
- *
- * Question: Is it possible to have both selected carrier and broker dealer? Some filters specify.
- */
-
 const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
-    ({ authorizedCarriers, brokerDealersSSR, carrierHeaderIsIntersecting, carrierHeaderEntry, loading }, ref) => {
+    ({ authorizedCarriers, brokerDealersSSR, carrierHeaderIsIntersecting, carrierHeaderEntry }, ref) => {
         const { t } = useTranslation(TranslationFiles.COMMON);
 
         const carrierFilterItems = useMemo(
@@ -70,14 +57,16 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             [authorizedCarriers]
         );
 
-        const { updateSelectedCarriers, updateSelectedBrokerDealers } = useDashboardStore(state => state);
+        const { updateSelectedCarriers, updateSelectedBrokerDealers, selectedCarriers, selectedBrokerDealers } = useDashboardStore(
+            state => state
+        );
 
         const [brokerDealers, setBrokerDealers] = useState<DashboardResponseData[]>(brokerDealersSSR || []);
 
         const [placeholderSelectedCarriers, setPlaceholderSelectedCarriers] = useState<CarrierListItem>(
             carrierFilterItems.length === 1 ? { [carrierFilterItems[0].value]: carrierFilterItems[0].displayText } : {}
         );
-        const [selectedBrokerDealers, setSelectedBrokerDealers] = useState<CarrierListItem>(
+        const [placeholderSelectedBrokerDealers, setSelectedBrokerDealers] = useState<CarrierListItem>(
             brokerDealers?.length === 1 ? { [brokerDealers[0].key]: brokerDealers[0].name } : {}
         );
 
@@ -123,13 +112,17 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
 
         const handleOnOpenChangeCarrier = (open: boolean) => {
             if (!open) {
-                updateSelectedCarriers(placeholderSelectedCarriers);
+                if (!areObjectsEqual(selectedCarriers, placeholderSelectedCarriers)) {
+                    updateSelectedCarriers(placeholderSelectedCarriers);
+                }
             }
         };
 
         const handleOnOpenChangeBroker = (open: boolean) => {
             if (!open) {
-                updateSelectedBrokerDealers(selectedBrokerDealers);
+                if (!areObjectsEqual(selectedBrokerDealers, placeholderSelectedBrokerDealers)) {
+                    updateSelectedBrokerDealers(placeholderSelectedBrokerDealers);
+                }
             }
         };
 
@@ -140,7 +133,7 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             updateSelectedCarriers({});
         };
 
-        const clearFiltersDisabled = Object.keys({ ...placeholderSelectedCarriers, ...selectedBrokerDealers }).length === 0;
+        const clearFiltersDisabled = Object.keys({ ...placeholderSelectedCarriers, ...placeholderSelectedBrokerDealers }).length === 0;
 
         return (
             <div
@@ -163,7 +156,6 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                                 onChange={updateCarrierFilters}
                                 size={FieldSize.Small}
                                 placeholder={t('allCarriers') || ''}
-                                disabled={loading}
                                 name="carrier-dropdown-btn"
                                 onOpenChange={handleOnOpenChangeCarrier}
                             />
@@ -171,11 +163,10 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                         <div className="w-52">
                             <BrokerDealerFilter
                                 brokerDealers={brokerDealers}
-                                selectedBrokerDealers={selectedBrokerDealers}
+                                selectedBrokerDealers={placeholderSelectedBrokerDealers}
                                 selectedCarriers={Object.keys(placeholderSelectedCarriers)}
                                 setSelectedBrokerDealers={setBrokerDealers}
                                 updateBrokerDealerFilters={updateBrokerDealerFilters}
-                                disabled={loading}
                                 handleOnOpenChangeBroker={handleOnOpenChangeBroker}
                             />
                         </div>
@@ -183,7 +174,7 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                             <Button
                                 className="flex items-center align-middle flex-row"
                                 mode="link"
-                                disabled={clearFiltersDisabled || loading}
+                                disabled={clearFiltersDisabled}
                                 size={ButtonSize.Small}
                                 onClick={clearFilters}
                             >

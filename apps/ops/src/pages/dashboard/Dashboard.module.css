@@ -1,6 +1,5 @@
 .container {
     position: relative;
-    background-color: var(--color-base-surface-surface-secondary);
     z-index: 1;
 }
 
@@ -8,7 +7,6 @@
     z-index: 2;
 }
 
-.insightsHeader,
 .filtersHeader {
     padding: var(--measure-dimension-gap-2xl);
     display: flex;
@@ -40,18 +38,6 @@
     }
 }
 
-.insightsHeader {
-    position: sticky;
-    top: var(--pinned-height);
-    z-index: 2;
-    background-color: var(--color-base-surface-surface-secondary);
-    margin-left: -32px;
-    margin-right: -32px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
 .insightsHeaderDropdownContainer {
     display: flex;
     flex-direction: row;
@@ -61,4 +47,10 @@
 
 .tooltip {
     border: 16px solid var(--color-base-surface-surface-primry);
+}
+
+.tabContent {
+    border-color: var(--color-base-border-border-light);
+    border-top-width: 2px;
+    position: relative;
 }
