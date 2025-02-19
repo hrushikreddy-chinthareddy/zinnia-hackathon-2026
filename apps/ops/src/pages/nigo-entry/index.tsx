@@ -19,15 +19,12 @@ import { Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
-import { AvailableFormsTransaction, SearchTransactionRequestBody } from '@deps/models/case/send-document';
-import { ActiveWithdrawalCase, Carrier } from '@deps/models/case/withdrawal/case';
-import { Policy } from '@deps/models/policy/sor-policy';
+import { ActiveWithdrawalCase } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
-import { getSearchTransactionsSSR } from '@deps/queries/api/c2web';
 import { searchCasesSSR } from '@deps/queries/api/cases';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
-import { getPolicyDetailsSsr, getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
+import { getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS, FeatureKeyIdentifier } from '@deps/utils/optimizely/flags';
@@ -46,9 +43,10 @@ export type TransactionDetails = {
 
 interface NigoEntryProps extends SegmentTrackedPageProps {
     documentNumber: string;
-    policy: Policy;
+    //policy: Policy;
+    policyNumber: string;
     planCode: string;
-    availableFormsTransactions: AvailableFormsTransaction[];
+    //availableFormsTransactions: AvailableFormsTransaction[];
     docType: string;
     clientCode: string;
     nigoExceptions: any;
@@ -69,9 +67,9 @@ const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: F
 };
 
 const NigoEntry = ({
-    policy,
+    policyNumber,
     planCode,
-    availableFormsTransactions,
+    //availableFormsTransactions,
     documentNumber,
     docType,
     clientCode,
@@ -87,7 +85,7 @@ const NigoEntry = ({
     user,
 }: NigoEntryProps) => {
     useSegmentPageTracker(user, SegmentPageName.NigoEntry, {
-        policyNumber: policy?.policyNumber,
+        policyNumber,
         planCode,
         documentNumber,
         docType,
@@ -109,9 +107,10 @@ const NigoEntry = ({
                 <NigoEntryProvider>
                     <NigoEntryContainer
                         documentNumber={documentNumber}
-                        policy={policy}
+                        //policy={policy}
+                        policyNumber={policyNumber}
                         planCode={planCode}
-                        availableFormsTransactions={availableFormsTransactions}
+                        //availableFormsTransactions={availableFormsTransactions}
                         docType={docType}
                         clientCode={clientCode}
                         nigoExceptions={nigoExceptions}
@@ -137,6 +136,7 @@ export const getServerSideProps = withPageAuthRequired({
         let accessToken;
         try {
             accessToken = (await getAccessToken(req, res)).accessToken;
+            console.log("??adcce", accessToken)
         } catch (e) {
             logWarn('getServerSidePropsNigoEntryPage::Access token expired', {
                 ...parseErrorInformation(e),
@@ -271,7 +271,7 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
+            /*const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
             const planCode = response ? response[0]?.planCode : null;
             if (!planCode) {
                 logWarn('nigo-entry::Policy plan code not found', {
@@ -330,15 +330,11 @@ export const getServerSideProps = withPageAuthRequired({
                 file: 'pages/nigo-entry',
                 function: 'getServerSideProps',
                 user: userInfoForLogging.email,
-            });
+            });*/
 
-            const nigoFilters = {
-                categoryIds: ['Form', 'Signature', 'Account Information'],
-                carrier: clientCode?.toUpperCase(),
-                process: activeForm?.process,
-            };
 
-            const transactionRequestBody: SearchTransactionRequestBody = {
+
+            /*const transactionRequestBody: SearchTransactionRequestBody = {
                 carrier: policy.carrierId || '',
                 issueState: policy.issueState || '',
                 planCode: policy.product?.planCode || '',
@@ -357,9 +353,9 @@ export const getServerSideProps = withPageAuthRequired({
                 file: 'pages/nigo-entry',
                 function: 'getServerSideProps',
                 user: userInfoForLogging.email,
-            });
+            });*/
 
-            const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
+
             const taskInfoLink = buildTaskLink(taskId, form.caseId, caseType, documentNumber, clientCode);
             const filters = {
                 policyNumber: contractNum,
@@ -371,17 +367,28 @@ export const getServerSideProps = withPageAuthRequired({
                 process: [Processes.Correspondence as string],
             };
 
-            const [parties, document, searchCasesResponse] = await Promise.all([
+            const nigoFilters = {
+                categoryIds: ['Form', 'Signature', 'Account Information'],
+                carrier: clientCode?.toUpperCase(),
+                process: activeForm?.process,
+            };
+
+            const [parties, document, searchCasesResponse, policies, nigoExceptionResponse] = await Promise.all([
                 await getPolicyPartiesSSR(contractNum, clientCode, accessToken as string),
                 await getDocumentV2SSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken),
                 await searchCasesSSR(filters, accessToken),
+                await searchPolicySSR(contractNum, [clientCode?.toUpperCase()], accessToken, 1, 0),
+                await getNigoExceptions(nigoFilters, accessToken),
             ]);
-            logInfo('nigo-entry::Retrieved parties, document and correspondence case search result', {
+            const planCode = policies ? policies[0]?.planCode : null;
+            const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
+            logInfo('nigo-entry::Retrieved parties, document, planCode, nigoExceptions and correspondence case search result', {
                 taskId,
                 documentNumber,
                 documentType: docType,
                 clientCode,
                 contractNum,
+                planCode,
                 file: 'pages/nigo-entry',
                 function: 'getServerSideProps',
                 user: userInfoForLogging.email,
@@ -425,8 +432,9 @@ export const getServerSideProps = withPageAuthRequired({
                     documentNumber,
                     clientCode,
                     docType: docType,
-                    policy,
-                    availableFormsTransactions,
+                    planCode,
+                    policyNumber: contractNum,
+                    //availableFormsTransactions,
                     nigoExceptions,
                     nigoSubExceptions,
                     user,

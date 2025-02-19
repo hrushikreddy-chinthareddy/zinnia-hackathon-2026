@@ -14,10 +14,10 @@ interface AddressTabProps {
 }
 function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent.addressHistoryTab' });
-    const url = `/policies/${planCode}/${policyNumber}/policy/policy-details`;
+    const url = policyNumber && planCode ? `/policies/${planCode}/${policyNumber}/policy/policy-details` : null;
     return (
         <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-5 md:px-6 lg:px-8 gap-4">
-            {addresses.map((address: any) => {
+            {addresses?.map((address: any) => {
                 return (
                     <div key={address.addressId} className="px-4 mt-3">
                         <div className="flex gap-2  items-center">
@@ -36,7 +36,7 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
                 );
             })}
 
-            <div className="text-[--color-base-text-text-link] font-semibold text-md p-4">
+            { url && <div className="text-[--color-base-text-text-link] font-semibold text-md p-4">
                 <NavElement
                     className={'whitespace-normal break-words'}
                     href={url}
@@ -51,6 +51,7 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
                     {t('viewFullDeatils')}
                 </NavElement>
             </div>
+            }
         </div>
     );
 }

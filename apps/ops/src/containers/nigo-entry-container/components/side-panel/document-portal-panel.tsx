@@ -3,13 +3,14 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { PolicyDocument } from '@deps/models/case/document';
 import { Policy } from '@deps/models/policy/sor-policy';
 
 import { useGetPolicyTypeDocs } from '../steps/service-form-review/service-form-review.helper';
-import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 
 export enum TabOptions {
     Working = 'Working',
@@ -17,7 +18,7 @@ export enum TabOptions {
 }
 
 type DocumentViewProps = {
-    policy: Policy;
+    policy?: Policy;
     documentNumber: string;
     docType: string;
 };
@@ -25,7 +26,7 @@ type DocumentViewProps = {
 const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.documentPanel' });
     const [activeTab, setActiveTab] = useState(TabOptions.Working);
-    const clientCode =   policy?.carrierId || '';
+    const clientCode = policy?.carrierId || '';
     const [loading, getPolicyDocs, workingDocument, relatedDocument] = useGetPolicyTypeDocs(
         policy?.policyNumber || '',
         policy?.carrierId || '',
@@ -39,6 +40,8 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
+    console.log("??relatedDocument", relatedDocument);
+    console.log("??workingDocument", workingDocument)
     const renderDocumentSection = (document: any, displayName: string, clientCode: string) => {
         return (
             <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]" key={document.documentId}>
@@ -64,6 +67,11 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
         <>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Working}>
                 {workingDocument && renderDocumentSection(workingDocument, workingDocument?.displayName || '', clientCode)}
+                {isNullEmptyOrUndefined(workingDocument) &&
+                <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
+                <div className="text-sm font-bold"><PiiWrapper>Looks like there is't any documents to display.</PiiWrapper></div>
+            </div>
+                }
             </TabContent>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
                 {relatedDocument?.length !== 0 && (
@@ -73,7 +81,7 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
                         ))}
                     </>
                 )}
-                {relatedDocument?.length === 0 && (
+                {relatedDocument?.length === 0 || isNullEmptyOrUndefined(relatedDocument) && (
                     <div className="border-box w-full lg:px-[30px] mt-2">
                         <div className="w-full rounded border-2 border border-gray-100 bg-gray-50 p-8">
                             <AssistiveText

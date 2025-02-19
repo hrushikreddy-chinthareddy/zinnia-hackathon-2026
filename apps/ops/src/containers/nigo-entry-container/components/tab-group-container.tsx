@@ -29,7 +29,7 @@ import DocumentPortalPanel from './side-panel/document-portal-panel';
 
 type TabGroupContainerProps = {
     steps: Step[];
-    policy: Policy;
+    policy?: Policy;
     showJointOwner?: boolean;
     documentNumber?: string;
     docType: string;
@@ -51,7 +51,7 @@ const TabGroupContent = ({
 
     const fetchCases = useCallback(async () => {
         try {
-            const searchValueObject = { policyNumber: policy.policyNumber };
+            const searchValueObject = { policyNumber: policy?.policyNumber };
 
             const updatedRequest: CaseSearchQuery = {
                 ...searchValueObject,
@@ -97,7 +97,7 @@ const TabGroupContent = ({
                 error: true,
             });
         }
-    }, [policy.policyNumber, limit, offset, t]);
+    }, [policy?.policyNumber, limit, offset, t]);
 
     useEffect(() => {
         fetchCases();
@@ -128,7 +128,7 @@ const TabGroupContent = ({
         openSideSheet();
     };
 
-    const { diaryNotes } = useDiaryNotes(policy.policyNumber as string, policy.carrierId as string, 0, 10);
+    const { diaryNotes } = useDiaryNotes(policy?.policyNumber as string, policy?.carrierId as string, 0, 10);
     const opeDiaryNotes = () => {
         const content = <DiaryNotesContent notesData={{ diaryNotes: diaryNotes } as any} />;
         sideSheet.changeSideSheetContent(t('site.navLinks.diaryNotes.text'), content);
@@ -155,7 +155,7 @@ const TabGroupContent = ({
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
 
             <GlobalValuesBar
-                carrierId={policy.carrierId}
+                carrierId={policy?.carrierId}
                 marketingName={marketingName}
                 owner={policyOwner}
                 jointOwner={jointOwner}

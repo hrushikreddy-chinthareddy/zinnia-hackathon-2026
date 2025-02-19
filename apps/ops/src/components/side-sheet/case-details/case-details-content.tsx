@@ -1,6 +1,6 @@
 import { TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
-import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
 
 import { ErrorMessagePart } from '@deps/components/error/Error';
 import { TranslationFiles } from '@deps/config/translations';
@@ -42,7 +42,7 @@ function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, ca
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent' });
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
-    const carrierName = getCarrierNameByClientId(policy.carrierId as string);
+    const carrierName = getCarrierNameByClientId(policy?.carrierId as string);
 
     const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
     const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
@@ -58,7 +58,7 @@ function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, ca
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Address}>
                 <AddressTab
                     addresses={policyOwner?.addresses as addressType[]}
-                    planCode={policy.product?.planCode}
+                    planCode={policy?.product?.planCode}
                     policyNumber={policy?.policyNumber}
                 />
             </TabContent>
@@ -73,7 +73,7 @@ function CaseDetailsContent({ policy, documentData, offset, limit, setOffset, ca
                         {t('tabs.related') ?? ''} ({caseTableData.total})
                     </TabTrigger>
                     <TabTrigger value={TabOptions.Address}>
-                        {t('tabs.addressHistory') ?? ''} ({policyOwner?.addresses?.length})
+                        {t('tabs.addressHistory') ?? ''} ({policyOwner?.addresses?.length || 0})
                     </TabTrigger>
                 </TabList>
                 {renderTabContent}

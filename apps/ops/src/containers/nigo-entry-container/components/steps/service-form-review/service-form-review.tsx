@@ -75,6 +75,11 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                         </div>
                     </div>
                 )}
+                {!loading && !workingDocument && (
+                    <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
+                        <div className="text-sm font-bold"><PiiWrapper>Looks like there is't any documents to display.</PiiWrapper></div>
+                    </div>
+                )}
                 <Radio items={sectionOptions} label={''} onChange={event => onOptionSelection(event.target.value as SelOptionType)} value={sectionOption || SelOptionType.DATA_ENTRY} />
                 { sectionOption === SelOptionType.DOC_INDEXING && <DocumentIndexingInfo /> }
             </div>

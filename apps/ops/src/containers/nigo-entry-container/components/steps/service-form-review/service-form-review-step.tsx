@@ -16,7 +16,6 @@ import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -28,17 +27,18 @@ import { getCaseType } from '../form-entry/form-entry-step.helper';
 
 interface ServiceFormReviewStepProps {
     documentNumber: string;
-    policy: Policy;
+    //policy?: Policy;
+    policyNumber: string;
     docType: string;
     clientCode: string;
     taskInfoLink: string;
     document: DocumentData;
 };
 
-export const ServiceFormReviewStep = ({documentNumber, policy, docType, clientCode, document} : ServiceFormReviewStepProps ) => {
+export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, clientCode, document} : ServiceFormReviewStepProps ) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
     const { goToNext } = useWorkflow();
-    const { policyNumber } = policy || {};
+    //const { policyNumber } = policy || {};
     const { sectionOption, documentIndexingInfo, formErrors, setFormErrors, setSubmitFailed } = useNigoEntry();
     const formState = useContext(FormDataContext);
 
