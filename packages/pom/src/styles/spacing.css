@@ -781,3 +781,21 @@ Margin values included in modules will override these. **/
     gap: var(--measure-dimension-padding-6xl, 3rem);
   }
 }
+
+#sidesheet-content {
+  /*
+  * GAP
+  * =======
+  */
+  .gap-md {
+    gap: var(--measure-dimension-gap-md);
+  }
+
+  .gap-lg {
+    gap: var(--measure-dimension-gap-lg);
+  }
+
+  .gap-xl {
+    gap: var(--measure-dimension-gap-xl);
+  }
+}

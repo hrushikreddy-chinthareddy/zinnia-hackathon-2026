@@ -24,7 +24,11 @@ const tableRows = (data: StateTrainingItem[]) =>
   }));
 
 const StateTraining = ({ items = generateStateTraining(6) }) => (
-  <PomTable headers={tableHeaders} rows={tableRows(items)} />
+  <PomTable
+    headers={tableHeaders}
+    rows={tableRows(items)}
+    emptyRowMessage="There are currently no state training for this entity."
+  />
 );
 
 export default StateTraining;

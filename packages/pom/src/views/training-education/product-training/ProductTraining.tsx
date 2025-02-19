@@ -23,7 +23,11 @@ const tableRows = (data: ProductTrainingItem[]) =>
   }));
 
 const ProductTraining = ({ items = productTrainingData }) => (
-  <PomTable headers={tableHeaders} rows={tableRows(items)} />
+  <PomTable
+    headers={tableHeaders}
+    rows={tableRows(items)}
+    emptyRowMessage="There are currently no product training for this entity."
+  />
 );
 
 export default ProductTraining;

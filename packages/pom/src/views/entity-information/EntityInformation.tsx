@@ -1,7 +1,7 @@
 import { ContactInfo } from './contact-info/ContactInfo';
 import { Identification } from './identification/Identification';
 import { ProducerType } from '../../types';
-import { BackgroundCheck } from './background-check/BackgroundCheck';
+import { BackgroundChecks } from './background-checks/BackgroundChecks';
 
 const EntityInformation = ({
   producerType,
@@ -12,7 +12,7 @@ const EntityInformation = ({
     <div>
       <Identification producerType={producerType} />
       <ContactInfo producerType={producerType} />
-      {producerType === ProducerType.INDIVIDUAL && <BackgroundCheck />}
+      {producerType === ProducerType.INDIVIDUAL && <BackgroundChecks />}
     </div>
   );
 };

@@ -27,8 +27,14 @@ const tableRows = (data: AmlTrainingItem[]) =>
     expirationDate: training.expirationDate,
   }));
 
-const AmlTraining = ({ items = amlTrainingData }) => (
-  <PomTable headers={tableHeaders} rows={tableRows(items)} />
-);
+const AmlTraining = ({ items = amlTrainingData }) => {
+  return (
+    <PomTable
+      headers={tableHeaders}
+      rows={tableRows(items)}
+      emptyRowMessage="There are currently no AML training for this entity."
+    />
+  );
+};
 
 export default AmlTraining;

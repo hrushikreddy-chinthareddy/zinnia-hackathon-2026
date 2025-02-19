@@ -2,31 +2,25 @@ import CardSection from '../../components/card-section/CardSection';
 import AmlTraining from './aml-training/AmlTraining';
 import ProductTraining from './product-training/ProductTraining';
 import StateTraining from './state-training/StateTraining';
+import { AddAmlTrainingSidesheet } from './aml-training/add/AddAmlTrainingSidesheet';
+import { AddProductTrainingSidesheet } from './product-training/add/AddProductTrainingSidesheet';
+import { AddStateTrainingSidesheet } from './state-training/add/AddStateTrainingSidesheet';
 
 const TrainingEducation = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'var(--measure-dimension-margin-xl)',
-      }}
-    >
-      <CardSection
-        title="AML Training"
-        action={() => console.log('clicked aml training')}
-      >
+    <div className="pom_flex-column">
+      <CardSection title="AML Training" action={<AddAmlTrainingSidesheet />}>
         <AmlTraining />
       </CardSection>
       <CardSection
         title="Product Training"
-        action={() => console.log('clicked product training')}
+        action={<AddProductTrainingSidesheet />}
       >
         <ProductTraining />
       </CardSection>
       <CardSection
         title="State Training"
-        action={() => console.log('clicked state training')}
+        action={<AddStateTrainingSidesheet />}
       >
         <StateTraining />
       </CardSection>

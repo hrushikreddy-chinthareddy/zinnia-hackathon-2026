@@ -153,3 +153,8 @@ export type ApiProps = {
     apiPayload: any;
     responseData: string;
 };
+
+export enum DataFormattingTypes {
+    SSN = 'ssn',
+    Date = 'date',
+}

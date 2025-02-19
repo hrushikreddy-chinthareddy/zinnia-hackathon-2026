@@ -64,7 +64,6 @@ interface SSWCaseProps extends SegmentTrackedPageProps {
     transactionsHistory?: Transaction[];
     formParts: React.ReactNode;
     parties: LifeCadParty[];
-    // TODO MG: put this in an interface for FeatureFlags that each page needing it can just extend
     featureFlagDecisions: FeatureFlags;
     planCode?: string;
 }

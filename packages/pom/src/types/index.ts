@@ -1,4 +1,4 @@
-import type TrainingEducation from "../views/training-education/TrainingEducation";
+import type TrainingEducation from '../views/training-education/TrainingEducation';
 
 // @TODO: this is temporary, until we import api types
 export enum ProducerType {
@@ -53,5 +53,25 @@ export interface LineOfAuthority {
   expiryDate: string;
 }
 
+export interface BackgroundCheck {
+  carrier: string;
+  dateRequested: string;
+  provider: string;
+  resultDate: string;
+  status: BackgroundCheckStatus;
+}
+
+export enum BackgroundCheckStatus {
+  IN_PROGRESS = 'In Progress',
+  APPROVED = 'Approved',
+  UNDER_REVIEW = 'Under Review',
+  DENIED = 'Denied',
+  CANT_COMPLETE = 'Unable to complete',
+}
+
+export enum YesNo {
+  YES = 'Yes',
+  NO = 'No',
+}
 
 export { TrainingEducation };

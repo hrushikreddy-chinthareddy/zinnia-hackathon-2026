@@ -56,11 +56,6 @@ const trackClick = (
 
 const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPartyId }: QuickLinksProps) => {
     const { featureFlags } = useOptimizely();
-
-    // BPB - systematic programs work
-    const systematicProgram = policy.policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
-    const arrangementId = systematicProgram?.arrangementId || '';
-
     const [isEligibleManageAutopay, setIsEligibleManageAutopay] = useState(false);
     const [autopayChecked, setAutopayChecked] = useState(false);
     const [isEligibleNewPremium, setIsEligibleNewPremium] = useState(false);
@@ -79,10 +74,12 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
     const [isAnnuity] = useState(policy.isAnnuity);
     const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
 
-    // this should only run once after fireEligibilityChecks && isLife are both true
+    // this should only run once after fireEligibilityChecks && (isLife || isAnnuity) are both true
     useEffect(() => {
         if (fireEligibilityChecks && (isLife || isAnnuity)) {
             const checkManageAutopayEligibility = async () => {
+                const systematicProgram = policy.policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
+                const arrangementId = systematicProgram?.arrangementId || '';
                 const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId || '');
 
                 if (manageAutopayEligibility?.status === TransactionResponseStatus.Success) {
@@ -125,7 +122,7 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
 
                     return;
                 }
-                const loanPaymentEligibility = await checkEligibilityLoanRepaymentOneTime(planCode, policyNumber);
+                const loanPaymentEligibility = await checkEligibilityLoanRepaymentOneTime(planCode, policyNumber, policy.loanValues?.totalLoanBalance);
 
                 if (loanPaymentEligibility?.status === TransactionResponseStatus.Success) {
                     setIsEligibleLoanPayment(true);
@@ -139,7 +136,7 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
             checkNewLoanEligibility();
             checkLoanPaymentEligibility();
         }
-    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife, isAnnuity, policy.loanValues?.maximumLoanAmount, loanPaymentEnabled]);
+    }, [planCode, policyNumber, fireEligibilityChecks, isLife, isAnnuity, policy.loanValues, policy.policy.systematicPrograms, loanPaymentEnabled]);
 
     useEffect(() => {
         if (autopayChecked && newPremiumChecked && withdrawalChecked && newLoanChecked && loanPaymentChecked) {

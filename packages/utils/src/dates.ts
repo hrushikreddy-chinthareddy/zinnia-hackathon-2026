@@ -9,7 +9,7 @@ export const DEFAULT_DATE_FORMAT = 'M/D/YYYY';
  * @returns boolean
  * undefined is a valid dayjs date, so need to check specifically for date is null first
  */
-export const isValidDate = (date: string | null | undefined) => {
+export const isValidDate = (date: string | Date | null | undefined) => {
   if (!date) {
     return false;
   }
@@ -27,7 +27,7 @@ export const isValidDate = (date: string | null | undefined) => {
  * @returns format 2/26/2024
  */
 export const standardDateMonthDayYear = (
-  date: string | null | undefined
+  date: string | Date | null | undefined
 ): string => {
   if (!isValidDate(date)) {
     return DEFAULT_ERROR_STRING;
