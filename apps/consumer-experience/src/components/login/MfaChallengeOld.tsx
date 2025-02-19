@@ -42,7 +42,7 @@ const SubmitButton = () => {
 // ALERT!!!!!!!!!!! THIS COMPONENT WILL BE DEPRECATED ONCE ADD BANK MFA TRANSACTION VERIFICATION
 // FEATURE IS ADDED, THIS SHOULD ONLY BE USED IN LOGIN FLOW WHEN THAT FEATURE FLAG IS TURNED
 // OFF
-export const MfaChallenge = ({
+export const MfaChallengeOld = ({
   enrollment,
   id,
   postLogin,

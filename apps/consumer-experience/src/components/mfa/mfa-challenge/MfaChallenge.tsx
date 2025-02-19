@@ -137,7 +137,7 @@ export const MfaChallenge = ({
     });
 
     console.log('onSubmit', response);
-    if (!response.error) {
+    if (response && !response.error) {
       onChallengeSuccess?.();
     } else if (response.error === 'invalid_grant') {
       setError('code', {
