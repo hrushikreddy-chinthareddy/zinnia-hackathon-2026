@@ -12,7 +12,7 @@ import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow
 
 import { TaskView } from './progress-tab-types';
 
-const SupportedTaskMap = [
+export const SupportedTaskMap = [
     TaskType.SuitabilityReview,
     TaskType.SuitabilityDataEntry,
     TaskType.PURCHASE_DOCUMENT_MATCHING,
