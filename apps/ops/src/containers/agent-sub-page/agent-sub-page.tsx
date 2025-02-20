@@ -18,7 +18,7 @@ export type AgentSubPage = {
 };
 
 export const AgentSubPage = ({ partyId }: AgentSubPage) => {
-    const [agentData, setAgentData] = useState();
+    const [agentData, setAgentData] = useState<any>();
     const { policy, policyDetails } = useContext(PolicyData);
 
     const { t } = useTranslation();
