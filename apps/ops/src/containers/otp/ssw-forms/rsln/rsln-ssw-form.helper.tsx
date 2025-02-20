@@ -181,6 +181,10 @@ export default function getRslnConfig(t: TFunction) {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
                 },
+                {
+                    fieldName: PartyFields.Dob,
+                    fieldLabel: t('personalDetails.dob'),
+                },
             ],
         },
         {
@@ -216,7 +220,7 @@ export default function getRslnConfig(t: TFunction) {
             label: t('distributionReason.reasonOptions.inSvcDistrib'),
             value: RestrictionOption.InServiceDistribution,
         },
-        { label: t('distributionReason.reasonOptions.others'), value: RestrictionOption.Others },
+        { label: t('distributionReason.reasonOptions.other'), value: RestrictionOption.Others },
     ];
 
     const generateSSWPayload = (val: SSWProgram, subType: SSWType) => ({
@@ -235,17 +239,11 @@ export default function getRslnConfig(t: TFunction) {
         ...(subType === SSWType.PercentOfAmountValue && { partialPercent: { text: val.percent?.text, amountType: AmountType.Percent } }),
     });
 
-    //Done
     const systematicWithdrawalOptions = [
         {
             label: t('sswProgram.sswOptions.fixedDollar'),
             value: SSWType.FixDollar,
             generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.FixDollar),
-        },
-        {
-            label: t('sswProgram.sswOptions.fixedPeriodIncome'),
-            value: SSWType.FixPeriod,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.FixPeriod),
         },
         {
             label: t('sswProgram.sswOptions.percentageOfAccountValue'),
