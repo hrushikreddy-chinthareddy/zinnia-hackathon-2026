@@ -170,7 +170,7 @@ export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
         const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/assigned`);
         return data ?? [];
     } catch (error) {
-        logError('getAssignedTasks::', {
+        logError('getAssignedTasks::Failed to retrieve unassigned tasks', {
             ...parseErrorInformation(error),
             file: 'queries/v1/tasks/assigned',
             function: 'getAssignedTasks',
@@ -219,17 +219,17 @@ export const unassignTask = async (caseId: string, taskId: string, entryDuration
         const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
         const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/unclaim`;
         const { data } = await client.put<AxiosResponse>(url);
-        logInfo('Successfully updated task using v1', { caseId, taskId, url, function: 'tasks.unassignTask' });
 
-        browserLogInfo('Form entry time', {
+        browserLogInfo('unassignTask::Successfully unassigned task', {
             timeElapsedSinceLoad: timeInSeconds,
             caseId,
+            taskId,
             url,
             function: 'tasks.unassignTask',
         });
         return data;
     } catch (error: any) {
-        browserLogError('An error occurred during update task using v1', {
+        browserLogError('unassignTask::::Failed to unassign task', {
             ...parseErrorInformation(error),
             error,
             caseId,
