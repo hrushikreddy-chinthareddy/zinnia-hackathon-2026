@@ -35,6 +35,7 @@ export const useGetPolicyTypeDocs = (
                 browserLogInfo('useGetPolicyTypeDocs::Policy documents retrieved', {
                     id,
                     clientCode,
+                    docType,
                     workingDocument: workingDoc ? true : false,
                     relatedDocument: relatedDoc?.length || 0,
                     file: 'service-form-review-helper'
@@ -44,7 +45,7 @@ export const useGetPolicyTypeDocs = (
             }
             setLoading(false);
         } catch (e) {
-            browserLogError('useGetPolicyTypeDocs::error while fetching policy type documents', { ...parseErrorInformation(e)} );
+            browserLogError('useGetPolicyTypeDocs::error while fetching policy type documents', { id, clientCode, docType, ...parseErrorInformation(e)} );
             setLoading(false);
         }
     }, [loading, id, clientCode, docType, documentNumber]);
