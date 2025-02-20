@@ -15,8 +15,8 @@ interface Props {
 
 export const GenericLoginPage = ({ title, description, action }: Props) => {
   return (
-    <div className="main-content-wrapper">
-      <div className="main-content-inner">
+    <div className="layout-wrapper">
+      <div className="layout-wrapper-inner">
         <div className={globalStyles.mainContent}>
           <div className={styles.formContainer}>
             <div>
