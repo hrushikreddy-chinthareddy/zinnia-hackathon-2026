@@ -449,30 +449,29 @@ export default function getPrdnConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.Owner,
         },
         {
-            key: `sig-val-beneficiary`,
+            key: `sig-val-joint`,
             fields: [
                 {
                     component: SignatureFields.SignatureType,
-                    key: 'beneficiary-type',
+                    key: 'joint-type',
                 },
                 {
                     component: SignatureFields.SignaturePresent,
-                    key: 'beneficiary-present',
+                    key: 'joint-sign-present',
                 },
                 {
                     component: SignatureFields.SignatureTitle,
-                    key: 'beneficiary-title',
+                    key: 'joint-title',
                 },
                 {
                     component: SignatureFields.SignatureDate,
-                    key: 'beneficiary-date',
-                },
-                {
-                    component: SignatureFields.SignGuaranteeStamp,
-                    key: 'owner-sign-guarantee-stamp',
+                    key: 'joint-date',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            signatureType: SignatureValidationTypeWithdrawal.JointOwner,
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
+                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+            },
         },
         {
             key: `sig-val-spouse`,
@@ -526,6 +525,6 @@ export default function getPrdnConfig(t: TFunction) {
         disbursementOptions,
         signaturesConfig,
         fundWithdrawnMethodOptions,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
     };
 }
