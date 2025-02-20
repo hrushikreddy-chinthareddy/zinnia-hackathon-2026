@@ -43,16 +43,6 @@ export default function SideSheetRefineResults({
 }: SideSheetRefineResultsProps) {
     const { t } = useTranslation();
     const perms = usePermissionsContext();
-
-    const [additionalFilters, setAdditionalFilters] = useState(filters);
-    const [productNameOptions, setProductNameOptions] = useState<string[]>([]);
-    const [processListOptions, setProcessListOptions] = useState<string[]>([]);
-    const [requestSubTypeOptions, setRequestSubTypeOptions] = useState<string[]>([]);
-    const [loadingProductName, setLoadingProductName] = useState(false);
-    const [loadingProcessList, setLoadingProcessList] = useState(false);
-    const [loadingRequestSubType, setLoadingRequestSubType] = useState(false);
-    const [errors, setErrors] = useState<Errors>({});
-
     const carrierFilterItems = authorizedCarriers.map((carrierCode: string) => {
         const valueAndDisplay = getCarrierNameByClientId(carrierCode) || carrierCode.toUpperCase();
 
@@ -62,6 +52,18 @@ export default function SideSheetRefineResults({
             label: getCarrierListItem(carrierCode),
         };
     });
+    // if only one carrier filter exists, select it by default
+    if (carrierFilterItems.length === 1) {
+        filters.carriers = { [carrierFilterItems[0].value]: carrierFilterItems[0].displayText };
+    }
+    const [additionalFilters, setAdditionalFilters] = useState(filters);
+    const [productNameOptions, setProductNameOptions] = useState<string[]>([]);
+    const [processListOptions, setProcessListOptions] = useState<string[]>([]);
+    const [requestSubTypeOptions, setRequestSubTypeOptions] = useState<string[]>([]);
+    const [loadingProductName, setLoadingProductName] = useState(false);
+    const [loadingProcessList, setLoadingProcessList] = useState(false);
+    const [loadingRequestSubType, setLoadingRequestSubType] = useState(false);
+    const [errors, setErrors] = useState<Errors>({});
 
     const getUniqueCarrierFilterItems = () => {
         const carrierLabels = new Set();
@@ -78,11 +80,6 @@ export default function SideSheetRefineResults({
         ).sort((item1, item2) => item1.displayText.localeCompare(item2.displayText));
         return uniqueCarrierFilterItems;
     };
-
-    const selectedCarriers =
-        carrierFilterItems.length === 1
-            ? { [carrierFilterItems[0].value]: carrierFilterItems[0].displayText }
-            : additionalFilters.carriers ?? {};
 
     // update ProductName when carrier changes
     useEffect(() => {
@@ -356,6 +353,8 @@ export default function SideSheetRefineResults({
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, offset: 0, additionalFilters: initialAdditionalFilters }));
         closeSideSheet();
     };
+
+    const selectedCarriers = additionalFilters.carriers ?? {};
 
     // Render
     return (

@@ -7,10 +7,11 @@ import type { Metadata } from 'next';
 import { DataDogInit } from '@/components/DataDogInit';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { isProd } from '@/utils';
-
-import '@/app/styles/globals.css';
+import { getCookie } from '@/utils/auth';
+import { THEME_COOKIE } from '@/utils/serverClientUtils';
 
 import Providers from './providers';
+import '@/app/styles/globals.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -119,9 +120,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const themeCooke = (await getCookie(THEME_COOKIE)) || 'bloom';
   return (
     <html
       lang="en"
+      data-theme={themeCooke}
       className={`${primaryFont.variable} ${secondaryFont.variable} typography-content-body-sm`}
     >
       <body>

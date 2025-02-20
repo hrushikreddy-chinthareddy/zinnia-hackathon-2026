@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { v4 as uuidV4 } from 'uuid';
 
-import { Withdrawal } from "@deps/contexts/WithdrawalContext";
+import { Withdrawal } from "@deps/contexts/transactions/WithdrawalContext";
 import { AllocationOption, AmountType, PaymentForm } from "@deps/models/policy/sor-policy";
 import { FullSurrenderWithdrawalRequestQuery, PartialWithdrawalOneTimeRequestQuery } from "@deps/queries/api/bpm";
 import { ZAHARA_API_DATE_FORMAT } from "@deps/types/constants";

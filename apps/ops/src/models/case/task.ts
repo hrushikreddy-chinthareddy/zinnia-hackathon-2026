@@ -15,7 +15,8 @@ export enum TaskType {
     SuitabilityDataEntry = 'SUITABILITY_DATA_ENTRY',
     SuitabilityReview = 'SUITABILITY_REVIEW',
     PURCHASE_DOCUMENT_MATCHING = 'PURCHASE_DOCUMENT_MATCHING',
-    Agent_Nigo = 'NEWBUSINESS_AGENT_NIGO',
+    Agent_Nigo = 'NB_AGENT_NIGO',
+    Application_Nigo = 'NB_APPLICATION_NIGO',
 }
 
 export enum EarlyTaskType {
@@ -30,6 +31,14 @@ export enum EarlyTaskType {
 export enum TaskSource {
     ZinniaTaskManagement = 'Zinnia.TaskManagement',
 }
+
+export enum MessageType {
+    Default = 'default',
+    Success = 'success',
+    Info = 'info',
+    Error = 'error',
+}
+
 export interface Signature {
     signaturePresent: string;
     type: string | null;
@@ -144,4 +153,10 @@ export type ApiProps = {
     responseKey: string;
     apiPayload: any;
     responseData: string;
+    response: any;
 };
+
+export enum DataFormattingTypes {
+    SSN = 'ssn',
+    Date = 'date',
+}

@@ -1,4 +1,5 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { convertToCamelCase } from '@zinnia/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
@@ -10,14 +11,14 @@ import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { FormMetadata, TaskType } from '@deps/models/case/task';
+import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getCaseDetailsSSR } from '@deps/queries/api/cases';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
@@ -60,8 +61,6 @@ export const getServerSideProps = withPageAuthRequired({
         const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
         const taskId = (query.taskId as string) || '';
-
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
 
         let accessToken;
         try {
@@ -109,11 +108,42 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const { taskType, carrier, caseId, process } = task;
-            const caseDetails = await getCaseDetailsSSR(caseId, accessToken as string);
-            const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
+            if (
+                !(
+                    user.email &&
+                    ((task.assignee && task.assignee.toLowerCase() == user.email.toLowerCase()) ||
+                        (!task.assignee && task.prefferedAssignee && task.prefferedAssignee.toLowerCase() == user.email.toLowerCase()))
+                )
+            ) {
+                logWarn('task/:id::task is not assigned to user', { assignee: task.assignee, user: user.email });
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
 
-            if (!isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions)) {
+            const { taskType, carrier, caseId, process } = task;
+
+            if (!taskType || !carrier || !caseId || !process) {
+                logWarn('task/details not found', { taskType, carrier, caseId, process });
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
+
+            const isTaskEnabled = await optimizelyService.getFeatureFlagVariables(
+                FEATURE_FLAG_VARIABLES.TASK_MANAGEMENT,
+                carrier?.toLowerCase(),
+                user.sub
+            );
+            const flag = convertToCamelCase(taskType);
+            const enabledTask = Object.keys(isTaskEnabled).includes(flag);
+            if (!enabledTask) {
                 logWarn('task/:id::feature flag not enabled', { carrier });
                 return {
                     redirect: {
@@ -130,11 +160,36 @@ export const getServerSideProps = withPageAuthRequired({
                 taskType: 'SUITABILITY_REVIEW',
                 title: '',
                 formSchema: {
-                    $schema: 'http://json-schema.org/draft-07/schema#',
                     type: 'object',
+                    properties: {
+                        documentCategory: {
+                            type: 'array',
+                            items: {
+                                type: {
+                                    title: 'DOCUMENT_CATEGORY',
+                                    type: 'string',
+                                },
+                                key: {
+                                    title: 'DOCUMENT_CATEGORY',
+                                    type: 'string',
+                                },
+                                value: {
+                                    title: 'DOCUMENT_CATEGORY',
+                                    type: 'string',
+                                },
+                            },
+                        },
+                    },
                 },
                 uiSchema: {
-                    type: 'object',
+                    documentCategory: {
+                        'ui:props': {
+                            apiUrl: 'case/v1/refdata/DOCUMENT_TYPE?parentKey',
+                            apiMethod: 'get',
+                            responseKey: 'caseSubTypeOptions',
+                            responseData: '{{data.referenceData.requestSubType}}',
+                        },
+                    },
                 },
                 schemaContent: {
                     tabSchemas: [
@@ -179,6 +234,9 @@ export const getServerSideProps = withPageAuthRequired({
                                             'CONFLICTING_GOALS',
                                             'REVERSE_MORTGAGE',
                                         ],
+                                    },
+                                    docCategoryEnum: {
+                                        enum: ['Death', 'Suitability', 'New Business', 'Agent', 'Post Issue'],
                                     },
                                 },
                                 properties: {
@@ -279,41 +337,6 @@ export const getServerSideProps = withPageAuthRequired({
                                                     title: 'upload',
                                                     type: 'string',
                                                     format: 'data-url',
-                                                    upload: {
-                                                        type: 'object',
-                                                        properties: {
-                                                            docCategory: {
-                                                                type: 'string',
-                                                                title: 'Document category',
-                                                                enum: ['NEW_BUSINESS', 'EXISTING_BUSINESS', 'OTHERS'],
-                                                            },
-                                                            formType: {
-                                                                type: 'string',
-                                                                title: 'Form type',
-                                                                enum: ['NB Application', 'RMD Application', 'Other Application'],
-                                                            },
-                                                            zinniaLiveCaseId: {
-                                                                type: 'string',
-                                                                default: '{{customData.caseId}}',
-                                                            },
-                                                            correlationId: {
-                                                                type: 'string',
-                                                                default: '{{customData.correlationId}}',
-                                                            },
-                                                            parentCarrierCode: {
-                                                                type: 'string',
-                                                                default: '{{customData.carrier}}',
-                                                            },
-                                                            docClassification: {
-                                                                type: 'string',
-                                                                default: 'INBOUND',
-                                                            },
-                                                            docAccessLevel: {
-                                                                type: 'string',
-                                                                default: 'CLIENT_COPY',
-                                                            },
-                                                        },
-                                                    },
                                                 },
                                             },
                                         },
@@ -464,6 +487,10 @@ export const getServerSideProps = withPageAuthRequired({
                                         'ui:options': {
                                             label: false,
                                         },
+                                        'ui:props': {
+                                            apiUrl: 'case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null',
+                                            apiMethod: 'get',
+                                        },
                                     },
                                 },
                                 attachments: {
@@ -482,13 +509,49 @@ export const getServerSideProps = withPageAuthRequired({
 
             const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
 
+            // if (taskMetadata?.formSchema?.properties) {
+            //     Object.keys(taskMetadata.formSchema.properties).forEach(async key => {
+            //         const url = (taskMetadata.uiSchema as any)?.[key]?.['ui:props']?.apiUrl;
+            //         console.log('🚀 ~ Object.keys ~ url:', url);
+            //         const config = {
+            //             authorization: `Bearer ${accessToken}`,
+            //             headers: {
+            //                 'Content-type': 'application/json',
+            //                 'Access-Control-Allow-Origin': '*',
+            //             },
+            //         };
+
+            //         if (url) {
+            //             const { data } = await serverApi.get<any, AxiosResponse<any>>(apiServerBaseUrl + '/' + url, config);
+            //             console.log('🚀 ~ Object.keys ~ data:', data);
+
+            //             if (currentTaskMetadata[0] && currentTaskMetadata[0].formSchema && currentTaskMetadata[0].formSchema) {
+            //                 currentTaskMetadata[0].formSchema.definitions.docCategoryEnum = {
+            //                     enum: data.map((item: any) => item.value) || [],
+            //                 };
+            //             }
+
+            //             console.log(
+            //                 '🚀 ~ Object.keys ~ currentTaskMetadata[0].formSchema.definitions.docCategoryEnum :',
+            //                 currentTaskMetadata[0].formSchema
+            //             );
+            //         }
+            //     });
+            // }
+
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],
                 carrier: carrier?.toUpperCase(),
                 process: taskType,
             };
 
-            const nigoExceptionResponse = await getNigoExceptions(nigoFilters, accessToken);
+            const [caseDetails, nigoExceptionResponse] = await Promise.all([
+                await getCaseDetailsSSR(caseId, accessToken as string),
+                await getNigoExceptions(nigoFilters, accessToken),
+            ]);
+
+            const correlationId = caseDetails?.correlationId;
+
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
             const taskInfoLink = buildCaseLink(caseId);
 

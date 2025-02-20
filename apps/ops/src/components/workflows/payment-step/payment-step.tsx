@@ -128,32 +128,34 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
         >
             <div className="flex flex-col gap-2">
                 <div className="flex flex-col">
-                    <Typography className="mb-4" variant={TypographyVariant.LabelLg}>
+                    <Typography variant={TypographyVariant.LabelLg}>
                         {subtitle}
                     </Typography>
-                    <Typography variant={TypographyVariant.Label}>{t('workflows.paymentStep.label')}</Typography>
-                    <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3" data-testid="payment-methods">
-                        {bankDetails?.map(details => (
-                            <BankDataCard
-                                bankDetails={details}
-                                onCardClick={() => {
-                                    handleSelection({
-                                        paymentAccountNumber: details.accountNumber,
-                                        paymentBankId: details.bankId,
-                                        paymentBranchName: details.branchName,
-                                    });
-                                }}
-                                key={details.accountNumber}
-                                selectedId={currentPaymentAccountNumber}
-                                accessibilityClickText={t('ariaLabel.select')}
-                            />
-                        ))}
-                        <div
-                            aria-hidden
-                            className="flex cursor-not-allowed items-center justify-center gap-1 rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-8 text-gray-300"
-                        >
-                            <AddIcon height={24} width={24} />
-                            <p className="font-primary text-base font-semibold">{t('workflows.paymentStep.add')}</p>
+                    <div className="flex flex-col gap-4">
+                        <Typography variant={TypographyVariant.LabelLg}>{t('workflows.paymentStep.label')}</Typography>
+                        <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3" data-testid="payment-methods">
+                            {bankDetails?.map(details => (
+                                <BankDataCard
+                                    bankDetails={details}
+                                    onCardClick={() => {
+                                        handleSelection({
+                                            paymentAccountNumber: details.accountNumber,
+                                            paymentBankId: details.bankId,
+                                            paymentBranchName: details.branchName,
+                                        });
+                                    }}
+                                    key={details.accountNumber}
+                                    selectedId={currentPaymentAccountNumber}
+                                    accessibilityClickText={t('ariaLabel.select')}
+                                />
+                            ))}
+                            <div
+                                aria-hidden
+                                className="flex cursor-not-allowed items-center justify-center gap-1 rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-8 text-gray-300"
+                            >
+                                <AddIcon height={24} width={24} />
+                                <p className="font-primary text-base font-semibold">{t('workflows.paymentStep.add')}</p>
+                            </div>
                         </div>
                     </div>
                     {formError && (

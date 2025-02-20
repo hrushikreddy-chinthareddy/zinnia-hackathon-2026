@@ -1,0 +1,6 @@
+.cardHeader {
+  display: flex;
+  align-items: baseline;
+  padding-bottom: var(--measure-dimension-padding-4xl);
+  gap: var(--measure-dimension-padding-lg);
+}

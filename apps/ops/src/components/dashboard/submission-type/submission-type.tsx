@@ -2,10 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
-import { ChipRadio } from '@deps/components/chip-radio/chip-radio';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Select from '@deps/components/select/select';
@@ -20,8 +19,12 @@ import { chunkArray } from '@deps/utils/array';
 
 import { Legend } from './legend';
 import styles from './submission-type.module.css';
-import { submissionTypeQuery, transformData, generateSeries, startDates, TimeframeFilterOptions, getDateRangeText } from './utils';
+import { submissionTypeQuery, transformData, generateSeries } from './utils';
+import { ChartHeader } from '../chart-header';
+import { getPieChartData } from '../distribution-charts/distribution-pie-chart-small-api-based';
 import CaseStatBlock from '../stat-blocks/case-stat-block';
+import { TimeFilter } from '../time-filter/time-filter';
+import { TimeframeFilterOptions, generateCarouselDataLengths, startDates } from '../utils';
 
 export const SubmissionType: FC = () => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
@@ -67,6 +70,19 @@ export const SubmissionType: FC = () => {
         queryFn: () => submissionTypeQuery(filter, [GroupByOptions.ApplicationType]),
         placeholderData: previousData => previousData,
         enabled: Object.keys(filter).length > 0,
+        select: response => {
+            const { data } = response;
+            const updatedElectronicName = data?.map(item => {
+                return {
+                    ...item,
+                    name: item.name === 'Electronic' ? 'Electronic (E-App)' : item.name,
+                };
+            });
+            return {
+                ...response,
+                data: updatedElectronicName,
+            };
+        },
     });
 
     const {
@@ -111,12 +127,15 @@ export const SubmissionType: FC = () => {
         };
     });
 
-    const timeframeOptions = Object.values(TimeframeFilterOptions).map(option => ({
-        label: option,
-        ariaLabel: option,
-        value: option,
-        displayText: option,
-    }));
+    const pieChartData = getPieChartData(pieChartStats);
+    const pieChartDataColors = pieChartData.map(pieChart => {
+        return {
+            ...pieChart,
+            color: pieChart.name === 'Digital' ? '#00628B' : pieChart.name === 'Electronic (E-App)' ? '#85BCD3' : '#021936',
+            type: 'pie',
+        };
+    });
+    const pieChartSeriesData: Highcharts.SeriesOptionsType[] = [{ data: pieChartDataColors, name: 'cases', type: 'pie' }];
 
     const submissionVsOptions = [
         { label: 'Carrier', value: GroupByOptions.Carrier, disabled: carriers.length === 1 },
@@ -124,44 +143,29 @@ export const SubmissionType: FC = () => {
         { label: 'Distribution Partner', value: GroupByOptions.BrokerDealerName },
     ];
 
-    const timerangeText = getDateRangeText(timeframe);
-
     const submissionMethodTooltip = (
         <>
             <p>
-                <span className="font-bold">Digital:</span> Cases submitted directly through Policy Portal without using OnBase.
+                <span className="font-bold">Digital:</span> Submitted directly through Zinnia Live's digital platform.
             </p>
 
             <p>
-                <span className="font-bold">Electronic:</span> Cases submitted electronically via DTCC.
+                <span className="font-bold">Electronic (E-App):</span> Submitted electronically via integrated third-party systems.
             </p>
 
             <p>
-                <span className="font-bold">Paper:</span> Cases submitted using a paper form.
+                <span className="font-bold">Paper:</span> Submitted in physical format and processed manually.
             </p>
         </>
     );
 
     const chunkedResponseLengths = chunkedResponse.map(chunk => chunk.length);
 
-    const eachChunkPortionOfTotal = useMemo(
-        () =>
-            chunkedResponseLengths.map((chunkLength, index) => {
-                const total = chunkedResponseLengths.reduce((acc, val) => acc + val, 0);
-                const chunkStartIndex = chunkedResponseLengths.slice(0, index).reduce((acc, val) => acc + val, 1);
-                const chunkEndIndex = chunkStartIndex + chunkLength - 1;
-                return {
-                    start: chunkStartIndex,
-                    end: chunkEndIndex,
-                    total,
-                };
-            }),
-        [chunkedResponseLengths]
-    );
+    const eachChunkPortionOfTotal = generateCarouselDataLengths(chunkedResponseLengths);
 
     const legendItems = [
         {
-            label: 'Electronic',
+            label: 'Electronic (E-App)',
             color: '#85BCD3',
         },
         {
@@ -173,8 +177,43 @@ export const SubmissionType: FC = () => {
             color: '#021936',
         },
     ];
+
+    const totalCaseCount = graphStats?.data?.map(stat => stat.count).reduce((a, b) => a + b, 0);
+
+    //TODO: When we re-write the pie charts, probably move this into its own component.
+    const pieChartLegendConfig: Highcharts.LegendOptions = {
+        align: 'center',
+        verticalAlign: 'bottom',
+        layout: 'horizontal',
+        width: 180,
+        padding: 10,
+        navigation: {
+            enabled: true,
+        },
+        enabled: true,
+        maxHeight: 120,
+        itemStyle: {
+            fontSize: '12px',
+        },
+    };
+
+    const totalCases =
+        applicationTypeFetching || applicationTypeFetching2 ? (
+            <div className="blur">
+                <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+            </div>
+        ) : (
+            <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+        );
+
     return (
         <div className={styles.container}>
+            <ChartHeader
+                title="Submission Method"
+                subtitle={`${totalCaseCount?.toLocaleString()} total cases`}
+                titleToolTip={submissionMethodTooltip}
+                description="The distribution of incoming case requests by submission method, comparing eApp, paper, and digital submissions."
+            />
             {applicationTypeLoading2 || applicationTypeLoading ? (
                 <div className="grid place-content-center h-full w-full min-h-[400px]">
                     <PageLoader />
@@ -188,40 +227,41 @@ export const SubmissionType: FC = () => {
                 </div>
             ) : (
                 <BlurOverlayLoader loading={applicationTypeFetching || applicationTypeFetching2}>
-                    <div className="flex bg-[--color-base-surface-surface-primary]">
+                    <div className="flex bg-[--color-base-surface-surface-primary] mt-6">
                         <CaseStatBlock
                             dashboardStatsResponse={pieChartStats}
-                            blockLabel="Submission method"
+                            blockLabel="All submissions"
                             timeFrameLabel={''}
                             statMeasurementLabel="case"
                             classNames={styles.statBlock}
                             variant="single"
-                            labelTooltip={submissionMethodTooltip}
                             loading={applicationTypeLoading2 || applicationTypeLoading}
-                            chartConfig={{ colors: ['#85BCD3', '#00628B', '#021936'] }}
+                            chartConfig={{
+                                series: pieChartSeriesData,
+                                legend: pieChartLegendConfig,
+                                chart: { height: 280, marginBottom: 80 },
+                            }}
+                            showStatDetails={false}
                         />
                         <div className={clsx('w-3/4', styles.chartContainer)}>
-                            <div className={styles.filterContainer}>
-                                <h3 className="headline-3-d">Submission Vs</h3>
-                                <Select
-                                    className={styles.submissionMethodSelect}
-                                    options={submissionVsOptions}
-                                    value={submissionVs}
-                                    onChange={val => setSubmissionVs(val as GroupByOptions)}
-                                />
-                            </div>
-                            <div className={styles.timeframeContainer}>
-                                <div>
-                                    <p className="typography-labels-label-lg-alt">Total case submissions</p>
-                                    <p className="typography-labels-label-sm">{timerangeText}</p>
+                            <div className={styles.timeFilterContainer}>
+                                <div className="w-1/4">
+                                    <Select
+                                        label="Group by"
+                                        className={styles.submissionMethodSelect}
+                                        options={submissionVsOptions}
+                                        value={submissionVs}
+                                        onChange={val => setSubmissionVs(val as GroupByOptions)}
+                                    />
                                 </div>
-                                <ChipRadio
-                                    id="timeframe-select"
-                                    options={timeframeOptions}
-                                    defaultValue={timeframe}
-                                    onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
-                                />
+                                <div className="w-3/4">
+                                    <TimeFilter
+                                        defaultValue={timeframe}
+                                        onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
+                                    />
+                                </div>
                             </div>
+
                             <Carousel
                                 slideStyle="my-8 pt-6"
                                 slides={statsWithChartData.map((stat, index) => {

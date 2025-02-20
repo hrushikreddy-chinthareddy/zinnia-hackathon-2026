@@ -6,10 +6,10 @@ import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 
 export enum ParentPage {
+    CreateCase = 'create-case',
+    Loans = 'loans',
     Premiums = 'premiums',
     Withdrawals = 'withdrawals',
-    CreateCase = 'create-case',
-    NewLoan = 'new-loan',
 }
 
 interface TransactionNavigationButtonsProps {

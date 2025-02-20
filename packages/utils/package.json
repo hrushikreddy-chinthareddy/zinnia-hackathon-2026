@@ -6,10 +6,18 @@
     "url": "git+https://github.com/zinnia/digital-experience-monorepo.git"
   },
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist/**"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "tsup",
     "dev": "pnpm run watch",
@@ -22,7 +30,8 @@
     "preset": "@zinnia/jest-presets/node"
   },
   "dependencies": {
-    "@zinnia/api-types": "workspace:*"
+    "@zinnia/api-types": "workspace:*",
+    "dayjs": "^1.11.13"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

@@ -1,15 +1,16 @@
 import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { MetadataSearchResponse, SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { IconType, Icon, AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { ChangeEvent, useEffect, useState } from 'react';
-import inputStyles from '@deps/components/search/search-field-toggle/search-field-toggle.module.css';
 
-import style from './file-widget.module.css';
-import { MetadataSearchResponse, SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import ClickContainer from '@deps/components/click-container/click-container';
+import inputStyles from '@deps/components/search/search-field-toggle/search-field-toggle.module.css';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import ClickContainer from '@deps/components/click-container/click-container';
+
+import style from './file-widget.module.css';
 export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     props: WidgetProps<T, S, F>
 ) {

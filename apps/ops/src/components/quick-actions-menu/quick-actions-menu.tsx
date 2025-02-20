@@ -60,10 +60,9 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
     const { featureFlags } = useOptimizely();
 
     const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
-    const newLoanEnabled = featureFlags[FEATURE_FLAGS.NEW_LOAN_TRANSACTION];
+    const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
 
     const trackClick = (linkName: string, linkUrl: string) => {
-        // Tracking
         segmentAnalyticsTrackEvent<DropdownClickedEvent>(SegmentTrackedEventName.DropdownClicked, {
             dropdownName: 'Policy Quick Actions',
             selectedItemName: linkName,
@@ -133,18 +132,24 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                                 );
                             }}
                         />
-
-                        {newLoanEnabled && (
-                            <MenuContextualItem
-                                disabled={!eligibilityCheck?.eligibleNewLoan as boolean}
-                                content={t('transactions.newLoan')}
-                                href={`/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`}
-                                icon={<BankIcon height={20} width={20} />}
-                                onClick={() => {
-                                    trackClick('New Loan', `/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`);
-                                }}
-                            />
-                        )}
+                        <MenuContextualItem
+                            disabled={!eligibilityCheck?.eligibleNewLoan as boolean}
+                            content={t('transactions.newLoan')}
+                            href={`/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`}
+                            icon={<BankIcon height={20} width={20} />}
+                            onClick={() => {
+                                trackClick('New Loan', `/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`);
+                            }}
+                        />
+                        {loanPaymentEnabled && (<MenuContextualItem
+                            disabled={!eligibilityCheck?.eligibleLoanPayment as boolean}
+                            content={t('transactions.loanPayment')}
+                            href={`/policies/${planCode}/${policyNumber}/policy/loans/loan-payment/`}
+                            icon={<PaymentIcon height={20} width={20} />}
+                            onClick={() => {
+                                trackClick('Loan Payment', `/policies/${planCode}/${policyNumber}/policy/loans/loan-payment/`);
+                            }}
+                        />)}
                     </>
                 )}
             </MenuContextualLabel>
@@ -189,6 +194,7 @@ export interface QuickActionsMenuProps {
     policyNumber?: string;
     eligibilityCheck?: {
         eligibleAutopay: boolean | null;
+        eligibleLoanPayment: boolean | null;
         eligibleNewLoan: boolean | null;
         eligiblePremium: boolean | null;
         eligibleWithdrawal: boolean | null;
@@ -205,7 +211,6 @@ const QuickActionsMenu = ({ planCode, policyNumber, eligibilityCheck, isLoading,
 
     return (
         <>
-            {/* medium and larger viewports */}
             <div className="hidden md:block">
                 <MenuContextual trigger={<TextButton t={t} />} onOpenChange={onOpenChange}>
                     <MenuContextualContent

@@ -884,6 +884,7 @@ export enum RestrictionOption {
     EligibleDistribution = 'eligibledistribution',
     Empty = '',
     Hardship = 'hardship',
+    Others = 'others',
 }
 
 export enum PayoutOptions {
@@ -1031,6 +1032,7 @@ export enum Carrier {
     ULPC = 'ULPC',
     GLCO = 'GLCO',
     USAA = 'USAA',
+    PRDN = 'PRDN',
 }
 
 export const ParticipantCompanies = [

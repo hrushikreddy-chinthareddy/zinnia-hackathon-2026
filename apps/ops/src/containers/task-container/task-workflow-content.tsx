@@ -31,7 +31,10 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
 
     const openSideSheet = () => {
         const content = <GlobalTaskSideSheet taskId={task.id} type={'task'} />;
-        sideSheet.changeSideSheetContent(`Task: ${task.taskName}`, content);
+        sideSheet.changeSideSheetContent(
+            `${task.taskName ? `${t('sideSheet.task.taskHeading')}: ${task.taskName}` : t('sideSheet.task.taskHeading')}`,
+            content
+        );
         sideSheet.handleOpen(true);
     };
 

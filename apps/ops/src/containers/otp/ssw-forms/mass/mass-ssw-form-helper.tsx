@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
@@ -50,7 +49,6 @@ import {
     FormDisbursementSelections,
     PaymentMethodOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { createValidator } from '../../utils/helper-utils';
 
@@ -98,13 +96,8 @@ export default function useMassSSWConfig(t: TFunction) {
         [t]
     );
 
-    const sswFormValidation = ({ formParty, formSignature, formDisbursement, formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
+    const sswFormValidation = ({ formParty, formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
-        const sswProgramStartDate = formProgram?.programFrequency?.beginDate?.text || null;
-
-        if (sswProgramStartDate && [29, 30, 31].includes(dayjs(sswProgramStartDate, ZAHARA_API_DATE_FORMAT).get('D'))) {
-            errors['systematicStartDate'] = t('sswProgram.warnings.systematicStartDate', { startDate: 1, endDate: 28 });
-        }
 
         return errors;
     };

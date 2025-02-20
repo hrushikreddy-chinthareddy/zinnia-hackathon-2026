@@ -14,7 +14,11 @@
                     "type": "object",
                     "definitions": {
                         "caseTypeEnum": {},
-                        "caseSubTypeEnum": {}
+                        "caseSubTypeEnum": {},
+                        "isDuplicateEnum": {
+                            "enumNames": ["Yes", "No"],
+                            "enum": ["DUPLICATE", "MATCH_FOUND"]
+                        }
                     },
                     "properties": {
                         "sectionHeader": {
@@ -35,19 +39,16 @@
                                     "properties": {
                                         "payorName": {
                                             "type": "string",
-                                            "title": "Title"
+                                            "title": "Title",
+                                            "ui:field": "title"
                                         },
                                         "taxId": {
                                             "type": "string",
                                             "title": "SSN",
-                                            "dataType": "ssn"
-                                        },
-                                        "roles": {
-                                            "type": "string",
-                                            "title": "Role(s)"
+                                            "dataType": "ssn",
+                                            "ui:field": "subTitle"
                                         }
-                                    },
-                                    "additionalProperties": true
+                                    }
                                 },
                                 "purchaseDocument": {
                                     "type": "object",
@@ -113,7 +114,8 @@
                                     "properties": {
                                         "isDuplicate": {
                                             "type": "string",
-                                            "title": "Is this document a duplicate?"
+                                            "title": "Is this document a duplicate?",
+                                            "$ref": "#/definitions/isDuplicateEnum"
                                         }
                                     }
                                 }
@@ -197,6 +199,7 @@
                         }
                     },
                     "caseId": {
+                        "ui:placeholder": "eg: CA1234567890",
                         "ui:options": {
                             "label": true
                         }
@@ -225,19 +228,7 @@
                         }
                     },
                     "isDuplicate": {
-                        "ui:widget": "radio",
-                        "ui:options": {
-                            "customOptions": [
-                                {
-                                    "label": "Yes",
-                                    "value": "DUPLICATE"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "MATCH_FOUND"
-                                }
-                            ]
-                        }
+                        "ui:widget": "radio"
                     }
                 }
             },
@@ -265,12 +256,14 @@
                                     "properties": {
                                         "payorName": {
                                             "type": "string",
-                                            "title": "Title"
+                                            "title": "Title",
+                                            "ui:field": "title"
                                         },
                                         "taxId": {
                                             "type": "string",
                                             "title": "SSN",
-                                            "dataType": "ssn"
+                                            "dataType": "ssn",
+                                            "ui:field": "subTitle"
                                         }
                                     }
                                 },
@@ -369,12 +362,14 @@
                                 "companyName": {
                                     "type": "string",
                                     "title": "Company name",
-                                    "default": "{{entity.payment.exchangeReplace.companyName}}"
+                                    "default": "{{entity.payment.exchangeReplace.companyName}}",
+                                    "ui:field": "title"
                                 },
                                 "transferAmount": {
                                     "type": "string",
                                     "title": "Expected transfer amount",
-                                    "default": "${{entity.payment.exchangeReplace.amountRequested}}"
+                                    "default": "${{entity.payment.exchangeReplace.amountRequested}}",
+                                    "ui:field": "subTitle"
                                 },
                                 "paymentRecordId": {
                                     "type": "string",

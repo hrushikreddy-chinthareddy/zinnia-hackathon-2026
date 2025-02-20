@@ -35,8 +35,6 @@ export interface WithdrawalSideSheetValues extends BaseTransactionSideSheetValue
     taxWithholdings?: WithdrawalDetails[];
     withdrawalCharges?: WithdrawalDetails[];
     payeePaymentDetails?: PayeePaymentDetails[];
-
-    // TODO MG: these should be removed once reverse recreate has its own SideSheetValue interface
     effectiveDate?: string;
     processDate?: string;
     transactionType?: TransactionType;

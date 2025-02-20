@@ -30,7 +30,8 @@ export default function UlpcRmdWithdrawalForm() {
         w4pSignaturesConfig,
         disbursementOptions,
         isBeneSpouseOption,
-        fundWithdrawnMethodOptions
+        fundWithdrawnMethodOptions,
+        beneficiaryConfig
     } = getUlpcRmdConfig(t);
 
     const {
@@ -82,6 +83,7 @@ export default function UlpcRmdWithdrawalForm() {
                 beneInfo={formBeneInfo}
                 onBeneChange={setFormBeneInfo}
                 isBeneSpouseOption={isBeneSpouseOption}
+                configs={beneficiaryConfig}
             />
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}

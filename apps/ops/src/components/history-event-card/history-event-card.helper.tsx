@@ -32,7 +32,6 @@ const changeTypeKey = {
     [PeopleChangeType.Update]: 'xUpdate',
 };
 
-// TODO MG: move to payments helper?
 export const getPaymentMethods = (policy: Policy, payors: Transaction['payors']): BankAccount[] => {
     if (!policy?.parties?.length || !payors?.length) return [];
     const accounts: BankAccount[] = [];
@@ -56,7 +55,6 @@ export const getBankAccount = ({ policy, payorsOrPayees }: GetBankAccount) => {
     return payorOrPayeeBank;
 };
 
-// TODO MG: move to non financial helper file
 // uses the transaction to determine the type of change that occured
 export const getPeopleChangeType = (transaction: Transaction): PeopleChangeType | null => {
     const { partyPolicyChangeReferenceId, partyPolicyNewReferenceId } = transaction;
@@ -102,6 +100,7 @@ export const getEventTitle = (transaction: Transaction, t: TFunction): string =>
 
 export interface EventCardValues {
     amount?: number;
+    requestedAmount?: number;
     caption: string;
     eventBody?: string;
     eventTitle?: string;
@@ -160,7 +159,7 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
         case TransactionType.SubsequentPremium: {
             const systematicProgram = systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
 
-            amount = systematicProgram?.amount;
+            amount = appliedAmount || systematicProgram?.amount;
             eventBody = toTitleCase(systematicProgram?.frequency);
 
             if (bankingBody) eventBody += ` | ${bankingBody}`;
@@ -169,7 +168,6 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
         }
 
         case TransactionType.FullSurrender: {
-            // TODO MG: can we use paymentMethod or do we have to pass in payeeOrBeneficiaries for withdrawals?
             // try to cache this so isnt being called so many times
             const bankAccount = getBankAccount({ policy, payorsOrPayees: payeeOrBeneficiaries });
             const eventBankingBody = t('historyEventCard.toBanking', {
@@ -204,7 +202,7 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
 
         case TransactionType.PaymentSystematicLoanRepayment:
         case TransactionType.SystematicLoanRepayment: {
-            amount = requestedAmount;
+            amount = appliedAmount || requestedAmount;
             eventBody = bankingBody ?? '';
             break;
         }
@@ -252,14 +250,13 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
         default:
             if (!isNullEmptyOrUndefined(appliedAmount)) {
                 amount = appliedAmount;
-            } else if (!isNullEmptyOrUndefined(requestedAmount)) {
-                amount = requestedAmount;
             }
             break;
     }
 
     return {
         amount,
+        requestedAmount,
         caption,
         eventBody,
         eventTitle,

@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import { PremiumProvider, usePremium } from '@deps/contexts/NewPremiumContext';
+import { NewPremiumProvider, usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { Processes } from '@deps/models/case/case';
 
@@ -9,8 +9,8 @@ import WorkflowContainer from './workflow-container';
 import PaymentStep, { PaymentStepSetState } from '../../components/workflows/payment-step/payment-step';
 import PayorStep, { PayorStepSetState } from '../../components/workflows/payor-step/payor-step';
 import StartStep, { StartStepSetState } from '../../components/workflows/start-step/start-step';
-import Confirm from '../new-premium-container/confirm/confirm';
-import Summary from '../new-premium-container/summary/summary';
+import Confirm from '../financial-transactions/premium/new-premium/confirm/confirm';
+import Summary from '../financial-transactions/premium/new-premium/summary/summary';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 
 export default {
@@ -82,8 +82,8 @@ const premiumSteps: Step[] = [
 
 export const OneTimePremium = () => {
     return (
-        <PremiumProvider>
+        <NewPremiumProvider>
             <WorkflowContainer policy={mockPolicy} steps={premiumSteps} />
-        </PremiumProvider>
+        </NewPremiumProvider>
     );
 };

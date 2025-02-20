@@ -85,18 +85,30 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     };
 
     async function fetchDetails(apiUrl: string, value: string, newValue?: any) {
-        const payload = replacePlaceholders(apiProps.apiPayload, { ...formData?.customData, value });
+        const payload =
+            apiProps?.apiMethod === 'post' ? replacePlaceholders(apiProps.apiPayload, { ...formData?.customData, value }) : undefined;
 
-        const response = await client[apiProps?.apiMethod ?? 'get']<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload ?? undefined);
+        const queryString = new URLSearchParams(replacePlaceholders(apiProps.apiPayload, { ...formData?.customData, value })).toString();
 
-        const data1 = replacePlaceholders(apiProps.responseData, response);
+        const url = apiProps?.apiMethod === 'post' ? apiUrl : apiUrl + queryString;
 
-        const data = {
-            [apiProps?.responseKey]: data1,
+        const { data } = await client[apiProps?.apiMethod ?? 'get']<any, AxiosResponse<any>>(`${baseUrl}${url}`, payload ?? undefined);
+
+        const responseData = apiProps.responseData ? replacePlaceholders(apiProps.responseData, data) : data;
+        const filterData: Record<string, any> = {};
+        if (apiProps?.response) {
+            Object.keys(apiProps?.response).forEach(key => {
+                filterData[key] = responseData?.map((item: any) => item[apiProps?.response?.[key]]);
+            });
+        }
+
+        const MappedData = {
+            [apiProps?.responseKey]: apiProps?.response ? filterData : responseData,
         };
+        console.log('🚀 ~ fetchDetails ~ data:', MappedData);
 
         onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
-        formData?.setCustomData && formData.setCustomData(data);
+        formData?.setCustomData && formData.setCustomData(MappedData);
     }
 
     const showPlaceholderOption = !multiple && schema.default === undefined;

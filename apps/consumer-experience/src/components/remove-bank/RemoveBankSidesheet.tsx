@@ -6,16 +6,19 @@ import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
 import { putEndDateBankAccount } from '@/actions/bpm/bank-actions';
+import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import { useUser } from '@/hooks/use-user';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { Error } from './form-steps/error/Error';
 import { Loading } from './form-steps/loading/Loading';
 import { RemoveBankConfirm } from './form-steps/remove-bank-confirm/RemoveBankConfirm';
 import { Success } from './form-steps/success/Success';
+import { VerifyIdentity } from '../transaction-steps/verify-identity/VerifyIdentity';
 
 export interface RemoveBankProps {
   partyId: string;
@@ -32,6 +35,9 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   autopayEnabled,
   numberOfAccounts,
 }) => {
+  const { data: featureFlagData } = useFeatureFlags();
+  const checkIdentityCode =
+    featureFlagData?.[FEATURE_FLAGS.TRANSACTION_LEVEL_CODE_ADD_BANK];
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
     planCode: string;
@@ -51,6 +57,11 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   );
 
   const handleRemove = async () => {
+    if (checkIdentityCode) {
+      setStep(FormSteps.VERIFY_IDENTITY);
+      return;
+    }
+
     setStep(FormSteps.LOADING);
     const { data, error } = await putEndDateBankAccount({
       planCode: params.planCode,
@@ -87,6 +98,10 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
     }
   };
 
+  const onClose = () => {
+    setOpen(false);
+  };
+
   const sidesheetInner = () => {
     if (numberOfAccounts === 1) {
       return (
@@ -94,7 +109,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
           errorTitle="This is the only account saved."
           isServerError={isServerError}
           errorMessage="You must have at least one banking account saved. To remove this one, first add another bank account."
-          closeCallback={() => setOpen(false)}
+          closeCallback={onClose}
         />
       );
     }
@@ -112,7 +127,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
               </a>
             </span>
           }
-          closeCallback={() => setOpen(false)}
+          closeCallback={onClose}
         />
       );
     }
@@ -126,7 +141,17 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
         <Success
           successTitle={successTitle}
           successMessage={successMessage}
-          closeCallback={() => setOpen(false)}
+          closeCallback={onClose}
+        />
+      );
+    }
+
+    if (step === FormSteps.VERIFY_IDENTITY) {
+      return (
+        <VerifyIdentity
+          closeCallback={onClose}
+          onSuccess={handleRemove}
+          transactionDescription="managing your bank account."
         />
       );
     }
@@ -135,7 +160,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
       <RemoveBankConfirm
         accountNumber={values?.accountNumber}
         bankNickname={values?.branchName}
-        cancelCallback={() => setOpen(false)}
+        cancelCallback={onClose}
         confirmCallback={handleRemove}
       />
     );

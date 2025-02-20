@@ -29,6 +29,7 @@ export default function GlcoRmdWithdrawalForm() {
         w4pSignaturesConfig,
         disbursementOptions,
         isBeneSpouseOption,
+        beneficiaryConfig
     } = getGlcoRmdConfig(t);
 
     const {
@@ -78,6 +79,7 @@ export default function GlcoRmdWithdrawalForm() {
                 beneInfo={formBeneInfo}
                 onBeneChange={setFormBeneInfo}
                 isBeneSpouseOption={isBeneSpouseOption}
+                configs={beneficiaryConfig}
             />
 
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />

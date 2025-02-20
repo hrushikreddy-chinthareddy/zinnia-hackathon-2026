@@ -157,6 +157,8 @@ export enum ResponsiveGridTest {
 }
 
 export enum LoansTest {
+    LOAN_PAYMENT_LINK = 'loan-payment-link',
+    LOAN_PAYMENT_LINK_DISABLED = 'loan-payment-link-disabled',
     START_LOAN_LINK = 'start-loan-link',
     START_LOAN_LINK_DISABLED = 'start-loan-link-disabled',
 }

@@ -8,16 +8,39 @@
         "$schema": "http://json-schema.org/draft-07/schema#",
         "definitions": {
             "partyTypeEnum": {
-                "enum": ["PERSON", "ORGANIZATION", "OTHERS"]
+                "enum": [
+                    "PERSON",
+                    "ORGANIZATION",
+                    "OTHERS"
+                ]
             },
             "roleTypeEnum": {
-                "enum": ["OWNER", "JOINT_OWNER", "AGENT", "PRIMARY_WRITING_AGENT", "PRIMARY_SERVICING_AGENT", "BROKER_DEALER"]
+                "enum": [
+                    "OWNER",
+                    "JOINT_OWNER",
+                    "AGENT",
+                    "PRIMARY_WRITING_AGENT",
+                    "PRIMARY_SERVICING_AGENT",
+                    "BROKER_DEALER"
+                ]
             },
             "genderEnum": {
-                "enum": ["MALE", "FEMALE", "TRANSGENDER", "OTHER"]
+                "enum": [
+                    "MALE",
+                    "FEMALE",
+                    "TRANSGENDER",
+                    "OTHER"
+                ]
             },
             "martialStatusEnum": {
-                "enum": ["SINGLE", "MARRIED", "DIVORCED", "WIDOWED", "UNKNOWN", "LEGALLY_SEPARATED"]
+                "enum": [
+                    "SINGLE",
+                    "MARRIED",
+                    "DIVORCED",
+                    "WIDOWED",
+                    "UNKNOWN",
+                    "LEGALLY_SEPARATED"
+                ]
             },
             "birthCountryEnum": {
                 "enum": [
@@ -146,34 +169,73 @@
                 ]
             },
             "govtIdTypeEnum": {
-                "enum": ["SSN", "PASSPORT", "DRIVER_LICENSE", "ARMED_FORCEID"]
+                "enum": [
+                    "SSN",
+                    "PASSPORT",
+                    "DRIVER_LICENSE",
+                    "ARMED_FORCEID"
+                ]
             },
             "addressTypeEnum": {
-                "enum": ["RESIDENCE", "MAILING", "BUSINESS", "PRIMARY_ADDRESS", "VACATION", "BILLING_MAILING"]
+                "enum": [
+                    "RESIDENCE",
+                    "MAILING",
+                    "BUSINESS",
+                    "PRIMARY_ADDRESS",
+                    "VACATION",
+                    "BILLING_MAILING"
+                ]
             },
             "employmentStatusEnum": {
-                "enum": ["ACTIVE", "RETIRED", "DISABLED", "TERMINATED", "OTHERS"]
+                "enum": [
+                    "ACTIVE",
+                    "RETIRED",
+                    "DISABLED",
+                    "TERMINATED",
+                    "OTHERS"
+                ]
             },
             "lineOfBusinessEnum": {
-                "enum": ["ANNUITY", "LIFE"]
+                "enum": [
+                    "ANNUITY",
+                    "LIFE"
+                ]
             },
             "qualPlanTypeEnum": {
-                "enum": ["NON_QUALIFIED", "QUALIFIED"]
+                "enum": [
+                    "NON_QUALIFIED",
+                    "QUALIFIED"
+                ]
             },
             "replacementIndEnum": {
-                "enum": ["YES", "NO"]
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
             },
             "replacedContractTypeEnum": {
-                "enum": ["ANNUITY", "LIFE"]
+                "enum": [
+                    "ANNUITY",
+                    "LIFE"
+                ]
             },
             "soldPoliciesToApplicantEnum": {
-                "enum": ["YES", "NO"]
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
             },
             "pastReplacementEnum": {
-                "enum": ["YES", "NO"]
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
             },
             "coverageExpenseConsiderationEnum": {
-                "enum": ["YES", "NO"]
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
             },
             "sourceOfIncomeEnum": {
                 "enum": [
@@ -197,13 +259,23 @@
                 ]
             },
             "materialChangeExpEnum": {
-                "enum": ["YES", "NO"]
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
             },
             "materialChangeDetails_changeTypeEnum": {
-                "enum": ["LIVING_EXPENSE_INCREASE", "LIVING_EXPENSE_DECREASE", "LIVING_ASSET_DECREASE"]
+                "enum": [
+                    "LIVING_EXPENSE_INCREASE",
+                    "LIVING_EXPENSE_DECREASE",
+                    "LIVING_ASSET_DECREASE"
+                ]
             },
             "isApplicableEnum": {
-                "enum": ["YES", "NO"]
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
             },
             "sourceOfFundsEnum": {
                 "enum": [
@@ -240,46 +312,97 @@
                 ]
             },
             "financialProducts_assetsDistribution_qualificationTypeEnum": {
-                "enum": ["QUALIFIED", "NON_QUALIFIED"]
+                "enum": [
+                    "QUALIFIED",
+                    "NON_QUALIFIED"
+                ]
             },
             "financialProducts_totalAsset_qualificationTypeEnum": {
-                "enum": ["QUALIFIED", "NON_QUALIFIED"]
+                "enum": [
+                    "QUALIFIED",
+                    "NON_QUALIFIED"
+                ]
             },
             "financialProducts_totalAsset_assetTypeEnum": {
-                "enum": ["LIQUID_ASSET", "NON_LIQUID_ASSET"]
+                "enum": [
+                    "LIQUID_ASSET",
+                    "NON_LIQUID_ASSET"
+                ]
             },
             "rateChangeAcknowledgmentEnum": {
-                "enum": ["YES", "NO"]
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
             },
             "investProduct_riskToleranceEnum": {
-                "enum": ["CONSERVATIVE", "MODERATE_CONSERVATIVE", "MODERATE", "MODERATE_AGGRESSIVE", "AGGRESSIVE"]
+                "enum": [
+                    "CONSERVATIVE",
+                    "MODERATE_CONSERVATIVE",
+                    "MODERATE",
+                    "MODERATE_AGGRESSIVE",
+                    "AGGRESSIVE"
+                ]
             },
             "investProduct_annuityFitsRiskToleranceEnum": {
-                "enum": ["YES", "NO"]
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
             },
             "financialObjectives_buyingReasonEnum": {
-                "enum": ["INCOME", "TAX_DEFERRAL", "GURANTEES", "GROWTH", "PRINCIPAL_PROTECTION", "OTHERS"]
+                "enum": [
+                    "INCOME",
+                    "TAX_DEFERRAL",
+                    "GURANTEES",
+                    "GROWTH",
+                    "PRINCIPAL_PROTECTION",
+                    "OTHERS"
+                ]
             },
             "financialObjectives_annuityMeetsFinancialNeedsEnum": {
-                "enum": ["YES", "NO"]
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
             },
             "agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum": {
-                "enum": ["YES", "NO"]
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
             },
             "agentAcknowledgment_maApplicationQuestionnaire_saleInLast5YearsEnum": {
-                "enum": ["YES", "NO"]
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
             },
             "agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum": {
-                "enum": ["ANNUITY", "LIFE"]
+                "enum": [
+                    "ANNUITY",
+                    "LIFE"
+                ]
             },
             "signatureInfo_signatureRoleCodeEnum": {
-                "enum": ["OWNER", "AGENT"]
+                "enum": [
+                    "OWNER",
+                    "AGENT"
+                ]
             },
             "signatureInfo_signatureStateEnum": {
-                "enum": ["US"]
+                "enum": [
+                    "US"
+                ]
             },
             "signatureInfo_signatoryDesignationEnum": {
-                "enum": ["TRUSTEE", "EXECUTOR", "CUSTODIAN", "GUARDIAN", "ATTORNEY_IN_FACT"]
+                "enum": [
+                    "TRUSTEE",
+                    "EXECUTOR",
+                    "CUSTODIAN",
+                    "GUARDIAN",
+                    "ATTORNEY_IN_FACT"
+                ]
             }
         },
         "properties": {
@@ -389,7 +512,11 @@
                                         "title": "Government id expiry date"
                                     }
                                 },
-                                "required": ["govtId", "govtIdType", "govtIdExpDate"]
+                                "required": [
+                                    "govtId",
+                                    "govtIdType",
+                                    "govtIdExpDate"
+                                ]
                             }
                         },
                         "addresses": {
@@ -430,13 +557,23 @@
                                         "title": "Zip code"
                                     }
                                 },
-                                "required": ["addressType", "line1", "city", "state", "country", "zip"]
+                                "required": [
+                                    "addressType",
+                                    "line1",
+                                    "city",
+                                    "state",
+                                    "country",
+                                    "zip"
+                                ]
                             }
                         },
                         "employment": {
                             "type": "object",
                             "title": "Employment Information",
-                            "required": ["employmentStatus", "occupation"],
+                            "required": [
+                                "employmentStatus",
+                                "occupation"
+                            ],
                             "properties": {
                                 "employmentStatus": {
                                     "type": "array",
@@ -471,7 +608,9 @@
                                                 "minLength": 1
                                             }
                                         },
-                                        "required": ["disabilityExplanation"]
+                                        "required": [
+                                            "disabilityExplanation"
+                                        ]
                                     }
                                 }
                             ]
@@ -506,7 +645,13 @@
                         "title": "Annual payment amount"
                     }
                 },
-                "required": ["lineOfBusiness", "productCode", "productType", "qualPlanType", "annualPaymentAmt"]
+                "required": [
+                    "lineOfBusiness",
+                    "productCode",
+                    "productType",
+                    "qualPlanType",
+                    "annualPaymentAmt"
+                ]
             },
             "applicationInfo": {
                 "type": "object",
@@ -546,10 +691,19 @@
                                 "$ref": "#/definitions/coverageExpenseConsiderationEnum"
                             }
                         },
-                        "required": ["soldPoliciesToApplicant", "pastReplacement", "coverageExpenseConsideration"]
+                        "required": [
+                            "soldPoliciesToApplicant",
+                            "pastReplacement",
+                            "coverageExpenseConsideration"
+                        ]
                     }
                 },
-                "required": ["replacementInd", "replacementReason", "replacedContractType", "additionalInformation"]
+                "required": [
+                    "replacementInd",
+                    "replacementReason",
+                    "replacedContractType",
+                    "additionalInformation"
+                ]
             },
             "fiscalData": {
                 "type": "object",
@@ -613,7 +767,12 @@
                                     "title": "Amount"
                                 }
                             },
-                            "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
+                            "required": [
+                                "changeType",
+                                "isApplicable",
+                                "numberOfYears",
+                                "amount"
+                            ]
                         }
                     },
                     "totalAssets": {
@@ -700,7 +859,11 @@
                                             "title": "Amount"
                                         }
                                     },
-                                    "required": ["productType", "qualificationType", "amount"]
+                                    "required": [
+                                        "productType",
+                                        "qualificationType",
+                                        "amount"
+                                    ]
                                 }
                             },
                             "totalAsset": {
@@ -724,14 +887,25 @@
                                             "title": "Amount"
                                         }
                                     },
-                                    "required": ["qualificationType", "assetType", "amount"]
+                                    "required": [
+                                        "qualificationType",
+                                        "assetType",
+                                        "amount"
+                                    ]
                                 }
                             }
                         },
-                        "required": ["assetsDistribution", "totalAsset"]
+                        "required": [
+                            "assetsDistribution",
+                            "totalAsset"
+                        ]
                     }
                 },
-                "required": ["rateChangeAcknowledgment", "totalAnnuityValue", "financialProducts"]
+                "required": [
+                    "rateChangeAcknowledgment",
+                    "totalAnnuityValue",
+                    "financialProducts"
+                ]
             },
             "investmentRiskInfo": {
                 "type": "object",
@@ -752,7 +926,11 @@
                         "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
                     }
                 },
-                "required": ["riskTolerance", "riskToleranceDesc", "annuityFitsRiskTolerance"]
+                "required": [
+                    "riskTolerance",
+                    "riskToleranceDesc",
+                    "annuityFitsRiskTolerance"
+                ]
             },
             "financialObjectives": {
                 "type": "object",
@@ -777,7 +955,11 @@
                         "$ref": "#/definitions/financialObjectives_annuityMeetsFinancialNeedsEnum"
                     }
                 },
-                "required": ["buyingReason", "buyingReasonDetails", "annuityMeetsFinancialNeeds"]
+                "required": [
+                    "buyingReason",
+                    "buyingReasonDetails",
+                    "annuityMeetsFinancialNeeds"
+                ]
             },
             "liquidityOptions": {
                 "type": "object",
@@ -902,7 +1084,12 @@
                                             "title": "Issue date"
                                         }
                                     },
-                                    "required": ["productType", "companyName", "policyNumber", "issueDate"]
+                                    "required": [
+                                        "productType",
+                                        "companyName",
+                                        "policyNumber",
+                                        "issueDate"
+                                    ]
                                 }
                             }
                         }
@@ -928,7 +1115,12 @@
                                 "title": "Disclosure retention"
                             }
                         },
-                        "required": ["evaluatedInformation", "informedOfFeatures", "communicatedBasis", "disclosureRetention"]
+                        "required": [
+                            "evaluatedInformation",
+                            "informedOfFeatures",
+                            "communicatedBasis",
+                            "disclosureRetention"
+                        ]
                     },
                     "disclosureAcknowledgement": {
                         "type": "object",
@@ -984,7 +1176,11 @@
                         ]
                     }
                 },
-                "required": ["maApplicationQuestionnaire", "financialAcknowledgement", "disclosureAcknowledgement"]
+                "required": [
+                    "maApplicationQuestionnaire",
+                    "financialAcknowledgement",
+                    "disclosureAcknowledgement"
+                ]
             },
             "additionalInfo": {
                 "type": "object",
@@ -1051,7 +1247,11 @@
                         "title": "Reverse mortgage"
                     }
                 },
-                "required": ["applyForMeansTestedBenefits", "buyingForGovernmentBenefits", "reverseMortgage"]
+                "required": [
+                    "applyForMeansTestedBenefits",
+                    "buyingForGovernmentBenefits",
+                    "reverseMortgage"
+                ]
             },
             "signatureInfo": {
                 "type": "array",
@@ -1129,13 +1329,24 @@
                 "partyType": {
                     "ui:options": {
                         "help": "Applicant's type",
-                        "enumNames": ["Person", "Orginazation", "Others"]
+                        "enumNames": [
+                            "Person",
+                            "Orginazation",
+                            "Others"
+                        ]
                     }
                 },
                 "roleType": {
                     "ui:options": {
                         "help": "Applicant's Role",
-                        "enumNames": ["Owner", "Joint Owner", "Agent", "Primary Writing Agent", "Primary Serving Agent", "Broker Dealer"]
+                        "enumNames": [
+                            "Owner",
+                            "Joint Owner",
+                            "Agent",
+                            "Primary Writing Agent",
+                            "Primary Serving Agent",
+                            "Broker Dealer"
+                        ]
                     }
                 },
                 "fullName": {
@@ -1165,7 +1376,12 @@
                     },
                     "gender": {
                         "ui:options": {
-                            "enumNames": ["Male", "Female", "Transgender", "Other"]
+                            "enumNames": [
+                                "Male",
+                                "Female",
+                                "Transgender",
+                                "Other"
+                            ]
                         }
                     },
                     "age": {
@@ -1177,72 +1393,79 @@
                     },
                     "martialStatus": {
                         "ui:options": {
-                            "enumNames": ["Single", "Married", "Divorced", "Widowed", "Unknown", "Legally Seperated"]
+                            "enumNames": [
+                                "Single",
+                                "Married",
+                                "Divorced",
+                                "Widowed",
+                                "Unknown",
+                                "Legally Seperated"
+                            ]
                         }
                     },
                     "birthCountry": {
                         "uniqueItems": true,
                         "ui:options": {
                             "enumNames": [
-                                "AA",
-                                "AE",
-                                "AK",
-                                "AL",
-                                "AP",
-                                "AR",
-                                "AZ",
-                                "CA",
-                                "CD",
-                                "CO",
-                                "CT",
-                                "DC",
-                                "DE",
-                                "FL",
-                                "FN",
-                                "GA",
-                                "GU",
-                                "HI",
-                                "IA",
-                                "ID",
-                                "IL",
-                                "IN",
-                                "KS",
-                                "KY",
-                                "LA",
-                                "MA",
-                                "MD",
-                                "ME",
-                                "MI",
-                                "MN",
-                                "MO",
-                                "MS",
-                                "MT",
-                                "NC",
-                                "ND",
-                                "NE",
-                                "NH",
-                                "NJ",
-                                "NM",
-                                "NV",
-                                "NY",
-                                "OH",
-                                "OK",
-                                "OR",
-                                "PA",
-                                "PR",
-                                "RI",
-                                "SC",
-                                "SD",
-                                "TN",
-                                "TX",
-                                "UT",
-                                "VA",
-                                "VI",
-                                "VT",
-                                "WA",
-                                "WI",
-                                "WV",
-                                "WY"
+                                "Armed Forces Americas (except Canada)",
+                                "Armed Forces Canada, Africa, Europe, Middle East",
+                                "Alaska",
+                                "Alabama",
+                                "US Armed Forces Pacific",
+                                "Arkansas",
+                                "Arizona",
+                                "California",
+                                "Chad",
+                                "Colorado",
+                                "Connecticut",
+                                "District of Columbia",
+                                "Delaware",
+                                "Florida",
+                                "Estonia",
+                                "Georgia",
+                                "Guam",
+                                "Hawaii",
+                                "Iowa",
+                                "Idaho",
+                                "Illinois",
+                                "Indiana",
+                                "Kansas",
+                                "Kentucky",
+                                "Louisiana",
+                                "Massachusetts",
+                                "Maryland",
+                                "Maine",
+                                "Michigan",
+                                "Minnesota",
+                                "Missouri",
+                                "Mississippi",
+                                "Montana",
+                                "North Carolina",
+                                "North Dakota",
+                                "Nebraska",
+                                "New Hampshire",
+                                "New Jersey",
+                                "New Mexico",
+                                "Nevada",
+                                "New York",
+                                "Ohio",
+                                "Oklahoma",
+                                "Oregon",
+                                "Pennsylvania",
+                                "Puerto Rico",
+                                "Rhode Island",
+                                "South Carolina",
+                                "South Dakota",
+                                "Tennessee",
+                                "Texas",
+                                "Utah",
+                                "Virginia",
+                                "Virgin Islands",
+                                "Vermont",
+                                "Washington",
+                                "Wisconsin",
+                                "West Virginia",
+                                "Wyoming"
                             ]
                         }
                     },
@@ -1250,65 +1473,65 @@
                         "uniqueItems": true,
                         "ui:options": {
                             "enumNames": [
-                                "AA",
-                                "AE",
-                                "AK",
-                                "AL",
-                                "AP",
-                                "AR",
-                                "AZ",
-                                "CA",
-                                "CD",
-                                "CO",
-                                "CT",
-                                "DC",
-                                "DE",
-                                "FL",
-                                "FN",
-                                "GA",
-                                "GU",
-                                "HI",
-                                "IA",
-                                "ID",
-                                "IL",
-                                "IN",
-                                "KS",
-                                "KY",
-                                "LA",
-                                "MA",
-                                "MD",
-                                "ME",
-                                "MI",
-                                "MN",
-                                "MO",
-                                "MS",
-                                "MT",
-                                "NC",
-                                "ND",
-                                "NE",
-                                "NH",
-                                "NJ",
-                                "NM",
-                                "NV",
-                                "NY",
-                                "OH",
-                                "OK",
-                                "OR",
-                                "PA",
-                                "PR",
-                                "RI",
-                                "SC",
-                                "SD",
-                                "TN",
-                                "TX",
-                                "UT",
-                                "VA",
-                                "VI",
-                                "VT",
-                                "WA",
-                                "WI",
-                                "WV",
-                                "WY"
+                                "Armed Forces Americas (except Canada)",
+                                "Armed Forces Canada, Africa, Europe, Middle East",
+                                "Alaska",
+                                "Alabama",
+                                "US Armed Forces Pacific",
+                                "Arkansas",
+                                "Arizona",
+                                "California",
+                                "Chad",
+                                "Colorado",
+                                "Connecticut",
+                                "District of Columbia",
+                                "Delaware",
+                                "Florida",
+                                "Estonia",
+                                "Georgia",
+                                "Guam",
+                                "Hawaii",
+                                "Iowa",
+                                "Idaho",
+                                "Illinois",
+                                "Indiana",
+                                "Kansas",
+                                "Kentucky",
+                                "Louisiana",
+                                "Massachusetts",
+                                "Maryland",
+                                "Maine",
+                                "Michigan",
+                                "Minnesota",
+                                "Missouri",
+                                "Mississippi",
+                                "Montana",
+                                "North Carolina",
+                                "North Dakota",
+                                "Nebraska",
+                                "New Hampshire",
+                                "New Jersey",
+                                "New Mexico",
+                                "Nevada",
+                                "New York",
+                                "Ohio",
+                                "Oklahoma",
+                                "Oregon",
+                                "Pennsylvania",
+                                "Puerto Rico",
+                                "Rhode Island",
+                                "South Carolina",
+                                "South Dakota",
+                                "Tennessee",
+                                "Texas",
+                                "Utah",
+                                "Virginia",
+                                "Virgin Islands",
+                                "Vermont",
+                                "Washington",
+                                "Wisconsin",
+                                "West Virginia",
+                                "Wyoming"
                             ]
                         }
                     }
@@ -1325,14 +1548,23 @@
                         },
                         "govtIdType": {
                             "ui:options": {
-                                "enumNames": ["SSN", "Passport", "Driver license", "Armed forceid"]
+                                "enumNames": [
+                                    "SSN",
+                                    "Passport",
+                                    "Driver license",
+                                    "Armed forceid"
+                                ]
                             }
                         },
                         "govtIdExpDate": {
                             "format": "date",
                             "ui:options": {}
                         },
-                        "required": ["govtId", "govtIdType", "govtIdExpDate"]
+                        "required": [
+                            "govtId",
+                            "govtIdType",
+                            "govtIdExpDate"
+                        ]
                     }
                 },
                 "addresses": {
@@ -1345,7 +1577,14 @@
                         "addressType": {
                             "uniqueItems": true,
                             "ui:options": {
-                                "enumNames": ["Residence", "Mailing", "Business", "Primary address", "Vacation", "Billing mailing"]
+                                "enumNames": [
+                                    "Residence",
+                                    "Mailing",
+                                    "Business",
+                                    "Primary address",
+                                    "Vacation",
+                                    "Billing mailing"
+                                ]
                             }
                         },
                         "line1": {
@@ -1367,13 +1606,26 @@
                             "ui:options": {}
                         }
                     },
-                    "required": ["addressType", "line1", "city", "state", "country", "zip"]
+                    "required": [
+                        "addressType",
+                        "line1",
+                        "city",
+                        "state",
+                        "country",
+                        "zip"
+                    ]
                 },
                 "employment": {
                     "employmentStatus": {
                         "ui:options": {
                             "widget": "checkboxes",
-                            "enumNames": ["Active", "Retired", "Disabled", "TerminatedD", "Others"]
+                            "enumNames": [
+                                "Active",
+                                "Retired",
+                                "Disabled",
+                                "Terminated",
+                                "Others"
+                            ]
                         }
                     },
                     "occupation": {
@@ -1391,7 +1643,10 @@
             },
             "lineOfBusiness": {
                 "ui:options": {
-                    "enumNames": ["Annuity", "Life"]
+                    "enumNames": [
+                        "Annuity",
+                        "Life"
+                    ]
                 }
             },
             "productCode": {
@@ -1402,7 +1657,10 @@
             },
             "qualPlanType": {
                 "ui:options": {
-                    "enumNames": ["Nonqualified", "Qualified"]
+                    "enumNames": [
+                        "Nonqualified",
+                        "Qualified"
+                    ]
                 }
             },
             "annualPaymentAmt": {
@@ -1419,7 +1677,10 @@
                 "ui:widget": "radio",
                 "ui:options": {
                     "inline": true,
-                    "enumNames": ["Yes", "No"]
+                    "enumNames": [
+                        "Yes",
+                        "No"
+                    ]
                 }
             },
             "replacementReason": {
@@ -1427,28 +1688,40 @@
             },
             "replacedContractType": {
                 "ui:options": {
-                    "enumNames": ["Annuity", "Life"]
+                    "enumNames": [
+                        "Annuity",
+                        "Life"
+                    ]
                 }
             },
             "additionalInformation": {
                 "soldPoliciesToApplicant": {
                     "ui:widget": "radio",
                     "ui:options": {
-                        "enumNames": ["Yes", "No"]
+                        "enumNames": [
+                            "Yes",
+                            "No"
+                        ]
                     }
                 },
                 "pastReplacement": {
                     "ui:widget": "radio",
                     "ui:options": {
                         "inline": true,
-                        "enumNames": ["YES", "NO"]
+                        "enumNames": [
+                            "YES",
+                            "NO"
+                        ]
                     }
                 },
                 "coverageExpenseConsideration": {
                     "ui:widget": "radio",
                     "ui:options": {
                         "inline": true,
-                        "enumNames": ["Yes", "No"]
+                        "enumNames": [
+                            "Yes",
+                            "No"
+                        ]
                     }
                 }
             }
@@ -1504,7 +1777,10 @@
                 "ui:widget": "radio",
                 "ui:options": {
                     "inline": true,
-                    "enumNames": ["Yes", "No"]
+                    "enumNames": [
+                        "Yes",
+                        "No"
+                    ]
                 }
             },
             "materialChangeReason": {
@@ -1520,12 +1796,19 @@
                     "changeType": {
                         "ui:options": {
                             "label": true,
-                            "enumNames": ["Living expense increase", "Living expense decrease", "Living asset decrease"]
+                            "enumNames": [
+                                "Living expense increase",
+                                "Living expense decrease",
+                                "Living asset decrease"
+                            ]
                         }
                     },
                     "isApplicable": {
                         "ui:options": {
-                            "enumNames": ["Yes", "No"]
+                            "enumNames": [
+                                "Yes",
+                                "No"
+                            ]
                         }
                     },
                     "numberOfYears": {
@@ -1590,7 +1873,10 @@
                 "ui:widget": "radio",
                 "ui:options": {
                     "inline": true,
-                    "enumNames": ["Yes", "No"]
+                    "enumNames": [
+                        "Yes",
+                        "No"
+                    ]
                 }
             },
             "totalAnnuityValue": {
@@ -1626,7 +1912,10 @@
                             "ui:widget": "radio",
                             "ui:options": {
                                 "inline": true,
-                                "enumNames": ["Qualified", "Nonqualified"]
+                                "enumNames": [
+                                    "Qualified",
+                                    "Nonqualified"
+                                ]
                             }
                         },
                         "amount": {
@@ -1647,12 +1936,18 @@
                             "ui:widget": "radio",
                             "ui:options": {
                                 "inline": true,
-                                "enumNames": ["Qualified", "Nonqualified"]
+                                "enumNames": [
+                                    "Qualified",
+                                    "Nonqualified"
+                                ]
                             }
                         },
                         "assetType": {
                             "ui:options": {
-                                "enumNames": ["Liquid Asset", "Non Liquid QUID Asset"]
+                                "enumNames": [
+                                    "Liquid Asset",
+                                    "Non Liquid QUID Asset"
+                                ]
                             }
                         },
                         "amount": {
@@ -1671,7 +1966,13 @@
             "riskTolerance": {
                 "ui:options": {
                     "inline": true,
-                    "enumNames": ["Conservative", "Moderate conversative", "Moderate", "Moderate aggressive", "Aggressive"]
+                    "enumNames": [
+                        "Conservative",
+                        "Moderate conversative",
+                        "Moderate",
+                        "Moderate aggressive",
+                        "Aggressive"
+                    ]
                 }
             },
             "riskToleranceDesc": {},
@@ -1679,7 +1980,10 @@
                 "ui:widget": "radio",
                 "ui:options": {
                     "inline": true,
-                    "enumNames": ["Yes", "No"]
+                    "enumNames": [
+                        "Yes",
+                        "No"
+                    ]
                 }
             }
         },
@@ -1690,14 +1994,24 @@
             "buyingReason": {
                 "ui:options": {
                     "widget": "checkboxes",
-                    "enumNames": ["Income", "Tax deferal", "Gurantees", "Growth", "Principal protection", "Others"]
+                    "enumNames": [
+                        "Income",
+                        "Tax deferal",
+                        "Gurantees",
+                        "Growth",
+                        "Principal protection",
+                        "Others"
+                    ]
                 }
             },
             "buyingReasonDetails": {},
             "annuityMeetsFinancialNeeds": {
                 "ui:options": {
                     "inline": true,
-                    "enumNames": ["Yes", "No"]
+                    "enumNames": [
+                        "Yes",
+                        "No"
+                    ]
                 }
             }
         },
@@ -1708,7 +2022,14 @@
             "fundsAccessExplanation": {},
             "distributionMethods": {
                 "ui:options": {
-                    "enumNames": ["Income", "Tax deferal", "Gurantees", "Growth", "Principal protection", "Others"],
+                    "enumNames": [
+                        "Income",
+                        "Tax deferal",
+                        "Gurantees",
+                        "Growth",
+                        "Principal protection",
+                        "Others"
+                    ],
                     "label": false
                 }
             },
@@ -1739,13 +2060,19 @@
                 "soldPoliciesToApplicant": {
                     "ui:widget": "radio",
                     "ui:options": {
-                        "enumNames": ["Yes", "No"]
+                        "enumNames": [
+                            "Yes",
+                            "No"
+                        ]
                     }
                 },
                 "saleInLast5Years": {
                     "ui:widget": "radio",
                     "ui:options": {
-                        "enumNames": ["Yes", "No"]
+                        "enumNames": [
+                            "Yes",
+                            "No"
+                        ]
                     }
                 },
                 "saleDetails": {},
@@ -1758,7 +2085,10 @@
                         },
                         "productType": {
                             "ui:options": {
-                                "enumNames": ["Annuity", "Life"]
+                                "enumNames": [
+                                    "Annuity",
+                                    "Life"
+                                ]
                             }
                         },
                         "companyName": {},
@@ -1801,7 +2131,10 @@
                 },
                 "signatureRoleCode": {
                     "ui:options": {
-                        "enumNames": ["Owner", "Agent"]
+                        "enumNames": [
+                            "Owner",
+                            "Agent"
+                        ]
                     }
                 },
                 "signatoryName": {},
@@ -1809,12 +2142,20 @@
                 "signatureCity": {},
                 "signatureState": {
                     "ui:options": {
-                        "enumNames": ["AA"]
+                        "enumNames": [
+                            "AA"
+                        ]
                     }
                 },
                 "signatoryDesignation": {
                     "ui:options": {
-                        "enumNames": ["Trustee", "Executor", "Custodian", "Guardian", "Attorney in fact"]
+                        "enumNames": [
+                            "Trustee",
+                            "Executor",
+                            "Custodian",
+                            "Guardian",
+                            "Attorney in fact"
+                        ]
                     }
                 }
             }
@@ -1829,16 +2170,39 @@
                     "$schema": "http://json-schema.org/draft-07/schema#",
                     "definitions": {
                         "partyTypeEnum": {
-                            "enum": ["PERSON", "ORGANIZATION", "OTHERS"]
+                            "enum": [
+                                "PERSON",
+                                "ORGANIZATION",
+                                "OTHERS"
+                            ]
                         },
                         "roleTypeEnum": {
-                            "enum": ["OWNER", "JOINT_OWNER", "AGENT", "PRIMARY_WRITING_AGENT", "PRIMARY_SERVICING_AGENT", "BROKER_DEALER"]
+                            "enum": [
+                                "OWNER",
+                                "JOINT_OWNER",
+                                "AGENT",
+                                "PRIMARY_WRITING_AGENT",
+                                "PRIMARY_SERVICING_AGENT",
+                                "BROKER_DEALER"
+                            ]
                         },
                         "genderEnum": {
-                            "enum": ["MALE", "FEMALE", "TRANSGENDER", "OTHER"]
+                            "enum": [
+                                "MALE",
+                                "FEMALE",
+                                "TRANSGENDER",
+                                "OTHER"
+                            ]
                         },
                         "martialStatusEnum": {
-                            "enum": ["SINGLE", "MARRIED", "DIVORCED", "WIDOWED", "UNKNOWN", "LEGALLY_SEPARATED"]
+                            "enum": [
+                                "SINGLE",
+                                "MARRIED",
+                                "DIVORCED",
+                                "WIDOWED",
+                                "UNKNOWN",
+                                "LEGALLY_SEPARATED"
+                            ]
                         },
                         "birthCountryEnum": {
                             "enum": [
@@ -1967,34 +2331,73 @@
                             ]
                         },
                         "govtIdTypeEnum": {
-                            "enum": ["SSN", "PASSPORT", "DRIVER_LICENSE", "ARMED_FORCEID"]
+                            "enum": [
+                                "SSN",
+                                "PASSPORT",
+                                "DRIVER_LICENSE",
+                                "ARMED_FORCEID"
+                            ]
                         },
                         "addressTypeEnum": {
-                            "enum": ["RESIDENCE", "MAILING", "BUSINESS", "PRIMARY_ADDRESS", "VACATION", "BILLING_MAILING"]
+                            "enum": [
+                                "RESIDENCE",
+                                "MAILING",
+                                "BUSINESS",
+                                "PRIMARY_ADDRESS",
+                                "VACATION",
+                                "BILLING_MAILING"
+                            ]
                         },
                         "employmentStatusEnum": {
-                            "enum": ["ACTIVE", "RETIRED", "DISABLED", "TERMINATED", "OTHERS"]
+                            "enum": [
+                                "ACTIVE",
+                                "RETIRED",
+                                "DISABLED",
+                                "TERMINATED",
+                                "OTHERS"
+                            ]
                         },
                         "lineOfBusinessEnum": {
-                            "enum": ["ANNUITY", "LIFE"]
+                            "enum": [
+                                "ANNUITY",
+                                "LIFE"
+                            ]
                         },
                         "qualPlanTypeEnum": {
-                            "enum": ["NON_QUALIFIED", "QUALIFIED"]
+                            "enum": [
+                                "NON_QUALIFIED",
+                                "QUALIFIED"
+                            ]
                         },
                         "replacementIndEnum": {
-                            "enum": ["YES", "NO"]
+                            "enum": [
+                                "YES",
+                                "NO"
+                            ]
                         },
                         "replacedContractTypeEnum": {
-                            "enum": ["ANNUITY", "LIFE"]
+                            "enum": [
+                                "ANNUITY",
+                                "LIFE"
+                            ]
                         },
                         "soldPoliciesToApplicantEnum": {
-                            "enum": ["YES", "NO"]
+                            "enum": [
+                                "YES",
+                                "NO"
+                            ]
                         },
                         "pastReplacementEnum": {
-                            "enum": ["YES", "NO"]
+                            "enum": [
+                                "YES",
+                                "NO"
+                            ]
                         },
                         "coverageExpenseConsiderationEnum": {
-                            "enum": ["YES", "NO"]
+                            "enum": [
+                                "YES",
+                                "NO"
+                            ]
                         },
                         "sourceOfIncomeEnum": {
                             "enum": [
@@ -2018,13 +2421,23 @@
                             ]
                         },
                         "materialChangeExpEnum": {
-                            "enum": ["YES", "NO"]
+                            "enum": [
+                                "YES",
+                                "NO"
+                            ]
                         },
                         "materialChangeDetails_changeTypeEnum": {
-                            "enum": ["LIVING_EXPENSE_INCREASE", "LIVING_EXPENSE_DECREASE", "LIVING_ASSET_DECREASE"]
+                            "enum": [
+                                "LIVING_EXPENSE_INCREASE",
+                                "LIVING_EXPENSE_DECREASE",
+                                "LIVING_ASSET_DECREASE"
+                            ]
                         },
                         "isApplicableEnum": {
-                            "enum": ["YES", "NO"]
+                            "enum": [
+                                "YES",
+                                "NO"
+                            ]
                         },
                         "sourceOfFundsEnum": {
                             "enum": [
@@ -2061,46 +2474,97 @@
                             ]
                         },
                         "financialProducts_assetsDistribution_qualificationTypeEnum": {
-                            "enum": ["QUALIFIED", "NON_QUALIFIED"]
+                            "enum": [
+                                "QUALIFIED",
+                                "NON_QUALIFIED"
+                            ]
                         },
                         "financialProducts_totalAsset_qualificationTypeEnum": {
-                            "enum": ["QUALIFIED", "NON_QUALIFIED"]
+                            "enum": [
+                                "QUALIFIED",
+                                "NON_QUALIFIED"
+                            ]
                         },
                         "financialProducts_totalAsset_assetTypeEnum": {
-                            "enum": ["LIQUID_ASSET", "NON_LIQUID_ASSET"]
+                            "enum": [
+                                "LIQUID_ASSET",
+                                "NON_LIQUID_ASSET"
+                            ]
                         },
                         "rateChangeAcknowledgmentEnum": {
-                            "enum": ["YES", "NO"]
+                            "enum": [
+                                "YES",
+                                "NO"
+                            ]
                         },
                         "investProduct_riskToleranceEnum": {
-                            "enum": ["CONSERVATIVE", "MODERATE_CONSERVATIVE", "MODERATE", "MODERATE_AGGRESSIVE", "AGGRESSIVE"]
+                            "enum": [
+                                "CONSERVATIVE",
+                                "MODERATE_CONSERVATIVE",
+                                "MODERATE",
+                                "MODERATE_AGGRESSIVE",
+                                "AGGRESSIVE"
+                            ]
                         },
                         "investProduct_annuityFitsRiskToleranceEnum": {
-                            "enum": ["YES", "NO"]
+                            "enum": [
+                                "YES",
+                                "NO"
+                            ]
                         },
                         "financialObjectives_buyingReasonEnum": {
-                            "enum": ["INCOME", "TAX_DEFERRAL", "GURANTEES", "GROWTH", "PRINCIPAL_PROTECTION", "OTHERS"]
+                            "enum": [
+                                "INCOME",
+                                "TAX_DEFERRAL",
+                                "GURANTEES",
+                                "GROWTH",
+                                "PRINCIPAL_PROTECTION",
+                                "OTHERS"
+                            ]
                         },
                         "financialObjectives_annuityMeetsFinancialNeedsEnum": {
-                            "enum": ["YES", "NO"]
+                            "enum": [
+                                "YES",
+                                "NO"
+                            ]
                         },
                         "agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum": {
-                            "enum": ["YES", "NO"]
+                            "enum": [
+                                "YES",
+                                "NO"
+                            ]
                         },
                         "agentAcknowledgment_maApplicationQuestionnaire_saleInLast5YearsEnum": {
-                            "enum": ["YES", "NO"]
+                            "enum": [
+                                "YES",
+                                "NO"
+                            ]
                         },
                         "agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum": {
-                            "enum": ["ANNUITY", "LIFE"]
+                            "enum": [
+                                "ANNUITY",
+                                "LIFE"
+                            ]
                         },
                         "signatureInfo_signatureRoleCodeEnum": {
-                            "enum": ["OWNER", "AGENT"]
+                            "enum": [
+                                "OWNER",
+                                "AGENT"
+                            ]
                         },
                         "signatureInfo_signatureStateEnum": {
-                            "enum": ["US"]
+                            "enum": [
+                                "US"
+                            ]
                         },
                         "signatureInfo_signatoryDesignationEnum": {
-                            "enum": ["TRUSTEE", "EXECUTOR", "CUSTODIAN", "GUARDIAN", "ATTORNEY_IN_FACT"]
+                            "enum": [
+                                "TRUSTEE",
+                                "EXECUTOR",
+                                "CUSTODIAN",
+                                "GUARDIAN",
+                                "ATTORNEY_IN_FACT"
+                            ]
                         }
                     },
                     "properties": {
@@ -2210,7 +2674,11 @@
                                                     "title": "Government id expiry date"
                                                 }
                                             },
-                                            "required": ["govtId", "govtIdType", "govtIdExpDate"]
+                                            "required": [
+                                                "govtId",
+                                                "govtIdType",
+                                                "govtIdExpDate"
+                                            ]
                                         }
                                     },
                                     "addresses": {
@@ -2251,13 +2719,23 @@
                                                     "title": "Zip code"
                                                 }
                                             },
-                                            "required": ["addressType", "line1", "city", "state", "country", "zip"]
+                                            "required": [
+                                                "addressType",
+                                                "line1",
+                                                "city",
+                                                "state",
+                                                "country",
+                                                "zip"
+                                            ]
                                         }
                                     },
                                     "employment": {
                                         "type": "object",
                                         "title": "Employment Information",
-                                        "required": ["employmentStatus", "occupation"],
+                                        "required": [
+                                            "employmentStatus",
+                                            "occupation"
+                                        ],
                                         "properties": {
                                             "employmentStatus": {
                                                 "type": "array",
@@ -2292,7 +2770,9 @@
                                                             "minLength": 1
                                                         }
                                                     },
-                                                    "required": ["disabilityExplanation"]
+                                                    "required": [
+                                                        "disabilityExplanation"
+                                                    ]
                                                 }
                                             }
                                         ]
@@ -2327,7 +2807,13 @@
                                     "title": "Annual payment amount"
                                 }
                             },
-                            "required": ["lineOfBusiness", "productCode", "productType", "qualPlanType", "annualPaymentAmt"]
+                            "required": [
+                                "lineOfBusiness",
+                                "productCode",
+                                "productType",
+                                "qualPlanType",
+                                "annualPaymentAmt"
+                            ]
                         },
                         "applicationInfo": {
                             "type": "object",
@@ -2367,10 +2853,19 @@
                                             "$ref": "#/definitions/coverageExpenseConsiderationEnum"
                                         }
                                     },
-                                    "required": ["soldPoliciesToApplicant", "pastReplacement", "coverageExpenseConsideration"]
+                                    "required": [
+                                        "soldPoliciesToApplicant",
+                                        "pastReplacement",
+                                        "coverageExpenseConsideration"
+                                    ]
                                 }
                             },
-                            "required": ["replacementInd", "replacementReason", "replacedContractType", "additionalInformation"]
+                            "required": [
+                                "replacementInd",
+                                "replacementReason",
+                                "replacedContractType",
+                                "additionalInformation"
+                            ]
                         },
                         "fiscalData": {
                             "type": "object",
@@ -2434,7 +2929,12 @@
                                                 "title": "Amount"
                                             }
                                         },
-                                        "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
+                                        "required": [
+                                            "changeType",
+                                            "isApplicable",
+                                            "numberOfYears",
+                                            "amount"
+                                        ]
                                     }
                                 },
                                 "totalAssets": {
@@ -2521,7 +3021,11 @@
                                                         "title": "Amount"
                                                     }
                                                 },
-                                                "required": ["productType", "qualificationType", "amount"]
+                                                "required": [
+                                                    "productType",
+                                                    "qualificationType",
+                                                    "amount"
+                                                ]
                                             }
                                         },
                                         "totalAsset": {
@@ -2545,14 +3049,25 @@
                                                         "title": "Amount"
                                                     }
                                                 },
-                                                "required": ["qualificationType", "assetType", "amount"]
+                                                "required": [
+                                                    "qualificationType",
+                                                    "assetType",
+                                                    "amount"
+                                                ]
                                             }
                                         }
                                     },
-                                    "required": ["assetsDistribution", "totalAsset"]
+                                    "required": [
+                                        "assetsDistribution",
+                                        "totalAsset"
+                                    ]
                                 }
                             },
-                            "required": ["rateChangeAcknowledgment", "totalAnnuityValue", "financialProducts"]
+                            "required": [
+                                "rateChangeAcknowledgment",
+                                "totalAnnuityValue",
+                                "financialProducts"
+                            ]
                         },
                         "investmentRiskInfo": {
                             "type": "object",
@@ -2573,7 +3088,11 @@
                                     "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
                                 }
                             },
-                            "required": ["riskTolerance", "riskToleranceDesc", "annuityFitsRiskTolerance"]
+                            "required": [
+                                "riskTolerance",
+                                "riskToleranceDesc",
+                                "annuityFitsRiskTolerance"
+                            ]
                         },
                         "financialObjectives": {
                             "type": "object",
@@ -2598,7 +3117,11 @@
                                     "$ref": "#/definitions/financialObjectives_annuityMeetsFinancialNeedsEnum"
                                 }
                             },
-                            "required": ["buyingReason", "buyingReasonDetails", "annuityMeetsFinancialNeeds"]
+                            "required": [
+                                "buyingReason",
+                                "buyingReasonDetails",
+                                "annuityMeetsFinancialNeeds"
+                            ]
                         },
                         "liquidityOptions": {
                             "type": "object",
@@ -2723,7 +3246,12 @@
                                                         "title": "Issue date"
                                                     }
                                                 },
-                                                "required": ["productType", "companyName", "policyNumber", "issueDate"]
+                                                "required": [
+                                                    "productType",
+                                                    "companyName",
+                                                    "policyNumber",
+                                                    "issueDate"
+                                                ]
                                             }
                                         }
                                     }
@@ -2749,7 +3277,12 @@
                                             "title": "Disclosure retention"
                                         }
                                     },
-                                    "required": ["evaluatedInformation", "informedOfFeatures", "communicatedBasis", "disclosureRetention"]
+                                    "required": [
+                                        "evaluatedInformation",
+                                        "informedOfFeatures",
+                                        "communicatedBasis",
+                                        "disclosureRetention"
+                                    ]
                                 },
                                 "disclosureAcknowledgement": {
                                     "type": "object",
@@ -2805,7 +3338,11 @@
                                     ]
                                 }
                             },
-                            "required": ["maApplicationQuestionnaire", "financialAcknowledgement", "disclosureAcknowledgement"]
+                            "required": [
+                                "maApplicationQuestionnaire",
+                                "financialAcknowledgement",
+                                "disclosureAcknowledgement"
+                            ]
                         },
                         "additionalInfo": {
                             "type": "object",
@@ -2872,7 +3409,11 @@
                                     "title": "Reverse mortgage"
                                 }
                             },
-                            "required": ["applyForMeansTestedBenefits", "buyingForGovernmentBenefits", "reverseMortgage"]
+                            "required": [
+                                "applyForMeansTestedBenefits",
+                                "buyingForGovernmentBenefits",
+                                "reverseMortgage"
+                            ]
                         },
                         "signatureInfo": {
                             "type": "array",
@@ -2950,7 +3491,11 @@
                             "partyType": {
                                 "ui:options": {
                                     "help": "Applicant's type",
-                                    "enumNames": ["Person", "Orginazation", "Others"]
+                                    "enumNames": [
+                                        "Person",
+                                        "Orginazation",
+                                        "Others"
+                                    ]
                                 }
                             },
                             "roleType": {
@@ -2993,7 +3538,12 @@
                                 },
                                 "gender": {
                                     "ui:options": {
-                                        "enumNames": ["Male", "Female", "Transgender", "Other"]
+                                        "enumNames": [
+                                            "Male",
+                                            "Female",
+                                            "Transgender",
+                                            "Other"
+                                        ]
                                     }
                                 },
                                 "age": {
@@ -3005,7 +3555,14 @@
                                 },
                                 "martialStatus": {
                                     "ui:options": {
-                                        "enumNames": ["Single", "Married", "Divorced", "Widowed", "Unknown", "Legally Seperated"]
+                                        "enumNames": [
+                                            "Single",
+                                            "Married",
+                                            "Divorced",
+                                            "Widowed",
+                                            "Unknown",
+                                            "Legally Seperated"
+                                        ]
                                     }
                                 },
                                 "birthCountry": {
@@ -3153,14 +3710,23 @@
                                     },
                                     "govtIdType": {
                                         "ui:options": {
-                                            "enumNames": ["SSN", "Passport", "Driver license", "Armed forceid"]
+                                            "enumNames": [
+                                                "SSN",
+                                                "Passport",
+                                                "Driver license",
+                                                "Armed forceid"
+                                            ]
                                         }
                                     },
                                     "govtIdExpDate": {
                                         "format": "date",
                                         "ui:options": {}
                                     },
-                                    "required": ["govtId", "govtIdType", "govtIdExpDate"]
+                                    "required": [
+                                        "govtId",
+                                        "govtIdType",
+                                        "govtIdExpDate"
+                                    ]
                                 }
                             },
                             "addresses": {
@@ -3202,13 +3768,26 @@
                                         "ui:options": {}
                                     }
                                 },
-                                "required": ["addressType", "line1", "city", "state", "country", "zip"]
+                                "required": [
+                                    "addressType",
+                                    "line1",
+                                    "city",
+                                    "state",
+                                    "country",
+                                    "zip"
+                                ]
                             },
                             "employment": {
                                 "employmentStatus": {
                                     "ui:options": {
                                         "widget": "checkboxes",
-                                        "enumNames": ["Active", "Retired", "Disabled", "TerminatedD", "Others"]
+                                        "enumNames": [
+                                            "Active",
+                                            "Retired",
+                                            "Disabled",
+                                            "TerminatedD",
+                                            "Others"
+                                        ]
                                     }
                                 },
                                 "occupation": {
@@ -3226,7 +3805,10 @@
                         },
                         "lineOfBusiness": {
                             "ui:options": {
-                                "enumNames": ["Annuity", "Life"]
+                                "enumNames": [
+                                    "Annuity",
+                                    "Life"
+                                ]
                             }
                         },
                         "productCode": {
@@ -3237,7 +3819,10 @@
                         },
                         "qualPlanType": {
                             "ui:options": {
-                                "enumNames": ["Nonqualified", "Qualified"]
+                                "enumNames": [
+                                    "Nonqualified",
+                                    "Qualified"
+                                ]
                             }
                         },
                         "annualPaymentAmt": {
@@ -3254,7 +3839,10 @@
                             "ui:widget": "radio",
                             "ui:options": {
                                 "inline": true,
-                                "enumNames": ["Yes", "No"]
+                                "enumNames": [
+                                    "Yes",
+                                    "No"
+                                ]
                             }
                         },
                         "replacementReason": {
@@ -3262,28 +3850,40 @@
                         },
                         "replacedContractType": {
                             "ui:options": {
-                                "enumNames": ["Annuity", "Life"]
+                                "enumNames": [
+                                    "Annuity",
+                                    "Life"
+                                ]
                             }
                         },
                         "additionalInformation": {
                             "soldPoliciesToApplicant": {
                                 "ui:widget": "radio",
                                 "ui:options": {
-                                    "enumNames": ["Yes", "No"]
+                                    "enumNames": [
+                                        "Yes",
+                                        "No"
+                                    ]
                                 }
                             },
                             "pastReplacement": {
                                 "ui:widget": "radio",
                                 "ui:options": {
                                     "inline": true,
-                                    "enumNames": ["YES", "NO"]
+                                    "enumNames": [
+                                        "YES",
+                                        "NO"
+                                    ]
                                 }
                             },
                             "coverageExpenseConsideration": {
                                 "ui:widget": "radio",
                                 "ui:options": {
                                     "inline": true,
-                                    "enumNames": ["Yes", "No"]
+                                    "enumNames": [
+                                        "Yes",
+                                        "No"
+                                    ]
                                 }
                             }
                         }
@@ -3339,7 +3939,10 @@
                             "ui:widget": "radio",
                             "ui:options": {
                                 "inline": true,
-                                "enumNames": ["Yes", "No"]
+                                "enumNames": [
+                                    "Yes",
+                                    "No"
+                                ]
                             }
                         },
                         "materialChangeReason": {
@@ -3355,12 +3958,19 @@
                                 "changeType": {
                                     "ui:options": {
                                         "label": true,
-                                        "enumNames": ["Living expense increase", "Living expense decrease", "Living asset decrease"]
+                                        "enumNames": [
+                                            "Living expense increase",
+                                            "Living expense decrease",
+                                            "Living asset decrease"
+                                        ]
                                     }
                                 },
                                 "isApplicable": {
                                     "ui:options": {
-                                        "enumNames": ["Yes", "No"]
+                                        "enumNames": [
+                                            "Yes",
+                                            "No"
+                                        ]
                                     }
                                 },
                                 "numberOfYears": {
@@ -3425,7 +4035,10 @@
                             "ui:widget": "radio",
                             "ui:options": {
                                 "inline": true,
-                                "enumNames": ["Yes", "No"]
+                                "enumNames": [
+                                    "Yes",
+                                    "No"
+                                ]
                             }
                         },
                         "totalAnnuityValue": {
@@ -3461,7 +4074,10 @@
                                         "ui:widget": "radio",
                                         "ui:options": {
                                             "inline": true,
-                                            "enumNames": ["Qualified", "Nonqualified"]
+                                            "enumNames": [
+                                                "Qualified",
+                                                "Nonqualified"
+                                            ]
                                         }
                                     },
                                     "amount": {
@@ -3482,12 +4098,18 @@
                                         "ui:widget": "radio",
                                         "ui:options": {
                                             "inline": true,
-                                            "enumNames": ["Qualified", "Nonqualified"]
+                                            "enumNames": [
+                                                "Qualified",
+                                                "Nonqualified"
+                                            ]
                                         }
                                     },
                                     "assetType": {
                                         "ui:options": {
-                                            "enumNames": ["Liquid Asset", "Non Liquid QUID Asset"]
+                                            "enumNames": [
+                                                "Liquid Asset",
+                                                "Non Liquid QUID Asset"
+                                            ]
                                         }
                                     },
                                     "amount": {
@@ -3506,7 +4128,13 @@
                         "riskTolerance": {
                             "ui:options": {
                                 "inline": true,
-                                "enumNames": ["Conservative", "Moderate conversative", "Moderate", "Moderate aggressive", "Aggressive"]
+                                "enumNames": [
+                                    "Conservative",
+                                    "Moderate conversative",
+                                    "Moderate",
+                                    "Moderate aggressive",
+                                    "Aggressive"
+                                ]
                             }
                         },
                         "riskToleranceDesc": {},
@@ -3514,7 +4142,10 @@
                             "ui:widget": "radio",
                             "ui:options": {
                                 "inline": true,
-                                "enumNames": ["Yes", "No"]
+                                "enumNames": [
+                                    "Yes",
+                                    "No"
+                                ]
                             }
                         }
                     },
@@ -3525,14 +4156,24 @@
                         "buyingReason": {
                             "ui:options": {
                                 "widget": "checkboxes",
-                                "enumNames": ["Income", "Tax deferal", "Gurantees", "Growth", "Principal protection", "Others"]
+                                "enumNames": [
+                                    "Income",
+                                    "Tax deferal",
+                                    "Gurantees",
+                                    "Growth",
+                                    "Principal protection",
+                                    "Others"
+                                ]
                             }
                         },
                         "buyingReasonDetails": {},
                         "annuityMeetsFinancialNeeds": {
                             "ui:options": {
                                 "inline": true,
-                                "enumNames": ["Yes", "No"]
+                                "enumNames": [
+                                    "Yes",
+                                    "No"
+                                ]
                             }
                         }
                     },
@@ -3543,7 +4184,14 @@
                         "fundsAccessExplanation": {},
                         "distributionMethods": {
                             "ui:options": {
-                                "enumNames": ["Income", "Tax deferal", "Gurantees", "Growth", "Principal protection", "Others"],
+                                "enumNames": [
+                                    "Income",
+                                    "Tax deferal",
+                                    "Gurantees",
+                                    "Growth",
+                                    "Principal protection",
+                                    "Others"
+                                ],
                                 "label": false
                             }
                         },
@@ -3574,13 +4222,19 @@
                             "soldPoliciesToApplicant": {
                                 "ui:widget": "radio",
                                 "ui:options": {
-                                    "enumNames": ["Yes", "No"]
+                                    "enumNames": [
+                                        "Yes",
+                                        "No"
+                                    ]
                                 }
                             },
                             "saleInLast5Years": {
                                 "ui:widget": "radio",
                                 "ui:options": {
-                                    "enumNames": ["Yes", "No"]
+                                    "enumNames": [
+                                        "Yes",
+                                        "No"
+                                    ]
                                 }
                             },
                             "saleDetails": {},
@@ -3593,7 +4247,10 @@
                                     },
                                     "productType": {
                                         "ui:options": {
-                                            "enumNames": ["Annuity", "Life"]
+                                            "enumNames": [
+                                                "Annuity",
+                                                "Life"
+                                            ]
                                         }
                                     },
                                     "companyName": {},
@@ -3636,7 +4293,10 @@
                             },
                             "signatureRoleCode": {
                                 "ui:options": {
-                                    "enumNames": ["Owner", "Agent"]
+                                    "enumNames": [
+                                        "Owner",
+                                        "Agent"
+                                    ]
                                 }
                             },
                             "signatoryName": {},
@@ -3644,12 +4304,20 @@
                             "signatureCity": {},
                             "signatureState": {
                                 "ui:options": {
-                                    "enumNames": ["AA"]
+                                    "enumNames": [
+                                        "AA"
+                                    ]
                                 }
                             },
                             "signatoryDesignation": {
                                 "ui:options": {
-                                    "enumNames": ["Trustee", "Executor", "Custodian", "Guardian", "Attorney in fact"]
+                                    "enumNames": [
+                                        "Trustee",
+                                        "Executor",
+                                        "Custodian",
+                                        "Guardian",
+                                        "Attorney in fact"
+                                    ]
                                 }
                             }
                         }

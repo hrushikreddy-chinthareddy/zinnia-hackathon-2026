@@ -84,6 +84,8 @@ export interface CaseSearchBody {
     updatedDateEnd?: number;
     updatedDateStart?: number;
     caseIds?: string[];
+    caseResultDetail?: string;
+    caseResult?: string;
 }
 
 export interface GeneralSearchResponse {

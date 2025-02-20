@@ -4,4 +4,5 @@ export enum QueryKeys {
   POLICY_FUNDS = 'policyFunds',
   POLICY_STATUS = 'policyStatus',
   POLICY_ACKNOWLEDGEMENT = 'policyAcknowledgement',
+  USER_AUTHENTICATION_METHODS = 'userAuthenticationMethods',
 }

@@ -4,25 +4,34 @@ import {
     FormContextType,
     GenericObjectType,
     getTemplate,
+    getUiOptions,
     Registry,
     RJSFSchema,
     StrictRJSFSchema,
     UIOptionsType,
     WidgetProps,
 } from '@rjsf/utils';
-import { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { AxiosResponse } from 'axios';
+import dayjs from 'dayjs';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
-
-import style from './file-widget.module.css';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
-import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
-import dayjs from 'dayjs';
+import { ApiProps, FormMetadata } from '@deps/models/case/task';
 import { uploadDocumentV2 } from '@deps/queries/api/documents';
+import { baseAppUrl } from '@deps/queries/api-config';
+import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
+import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
+
+const baseUrl = baseAppUrl + '/api/';
+
+import FileAttachmentComponent from './file-attachment.component';
+import style from './file-widget.module.css';
+
+import { client } from '@deps/queries/api-utils/client';
+
 function addNameToDataURL(dataURL: string, name: string) {
     if (dataURL === null) {
         return null;
@@ -128,13 +137,18 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
     }, [] as FileInfoType[]);
 }
 
-function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: WidgetProps<T, S, F>) {
-    const { disabled, readonly, required, multiple, onChange, value, options, name, registry, schema, uiSchema, formContext } = props;
+function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(widgetProps: WidgetProps<T, S, F>) {
+    const { disabled, readonly, required, multiple, onChange, value, options, name, registry, schema, uiSchema, formContext } = widgetProps;
 
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'general' });
     const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
     const sideSheet = useSideSheetContext();
     const [uploadSelection, setUploadSelection] = useState({});
+    const [attachmentSchema, setAttachmentSchema] = useState<FormMetadata | null>(null);
+
+    const { props } = getUiOptions<T, S, F>(uiSchema);
+
+    const { apiUrl, apiMethod } = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
 
     const onSubmit = useCallback(
         (data: any, files: any) => {
@@ -157,6 +171,53 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         },
         [formContext, value]
     );
+
+    const definitionMapper = async () => {
+        if (attachmentSchema?.formSchema) {
+            const url = `${baseUrl}case/v1/refdata/DOCUMENT_CATEGORY`;
+            if (url) {
+                const { data } = await client[apiMethod ?? 'get']<any, AxiosResponse>(url);
+                setAttachmentSchema((oldSchema: any) => ({
+                    ...oldSchema,
+                    formSchema: {
+                        ...oldSchema.formSchema,
+                        definitions: {
+                            ...(oldSchema.formSchema as any).definitions,
+                            docCategoryEnum: {
+                                enum: data.map((item: any) => item.value) || [],
+                            },
+                        },
+                    },
+                }));
+            }
+        }
+    };
+    useEffect(() => {
+        const getAttachmentSchema = async () => {
+            try {
+                const url = `${baseUrl}${apiUrl}`;
+                const dataUrl = `${baseUrl}case/v1/refdata/DOCUMENT_CATEGORY`;
+
+                const [schema, documentCategory] = await Promise.all([
+                    await client[apiMethod ?? 'get']<FormMetadata, AxiosResponse>(url),
+                    await client[apiMethod ?? 'get']<any, AxiosResponse>(dataUrl),
+                ]);
+                if (!schema.data) {
+                    return;
+                }
+
+                schema.data.formSchema.definitions.docCategoryEnum = {
+                    enum: documentCategory?.data.map((item: any) => item.key) || [],
+                    enumNames: documentCategory?.data.map((item: any) => item.value) || [],
+                };
+
+                setAttachmentSchema(schema.data);
+            } catch (err) {
+                console.log('🚀 ~ getAttachmentSchema ~ err:', err);
+            }
+        };
+        getAttachmentSchema();
+    }, [apiMethod, apiUrl]);
 
     const uploadChangeHandler = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
@@ -185,6 +246,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                     // For single file upload, just take the first element if newValue is an array
                     onChange(newValue[0]);
                 }
+
                 const content = (
                     <div className="p-6">
                         <FilesInfo<T, S, F>
@@ -194,34 +256,15 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                             preview={options.filePreview}
                             options={values as any}
                         />
-                        <DynamicForm
-                            taskMetadata={{
-                                formSchema: (schema.items as any)?.upload as RJSFSchema | {} as RJSFSchema,
-                                uiSchema: {
-                                    options: {
-                                        'ui:label': false,
-                                    },
-                                    zinniaLiveCaseId: {
-                                        'ui:widget': 'hidden',
-                                    },
-                                    correlationId: {
-                                        'ui:widget': 'hidden',
-                                    },
-                                    parentCarrierCode: {
-                                        'ui:widget': 'hidden',
-                                    },
-                                    docClassification: {
-                                        'ui:widget': 'hidden',
-                                    },
-                                    docAccessLevel: {
-                                        'ui:widget': 'hidden',
-                                    },
-                                },
-                            }}
-                            onSubmit={(data: any) => onSubmit(data, values)}
-                            formData={uploadSelection}
-                            onChange={uploadChangeHandler}
-                        />
+
+                        {attachmentSchema && (
+                            <FileAttachmentComponent
+                                files={values}
+                                schema={attachmentSchema}
+                                formData={uploadSelection}
+                                onClose={() => sideSheet.handleOpen(false)}
+                            />
+                        )}
                     </div>
                 );
 
@@ -229,7 +272,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 sideSheet.handleOpen(true);
             });
         },
-        [multiple, onChange, value, onSubmit, options.filePreview]
+        [multiple, onChange, value, onSubmit, options.filePreview, attachmentSchema, uploadSelection]
     );
 
     const rmFile = useCallback(
@@ -243,15 +286,15 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         },
         [multiple, value, onChange]
     );
-    const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
+
     return (
         <>
             <div className="mt-1">
-                <label htmlFor={props.id} className={style.customFileUpload}>
+                <label htmlFor={widgetProps.id} className={style.customFileUpload}>
                     {schema?.title ?? t('upload')}
                 </label>
                 <BaseInputTemplate
-                    {...props}
+                    {...widgetProps}
                     disabled={disabled || readonly}
                     type="file"
                     required={value ? false : required}

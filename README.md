@@ -79,8 +79,10 @@ To simplify the development process, we have created two helper scripts to run e
 #### Setting up env variables
 
 Options:
-If you have vercel secrets permissions, use `vercel env pull [file]` to retrieve the secrets from vercel. More details [here](https://vercel.com/docs/cli/env)
-Otherwise, copy `.env` to `.env.development.local` for each project and request values from developer
+
+1. If you have vercel secrets permissions (don't be surprised if you don't), use `vercel env pull [file]` to retrieve the secrets from vercel. More details [here](https://vercel.com/docs/cli/env). `env` here is the name of the file to copy into. They are different per project, so follow that standard.
+
+2. Otherwise, copy `.env` to `.env.development.local` for each project and request values from developer
 
 #### Running Ops
 
@@ -97,6 +99,10 @@ To run Consumer Experience, use the following command:
 ```bash
 pnpm run dev:consumer-experience
 ```
+
+#### Contributing
+
+- PRs should be opened off of dev and branches must use
 
 ### Troubleshooting
 

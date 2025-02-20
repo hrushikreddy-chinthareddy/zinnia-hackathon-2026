@@ -1,8 +1,8 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { SearchRequest, TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import UnauthorizedCard from '@deps/components/card/card-unauthorized';
 import EventsLoader from '@deps/components/events-loader/events-loader';
@@ -22,12 +22,20 @@ import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/consta
 
 import DocumentResultsPagination from './documents-results-pagination';
 import DocumentsResultsTable from './documents-results-table';
+import { searchTaxForms } from '@deps/queries/api/tax-forms';
+import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import TaxDocumentsTable from './tax-documents-table';
 
 type DocumentsSubPageProps = {
     policy: Policy;
 };
 
 export type DocumentWithSource = PolicyDocument & { documentSource: DocumentTypeView };
+
+// This is the maximum number of years retrievable by the API
+const maxTaxYears = 5;
 
 const getYearOptions = (policy: Policy): SimpleOption[] => {
     const defaultOption = { label: DEFAULT_ERROR_STRING, value: 'all' };
@@ -37,19 +45,25 @@ const getYearOptions = (policy: Policy): SimpleOption[] => {
     const range = determineRange(dayjs().year(), earliestPolicyDate.year() - 1);
     return [defaultOption, ...range.map(year => ({ label: `${year}`, value: `${year}` }))];
 };
-export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
-    const { t } = useTranslation();
-    const { breadcrumb } = useBreadcrumb();
 
-    const [documentType, setDocumentType] = useState(DocumentTypeView.Policy as string);
+const NormalDocs = ({
+    yearSelection,
+    documentType,
+    policy,
+    isFirstYearSelected,
+}: {
+    yearSelection: string;
+    documentType: string;
+    policy: Policy;
+    isFirstYearSelected: boolean;
+}) => {
+    const { t } = useTranslation();
     const limit = 25;
     const [offset, setOffset] = useState(0);
-    const yearOptions = getYearOptions(policy);
-    const [yearSelection, setYearSelection] = useState<string>(dayjs().year().toString());
-    const searchParams = useMemo(() => {
+
+    const searchParams = useMemo<SearchRequest | null>(() => {
         let optionalParams = {};
         if (yearSelection !== 'all') {
-            const isFirstYearSelected = yearOptions[yearOptions.length - 1].value === yearSelection;
             const startDate = dayjs().year(Number(yearSelection)).month(0).date(1);
             const documentStartDate = isFirstYearSelected
                 ? startDate.add(1, 'year').subtract(1100, 'days').format(ZAHARA_API_DATE_FORMAT) // this is the maximum range allowed
@@ -69,8 +83,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
             orderBy: 'documentDate',
             orderByDirection: SearchRequest.orderByDirection.DESC,
         };
-    }, [documentType, policy, yearOptions, yearSelection]);
-    const [results, loading, total, status] = useDocumentSearch(searchParams, limit, offset);
+    }, [documentType, policy, isFirstYearSelected, yearSelection]);
 
     const goToPage = useCallback(
         (pageNumber: number) => {
@@ -79,9 +92,148 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
         [limit, setOffset]
     );
 
+    useEffect(() => {
+        setOffset(0);
+    }, [yearSelection]);
+
+    const [results, loading, total, status] = useDocumentSearch(searchParams, limit, offset);
+
+    return (
+        <>
+            {status === StatusCode.Forbidden ? (
+                <UnauthorizedCard />
+            ) : (
+                <>
+                    {!loading && (
+                        <DocumentsResultsTable
+                            carrierCode={policy.carrierId ?? ''}
+                            documentType={documentType as DocumentTypeView}
+                            policyNumber={policy.policyNumber ?? ''}
+                            results={results ?? []}
+                        />
+                    )}
+                    {loading && (
+                        <div className="mx-auto flex items-center justify-center gap-2">
+                            <EventsLoader message={t('policy.documents.loadingDocuments')} />
+                        </div>
+                    )}
+                    <DocumentResultsPagination
+                        goToPage={goToPage}
+                        loading={loading}
+                        limit={limit}
+                        total={total}
+                        offset={offset}
+                        className="pb-[120px] lg:pb-0"
+                    />
+                </>
+            )}
+        </>
+    );
+};
+
+const TaxDocs = ({
+    yearSelection,
+    policy,
+    isFirstYearSelected,
+}: {
+    yearSelection: string;
+    policy: Policy;
+    isFirstYearSelected: boolean;
+}) => {
+    const limit = 25;
+    const { t } = useTranslation();
+
+    const [docs, setDocs] = useState<TaxformResponse[] | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [status, setStatus] = useState<StatusCode | null>(null);
+    const [total, setTotal] = useState<number>(0);
+    const { featureFlags } = useOptimizely();
+
+    const [offset, setOffset] = useState(0);
+
+    useEffect(() => {
+        const searchTaxDocs = async () => {
+            setLoading(true);
+            setOffset(0);
+            setTotal(0);
+            const taxQueryParams: SearchTaxFormRequestBody = {
+                clientCode: policy.carrierId ?? '',
+                contractNumber: policy.policyNumber ?? '',
+            };
+            if (yearSelection === 'all' || isFirstYearSelected) {
+                taxQueryParams.numYears = maxTaxYears;
+            } else {
+                taxQueryParams.taxYear = Number(yearSelection);
+            }
+            const response = await searchTaxForms(taxQueryParams, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]);
+            setDocs(response?.data?.items ?? null);
+            setTotal(response?.data?.count ?? 0);
+            setLoading(false);
+            setStatus(response?.error?.status ?? null);
+        };
+
+        searchTaxDocs();
+    }, [yearSelection, policy, isFirstYearSelected, featureFlags]);
+
+    const goToPage = useCallback(
+        (pageNumber: number) => {
+            setOffset((pageNumber - 1) * limit);
+        },
+        [limit, setOffset]
+    );
+
+    const paginatedDocs =
+        useMemo(() => {
+            return docs?.slice(offset, offset + limit);
+        }, [docs, offset, loading, total, status]) ?? [];
+
+    return (
+        <>
+            {status === StatusCode.Forbidden ? (
+                <UnauthorizedCard />
+            ) : (
+                <>
+                    {!loading && (
+                        <TaxDocumentsTable
+                            carrierCode={policy.carrierId ?? ''}
+                            policyNumber={policy.policyNumber ?? ''}
+                            results={paginatedDocs}
+                        />
+                    )}
+                    {loading && (
+                        <div className="mx-auto flex items-center justify-center gap-2">
+                            <EventsLoader message={t('policy.documents.loadingDocuments')} />
+                        </div>
+                    )}
+                    <DocumentResultsPagination
+                        goToPage={goToPage}
+                        loading={loading}
+                        limit={limit}
+                        total={total}
+                        offset={offset}
+                        className="pb-[120px] lg:pb-0"
+                    />
+                </>
+            )}
+        </>
+    );
+};
+
+export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
+    const { t } = useTranslation();
+    const { breadcrumb } = useBreadcrumb();
+
+    const [documentType, setDocumentType] = useState(DocumentTypeView.Policy as string);
+
+    const yearOptions = getYearOptions(policy);
+    const [yearSelection, setYearSelection] = useState<string>(dayjs().year().toString());
+
+    const isFirstYearSelected = useMemo(() => {
+        return yearSelection === yearOptions?.[yearOptions?.length - 1]?.value;
+    }, [yearSelection, yearOptions]);
+
     const handleYearSelection = (val: string) => {
         if (val === yearSelection) return;
-        setOffset(0);
         setYearSelection(val);
     };
 
@@ -117,27 +269,20 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                         <RadioGroup.Item className="chip" value={DocumentTypeView.Correspondence}>
                             {t('policy.documents.sent') as string}
                         </RadioGroup.Item>
+                        <RadioGroup.Item className="chip" value={'tax-forms'}>
+                            {t('policy.documents.taxDocuments') as string}
+                        </RadioGroup.Item>
                     </RadioGroup.Root>
                 </div>
-                {status === StatusCode.Forbidden ? (
-                    <UnauthorizedCard />
+                {documentType !== 'tax-forms' ? (
+                    <NormalDocs
+                        yearSelection={yearSelection}
+                        documentType={documentType}
+                        policy={policy}
+                        isFirstYearSelected={isFirstYearSelected}
+                    />
                 ) : (
-                    <>
-                        {!loading && (
-                            <DocumentsResultsTable
-                                carrierCode={policy.carrierId ?? ''}
-                                documentType={documentType as DocumentTypeView}
-                                policyNumber={policy.policyNumber ?? ''}
-                                results={results ?? []}
-                            />
-                        )}
-                        {loading && (
-                            <div className="mx-auto flex items-center justify-center gap-2">
-                                <EventsLoader message={t('policy.documents.loadingDocuments')} />
-                            </div>
-                        )}
-                        <DocumentResultsPagination goToPage={goToPage} loading={loading} limit={limit} total={total} offset={offset} />
-                    </>
+                    <TaxDocs yearSelection={yearSelection} policy={policy} isFirstYearSelected={isFirstYearSelected} />
                 )}
             </CardContainer>
         </div>

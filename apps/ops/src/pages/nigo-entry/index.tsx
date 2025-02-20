@@ -20,7 +20,6 @@ import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { AvailableFormsTransaction, SearchTransactionRequestBody } from '@deps/models/case/send-document';
-import { TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
@@ -28,7 +27,6 @@ import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/hel
 import { getSearchTransactionsSSR } from '@deps/queries/api/c2web';
 import { searchCasesSSR } from '@deps/queries/api/cases';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
-import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyDetailsSsr, getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
@@ -181,14 +179,17 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
+            const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
+
             logInfo('nigo-entry::getCaseTaskByIdSSR task active form found', {
                 taskId,
+                documentNumber,
+                contractNum,
+                clientCode,
                 file: 'pages/nigo-entry',
                 function: 'getServerSideProps',
                 user: userInfoForLogging.email,
             });
-
-            const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
 
             const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name });
             const caseType = ProcessesToCaseTypeMap[activeForm.process as Processes];
@@ -416,41 +417,6 @@ export const getServerSideProps = withPageAuthRequired({
                 user: userInfoForLogging.email,
             });
 
-            let isNigoCase = false;
-            const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-            if (shouldShowNewExperience) {
-                isNigoCase = await checkNigoExistsSSR(clientCode?.toUpperCase(), document.caseId, accessToken);
-                if (isNigoCase && form?.status !== TaskStatus.Completed) {
-                    logInfo('nigoEntry::Nigo exists for case', {
-                        taskId,
-                        documentNumber,
-                        clientCode,
-                        contractNum,
-                        caseId: document.caseId,
-                        file: 'pages/nigo-entry',
-                        function: 'getServerSideProps',
-                        user: userInfoForLogging.email,
-                    });
-                    return {
-                        redirect: {
-                            destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
-                            permanent: false,
-                        },
-                    };
-                } else {
-                    logInfo('nigoEntry::Skipping NIGO check', {
-                        taskId,
-                        documentNumber,
-                        documentType: docType,
-                        clientCode,
-                        contractNum,
-                        file: 'pages/nigo-entry',
-                        function: 'getServerSideProps',
-                        user: userInfoForLogging.email,
-                    });
-                }
-            }
-
             const latestForm =
                 !isNullEmptyOrUndefined(docType) &&
                 searchCasesResponse?.data?.find(item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase());
@@ -471,7 +437,7 @@ export const getServerSideProps = withPageAuthRequired({
                     document,
                     taskInfoLink,
                     prevTransactionDetails: latestForm ? latestForm?.additionalData || null : null,
-                    isNigoCase,
+                    isNigoCase: false,
                 },
             };
         } catch (error) {

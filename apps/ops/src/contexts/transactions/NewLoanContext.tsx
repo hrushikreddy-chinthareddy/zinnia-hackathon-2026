@@ -4,7 +4,7 @@ import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext,
 
 import { PayeesType } from '@deps/components/workflows/payees-step/payees-step';
 import { PaymentMethodType } from '@deps/components/workflows/payment-step/payment-step';
-import { AmountType } from '@deps/containers/financial-transactions/new-loan/amount/amount';
+import { AmountType } from '@deps/containers/financial-transactions/loan/new-loan/amount/amount';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 // ACH is the only supported payment type for MVP

@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import {
@@ -40,7 +39,6 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { createValidator } from '../../utils/helper-utils';
 
@@ -51,7 +49,6 @@ export default function useSbgcConfig(t: TFunction) {
         formParty,
         formSignature,
         formDisbursement,
-        formProgram,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
         if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
@@ -69,19 +66,26 @@ export default function useSbgcConfig(t: TFunction) {
             }
         }
 
-        const sswProgramStartDate = formProgram?.programFrequency?.beginDate?.text || null;
-        if (sswProgramStartDate && [29, 30, 31].includes(dayjs(sswProgramStartDate, ZAHARA_API_DATE_FORMAT).get('D'))) {
-            errors['systematicStartDate'] = t('sswProgram.warnings.systematicStartDate', { startDate: 1, endDate: 28 });
-        }
-
         return errors;
     };
 
     const reasonOptions = [
-        { label: t('distributionReason.reasonOptions.age595'), value: RestrictionOption.Age595 },
-        { label: t('distributionReason.reasonOptions.disabled'), value: RestrictionOption.Disabled },
-        { label: t('distributionReason.reasonOptions.severance'), value: RestrictionOption.Severance, subElement: <ReasonDate /> },
-        { label: t('distributionReason.reasonOptions.internalRevCode72'), value: RestrictionOption.InternalRevenueCode72 },
+        {
+            label: t('distributionReason.reasonOptions.age595'),
+            value: RestrictionOption.Age595
+        },
+        {
+            label: t('distributionReason.reasonOptions.disabled'),
+            value: RestrictionOption.Disabled
+        },
+        {
+            label: t('distributionReason.reasonOptions.severance'),
+            value: RestrictionOption.Severance, subElement: <ReasonDate />
+        },
+        {
+            label: t('distributionReason.reasonOptions.internalRevCode72'),
+            value: RestrictionOption.InternalRevenueCode72
+        },
         {
             label: t('distributionReason.reasonOptions.inSvcDistrib'),
             value: RestrictionOption.InServiceDistribution,
@@ -499,6 +503,7 @@ export default function useSbgcConfig(t: TFunction) {
             generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.InterestEarningDividendsGains),
         },
     ];
+
     const w4pSignaturesConfig = [
         {
             component: SignatureFields.SignatureType,
@@ -512,7 +517,6 @@ export default function useSbgcConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-
     ];
 
     return {

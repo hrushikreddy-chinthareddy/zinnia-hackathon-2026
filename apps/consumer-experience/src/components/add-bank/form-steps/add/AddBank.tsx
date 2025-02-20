@@ -19,7 +19,6 @@ export interface AddBankProps {
 }
 
 export const AddBank: FC<AddBankProps> = ({
-  values,
   cancelCallback,
   submitCallback,
 }) => {
@@ -30,12 +29,10 @@ export const AddBank: FC<AddBankProps> = ({
     formState: { errors, defaultValues },
   } = useForm<BankFormFields>({
     defaultValues: {
-      accountType: values?.accountType || AccountType.CHECKING,
-      branchName: values?.branchName || '',
-      routingNumber: values?.routingNumber || '',
-      accountNumber: values?.accountNumber
-        ? `**********${values?.accountNumber}`
-        : '',
+      accountType: AccountType.CHECKING,
+      branchName: '',
+      routingNumber: '',
+      accountNumber: '',
     },
   });
 

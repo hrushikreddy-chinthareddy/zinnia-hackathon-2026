@@ -1,12 +1,18 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { useEffect, useState } from 'react';
 
+import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
+import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
+import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
 import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import QuickActionsMenu, { QuickActionsMenuProps } from '@deps/components/quick-actions-menu/quick-actions-menu';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Reason } from '@deps/models/policy/sor-policy';
 import {
+    checkEligibilityLoanRepaymentOneTime,
     checkEligibilityNewLoan,
     checkEligibilityOneTimePremium,
     checkEligibilityPartialWithdrawalOneTime,
@@ -20,6 +26,7 @@ export interface QuickLinksProps extends QuickActionsMenuProps {
     links: {
         href: string;
         name: string;
+        subLinks?: { href: string; name: string }[];
     }[];
     policy: PolicyDetails;
     sessionId: string;
@@ -49,12 +56,6 @@ const trackClick = (
 
 const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPartyId }: QuickLinksProps) => {
     const { featureFlags } = useOptimizely();
-    const newLoanEnabled = featureFlags?.[FEATURE_FLAGS.NEW_LOAN_TRANSACTION];
-
-    // BPB - systematic programs work
-    const systematicProgram = policy.policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
-    const arrangementId = systematicProgram?.arrangementId || '';
-
     const [isEligibleManageAutopay, setIsEligibleManageAutopay] = useState(false);
     const [autopayChecked, setAutopayChecked] = useState(false);
     const [isEligibleNewPremium, setIsEligibleNewPremium] = useState(false);
@@ -63,17 +64,22 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
     const [withdrawalChecked, setWithdrawalChecked] = useState(false);
     const [isEligibleNewLoan, setIsEligibleNewLoan] = useState(false);
     const [newLoanChecked, setNewLoanChecked] = useState(false);
+    const [isEligibleLoanPayment, setIsEligibleLoanPayment] = useState(false);
+    const [loanPaymentChecked, setLoanPaymentChecked] = useState(false);
 
     const [isLoading, setIsLoading] = useState(true);
     const [fireEligibilityChecks, setFireEligibilityChecks] = useState(false);
 
     const [isLife] = useState(policy.isLife);
     const [isAnnuity] = useState(policy.isAnnuity);
+    const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
 
-    // this should only run once after fireEligibilityChecks && isLife are both true
+    // this should only run once after fireEligibilityChecks && (isLife || isAnnuity) are both true
     useEffect(() => {
         if (fireEligibilityChecks && (isLife || isAnnuity)) {
             const checkManageAutopayEligibility = async () => {
+                const systematicProgram = policy.policy.systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
+                const arrangementId = systematicProgram?.arrangementId || '';
                 const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId || '');
 
                 if (manageAutopayEligibility?.status === TransactionResponseStatus.Success) {
@@ -101,10 +107,6 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
             };
 
             const checkNewLoanEligibility = async () => {
-                if (!newLoanEnabled) {
-                    setNewLoanChecked(true);
-                    return;
-                }
                 const newLoanEligibility = await checkEligibilityNewLoan(planCode, policyNumber, policy.loanValues?.maximumLoanAmount);
 
                 if (newLoanEligibility?.status === TransactionResponseStatus.Success) {
@@ -113,21 +115,38 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
                 setNewLoanChecked(true);
             };
 
+            const checkLoanPaymentEligibility = async () => {
+                if (!loanPaymentEnabled) {
+                    setIsEligibleLoanPayment(false);
+                    setLoanPaymentChecked(true);
+
+                    return;
+                }
+                const loanPaymentEligibility = await checkEligibilityLoanRepaymentOneTime(planCode, policyNumber, policy.loanValues?.totalLoanBalance);
+
+                if (loanPaymentEligibility?.status === TransactionResponseStatus.Success) {
+                    setIsEligibleLoanPayment(true);
+                }
+                setLoanPaymentChecked(true);
+            };
+
             checkManageAutopayEligibility();
             checkOneTimeEligibility();
             checkWithdrawalEligibility();
             checkNewLoanEligibility();
+            checkLoanPaymentEligibility();
         }
-    }, [planCode, policyNumber, arrangementId, fireEligibilityChecks, isLife, isAnnuity, newLoanEnabled, policy.loanValues?.maximumLoanAmount]);
+    }, [planCode, policyNumber, fireEligibilityChecks, isLife, isAnnuity, policy.loanValues, policy.policy.systematicPrograms, loanPaymentEnabled]);
 
     useEffect(() => {
-        if (autopayChecked && newPremiumChecked && withdrawalChecked && newLoanChecked) {
+        if (autopayChecked && newPremiumChecked && withdrawalChecked && newLoanChecked && loanPaymentChecked) {
             setIsLoading(false);
         }
-    }, [autopayChecked, newLoanChecked, newLoanEnabled, newPremiumChecked, withdrawalChecked]);
+    }, [autopayChecked, loanPaymentChecked, newLoanChecked, newPremiumChecked, withdrawalChecked]);
 
     const eligibilityCheck = {
         eligibleAutopay: isEligibleManageAutopay,
+        eligibleLoanPayment: isEligibleLoanPayment,
         eligibleNewLoan: isEligibleNewLoan,
         eligiblePremium: isEligibleNewPremium,
         eligibleWithdrawal: isEligibleWithdrawal,
@@ -142,18 +161,42 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
 
     return (
         <div className="flex flex-wrap gap-x-8 gap-y-4 text-md" data-testid="quick-links">
-            {links.map(({ name, href }) => (
-                <NavElement
-                    className="font-primary text-md"
-                    data-testid={name}
-                    href={href}
-                    key={name + href}
-                    onClick={() => trackClick(SegmentTrackedEventName.PolicyClicked, name, href, policyNumber, sessionId, userPartyId)}
-                    type={NavElementType.Link}
-                >
-                    {name}
-                </NavElement>
-            ))}
+            {links.map(({ name, href, subLinks }) => {
+                if (subLinks) {
+                    return (
+                        <MenuContextual
+                            key={name + href}
+                            trigger={
+                                <Typography variant={TypographyVariant.BodySmBold} className="text-secondary ">
+                                    {name}
+                                    <Icon type={IconType.CHEVRON} height={16} width={16} className="ml-1" />
+                                </Typography>
+                            }
+                        >
+                            <MenuContextualLabel label={name}>
+                                {subLinks.map(subLink => {
+                                    return <MenuContextualItem content={subLink.name} href={subLink.href} key={subLink.name} />;
+                                })}
+                            </MenuContextualLabel>
+                        </MenuContextual>
+                    );
+                } else {
+                    return (
+                        <NavElement
+                            className="font-primary text-md"
+                            data-testid={name}
+                            href={href}
+                            key={name + href}
+                            onClick={() =>
+                                trackClick(SegmentTrackedEventName.PolicyClicked, name, href, policyNumber, sessionId, userPartyId)
+                            }
+                            type={NavElementType.Link}
+                        >
+                            {name}
+                        </NavElement>
+                    );
+                }
+            })}
 
             {(isLife || isAnnuity) && (
                 <>

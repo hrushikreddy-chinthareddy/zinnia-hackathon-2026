@@ -1,0 +1,19 @@
+/* Button.module.css */
+.button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    color: #ac0091;
+    border-radius: 9999px;
+    cursor: pointer;
+    border: 2px solid #ac0091;
+    background-color: #fbf2f9;
+    font-weight: 500;
+}
+
+.button:hover {
+    background-color: var(--color-fuchsia-color-50-fuchsia);
+    border-color: var(--color-fuchsia-color-200-fuchsia);
+    color: var(--color-fuchsia-color-400-fuchsia);
+}

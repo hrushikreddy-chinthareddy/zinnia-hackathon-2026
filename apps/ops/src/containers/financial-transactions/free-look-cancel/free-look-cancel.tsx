@@ -7,7 +7,7 @@ import PaymentStep, { PaymentStepSetState } from '@deps/components/workflows/pay
 import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
-import { useWithdrawal } from '@deps/contexts/WithdrawalContext';
+import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Processes } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 
@@ -36,7 +36,6 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     setState={setWithdrawal as StartStepSetState}
                     state={withdrawal}
                     title={t('cancelFreeLook.start.title') as string}
-                    subtitle={''}
                 />
             ),
             screenReaderLabel: startLabel,
