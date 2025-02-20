@@ -13,7 +13,6 @@ import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import useMock from '@/hooks/use-mock';
 import { CarrierNames } from '@/types/carriers';
 import { CarrierListDetail, getCarrierSubdomainByName } from '@/utils/carriers';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './NavMenu.module.css';
 
@@ -40,7 +39,6 @@ export const NavMenu = ({
   carrierPolicyDetails?: CarrierListDetail[] | null;
 }) => {
   const { data: featureFlagData } = useFeatureFlags();
-  const showAnnuities = featureFlagData?.[FEATURE_FLAGS.ANNUITY_MODE];
   const [currentUrl, setCurrentUrl] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -80,28 +78,8 @@ export const NavMenu = ({
           align="end"
         >
           <div className="typography-nav-nav-drawer">
-            <p>My Coverage</p>
+            <p className="typography-labels-label-sm">My Coverage</p>
             <ul>
-              {!showAnnuities && (
-                <li
-                  className={clsx({
-                    [styles.active as string]: pathname === navUrls.allPolicies,
-                  })}
-                >
-                  <span>
-                    <Icon type={IconType.MATCHES} />
-                  </span>
-                  <Link
-                    href="/coverage"
-                    onClick={() => {
-                      setIsOpen(false);
-                    }}
-                  >
-                    My policies
-                  </Link>
-                </li>
-              )}
-
               {carrierPolicyDetails &&
                 carrierPolicyDetails.length > 0 &&
                 carrierPolicyDetails.map((detail: CarrierListDetail) => {
@@ -141,7 +119,7 @@ export const NavMenu = ({
                   );
                 })}
             </ul>
-            <p>My Account</p>
+            <p className="typography-labels-label-sm">My Account</p>
             <ul>
               <li
                 className={clsx({
