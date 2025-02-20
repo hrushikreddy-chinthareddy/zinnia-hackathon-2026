@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 import { MfaChallenge } from '@/components/mfa/mfa-challenge/MfaChallenge';
 import { ROOT_URL_PATH } from '@/types';
@@ -19,6 +20,15 @@ export const MfaChallengeLogin = ({
   id?: string;
 }) => {
   const router = useRouter();
+  // TODO: TEST THIS when i have some codes left,
+  // it's a known thing that navigating with next router is slooooow
+  useEffect(() => {
+    router.prefetch(
+      `${window.location.origin}/${ROOT_URL_PATH}?${FROM_LOGIN_QUERY_KEY}=true`
+    );
+    router.prefetch(`${window.location.origin}/login/error`);
+  }, [router]);
+
   return (
     <MfaChallenge
       enrollment={enrollment}
