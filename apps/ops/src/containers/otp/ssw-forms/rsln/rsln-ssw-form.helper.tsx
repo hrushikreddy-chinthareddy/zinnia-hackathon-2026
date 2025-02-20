@@ -252,6 +252,11 @@ export default function getRslnConfig(t: TFunction) {
             value: SSWType.PercentOfAmountValue,
             generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.PercentOfAmountValue),
         },
+        {
+            label: t('sswProgram.sswOptions.maximumFreeWithdrawal'),
+            value: SSWType.AnnualFree,
+            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.AnnualFree),
+        },
     ];
 
     const disbursementOptions: PaymentMethodOption[] = [
