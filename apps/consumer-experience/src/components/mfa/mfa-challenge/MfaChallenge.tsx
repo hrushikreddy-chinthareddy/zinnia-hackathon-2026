@@ -136,7 +136,6 @@ export const MfaChallenge = ({
       enrollment,
     });
 
-    console.log('onSubmit', response);
     if (response && !response.error) {
       onChallengeSuccess?.();
     } else if (response.error === 'invalid_grant') {
@@ -145,7 +144,6 @@ export const MfaChallenge = ({
         message: 'This code’s not right. Try again.',
       });
     } else {
-      console.log('onSubmit but in the else');
       onChallengeFailure?.();
     }
   };
@@ -153,8 +151,8 @@ export const MfaChallenge = ({
   const handleResendCode = async () => {
     setResendCode(true);
     const resendResponse = await sendMfaChallenge({
-      challengeType: authenticator?.authenticator_type,
-      authenticatorId: authenticator?.id,
+      challengeType: authenticator?.authenticator_type || '',
+      authenticatorId: authenticator?.id || '',
       loggingContext: {
         file: 'MfaChallenge.tsx',
         function: 'handleResendCode',

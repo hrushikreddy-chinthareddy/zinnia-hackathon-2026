@@ -1,10 +1,13 @@
 'use server';
 
-import { redirect } from 'next/navigation';
 import { FieldValues } from 'react-hook-form';
 
 import { ServerApi } from '@/services';
-import { Auth0ErrorResponse, OauthToken } from '@/types/auth';
+import {
+  Auth0ErrorResponse,
+  MfaSendChallengeInputs,
+  OauthToken,
+} from '@/types/auth';
 import {
   getMfaCookie,
   getOobMfaCookie,
@@ -30,10 +33,14 @@ export const getPostLoginMfaToken = async () => {
         value: data.mfa_token,
       });
     } else {
-      // TODO: what happens here???
-      console.log('no mfa token');
+      // TODO: what should happen here???
+      logTrace('no mfa token in data', {
+        file: 'transaction-mfa-actions.ts',
+        function: 'getPostLoginMfaToken',
+      });
     }
   } catch (error) {
+    logWarn('getPostLoginMfaToken error', { error });
     console.log(error);
   }
 };
@@ -56,7 +63,9 @@ export const sendMfaChallenge = async ({
   challengeType,
   ...loggingContext
   //TODO: fix type
-}: any) => {
+}: Omit<MfaSendChallengeInputs, 'mfaToken'> & {
+  loggingContext: Record<string, unknown>;
+}) => {
   try {
     const mfaToken = (await getMfaCookie()) || '';
     const response = await ServerApi.sendMfaChallenge({
@@ -67,7 +76,7 @@ export const sendMfaChallenge = async ({
     const data = await response.json();
 
     if (response.status === 200) {
-      logTrace('successful-response', { ...loggingContext });
+      logTrace('sendMfaChallenge successful-response', { ...loggingContext });
       await setMfaOobCookie({
         value: data.oob_code,
       });
@@ -77,12 +86,13 @@ export const sendMfaChallenge = async ({
       };
     }
 
-    logTrace('unsuccessful-response', {
+    logTrace('sendMfaChallenge unsuccessful-response', {
       ...loggingContext,
       reqStatus: response.status,
     });
     throw data;
   } catch (error) {
+    logWarn('sendMfaChallenge error', { error });
     return {
       success: false,
     };
@@ -98,20 +108,22 @@ export const sendMfaChallenge = async ({
  */
 export async function verifyMfaChallenge(
   // TODO: fix this type
-  mfaData: any
+  mfaData: {
+    code: string;
+    isEnrollment: boolean;
+  }
 ): Promise<Auth0ErrorResponse | never> {
   const loggingContext = {
     file: 'login-actions.ts',
     function: 'verifyMfaChallenge',
   };
   logTrace('start', { ...loggingContext });
-  const redirectToErrorPage = false;
   let data: Auth0ErrorResponse | OauthToken;
   try {
     // We need to know if this is an enrollment or not because it changes how we pass the MFA token to auth0
     // for non enrolled user we need to pass the token as an authorization header
     // for enrolled users we pass it as an input to the API
-    // const isEnrollment = mfaData.get('isEnrollment')?.toString() === 'true';
+    const isEnrollment = mfaData?.isEnrollment?.toString() === 'true';
     const mfaToken = await getMfaCookie();
     const code = mfaData?.code || '';
     const oobCode = await getOobMfaCookie();
@@ -130,7 +142,7 @@ export async function verifyMfaChallenge(
       mfaToken,
       bindingCode: code,
       oobCode,
-      isEnrollment: false,
+      isEnrollment,
     });
 
     data = await response.json();
@@ -167,14 +179,14 @@ export async function verifyMfaChallenge(
     };
   }
 
-  if (redirectToErrorPage) {
-    return redirect(`/login/error`);
-  }
-
   const tokenData = data! as OauthToken;
   // TODO: This function could use a different name, but reusing it to ensure
   // mfa cookies are deleted and access token reset with new stepUp time
   await setLoginCookies(tokenData);
+
+  logTrace('successful-response::verifyMfaChallenge', {
+    ...loggingContext,
+  });
 
   return {
     success: true,
