@@ -1,8 +1,6 @@
 import { useTranslation } from 'next-i18next';
-import { useContext, useMemo } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import FieldData from '@deps/components/fields/field-data/field-data';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import PersonPageHeader from '@deps/containers/page-header/interior-people-page-header';
 import AddressCard from '@deps/containers/people-data-cards/address-card/address-card';
 import EmailCard from '@deps/containers/people-data-cards/email-card/email-card';
@@ -10,8 +8,9 @@ import IdentificationCard from '@deps/containers/people-data-cards/identificatio
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
+import { getAgentData } from '@deps/queries/api/agents';
 
-import CardContainer from '../card-container/card-container';
+import AllocationCard from '../people-data-cards/allocation-card/allocation-card';
 import FirmInformationCard from '../people-data-cards/firm-information-card/firm-information-card';
 
 export type AgentSubPage = {
@@ -19,6 +18,7 @@ export type AgentSubPage = {
 };
 
 export const AgentSubPage = ({ partyId }: AgentSubPage) => {
+    const [agentData, setAgentData] = useState();
     const { policy, policyDetails } = useContext(PolicyData);
 
     const { t } = useTranslation();
@@ -35,8 +35,23 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
         return partyRoles?.filter(pr => pr.partyId === selectedPolicyParty?.partyId) || [];
     }, [partyRoles, selectedPolicyParty?.partyId]);
 
-    // to do - this is the new implementation of the Parties Class - update in all locations, rather than just the Identification Card
     const newSelectedPolicyParty = policyDetails.getPartyById(partyId);
+
+    const agentId = selectedPolicyParty?.agentExternalId;
+    const clientCode = policy.carrierId;
+
+    const fetchPolicies = useCallback(async () => {
+        try {
+            const result = getAgentData({ clientCode, id: agentId });
+            setAgentData(result);
+        } catch (error) {
+            console.error('Unable to fetch agent details', error);
+        }
+    }, [agentId, clientCode]);
+
+    useEffect(() => {
+        fetchPolicies();
+    }, [fetchPolicies]);
 
     return (
         <div className="shadow-elevation-light-04">
@@ -58,15 +73,7 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
             />
 
             <hr className=" h-0.5 border-none bg-gray-100" />
-            <CardContainer classNames="flex w-full flex-col items-start">
-                <Typography className="mr-5" variant={TypographyVariant.H2}>
-                    {t('people.card.allocation.label')}
-                </Typography>
-                <div className="flex gap-8 mt-4 flex-wrap">
-                    <FieldData label={t('people.card.allocation.commissionAllocation')}>{}</FieldData>
-                </div>
-                {/* <EmptyCard text={t('empty') as string} /> */}
-            </CardContainer>
+            <AllocationCard allocation={selectedPolicyParty?.agentPercentage} deathBenefit={null} />
 
             <hr className=" h-0.5 border-none bg-gray-100" />
             <IdentificationCard
