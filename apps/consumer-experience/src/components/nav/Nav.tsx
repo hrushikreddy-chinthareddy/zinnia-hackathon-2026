@@ -61,22 +61,20 @@ export async function Nav({
   };
 
   return (
-    <nav className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.logoContainer}>
-          <DevMenu />
+    <nav className={styles.nav}>
+      <div className={styles.logoContainer}>
+        <DevMenu />
 
-          <Link
-            prefetch
-            href="/"
-            className="justify-self-start"
-            aria-label="Home page"
-          >
-            {carrierNavLogo()}
-          </Link>
-        </div>
-        <NavMenu userName={userName} carrierPolicyDetails={carrierDetails} />
+        <Link
+          prefetch
+          href="/"
+          className="justify-self-start"
+          aria-label="Home page"
+        >
+          {carrierNavLogo()}
+        </Link>
       </div>
+      <NavMenu userName={userName} carrierPolicyDetails={carrierDetails} />
     </nav>
   );
 }

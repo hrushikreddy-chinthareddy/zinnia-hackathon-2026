@@ -50,8 +50,8 @@ export default async function AuthenticatedLayout({
           }}
         >
           <div style={{ width: '100%', backgroundColor: 'white' }}>
-            <div className="main-content-wrapper">
-              <div className="main-content-inner">
+            <div className="layout-wrapper">
+              <div className="layout-wrapper-inner">
                 <Nav
                   planCode={params.planCode}
                   policyNumber={params.policyNumber}
@@ -69,8 +69,8 @@ export default async function AuthenticatedLayout({
             <RefreshRouterManager>
               <MourningBanner />
               {/* TODO: fix naming of classes */}
-              <div className="main-content-wrapper">
-                <div className="main-content-inner">
+              <div className="layout-wrapper">
+                <div className="layout-wrapper-inner">
                   <div className={styles.mainContent}>
                     <UserConsentManager>{children}</UserConsentManager>
                   </div>

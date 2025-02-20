@@ -63,7 +63,7 @@ p:has(a) {
   }
 }
 
-.main-content-wrapper {
+.layout-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,24 +73,25 @@ p:has(a) {
   it does make things look a bit weird when the window is resized to below 400px because
   the scroll bar is taking up space but it looks okay on mobile  */
   padding-left: calc(100vw - 100%);
+  /* scrollbar-gutter: stable both-edges; */
 
-  .main-content-inner {
+  .layout-wrapper-inner {
     min-width: 344px;
     width: 100%;
   }
 }
 
 @media (width >= 500px) {
-  .main-content-wrapper {
+  .layout-wrapper {
     margin: 0 var(--measure-dimension-margin-sm);
   }
 }
 
 @media (width >= 768px) {
-  .main-content-wrapper {
+  .layout-wrapper {
     margin: 0 var(--measure-dimension-margin-md);
 
-    .main-content-inner {
+    .layout-wrapper-inner {
       max-width: 744px;
     }
   }

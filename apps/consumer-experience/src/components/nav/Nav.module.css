@@ -1,17 +1,4 @@
-.container {
-  width: 100%;
-  background-color: white;
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    background-color: white;
-  }
-}
-
-.content {
+.nav {
   display: flex;
   justify-content: space-between;
   width: 100%;
