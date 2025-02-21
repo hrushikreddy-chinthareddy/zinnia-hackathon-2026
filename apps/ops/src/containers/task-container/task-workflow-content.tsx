@@ -25,7 +25,7 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
     const sideSheet = useSideSheetContext();
 
     const handleProgressBarClick = (step: Step) => {
-        if (step.isDisabled || currentStepIndex === step.index) return;
+        if (step.isDisabled || step.isCompleted ||  currentStepIndex === step.index) return;
         setCurrentStepIndex(step.index);
     };
 
