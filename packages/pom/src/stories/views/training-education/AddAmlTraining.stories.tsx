@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { default as PomStyles } from '../../../styles/pom.module.css';
 import { AddAmlTrainingSidesheet } from '../../../views/training-education/aml-training/add/AddAmlTrainingSidesheet';
 
 const meta = {
@@ -13,8 +14,8 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {},
   decorators: [
-    (Story) => (
-      <div id="sidesheet-content">
+    Story => (
+      <div id={PomStyles['producer-onboarding-maintenance']}>
         <Story />
       </div>
     ),

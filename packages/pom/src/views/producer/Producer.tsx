@@ -10,6 +10,7 @@ import { ProducerType } from '../../types';
 import { CardHeader } from '../../components/card-header/CardHeader';
 import clsx from 'clsx';
 import styles from './Producer.module.css';
+import { default as PomStyles } from '../../styles/pom.module.css';
 import { useParams } from 'react-router';
 import EntityInformation from '../entity-information/EntityInformation';
 import LicensesAppointments from '../licenses-appointments/LicensesAppointments';
@@ -48,11 +49,11 @@ export const Producer = ({ producerType }: { producerType: ProducerType }) => {
   ];
 
   return (
-    <div className={styles.container}>
-      <div
-        className={clsx(styles.cardContainer)}
-        id="producer-onboarding-maintenance"
-      >
+    <div
+      className={styles.container}
+      id={PomStyles['producer-onboarding-maintenance']}
+    >
+      <div className={clsx(styles.cardContainer)}>
         {/* @todo: will remove this once we have the api integration */}
         <CardHeader producerType={producerType} id={id} />
         <TabGroup defaultValue={tabs[0].value}>
