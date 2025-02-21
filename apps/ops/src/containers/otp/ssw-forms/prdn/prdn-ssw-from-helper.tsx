@@ -467,6 +467,10 @@ export default function getPrdnConfig(t: TFunction) {
                     component: SignatureFields.SignatureDate,
                     key: 'joint-date',
                 },
+                {
+                    component: SignatureFields.SignGuaranteeStamp,
+                    key: 'joint-sign-guarantee-stamp',
+                },
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
