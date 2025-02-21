@@ -32,8 +32,6 @@ export default function TextListTemplate(props: ArrayFieldTemplateProps): JSX.El
         }
     }
 
-    title = uiSchema?.['ui:options']?.textListTitle as string;
-
     return list.length > 0 ? (
         <div className={`${hasBg ? 'bg-gray-50 w-2/4 p-4' : ''}`}>
             {title && <Typography variant={TypographyVariant.BodySmBold}>{title as any}</Typography>}

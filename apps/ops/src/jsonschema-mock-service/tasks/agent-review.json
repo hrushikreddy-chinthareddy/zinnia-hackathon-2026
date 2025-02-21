@@ -1,10 +1,10 @@
 {
-    "formSchema": {
-        "type": "object"
-    },
-    "uiSchema": {
-        "type": "object"
-    },
+    "formId": "3fbd2003-d32e-46b7-800a-12ce72676e12",
+    "carrier": "WELB",
+    "process": "New Business",
+    "taskType": "NB_AGENT_REVIEW",
+    "formSchema": { "type": "object" },
+    "uiSchema": { "type": "object" },
     "schemaContent": {
         "tabSchemas": [
             {
@@ -22,7 +22,7 @@
                         },
                         "details": {
                             "type": "object",
-                            "title": "Details",
+                            "title": "",
                             "properties": {
                                 "agentDetails": {
                                     "title": "Supporting Information",
@@ -137,10 +137,11 @@
                     },
                     "details": {
                         "ui:options": {
-                            "label": false
+                            "label": true
                         },
                         "agentDetails": {
                             "ui:options": {
+                                "label": true,
                                 "cardType": "Detailed",
                                 "icon": "CIRCLE_USER",
                                 "ObjectFieldTemplate": "CardTemplate"
@@ -176,6 +177,11 @@
                                     "value": "DEFAULT"
                                 }
                             ]
+                        },
+                        "items": {
+                            "ui:options": {
+                                "label": "false"
+                            }
                         },
                         "ui:placeholder": "Select Issues"
                     },
