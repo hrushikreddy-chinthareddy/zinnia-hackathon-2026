@@ -1,18 +1,14 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
 import PageLoader from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
-import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { UserPermission } from '@deps/models/user-profile';
 import { downloadFormById } from '@deps/queries/api/c2web';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface FormViewerProps extends SegmentTrackedPageProps {
@@ -62,33 +58,7 @@ const FormViewer = ({ formId, user }: FormViewerProps) => {
 
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, params, res, req } = context;
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('documents:: Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'documents',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
-
-        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
-            accessToken,
-            user,
-            UserPermission.AllowReadCaseManagement
-        );
-        if (!hasPermissionToReadCaseManagement) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
+        const { locale = DEFAULT_LOCALE, params } = context;
 
         const formId = (params?.formId as string) || '';
 

@@ -16,7 +16,7 @@ import TabGroupContainer from '@deps/containers/tab-group-container/tab-group';
 import { CorrespondenceProvider } from '@deps/contexts/CorrespondenceContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { AttachmentDetails, AttachmentType, CorrespondenceFormParts } from '@deps/models/case/correspondence';
@@ -28,7 +28,7 @@ import {
     SendDocumentFormType,
 } from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { UserPermission, UserProfile } from '@deps/models/user-profile';
+import { UserProfile } from '@deps/models/user-profile';
 import { getSearchTransactionsSSR, sendCommunication } from '@deps/queries/api/c2web';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
@@ -184,13 +184,12 @@ export const getServerSideProps = withPageAuthRequired({
             });
             return serverSidePropsLogout();
         }
-        // Create a permissions object to pass to the page, strongly typed using the enum.
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadOtpRenewals);
+
         const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
         const shouldShowSendDocumentPage = featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT];
         const shouldShowCaseButton = featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT_SHOW_CASE_BUTTON];
 
-        if (!doesUserHasPagePermissions || !shouldShowSendDocumentPage) {
+        if (!shouldShowSendDocumentPage) {
             return {
                 redirect: {
                     destination: '/403',
