@@ -19,18 +19,7 @@
     justify-content: center;
 }
 
-.chartContainer {
-    padding-left: var(--measure-dimension-gap-2xl);
-    border-left: 1px solid var(--color-base-border-border-light);
-}
-
 .insightsContainer {
     padding-top: var(--measure-dimension-padding-4xl);
     padding-right: var(--measure-dimension-padding-lg);
-}
-
-.filterContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
 }

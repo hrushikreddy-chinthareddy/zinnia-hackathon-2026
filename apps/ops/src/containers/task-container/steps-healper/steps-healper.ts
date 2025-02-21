@@ -23,6 +23,11 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
         case TaskType.Agent_Nigo:
             steps = getAgentNigoSteps(props);
             break;
+
+        case TaskType.Application_Nigo:
+            steps = getAgentNigoSteps(props);
+            break;
+
         default:
             steps = [];
     }

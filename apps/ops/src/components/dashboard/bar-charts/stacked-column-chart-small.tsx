@@ -8,6 +8,11 @@ import { useState, useEffect, useCallback } from 'react';
 import caseChartHelpers, { ChartConfigSeriesDataSimple } from '@deps/helpers/dashboard/case-chart-helpers';
 import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 
+//https://www.npmjs.com/package/highcharts-react-official#highcharts-with-nextjs
+if (typeof Highcharts === 'object') {
+    more(Highcharts);
+}
+
 interface Props {
     statGrouping?: CaseDashboardStatsResponse;
     startDate: Date;
@@ -90,14 +95,6 @@ const SmallStackedColumnChart = ({ statGrouping, startDate, endDate, title }: Pr
         },
         [endDate] // add any dependencies here
     );
-
-    useEffect(() => {
-        if (typeof window === 'undefined') {
-            return;
-        }
-        // accessibility(Highcharts);
-        more(Highcharts);
-    }, []);
 
     useEffect(() => {
         const seriesData = getSeriesData(statGrouping, startDate, endDate);

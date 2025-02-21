@@ -482,6 +482,7 @@ export const getPolicyAccountValueWith30DayChange = async (
 };
 
 // TODO: convert this to just getPolicyDetails
+
 export const getPolicyForHeaderDetails = async (
   options: PolicyRequestInputs
 ): Promise<ApiResponse<PolicyDetails>> => {

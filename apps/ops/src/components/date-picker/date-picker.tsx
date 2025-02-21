@@ -462,7 +462,6 @@ export default function DatePicker({
     datePickerType,
     handleCustomSelection,
     showMonths = true,
-
 }: DatePickerProps) {
     const isRange = date && 'start' in date && 'end' in date;
     const [currentDate] = useState(() => {

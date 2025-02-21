@@ -1,5 +1,5 @@
 /* do we just rely on ops heading styles? or do we set our own in this project? */
-
+@import url(./fonts/index.css);
 @import '@zinnia/bloom/css';
 /* TODO: uh oh this will prolly conflict with tailwind. I don't want to lose my utility spacing classes :( */
 @import './spacing.css';
@@ -10,26 +10,16 @@
   --dimesion-padding-tablet: var(--measure-dimension-padding-3xl);
   --dimesion-padding-desktop: var(--measure-dimension-padding-4xl);
 
+  font: var(--typography-content-body-sm);
+
   /* TODO: once the typography variables are exported from bloom, replace these with font: var(--typography-desktop-headline-1-d) */
   h1 {
-    font-family: var(--font-family-primary);
-    font-style: normal;
-    font-weight: 500;
-    font-size: 36px;
-    line-height: 44px;
-    letter-spacing: 0px;
-    text-indent: 0px;
+    font: var(--typography-desktop-headline-1-d);
   }
 
   /* TODO: once the typography variables are exported from bloom, replace these with font: var(--typography-desktop-headline-2-d) */
   h2 {
-    font-family: var(--font-family-primary);
-    font-style: normal;
-    font-weight: 500;
-    font-size: 26px;
-    line-height: 32px;
-    letter-spacing: 0px;
-    text-indent: 0px;
+    font: var(--typography-desktop-headline-2-d);
   }
 
   .card-section {
@@ -85,5 +75,32 @@
         left: calc(var(--dimesion-padding-desktop) * -1);
       }
     }
+  }
+}
+
+.pom_content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+}
+
+.pom_ordered-list {
+  list-style-position: inside;
+  list-style-type: decimal;
+}
+
+.pom_flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+#sidesheet-content {
+  font: var(--typography-content-body-sm);
+
+  h2 {
+    font: var(--typography-desktop-headline-2-d);
+  }
+  h3 {
+    font: var(--typography-desktop-headline-3-d);
   }
 }

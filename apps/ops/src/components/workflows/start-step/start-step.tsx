@@ -28,7 +28,7 @@ interface StartStepProps {
     setState: StartStepSetState;
     state: StartType;
     title: string;
-    subtitle: string;
+    subtitle?: string;
     isOnBaseUpdateAssistiveText?: boolean;
     isContinueDisabled?: boolean;
 }
@@ -68,6 +68,7 @@ const StartStep = ({ parentPage, policy, processType, setState, state, title, su
                 });
                 setCaseOptions(options);
             } else {
+                // TODO MG: handle
                 throw new Error(response?.data?.err ? response.data.err : 'Error fetching cases');
             }
         }
@@ -122,8 +123,9 @@ const StartStep = ({ parentPage, policy, processType, setState, state, title, su
             }
         >
             <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                    <Label label={t('workflows.start.documentSelectionLabel')} sentenceCase={false} variant={LabelVariant.FieldLabel} />
+                <div className="flex flex-col">
+                    {/* TODO MG: use CaseDocumentSelect */}
+                    <Label className="mb-4" label={t('workflows.start.documentSelectionLabel')} sentenceCase={false} variant={LabelVariant.LabelLg} />
                     <div className="grid max-w-[436px] gap-2">
                         {caseOptions
                             .sort((a, b) => a.documentNumber?.localeCompare(b.documentNumber))
@@ -137,7 +139,7 @@ const StartStep = ({ parentPage, policy, processType, setState, state, title, su
                             ))}
                     </div>
                     {(selectedCaseId === PROCESS_WITHOUT_CASE_DOCUMENT || showSelectionError) && (
-                        <div className="flex flex-col gap-2 pt-1">
+                        <div className="flex flex-col gap-2 mt-2">
                             {selectedCaseId === PROCESS_WITHOUT_CASE_DOCUMENT && (
                                 <AssistiveText
                                     variant={AssistiveTextVariant.Info}

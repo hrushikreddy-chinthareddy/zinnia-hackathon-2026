@@ -7,6 +7,7 @@ export type TaskView = {
     parentExceptionStatus?: ExceptionStatuses | null;
     status: string;
     updatedAt: string;
+    taskName?: string;
 };
 
 export type ExceptionView = {

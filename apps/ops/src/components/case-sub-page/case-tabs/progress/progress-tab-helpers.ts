@@ -420,6 +420,7 @@ export class TransformedCase {
             parentExceptionStatus: status,
             status: foundTask.status,
             updatedAt: foundTask.updatedAt,
+            taskName: foundTask.taskName || '',
         };
     }
     // Builds an ExceptionView from an ExceptionInstance

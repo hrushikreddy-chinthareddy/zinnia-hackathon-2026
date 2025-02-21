@@ -151,6 +151,7 @@ export const transformPolicyMetricsForAccountValueChange = (
   return valueChange ? { valueChange } : null;
 };
 
+// TODO: at some point rename this, no longer being used by policy header
 export const transformPolicyForHeaderDetails = (
   policy: Policy
 ): PolicyDetails => {
@@ -604,10 +605,12 @@ export const transformPolicyStatusDetails = (
 
 export const transformPolicyDetails = (policy: Policy): Partial<Policy> => {
   return {
+    policyStatus: policy?.policyStatus || PolicyStatus.NOTISSUED,
     product: {
       productType: policy.product?.productType,
       planName: policy.product?.planName,
       planCode: policy.product?.planCode,
+      marketingName: policy?.product?.marketingName || '',
     },
     carrierId: policy.carrierId,
     accountValues: {

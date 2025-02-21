@@ -5,12 +5,20 @@ import HighchartsReact from 'highcharts-react-official';
 import { FC, useEffect, useState } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
+import { CaseTypeFilter } from '@deps/components/dashboard/case-type-filter';
+import { ChartHeader } from '@deps/components/dashboard/chart-header';
+import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
+import { getPieChartData } from '@deps/components/dashboard/distribution-charts/distribution-pie-chart-small-api-based';
+import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
+import { TimeFilter } from '@deps/components/dashboard/time-filter/time-filter';
+import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import CardContainer from '@deps/containers/card-container/card-container';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { Statuses } from '@deps/models/case/case';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { useDashboardStore } from '@deps/store/store';
@@ -20,34 +28,21 @@ import { chunkArray } from '@deps/utils/array';
 import { Legend } from './legend';
 import styles from './submission-type.module.css';
 import { submissionTypeQuery, transformData, generateSeries } from './utils';
-import { ChartHeader } from '../chart-header';
-import { getPieChartData } from '../distribution-charts/distribution-pie-chart-small-api-based';
-import CaseStatBlock from '../stat-blocks/case-stat-block';
-import { TimeFilter } from '../time-filter/time-filter';
-import { TimeframeFilterOptions, generateCarouselDataLengths, startDates } from '../utils';
+import { TimeframeFilterOptions, formatProcessFilter, generateCarouselDataLengths, startDates } from '../utils';
 
 export const SubmissionType: FC = () => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
     const [submissionVs, setSubmissionVs] = useState<GroupByOptions>(GroupByOptions.Carrier);
-    const { selectedCarriers, selectedBrokerDealers, selectedProcess, selectedSubProcess } = useDashboardStore(state => state);
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
+    const [selectedProcess, setSelectedProcess] = useState<Processes | undefined>(Processes.NewBusiness);
 
     const filter: DashboardSearchFilter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+        carrier: Object.keys(selectedCarriers),
+        brokerDealerName: Object.keys(selectedBrokerDealers),
         createdDateStart: startDates[timeframe],
+        process: formatProcessFilter(selectedProcess),
     };
-
-    const carriers = Object.keys(selectedCarriers);
-    if (selectedCarriers && carriers.length) {
-        filter.carrier = carriers;
-    }
-
-    const brokers = Object.keys(selectedBrokerDealers);
-    if (selectedBrokerDealers && brokers.length) {
-        filter.brokerDealerName = brokers;
-    }
-
-    filter.process = [selectedProcess];
-    filter.requestSubType = selectedSubProcess;
 
     // If there is a selected carrier, default to the product name. Otherwise back to carrier
     useEffect(() => {
@@ -117,6 +112,9 @@ export const SubmissionType: FC = () => {
                 },
                 xAxis: {
                     categories: applicationTypeCategories,
+                    labels: {
+                        useHTML: false,
+                    },
                 },
                 yAxis: {
                     allowDecimals: false,
@@ -138,7 +136,7 @@ export const SubmissionType: FC = () => {
     const pieChartSeriesData: Highcharts.SeriesOptionsType[] = [{ data: pieChartDataColors, name: 'cases', type: 'pie' }];
 
     const submissionVsOptions = [
-        { label: 'Carrier', value: GroupByOptions.Carrier, disabled: carriers.length === 1 },
+        { label: 'Carrier', value: GroupByOptions.Carrier, disabled: filter.carrier?.length === 1 },
         { label: 'Product', value: GroupByOptions.ProductName },
         { label: 'Distribution Partner', value: GroupByOptions.BrokerDealerName },
     ];
@@ -197,12 +195,22 @@ export const SubmissionType: FC = () => {
         },
     };
 
+    const totalCases =
+        applicationTypeFetching || applicationTypeFetching2 ? (
+            <div className="blur">
+                <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+            </div>
+        ) : (
+            <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+        );
+
     return (
-        <div className={styles.container}>
+        <CardContainer fullWidth={false}>
             <ChartHeader
                 title="Submission Method"
-                subtitle={`${totalCaseCount?.toLocaleString()} total cases`}
+                subtitle={totalCases}
                 titleToolTip={submissionMethodTooltip}
+                description="The distribution of incoming case requests by submission method, comparing eApp, paper, and digital submissions."
             />
             {applicationTypeLoading2 || applicationTypeLoading ? (
                 <div className="grid place-content-center h-full w-full min-h-[400px]">
@@ -217,7 +225,7 @@ export const SubmissionType: FC = () => {
                 </div>
             ) : (
                 <BlurOverlayLoader loading={applicationTypeFetching || applicationTypeFetching2}>
-                    <div className="flex bg-[--color-base-surface-surface-primary]">
+                    <div className="flex bg-[--color-base-surface-surface-primary] mt-6">
                         <CaseStatBlock
                             dashboardStatsResponse={pieChartStats}
                             blockLabel="All submissions"
@@ -233,18 +241,26 @@ export const SubmissionType: FC = () => {
                             }}
                             showStatDetails={false}
                         />
-                        <div className={clsx('w-3/4', styles.chartContainer)}>
+                        <div className={clsx('w-3/4', sharedStyles.chartContainer)}>
                             <div className={styles.timeFilterContainer}>
-                                <div className="w-1/4">
+                                <div className="w-1/2 flex gap-2">
                                     <Select
+                                        maxContentWidth
                                         label="Group by"
-                                        className={styles.submissionMethodSelect}
+                                        className={sharedStyles.selectDropdowns}
                                         options={submissionVsOptions}
                                         value={submissionVs}
+                                        size={FieldSize.XS}
                                         onChange={val => setSubmissionVs(val as GroupByOptions)}
                                     />
+
+                                    <CaseTypeFilter
+                                        onValueChange={setSelectedProcess}
+                                        caseStatus={[Statuses.InProgress, Statuses.Exception, Statuses.NotStarted]}
+                                        defaultProcess={Processes.NewBusiness}
+                                    />
                                 </div>
-                                <div className="w-3/4">
+                                <div className="w-1/2">
                                     <TimeFilter
                                         defaultValue={timeframe}
                                         onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
@@ -272,6 +288,6 @@ export const SubmissionType: FC = () => {
                     </div>
                 </BlurOverlayLoader>
             )}
-        </div>
+        </CardContainer>
     );
 };

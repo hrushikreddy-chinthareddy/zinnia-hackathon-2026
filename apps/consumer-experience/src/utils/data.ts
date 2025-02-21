@@ -353,6 +353,14 @@ export const lineOfBusinessUrlPath = (lineOfBusiness?: LineOfBusiness) => {
   return LineOfBusinessPath.POLICIES;
 };
 
+export const lineOfBusinessFromPath = (path: LineOfBusinessPath) => {
+  if (path === LineOfBusinessPath.ANNUITIES) {
+    return LineOfBusiness.ANNUITY;
+  }
+
+  return LineOfBusiness.LIFE;
+};
+
 export const lineOfBusinessDisplayText = (lineOfBusiness?: LineOfBusiness) => {
   if (isAnnuity(lineOfBusiness)) {
     return 'contract';

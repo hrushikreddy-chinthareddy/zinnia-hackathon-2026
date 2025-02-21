@@ -884,6 +884,7 @@ export enum RestrictionOption {
     EligibleDistribution = 'eligibledistribution',
     Empty = '',
     Hardship = 'hardship',
+    Others = 'others',
 }
 
 export enum PayoutOptions {

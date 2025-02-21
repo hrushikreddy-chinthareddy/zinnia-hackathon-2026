@@ -17,8 +17,6 @@ export const isStillInactive = {
     beneficiaryCardContainer: 'Refer to guidelines for instructions to edit allocations.',
     interiorPeoplePageHeader: 'Refer to guidelines for instructions to add or remove roles.',
     interiorPeoplePageDOB: 'Refer to guidelines for instructions to edit date of birth.',
-    loanPageSetUpAutopay: 'Refer to guidelines for instructions to set up autopay.',
-    loanPageManageAutopay: 'Refer to guidelines for instructions to manage autopay.',
     withdrawalPageexchange1035: 'Refer to guidelines for instructions to process 1035 exchange.',
     withdrawalSetupAutopay: 'Refer to guidelines for instructions to setup autopay.',
     withdrawalManageAutopay: 'Refer to guidelines for instructions to manage autopay.',

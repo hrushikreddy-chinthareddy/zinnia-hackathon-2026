@@ -8,6 +8,7 @@ import { AssignedTask } from '@deps/models/case/task-instance';
 import { claimNextTask } from '@deps/queries/api/v1/claim-task';
 import { getAssignedTasks } from '@deps/queries/api/v1/task';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+import { MessageType } from '@deps/models/case/task';
 
 import TaskQueueTable from './task-queue-table';
 
@@ -20,6 +21,7 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
     const [taskDetails, setTaskDetails] = useState<AssignedTask[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+   const [errorType, setErrorType] = useState(MessageType.Error);
 
     const handleClaimTask = async () => {
         setErrorMessage('');
@@ -31,13 +33,14 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
             if (data.statusCode) {
                 switch (data.statusCode) {
                     case 400:
-                        setErrorMessage(t('claimTaskError') + data.message);
+                        setErrorMessage(data.message);
                         break;
                     case 404:
-                        setErrorMessage(t('claimTaskError') + data.message);
+                        setErrorMessage(data.message);
+                        setErrorType(MessageType.Info);
                         break;
                     default:
-                        setErrorMessage(t('claimTaskError') + data.message);
+                        setErrorMessage(data.message);
                         break;
                 }
             } else {
@@ -60,7 +63,7 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
 
     useEffect(() => {
         getTasks(true);
-    }, [])
+    }, []);
 
     return (
         <>
@@ -83,10 +86,20 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
                 </div>
 
                 {errorMessage && (
-                    <AssistiveText text={errorMessage} variant={AssistiveTextVariant.Error} className="my-4" />
+                    <AssistiveText
+                        text={errorMessage}
+                        variant={errorType == MessageType.Info ? AssistiveTextVariant.Info : AssistiveTextVariant.Error}
+                        className="my-4"
+                    />
                 )}
 
-                <TaskQueueTable tasks={taskDetails} isLoading={isLoading} featureFlagDecisions={featureFlagDecisions} getTasks={getTasks} setErrorMessage={setErrorMessage} />
+                <TaskQueueTable
+                    tasks={taskDetails}
+                    isLoading={isLoading}
+                    featureFlagDecisions={featureFlagDecisions}
+                    getTasks={getTasks}
+                    setErrorMessage={setErrorMessage}
+                />
             </div>
         </>
     );

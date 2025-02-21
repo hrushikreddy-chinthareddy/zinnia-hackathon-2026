@@ -1,3 +1,4 @@
+import { AllocationOption } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -16,6 +17,7 @@ import { TransactionResponseStatus, submitLoanPayment } from '@deps/queries/api/
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { buildLoanPaymentRequestBody } from '../loan-payment.helpers';
 
 interface ConfirmProps {
     policy: Policy;
@@ -30,42 +32,20 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    const { paymentBankId, caseId, effectiveDate, paymentAmount, payorFullName, payorPartyId, validationResponse, reverseInitiator } =
-    loanPayment;
+    const {  paymentAmount, payorFullName, validationResponse } = loanPayment;
 
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
 
     const submit = useCallback(async () => {
-        const response = await submitLoanPayment(policy.product?.planCode, policy.policyNumber, {
-            caseId: caseId || '',
-            correlationId: uuidV4(),
-            effectiveDate: dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT),
-            reverseInitiator: reverseInitiator,
-            transactionAmounts: {
-                requestedAmount: Number(paymentAmount),
-            },
-            payor: {
-                bankId: paymentBankId,
-                partyId: payorPartyId,
-                paymentForm: ACH,
-            },
-        });
+        const paymentBody = buildLoanPaymentRequestBody(loanPayment);
+        const response = await submitLoanPayment(policy.product?.planCode, policy.policyNumber, paymentBody);
 
         if (response.status !== StatusCode.Accepted) {
             setSubmitFailed(true);
         }
 
         setIsLoading(false);
-    }, [
-        policy.product?.planCode,
-        policy.policyNumber,
-        caseId,
-        effectiveDate,
-        reverseInitiator,
-        paymentAmount,
-        paymentBankId,
-        payorPartyId,
-    ]);
+    }, [loanPayment, policy.product?.planCode, policy.policyNumber]);
 
     useEffect(() => {
         submit();

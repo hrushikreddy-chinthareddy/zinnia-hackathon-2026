@@ -82,8 +82,8 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
             value: FormDisbursementSelections.EFT,
             fields: [
                 {
-                    fieldLabel: t('distributionMethod.chooseTheBank'),
                     fieldName: BankingFields.Bank,
+                    fieldLabel: t('distributionMethod.chooseTheBank'),
                     component: DisbursementFields.SelectBank,
                 },
                 {
@@ -127,8 +127,8 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                     fieldLabel: t('distributionMethod.bankRoutingNumber'),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
-                    classNames: 'col-start-1',
                     maskOnBlur: true,
+                    classNames: 'col-start-1',
                     disableCopyPaste: true,
                 },
                 {
@@ -143,8 +143,13 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                     fieldName: BankingFields.BankName,
                     fieldLabel: t('distributionMethod.bankName'),
                     component: DisbursementFields.BankTextField,
-                    isBankingField: true,
                     classNames: 'col-start-1',
+                    isBankingField: true,
+                },
+                {
+                    fieldName: BankingFields.AccountHolder,
+                    fieldLabel: t('rmdMethod.banking.accountHolder'),
+                    component: DisbursementFields.BankTextField,
                 },
             ],
             getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
@@ -172,7 +177,7 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                 isVoidCheckAttached,
                 doesCheckMeetSecurityRequirements,
                 reEnterAccountNumber,
-                reEnterBankRoutingNumber,
+                reEnterBankRoutingNumber
             }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -189,7 +194,7 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                             nameOnBankAccount: accountHolder ?? '',
                             routingNumber: bankRoutingNumber,
                             reEnterAccountNumber,
-                            reEnterBankRoutingNumber,
+                            reEnterBankRoutingNumber
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
@@ -422,18 +427,6 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
     const jointLifeExpectancyConfigs: JointLifeExpectancyConfig = {
         checkboxLabel: t('rmdMethod.jointLifeExpectancy.label.flic'),
         fields: [
-            {
-                fieldName: PartyFields.FirstName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.firstName'),
-            },
-            {
-                fieldName: PartyFields.MiddleName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.middleName'),
-            },
-            {
-                fieldName: PartyFields.LastName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.lastName'),
-            },
             {
                 fieldName: PartyFields.Dob,
                 fieldLabel: t('rmdMethod.jointLifeExpectancy.dob.flic'),

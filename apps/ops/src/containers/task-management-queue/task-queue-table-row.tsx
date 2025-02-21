@@ -32,7 +32,7 @@ import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/c
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
 import { removeFromCache } from '@deps/utils/cache';
-
+import { SupportedTaskMap } from '@deps/components/case-sub-page/case-tabs/progress/tasks';
 type TaskQueueTableRowProps = {
     task: AssignedTask;
     featureFlagDecisions: FeatureFlags;
@@ -106,6 +106,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             const body = { ...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement };
             const response = await updateTask(taskData.caseId, taskData.id, body, timer);
 
+            removeFromCache('getTaskInstance', { taskId: task.id });
             if (response) {
                 browserLogInfo('task-queue:handleStartTask::Successfully updated task in progress', {
                     taskId: taskData.id,
@@ -195,7 +196,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             badgeLabel = 'To do';
             break;
     }
-    const SupportedTaskMap = [TaskType.SuitabilityReview, TaskType.SuitabilityDataEntry];
+
     return (
         <TableRow key={`task_queue_row_${task.id}`}>
             <TableCell>

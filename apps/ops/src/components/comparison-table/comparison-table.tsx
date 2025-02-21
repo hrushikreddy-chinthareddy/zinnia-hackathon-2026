@@ -1,10 +1,9 @@
 import { Tag, TagVariant } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 
-import ChipStatus from '@deps/components/chip-status/chip-status';
 import Content, { ContentVariant } from '@deps/components/content/content';
-import { Statuses } from '@deps/models/case/case';
 
 export interface ComparisonTableProps {
     comparisonData?: any;
@@ -79,6 +78,7 @@ const TableHeaders: React.FC<TableRowsProps> = ({ rowData }) => {
 };
 
 const TableRows: React.FC<TableRowsProps> = ({ rowData }) => {
+    const { t } = useTranslation();
     const bodyData = rowData.filter(item => item.header !== '' && item.header !== 'Banking details');
 
     return (
@@ -90,9 +90,9 @@ const TableRows: React.FC<TableRowsProps> = ({ rowData }) => {
                         <th key={`header_${index}`} className={`${leftCellClasses} ${index === 0 ? 'rounded-tl' : ''}`} scope="row">
                             <Content variant={ContentVariant.BodySm} details={rowData.header} className="md:whitespace-nowrap" />
                         </th>
-                        <td key={`new_${index}`} className={centerCellClasses}>
+                        <td key={`new_${index}`} className={clsx(centerCellClasses, 'flex')}>
                             <Content pii={pii} variant={ContentVariant.BodySmBold} details={getRowDataDetails(rowData.new)} />
-                            {isRowDataDifferent(rowData.new as string, rowData.current as string) && <ChipStatus status={Statuses.New} />}
+                            {isRowDataDifferent(rowData.new as string, rowData.current as string) && <Tag text={t('comparisonTable.new')} variant={TagVariant.Information} />}
                         </td>
                         <td key={`current_${index}`} className={`${rightCellClasses} ${index === 0 ? 'rounded-tr' : ''}`}>
                             <Content pii={pii} variant={ContentVariant.BodySmBold} details={getRowDataDetails(rowData.current)} />
@@ -119,7 +119,7 @@ const BankDetailsTableRow: React.FC<TableRowsProps> = ({ rowData }) => {
             <th className={`rounded-bl border-b-2 ${leftCellClasses}`} scope="row">
                 <Content variant={ContentVariant.BodySm} details={t('comparisonTable.bankDetails') as string} />
             </th>
-            <td className={`border-2 ${centerCellClasses}`}>
+            <td className={`border-2 flex ${centerCellClasses}`}>
                 <div className="flex flex-col">
                     <span className="pointer-events-none uppercase">
                         <Tag isSelected={false} text={`${newBankDetails.paymentType}`} variant={TagVariant.White} />
@@ -131,7 +131,7 @@ const BankDetailsTableRow: React.FC<TableRowsProps> = ({ rowData }) => {
                         details={`${t('comparisonTable.checkingEndingIn')} ${newBankDetails?.accountNumber}`}
                     />
                 </div>
-                {isDifferent && <ChipStatus status={Statuses.New} />}
+                {isDifferent && <Tag text={t('comparisonTable.new')} variant={TagVariant.Information} />}
             </td>
             <td className={`rounded-br border-b-2 ${rightCellClasses}`}>
                 <div className="flex flex-col">

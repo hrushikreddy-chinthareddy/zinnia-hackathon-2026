@@ -1,0 +1,22 @@
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+
+  :last-child {
+    align-self: center;
+    width: fit-content;
+  }
+}
+
+/* overriding bloom styles for radio buttons */
+.authenticationOptions {
+  > div {
+    flex-direction: row;
+    gap: 0;
+
+    div[class^='_RadioGroupContainer'] {
+      margin-right: var(--measure-dimension-gap-lg);
+    }
+  }
+}

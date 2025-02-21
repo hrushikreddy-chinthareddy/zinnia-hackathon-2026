@@ -66,13 +66,13 @@ const TaxFormsSelection = ({
             abortControllerRef.current.set(selected, newAbortController);
 
             const response = await searchTaxForms(requestData, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3], newAbortController.signal);
-            if (!response.items.length) {
+            if (!response?.data?.items?.length) {
                 setError({ submit: t('sendTaxForms.errors.noTaxForms', { year: selected }) as string });
             }
 
             setTaxFormSelectionDetails(prev => {
                 const existingTaxForms = prev?.taxForms || [];
-                const newTaxForms = response?.items?.filter(
+                const newTaxForms = (response?.data?.items || []).filter(
                     form => !existingTaxForms.find(existingForm => existingForm.taxYear === form.taxYear)
                 );
                 return {
