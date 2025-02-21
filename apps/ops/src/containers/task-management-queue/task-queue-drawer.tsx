@@ -107,6 +107,15 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
     return true
   }
 
+  const handleCancel = () => {
+    const currentLocation = window.location.pathname;
+    const regex = /^\/cases\/CA\d+\/progress$/;
+    if (regex.test(currentLocation)) {
+      openGlobalSideSheet();
+    } else {
+      onClose();
+    }
+  }
 
   return (
     <div className="m-10 flex flex-col gap-5">
@@ -136,7 +145,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
       <div className="flex justify-end align-middle">
         <Button
           className="mr-4"
-          onClick={() => openGlobalSideSheet()}
+          onClick={handleCancel}
           size={ButtonSize.Small}
           type={ButtonType.Secondary}
         >

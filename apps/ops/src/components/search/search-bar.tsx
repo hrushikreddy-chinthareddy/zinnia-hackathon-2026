@@ -76,7 +76,10 @@ const SearchBar = ({
 
     const handleNewValue = (e: ChangeEvent<HTMLInputElement>, value: string, key: PolicySearchKeys) => {
         setShowFieldErrorMessage(false); // reset field error message on change
-        setValues(prevValues => ({ ...prevValues, [key]: (value || '').trim() }));
+        if (activeLabels?.value != 'firmName') {
+            value = (value || '').trim();
+        }
+        setValues(prevValues => ({ ...prevValues, [key]: value || '' }));
     };
 
     const handleToggle = useCallback(

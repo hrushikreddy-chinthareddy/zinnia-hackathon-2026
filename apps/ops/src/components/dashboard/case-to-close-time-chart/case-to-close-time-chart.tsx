@@ -34,7 +34,6 @@ export const CaseToCloseTimeChart: FC = () => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
 
     const filter: DashboardSearchFilter = {
-        caseStatus: [Statuses.Completed],
         createdDateStart: startDates[timeframe],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
