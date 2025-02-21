@@ -13,7 +13,7 @@ import { browserLogError, browserLogInfo } from "@deps/utils/browser-logging";
 import { useRouter } from "next/router";
 import { TaskSource, TaskType } from "@deps/models/case/task";
 import { ERROR_CODES } from "@deps/pages/create-case/error";
-import { writeToCache } from "@deps/utils/cache";
+import { removeFromCache } from "@deps/utils/cache";
 import { PendingReasonOptions } from "@deps/models/case/enums";
 import { useSideSheetContext } from "@deps/contexts/SideSheetContext";
 import GlobalTaskSideSheet from "../case-overview/tasks-table/sidesheet/global-task-sidesheet-content";
@@ -90,15 +90,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
           clientCode: taskData?.carrier,
           process: taskData?.process,
         });
-
-        writeToCache(
-          'getTaskInstance',
-          { taskId },
-          {
-            ...taskData,
-            status: TaskStatus.Pending,
-          }
-        );
+        removeFromCache('getTaskInstance', { taskId: taskData.id});
         onClose();
         getTasks && getTasks();
 
