@@ -145,6 +145,22 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         }));
     };
 
+    const updateSchemaHandler = (dynamicData: any) => {
+        Object.keys(dynamicData).forEach(key => {
+            const currentSchema1 = {
+                ...formSchema,
+                formSchema: {
+                    ...formSchema.formSchema,
+                    definitions: {
+                        ...formSchema.formSchema.definitions,
+                        [key]: { ...dynamicData[key] },
+                    },
+                },
+            };
+            setFormSchema(oldSchema => ({ ...oldSchema, ...currentSchema1 }));
+        });
+    };
+
     useEffect(() => {
         const caseSubTypes = task?.data?.caseSubTypeOptions;
 
@@ -195,7 +211,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onChange={handleChange}
             onSubmit={handleSubmit}
             readonly={readonly}
-            formContext={{ customData: { ...formContext, ...task.data }, setCustomData: setFormContext }}
+            formContext={{ customData: { ...formContext, ...task.data }, setCustomData: setFormContext, updateSchema: updateSchemaHandler }}
         ></DynamicForm>
     );
 });

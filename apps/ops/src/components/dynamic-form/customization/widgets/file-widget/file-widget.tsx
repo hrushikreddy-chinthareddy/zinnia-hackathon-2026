@@ -1,8 +1,6 @@
-import { IChangeEvent } from '@rjsf/core';
 import {
     dataURItoBlob,
     FormContextType,
-    GenericObjectType,
     getTemplate,
     getUiOptions,
     Registry,
@@ -13,15 +11,17 @@ import {
 } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { csrApiHelper } from '@deps/helpers/csr-api-helper';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { ApiProps, FormMetadata } from '@deps/models/case/task';
 import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import { baseAppUrl } from '@deps/queries/api-config';
+import { client } from '@deps/queries/api-utils/client';
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 
@@ -29,8 +29,6 @@ const baseUrl = baseAppUrl + '/api/';
 
 import FileAttachmentComponent from './file-attachment.component';
 import style from './file-widget.module.css';
-
-import { client } from '@deps/queries/api-utils/client';
 
 function addNameToDataURL(dataURL: string, name: string) {
     if (dataURL === null) {
@@ -143,88 +141,55 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'general' });
     const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
     const sideSheet = useSideSheetContext();
-    const [uploadSelection, setUploadSelection] = useState({});
+
     const [attachmentSchema, setAttachmentSchema] = useState<FormMetadata | null>(null);
 
-    const { props } = getUiOptions<T, S, F>(uiSchema);
+    const { props, showFiles } = getUiOptions<T, S, F>(uiSchema);
 
     const { apiUrl, apiMethod } = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
 
-    const onSubmit = useCallback(
-        (data: any, files: any) => {
-            const attachments = [...formContext?.customData?.attachments];
-            Object.keys(files).map((key: any) => {
-                const { blob, name } = dataURItoBlob(files[key]);
-                const processedData = replacePlaceholders(data.formData, formContext ?? {});
-                const metaData = {
-                    ...processedData,
-                    sourceFileName: name,
-                    documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
-                    fileType: blob.type,
-                    formType: 'NB Application',
-                };
+    const onSubmit = (data: any, files: any) => {
+        const attachments = [...(formContext?.customData?.attachments || [])];
+        Object.keys(files).map((key: any) => {
+            const { blob, name } = dataURItoBlob(files[key]);
+            const processedData = replacePlaceholders(data, formContext ?? {});
+            const metaData = {
+                ...processedData,
+                sourceFileName: name,
+                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
+                fileType: blob.type,
+                formType: 'NB Application',
+                docCategory: 'NEW_BUSINESS',
+            };
 
-                uploadDocumentV2(metaData, files[key], formContext?.correlationId || '');
-                attachments.push({ documentName: name, documentType: blob.type });
-                formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
-            });
-        },
-        [formContext, value]
-    );
-
-    const definitionMapper = async () => {
-        if (attachmentSchema?.formSchema) {
-            const url = `${baseUrl}case/v1/refdata/DOCUMENT_CATEGORY`;
-            if (url) {
-                const { data } = await client[apiMethod ?? 'get']<any, AxiosResponse>(url);
-                setAttachmentSchema((oldSchema: any) => ({
-                    ...oldSchema,
-                    formSchema: {
-                        ...oldSchema.formSchema,
-                        definitions: {
-                            ...(oldSchema.formSchema as any).definitions,
-                            docCategoryEnum: {
-                                enum: data.map((item: any) => item.value) || [],
-                            },
-                        },
-                    },
-                }));
-            }
-        }
+            uploadDocumentV2(metaData, files[key], formContext?.correlationId || '');
+            attachments.push({ documentName: name, documentType: blob.type });
+            formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
+            sideSheet.onClose();
+        });
     };
+    const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
     useEffect(() => {
         const getAttachmentSchema = async () => {
             try {
                 const url = `${baseUrl}${apiUrl}`;
-                const dataUrl = `${baseUrl}case/v1/refdata/DOCUMENT_CATEGORY`;
 
-                const [schema, documentCategory] = await Promise.all([
-                    await client[apiMethod ?? 'get']<FormMetadata, AxiosResponse>(url),
-                    await client[apiMethod ?? 'get']<any, AxiosResponse>(dataUrl),
-                ]);
-                if (!schema.data) {
+                const { data } = await client[apiMethod ?? 'get']<FormMetadata, AxiosResponse>(url);
+                if (!data) {
                     return;
                 }
+                const apiProps = typeof props === 'object' ? (data?.uiSchema?.options?.['ui:props'] as ApiProps) : ({} as ApiProps);
+                csrApiHelper(apiProps, { ...formContext?.customData }).then(response => {
+                    data.formSchema.definitions[apiProps?.dataKey] = response;
+                });
 
-                schema.data.formSchema.definitions.docCategoryEnum = {
-                    enum: documentCategory?.data.map((item: any) => item.key) || [],
-                    enumNames: documentCategory?.data.map((item: any) => item.value) || [],
-                };
-
-                setAttachmentSchema(schema.data);
+                setAttachmentSchema(data);
             } catch (err) {
                 console.log('🚀 ~ getAttachmentSchema ~ err:', err);
             }
         };
         getAttachmentSchema();
     }, [apiMethod, apiUrl]);
-
-    const uploadChangeHandler = useCallback(
-        (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
-            setUploadSelection({ ...event.formData });
-        },
-        [setUploadSelection]
-    );
 
     const handleChange = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
@@ -259,10 +224,10 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
                         {attachmentSchema && (
                             <FileAttachmentComponent
-                                files={values}
                                 schema={attachmentSchema}
-                                formData={uploadSelection}
-                                onClose={() => sideSheet.handleOpen(false)}
+                                formData={{}}
+                                onClose={() => sideSheet.onClose()}
+                                onSubmit={(formData: any) => onSubmit(formData, values)}
                             />
                         )}
                     </div>
@@ -272,7 +237,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 sideSheet.handleOpen(true);
             });
         },
-        [multiple, onChange, value, onSubmit, options.filePreview, attachmentSchema, uploadSelection]
+        [multiple, onChange, value, onSubmit, options.filePreview, attachmentSchema]
     );
 
     const rmFile = useCallback(
@@ -304,13 +269,15 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                     className={style.input}
                 />
             </div>
-            {/* <FilesInfo<T, S, F>
-                filesInfo={filesInfo}
-                onRemove={rmFile}
-                registry={registry}
-                preview={options.filePreview}
-                options={options}
-            /> */}
+            {showFiles && (
+                <FilesInfo<T, S, F>
+                    filesInfo={filesInfo}
+                    onRemove={rmFile}
+                    registry={registry}
+                    preview={options.filePreview}
+                    options={options}
+                />
+            )}
         </>
     );
 }

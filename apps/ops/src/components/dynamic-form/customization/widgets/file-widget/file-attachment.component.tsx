@@ -8,10 +8,10 @@ import { FormMetadata } from '@deps/models/case/task';
 export type FileAttachmentComponentProps = {
     schema: FormMetadata;
     formData: any;
-    files: any;
     onClose: () => void;
+    onSubmit: (data: any) => void;
 };
-const FileAttachmentComponent = ({ schema, formData, files, onClose }: FileAttachmentComponentProps) => {
+const FileAttachmentComponent = ({ schema, formData, onSubmit, onClose }: FileAttachmentComponentProps) => {
     const [currentFormData, setCurrentFormData] = useState(formData);
     const [currentSchema, setCurrentSchema] = useState(schema);
     const uploadChangeHandler = useCallback(
@@ -25,17 +25,13 @@ const FileAttachmentComponent = ({ schema, formData, files, onClose }: FileAttac
         [setCurrentFormData]
     );
 
-    const onSubmit = useCallback(
-        (values: any) => {
-            console.log('values', currentFormData, values, files);
-            onClose();
-        },
-        [currentFormData, files]
-    );
+    const onSubmitHandler = useCallback(() => {
+        onSubmit(currentFormData);
+    }, [currentFormData, onSubmit]);
 
-    const setFormContext = (dynamicData: any) => {
+    const updateSchemaHandler = (dynamicData: any) => {
         Object.keys(dynamicData).forEach(key => {
-            const currentSchema1 = {
+            const updatedSchema = {
                 ...currentSchema,
                 formSchema: {
                     ...currentSchema.formSchema,
@@ -45,22 +41,29 @@ const FileAttachmentComponent = ({ schema, formData, files, onClose }: FileAttac
                     },
                 },
             };
-            setCurrentSchema(oldSchema => ({ ...oldSchema, ...currentSchema1 }));
+            setCurrentSchema(oldSchema => ({ ...oldSchema, ...updatedSchema }));
         });
+    };
 
+    const setCustomDataHandler = (data: any) => {
         setCurrentFormData((ogTask: any) => ({
             ...ogTask,
-            ...dynamicData,
+            ...data,
         }));
     };
 
     return (
         <DynamicForm
             taskMetadata={currentSchema}
-            onSubmit={onSubmit}
+            onSubmit={onSubmitHandler}
             formData={currentFormData}
             onChange={uploadChangeHandler}
-            formContext={{ customData: { ...formData }, setCustomData: setFormContext }}
+            formContext={{
+                customData: { ...formData },
+                setCustomData: setCustomDataHandler,
+                onCancel: onClose,
+                updateSchema: updateSchemaHandler,
+            }}
         />
     );
 };

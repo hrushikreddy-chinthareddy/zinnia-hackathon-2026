@@ -8,13 +8,11 @@ import {
     StrictRJSFSchema,
     WidgetProps,
 } from '@rjsf/utils';
-import { AxiosResponse } from 'axios';
 
 import SelectComponent from '@deps/components/select/select';
-import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
-import { ApiProps } from '@deps/models/case/task';
+import { csrApiHelper } from '@deps/helpers/csr-api-helper';
+import { ApiProps, ApiResponseTypes } from '@deps/models/case/task';
 import { baseAppUrl } from '@deps/queries/api-config';
-import { client } from '@deps/queries/api-utils/client';
 
 const baseUrl = baseAppUrl + '/api/';
 
@@ -85,30 +83,14 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     };
 
     async function fetchDetails(apiUrl: string, value: string, newValue?: any) {
-        const payload =
-            apiProps?.apiMethod === 'post' ? replacePlaceholders(apiProps.apiPayload, { ...formData?.customData, value }) : undefined;
-
-        const queryString = new URLSearchParams(replacePlaceholders(apiProps.apiPayload, { ...formData?.customData, value })).toString();
-
-        const url = apiProps?.apiMethod === 'post' ? apiUrl : apiUrl + queryString;
-
-        const { data } = await client[apiProps?.apiMethod ?? 'get']<any, AxiosResponse<any>>(`${baseUrl}${url}`, payload ?? undefined);
-
-        const responseData = apiProps.responseData ? replacePlaceholders(apiProps.responseData, data) : data;
-        const filterData: Record<string, any> = {};
-        if (apiProps?.response) {
-            Object.keys(apiProps?.response).forEach(key => {
-                filterData[key] = responseData?.map((item: any) => item[apiProps?.response?.[key]]);
-            });
-        }
-
-        const MappedData = {
-            [apiProps?.responseKey]: apiProps?.response ? filterData : responseData,
-        };
-        console.log('🚀 ~ fetchDetails ~ data:', MappedData);
-
         onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
-        formData?.setCustomData && formData.setCustomData(MappedData);
+        csrApiHelper(apiProps, { ...formContext?.customData, value }).then(response => {
+            if (apiProps.responseType === ApiResponseTypes.FormData) {
+                formData?.setCustomData && formData.setCustomData({ [apiProps?.dataKey]: response });
+            } else {
+                formData?.updateSchema && formData.updateSchema({ [apiProps?.dataKey]: response });
+            }
+        });
     }
 
     const showPlaceholderOption = !multiple && schema.default === undefined;
