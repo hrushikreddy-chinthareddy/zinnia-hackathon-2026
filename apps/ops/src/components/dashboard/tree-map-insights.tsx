@@ -129,7 +129,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents 
                             wrapper.style.overflow = 'hidden';
                             wrapper.style.textOverflow = 'ellipsis';
 
-                            wrapper.style.margin = 'var(--measure-dimension-margin-2xs)';
+                            wrapper.style.margin = 'var(--measure-dimension-padding-xs)';
                             wrapper.style.padding = 'var(--measure-dimension-padding-xs)';
                             wrapper.style.alignItems = 'center';
                             const nameSpan = document.createElement('span');

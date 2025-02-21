@@ -144,7 +144,7 @@ export const CaseToCloseTimeChart: FC = () => {
             <ChartHeader title="Median Case Processing Times" subtitle={totalCases} />
 
             <BlurOverlayLoader loading={caseTimingDataFetching}>
-                <div className=" flex bg-[--color-base-surface-surface-primar">
+                <div className=" flex bg-[--color-base-surface-surface-primary">
                     {caseTimingDataError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
