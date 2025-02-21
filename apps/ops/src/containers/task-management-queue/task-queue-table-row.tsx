@@ -94,19 +94,21 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             return;
         }
 
-        switch (taskStatus) {
-            case TaskStatus.InProgress: {
+        try {
+            if (TaskStatus.InProgress) {
                 browserLogInfo('task-queue:handleStartTask::Task is in progress', {
                     taskId: taskId,
                     taskStatus: taskStatus,
                 });
                 router.push(newTask ? `/task/${taskId}` : `/nigo-entry?taskId=${taskId}`);
-                break;
+                return;
             }
-            case TaskStatus.New: {
+            if (TaskStatus.New && newTask) {
                 await updateTaskStatus(taskData);
-                break;
+                return;
             }
+        } catch (e) {
+            browserLogError('task-queue:handleStartTask::Error updating task status');
         }
 
         const caseType = ProcessesToCaseTypeMap[taskData.process as Processes];
