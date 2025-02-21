@@ -13,7 +13,6 @@ import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import useMock from '@/hooks/use-mock';
 import { CarrierNames } from '@/types/carriers';
 import { CarrierListDetail, getCarrierSubdomainByName } from '@/utils/carriers';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './NavMenu.module.css';
 
@@ -40,7 +39,6 @@ export const NavMenu = ({
   carrierPolicyDetails?: CarrierListDetail[] | null;
 }) => {
   const { data: featureFlagData } = useFeatureFlags();
-  const showAnnuities = featureFlagData?.[FEATURE_FLAGS.ANNUITY_MODE];
   const [currentUrl, setCurrentUrl] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -80,44 +78,8 @@ export const NavMenu = ({
           align="end"
         >
           <div className="typography-nav-nav-drawer">
+            <p className="typography-labels-label-sm">My Coverage</p>
             <ul>
-              <li
-                className={clsx({
-                  [styles.active as string]: pathname === navUrls.account,
-                })}
-              >
-                <span>
-                  <Icon type={IconType.CIRCLE_USER} width={20} height={20} />
-                </span>
-                <Link
-                  href="/my-account"
-                  onClick={() => {
-                    setIsOpen(false);
-                  }}
-                >
-                  Account
-                </Link>
-              </li>
-              {!showAnnuities && (
-                <li
-                  className={clsx({
-                    [styles.active as string]: pathname === navUrls.allPolicies,
-                  })}
-                >
-                  <span>
-                    <Icon type={IconType.MATCHES} />
-                  </span>
-                  <Link
-                    href="/coverage"
-                    onClick={() => {
-                      setIsOpen(false);
-                    }}
-                  >
-                    My policies
-                  </Link>
-                </li>
-              )}
-
               {carrierPolicyDetails &&
                 carrierPolicyDetails.length > 0 &&
                 carrierPolicyDetails.map((detail: CarrierListDetail) => {
@@ -134,7 +96,9 @@ export const NavMenu = ({
                       className={clsx({
                         [styles.active as string]:
                           // companyName might be an empty string
-                          companyName && currentUrl.includes(companyName),
+                          companyName &&
+                          currentUrl.includes(companyName) &&
+                          pathname === navUrls.allPolicies,
                       })}
                     >
                       <span>
@@ -155,14 +119,38 @@ export const NavMenu = ({
                   );
                 })}
             </ul>
-            <div style={{ position: 'relative' }}>
-              <a href="/api/logout">
+            <p className="typography-labels-label-sm">My Account</p>
+            <ul>
+              <li
+                className={clsx({
+                  [styles.active as string]: pathname === navUrls.account,
+                })}
+              >
                 <span>
-                  <Icon type={IconType.LOGOUT} width={20} height={20} />
+                  <Icon type={IconType.CIRCLE_USER} width={20} height={20} />
                 </span>
-                Sign out
-              </a>
-            </div>
+                <Link
+                  href="/my-account"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                >
+                  Account Profile
+                </Link>
+              </li>
+              {/* This is kind of lazy, but because the nav menu is fixed, when i try to remove the bottom
+              padding on the container, it is removing the bottom margin on the last li too, i can't
+              target this last li without also targeting the last li in the ul above, so i'm just
+              explicitly setting the marginBottom here */}
+              <li style={{ marginBottom: 0 }}>
+                <a href="/api/logout">
+                  <span>
+                    <Icon type={IconType.LOGOUT} width={20} height={20} />
+                  </span>
+                  Sign out
+                </a>
+              </li>
+            </ul>
           </div>
         </Popover.Content>
       </Popover.Portal>
