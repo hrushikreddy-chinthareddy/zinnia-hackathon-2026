@@ -1,0 +1,63 @@
+{
+  "id": "TA000000017898",
+  "caseId": "CA0000390338",
+  "source": "BPM.IndexationOrkestr",
+  "templateId": "1f802f29-b4e0-4a4b-9923-ba63a1bde55b",
+  "process": "Qualification",
+  "carrier": "WELB",
+  "taskType": "PURCHASE_DOCUMENT_MATCHING",
+  "taskName": "Match Document",
+  "status": "INPROGRESS",
+  "data": {
+      "details": {
+          "amount": "238500",
+          "payerDetails": {
+              "taxId": "202501282",
+              "firstName": "TEST FIRSTNAME",
+              "lastName": "TEST LASTNAME"
+          },
+          "purchaseDocument": {
+              "documentSource": "EDS"
+          }
+      },
+      "potentialMatches": [
+          {
+              "taxId": "202501282",
+              "applicationId": "WELLANI041120242025012811",
+              "zlCaseId": "CA0000388341",
+              "policyNumber": "ADA2500730",
+              "firstName": "Thad",
+              "lastName": "Halvorson",
+              "correlationid": "18168ea5-fb69-446c-99d2-062e5b53d7f1",
+              "entityType": "NB_APPLICATION_DATA",
+              "recordId": "6798daf49588c60cdbc18970"
+          }
+      ]
+  },
+  "mappedExceptions": [],
+  "mappedDocuments": [],
+  "queue": "qualification",
+  "escalated": false,
+  "assigneeFirstName": "Vijayalaxmi",
+  "assigneeLastName": "Sambhane",
+  "assignee": "Vijayalaxmi.Sambhane@zinnia.com",
+  "assigneePartyId": "fa49a69c3939412d87b315cb39459497",
+  "assignedAt": "2025-02-11T07:25:51Z",
+  "createdBy": "SYSTEM",
+  "createdByPartyId": "SYSTEM",
+  "createdAt": "2025-02-05T07:09:25Z",
+  "updatedBy": "Vijayalaxmi.Sambhane@zinnia.com",
+  "updatedByPartyId": "fa49a69c3939412d87b315cb39459497",
+  "updatedAt": "2025-02-11T07:26:40Z",
+  "identifiers": [
+      {
+          "identifier": "zlCaseId",
+          "value": "CA0000390338"
+      },
+      {
+          "identifier": "correlationid",
+          "value": "ca128930-4acf-4551-8b12-797e2cd76ce77"
+      }
+  ],
+  "externalId": "f58b52b3-a3d2-4412-93f3-f84dc51026fe"
+}

@@ -2,6 +2,9 @@ import wellabeSuitabilitySchema from '@deps/jsonschema-mock-service/carrier/well
 import wellabeSuitabilityData from '@deps/jsonschema-mock-service/carrier/wellabe/suitability/suitability.json';
 import wellabeSuitabilityReviewSchema from '@deps/jsonschema-mock-service/carrier/wellabe/suitability-review/suitability-review-schema.json';
 import wellabeSuitabilityReviewData from '@deps/jsonschema-mock-service/carrier/wellabe/suitability-review/suitability-review.json';
+import purchaseDocumentMatchingData from '@deps/jsonschema-mock-service/tasks-data/purchase-document-matching.json';
+import agentNigoData from '@deps/jsonschema-mock-service/tasks-data/agent-nigo.json';
+import applicationNigoData from '@deps/jsonschema-mock-service/tasks-data/application-nigo.json';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 
@@ -22,6 +25,12 @@ export const getCaseTaskByIdSSRMock = async (taskType: TaskType): Promise<Manage
             return wellabeSuitabilityData as ManagementTask<TaskStatus>;
         case TaskType.SuitabilityReview:
             return wellabeSuitabilityReviewData as ManagementTask<TaskStatus>;
+        case TaskType.PURCHASE_DOCUMENT_MATCHING:
+            return purchaseDocumentMatchingData as ManagementTask<TaskStatus>;
+        case TaskType.Agent_Nigo:
+            return agentNigoData as ManagementTask<TaskStatus>;
+        case TaskType.Application_Nigo:
+            return applicationNigoData as ManagementTask<TaskStatus>;
         default:
             return null;
     }
