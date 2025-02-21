@@ -5147,6 +5147,14 @@
             "secondaryCta": "Back to home"
         }
     },
+    "nbAgentReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Validate Agent was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."
