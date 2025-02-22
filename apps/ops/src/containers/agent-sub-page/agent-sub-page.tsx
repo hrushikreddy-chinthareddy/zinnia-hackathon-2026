@@ -7,6 +7,7 @@ import EmailCard from '@deps/containers/people-data-cards/email-card/email-card'
 import IdentificationCard from '@deps/containers/people-data-cards/identification-card/identification-card';
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
+import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { getAgentData } from '@deps/queries/api/agents';
 
@@ -18,7 +19,8 @@ export type AgentSubPage = {
 };
 
 export const AgentSubPage = ({ partyId }: AgentSubPage) => {
-    const [agentData, setAgentData] = useState<any>();
+    const [agentData, setAgentData] = useState<AgentParty>();
+    const [isLoading, setIsLoading] = useState(true);
     const { policy, policyDetails } = useContext(PolicyData);
 
     const { t } = useTranslation();
@@ -42,10 +44,13 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
 
     const fetchPolicies = useCallback(async () => {
         try {
-            const result = getAgentData({ clientCode, id: agentId });
-            setAgentData(result);
+            const result = await getAgentData({ clientCode, id: agentId, policyNumber, planCode });
+            setAgentData(new AgentParty(result, selectedPolicyParty));
         } catch (error) {
             console.error('Unable to fetch agent details', error);
+            setAgentData(new AgentParty(undefined, selectedPolicyParty));
+        } finally {
+            setIsLoading(false);
         }
     }, [agentId, clientCode]);
 
@@ -55,59 +60,64 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
 
     return (
         <div className="shadow-elevation-light-04">
-            <PersonPageHeader
-                breadcrumbText={breadcrumb?.text}
-                breadcrumbUrl={breadcrumb?.url}
-                selectedPolicyParty={selectedPolicyParty}
-                selectedPolicyPartyRoles={selectedPolicyPartyRoles}
-                editable={false}
-                partyStatus={selectedPolicyParty?.partyStatus}
-            />
+            {isLoading && <div>Loading...</div>}
+            {!isLoading && agentData && (
+                <>
+                    <PersonPageHeader
+                        breadcrumbText={breadcrumb?.text}
+                        breadcrumbUrl={breadcrumb?.url}
+                        selectedPolicyParty={agentData?.party}
+                        selectedPolicyPartyRoles={selectedPolicyPartyRoles}
+                        editable={false}
+                        partyStatus={selectedPolicyParty?.partyStatus}
+                    />
 
-            <hr className=" h-0.5 border-none bg-gray-100" />
-            <FirmInformationCard
-                party={selectedPolicyParty}
-                partyRoles={selectedPolicyPartyRoles}
-                planCode={planCode}
-                policyNumber={policyNumber}
-            />
+                    <hr className=" h-0.5 border-none bg-gray-100" />
+                    <FirmInformationCard
+                        party={agentData?.party}
+                        partyRoles={selectedPolicyPartyRoles}
+                        planCode={planCode}
+                        policyNumber={policyNumber}
+                    />
 
-            <hr className=" h-0.5 border-none bg-gray-100" />
-            <AllocationCard allocation={selectedPolicyParty?.agentPercentage} deathBenefit={null} />
+                    <hr className=" h-0.5 border-none bg-gray-100" />
+                    <AllocationCard allocation={agentData?.party?.agentPercentage} deathBenefit={null} />
 
-            <hr className=" h-0.5 border-none bg-gray-100" />
-            <IdentificationCard
-                selectedPolicyParty={newSelectedPolicyParty}
-                isAnnuity={policyDetails.isAnnuity}
-                partyRoles={selectedPolicyPartyRoles}
-            />
+                    <hr className=" h-0.5 border-none bg-gray-100" />
+                    <IdentificationCard
+                        selectedPolicyParty={agentData}
+                        isAnnuity={policyDetails.isAnnuity}
+                        partyRoles={selectedPolicyPartyRoles}
+                    />
 
-            <hr className="h-0.5 border-none bg-gray-100" />
-            <PhoneCard
-                editable={false}
-                party={selectedPolicyParty}
-                partyRoles={selectedPolicyPartyRoles}
-                planCode={planCode}
-                policyNumber={policyNumber}
-            />
+                    <hr className="h-0.5 border-none bg-gray-100" />
+                    <PhoneCard
+                        editable={false}
+                        party={agentData?.party}
+                        partyRoles={selectedPolicyPartyRoles}
+                        planCode={planCode}
+                        policyNumber={policyNumber}
+                    />
 
-            <hr className="h-0.5 border-none bg-gray-100" />
-            <EmailCard
-                editable={false}
-                party={selectedPolicyParty}
-                partyRoles={selectedPolicyPartyRoles}
-                planCode={planCode}
-                policyNumber={policyNumber}
-            />
+                    <hr className="h-0.5 border-none bg-gray-100" />
+                    <EmailCard
+                        editable={false}
+                        party={agentData?.party}
+                        partyRoles={selectedPolicyPartyRoles}
+                        planCode={planCode}
+                        policyNumber={policyNumber}
+                    />
 
-            <hr className="h-0.5 border-none bg-gray-100" />
-            <AddressCard
-                editable={false}
-                party={selectedPolicyParty}
-                partyRoles={selectedPolicyPartyRoles}
-                planCode={planCode}
-                policyNumber={policyNumber}
-            />
+                    <hr className="h-0.5 border-none bg-gray-100" />
+                    <AddressCard
+                        editable={false}
+                        party={agentData?.party}
+                        partyRoles={selectedPolicyPartyRoles}
+                        planCode={planCode}
+                        policyNumber={policyNumber}
+                    />
+                </>
+            )}
         </div>
     );
 };
