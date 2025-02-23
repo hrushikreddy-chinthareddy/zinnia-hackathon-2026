@@ -8,6 +8,11 @@ import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { DashboardStatsElementResponse } from '@deps/models/case/case';
 
+//https://www.npmjs.com/package/highcharts-react-official#highcharts-with-nextjs
+if (typeof Highcharts === 'object') {
+    more(Highcharts);
+}
+
 interface Props {
     className?: string;
     seriesLabel?: string;
@@ -82,11 +87,6 @@ const DistributionPieChartSmall = ({
         },
         [seriesLabel, sort]
     );
-
-    useEffect(() => {
-        more(Highcharts);
-        // accessibility(Highcharts);
-    }, []);
 
     useEffect(() => {
         const chartData = getChartData(statGrouping);

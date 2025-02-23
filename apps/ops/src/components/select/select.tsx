@@ -89,6 +89,7 @@ const SelectComponent = ({
     size = FieldSize.Small,
     value,
     onOpenChange,
+    maxContentWidth,
 }: SelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const MainComponent = isMultiselect ? DropdownMenu : Select;
@@ -173,26 +174,40 @@ const SelectComponent = ({
                         <FieldIcon
                             icon={endIcon}
                             variant={disabled ? FieldVariant.Inactive : FieldVariant.Default}
-                            className={`simple-transition mr-4 ${isOpen ? 'flip180' : ''} ${disabled ? 'text-secondary' : ''}`}
+                            className={clsx('simple-transition', {
+                                flip180: isOpen,
+                                'text-secondary': disabled,
+                                'mr-4': size !== FieldSize.XS,
+                                'mr-2': size === FieldSize.XS,
+                            })}
                         />
                     </div>
                 </MainComponent.Trigger>
-                <MainComponent.Content
-                    position="popper"
-                    className={clsx(`${contentClasses} max-h-[266px] w-[var(--radix-popper-anchor-width)]`, style.content)}
-                    onEscapeKeyDown={e => e.stopPropagation()} // Prevents closure of the side sheet or any parent element
-                >
-                    {isMultiselect ? (
-                        <MultiselectOptionItem
-                            options={options}
-                            value={value as { [key: string]: string }}
-                            onChange={onChange}
-                            isMultiselect
-                        />
-                    ) : (
-                        <SingleSelectOptions options={options} value={value} />
-                    )}
-                </MainComponent.Content>
+                <MainComponent.Portal>
+                    <MainComponent.Content
+                        position="popper"
+                        align={maxContentWidth ? 'start' : undefined}
+                        className={clsx(
+                            `${contentClasses} max-h-[266px]`,
+                            {
+                                'w-[var(--radix-popper-anchor-width)]': !maxContentWidth,
+                            },
+                            style.content
+                        )}
+                        onEscapeKeyDown={e => e.stopPropagation()} // Prevents closure of the side sheet or any parent element
+                    >
+                        {isMultiselect ? (
+                            <MultiselectOptionItem
+                                options={options}
+                                value={value as { [key: string]: string }}
+                                onChange={onChange}
+                                isMultiselect
+                            />
+                        ) : (
+                            <SingleSelectOptions options={options} value={value} />
+                        )}
+                    </MainComponent.Content>
+                </MainComponent.Portal>
             </MainComponent.Root>
             {message && <AssistiveText text={message} variant={AssistiveTextVariant.Error} className="mt-2" />}
         </div>

@@ -6,7 +6,7 @@ import { CSSProperties, FC, PropsWithChildren, useState } from 'react';
 
 export enum DashboardTabs {
     ACTIVE_APPLICATIONS = 'active-applications',
-    ISSUED_BUSINESS = 'issued-business',
+    CLOSED_TRANSACTIONS = 'closed-transactions',
 }
 const DEFAULT_TAB = DashboardTabs.ACTIVE_APPLICATIONS;
 
@@ -26,26 +26,20 @@ export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
     }
 
     return (
-        <TabGroup
-            className=" bg-white px-8 pt-4 pb-0 "
-            defaultValue={tabVal}
-            value={tabVal}
-            activationMode="manual"
-            onValueChange={handleTabChange}
-        >
+        <TabGroup defaultValue={tabVal} value={tabVal} activationMode="manual" onValueChange={handleTabChange}>
             <TabList
                 style={
                     {
                         '--indicator-z-index': 2,
                     } as CSSProperties
                 }
-                className="!mb-0 w-full !border-b-0"
+                className="!mb-0 w-full !border-b-0 bg-white px-8"
             >
                 <TabTrigger value={DashboardTabs.ACTIVE_APPLICATIONS}>
                     <Icon type={IconType.DOCUMENT_TEXT} width={24} height={24} className="hidden lg:block" />{' '}
                     {toTitleCase('open transactions')}
                 </TabTrigger>
-                <TabTrigger value={DashboardTabs.ISSUED_BUSINESS}>
+                <TabTrigger value={DashboardTabs.CLOSED_TRANSACTIONS}>
                     <Icon type={IconType.SHIELD_CHECKMARK} width={24} height={24} className="hidden lg:block" />{' '}
                     {toTitleCase('closed transactions')}
                 </TabTrigger>

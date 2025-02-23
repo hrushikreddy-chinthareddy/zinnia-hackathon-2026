@@ -7,7 +7,7 @@ import { client } from '@deps/queries/api-utils/client';
 import { replacePlaceholders } from './value-placement.helper';
 const baseUrl = baseAppUrl + '/api/';
 export const csrApiHelper = async (props: ApiProps, formData: any) => {
-    const { apiUrl, apiMethod, apiBody, apiHeaders, apiPayload, responseData, response } = props;
+    const { apiUrl, apiMethod, apiPayload, responseData, response } = props;
 
     if (apiMethod === 'post') {
         try {

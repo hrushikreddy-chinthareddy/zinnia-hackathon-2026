@@ -6,6 +6,7 @@ import HC_TREEMAP from 'highcharts/modules/treemap';
 import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
@@ -20,6 +21,8 @@ import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
 
+import { ChartHeader } from './chart-header';
+
 const CHART_HEIGHT = 500;
 
 if (typeof Highcharts === 'object') {
@@ -32,9 +35,10 @@ export type TreeMapInsightsProps = {
     dashboardStatsData?: CaseDashboardStatsResponse;
     heading: string;
     carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
+    FilterComponents: React.ReactNode;
 };
 
-export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsightsProps) => {
+export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents }: TreeMapInsightsProps) => {
     const chartCompomentRef = useRef<HighchartsReact.RefObject>(null);
     const [aiSummary, setAiSummary] = useState<string | null>(null);
     const shouldShowCaseInsights = useCaseInsightsPermission();
@@ -54,14 +58,6 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
             return '';
         }
     };
-
-    // TODO: figure out filtering based on the the secondary and tertiary groupings
-    // const seriesData = useMemo(() => {
-    //     const data = dashboardStatsData
-    //         .find(item => item.name === selectedSubprocess)
-    //         ?.values?.filter(item => item.name !== 'NULL_VALUE' && item.name !== '');
-    //     return data || []; // always return an array
-    // }, [dashboardStatsData]);
 
     const seriesData = dashboardStatsData?.data; // this will change once filters are added
 
@@ -133,7 +129,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
                             wrapper.style.overflow = 'hidden';
                             wrapper.style.textOverflow = 'ellipsis';
 
-                            wrapper.style.margin = 'var(--measure-dimension-margin-2xs)';
+                            wrapper.style.margin = 'var(--measure-dimension-padding-xs)';
                             wrapper.style.padding = 'var(--measure-dimension-padding-xs)';
                             wrapper.style.alignItems = 'center';
                             const nameSpan = document.createElement('span');
@@ -207,47 +203,46 @@ export const TreeMapInsights = ({ dashboardStatsData, heading }: TreeMapInsights
     }, [seriesData, shouldShowCaseInsights]);
 
     return (
-        <div className={clsx('bg-white flex flex-col lg:flex-row gap-4')}>
-            <div className="basis-1/4 flex flex-col gap-4 items-start">
-                <div>
-                    <Typography variant={TypographyVariant.H3}>{heading}</Typography>
-                    <Typography variant={TypographyVariant.Label}>
-                        There are {wholeNumberFormatify(dashboardStatsData?.totalElements)} NIGOs
-                    </Typography>
-                </div>
-                {loading ? (
-                    <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
-                        <PageLoader />
-                    </div>
-                ) : (
-                    <>
-                        {!!aiSummary?.length && (
-                            <>
-                                <div className="flex flow-col items-center align-middle gap-2">
-                                    <LightBulbIcon height={'24px'} width={'24px'} />
-                                    <Typography variant={TypographyVariant.LabelLg}>Insight</Typography>
-                                </div>
-                                <Typography variant={TypographyVariant.BodySm}>{aiSummary}</Typography>
-                            </>
-                        )}
-                    </>
-                )}
-            </div>
-            <div className="basis-3/4 flex flex-col">
-                <div
-                    className={clsx(
-                        `w-full h-[${CHART_HEIGHT}px]`,
-                        noData && 'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]'
-                    )}
-                >
-                    {noData ? (
-                        <div className="flex flex-col gap-2 items-center">
-                            <ChartBarsIcon height={'24px'} width={'24px'} />
-                            <Typography variant={TypographyVariant.BodyBold}>There are no NIGOs</Typography>
+        <div className={clsx('bg-white')}>
+            <ChartHeader title={heading} subtitle={`There are ${wholeNumberFormatify(dashboardStatsData?.totalElements)} NIGOs`} />
+
+            <div className="flex flex-col lg:flex-row gap-4 mt-6">
+                <div className="w-1/4 flex flex-col gap-4 items-start">
+                    {loading ? (
+                        <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
+                            <PageLoader />
                         </div>
                     ) : (
-                        <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chartCompomentRef} />
+                        <>
+                            {!!aiSummary?.length && (
+                                <>
+                                    <div className="flex flow-col items-center align-middle gap-2">
+                                        <LightBulbIcon height={'24px'} width={'24px'} />
+                                        <Typography variant={TypographyVariant.LabelLg}>Insight</Typography>
+                                    </div>
+                                    <Typography variant={TypographyVariant.BodySm}>{aiSummary}</Typography>
+                                </>
+                            )}
+                        </>
                     )}
+                </div>
+                <div className={clsx('w-3/4 flex-col', sharedStyles.chartContainer)}>
+                    <div>{FilterComponents}</div>
+                    <div
+                        className={clsx(
+                            `w-full h-[${CHART_HEIGHT}px]`,
+                            noData && 'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]'
+                        )}
+                    >
+                        {noData ? (
+                            <div className="flex flex-col gap-2 items-center">
+                                <ChartBarsIcon height={'24px'} width={'24px'} />
+                                <Typography variant={TypographyVariant.BodyBold}>There are no NIGOs</Typography>
+                            </div>
+                        ) : (
+                            <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chartCompomentRef} />
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

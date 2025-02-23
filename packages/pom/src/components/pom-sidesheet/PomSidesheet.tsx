@@ -1,5 +1,6 @@
 import { FC, ReactNode, useState, cloneElement, isValidElement } from 'react';
 import { SideSheet, SideSheetProps } from '@zinnia/bloom/components';
+import { default as PomStyles } from '../../styles/pom.module.css';
 
 export interface PomSideSheetProps
   extends Omit<SideSheetProps, 'children' | 'overrideOpen'> {
@@ -45,7 +46,9 @@ export const PomSideSheet: FC<PomSideSheetProps> = ({
       trigger={triggerWithClick}
       closeCallback={() => setIsOpen(false)}
     >
-      <div id="sidesheet-content">{childrenWithClose}</div>
+      <div id={PomStyles['producer-onboarding-maintenance']}>
+        {childrenWithClose}
+      </div>
     </SideSheet>
   );
 };

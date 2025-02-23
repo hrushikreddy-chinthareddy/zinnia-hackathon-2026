@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from 'react';
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import SelectSimple from '@deps/components/select/select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat, getLabelSubString } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
@@ -16,6 +15,7 @@ import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
 import { SankeyCellText } from './sankey-cell-text';
+import { ChartHeader } from '../chart-header';
 
 interface Props {
     height?: number;
@@ -716,11 +716,9 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
 
     return (
         <BlurOverlayLoader loading={caseGroupingDataLoading || isFetching}>
-            <div>
-                <Typography className="flex items-center mt-7 mb-7" variant={TypographyVariant.H4} asTag="h2" data-testid="header-text">
-                    {t('caseStatCharHeader', { count: formattedCasesNumber })}
-                </Typography>
-                <div className="relative pb-6">
+            <div className="mt-8">
+                <ChartHeader title={t('caseStatCharHeader', { count: formattedCasesNumber })} subtitle={undefined} />
+                <div className="relative pb-6 mt-6">
                     <div
                         className="absolute top-0 bottom-0 left-0 border-r-2 border-[#EDEDED]"
                         style={{

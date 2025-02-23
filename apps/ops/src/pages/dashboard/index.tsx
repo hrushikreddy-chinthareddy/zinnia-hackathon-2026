@@ -3,7 +3,7 @@ import { TabContent } from '@zinnia/bloom/components';
 import { FgaRoles } from '@zinnia/utils';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 import { DashboardTabNav, DashboardTabs } from '@deps/components/dashboard/dashboard-nav-links';
 import FiltersHeader from '@deps/components/dashboard/filters-header/filters-header';
@@ -11,8 +11,8 @@ import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { ActiveApplications } from '@deps/containers/dashboard/active-applications/active-applications';
+import { ClosedTransactions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
-import { IssuedBusiness } from '@deps/containers/dashboard/issued-business/issued-business';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
@@ -25,6 +25,7 @@ import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimize
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
+import styles from './Dashboard.module.css';
 export interface CarrierListItem {
     [key: string]: string;
 }
@@ -43,10 +44,8 @@ const DashboardPage = ({
         entry: carrierHeaderEntry,
     } = useIntersectionObserver({
         threshold: 0,
-        rootMargin: `${-64}px 0px -100% 0px`,
+        rootMargin: `${0}px 0px -100% 0px`,
     });
-
-    const [loading, setLoading] = useState<boolean>(false);
 
     return (
         <>
@@ -59,15 +58,14 @@ const DashboardPage = ({
                         authorizedCarriers={authorizedCarriers}
                         brokerDealersSSR={brokerDealersSSR}
                         ref={carrierHeaderRef}
-                        loading={loading}
                     />
                     <DashboardTabNav>
-                        <div ref={tabContentRef}>
+                        <div ref={tabContentRef} className={styles.tabContent}>
                             <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
-                                <ActiveApplications carrierHeaderRef={carrierHeaderRef} authorizedCarriers={authorizedCarriers} />
+                                <ActiveApplications />
                             </TabContent>
-                            <TabContent value={DashboardTabs.ISSUED_BUSINESS}>
-                                <IssuedBusiness authorizedCarriers={authorizedCarriers} />
+                            <TabContent value={DashboardTabs.CLOSED_TRANSACTIONS}>
+                                <ClosedTransactions />
                             </TabContent>
                         </div>
                     </DashboardTabNav>

@@ -129,9 +129,13 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
 
                 const disableAnnuities = !featureFlags[FEATURE_FLAGS.POLICY_MANAGEMENT_ANNUITIES_ENABLED];
 
+                const transformedValue = Object.fromEntries(
+                    Object.entries(value).map(([key, val]) => (key === 'ssn' ? [key, val?.replaceAll('-', '')] : [key, val]))
+                );
+
                 const response = await searchPolicy(
                     {
-                        ...value,
+                        ...transformedValue,
                         ...(disableAnnuities ? { lineOfBusiness: 'LIFE' } : {}),
                     },
                     { limit, offset }
@@ -200,7 +204,8 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
             }
         });
 
-        const hasSearchValue = value && !!Object.keys(value).length;
+        const hasSearchValue = value && !!Object.keys(value).length && !(value.ssn && !/\d/.test(value.ssn));
+
         // Show the field error message if the search button is clicked and nothing have been entered into the field
         if (!hasSearchValue) {
             setShowFieldErrorMessage(true);
@@ -219,7 +224,10 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         // initial value of polichSearchFilters.searchValue is `{}`
         // if any keys are present then this will return true
         // we then know we are returning from a search
-        const searchValueIsSet = !!Object.keys(policySearchFilters.searchValue).length;
+
+        const searchValueIsSet =
+            !!Object.keys(policySearchFilters.searchValue).length &&
+            !(policySearchFilters.searchValue.ssn && !/\d/.test(policySearchFilters.searchValue.ssn));
 
         // don't fetch search results on initial page load. Wait until the Search button is clicked
         // unless

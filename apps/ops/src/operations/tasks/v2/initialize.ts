@@ -133,7 +133,7 @@ export const initializeOTPTaskSSR = async ({
         contractNumber,
         documentNumber,
         file: 'queries/api/cases',
-        function: 'initializeTaskV2',
+        function: 'initializeOTPTaskSSR',
         taskType,
         taskId,
         action,
@@ -150,6 +150,7 @@ export const initializeOTPTaskSSR = async ({
             if (activeForm) {
                 logInfo('initializeTaskV2::getCaseTaskByIdSSR task active form found', loggingContext);
                 if (action === 'readonly' || (activeForm.status === TaskStatus.New || activeForm.status === TaskStatus.InProgress)) {
+                    logInfo('initializeTaskV2::getCaseTaskByIdSSR returining task', { ...loggingContext, taskStatus: activeForm?.status } );
                     return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                 }
             }
@@ -164,11 +165,11 @@ export const initializeOTPTaskSSR = async ({
                 activeForm = await getCaseTaskByIdSSR(task.id, accessToken);
                 if (activeForm) {
                     if (activeForm.status === TaskStatus.New || activeForm.status === TaskStatus.InProgress) {
-                        logInfo('initializeTaskV2::active form found', { ...loggingContext, taskId: task.id });
+                        logInfo('initializeTaskV2::active form found', { ...loggingContext, taskId: task.id, taskStatus: activeForm?.status });
                         return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                     }
                     if (activeForm.status === TaskStatus.Completed && getLastSaved) {
-                        logInfo('initializeTaskV2::completed form found', { ...loggingContext, taskId: task.id });
+                        logInfo('initializeTaskV2::completed form found', { ...loggingContext, taskId: task.id, taskStatus: activeForm?.status });
                         completedForm = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                     }
                 }
@@ -187,11 +188,11 @@ export const initializeOTPTaskSSR = async ({
             logInfo('initializeTaskV2::Digital form not found', loggingContext);
             throw new Error(`initializeTaskV2::Unsuccessful digital form creation for task type ${taskType}`);
         }
-        logInfo('initializeTaskV2::Digital form data found', loggingContext);
+        logInfo('initializeTaskV2::Digital form data found', { ...loggingContext, documentNumber, caseId });
         digitalForm.data.documentNumber = documentNumber;
         digitalForm.data.onbaseCaseId = caseId;
         if (getLastSaved && completedForm) {
-            logInfo('initializeTaskV2::completed form populated under new task', {...loggingContext, getLastSaved });
+            logInfo('initializeTaskV2::completed form populated under new task', {...loggingContext, getLastSaved, documentNumber, caseId });
             digitalForm.data.formRequest = { ...completedForm.data.formRequest};
         }
         logInfo('initializeTaskV2::creating a task', loggingContext);
