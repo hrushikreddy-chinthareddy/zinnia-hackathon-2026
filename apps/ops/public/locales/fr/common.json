@@ -771,8 +771,7 @@
         "with": "avec",
         "approved": "Approuvé",
         "unapproved": "Désapprouvé",
-        "uploadDocument": "Téléverser le document",
-        "upload": "Téléverser"
+        "submit": "Soumettre"
     },
     "dashboard": {
         "h1": "Recherche de politique",
@@ -1418,7 +1417,7 @@
             "suitabilityReviewIssues": "Revoir Suitability Problèmes",
             "purchaseDocumentMatchingIssues": "Document de correspondance",
             "agentNigo": "Réviser les problèmes d'agent",
-            "applicationNigo":"Réviser les problèmes d'agent"
+            "applicationNigo": "Réviser les problèmes d'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -4326,7 +4325,7 @@
             },
             "title": "Compris!"
         }
-    },    
+    },
     "loanPayment": {
         "amount": {
             "label": "Montant",

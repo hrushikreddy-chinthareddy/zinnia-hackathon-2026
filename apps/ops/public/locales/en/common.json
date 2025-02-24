@@ -730,8 +730,6 @@
         "with": "with",
         "approved": "Approved",
         "unapproved": "Unapproved",
-        "uploadDocument": "Upload document",
-        "upload": "Upload",
         "submit": "Submit"
     },
     "dashboard": {
@@ -1421,7 +1419,7 @@
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
-            "applicationNigo":"Review Application Issues"
+            "applicationNigo": "Review Application Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
