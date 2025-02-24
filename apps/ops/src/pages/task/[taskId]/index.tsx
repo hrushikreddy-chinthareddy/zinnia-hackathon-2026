@@ -17,7 +17,7 @@ import { ManagementTask } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
-import { getCaseDetailsSSR } from '@deps/queries/api/cases';
+import { getCaseDetailsSSR, getReferenceDataSSR } from '@deps/queries/api/cases';
 import { optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
@@ -166,12 +166,36 @@ export const getServerSideProps = withPageAuthRequired({
                 await getNigoExceptions(nigoFilters, accessToken),
             ]);
 
+            const correlationId = caseDetails?.correlationId;
+
             const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
 
-            const correlationId = caseDetails?.correlationId;
+            if (!currentTaskMetadata.length) {
+                const fallbackMetadata: FormMetadata = {
+                    title: '',
+                    formSchema: taskMetadata?.formSchema ?? {},
+                    uiSchema: taskMetadata?.uiSchema ?? {},
+                };
+                currentTaskMetadata.push(fallbackMetadata ?? {});
+            }
 
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
             const taskInfoLink = buildCaseLink(caseId);
+
+            if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
+                const filters = {
+                    carrier: [task.carrier],
+                    keys: ['processList'] as ('processList' | 'requestSubType' | 'productName')[],
+                };
+
+                const caseTypeOptions = await getReferenceDataSSR(filters, accessToken);
+
+                if (currentTaskMetadata[0]?.formSchema?.definitions) {
+                    currentTaskMetadata[0].formSchema.definitions.caseTypeEnum = {
+                        enum: caseTypeOptions?.referenceData.processList || ['Case Type Not Found'],
+                    };
+                }
+            }
 
             return {
                 props: {
