@@ -79,10 +79,10 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         const newValue = getValue(false, value, enumOptions, selectedIndexes, multiple);
 
         if (!apiProps.apiUrl) return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
-        await fetchDetails(apiProps.apiUrl, value, newValue);
+        await fetchDetails(value, newValue);
     };
 
-    async function fetchDetails(apiUrl: string, value: string, newValue?: any) {
+    async function fetchDetails(value: string, newValue?: any) {
         onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
         csrApiHelper(apiProps, { ...formContext?.customData, value }).then(response => {
             if (apiProps.responseType === ApiResponseTypes.FormData) {
