@@ -34,7 +34,7 @@ const SystematicWithdrawalProgram = ({
     isReadOnly,
     onSswProgramFrequencyChange,
     planCode,
-    jointCoveredPlanCodes
+    jointCoveredPlanCodes,
 }: SystematicWithdrawalProgramProps) => {
     const { formErrors, formProgram, setFormProgram } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
@@ -50,8 +50,10 @@ const SystematicWithdrawalProgram = ({
         depleteFundYears: { text: formProgram?.programFrequency?.fixedPeriodYear?.text || null },
     });
 
+    const filteredSSWTypeOptions = options.filter(option => option !== null);
+
     useEffect(() => {
-        const selectedOption = options.find(val => val.value === sswData.programSubType.text);
+        const selectedOption = filteredSSWTypeOptions.find(val => val.value === sswData.programSubType.text);
 
         if (selectedOption?.generateSSWPayloadFromSelection) {
             setFormProgram(oldVal => {
@@ -74,7 +76,12 @@ const SystematicWithdrawalProgram = ({
                 {t('newProgram')}
             </Typography>
             <div className="p-2">
-                <SystematicWithdrawalRow isReadOnly={isReadOnly} sswTypeOptions={options} onDataChange={setSswData} sswData={sswData} />
+                <SystematicWithdrawalRow
+                    isReadOnly={isReadOnly}
+                    sswTypeOptions={filteredSSWTypeOptions}
+                    onDataChange={setSswData}
+                    sswData={sswData}
+                />
             </div>
             {sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
                 <JointCoveredPersonDetails

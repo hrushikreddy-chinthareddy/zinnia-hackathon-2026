@@ -1416,7 +1416,7 @@
             "suitabilityReviewIssues": "Revoir Suitability Problèmes",
             "purchaseDocumentMatchingIssues": "Document de correspondance",
             "agentNigo": "Réviser les problèmes d'agent",
-            "applicationNigo":"Réviser les problèmes d'agent"
+            "applicationNigo": "Réviser les problèmes d'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -1697,7 +1697,8 @@
                     "interestEarningDividendsGains": "Interset/Gains/Dividendes/Gains",
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Option de revenu viager conjoint",
-                    "singleLifetimeIncomeOption": "Option de revenu viager unique"
+                    "singleLifetimeIncomeOption": "Option de revenu viager unique",
+                    "interestEarned": "Intérêt gagné"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Veuillez spécifier le fonds pour configurer SSW avec le pourcentage d'A.V.",
@@ -4324,7 +4325,7 @@
             },
             "title": "Compris!"
         }
-    },    
+    },
     "loanPayment": {
         "amount": {
             "label": "Montant",

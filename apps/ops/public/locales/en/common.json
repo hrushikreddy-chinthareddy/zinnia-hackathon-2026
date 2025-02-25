@@ -1418,7 +1418,7 @@
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
-            "applicationNigo":"Review Application Issues"
+            "applicationNigo": "Review Application Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -1704,7 +1704,8 @@
                     "interestEarningDividendsGains": "Interest/Earnings/Dividends/Gains",
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Joint Lifetime Income Option",
-                    "singleLifetimeIncomeOption": "Single Lifetime Income Option"
+                    "singleLifetimeIncomeOption": "Single Lifetime Income Option",
+                    "interestEarned": "Interest earned"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Please specify the fund to setup SSW with Percent of A.V",

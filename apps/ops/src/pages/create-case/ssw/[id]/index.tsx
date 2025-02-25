@@ -45,7 +45,6 @@ import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-
 import { NassauSSWForm } from '@deps/containers/otp/ssw-forms/nasu/nasu-ssw-form';
 import { FlicSSWForm } from '@deps/containers/otp/ssw-forms/flic/flic-ssw-form';
 import { GlcoSSWForm } from '@deps/containers/otp/ssw-forms/glco/glco-ssw-form';
-import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 import { UlpcSSWForm } from '@deps/containers/otp/ssw-forms/ulpc/ulpc-ssw-form';
 import { GdmnSSWForm } from '@deps/containers/otp/ssw-forms/gdmn/gdmn-ssw-form';
 import { UsaaSSWForm } from '@deps/containers/otp/ssw-forms/usaa/usaa-ssw-form';
@@ -56,6 +55,8 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 import { ERROR_CODES } from '../../error';
 import { RslnSSWForm } from '@deps/containers/otp/ssw-forms/rsln/rsln-ssw-form';
 import { PrdnSSWForm } from '@deps/containers/otp/ssw-forms/prdn/prdn-ssw-form';
+import { DlicSSWForm } from '@deps/containers/otp/ssw-forms/dlic/dlic-ssw-form';
+import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -95,6 +96,7 @@ const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Recor
     [Carrier.GDMN]: <GdmnSSWForm />,
     [Carrier.USAA]: <UsaaSSWForm />,
     [Carrier.RSLN]: <RslnSSWForm />,
+    [Carrier.DLIC]: <DlicSSWForm />,
 });
 
 export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user, planCode }: SSWCaseProps) {
