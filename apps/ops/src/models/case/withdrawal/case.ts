@@ -794,6 +794,8 @@ export enum FundWithdrawnMethod {
     Prorata = 'Prorata',
     SpecifyFunds = 'Specific',
     Empty = '',
+    // TODO: Update value once API's are updated
+    VariableFunds = 'Specific',
 }
 
 export enum RMDFundWithdrawnMethod {

@@ -1721,6 +1721,9 @@
                         "level": "Niveau",
                         "increasing": "Croissant"
                     }
+                },
+                "singleLifeTimeIncome": {
+                    "title": "Nom de la personne bénéficiaire du revenu"
                 }
             },
             "rmdMethod": {

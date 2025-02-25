@@ -1728,6 +1728,9 @@
                         "level": "Level",
                         "increasing": "Increasing"
                     }
+                },
+                "singleLifeTimeIncome": {
+                    "title": "Name of Income Person"
                 }
             },
             "rmdMethod": {
@@ -1962,7 +1965,8 @@
                 "or": "Or",
                 "preTaxBalance": "Pre-tax balance",
                 "prorata": "Prorata",
-                "specifyFunds": "Specify funds"
+                "specifyFunds": "Specify funds",
+                "variableFunds": "Variable funds"
             },
             "distributionReason": {
                 "addDate": "Add date",

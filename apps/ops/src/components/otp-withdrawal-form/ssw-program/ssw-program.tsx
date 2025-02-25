@@ -8,9 +8,10 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import JointCoveredPersonDetails from '@deps/containers/otp/ssw-forms/sbgc/joint-covered-person-details';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { AmountType, SSWType, Frequency } from '@deps/models/case/withdrawal/case';
+import { AmountType, SSWType, Frequency, PartyRoles } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
+import SingleLifePersonDetails from './single-life-person-details';
 import { SSWFormProgramFields } from './ssw-form-program.helper';
 import SystematicWithdrawalRow, { SSWProgram } from './ssw-row';
 import ExistingPrograms from '../rmd-method/existing-programs';
@@ -36,9 +37,11 @@ const SystematicWithdrawalProgram = ({
     planCode,
     jointCoveredPlanCodes,
 }: SystematicWithdrawalProgramProps) => {
-    const { formErrors, formProgram, setFormProgram } = useContext(FormDataContext);
+    const { formErrors, formProgram, formParty, setFormProgram } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
     const today = dayjs().format(ZAHARA_API_DATE_FORMAT);
+
+    const jointOwnerDetails = formParty?.parties?.find(item => item.partyRoleType === PartyRoles.JOINT_OWNER);
 
     const [sswData, setSswData] = useState<SSWProgram>({
         startDate: { text: formProgram?.programFrequency?.beginDate.text || today },
@@ -89,6 +92,10 @@ const SystematicWithdrawalProgram = ({
                     planCode={planCode}
                     jointCoveredPlanCodes={jointCoveredPlanCodes}
                 />
+            )}
+
+            {jointOwnerDetails && sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption && (
+                <SingleLifePersonDetails personDetails={jointOwnerDetails} />
             )}
             {formErrors && (
                 <div className="flex flex-col">
