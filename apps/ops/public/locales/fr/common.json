@@ -4247,7 +4247,7 @@
         "eligible": "Éligible",
         "eligibleForWithdrawal": "Éligible au retrait",
         "eligibleForWithdrawalTooltip": "Les retraits de la valeur du compte sont autorisés actuellement. Les retraits peuvent réduire le bénéfice décès.",
-        "freeWithdrawalAmount": "Montant de retrait gratuit",
+        "freeWithdrawalAmount": "Montant de retrait gratuit: {{ amount }}",
         "ineligible": "Non éligible",
         "maximumWithdrawal": "Montant maximal de retrait",
         "netSurrenderValue": "Valeur de rachat nette",
