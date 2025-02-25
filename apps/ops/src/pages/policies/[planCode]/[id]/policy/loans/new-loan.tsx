@@ -3,21 +3,17 @@ import router from 'next/router';
 import { useEffect } from 'react';
 
 import { PageHead } from '@deps/components/page-title';
-import NewLoanContainer from '@deps/containers/financial-transactions/new-loan/new-loan-container';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import NewLoanContainer from '@deps/containers/financial-transactions/loan/new-loan/new-loan-container';
 import { NewLoanProvider } from '@deps/contexts/transactions/NewLoanContext';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { checkEligibilityNewLoan, TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 
-export interface PolicyLoanProps {
+export interface NewLoanProps {
     policy: Policy;
 }
 
-const NewLoan = ({ policy }: PolicyLoanProps) => {
-    const { featureFlags } = useOptimizely();
-
+const NewLoan = ({ policy }: NewLoanProps) => {
     useEffect(() => {
         const checkEligibility = async () => {
             const eligibilityCheck = await checkEligibilityNewLoan(policy.product?.planCode, policy.policyNumber, policy.loanValues?.maximumLoanAmount);
@@ -30,12 +26,6 @@ const NewLoan = ({ policy }: PolicyLoanProps) => {
         };
         checkEligibility();
     }, [policy.loanValues?.maximumLoanAmount, policy.policyNumber, policy.product?.planCode]);
-
-    if (!featureFlags?.[FEATURE_FLAGS.NEW_LOAN_TRANSACTION]) {
-        router.push(`/403`);
-
-        return null;
-    }
 
     return (
         <NewLoanProvider>

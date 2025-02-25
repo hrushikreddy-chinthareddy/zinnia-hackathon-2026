@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 
-import { WithdrawalProvider } from '@deps/contexts/WithdrawalContext';
+import { WithdrawalProvider } from '@deps/contexts/transactions/WithdrawalContext';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 
 import WithdrawalContainer from './withdrawal-container';

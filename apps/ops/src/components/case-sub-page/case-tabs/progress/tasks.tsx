@@ -12,21 +12,22 @@ import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow
 
 import { TaskView } from './progress-tab-types';
 
-const SupportedTaskMap = [
+export const SupportedTaskMap = [
     TaskType.SuitabilityReview,
     TaskType.SuitabilityDataEntry,
     TaskType.PURCHASE_DOCUMENT_MATCHING,
     TaskType.Agent_Nigo,
+    TaskType.Application_Nigo
 ];
 
 export function Task({ task }: { task: TaskView }) {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
-
     const TaskTitle: Record<string, string> = {
         [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReviewIssues'),
         [TaskType.PURCHASE_DOCUMENT_MATCHING]: t('caseOverview.tabs.purchaseDocumentMatchingIssues'),
         [TaskType.Agent_Nigo]: t('caseOverview.tabs.agentNigo'),
+        [TaskType.Application_Nigo]: t('caseOverview.tabs.applicationNigo'),
     };
 
     const TaskTypeMap: Record<string, string> = {
@@ -35,9 +36,9 @@ export function Task({ task }: { task: TaskView }) {
 
     const handleClick = (task: TaskView) => {
         sideSheet.changeSideSheetContent(
-            `${t('sideSheet.task.taskHeading')}: ${TaskTitle[task.description]}`,
+            `${task.taskName ? `${t('sideSheet.task.taskHeading')}: ${task.taskName}` : t('sideSheet.task.taskHeading')}`,
             SupportedTaskMap.includes(task.description as TaskType) ? (
-                <GlobalTaskSideSheet taskId={task.id} />
+                <GlobalTaskSideSheet taskId={task.id} taskDescription={task.description} />
             ) : (
                 <TaskSideSheet taskId={task.id} />
             )
@@ -53,9 +54,8 @@ export function Task({ task }: { task: TaskView }) {
 
     // if the task is part of an exception, add a dot before the task and change the color depending on the status
     if (task.hasParentException) {
-        beforeClasses = `before:text-[32px] before:content-["·"] ${
-            task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
-        }`;
+        beforeClasses = `before:text-[32px] before:content-["·"] ${task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
+            }`;
     }
 
     return (

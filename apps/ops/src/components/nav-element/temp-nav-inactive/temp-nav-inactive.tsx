@@ -4,6 +4,7 @@ import { PropsWithChildren, ReactNode } from 'react';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
+
 type TempNavInactiveProps = {
     tooltipBody: ReactNode;
     triggerClassName?: string;
@@ -16,11 +17,6 @@ export const isStillInactive = {
     beneficiaryCardContainer: 'Refer to guidelines for instructions to edit allocations.',
     interiorPeoplePageHeader: 'Refer to guidelines for instructions to add or remove roles.',
     interiorPeoplePageDOB: 'Refer to guidelines for instructions to edit date of birth.',
-    loanPageHeader: 'Refer to guidelines for instructions to start a loan.',
-    loanPageStartNew: 'Refer to guidelines for instructions to start a loan.',
-    loanPageSetUpAutopay: 'Refer to guidelines for instructions to set up autopay.',
-    loanPageManageAutopay: 'Refer to guidelines for instructions to manage autopay.',
-    loanPageOTP: 'Refer to guidelines for instructions to make one-time payment.',
     withdrawalPageexchange1035: 'Refer to guidelines for instructions to process 1035 exchange.',
     withdrawalSetupAutopay: 'Refer to guidelines for instructions to setup autopay.',
     withdrawalManageAutopay: 'Refer to guidelines for instructions to manage autopay.',

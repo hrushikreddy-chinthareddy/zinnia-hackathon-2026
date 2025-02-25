@@ -36,7 +36,10 @@ export type MultiselectProps = {
     onOpenChange?: (isOpen: boolean) => void;
 };
 
-export type SelectProps = (SimpleSelectProps | MultiselectProps) & { disabled?: boolean } & Omit<FieldProps, 'onChange' | 'value'>;
+export type SelectProps = (SimpleSelectProps | MultiselectProps) & { disabled?: boolean; maxContentWidth?: boolean } & Omit<
+        FieldProps,
+        'onChange' | 'value'
+    >;
 
 export const getTriggerClasses = (isOpen: boolean) => {
     const hoverFocusClass = 'default-hover default-focus';
@@ -60,6 +63,7 @@ export const getSelectedValueClasses = (disabled: boolean, size: FieldSize) =>
         '!block overflow-hidden text-ellipsis whitespace-nowrap text-left',
         {
             'text-gray-600': disabled,
+            'py-1 pl-2 pr-2': size === FieldSize.XS,
             'h-9.5 py-2 pl-4 pr-2': size === FieldSize.Small,
             'h-13 p-4 pr-2': size === FieldSize.Default,
         }

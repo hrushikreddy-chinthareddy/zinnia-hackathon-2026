@@ -1,4 +1,4 @@
-import { NewLoanRequest } from '@zinnia/api-types/types/sor';
+import { LoanRepaymentOneTimeRequest, NewLoanRequest } from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
@@ -17,6 +17,10 @@ import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
+
+export interface LoanRepaymentOneTimeRequestQuery extends LoanRepaymentOneTimeRequest {
+    caseId: string;
+}
 
 export interface OneTimePremiumRequestQuery extends OneTimePremiumRequest {
     caseId: string;
@@ -55,6 +59,15 @@ export interface ReverseRecreateRequestQuery {
     caseID: string;
 }
 
+export interface SystematicProgramUpdateResponse {
+    status: number;
+    data?: {
+        caseId: string;
+        caseStatus: string;
+        correlationId: string;
+    };
+}
+
 export interface SubmitPremiumResponse {
     status: number;
     data?: {
@@ -64,7 +77,7 @@ export interface SubmitPremiumResponse {
     };
 }
 
-export interface CancelTransactionResponse extends SubmitPremiumResponse {}
+export interface CancelTransactionResponse extends SystematicProgramUpdateResponse {}
 
 export interface TransactionResponse {
     status: string | number;
@@ -88,6 +101,36 @@ export enum TransactionResponseStatus {
     Success = 'success',
 }
 
+export const checkEligibilityLoanRepaymentOneTime = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    totalLoanBalance: number | undefined
+): Promise<TransactionResponse> => {
+    try {
+        if (!totalLoanBalance || totalLoanBalance <= 0) {
+            return {
+                status: TransactionResponseStatus.Failure,
+                validationResult: [{
+                    resolution: 'Total loan balance is 0',
+                    attribute: null,
+                    error: '',
+                    errorCode: ''
+                }]
+            };
+        }
+        const { data } = await client.post<TransactionResponse, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/loanrepaymentonetime/eligibilitycheck`,
+            {} as AxiosResponse
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('checkEligibilityLoanRepaymentOneTime::an error occurred during eligibility check', error);
+
+        return error?.data;
+    }
+};
+
 export const checkEligibilityNewLoan = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
@@ -98,6 +141,12 @@ export const checkEligibilityNewLoan = async (
         if (maxLoanValue === 0) {
             return {
                 status: TransactionResponseStatus.Failure,
+                validationResult: [{
+                    resolution: 'Maximum loan value is 0',
+                    attribute: null,
+                    error: '',
+                    errorCode: ''
+                }]
             };
         }
 
@@ -183,6 +232,25 @@ export const validateFullSurrenderWithdrawal = async (
         return data;
     } catch (error: any) {
         console.error('validateFullSurrenderWithdrawal::an error occurred during validation', error);
+
+        return error?.data as TransactionResponse;
+    }
+};
+
+export const validateLoanPayment = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: LoanRepaymentOneTimeRequestQuery
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<LoanRepaymentOneTimeRequestQuery, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/loanrepaymentonetime/validation`,
+            query
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error('validateLoanPayment::an error occurred during validation', error);
 
         return error?.data as TransactionResponse;
     }
@@ -318,6 +386,22 @@ export const submitOneTimePremium = async (
     }
 };
 
+export const submitLoanPayment = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: LoanRepaymentOneTimeRequestQuery
+): Promise<TransactionResponse> => {
+    try {
+        const response = await client.post<LoanRepaymentOneTimeRequestQuery, AxiosResponse>(`${baseUrl}/policies/${planCode}/${policyNumber}/loanrepaymentonetime`, query);
+
+        return { status: response.status };
+    } catch (error: any) {
+        console.error('submitLoanPayment::an error occurred during submission', error);
+
+        return { status: error.response?.status };
+    }
+};
+
 export const submitNewLoan = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
@@ -356,14 +440,14 @@ export const submitSystematicProgramUpdate = async (
     policyNumber: string | undefined,
     arrangementId: string,
     query: SystematicProgramUpdateRequestQuery
-): Promise<SubmitPremiumResponse> => {
+): Promise<SystematicProgramUpdateResponse> => {
     try {
-        const data = await client.post<SystematicProgramUpdateRequestQuery, AxiosResponse>(
+        const response = await client.post<SystematicProgramUpdateRequestQuery, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}`,
             query
         );
 
-        return data;
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitSystematicProgramUpdate::an error occurred during validation', error);
 

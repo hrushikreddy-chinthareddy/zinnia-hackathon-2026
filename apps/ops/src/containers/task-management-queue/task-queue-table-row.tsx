@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { getTaskStatus } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
@@ -22,8 +21,18 @@ import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import TaskQueueDrawer from './task-queue-drawer';
+import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
+import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
+import Dropdown from '@deps/components/dropdown/Dropdown';
+import Badge from '@deps/components/badge/badge';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
+import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
+import { BadgeVariant } from '@deps/components/badge/badge.helper';
 import { removeFromCache } from '@deps/utils/cache';
-
+import { SupportedTaskMap } from '@deps/components/case-sub-page/case-tabs/progress/tasks';
 type TaskQueueTableRowProps = {
     task: AssignedTask;
     featureFlagDecisions: FeatureFlags;
@@ -35,7 +44,6 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
     const router = useRouter();
     const [timer] = useState(performance.now());
-
     const createdAt = task.createdAt ? dayjs(task.createdAt).format('MMM DD, YYYY h:mm a') : '-';
     const taskStatus = getTaskStatus(t, task.status);
     const documentNumber = getCaseIdentifierValue(task.identifiers, CaseIdentifier.DocumentNumber);
@@ -98,6 +106,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             const body = { ...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement };
             const response = await updateTask(taskData.caseId, taskData.id, body, timer);
 
+            removeFromCache('getTaskInstance', { taskId: task.id });
             if (response) {
                 browserLogInfo('task-queue:handleStartTask::Successfully updated task in progress', {
                     taskId: taskData.id,
@@ -149,6 +158,44 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             return;
         }
     };
+    const sideSheet = useSideSheetContext();
+    const openSideSheet = () => {
+        const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} getTasks={getTasks} />;
+        sideSheet.changeSideSheetContent(t('updateTaskStatusDrawer.updateTaskStatus'), content);
+        sideSheet.handleOpen(true);
+    };
+    const statuses = [
+        {
+            label: 'Pending',
+            icon: <Pause width={16} height={16} />,
+            onSelect: () => {
+                openSideSheet()
+            },
+        },
+    ];
+    let badgeIcon, badgeVariant, badgeLabel;
+    switch (task.status) {
+        case TaskStatus.Completed:
+            badgeIcon = <CircleCheckIcon height={16} width={16} />;
+            badgeVariant = BadgeVariant.Success;
+            badgeLabel = 'Completed';
+            break;
+        case TaskStatus.Canceled:
+            badgeIcon = <BanIcon height={16} width={16} />;
+            badgeVariant = BadgeVariant.Inactive;
+            badgeLabel = 'Canceled';
+            break;
+        case TaskStatus.Pending:
+            badgeIcon = <Pause width={16} height={16} />,
+                badgeVariant = BadgeVariant.Error;
+            badgeLabel = 'Pending';
+            break;
+        default:
+            badgeIcon = <Progress width={16} height={16} />;
+            badgeVariant = BadgeVariant.Info;
+            badgeLabel = 'To do';
+            break;
+    }
 
     return (
         <TableRow key={`task_queue_row_${task.id}`}>
@@ -165,12 +212,33 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             <TableCell>
                 <Content details={carrierName} variant={ContentVariant.BodySm} />
             </TableCell>
-            <TableCell>
+            <TableCell >
+
                 <Content details={task?.process} variant={ContentVariant.BodySm} />
             </TableCell>
             <TableCell>
-                <Content details={taskStatus} variant={ContentVariant.BodySm} />
+                {(SupportedTaskMap.includes(task?.taskType as TaskType)) ?
+
+                    <>
+                        {task?.status === TaskStatus.InProgress && <Dropdown
+                            triggerIcon={<div className='pb-1'><Progress width={16} height={16} /></div>}
+                            triggerLabel="In Progress"
+                            options={statuses}
+                        />}
+                        {task?.status !== TaskStatus.InProgress && <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
+                            <Badge
+                                icon={badgeIcon}
+                                variant={badgeVariant}
+                                label={badgeLabel}
+                                rounded={true}
+                                className="flex gap-1 items-center"
+                            />
+                        </Typography>}
+                    </> :
+                    <Content details={taskStatus} variant={ContentVariant.BodySm} />
+                }
             </TableCell>
+
             <TableCell>
                 <Content details={createdAt} variant={ContentVariant.BodySm} />
             </TableCell>
@@ -194,8 +262,12 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
                     />
                 </a>
             </TableCell>
-        </TableRow>
+        </TableRow >
     );
 };
 
 export default TaskQueueTableRow;
+
+
+
+

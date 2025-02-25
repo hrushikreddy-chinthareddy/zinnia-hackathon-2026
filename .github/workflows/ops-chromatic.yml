@@ -1,0 +1,19 @@
+name: 'Chromatic OPS'
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'apps/consumer-experience/**'
+    branches-ignore:
+      - 'dependabot/**'
+
+jobs:
+  chromatic:
+    uses: './.github/workflows/build-chromatic.yml'
+    with:
+      project-name: OPS
+      filter-path: ops
+      working-dir: apps/ops
+    secrets:
+      chromatic-token: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

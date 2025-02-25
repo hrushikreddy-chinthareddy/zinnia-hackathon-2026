@@ -1,4 +1,5 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { convertToCamelCase } from '@zinnia/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
@@ -17,8 +18,8 @@ import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getCaseDetailsSSR, getReferenceDataSSR } from '@deps/queries/api/cases';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
@@ -61,8 +62,6 @@ export const getServerSideProps = withPageAuthRequired({
         const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
         const taskId = (query.taskId as string) || '';
-
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
 
         let accessToken;
         try {
@@ -110,11 +109,42 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const { taskType, carrier, caseId, process } = task;
-            const caseDetails = await getCaseDetailsSSR(caseId, accessToken as string);
-            const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
+            if (
+                !(
+                    user.email &&
+                    ((task.assignee && task.assignee.toLowerCase() == user.email.toLowerCase()) ||
+                        (!task.assignee && task.prefferedAssignee && task.prefferedAssignee.toLowerCase() == user.email.toLowerCase()))
+                )
+            ) {
+                logWarn('task/:id::task is not assigned to user', { assignee: task.assignee, user: user.email });
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
 
-            if (!isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions)) {
+            const { taskType, carrier, caseId, process } = task;
+
+            if (!taskType || !carrier || !caseId || !process) {
+                logWarn('task/details not found', { taskType, carrier, caseId, process });
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
+
+            const isTaskEnabled = await optimizelyService.getFeatureFlagVariables(
+                FEATURE_FLAG_VARIABLES.TASK_MANAGEMENT,
+                carrier?.toLowerCase(),
+                user.sub
+            );
+            const flag = convertToCamelCase(taskType);
+            const enabledTask = Object.keys(isTaskEnabled).includes(flag);
+            if (!enabledTask) {
                 logWarn('task/:id::feature flag not enabled', { carrier });
                 return {
                     redirect: {
@@ -123,7 +153,19 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-            const taskMetadata = await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken);
+            const nigoFilters = {
+                categoryIds: ['Form', 'Signature', 'Account Information'],
+                carrier: carrier?.toUpperCase(),
+                process: taskType,
+            };
+
+            const [caseDetails, taskMetadata, nigoExceptionResponse] = await Promise.all([
+                await getCaseDetailsSSR(caseId, accessToken as string),
+                await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken),
+                await getNigoExceptions(nigoFilters, accessToken),
+            ]);
+
+            const correlationId = caseDetails?.correlationId;
 
             const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
 
@@ -136,13 +178,6 @@ export const getServerSideProps = withPageAuthRequired({
                 currentTaskMetadata.push(fallbackMetadata ?? {});
             }
 
-            const nigoFilters = {
-                categoryIds: ['Form', 'Signature', 'Account Information'],
-                carrier: carrier?.toUpperCase(),
-                process: taskType,
-            };
-
-            const nigoExceptionResponse = await getNigoExceptions(nigoFilters, accessToken);
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
             const taskInfoLink = buildCaseLink(caseId);
             if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {

@@ -540,7 +540,6 @@ export default function DatePicker({
         if (isFutureDateDisabled && dayjsDate.isAfter(dayjs(), 'day')) {
             return disabledClasses;
         }
-
         return '';
     };
 
@@ -635,9 +634,9 @@ export default function DatePicker({
                 />
             )}
             {!isRange &&
-            handleCustomSelection &&
-            datePickerType &&
-            [DatePickerTypes.Annually, DatePickerTypes.Quarterly].includes(datePickerType) ? (
+                handleCustomSelection &&
+                datePickerType &&
+                [DatePickerTypes.Annually, DatePickerTypes.Quarterly].includes(datePickerType) ? (
                 <Quarters
                     quartersOpen={daysOpen}
                     getDisabledQuarterClasses={getDisabledQuarterClasses}

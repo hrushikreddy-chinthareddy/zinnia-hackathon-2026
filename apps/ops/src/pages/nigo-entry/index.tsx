@@ -179,14 +179,17 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
+            const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
+
             logInfo('nigo-entry::getCaseTaskByIdSSR task active form found', {
                 taskId,
+                documentNumber,
+                contractNum,
+                clientCode,
                 file: 'pages/nigo-entry',
                 function: 'getServerSideProps',
                 user: userInfoForLogging.email,
             });
-
-            const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
 
             const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name });
             const caseType = ProcessesToCaseTypeMap[activeForm.process as Processes];

@@ -6,12 +6,10 @@ import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-wi
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
 import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
-import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import PageHeader from '@deps/components/page-header/page-header';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import { TranslationFiles } from '@deps/config/translations';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
 import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
@@ -21,7 +19,6 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { checkEligibilityNewLoan, TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { getBorrowingInterestRate, getLoanInterestRate } from '@deps/queries/api/product-rate';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface LoansContainerProps {
     policy: Policy;
@@ -32,7 +29,6 @@ interface LoansContainerProps {
 
 const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanCarryingBalance }: LoansContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const { featureFlags } = useOptimizely();
 
     const [isEligible, setIsEligible] = useState<boolean | null>(null);
     const [ineligibilityMessage, setIneligibityMessage] = useState('');
@@ -40,7 +36,6 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
     const [availableLoanInterestRate, setAvailableLoanInterestRate] = useState(t('general.loadingThing', { thing: t('general.rate') }));
     const [availableLoanCreditRate, setAvailableLoanCreditRate] = useState(t('general.loadingThing', { thing: t('general.rate') }));
     const policyDetails = new PolicyDetails(policy);
-    const newLoanEnabled = featureFlags?.[FEATURE_FLAGS.NEW_LOAN_TRANSACTION];
 
     useEffect(() => {
         const getLoanRates = async () => {
@@ -65,7 +60,7 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
             !eligible && setIneligibityMessage(formatValidationResult(eligibilityResponse?.validationResult));
         };
         checkEligibility();
-    }, [newLoanEnabled, policy.loanValues?.maximumLoanAmount, policy.policyNumber, policy.product?.planCode]);
+    }, [policy.loanValues?.maximumLoanAmount, policy.policyNumber, policy.product?.planCode]);
 
     const { currency, loanValues, coverage } = policy;
     const currencyFormat: Intl.NumberFormatOptions = { style: 'currency', currency };
@@ -149,11 +144,7 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
                 )}
             </div>
             <div className="mt-8 bg-gray-50 px-8 py-4">
-                {!newLoanEnabled ? (
-                    <TempNavInactive tooltipBody={isStillInactive.loanPageHeader}>
-                        {t('transactions.loans.header.startLoan')}
-                    </TempNavInactive>
-                ) : isEligible ? (
+                {isEligible ? (
                     <NavElement
                         className="mr-5"
                         data-testid={LoansTest.START_LOAN_LINK}

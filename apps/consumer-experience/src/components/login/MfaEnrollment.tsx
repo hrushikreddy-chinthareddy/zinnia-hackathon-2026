@@ -13,6 +13,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 
 import { associateMfa } from '@/actions/login-actions';
 import styles from '@/app/login/Login.module.css';
+import { MfaVerificationType } from '@/types/auth';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -98,12 +99,21 @@ export const MfaEnrollment = () => {
           <legend>How would you like to receive the code?</legend>
           <div className={styles.mfaOptions}>
             <label className={styles.mfaOption}>
-              <input type="radio" name="authenticatorType" value="sms" />
-              Text
+              <input
+                type="radio"
+                name="authenticatorType"
+                value={MfaVerificationType.SMS}
+                defaultChecked
+              />
+              SMS
             </label>
             <label className={styles.mfaOption}>
-              <input type="radio" name="authenticatorType" value="voice" />
-              Call
+              <input
+                type="radio"
+                name="authenticatorType"
+                value={MfaVerificationType.CALL}
+              />
+              Phone call
             </label>
           </div>
         </div>

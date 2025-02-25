@@ -25,7 +25,7 @@ const Start = ({ policy }: any) => {
                 setState={setFormData as StartStepSetState}
                 state={formData}
                 title={t('title')}
-                subtitle={t('subTitle')}
+                subtitle={t('subTitle') as string}
                 processType={Processes.SSW}
             />
         </>

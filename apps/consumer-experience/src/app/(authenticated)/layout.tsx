@@ -40,7 +40,7 @@ export default async function AuthenticatedLayout({
   // const userName = session?.user?.name.split(' ');
 
   return (
-    <main data-theme={themeCookie}>
+    <main>
       <UserProvider user={session?.user}>
         {/* As of May 22, 2024 we have not started phase 2 of masking PII data. This provider is setup for future use. Once we iron out the requirements around PII levels and data masking, we will populate this provider */}
         <PiiProvider
@@ -49,25 +49,34 @@ export default async function AuthenticatedLayout({
             piiLevel: undefined,
           }}
         >
+          <div style={{ width: '100%', backgroundColor: 'white' }}>
+            <div className="layout-wrapper">
+              <div className="layout-wrapper-inner">
+                <Nav
+                  planCode={params.planCode}
+                  policyNumber={params.policyNumber}
+                  userName={{
+                    firstName: undefined,
+                    lastName: undefined,
+                  }}
+                  themeCookie={themeCookie as CompanyName}
+                />
+              </div>
+            </div>
+          </div>
+
           <SessionManager>
             <RefreshRouterManager>
-              <Nav
-                planCode={params.planCode}
-                policyNumber={params.policyNumber}
-                userName={{
-                  firstName: undefined,
-                  lastName: undefined,
-                }}
-                themeCookie={themeCookie as CompanyName}
-              />
-
-              <div className={styles.container}>
-                <div className={styles.content}>
-                  <MourningBanner />
-                  <UserConsentManager>{children}</UserConsentManager>
-                  <Analytics />
+              <MourningBanner />
+              {/* TODO: fix naming of classes */}
+              <div className="layout-wrapper">
+                <div className="layout-wrapper-inner">
+                  <div className={styles.mainContent}>
+                    <UserConsentManager>{children}</UserConsentManager>
+                  </div>
                 </div>
               </div>
+              <Analytics />
             </RefreshRouterManager>
           </SessionManager>
         </PiiProvider>

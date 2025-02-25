@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
@@ -44,7 +43,6 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
@@ -90,13 +88,8 @@ export default function useFlicSSWConfig(t: TFunction) {
         formDisbursement
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
-        const sswProgramStartDate = formProgram?.programFrequency?.beginDate?.text || null;
         const sswType = formProgram?.programSubType?.text || '';
         const funds = formDistribution?.funds.filter(fund => !!fund.amount.text);
-
-        if (sswProgramStartDate && [29, 30, 31].includes(dayjs(sswProgramStartDate, ZAHARA_API_DATE_FORMAT).get('D'))) {
-            errors['systematicStartDate'] = t('sswProgram.warnings.systematicStartDate', { startDate: 1, endDate: 28 });
-        }
 
         if (sswType === SSWType.PercentOfAmountValue && funds?.length === 0) {
             errors['specifyFundsRequired'] = t('sswProgram.warnings.specifyFundsRequired');

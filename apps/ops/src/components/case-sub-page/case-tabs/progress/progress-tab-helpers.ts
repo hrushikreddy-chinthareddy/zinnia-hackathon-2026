@@ -16,6 +16,7 @@ import { StageInstance } from '@deps/models/case/stage-instance';
 import { MultiStepInstance, SingleStepInstance, StepInstance } from '@deps/models/case/step-instance';
 import { TaskInstance, TaskStatus } from '@deps/models/case/task-instance';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { GroupedExceptions } from './progress-tab-types';
 
 import { CaseAdditionalData, ExceptionView, TaskView } from './progress-tab-types';
 
@@ -100,11 +101,36 @@ const taskSorter = (taskA: TaskView, taskB: TaskView) => {
     return taskStatusHierarchy[taskB.status] - taskStatusHierarchy[taskA.status];
 };
 
+const groupExceptionsByTask = (exceptions: ExceptionView[]): GroupedExceptions => {
+    return exceptions.reduce((acc: GroupedExceptions, exception: ExceptionView) => {
+        if (exception.tasks.length === 0) {
+            if (!acc['no-task']) {
+                acc['no-task'] = { tasks: [], exceptions: [] };
+            }
+            acc['no-task'].exceptions.push(exception);
+        } else {
+            exception.tasks.forEach(task => {
+                if (!acc[task.id]) {
+                    acc[task.id] = { tasks: [], exceptions: [] };
+                }
+                if (!acc[task.id].tasks.some(t => t.id === task.id)) {
+                    acc[task.id].tasks.push(task);
+                }
+                if (!acc[task.id].exceptions.some(e => e.id === exception.id)) {
+                    acc[task.id].exceptions.push(exception);
+                }
+            });
+        }
+        return acc;
+    }, {});
+};
+
 export class TransformedStep {
     additionalData: CaseAdditionalData = {};
     description?: string;
     documents: DocumentView[];
     exceptions: ExceptionView[] = [];
+    exceptionsGroupedByTask: GroupedExceptions = {};
     id: string;
     isMultiInstance: boolean = false;
     name: string = '';
@@ -133,6 +159,7 @@ export class TransformedStep {
         this.buildNameAndDescription();
         this.buildExceptions();
         this.buildTasks();
+        this.exceptionsGroupedByTask = groupExceptionsByTask(this.exceptions);
     }
     private buildExceptions() {
         this.exceptions = (
@@ -319,6 +346,8 @@ export class TransformedCase {
     // Exceptions that are not tied to any step
     unmappedExceptions: ExceptionView[] = [];
     unresolvedExceptionCount: number;
+    exceptionsGroupedByTask: GroupedExceptions = {};
+
     constructor(caseDetails: Case, t: TFunction) {
         this.caseRaw = caseDetails;
         this.t = t;
@@ -391,6 +420,7 @@ export class TransformedCase {
             parentExceptionStatus: status,
             status: foundTask.status,
             updatedAt: foundTask.updatedAt,
+            taskName: foundTask.taskName || '',
         };
     }
     // Builds an ExceptionView from an ExceptionInstance
@@ -438,5 +468,6 @@ export class TransformedCase {
             }
             return acc;
         }, [] as ExceptionView[]);
+        this.exceptionsGroupedByTask = groupExceptionsByTask(this.unmappedExceptions);
     }
 }

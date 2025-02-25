@@ -85,7 +85,7 @@ export default function RMDOptions({ rmdData, onDataChange, isFormStateReadOnly 
                         disabled={isFormStateReadOnly}
                         variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
                     />
-                    {!showAmount && (
+                    {!showAmount && !isFormStateReadOnly&& (
                         <AssistiveText
                             text={t('enterAmountManually') as string}
                             iconOverride={` `}
