@@ -21,9 +21,10 @@ export interface IdentificationCardProps {
     selectedPolicyParty?: PolicyParty;
     partyRoles?: PolicyParties[];
     isAnnuity?: boolean;
+    agentData?: any;
 }
 
-const IdentificationCard = ({ editable = false, selectedPolicyParty, partyRoles, isAnnuity }: IdentificationCardProps) => {
+const IdentificationCard = ({ editable = false, selectedPolicyParty, partyRoles, isAnnuity, agentData }: IdentificationCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.card.identification' });
 
     const {
@@ -174,10 +175,10 @@ const IdentificationCard = ({ editable = false, selectedPolicyParty, partyRoles,
                         {isAgent && (
                             <>
                                 <FieldData label={t('options.externalId')} sentenceCase={false}>
-                                    {}
+                                    {selectedPolicyParty?.party.agentExternalId}
                                 </FieldData>
                                 <FieldData label={t('options.channel')} sentenceCase={false}>
-                                    {}
+                                    {/* {selectedPartyRoles?.hiearchy?.channel} */}
                                 </FieldData>
                             </>
                         )}

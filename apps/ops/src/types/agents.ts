@@ -1,4 +1,5 @@
 // BPB note: this is being loosely typed from a QA response as the  API doesn't have a spec
+
 // certain string values may be enumerated, and the unknowns I just couldn't infer or didnt' need for now
 export interface AgentData {
     accordiaAgentIndicator: boolean;
@@ -153,8 +154,15 @@ export interface AgentData {
     }[];
     // BPB - ToDo - type this when needed
     appointments: unknown[];
-    // BPB - ToDo - type this when needed
-    hierarchy: unknown[];
+    hierarchy: {
+        channel: string | undefined;
+        channelDescription: string | undefined;
+        channelId: number | undefined;
+        externalId: string | undefined;
+        hierarchyKey: string | undefined;
+        hierarchyTypeId: number | undefined;
+        // to do - there is more data here but for now this is more than we need to display
+    }[];
     // BPB - ToDo - type this when needed
     licenses: unknown[];
     // BPB - ToDo - type this when needed

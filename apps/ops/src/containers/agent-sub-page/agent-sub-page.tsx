@@ -1,4 +1,4 @@
-import { useTranslation } from 'next-i18next';
+import { Loader } from '@zinnia/bloom/components';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import PersonPageHeader from '@deps/containers/page-header/interior-people-page-header';
@@ -23,7 +23,6 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
     const [isLoading, setIsLoading] = useState(true);
     const { policy, policyDetails } = useContext(PolicyData);
 
-    const { t } = useTranslation();
     const { breadcrumb } = useBreadcrumb();
 
     const { parties, partyRoles, policyNumber, product } = policy ?? {};
@@ -36,8 +35,6 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
     const selectedPolicyPartyRoles = useMemo(() => {
         return partyRoles?.filter(pr => pr.partyId === selectedPolicyParty?.partyId) || [];
     }, [partyRoles, selectedPolicyParty?.partyId]);
-
-    const newSelectedPolicyParty = policyDetails.getPartyById(partyId);
 
     const agentId = selectedPolicyParty?.agentExternalId;
     const clientCode = policy.carrierId;
@@ -52,6 +49,7 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
         } finally {
             setIsLoading(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [agentId, clientCode]);
 
     useEffect(() => {
@@ -60,7 +58,11 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
 
     return (
         <div className="shadow-elevation-light-04">
-            {isLoading && <div>Loading...</div>}
+            {isLoading && (
+                <div className="h-screen text-center mt-16">
+                    <Loader />
+                </div>
+            )}
             {!isLoading && agentData && (
                 <>
                     <PersonPageHeader
@@ -73,12 +75,7 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                     />
 
                     <hr className=" h-0.5 border-none bg-gray-100" />
-                    <FirmInformationCard
-                        party={agentData?.party}
-                        partyRoles={selectedPolicyPartyRoles}
-                        planCode={planCode}
-                        policyNumber={policyNumber}
-                    />
+                    <FirmInformationCard selectedPolicyParty={agentData} />
 
                     <hr className=" h-0.5 border-none bg-gray-100" />
                     <AllocationCard allocation={agentData?.party?.agentPercentage} deathBenefit={null} />
