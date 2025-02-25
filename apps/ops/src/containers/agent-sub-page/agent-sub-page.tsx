@@ -81,11 +81,7 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                     <AllocationCard allocation={agentData?.party?.agentPercentage} deathBenefit={null} />
 
                     <hr className=" h-0.5 border-none bg-gray-100" />
-                    <IdentificationCard
-                        selectedPolicyParty={agentData}
-                        isAnnuity={policyDetails.isAnnuity}
-                        partyRoles={selectedPolicyPartyRoles}
-                    />
+                    <IdentificationCard selectedPolicyParty={agentData} isAnnuity={policyDetails.isAnnuity} />
 
                     <hr className="h-0.5 border-none bg-gray-100" />
                     <PhoneCard
