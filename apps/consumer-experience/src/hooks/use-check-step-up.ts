@@ -24,11 +24,11 @@ export const useCheckStepUp = () => {
     return false;
   }
 
-  if (!lastStepUpTime) {
+  if (!lastStepUpTime || !dayjs.unix(lastStepUpTime).isValid()) {
     return true;
   }
 
-  const lastStepUpTimeDate = dayjs(lastStepUpTime);
+  const lastStepUpTimeDate = dayjs.unix(lastStepUpTime);
 
   return dayjs().diff(lastStepUpTimeDate, 'minute') > 15;
 };
