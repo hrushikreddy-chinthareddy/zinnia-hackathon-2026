@@ -68,7 +68,9 @@ export default class AgentParty extends PolicyParty {
 
     constructor(agent: AgentData | undefined, party: Party = {}) {
         super(transformAgentDataToParty(agent, party));
+
         this.channel = agent?.hierarchy?.[0]?.channel;
         this.businessName = agent?.individuals?.[0]?.businessName || undefined;
+        // to do - firm information might be another api call that needs to be added on here
     }
 }

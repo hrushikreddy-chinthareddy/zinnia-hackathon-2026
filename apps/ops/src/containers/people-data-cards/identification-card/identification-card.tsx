@@ -9,22 +9,21 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
+import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
 import { getStateName } from '@deps/helpers/states.helper';
 import { convertKebabedDateString, formatSSN, safeString } from '@deps/helpers/string.helper';
-import { PartyType, PolicyParties } from '@deps/models/policy/sor-policy';
+import { PartyType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { ReactComponent as FingerprintIcon } from '@deps/styles/elements/icons/icons_outlined/fingerprint.svg';
 
 export interface IdentificationCardProps {
     editable?: boolean;
-    selectedPolicyParty?: PolicyParty;
-    partyRoles?: PolicyParties[];
+    selectedPolicyParty?: PolicyParty | AgentParty;
     isAnnuity?: boolean;
-    agentData?: any;
 }
 
-const IdentificationCard = ({ editable = false, selectedPolicyParty, partyRoles, isAnnuity, agentData }: IdentificationCardProps) => {
+const IdentificationCard = ({ editable = false, selectedPolicyParty, isAnnuity }: IdentificationCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.card.identification' });
 
     const {
@@ -52,10 +51,7 @@ const IdentificationCard = ({ editable = false, selectedPolicyParty, partyRoles,
     const isOrganization = partyType === PartyType.ORGANIZATION;
     const isTrust = partyType === ('Trust' as PartyType);
 
-    const selectedPartyRoles = partyRoles?.map(roleObject => {
-        return roleObject.partyRole?.toLowerCase();
-    });
-    const isAgent = selectedPartyRoles?.includes('primarywritingagent') || selectedPartyRoles?.includes('primaryservicingagent');
+    const isAgent = selectedPolicyParty instanceof AgentParty;
 
     const hasAdditional = driversLicense || stateId || passports?.length;
 
@@ -178,7 +174,7 @@ const IdentificationCard = ({ editable = false, selectedPolicyParty, partyRoles,
                                     {selectedPolicyParty?.party.agentExternalId}
                                 </FieldData>
                                 <FieldData label={t('options.channel')} sentenceCase={false}>
-                                    {/* {selectedPartyRoles?.hiearchy?.channel} */}
+                                    {selectedPolicyParty?.channel}
                                 </FieldData>
                             </>
                         )}

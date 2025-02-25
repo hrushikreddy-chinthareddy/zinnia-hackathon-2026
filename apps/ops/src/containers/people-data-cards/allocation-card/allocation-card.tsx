@@ -81,7 +81,7 @@ const RelationshipToInsuredInfo = ({ relationshipToInsured }: RelationshipToInsu
     );
 };
 
-export const AllocationCard = ({
+const AllocationCard = ({
     allocation,
     deathBenefit,
     editable = false,
