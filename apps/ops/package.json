@@ -60,7 +60,7 @@
         "@types/uuid": "^9.0.2",
         "@typescript-eslint/eslint-plugin": "^6.18.1",
         "@zinnia/api-types": "workspace:*",
-        "@zinnia/bloom": "^4.27.0",
+        "@zinnia/bloom": "^4.29.2",
         "@zinnia/pom": "workspace:*",
         "@zinnia/utils": "workspace:*",
         "ag-grid-community": "29.2.0",
