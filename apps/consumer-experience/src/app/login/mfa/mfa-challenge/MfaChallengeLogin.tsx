@@ -20,7 +20,7 @@ export const MfaChallengeLogin = ({
   id?: string;
 }) => {
   const router = useRouter();
-  // TODO: TEST THIS when i have some codes left,
+  // attempt to prefetch to speed up the next router redirect
   // it's a known thing that navigating with next router is slooooow
   useEffect(() => {
     router.prefetch(

@@ -147,7 +147,6 @@ export async function verifyMfaChallenge(
 
     data = await response.json();
 
-    console.log(data);
     if (response.status !== 200) {
       logTrace('bad-response::verifyMfaChallenge', {
         ...loggingContext,
