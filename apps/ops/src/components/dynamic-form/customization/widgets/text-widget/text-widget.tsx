@@ -1,13 +1,11 @@
 import { getUiOptions, WidgetProps } from '@rjsf/utils';
-import React from 'react';
 
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
-
 import { formatValueByDataType } from '../../templates/card-templates/card-template';
 
 export const TextWidget = function (props: WidgetProps) {
-    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder, schema } = props;
-    const { inline, leading, startIcon, endIcon, dataType } = getUiOptions(uiSchema);
+    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder } = props;
+    const { inline, leading, dataType } = getUiOptions(uiSchema);
 
     if (inline) {
         return (
@@ -32,10 +30,6 @@ export const TextWidget = function (props: WidgetProps) {
                 disabled={disabled}
                 onChange={onChange}
                 status={rawErrors && rawErrors?.length > 0 ? 'error' : undefined}
-                type={(schema?.type as string) || 'text'}
-                leading={leading as React.ReactNode}
-                startIcon={startIcon as React.ReactNode}
-                endIcon={endIcon as React.ReactNode}
             />
         </div>
     );
