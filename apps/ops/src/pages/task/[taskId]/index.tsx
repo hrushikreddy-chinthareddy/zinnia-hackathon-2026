@@ -182,6 +182,7 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
+
             const taskInfoLink = buildCaseLink(caseId);
             if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
                 const filters = {
