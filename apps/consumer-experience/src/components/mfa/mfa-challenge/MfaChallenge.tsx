@@ -68,8 +68,6 @@ export const MfaChallenge = ({
     },
   });
 
-  // It might be making this call a whole heck of a lot (3 times?)
-  // which means
   useEffect(() => {
     // We have to call this even on post login (after calling the authentication_methods call) because
     // this call retrieves more specific data about the authenticator chosen
@@ -136,7 +134,10 @@ export const MfaChallenge = ({
       enrollment,
     });
 
+    console.log('in mra challenge component', response);
+
     if (response && !response.error) {
+      console.log('here i am a response!');
       onChallengeSuccess?.();
     } else if (response.error === 'invalid_grant') {
       setError('code', {
@@ -144,6 +145,7 @@ export const MfaChallenge = ({
         message: 'This code’s not right. Try again.',
       });
     } else {
+      console.log('here i am challenged failed');
       onChallengeFailure?.();
     }
   };
