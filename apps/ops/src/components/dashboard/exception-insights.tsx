@@ -9,7 +9,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { TimeframeFilterOptions } from '@deps/containers/dashboard/issued-business/issued-business';
+import { TimeframeFilterOptions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS, dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
@@ -155,7 +155,7 @@ export const ExceptionInsights = ({
                             wrapper.style.overflow = 'hidden';
                             wrapper.style.textOverflow = 'ellipsis';
 
-                            wrapper.style.margin = 'var(--measure-dimension-margin-2xs)';
+                            wrapper.style.margin = 'var(--measure-dimension-padding-xs)';
                             wrapper.style.padding = 'var(--measure-dimension-padding-xs)';
                             wrapper.style.alignItems = 'center';
 

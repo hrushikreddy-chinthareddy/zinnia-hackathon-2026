@@ -1,16 +1,10 @@
-import React from 'react';
 import { Preview } from '@storybook/react';
 
 import '../src/styles/globals.css';
+import BaseStorybookLayout from '../src/stories/decorators/StorybookDecorator';
 
 const preview: Preview = {
-  decorators: [
-    (Story) => (
-      <div id="producer-onboarding-maintenance">
-        <Story />
-      </div>
-    ),
-  ],
+  decorators: BaseStorybookLayout,
   parameters: {
     controls: {
       matchers: {

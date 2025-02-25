@@ -19,7 +19,9 @@ const ssrCasesUrlV2 = `${se2ApiServerUrlV2}`;
 
 export const getCaseTaskByIdSSR = async (taskId: string, accessToken: string | undefined): Promise<ManagementTask<TaskStatus> | null> => {
     try {
-        const { data } = await serverApi.get<any>(`${ssrCasesUrlV2}/tasks/${taskId}`, {
+        const url = `${ssrCasesUrlV2}/tasks/${taskId}`;
+        logInfo('getCaseTaskByIdSSR::Fetching task by id', {  url, taskId, file: 'queries/api/v2/task', function: 'getCaseTaskByIdSSR' });
+        const { data } = await serverApi.get<any>(url, {
             authorization: `Bearer ${accessToken}`,
             headers: {
                 Accept: '*/*',
@@ -28,10 +30,10 @@ export const getCaseTaskByIdSSR = async (taskId: string, accessToken: string | u
                 'Access-Control-Allow-Origin': '*',
             },
         });
-
+        logInfo('getCaseTaskByIdSSR::Successfully retrived task by id', {  url, taskId, file: 'queries/api/v2/task', function: 'getCaseTaskByIdSSR' });
         return data;
     } catch (error: any) {
-        logError('getCaseTaskById', { ...parseErrorInformation(error), taskId, file: 'queries/api/v2/task', function: 'getCaseTaskById' });
+        logError('getCaseTaskByIdSSR::Failed to retrieve task by id', { ...parseErrorInformation(error), taskId, file: 'queries/api/v2/task', function: 'getCaseTaskByIdSSR' });
         return null;
     }
 };
@@ -91,8 +93,10 @@ export const searchTaskSSR = async (
     accessToken: string | undefined
 ): Promise<CaseTaskSearchResponse | CaseSearchErrorResponse> => {
     try {
+        const url = `${se2ApiServerUrl}/tasks/search`;
+        logInfo('searchTaskSSR::Fetching case tasks', { caseId, url, file: 'queries/api/v2/task', function: 'searchTaskSSR' });
         const { data } = await serverApi.post<{ caseId: string }, AxiosResponse>(
-            `${se2ApiServerUrl}/tasks/search`,
+            url,
             { caseId },
             {
                 authorization: `Bearer ${accessToken}`,
@@ -104,9 +108,10 @@ export const searchTaskSSR = async (
                 },
             }
         );
+        logInfo('searchTaskSSR::Performed case tasks search', { caseId, url, file: 'queries/api/v2/task', function: 'searchTaskSSR' });
         return data;
     } catch (error: any) {
-        logError('searchTaskSSR', { ...parseErrorInformation(error), caseId, file: 'queries/api/v2/task', function: 'searchTaskSSR' });
+        logError('searchTaskSSR::Failed to perform case tasks search', { ...parseErrorInformation(error), caseId, file: 'queries/api/v2/task', function: 'searchTaskSSR' });
         return error.response;
     }
 };

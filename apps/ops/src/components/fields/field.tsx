@@ -9,6 +9,7 @@ import FieldLabel from './field-label';
 import FieldUnits, { FieldUnitsLocation } from './field-units';
 
 export enum FieldSize {
+    XS = 'xs',
     Small = 'small',
     Default = 'default',
 }

@@ -1417,7 +1417,8 @@
             "purchaseDocumentMatchingIssues": "Document de correspondance",
             "agentNigo": "Réviser les problèmes d'agent",
             "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements",
-            "applicationNigo": "Réviser les problèmes d'agent"
+            "applicationNigo": "Réviser les problèmes d'agent",
+            "agentReview": "Valider l'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -5122,6 +5123,14 @@
         "confirmStep": {
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbAgentReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Valider que l'agent a été soumis.",
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
         }

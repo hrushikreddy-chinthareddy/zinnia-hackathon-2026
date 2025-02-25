@@ -12,13 +12,14 @@ import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow
 
 import { TaskView } from './progress-tab-types';
 
-const SupportedTaskMap = [
+export const SupportedTaskMap = [
     TaskType.SuitabilityReview,
     TaskType.SuitabilityDataEntry,
     TaskType.PURCHASE_DOCUMENT_MATCHING,
     TaskType.Agent_Nigo,
     TaskType.PremiumNigo,
     TaskType.Application_Nigo,
+    TaskType.Agent_Review,
 ];
 
 export function Task({ task }: { task: TaskView }) {
@@ -30,6 +31,7 @@ export function Task({ task }: { task: TaskView }) {
         [TaskType.Agent_Nigo]: t('caseOverview.tabs.agentNigo'),
         [TaskType.PremiumNigo]: t('caseOverview.tabs.PaymentProcessingNigo'),
         [TaskType.Application_Nigo]: t('caseOverview.tabs.applicationNigo'),
+        [TaskType.Agent_Review]: t('caseOverview.tabs.agentReview'),
     };
 
     const TaskTypeMap: Record<string, string> = {

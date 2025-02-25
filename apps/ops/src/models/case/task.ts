@@ -18,6 +18,7 @@ export enum TaskType {
     Agent_Nigo = 'NB_AGENT_NIGO',
     PremiumNigo = 'NB_PAYMENT_PROCESSING_NIGO',
     Application_Nigo = 'NB_APPLICATION_NIGO',
+    Agent_Review = 'NB_AGENT_REVIEW',
 }
 
 export enum EarlyTaskType {

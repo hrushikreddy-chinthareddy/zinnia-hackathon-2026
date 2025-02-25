@@ -1,11 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { toTitleCase } from '@zinnia/utils';
+import clsx from 'clsx';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
@@ -18,31 +22,22 @@ import {
     CaseDashboardStatsResponse,
     DashboardStatsElementResponse,
     Processes,
+    Statuses,
 } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getCaseInsights } from '@deps/queries/api/openai';
+import { DashboardSearchFilter } from '@deps/queries/cases';
+import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_outlined/light-bulb.svg';
+import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import ActiveAgingBars from './active-aging-bars';
 import ActiveAgingPies from './active-aging-pies';
+import { CaseTypeFilter } from '../case-type-filter';
+import { ChartHeader } from '../chart-header';
+import { createBaseQuery, formatProcessFilter } from '../utils';
 
-interface Props {
-    classNames?: string;
-    createdBySubProcess?: CaseDashboardStatsResponse;
-    activeAgingPieChartByCreated?: CaseDashboardStatsResponse;
-    loading?: boolean;
-    selectedProcess: Processes;
-    carriers: string[];
-}
-
-const ActiveAging = ({
-    classNames,
-    createdBySubProcess,
-    activeAgingPieChartByCreated,
-    loading = true,
-    selectedProcess,
-    carriers,
-}: Props) => {
+const ActiveAging = () => {
     const agingChartsRef = useRef<HighchartsReactRefObject>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const numColumns = 7;
@@ -76,8 +71,41 @@ const ActiveAging = ({
     });
     const [subProcessToColorMap, setSubProcessToColorMap] = useState<{ [key: string]: string }>({});
     const [activeAgingPieChartDataToColorMap, setActiveAgingPieChartDataToColorMap] = useState<{ [key: string]: string }>({});
+    const [selectedProcess, setSelectedProcess] = useState<Processes | undefined>(Processes.NewBusiness);
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
 
     const shouldShowCaseInsights = useCaseInsightsPermission();
+    const { createdDateStart } = getStartAndEndDates('All');
+
+    const filter: DashboardSearchFilter = {
+        caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+        carrier: Object.keys(selectedCarriers),
+        brokerDealerName: Object.keys(selectedBrokerDealers),
+        createdDateStart,
+        process: formatProcessFilter(selectedProcess),
+    };
+
+    const {
+        data: createdBySubProcess,
+        isFetching: createdBySubProcessFetching,
+        isError: createdBySubProcessError,
+    } = useQuery({
+        queryKey: ['createdBySubProcessInsights', filter],
+        placeholderData: previousData => previousData,
+        queryFn: () => createBaseQuery(filter, [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
+        enabled: Object.keys(filter).length > 0,
+    });
+
+    const {
+        data: activeAgingPieChartByCreated,
+        isLoading: activeAgingPieChartByCreatedLoading,
+        isError: activeAgingPieChartByCreatedError,
+    } = useQuery({
+        queryKey: ['activeAgingPieChartKeys', filter],
+        queryFn: () => createBaseQuery(filter, [GroupByOptions.CreatedAt, GroupByOptions.ProductName]),
+        placeholderData: previousData => previousData,
+        enabled: Object.keys(filter).length > 0,
+    });
 
     const getAgingTimeRangeFromDate = useCallback((createdDate: Date) => {
         const now = Date.now();
@@ -149,7 +177,7 @@ const ActiveAging = ({
                           They want simple and insightful information about the data provided to you. The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
                           Your responses should be insightful and will be displayed on a UI as a summary for a module related to a pie chart. Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
             }),
-        enabled: shouldShowCaseInsights && !!agingRangesBySubProcess?.data && !loading,
+        enabled: shouldShowCaseInsights,
     });
 
     let aiSummaryText = 'No AI Summary';
@@ -401,163 +429,184 @@ const ActiveAging = ({
         );
     };
 
-    return (
-        <CardContainer fullWidth={false} containerClassNames={classNames}>
-            <Typography className="mb-1" variant={TypographyVariant.H2}>
-                Active Aging
+    const carriers = Object.keys(selectedCarriers);
+
+    return createdBySubProcessError ||
+        activeAgingPieChartByCreatedError ||
+        !activeAgingPieChartByCreated?.data?.length ||
+        !createdBySubProcess?.data?.length ? (
+        <div className="grid place-content-center h-full w-full min-h-[400px]">
+            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                <ChartBarsIcon height={'24px'} width={'24px'} />
+                {'Something went wrong fetching insights, please try again by refreshing the page'}
             </Typography>
-            <Typography className="capitalize mb-4" variant={TypographyVariant.H4} asTag="h3">
-                {getAgingSubtitle()}
-            </Typography>
-            <div className="flex flex-col xl:flex-row justify-between gap-4 w-full">
-                <div className="flex grow xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
-                    {renderAISummary()}
-                    <div className="flex-1 border-r-1 xl:border-r-0 xl:border-t-1 border-[#EDEDED]">
-                        <Typography className="mb-4 xl:mt-1" variant={TypographyVariant.BodySmBold}>
-                            Top volume by type
-                        </Typography>
-                        <ol className="flex flex-col gap-2 pr-4">
-                            {agingGroupingMap[selectedAgingRange as AgingTimeRangesKeys].slice(0, 5).map((stat, index) => (
-                                <li key={`stat-${index}-${stat.name}`}>
-                                    <div className="flex items-center gap-3">
-                                        <div className="h-3 w-3" style={{ backgroundColor: subProcessToColorMap[stat.name] }}></div>
-                                        <div className="flex items-center gap-1 w-full justify-between">
-                                            <NavElement
-                                                href={`/cases${convertToQueryString({
-                                                    requestSubType: stat.name,
-                                                    process: selectedProcess,
+        </div>
+    ) : (
+        <BlurOverlayLoader loading={createdBySubProcessFetching}>
+            <CardContainer fullWidth={false}>
+                <ChartHeader title="Active Aging" subtitle={getAgingSubtitle()} />
 
-                                                    carrier: carriers?.length ? carriers : '',
-                                                })}`}
-                                                title={toTitleCase(stat.name)}
-                                                size={NavElementSize.Small}
-                                                type={NavElementType.Link}
-                                                className="capitalize"
-                                                target="_blank"
-                                            >
-                                                {dashboardChartTitleFormat(stat.name)}
-                                            </NavElement>
-                                            <Typography
-                                                className="flex gap-2"
-                                                variant={TypographyVariant.BodySmBold}
-                                                data-testid="header-text"
-                                            >
-                                                {wholeNumberFormatify(stat.count)}
-                                            </Typography>
+                <div className="flex flex-col xl:flex-row justify-between gap-4 w-full mt-6">
+                    <div className="flex grow xl:flex-col xl:w-1/4 gap-4 mb-8 xl:mb-0">
+                        {renderAISummary()}
+                        <div className="flex-1 border-r-1 xl:border-r-0 xl:border-t-1 border-[#EDEDED]">
+                            <Typography className="mb-4 xl:mt-1" variant={TypographyVariant.BodySmBold}>
+                                Top volume by type
+                            </Typography>
+                            <ol className="flex flex-col gap-2 pr-4">
+                                {agingGroupingMap[selectedAgingRange as AgingTimeRangesKeys].slice(0, 5).map((stat, index) => (
+                                    <li key={`stat-${index}-${stat.name}`}>
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-3 w-3" style={{ backgroundColor: subProcessToColorMap[stat.name] }}></div>
+                                            <div className="flex items-center gap-1 w-full justify-between">
+                                                <NavElement
+                                                    href={`/cases${convertToQueryString({
+                                                        requestSubType: stat.name,
+                                                        process: selectedProcess ?? '',
+
+                                                        carrier: carriers?.length ? carriers : '',
+                                                    })}`}
+                                                    title={toTitleCase(stat.name)}
+                                                    size={NavElementSize.Small}
+                                                    type={NavElementType.Link}
+                                                    className="capitalize"
+                                                    target="_blank"
+                                                >
+                                                    {dashboardChartTitleFormat(stat.name)}
+                                                </NavElement>
+                                                <Typography
+                                                    className="flex gap-2"
+                                                    variant={TypographyVariant.BodySmBold}
+                                                    data-testid="header-text"
+                                                >
+                                                    {wholeNumberFormatify(stat.count)}
+                                                </Typography>
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ol>
-                    </div>
-                    <div className="flex-1 xl:border-t-1 border-[#EDEDED]">
-                        <Typography className="mb-4 xl:mt-1" variant={TypographyVariant.BodySmBold}>
-                            Top 5 Products
-                        </Typography>
-                        <ol className="flex flex-col gap-2 pr-4">
-                            {agingPieChartGroupingMap[selectedAgingRange as AgingTimeRangesKeys].slice(0, 5).map(stat => (
-                                <li key={stat.name}>
-                                    <div className="flex items-center gap-3">
-                                        <div
-                                            className="h-3 w-3"
-                                            style={{ backgroundColor: activeAgingPieChartDataToColorMap[stat.name] }}
-                                        ></div>
-                                        <div className="flex items-center gap-1 w-full justify-between">
-                                            <NavElement
-                                                href={`/cases${convertToQueryString({
-                                                    productName: productNameMap[stat.name] || stat.name,
-                                                    process: selectedProcess,
+                                    </li>
+                                ))}
+                            </ol>
+                        </div>
+                        <div className="flex-1 xl:border-t-1 border-[#EDEDED]">
+                            <Typography className="mb-4 xl:mt-1" variant={TypographyVariant.BodySmBold}>
+                                Top 5 Products
+                            </Typography>
+                            <ol className="flex flex-col gap-2 pr-4">
+                                {agingPieChartGroupingMap[selectedAgingRange as AgingTimeRangesKeys].slice(0, 5).map(stat => (
+                                    <li key={stat.name}>
+                                        <div className="flex items-center gap-3">
+                                            <div
+                                                className="h-3 w-3"
+                                                style={{ backgroundColor: activeAgingPieChartDataToColorMap[stat.name] }}
+                                            ></div>
+                                            <div className="flex items-center gap-1 w-full justify-between">
+                                                <NavElement
+                                                    href={`/cases${convertToQueryString({
+                                                        productName: productNameMap[stat.name] || stat.name,
+                                                        process: selectedProcess || '',
 
-                                                    carrier: carriers?.length ? carriers : '',
-                                                })}`}
-                                                title={toTitleCase(stat.name)}
-                                                size={NavElementSize.Small}
-                                                type={NavElementType.Link}
-                                                className="capitalize"
-                                                target="_blank"
-                                            >
-                                                {dashboardChartTitleFormat(stat.name, false)}
-                                            </NavElement>
-                                            <Typography
-                                                className="flex gap-2"
-                                                variant={TypographyVariant.BodySmBold}
-                                                data-testid="header-text"
-                                            >
-                                                {wholeNumberFormatify(stat.count)}
-                                            </Typography>
+                                                        carrier: carriers?.length ? carriers : '',
+                                                    })}`}
+                                                    title={toTitleCase(stat.name)}
+                                                    size={NavElementSize.Small}
+                                                    type={NavElementType.Link}
+                                                    className="capitalize"
+                                                    target="_blank"
+                                                >
+                                                    {dashboardChartTitleFormat(stat.name, false)}
+                                                </NavElement>
+                                                <Typography
+                                                    className="flex gap-2"
+                                                    variant={TypographyVariant.BodySmBold}
+                                                    data-testid="header-text"
+                                                >
+                                                    {wholeNumberFormatify(stat.count)}
+                                                </Typography>
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ol>
-                    </div>
-                </div>
-                <div className="relative xl:w-3/4">
-                    {Object.keys(AgingTimeRanges)
-                        .reverse()
-                        .map((option, i) => {
-                            const rightDistancePerBlock = agingChartWidth / (numColumns - 1);
-                            const rightPxPosition = Math.floor(i * rightDistancePerBlock);
-
-                            return (
-                                <div
-                                    key={i}
-                                    style={{
-                                        position: 'absolute',
-                                        right: `${rightPxPosition}px`,
-                                        width: rightDistancePerBlock,
-                                        height: 'calc(100% - 42px)',
-                                        maxHeight: '511px',
-                                        top: '42px',
-                                        borderTop: option === selectedAgingRange ? '3px solid #333' : 'none',
-                                        borderRight: '1px solid #ddd',
-                                        borderLeft: i === Object.keys(AgingTimeRanges).length - 1 ? '1px solid #ddd' : 'none',
-                                    }}
-                                >
-                                    <div
-                                        className="h-3 w-3"
-                                        style={{
-                                            backgroundColor: option === selectedAgingRange ? '#ddd' : 'transparent',
-                                            opacity: option === selectedAgingRange ? 0.2 : 0,
-                                            height: '100%',
-                                            width: '100%',
-                                        }}
-                                    ></div>
-                                </div>
-                            );
-                        })}
-                    <div className={'flex items-stretch flex-wrap ml-[85px] ' + (classNames ?? '')}>
-                        <div className="grid grid-cols-6 gap-2 w-full justify-items-center" aria-label="chips">
-                            {Object.keys(AgingTimeRanges).map(option => (
-                                <button
-                                    className="chip w-4/5"
-                                    key={`active-aging-${option}`}
-                                    value={option}
-                                    type="button"
-                                    onClick={() => onAgingTimelineChange(option as AgingTimeRangesKeysExtended)}
-                                >
-                                    {AgingTimeRanges[option as AgingTimeRangesKeys]}
-                                </button>
-                            ))}
+                                    </li>
+                                ))}
+                            </ol>
                         </div>
                     </div>
-                    <div ref={containerRef}>
-                        <ActiveAgingBars
-                            classNames="-mb-10"
-                            onRenderChart={onRenderChart}
-                            ref={agingChartsRef}
-                            agingRangesByProcess={agingRangesBySubProcess ?? { data: [], totalElements: 0 }}
+
+                    <div className={clsx('xl:w-3/4', sharedStyles.chartContainer)}>
+                        <div className="w-1/4">
+                            <CaseTypeFilter
+                                onValueChange={setSelectedProcess}
+                                caseStatus={[Statuses.InProgress, Statuses.Exception, Statuses.NotStarted]}
+                                defaultProcess={Processes.NewBusiness}
+                            />
+                        </div>
+                        <div className="relative mt-10">
+                            {Object.keys(AgingTimeRanges)
+                                .reverse()
+                                .map((option, i) => {
+                                    const rightDistancePerBlock = agingChartWidth / (numColumns - 1);
+                                    const rightPxPosition = Math.floor(i * rightDistancePerBlock);
+
+                                    return (
+                                        <div
+                                            key={i}
+                                            style={{
+                                                position: 'absolute',
+                                                right: `${rightPxPosition}px`,
+                                                width: rightDistancePerBlock,
+                                                height: 'calc(100% - 42px)',
+                                                maxHeight: '511px',
+                                                top: '42px',
+                                                borderTop: option === selectedAgingRange ? '3px solid #333' : 'none',
+                                                borderRight: '1px solid #ddd',
+                                                borderLeft: i === Object.keys(AgingTimeRanges).length - 1 ? '1px solid #ddd' : 'none',
+                                            }}
+                                        >
+                                            <div
+                                                className="h-3 w-3"
+                                                style={{
+                                                    backgroundColor: option === selectedAgingRange ? '#ddd' : 'transparent',
+                                                    opacity: option === selectedAgingRange ? 0.2 : 0,
+                                                    height: '100%',
+                                                    width: '100%',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    );
+                                })}
+                        </div>
+
+                        <div className={'flex items-stretch flex-wrap ml-[85px]'}>
+                            <div className="grid grid-cols-6 gap-2 w-full justify-items-center" aria-label="chips">
+                                {Object.keys(AgingTimeRanges).map(option => (
+                                    <button
+                                        className="chip w-4/5"
+                                        key={`active-aging-${option}`}
+                                        value={option}
+                                        type="button"
+                                        onClick={() => onAgingTimelineChange(option as AgingTimeRangesKeysExtended)}
+                                    >
+                                        {AgingTimeRanges[option as AgingTimeRangesKeys]}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div ref={containerRef}>
+                            <ActiveAgingBars
+                                classNames="-mb-10"
+                                onRenderChart={onRenderChart}
+                                ref={agingChartsRef}
+                                agingRangesByProcess={agingRangesBySubProcess ?? { data: [], totalElements: 0 }}
+                            />
+                        </div>
+
+                        <ActiveAgingPies
+                            distinctPieChartCategoryStatGroupingLabels={distinctPieChartDataLabels}
+                            width={agingChartWidth}
+                            dashboardStatsResponse={pieChartDataByAgingRanges ?? { data: [], totalElements: 0 }}
                         />
                     </div>
-
-                    <ActiveAgingPies
-                        distinctPieChartCategoryStatGroupingLabels={distinctPieChartDataLabels}
-                        width={agingChartWidth}
-                        dashboardStatsResponse={pieChartDataByAgingRanges ?? { data: [], totalElements: 0 }}
-                    />
                 </div>
-            </div>
-        </CardContainer>
+            </CardContainer>
+        </BlurOverlayLoader>
     );
 };
 

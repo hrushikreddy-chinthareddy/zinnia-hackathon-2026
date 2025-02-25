@@ -1419,7 +1419,8 @@
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
             "PaymentProcessingNigo": "Review Premium Issues",
-            "applicationNigo": "Review Application Issues"
+            "applicationNigo": "Review Application Issues",
+            "agentReview": "Validate Agent"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -5157,6 +5158,14 @@
         }
     },
 
+    "nbAgentReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Validate Agent was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."
