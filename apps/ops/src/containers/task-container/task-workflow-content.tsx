@@ -65,7 +65,7 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
                 steps={filteredSteps}
             />
             <div className="flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">
-                {filteredSteps[currentStepIndex].component}
+                {filteredSteps[currentStepIndex]?.component}
             </div>
         </div>
     );
