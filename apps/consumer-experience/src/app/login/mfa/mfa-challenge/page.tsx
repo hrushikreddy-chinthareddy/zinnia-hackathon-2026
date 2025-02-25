@@ -13,6 +13,8 @@ export default async function MfaChallengePage({
 }) {
   const featureFlagDecisions = await getFeatureFlags();
 
+  // Leaving this here for now because for some reason this flow
+  // does not work on mobile created CUI-697 to address
   if (!featureFlagDecisions[FEATURE_FLAGS.TRANSACTION_LEVEL_CODE_ADD_BANK]) {
     return (
       <GenericInfoPage
