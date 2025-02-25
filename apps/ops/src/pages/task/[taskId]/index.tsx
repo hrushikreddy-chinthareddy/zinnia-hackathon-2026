@@ -137,7 +137,6 @@ export const getServerSideProps = withPageAuthRequired({
                         },
                     };
                 }
-
                 const isTaskEnabled = await optimizelyService.getFeatureFlagVariables(
                     FEATURE_FLAG_VARIABLES.TASK_MANAGEMENT,
                     carrier?.toLowerCase(),
