@@ -1,8 +1,5 @@
 import dayjs from 'dayjs';
 
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-
-import { useFeatureFlags } from './use-feature-flags';
 import { useUser } from './use-user';
 
 /**
@@ -14,15 +11,7 @@ import { useUser } from './use-user';
 // TODO: come up with better name
 export const useCheckStepUp = () => {
   const { user } = useUser();
-  const { data: featureFlagData } = useFeatureFlags();
   const lastStepUpTime = user?.stepUpTime;
-
-  const checkIdentityCodeFlag =
-    featureFlagData?.[FEATURE_FLAGS.TRANSACTION_LEVEL_CODE_ADD_BANK];
-
-  if (!checkIdentityCodeFlag) {
-    return false;
-  }
 
   if (!lastStepUpTime || !dayjs.unix(lastStepUpTime).isValid()) {
     return true;
