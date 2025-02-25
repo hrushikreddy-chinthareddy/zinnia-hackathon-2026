@@ -83,7 +83,7 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
                 <input
                     aria-labelledby="case-search-label"
                     placeholder={Placeholder}
-                    className={clsx(inputStyles.input, style.iconInput, 'text-body-sm focus:!ring-0')}
+                    className={clsx(inputStyles.input, style.iconInput, style.linkDocumentInput)}
                     onChange={onChangeHandler}
                     key={id}
                     value={inputValue}

@@ -158,8 +158,6 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 sourceFileName: name,
                 documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                 fileType: blob.type,
-                formType: 'NB Application',
-                docCategory: 'NEW_BUSINESS',
             };
 
             uploadDocumentV2(metaData, files[key], formContext?.correlationId || '');

@@ -37,6 +37,7 @@
 .linkDocumentInput {
     border-radius: var(--measure-border-radius-radius-md);
     border-left-width: var(--measure-border-width-stroke-sm);
+    padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-dimension-padding-2xl));
 }
 
 .linkedDocument {
