@@ -6,7 +6,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { addBankRequest } from '@/actions/bpm/bank-actions';
-import { useCheckStepUp } from '@/hooks/use-check-step-up';
+import { useNeedsVerificationCode } from '@/hooks/use-needs-verification-code';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
@@ -31,7 +31,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
   partyId,
   policyOwner,
 }) => {
-  const requiresIdentityCode = useCheckStepUp();
+  const requiresIdentityCode = useNeedsVerificationCode();
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
     planCode: string;

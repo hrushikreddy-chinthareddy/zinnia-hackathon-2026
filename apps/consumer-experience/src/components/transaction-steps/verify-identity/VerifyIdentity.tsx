@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
 
+import { MfaChallenge } from '@/components/mfa/mfa-challenge/MfaChallenge';
 import { FormSteps } from '@/types/transactions';
 
 import { SelectAuthenticationMethod } from './SelectAuthenticationMethod';
-import { MfaChallenge } from '../../mfa/mfa-challenge/MfaChallenge';
 
 interface VerifyIdentityProps {
   closeCallback: () => void;

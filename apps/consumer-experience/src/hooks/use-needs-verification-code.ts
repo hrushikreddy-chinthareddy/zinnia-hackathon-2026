@@ -8,8 +8,7 @@ import { useUser } from './use-user';
  *
  * @returns {boolean} Whether or not it's been more than 15 minutes since the last time the user has gone through step up.
  */
-// TODO: come up with better name
-export const useCheckStepUp = () => {
+export const useNeedsVerificationCode = () => {
   const { user } = useUser();
   const lastStepUpTime = user?.stepUpTime;
 

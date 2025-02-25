@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
 import { putEndDateBankAccount } from '@/actions/bpm/bank-actions';
-import { useCheckStepUp } from '@/hooks/use-check-step-up';
+import { useNeedsVerificationCode } from '@/hooks/use-needs-verification-code';
 import { useUser } from '@/hooks/use-user';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
@@ -34,7 +34,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   autopayEnabled,
   numberOfAccounts,
 }) => {
-  const requiresIdentityCode = useCheckStepUp();
+  const requiresIdentityCode = useNeedsVerificationCode();
 
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
