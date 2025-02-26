@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import ButtonGrp from '@deps/components/button-group/button-group';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
@@ -11,6 +11,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { WithdrawalType, ProgramType, FormProgram, ProgramSubType, AmountType } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { SimpleOption } from '../select/select.helpers';
 
 const dollarIcon = <span>$</span>;
 const percentageIcon = <span>%</span>;
@@ -33,12 +34,14 @@ const determineProgramType = (formProgram: FormProgram): ProgramType | '' => {
             return '';
     }
 };
+
 export type AmountDetailsProps = {
     isOnlyWithdrawalTypeControls?: boolean;
     isFormStateReadOnly: boolean;
+    programTypes?: SimpleOption[] | undefined;
 };
 
-export default function AmountDetails({ isFormStateReadOnly, isOnlyWithdrawalTypeControls }: AmountDetailsProps) {
+export default function AmountDetails({ isFormStateReadOnly, isOnlyWithdrawalTypeControls, programTypes }: AmountDetailsProps) {
     const { formProgram, setFormProgram } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.amountDetails' });
     const asOfDate = formProgram?.asOfDate?.text
@@ -54,25 +57,6 @@ export default function AmountDetails({ isFormStateReadOnly, isOnlyWithdrawalTyp
     const withdrawalTypeRadioItems = [
         { label: t(`gross`), value: WithdrawalType.Gross },
         { label: t(`net`), value: WithdrawalType.Net },
-    ];
-
-    const programTypes = [
-        {
-            label: t(`programTypes.full`),
-            value: ProgramType.Full,
-        },
-        {
-            label: t(`programTypes.partial`),
-            value: ProgramType.Partial,
-        },
-        {
-            label: t(`programTypes.totalFreeAmt`),
-            value: ProgramType.TotalFreeAmt,
-        },
-        {
-            label: t(`gmwb`),
-            value: ProgramType.GMWB,
-        },
     ];
 
     useEffect(() => {
