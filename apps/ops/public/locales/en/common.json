@@ -3000,9 +3000,10 @@
                 "checkingEndingIn": "Checking ending in {{ accountNumber }}",
                 "COSTOFINSURANCE": "Cost of insurance",
                 "EXPENSECHARGE": "Expense charge",
-                "UNITEXPENSECHARGE": "UNITEXPENSE charge",
+                "MARKETVALUEADJUSTMENT": "Market value adjustment",
                 "RIDERCHARGE": "Rider charge",
                 "SURRENDERCHARGE": "Surrender charge",
+                "UNITEXPENSECHARGE": "UNITEXPENSE charge",
                 "WITHDRAWALCHARGE": "Withdrawal charge",
                 "proRata": "Pro rata",
                 "disbursementType": "{{disbursementType}} disbursement"
