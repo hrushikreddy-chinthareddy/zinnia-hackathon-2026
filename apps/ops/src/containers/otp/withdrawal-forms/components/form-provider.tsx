@@ -68,7 +68,6 @@ export const FormProvider = ({
     isOpenNigo,
     featureFlagDecisions,
 }: FormProviderProps) => {
-    console.log(initialForm, '<=== initialForm');
     const searchParams = useSearchParams();
     const [formData, setFormData] = useState(form?.data?.formRequest?.formData);
     const [formDisbursement, setFormDisbursement] = useState(form.data.formRequest.formDisbursement);
