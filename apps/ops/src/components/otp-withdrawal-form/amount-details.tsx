@@ -38,7 +38,7 @@ const determineProgramType = (formProgram: FormProgram): ProgramType | '' => {
 export type AmountDetailsProps = {
     isOnlyWithdrawalTypeControls?: boolean;
     isFormStateReadOnly: boolean;
-    programTypes?: SimpleOption[] | undefined;
+    programTypes?: SimpleOption[];
 };
 
 export default function AmountDetails({ isFormStateReadOnly, isOnlyWithdrawalTypeControls, programTypes }: AmountDetailsProps) {
@@ -130,7 +130,7 @@ export default function AmountDetails({ isFormStateReadOnly, isOnlyWithdrawalTyp
                 <div className="my-4 flex flex-col gap-8 md:grid md:grid-cols-2 md:grid-rows-2 lg:grid-cols-3 lg:grid-rows-1">
                     <SelectSimple
                         label={t(`programType`) as string}
-                        options={programTypes}
+                        options={programTypes || []}
                         onChange={(val: string) => setProgramType(val as ProgramType)}
                         size={FieldSize.Small}
                         value={programType}
