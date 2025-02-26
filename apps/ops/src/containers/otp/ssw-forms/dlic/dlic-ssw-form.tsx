@@ -94,7 +94,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 isReadOnly={isFormStateReadOnly}
                 options={systematicWithdrawalOptions(planCode) as SSWProgramOptions[]}
                 onSswProgramFrequencyChange={handleSswProgramFrequency}
-                singleLifePersonApplicable={initialForm?.carrier === Carrier.DLIC && isJointOwnerAvailable}
+                singleLifePersonApplicable={isJointOwnerAvailable}
             />
             <FormDistribution
                 isDerivedMethodFromFunds={true}
