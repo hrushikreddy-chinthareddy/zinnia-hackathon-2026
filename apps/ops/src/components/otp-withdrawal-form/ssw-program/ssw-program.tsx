@@ -8,7 +8,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import JointCoveredPersonDetails from '@deps/containers/otp/ssw-forms/sbgc/joint-covered-person-details';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { AmountType, SSWType, Frequency, PartyRoles, Carrier } from '@deps/models/case/withdrawal/case';
+import { AmountType, SSWType, Frequency, PartyRoles, Party } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import SingleLifePersonDetails from './single-life-person-details';
@@ -23,7 +23,7 @@ type SystematicWithdrawalProgramProps = {
     planCode?: string;
     jointCoveredPlanCodes?: string[];
     onSswProgramFrequencyChange?: (val: Frequency) => void;
-    clientCode?: string;
+    singleLifePersonApplicable?: boolean;
 };
 
 export interface SSWProgramOptions extends Omit<RadioItem, 'subelement'> {
@@ -37,9 +37,9 @@ const SystematicWithdrawalProgram = ({
     onSswProgramFrequencyChange,
     planCode,
     jointCoveredPlanCodes,
-    clientCode = '',
+    singleLifePersonApplicable = false,
 }: SystematicWithdrawalProgramProps) => {
-    const { formErrors, formProgram, formParty, setFormProgram, initialForm } = useContext(FormDataContext);
+    const { formErrors, formProgram, formParty, setFormProgram } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
     const today = dayjs().format(ZAHARA_API_DATE_FORMAT);
 
@@ -88,7 +88,7 @@ const SystematicWithdrawalProgram = ({
                     sswData={sswData}
                 />
             </div>
-            {clientCode !== Carrier.DLIC && sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
+            {!singleLifePersonApplicable && sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
                 <JointCoveredPersonDetails
                     isReadOnly={isReadOnly || false}
                     planCode={planCode}
@@ -96,8 +96,8 @@ const SystematicWithdrawalProgram = ({
                 />
             )}
 
-            {clientCode === Carrier.DLIC && jointOwnerDetails && sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption && (
-                <SingleLifePersonDetails personDetails={jointOwnerDetails} />
+            {singleLifePersonApplicable && sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption && (
+                <SingleLifePersonDetails personDetails={jointOwnerDetails as Party} />
             )}
             {formErrors && (
                 <div className="flex flex-col">

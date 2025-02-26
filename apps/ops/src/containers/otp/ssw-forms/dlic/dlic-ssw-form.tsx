@@ -12,14 +12,14 @@ import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdin
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
-import { Carrier, Frequency, FundWithdrawnMethod, PaymentMethod } from '@deps/models/case/withdrawal/case';
+import { Carrier, Frequency, FundWithdrawnMethod, PartyRoles, PaymentMethod } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
 import getDlicConfig from './dlic-ssw-from-helper';
 
 interface DlicSSWFormProps {
-    planCode?: string;
+    readonly planCode?: string;
 }
 
 export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
@@ -82,6 +82,8 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         setSswProgramFrequency(frequency);
     };
     const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const isJointOwnerAvailable = !!formParty?.parties?.find(item => item.partyRoleType === PartyRoles.JOINT_OWNER);
+
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -92,7 +94,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 isReadOnly={isFormStateReadOnly}
                 options={systematicWithdrawalOptions(planCode) as SSWProgramOptions[]}
                 onSswProgramFrequencyChange={handleSswProgramFrequency}
-                clientCode={initialForm?.carrier}
+                singleLifePersonApplicable={initialForm?.carrier === Carrier.DLIC && isJointOwnerAvailable}
             />
             <FormDistribution
                 isDerivedMethodFromFunds={true}
