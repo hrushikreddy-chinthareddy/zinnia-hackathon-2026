@@ -8,7 +8,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import JointCoveredPersonDetails from '@deps/containers/otp/ssw-forms/sbgc/joint-covered-person-details';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { AmountType, SSWType, Frequency, PartyRoles } from '@deps/models/case/withdrawal/case';
+import { AmountType, SSWType, Frequency, PartyRoles, Carrier } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import SingleLifePersonDetails from './single-life-person-details';
@@ -37,7 +37,7 @@ const SystematicWithdrawalProgram = ({
     planCode,
     jointCoveredPlanCodes,
 }: SystematicWithdrawalProgramProps) => {
-    const { formErrors, formProgram, formParty, setFormProgram } = useContext(FormDataContext);
+    const { formErrors, formProgram, formParty, setFormProgram, initialForm } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
     const today = dayjs().format(ZAHARA_API_DATE_FORMAT);
 
@@ -86,7 +86,7 @@ const SystematicWithdrawalProgram = ({
                     sswData={sswData}
                 />
             </div>
-            {sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
+            {initialForm?.carrier !== Carrier.DLIC && sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
                 <JointCoveredPersonDetails
                     isReadOnly={isReadOnly || false}
                     planCode={planCode}
@@ -94,9 +94,11 @@ const SystematicWithdrawalProgram = ({
                 />
             )}
 
-            {jointOwnerDetails && sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption && (
-                <SingleLifePersonDetails personDetails={jointOwnerDetails} />
-            )}
+            {initialForm?.carrier === Carrier.DLIC &&
+                jointOwnerDetails &&
+                sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption && (
+                    <SingleLifePersonDetails personDetails={jointOwnerDetails} />
+                )}
             {formErrors && (
                 <div className="flex flex-col">
                     {formErrors?.systematicStartDate && (

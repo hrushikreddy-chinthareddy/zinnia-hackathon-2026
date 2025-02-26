@@ -18,7 +18,11 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 import SswEditSelection from '../ssw-edit-selection';
 import getDlicConfig from './dlic-ssw-from-helper';
 
-export function DlicSSWForm() {
+interface DlicSSWFormProps {
+    planCode: string;
+}
+
+export function DlicSSWForm({ planCode }: DlicSSWFormProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const [sswProgramFrequency, setSswProgramFrequency] = useState('' as Frequency);
 
@@ -78,7 +82,6 @@ export function DlicSSWForm() {
         setSswProgramFrequency(frequency);
     };
     const shouldStateW4pRender = isAllowedState(contractIssueState);
-    const planCode = '679';
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
