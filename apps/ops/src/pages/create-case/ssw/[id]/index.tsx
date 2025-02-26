@@ -96,7 +96,7 @@ const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Recor
     [Carrier.GDMN]: <GdmnSSWForm />,
     [Carrier.USAA]: <UsaaSSWForm />,
     [Carrier.RSLN]: <RslnSSWForm />,
-    [Carrier.DLIC]: <DlicSSWForm />,
+    [Carrier.DLIC]: <DlicSSWForm planCode={planCode} />,
 });
 
 export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user, planCode }: SSWCaseProps) {

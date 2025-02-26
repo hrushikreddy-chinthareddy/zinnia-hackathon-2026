@@ -1724,7 +1724,7 @@
                     }
                 },
                 "singleLifeTimeIncome": {
-                    "title": "Nom de la personne bénéficiaire du revenu"
+                    "title": "Nom de Income Life converti au-dessus de la ligne en français"
                 }
             },
             "rmdMethod": {
