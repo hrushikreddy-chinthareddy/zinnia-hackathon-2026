@@ -118,6 +118,10 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
             displayText: option.label,
         })) ?? [];
 
+    if (options.placeholder) {
+        placeholder = options.placeholder || '';
+    }
+
     if (readonly) return <>{Object.values(selectedValues).join(', ')}</>;
 
     return (
