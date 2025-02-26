@@ -108,6 +108,21 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         }
     };
 
+    /**
+     * Cleans form data by removing properties marked for omission in the UI schema
+     */
+
+    const cleanForm = (formData: any) => {
+        let finalFormData = formData;
+        let iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
+        iterableProperties.forEach(property => {
+            if (taskMetadata.uiSchema?.[property]?.['ui:options']?.omitValue) {
+                delete finalFormData.data[property];
+            }
+        });
+        return finalFormData;
+    };
+
     const handleSubmit = useCallback(async () => {
         if (!isSubmit) {
             await fetchData();
@@ -115,7 +130,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             return;
         }
 
-        const taskPayload = buildTaskPayload(task, initialTask);
+        const taskPayload = buildTaskPayload(cleanForm(task), initialTask);
 
         const success = await updateTask(taskPayload, correlationId);
         removeFromCache('getTaskInstance', { taskId: task.id });

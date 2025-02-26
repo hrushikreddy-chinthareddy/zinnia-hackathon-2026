@@ -71,7 +71,7 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
 
     const handleDocumentSelection = (document: MetadataSearchResponse) => {
         const attachments = [...formContext?.customData?.attachments];
-        attachments.push({ documentName: document.documentId });
+        attachments.push({ documentId: document.documentId });
         formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
         setFilteredDocuments([]);
     };

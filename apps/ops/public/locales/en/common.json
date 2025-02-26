@@ -1419,7 +1419,8 @@
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
-            "applicationNigo": "Review Application Issues"
+            "applicationNigo": "Review Application Issues",
+            "agentReview": "Validate Agent"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -5143,6 +5144,14 @@
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review Agent Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "nbAgentReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Validate Agent was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }

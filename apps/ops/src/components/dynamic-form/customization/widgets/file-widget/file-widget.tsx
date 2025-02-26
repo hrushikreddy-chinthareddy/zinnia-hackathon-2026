@@ -160,10 +160,11 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 fileType: blob.type,
             };
 
-            uploadDocumentV2(metaData, files[key], formContext?.correlationId || '');
-            attachments.push({ documentName: name, documentType: blob.type });
-            formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
-            sideSheet.onClose();
+            uploadDocumentV2(metaData, files[key], formContext?.correlationId || '').then(response => {
+                attachments.push({ documentId: response?.documentId });
+                formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
+                sideSheet.onClose();
+            });
         });
     };
     const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
