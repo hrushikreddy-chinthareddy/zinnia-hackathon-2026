@@ -2762,7 +2762,8 @@
                 "nextSweepDate": "Prochaine date de balayage",
                 "nextSweepDateTooltip": "À cette date, tout l'argent du fonds de réserve sera \"balayé\" ou transféré dans les différents fonds de la police, selon les allocations de fonds sélectionnées par le propriétaire. Dans la plupart des cas, la date de balayage se produit le même jour chaque mois.",
                 "noFunds": "Rien à afficher.",
-                "type": "Type"
+                "type": "Type",
+                "years": "$t(temporal.years, {{count}})"
             },
             "segmentsTable": {
                 "segmentID": "ID de segment.",
@@ -3159,7 +3160,9 @@
         "timeago_other": "Il y a {{count}} $t(temporal.{{unit}}) {{formattedDate}}",
         "nYears": "{{n}} ans",
         "oneYear": "1 an",
-        "timeLeft": "Il reste {{timespan}}"
+        "timeLeft": "Il reste {{timespan}}",
+        "years_one": "{{count}} an",
+        "years_other": "{{count}} ans"
     },
     "sideSheet": {
         "posted": "Publié",
