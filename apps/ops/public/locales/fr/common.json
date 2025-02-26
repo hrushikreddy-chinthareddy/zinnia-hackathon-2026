@@ -771,7 +771,8 @@
         "with": "avec",
         "approved": "Approuvé",
         "unapproved": "Désapprouvé",
-        "submit": "Soumettre"
+        "submit": "Soumettre",
+        "uploadDocument": "Uploader un document"
     },
     "dashboard": {
         "h1": "Recherche de politique",

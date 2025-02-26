@@ -167,7 +167,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
             });
         });
     };
-    const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
+
     useEffect(() => {
         const getAttachmentSchema = async () => {
             try {
@@ -179,7 +179,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 }
                 const apiProps = typeof props === 'object' ? (data?.uiSchema?.options?.['ui:props'] as ApiProps) : ({} as ApiProps);
                 if (apiProps?.apiUrl) {
-                    csrApiHelper(apiProps, { ...formContext?.customData }).then(response => {
+                    await csrApiHelper(apiProps, { ...formContext?.customData }).then(response => {
                         data.formSchema.definitions[apiProps?.dataKey] = response;
                     });
                 }
@@ -238,7 +238,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 sideSheet.handleOpen(true);
             });
         },
-        [multiple, onChange, value, onSubmit, options.filePreview, attachmentSchema]
+        [attachmentSchema, multiple, onChange, value, onSubmit, options.filePreview]
     );
 
     const rmFile = useCallback(
@@ -252,7 +252,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         },
         [multiple, value, onChange]
     );
-
+    const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
     return (
         <>
             <div className="mt-1">
