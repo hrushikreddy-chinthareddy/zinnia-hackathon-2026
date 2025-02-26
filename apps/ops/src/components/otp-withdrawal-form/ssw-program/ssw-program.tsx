@@ -24,6 +24,7 @@ type SystematicWithdrawalProgramProps = {
     jointCoveredPlanCodes?: string[];
     onSswProgramFrequencyChange?: (val: Frequency) => void;
     singleLifePersonApplicable?: boolean;
+    jointCoveredPersonApplicable?: boolean;
 };
 
 export interface SSWProgramOptions extends Omit<RadioItem, 'subelement'> {
@@ -38,6 +39,7 @@ const SystematicWithdrawalProgram = ({
     planCode,
     jointCoveredPlanCodes,
     singleLifePersonApplicable = false,
+    jointCoveredPersonApplicable = true,
 }: SystematicWithdrawalProgramProps) => {
     const { formErrors, formProgram, formParty, setFormProgram } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
@@ -88,7 +90,7 @@ const SystematicWithdrawalProgram = ({
                     sswData={sswData}
                 />
             </div>
-            {!singleLifePersonApplicable && sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
+            {jointCoveredPersonApplicable && sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
                 <JointCoveredPersonDetails
                     isReadOnly={isReadOnly || false}
                     planCode={planCode}

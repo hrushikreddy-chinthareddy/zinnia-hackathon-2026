@@ -95,6 +95,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 options={systematicWithdrawalOptions(planCode) as SSWProgramOptions[]}
                 onSswProgramFrequencyChange={handleSswProgramFrequency}
                 singleLifePersonApplicable={isJointOwnerAvailable}
+                jointCoveredPersonApplicable={false}
             />
             <FormDistribution
                 isDerivedMethodFromFunds={true}
