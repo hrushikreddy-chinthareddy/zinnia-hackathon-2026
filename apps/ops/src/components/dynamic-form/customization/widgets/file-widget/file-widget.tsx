@@ -178,9 +178,11 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                     return;
                 }
                 const apiProps = typeof props === 'object' ? (data?.uiSchema?.options?.['ui:props'] as ApiProps) : ({} as ApiProps);
-                csrApiHelper(apiProps, { ...formContext?.customData }).then(response => {
-                    data.formSchema.definitions[apiProps?.dataKey] = response;
-                });
+                if (apiProps?.apiUrl) {
+                    csrApiHelper(apiProps, { ...formContext?.customData }).then(response => {
+                        data.formSchema.definitions[apiProps?.dataKey] = response;
+                    });
+                }
 
                 setAttachmentSchema(data);
             } catch (err) {
