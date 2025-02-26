@@ -2,6 +2,7 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import { TaskType } from '@deps/models/case/task';
 
 import { getAgentNigoSteps } from './agent-nigo';
+import { getAgentReviewSteps } from './agent-review';
 import { getMatchDocumentPaymentReviewSteps } from './match-payment-document-review';
 import { getSuitabilityReviewSteps } from './suitability-review-steps';
 import { getSuitabilitySteps } from './suitability-steps';
@@ -23,11 +24,12 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
         case TaskType.Agent_Nigo:
             steps = getAgentNigoSteps(props);
             break;
-
         case TaskType.Application_Nigo:
             steps = getAgentNigoSteps(props);
             break;
-
+        case TaskType.Agent_Review:
+            steps = getAgentReviewSteps(props);
+            break;
         default:
             steps = [];
     }

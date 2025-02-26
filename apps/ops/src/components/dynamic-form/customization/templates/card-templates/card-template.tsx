@@ -25,6 +25,11 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
 
     return (
         <>
+            {schema.title && (
+                <Typography variant={TypographyVariant.BodySmBold} className="mb-5">
+                    {schema.title}
+                </Typography>
+            )}
             <SingleCard
                 cardType={cardType as CardTypes}
                 icon={icon as IconType}
