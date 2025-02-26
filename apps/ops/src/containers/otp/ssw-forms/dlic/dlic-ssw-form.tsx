@@ -19,10 +19,10 @@ import SswEditSelection from '../ssw-edit-selection';
 import getDlicConfig from './dlic-ssw-from-helper';
 
 interface DlicSSWFormProps {
-    planCode: string;
+    planCode?: string;
 }
 
-export function DlicSSWForm({ planCode }: DlicSSWFormProps) {
+export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const [sswProgramFrequency, setSswProgramFrequency] = useState('' as Frequency);
 
@@ -92,6 +92,7 @@ export function DlicSSWForm({ planCode }: DlicSSWFormProps) {
                 isReadOnly={isFormStateReadOnly}
                 options={systematicWithdrawalOptions(planCode) as SSWProgramOptions[]}
                 onSswProgramFrequencyChange={handleSswProgramFrequency}
+                clientCode={initialForm?.carrier}
             />
             <FormDistribution
                 isDerivedMethodFromFunds={true}

@@ -106,7 +106,7 @@ const getSSWFormComponentMap = (qualType: QualTypes | '', planCode?: string): Re
     [Carrier.PRDN]: <PrdnSSWForm />,
     [Carrier.GDMN]: <GdmnSSWForm />,
     [Carrier.USAA]: <UsaaSSWForm />,
-    [Carrier.DLIC]: <DlicSSWForm planCode={planCode ?? ''} />,
+    [Carrier.DLIC]: <DlicSSWForm planCode={planCode} />,
 });
 
 export const getFormParts = (caseType: CaseType, clientCode: string, qualType: QualTypes | '', planCode: string = '') => {

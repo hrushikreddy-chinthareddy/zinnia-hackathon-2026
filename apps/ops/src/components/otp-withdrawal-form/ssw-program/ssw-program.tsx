@@ -23,6 +23,7 @@ type SystematicWithdrawalProgramProps = {
     planCode?: string;
     jointCoveredPlanCodes?: string[];
     onSswProgramFrequencyChange?: (val: Frequency) => void;
+    clientCode?: string;
 };
 
 export interface SSWProgramOptions extends Omit<RadioItem, 'subelement'> {
@@ -36,6 +37,7 @@ const SystematicWithdrawalProgram = ({
     onSswProgramFrequencyChange,
     planCode,
     jointCoveredPlanCodes,
+    clientCode = '',
 }: SystematicWithdrawalProgramProps) => {
     const { formErrors, formProgram, formParty, setFormProgram, initialForm } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
@@ -86,7 +88,7 @@ const SystematicWithdrawalProgram = ({
                     sswData={sswData}
                 />
             </div>
-            {initialForm?.carrier !== Carrier.DLIC && sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
+            {clientCode !== Carrier.DLIC && sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
                 <JointCoveredPersonDetails
                     isReadOnly={isReadOnly || false}
                     planCode={planCode}
@@ -94,11 +96,9 @@ const SystematicWithdrawalProgram = ({
                 />
             )}
 
-            {initialForm?.carrier === Carrier.DLIC &&
-                jointOwnerDetails &&
-                sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption && (
-                    <SingleLifePersonDetails personDetails={jointOwnerDetails} />
-                )}
+            {clientCode === Carrier.DLIC && jointOwnerDetails && sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption && (
+                <SingleLifePersonDetails personDetails={jointOwnerDetails} />
+            )}
             {formErrors && (
                 <div className="flex flex-col">
                     {formErrors?.systematicStartDate && (
