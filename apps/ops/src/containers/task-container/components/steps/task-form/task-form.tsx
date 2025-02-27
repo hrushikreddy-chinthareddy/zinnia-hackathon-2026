@@ -33,8 +33,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const formContext = { carrier: task.carrier, caseId: task.caseId, taskType: task.taskType };
     const fetchData = async () => {
         const correlationId = task.data.matchingResult;
-        if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
+
+        if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING || task.taskType === TaskType.Standard_Document_Matching) {
             if (correlationId === MatchingCase.ENTERED && task.data.caseId) {
+                console.log('EnteredMatchingCase');
                 try {
                     const matchedCase = await getCaseDetails(task.data.caseId);
 
@@ -42,6 +44,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         const error = !matchedCase ? 'caseNotFound' : 'correlationIdNotFount';
                         browserLogWarn(`task:: ${t(error)}`, task.data.caseId);
                         onSubmit(t(error));
+                        return;
+                    }
+
+                    if (task.taskType === TaskType.Standard_Document_Matching) {
                         return;
                     }
 
@@ -105,11 +111,14 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     console.log(e);
                 }
             }
+
         }
     };
 
     const handleSubmit = useCallback(async () => {
+
         if (!isSubmit) {
+            console.log('notissubmit');
             await fetchData();
             onSubmit('');
             return;
@@ -126,13 +135,13 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+            console.log(event, 'formevent');
             setTask({
                 ...task,
 
                 data: event.formData,
             });
         },
-
         [setTask, task]
     );
 
@@ -148,7 +157,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     useEffect(() => {
         const caseSubTypes = task?.data?.caseSubTypeOptions;
-
         if (caseSubTypes) {
             setFormSchema(prevSchema => ({
                 ...prevSchema,
@@ -164,6 +172,20 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             }));
         }
     }, [task?.data?.caseSubTypeOptions]);
+
+    useEffect(() => {
+        if (TaskType.Standard_Document_Matching === task.taskType) {
+            const matchedCase = task?.data?.potentialMatches?.find((match: any) => match.correlationid === task?.data?.matchingResult);
+            setTask((ogTask: any) => ({
+                ...ogTask,
+                data: {
+                    ...ogTask.data,
+                    matchedCaseId:
+                        task?.data?.matchingResult === 'ENTERED' ? task?.data?.caseId : matchedCase ? matchedCase.zlCaseId : null,
+                },
+            }));
+        }
+    }, [task?.data?.matchingResult, task?.data?.caseId]);
 
     useEffect(() => {
         const transactionOptions = task?.data?.transactionOptions;
@@ -196,7 +218,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onChange={handleChange}
             onSubmit={handleSubmit}
             readonly={readonly}
-            formContext={{ customData: { ...formContext, ...task.data }, setCustomData: setFormContext }}
+            formContext={{ customData: { ...formContext, task }, setCustomData: setFormContext }}
         ></DynamicForm>
     );
 });

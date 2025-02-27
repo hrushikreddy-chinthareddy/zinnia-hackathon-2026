@@ -1,10 +1,13 @@
 import { getUiOptions, WidgetProps } from '@rjsf/utils';
 
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 
 export const TextWidget = function (props: WidgetProps) {
-    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder } = props;
-    const { inline, prefix } = getUiOptions(uiSchema);
+    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder, formContext } = props;
+    const { inline, prefix, inlinetext } = getUiOptions(uiSchema);
+
+    let defaultValue = replacePlaceholders(value, { ...formContext }) || value;
 
     if (inline) {
         return (
@@ -17,14 +20,27 @@ export const TextWidget = function (props: WidgetProps) {
             </div>
         );
     }
+
+    if (inlinetext) {
+        return (
+            <div className="text-md ">
+                <div className="text-500">{label}</div>
+                <div>
+                    {prefix ? prefix : ''}
+                    {defaultValue}
+                </div>
+            </div>
+        );
+    }
+
     return (disabled as boolean) ? (
-        <div>{value}</div>
+        <div>{defaultValue}</div>
     ) : (
         <div className="max-w-sm flex w-full flex-col">
             <TextField
                 placeholder={placeholder}
                 id={id}
-                value={value || ''}
+                value={defaultValue || ''}
                 required={required}
                 disabled={disabled}
                 onChange={onChange}

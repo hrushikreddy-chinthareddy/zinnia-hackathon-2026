@@ -4324,7 +4324,7 @@
             },
             "title": "Compris!"
         }
-    },    
+    },
     "loanPayment": {
         "amount": {
             "label": "Montant",
@@ -5113,6 +5113,14 @@
         "confirmStep": {
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "standardDocumentMatching": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Appariement de Document standard a été soumise.",
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
         }

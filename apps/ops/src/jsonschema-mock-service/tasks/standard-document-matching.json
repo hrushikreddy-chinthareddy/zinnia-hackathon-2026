@@ -1,0 +1,389 @@
+{
+  formId: 'c0c1c9b9-741b-4272-8cf4-48cd0d7cb0f2',
+  process: 'Qualification',
+  carrier: 'WELB',
+  taskType: 'STANDARD_DOCUMENT_MATCHING',
+  formSchema: { type: 'object' },
+  uiSchema: { type: 'object' },
+  schemaContent: {
+      tabSchemas: [
+          {
+              title: 'Match Document',
+              formSchema: {
+                  $schema: 'http://json-schema.org/draft-07/schema#',
+                  type: 'object',
+                  definitions: {
+                      caseTypeEnum: {},
+                      caseSubTypeEnum: {}
+                  },
+                  required: ['matchingResult'],
+                  properties: {
+                      sectionHeader: {
+                          type: 'object',
+                          title: 'Processing Instructions',
+                      },
+                      details: {
+                          type: 'object',
+                          properties: {
+                              documents: {
+                                  title: 'Supporting Information',
+                                  type: 'array',
+                                  items: {
+                                      type: 'object',
+                                      properties: {
+                                          documentName: {
+                                              type: 'string',
+                                              'ui:field': 'title',
+                                          },
+                                          documentId: {
+                                              type: 'string',
+                                              'ui:field': 'subTitle',
+                                          },
+                                          docType:{
+                                              type: 'string',
+                                              'ui:field': 'subTitle',
+                                          },
+                                          documentSource: {
+                                              type: 'string',
+                                          },
+
+                                      },
+                                  },
+                              },
+                          },
+                      },
+                      caseOverview: {
+                          type: 'string',
+                          title: 'Open case search',
+                          default: '/cases',
+                          omitValue: true,
+                      },
+                      matchingResult: {
+                          type: 'string',
+                          title: 'Can you find a matching case for this document?',
+                      },
+                  },
+                  allOf: [
+                      {
+                          if: {
+                              properties: {
+                                  matchingResult: {
+                                      const: '',
+                                  },
+                              },
+                          },
+                          then: {},
+                          else: {
+                              if: {
+                                  properties: {
+                                      matchingResult: {
+                                          const: 'NO_MATCH',
+                                      },
+                                  },
+                              },
+                              then: {
+                                  properties: {
+                                      caseTitle: {
+                                          type: 'string',
+                                          title: 'Select a case type to index this document.',
+                                      },
+                                      caseType: {
+                                          type: 'string',
+                                          title: 'Cases',
+                                          $ref: '#/definitions/caseTypeEnum',
+                                      },
+                                      caseSubType: {
+                                          type: 'string',
+                                          title: 'Case Types',
+                                          $ref: '#/definitions/caseSubTypeEnum',
+                                      },
+                                  },
+                                  required: ['caseType'],
+                              },
+                              else: {
+                                  if: {
+                                      properties: {
+                                          matchingResult: {
+                                              const: 'ENTERED',
+                                          },
+                                      },
+                                  },
+                                  then: {
+                                      properties: {
+                                          caseId: {
+                                              type: 'string',
+                                              title: 'Case Id',
+                                          },
+                                      },
+                                      required: ['caseId'],
+                                  },
+                              },
+                          },
+                      },
+                  ],
+              },
+              uiSchema: {
+                  'ui:globalOptions': {
+                      duplicateKeySuffixSeparator: '_',
+                      orderable: false,
+                      copyable: false,
+                  },
+                  $schema: 'http://json-schema.org/draft-07/schema#',
+                  'ui:submitButtonOptions': {
+                      norender: true,
+                  },
+                  sectionHeader: {
+                      props: {
+                          description:
+                              "Review supporting information and determine if the document can be matched to an existing case. Search all cases and review any suggested potential matches. Confirm the matching Case ID, if possible. If there's no existing case to match the document to, mark the task as pending and wait for the application to arrive.",
+                      },
+                      'ui:options': {
+                          label: true,
+                          ObjectFieldTemplate: 'InstructionsTemplate',
+                      },
+                  },
+                  details: {
+                      'ui:options': {
+                          label: false,
+                      },
+                      documents: {
+                          'ui:options': {
+                              canAdd: false,
+                              label: true,
+                              addable: false,
+                          },
+                          items: {
+                              'ui:options': {
+                                  cardType: 'Document',
+                                  icon: 'DOCUMENT_TEXT',
+                                  ObjectFieldTemplate: 'CardTemplate',
+                              },
+                          },
+                      },
+                  },
+                  caseOverview: {
+                      'ui:options': {
+                          label: false,
+                          type: 'link',
+                      },
+                      'ui:widget': 'HyperLinkWidget',
+                      omitValue: true,
+                  },
+                  matchingResult: {
+                      'ui:widget': 'radio',
+                      'ui:options': {
+                          cardType: 'Hyperlink',
+                          label: true,
+                          customOptions: [
+                              {
+                                  value: 'ENTERED',
+                                  subElement: { label: 'Enter a case ID', value: '', url: '' },
+                              },
+
+                              {
+                                  value: 'NO_MATCH',
+                                  subElement: { label: 'Document cannot be matched to a case', value: '', url: '' },
+                              },
+                          ],
+                      },
+                  },
+                  caseId: {
+                      'ui:placeholder': 'eg: CA1234567890',
+                      'ui:options': {
+                          label: true,
+                      },
+                  },
+                  caseTitle: {
+                      'ui:options': {
+                          label: false,
+                          inlinetext: true,
+                      },
+                      omitValue: true,
+                  },
+                  caseType: {
+                      'ui:widget': 'SelectWidget',
+                      'ui:placeholder': 'Select',
+                      'ui:props': {
+                          apiUrl: 'case/v1/refdata',
+                          apiPayload: {
+                              carrier: ['{{carrier}}'],
+                              keys: ['requestSubType'],
+                              process: ['{{value}}'],
+                          },
+                          apiMethod: 'post',
+                          responseKey: 'caseSubTypeOptions',
+                          responseData: '{{data.referenceData.requestSubType}}',
+                      },
+                  },
+                  caseSubType: {
+                      'ui:widget': 'SelectWidget',
+                      'ui-options': {
+                          label: true,
+                          dependentField: 'caseType',
+                      },
+                      'ui:placeholder': 'Select',
+                  },
+              },
+          },
+          {
+              title: 'Document Processing',
+              formSchema: {
+                  $schema: 'http://json-schema.org/draft-07/schema#',
+                  type: 'object',
+                  properties: {
+                      details: {
+                          type: 'object',
+                          title: 'Supporting information',
+                          properties: {
+                              documents: {
+                                  title: 'Supporting Information',
+                                  type: 'array',
+                                  items: {
+                                      type: 'object',
+                                      properties: {
+                                          documentName: {
+                                              type: 'string',
+                                              'ui:field': 'title',
+                                          },
+                                          documentId: {
+                                              type: 'string',
+                                              'ui:field': 'subTitle',
+                                          },
+                                          docType:{
+                                              type: 'string',
+                                              'ui:field': 'subTitle',
+                                          },
+                                          documentSource: {
+                                              type: 'string',
+                                          },
+
+                                      },
+                                  },
+                              },
+                          },
+                      },
+                      caseOverview: {
+                          type: 'string',
+                          title: 'Open case search',
+                          default: '/cases/',
+                      },
+                      matchCaseIdTitle: {
+                          type: 'object',
+                          title: 'Match case ID',
+                      },
+                      matchCaseId: {
+                          type: 'string',
+                          title: '{{customData.task.data.matchedCaseId}}',
+                          default: '/cases/{{customData.task.data.matchedCaseId}}/progress',
+                      },
+                      matchedDocumentData: {
+                          type: 'object',
+                          title: 'What do you want to do with this document?',
+                          properties: {
+                              matchType: {
+                                  type: 'string',
+                                  enum: ['NEW', 'EXISTING', 'DUPLICATE'],
+                                  enumNames: [
+                                      'Add as a new document',
+                                      'Replace the existing document with this version',
+                                      'Discard because it is a duplicate document',
+                                  ],
+                                  default: 'NEW',
+                                  title: '',
+                              },
+                          },
+                          allOf: [
+                              {
+                                  if: {
+                                      properties: { matchType: { const: 'NEW' } },
+                                  },
+                                  then: {
+                                      properties: {},
+                                  },
+                              },
+                              {
+                                  if: {
+                                      properties: { matchType: { enum: ['EXISTING', 'DUPLICATE'] } },
+                                  },
+                                  then: {
+                                      properties: {
+                                          existingDocumentId: {
+                                              type: 'string',
+                                              title: 'Replace Document on Case',
+                                          },
+                                      },
+                                      // required: ['existingDocumentId'],
+                                  },
+                              },
+                          ],
+                      },
+                  },
+              },
+              uiSchema: {
+                  'ui:globalOptions': {
+                      duplicateKeySuffixSeparator: '_',
+                      orderable: false,
+                      copyable: false,
+                  },
+                  $schema: 'http: //json-schema.org/draft-07/schema#',
+                  'ui:submitButtonOptions': {
+                      norender: true,
+                  },
+
+                  details: {
+                      'ui:options': {
+                          label: false,
+                      },
+                      documents: {
+                          'ui:options': {
+                              canAdd: false,
+                              label: true,
+                              addable: false,
+                          },
+                          items: {
+                              'ui:options': {
+                                  cardType: 'Document',
+                                  icon: 'DOCUMENT_TEXT',
+                                  ObjectFieldTemplate: 'CardTemplate',
+                              },
+                          },
+                      },
+                  },
+                  caseOverview: {
+                      'ui:options': {
+                          label: false,
+                          type: 'link',
+                      },
+                      'ui:widget': 'HyperLinkWidget',
+                      omitValue: true,
+                  },
+
+                  matchCaseId: {
+                      'ui:options': {
+                          label: false,
+                      },
+                      'ui:widget': 'HyperLinkWidget',
+                  },
+
+                  matchedDocumentData: {
+                      matchType: {
+                          'ui:widget': 'radio',
+                          'ui:options': {
+                              label: false,
+                          },
+                      },
+                      existingDocumentId: {
+                          'ui:widget': 'text',
+                          'ui:options': {
+                              condition: {
+                                  scope: '#/matchedDocumentData/matchType',
+                                  values: ['EXISTING', 'DUPLICATE'],
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      ],
+  },
+};

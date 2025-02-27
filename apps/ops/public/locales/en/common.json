@@ -5146,6 +5146,14 @@
             "secondaryCta": "Back to home"
         }
     },
+    "standardDocumentMatching": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Standard Document Matching was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."

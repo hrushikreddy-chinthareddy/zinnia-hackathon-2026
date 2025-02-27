@@ -17,7 +17,8 @@ export const SupportedTaskMap = [
     TaskType.SuitabilityDataEntry,
     TaskType.PURCHASE_DOCUMENT_MATCHING,
     TaskType.Agent_Nigo,
-    TaskType.Application_Nigo
+    TaskType.Application_Nigo,
+    TaskType.Standard_Document_Matching,
 ];
 
 export function Task({ task }: { task: TaskView }) {
