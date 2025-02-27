@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import ProductTraining from '../../../views/training-education/product-training/ProductTraining';
-import { generateProductTraining } from '../../../views/training-education/__mocks';
+import ProductTraining from '../../../../views/training-education/product-training/ProductTraining';
+import { generateProductTraining } from '../../../../views/training-education/__mocks';
 
 const meta = {
   title: 'Views/Training and Education/Product Training',
@@ -15,8 +15,8 @@ export default meta;
 
 type StoryType = StoryObj<typeof ProductTraining>;
 
-export const Default: StoryType = {
+export const Table: StoryType = {
   args: {
-    items: generateProductTraining(15),
+    items: generateProductTraining(),
   },
 };

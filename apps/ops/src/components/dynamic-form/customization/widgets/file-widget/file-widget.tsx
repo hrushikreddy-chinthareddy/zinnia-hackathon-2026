@@ -2,14 +2,32 @@ import {
     dataURItoBlob,
     FormContextType,
     getTemplate,
+    getUiOptions,
     Registry,
     RJSFSchema,
     StrictRJSFSchema,
     UIOptionsType,
     WidgetProps,
 } from '@rjsf/utils';
-import { ChangeEvent, useCallback, useMemo } from 'react';
+import { AxiosResponse } from 'axios';
+import dayjs from 'dayjs';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { TranslationFiles } from '@deps/config/translations';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { csrApiHelper } from '@deps/helpers/csr-api-helper';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { ApiProps, FormMetadata } from '@deps/models/case/task';
+import { uploadDocumentV2 } from '@deps/queries/api/documents';
+import { baseAppUrl } from '@deps/queries/api-config';
+import { client } from '@deps/queries/api-utils/client';
+import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
+import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
+
+const baseUrl = baseAppUrl + '/api/';
+
+import FileAttachmentComponent from './file-attachment.component';
 import style from './file-widget.module.css';
 
 function addNameToDataURL(dataURL: string, name: string) {
@@ -56,10 +74,9 @@ function processFiles(files: FileList) {
     return Promise.all(Array.from(files).map(processFile));
 }
 
-function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     filesInfo,
     registry,
-    onRemove,
     options,
 }: {
     filesInfo: FileInfoType[];
@@ -76,13 +93,15 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
     const { RemoveButton } = getTemplate<'ButtonTemplates', T, S, F>('ButtonTemplates', registry, options);
 
     return (
-        <ul className="file-info mt-2 pl-4">
+        <ul className="file-info mt-2">
             {filesInfo.map((fileInfo, key) => {
-                const { name, size, type } = fileInfo;
-                const handleRemove = () => onRemove(key);
+                const { name } = fileInfo;
                 return (
-                    <li key={key}>
-                        <div className="typography-content-body-sm-bold">{name !== undefined ? name : 'No file chosen'}</div>
+                    <li key={key} className="p-2 border-1 border-gray-100 my-4 max-w-sm">
+                        <div className="typography-content-body-sm-bold flex gap-2 ">
+                            <UploadIcon height={25} width={25} />
+                            {name !== undefined ? name : 'No file chosen'}
+                        </div>
                         {/* <div>{translateString(TranslatableString.FilesInfo, [name, type, String(size)])}</div> */}
                         {/* {preview && <FileInfoPreview<T, S, F> fileInfo={fileInfo} registry={registry} />} */}
                         {/* <RemoveButton onClick={handleRemove} registry={registry} /> */}
@@ -116,9 +135,62 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
     }, [] as FileInfoType[]);
 }
 
-function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: WidgetProps<T, S, F>) {
-    const { disabled, readonly, required, multiple, onChange, value, options, registry } = props;
+function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(widgetProps: WidgetProps<T, S, F>) {
+    const { disabled, readonly, required, multiple, onChange, value, options, name, registry, schema, uiSchema, formContext } = widgetProps;
+
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'general' });
     const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
+    const sideSheet = useSideSheetContext();
+
+    const [attachmentSchema, setAttachmentSchema] = useState<FormMetadata | null>(null);
+
+    const { props, showFiles } = getUiOptions<T, S, F>(uiSchema);
+
+    const { apiUrl, apiMethod } = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
+
+    const onSubmit = (data: any, files: any) => {
+        const attachments = [...(formContext?.customData?.attachments || [])];
+        Object.keys(files).map((key: any) => {
+            const { blob, name } = dataURItoBlob(files[key]);
+            const processedData = replacePlaceholders(data, formContext ?? {});
+            const metaData = {
+                ...processedData,
+                sourceFileName: name,
+                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
+                fileType: blob.type,
+            };
+
+            uploadDocumentV2(metaData, files[key], formContext?.correlationId || '').then(response => {
+                attachments.push({ documentId: response?.documentId });
+                formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
+                sideSheet.onClose();
+            });
+        });
+    };
+
+    useEffect(() => {
+        const getAttachmentSchema = async () => {
+            try {
+                const url = `${baseUrl}${apiUrl}`;
+
+                const { data } = await client[apiMethod ?? 'get']<FormMetadata, AxiosResponse>(url);
+                if (!data) {
+                    return;
+                }
+                const apiProps = typeof props === 'object' ? (data?.uiSchema?.options?.['ui:props'] as ApiProps) : ({} as ApiProps);
+                if (apiProps?.apiUrl) {
+                    await csrApiHelper(apiProps, { ...formContext?.customData }).then(response => {
+                        data.formSchema.definitions[apiProps?.dataKey] = response;
+                    });
+                }
+
+                setAttachmentSchema(data);
+            } catch (err) {
+                console.log('🚀 ~ getAttachmentSchema ~ err:', err);
+            }
+        };
+        getAttachmentSchema();
+    }, [apiMethod, apiUrl]);
 
     const handleChange = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
@@ -130,17 +202,45 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
             // file in each event and concatenate them together ourselves
             processFiles(event.target.files).then(filesInfoEvent => {
                 const newValue = filesInfoEvent.map(fileInfo => fileInfo.dataURL);
+
+                let values = '';
                 if (multiple) {
-                    onChange(value.concat(newValue[0]));
+                    values = value?.concat(newValue);
+                    onChange(value?.concat(newValue));
                 } else {
+                    values = newValue[0] ?? '';
+                    // For single file upload, just take the first element if newValue is an array
                     onChange(newValue[0]);
                 }
+
+                const content = (
+                    <div className="p-6">
+                        <FilesInfo<T, S, F>
+                            filesInfo={filesInfoEvent}
+                            onRemove={rmFile}
+                            registry={registry}
+                            preview={options.filePreview}
+                            options={values as any}
+                        />
+
+                        {attachmentSchema && (
+                            <FileAttachmentComponent
+                                schema={attachmentSchema}
+                                formData={{}}
+                                onClose={() => sideSheet.onClose()}
+                                onSubmit={(formData: any) => onSubmit(formData, values)}
+                            />
+                        )}
+                    </div>
+                );
+
+                sideSheet.changeSideSheetContent(t('uploadDocument'), content);
+                sideSheet.handleOpen(true);
             });
         },
-        [multiple, value, onChange]
+        [attachmentSchema, multiple, onChange, value, onSubmit, options.filePreview]
     );
 
-    const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
     const rmFile = useCallback(
         (index: number) => {
             if (multiple) {
@@ -152,29 +252,34 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         },
         [multiple, value, onChange]
     );
+    const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
     return (
-        <div>
-            <label htmlFor={props.id} className={style.customFileUpload}>
-                Add Attachment {props.title}
-            </label>
-            <BaseInputTemplate
-                {...props}
-                disabled={disabled || readonly}
-                type="file"
-                required={value ? false : required} // this turns off HTML required validation when a value exists
-                onChangeOverride={handleChange}
-                value=""
-                accept={options.accept ? String(options.accept) : undefined}
-                className={style.input}
-            />
-            <FilesInfo<T, S, F>
-                filesInfo={filesInfo}
-                onRemove={rmFile}
-                registry={registry}
-                preview={options.filePreview}
-                options={options}
-            />
-        </div>
+        <>
+            <div className="mt-1">
+                <label htmlFor={widgetProps.id} className={style.customFileUpload}>
+                    {schema?.title ?? t('upload')}
+                </label>
+                <BaseInputTemplate
+                    {...widgetProps}
+                    disabled={disabled || readonly}
+                    type="file"
+                    required={value ? false : required}
+                    onChangeOverride={handleChange}
+                    value=""
+                    accept={options.accept ? String(options.accept) : undefined}
+                    className={style.input}
+                />
+            </div>
+            {showFiles && (
+                <FilesInfo<T, S, F>
+                    filesInfo={filesInfo}
+                    onRemove={rmFile}
+                    registry={registry}
+                    preview={options.filePreview}
+                    options={options}
+                />
+            )}
+        </>
     );
 }
 

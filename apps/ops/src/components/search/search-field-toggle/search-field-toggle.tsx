@@ -1,7 +1,7 @@
 import { AssistiveText, AssistiveTextVariant, Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { ChangeEvent, useContext, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
+import { ChangeEvent, useContext, useRef } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
@@ -16,9 +16,10 @@ interface SearchFieldToggleProps {
     activeLabels: LabelValue<PolicySearchKeys>;
     onClear?: (searchField: PolicySearchKeys | undefined) => void;
     values: SearchViewQuery;
+    inputClasses?: string;
 }
 
-export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, values }: SearchFieldToggleProps) => {
+export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, values, inputClasses }: SearchFieldToggleProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { showFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const { value: policyKey, label = '', placeholder, errorMessage } = activeLabels;
@@ -26,12 +27,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, valu
     const inputValue = values[activeLabels?.value || ''] || '';
 
     const inputType = () => {
-        switch (activeLabels.value) {
-            case 'ssn':
-                return 'number';
-            default:
-                return 'text';
-        }
+        return 'text';
     };
 
     const inputClass = () => {
@@ -52,6 +48,10 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, valu
     };
     const hasValue = !!inputRef.current?.value;
 
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.target.value = e.target.value.replace(/[^0-9-]/g, '');
+    };
+
     return (
         <div className={clsx(styles.inputContainer)}>
             <Icon type={IconType.SEARCH} className={styles.icon} color="#676767" />
@@ -60,7 +60,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, valu
                 aria-labelledby="case-search-label"
                 type={inputType()}
                 placeholder={placeholder ? placeholder : toSentenceCase(label)}
-                className={clsx(styles.input, inputClass(), 'text-body-sm focus:!ring-0')}
+                className={clsx(styles.input, inputClass(), 'text-body-sm focus:!ring-0', inputClasses)}
                 onChange={e => {
                     const text = (e.target as HTMLInputElement).value;
                     handleChange(e, text, policyKey as PolicySearchKeys);
@@ -68,6 +68,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, valu
                 key={activeLabels.value}
                 ref={inputRef}
                 value={inputValue}
+                onInput={activeLabels.value === 'ssn' ? handleInput : undefined}
             />
             {hasValue && (
                 <Button className={styles.close} onClick={handleClear} mode="link">
@@ -84,6 +85,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, valu
 
 const SearchFieldToggle = ({ activeLabels, values, ...rest }: SearchFieldToggleProps) => {
     let fields;
+
     if (activeLabels) {
         const { group } = activeLabels;
 

@@ -2,7 +2,7 @@
     align-items: center;
     background: var(--color-chip-surface-chip-default-fill);
     border-color: var(--color-chip-border-chip-default-border);
-    border-radius: var(--measure-dimension-radius-max);
+    border-radius: var(--measure-dimension-radius-sm);
     border-width: var(--measure-dimension-stroke-sm);
     color: var(--color-base-text-text-primary);
     display: flex;

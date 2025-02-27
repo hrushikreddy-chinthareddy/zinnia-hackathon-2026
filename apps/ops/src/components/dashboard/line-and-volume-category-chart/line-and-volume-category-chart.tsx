@@ -4,7 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { useRef } from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { TimeframeFilterOptions } from '@deps/containers/dashboard/issued-business/issued-business';
+import { TimeframeFilterOptions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import {
     CHART_HEIGHT,
     getBottomChartConfig,
@@ -16,6 +16,7 @@ import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/ill
 export type LineAndVolumeCategoryChartProps = {
     chartData?: LineAndVolumeCategoryAndSeries;
     timeframe: TimeframeFilterOptions;
+    showVolumeColumns?: boolean;
 };
 
 export const LineAndVolumeCategoryChart = ({
@@ -30,6 +31,7 @@ export const LineAndVolumeCategoryChart = ({
         monthlyCategoriesLabels: [],
     },
     timeframe,
+    showVolumeColumns,
 }: LineAndVolumeCategoryChartProps) => {
     const topChartRef = useRef<HighchartsReact.RefObject>(null);
     const bottomChartRef = useRef<HighchartsReact.RefObject>(null);
@@ -78,7 +80,7 @@ export const LineAndVolumeCategoryChart = ({
             {showData ? (
                 <>
                     <HighchartsReact ref={topChartRef} highcharts={Highcharts} options={topChartConfig} />
-                    <HighchartsReact ref={bottomChartRef} highcharts={Highcharts} options={bottomChartConfig} />
+                    {showVolumeColumns && <HighchartsReact ref={bottomChartRef} highcharts={Highcharts} options={bottomChartConfig} />}
                 </>
             ) : (
                 <>

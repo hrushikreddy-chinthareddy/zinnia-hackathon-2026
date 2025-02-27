@@ -8,6 +8,11 @@ import caseChartHelpers, { ChartConfigSeriesDataSimple } from '@deps/helpers/das
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 
+//https://www.npmjs.com/package/highcharts-react-official#highcharts-with-nextjs
+if (typeof Highcharts === 'object') {
+    more(Highcharts);
+}
+
 interface Props {
     agingRangesByProcess?: CaseDashboardStatsResponse;
     classNames?: string;
@@ -141,14 +146,6 @@ const ActiveAgingBars = forwardRef<HighchartsReactRefObject, Props>(({ agingRang
         },
         [onRenderChart]
     );
-
-    useEffect(() => {
-        if (typeof window === 'undefined') {
-            return;
-        }
-        // accessibility(Highcharts);
-        more(Highcharts);
-    }, []);
 
     useEffect(() => {
         const seriesData = getSeriesData(agingRangesByProcess);

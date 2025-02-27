@@ -729,7 +729,9 @@
         "view": "View",
         "with": "with",
         "approved": "Approved",
-        "unapproved": "Unapproved"
+        "unapproved": "Unapproved",
+        "submit": "Submit",
+        "uploadDocument": "Upload Document"
     },
     "dashboard": {
         "h1": "Policy Search",
@@ -1418,8 +1420,10 @@
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
-            "attachmentNigo": "Review Application Issues"
-            "applicationNigo":"Review Application Issues"
+            "attachmentNigo": "Review Attachment Issues",
+            "PaymentProcessingNigo": "Review Premium Issues",
+            "applicationNigo": "Review Application Issues",
+            "agentReview": "Validate Agent"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -5142,7 +5146,15 @@
     "nbAttachmentNigo": {
       "confirmStep": {
             "title": "Got It!",
-            "subTitle": "Task: Review Agent Issues was submitted.",
+            "subTitle": "Task: Review Attachment Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+     },
+    "nbPaymentProcessingNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review initial premium was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }
@@ -5150,7 +5162,15 @@
     "nbApplicationNigo": {
         "confirmStep": {
             "title": "Got It!",
-            "subTitle": "Task: Review Agent Issues was submitted.",
+            "subTitle": "Task: Review Application Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "nbAgentReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Validate Agent was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }

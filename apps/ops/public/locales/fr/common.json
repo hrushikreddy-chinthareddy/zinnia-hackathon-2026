@@ -770,7 +770,9 @@
         "view": "Afficher",
         "with": "avec",
         "approved": "Approuvé",
-        "unapproved": "Désapprouvé"
+        "unapproved": "Désapprouvé",
+        "submit": "Soumettre",
+        "uploadDocument": "Uploader un document"
     },
     "dashboard": {
         "h1": "Recherche de politique",
@@ -1416,8 +1418,10 @@
             "suitabilityReviewIssues": "Revoir Suitability Problèmes",
             "purchaseDocumentMatchingIssues": "Document de correspondance",
             "agentNigo": "Réviser les problèmes d'agent",
-            "attachmentNigo": "Réviser les problèmes d'application"
-            "applicationNigo":"Réviser les problèmes d'agent"
+            "attachmentNigo": "Réviser les problèmes d'attachment"
+            "applicationNigo":"Réviser les problèmes d'application",
+            "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements",
+            "agentReview": "Valider l'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -5113,7 +5117,15 @@
     "nbAttachmentNigo": {
       "confirmStep": {
             "title": "Compris!",
-            "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
+            "subTitle": "Tâche : Révision des problèmes d'attachment a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbPaymentProcessingNigo": {
+        "confirmStep": {
+            "title": "Compris !",
+            "subTitle": "Tâche : Examen de la prime initiale soumis.",
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
         }
@@ -5121,7 +5133,15 @@
     "nbApplicationNigo": {
         "confirmStep": {
             "title": "Compris!",
-            "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
+            "subTitle": "Tâche : Révision des problèmes d'application a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbAgentReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Valider que l'agent a été soumis.",
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
         }

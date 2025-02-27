@@ -228,7 +228,11 @@ export default function ProgressTab({ caseDetails }: { caseDetails: Case }) {
                     <div className="mt-6 flex w-full flex-col">
                         <Typography variant={TypographyVariant.H3}>{t(`caseOverview.tabs.otherIssues`)}</Typography>
                         <div className="mt-3 flex flex-col gap-2">
-                            <Exceptions exceptions={transformedCase.unmappedExceptions} unmapped={true} />
+                            <Exceptions
+                                exceptions={transformedCase.unmappedExceptions}
+                                unmapped={true}
+                                groupedExceptions={transformedCase.exceptionsGroupedByTask}
+                            />
                         </div>
                     </div>
                 )}

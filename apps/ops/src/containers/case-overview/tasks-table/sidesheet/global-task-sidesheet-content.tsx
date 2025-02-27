@@ -372,7 +372,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                                     popoverClassName="background-white w-full "
                                     pii={true}
                                 />
-                                {task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason}
                             </Typography>
                         </>
                     )}

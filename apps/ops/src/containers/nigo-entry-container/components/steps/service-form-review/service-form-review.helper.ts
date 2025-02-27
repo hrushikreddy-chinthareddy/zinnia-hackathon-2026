@@ -4,6 +4,8 @@ import { CaseType } from '@deps/models/case/case';
 import { PolicyDocuments, PolicyDocument } from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { getPolicyTypeDocsV2 } from '@deps/queries/api/documents';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 export const useGetPolicyTypeDocs = (
     id: string,
@@ -30,12 +32,20 @@ export const useGetPolicyTypeDocs = (
                 const relatedDoc = items.filter(
                     item => item.documentNumber !== documentNumber
                 );
+                browserLogInfo('useGetPolicyTypeDocs::Policy documents retrieved', {
+                    id,
+                    clientCode,
+                    docType,
+                    workingDocument: workingDoc ? true : false,
+                    relatedDocument: relatedDoc?.length || 0,
+                    file: 'service-form-review-helper'
+                });
                 setWorkingDocument(workingDoc);
                 setRelatedDocument(relatedDoc);
             }
             setLoading(false);
         } catch (e) {
-            console.error('useGetPolicyTypeDocs::error while fetching policy type documents', e);
+            browserLogError('useGetPolicyTypeDocs::error while fetching policy type documents', { id, clientCode, docType, ...parseErrorInformation(e)} );
             setLoading(false);
         }
     }, [loading, id, clientCode, docType, documentNumber]);

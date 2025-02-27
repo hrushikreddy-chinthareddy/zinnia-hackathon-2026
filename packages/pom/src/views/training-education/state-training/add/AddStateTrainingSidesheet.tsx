@@ -210,7 +210,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
                 </Label>
               }
               name="completionDate"
-              onDateSelect={(date) =>
+              onDateSelect={date =>
                 field.onChange(standardDateMonthDayYear(date))
               }
               fieldStatus={
@@ -239,7 +239,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
                 </Label>
               }
               name="expirationDate"
-              onDateSelect={(date) =>
+              onDateSelect={date =>
                 field.onChange(standardDateMonthDayYear(date))
               }
               fieldStatus={

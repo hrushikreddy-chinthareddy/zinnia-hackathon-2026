@@ -5,10 +5,13 @@ import HighchartsReact from 'highcharts-react-official';
 import { FC, useMemo, useState } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
-import { FieldSize } from '@deps/components/fields/field';
+import { CaseTypeFilter } from '@deps/components/dashboard//case-type-filter';
+import { ChartHeader } from '@deps/components/dashboard//chart-header';
+import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
+import { TimeFilter } from '@deps/components/dashboard/time-filter/time-filter';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import CardContainer from '@deps/containers/card-container/card-container';
 import { InsightSummary } from '@deps/containers/dashboard/insight-summary/insight-summary';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
@@ -16,63 +19,26 @@ import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { CaseTimingData } from '@deps/queries/api/cases';
 import { DashboardSearchFilter } from '@deps/queries/cases';
-import { getCaseDashboardStatsQuery, getCaseDashboardTimingQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { getCaseDashboardTimingQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
 
-import { formatProcessListOptions, generateCarouselDataLengths, startDates, TimeframeFilterOptions } from '../utils';
+import { formatProcessFilter, generateCarouselDataLengths, startDates, TimeframeFilterOptions } from '../utils';
 import styles from './case-to-close-time-chart.module.css';
 import { generateLabel, generateSeries, generateTooltip, getDaysFromSeconds } from './utils';
-import { ChartHeader } from '../chart-header';
-import { TimeFilter } from '../time-filter/time-filter';
 
 export const CaseToCloseTimeChart: FC = () => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
-    const [selectedProcess, setSelectedProcess] = useState<Processes | 'all' | undefined>();
+    const [selectedProcess, setSelectedProcess] = useState<Processes | undefined>(Processes.NewBusiness);
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
 
     const filter: DashboardSearchFilter = {
-        caseStatus: [Statuses.Completed],
         createdDateStart: startDates[timeframe],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
-        process: selectedProcess && selectedProcess !== 'all' ? [selectedProcess] : [],
+        process: formatProcessFilter(selectedProcess),
     };
-
-    // Get select dropdown options for process list options
-    //TODO: this isnt right number of cases per process
-    const { data: processListOptions, isFetching: processListOptionsFetching } = useQuery({
-        queryKey: ['processListOptions', filter],
-        placeholderData: previousData => previousData,
-        queryFn: async () => {
-            const processListFilter = {
-                ...filter,
-                process: [],
-                requestSubType: [],
-            };
-            const response = await getCaseDashboardStatsQuery(processListFilter, [GroupByOptions.Process]);
-            if (!response?.data) {
-                console.error(
-                    'createBaseQuery::An error occurred while getting case dashboard stats results',
-                    response?.data?.length,
-                    JSON.stringify(response)
-                );
-                throw response;
-            } else {
-                return response;
-            }
-        },
-        select: ({ data }) => {
-            const options = formatProcessListOptions(data);
-            options.unshift({
-                value: 'all',
-                label: 'All case types',
-            });
-            return options;
-        },
-        enabled: Object.keys(filter).length > 0,
-    });
 
     // get timing data by subprocess
     const {
@@ -113,7 +79,11 @@ export const CaseToCloseTimeChart: FC = () => {
                     },
                 },
                 colors: ['#67A2E9'],
-
+                plotOptions: {
+                    bar: {
+                        minPointLength: 10,
+                    },
+                },
                 tooltip: {
                     formatter: function (this: Highcharts.TooltipFormatterContextObject) {
                         return generateTooltip(this);
@@ -123,6 +93,7 @@ export const CaseToCloseTimeChart: FC = () => {
                 yAxis: {
                     allowDecimals: false,
                     tickAmount: 5,
+
                     labels: {
                         formatter: function (this: Highcharts.AxisLabelsFormatterContextObject) {
                             return generateLabel(this, isSeriesShowingDays);
@@ -169,11 +140,11 @@ export const CaseToCloseTimeChart: FC = () => {
     );
 
     return (
-        <div className={styles.container}>
+        <CardContainer fullWidth={false}>
             <ChartHeader title="Median Case Processing Times" subtitle={totalCases} />
 
-            <BlurOverlayLoader loading={caseTimingDataFetching || processListOptionsFetching}>
-                <div className=" flex bg-[--color-base-surface-surface-primar">
+            <BlurOverlayLoader loading={caseTimingDataFetching}>
+                <div className=" flex bg-[--color-base-surface-surface-primary">
                     {caseTimingDataError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
@@ -186,18 +157,13 @@ export const CaseToCloseTimeChart: FC = () => {
                             <div className={clsx('w-1/4', styles.insightsContainer)}>
                                 <InsightSummary className="grow" prompt={prompt} content={content} />
                             </div>
-                            <div className={clsx('w-3/4', styles.chartContainer)}>
-                                <div className={styles.filterContainer}>
+                            <div className={clsx('w-3/4', sharedStyles.chartContainer)}>
+                                <div className={sharedStyles.filterContainer}>
                                     <div className="w-1/4">
-                                        <Select
-                                            className={styles.processSelect}
-                                            options={processListOptions || []}
-                                            size={FieldSize.Small}
-                                            name="process-type-dropdown-btn"
-                                            placeholder={'All case types'}
-                                            label="Case type"
-                                            value={selectedProcess || ''}
-                                            onChange={value => setSelectedProcess(value as Processes)}
+                                        <CaseTypeFilter
+                                            onValueChange={setSelectedProcess}
+                                            caseStatus={[Statuses.Completed]}
+                                            defaultProcess={Processes.NewBusiness}
                                         />
                                     </div>
                                     <div className="w-3/4">
@@ -241,6 +207,6 @@ export const CaseToCloseTimeChart: FC = () => {
                     )}
                 </div>
             </BlurOverlayLoader>
-        </div>
+        </CardContainer>
     );
 };

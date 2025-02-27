@@ -3,35 +3,38 @@ import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
+
+import Badge from '@deps/components/badge/badge';
+import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { SupportedTaskMap } from '@deps/components/case-sub-page/case-tabs/progress/tasks';
 import Content, { ContentVariant } from '@deps/components/content/content';
+import Dropdown from '@deps/components/dropdown/Dropdown';
 import { getTaskStatus } from '@deps/components/tasks-listing/task-listing.helpers';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { ProcessesToCaseTypeMap } from '@deps/constants/case';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Processes } from '@deps/models/case/case';
 import { ProcessType } from '@deps/models/case/enums';
 import { EarlyTaskType, TaskSource, TaskType } from '@deps/models/case/task';
-import { AssignedTask, TaskStatus } from '@deps/models/case/task-instance';
+import { AssignedTask, ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { unassignTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
+import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
+import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
+import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
+import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
 import { ReactComponent as SparklesIcon } from '@deps/styles/elements/icons/icons_outlined/sparkles.svg';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { removeFromCache } from '@deps/utils/cache';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+
 import TaskQueueDrawer from './task-queue-drawer';
-import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
-import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
-import Dropdown from '@deps/components/dropdown/Dropdown';
-import Badge from '@deps/components/badge/badge';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
-import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
-import { removeFromCache } from '@deps/utils/cache';
 
 type TaskQueueTableRowProps = {
     task: AssignedTask;
@@ -52,16 +55,36 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
 
     const handleStartTask = async (taskId: string, taskStatus: TaskStatus, taskType: string) => {
         const newTask = !Object.values(EarlyTaskType).includes(taskType as EarlyTaskType);
-        if (taskStatus === TaskStatus.InProgress) {
-            browserLogInfo('task-queue:handleStartTask::Task is in progress', {
-                taskId: taskId,
-                taskStatus: taskStatus,
-            });
-            router.push(newTask ? `/task/${taskId}` : `/nigo-entry?taskId=${taskId}`);
-            return;
-        }
 
         const taskData = await getTaskInstance({ taskId: taskId });
+
+        const updateTaskStatus = async (taskData: ManagementTask) => {
+            try {
+                const body = { ...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement };
+                const response = await updateTask(taskData.caseId, taskData.id, body, timer);
+
+                removeFromCache('getTaskInstance', { taskId: task.id });
+                if (response) {
+                    browserLogInfo('task-queue:handleStartTask::Successfully updated task in progress', {
+                        taskId: taskData.id,
+                        documentNumber: taskData?.data?.documentNumber,
+                        clientCode: taskData?.carrier,
+                        process: taskData?.process,
+                    });
+                    router.push(newTask ? `/task/${taskData.id}` : `/nigo-entry?taskId=${taskData.id}`);
+                    return;
+                }
+            } catch (e) {
+                browserLogError('task-queue:handleStartTask::Error updating task in progress', {
+                    ...parseErrorInformation(e),
+                    taskId: taskData?.id,
+                    caseId: taskData.caseId,
+                });
+                router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
+                return;
+            }
+        };
+
         if (!taskData) {
             browserLogInfo('task-queue:handleStartTask::handleStartTask::Error retrieving a task', {
                 taskId: taskId,
@@ -69,6 +92,23 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             });
             router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
             return;
+        }
+
+        try {
+            if (TaskStatus.InProgress) {
+                browserLogInfo('task-queue:handleStartTask::Task is in progress', {
+                    taskId: taskId,
+                    taskStatus: taskStatus,
+                });
+                router.push(newTask ? `/task/${taskId}` : `/nigo-entry?taskId=${taskId}`);
+                return;
+            }
+            if (TaskStatus.New && newTask) {
+                await updateTaskStatus(taskData);
+                return;
+            }
+        } catch (e) {
+            browserLogError('task-queue:handleStartTask::Error updating task status');
         }
 
         const caseType = ProcessesToCaseTypeMap[taskData.process as Processes];
@@ -102,30 +142,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             return;
         }
 
-        try {
-            const body = { ...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement };
-            const response = await updateTask(taskData.caseId, taskData.id, body, timer);
-
-            removeFromCache('getTaskInstance', { taskId: task.id });
-            if (response) {
-                browserLogInfo('task-queue:handleStartTask::Successfully updated task in progress', {
-                    taskId: taskData.id,
-                    documentNumber: taskData?.data?.documentNumber,
-                    clientCode: taskData?.carrier,
-                    process: taskData?.process,
-                });
-                router.push(newTask ? `/task/${taskData.id}` : `/nigo-entry?taskId=${taskData.id}`);
-                return;
-            }
-        } catch (e) {
-            browserLogError('task-queue:handleStartTask::Error updating task in progress', {
-                ...parseErrorInformation(e),
-                taskId: taskId,
-                caseId: taskData.caseId,
-            });
-            router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
-            return;
-        }
+        updateTaskStatus(taskData);
     };
     const handleUnassignTask = async (taskId: string) => {
         const taskData = await getTaskInstance({ taskId: taskId });
@@ -169,7 +186,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             label: 'Pending',
             icon: <Pause width={16} height={16} />,
             onSelect: () => {
-                openSideSheet()
+                openSideSheet();
             },
         },
     ];
@@ -186,8 +203,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             badgeLabel = 'Canceled';
             break;
         case TaskStatus.Pending:
-            badgeIcon = <Pause width={16} height={16} />,
-                badgeVariant = BadgeVariant.Error;
+            (badgeIcon = <Pause width={16} height={16} />), (badgeVariant = BadgeVariant.Error);
             badgeLabel = 'Pending';
             break;
         default:
@@ -196,7 +212,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             badgeLabel = 'To do';
             break;
     }
-    const SupportedTaskMap = [TaskType.SuitabilityReview, TaskType.SuitabilityDataEntry];
+
     return (
         <TableRow key={`task_queue_row_${task.id}`}>
             <TableCell>
@@ -212,31 +228,38 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
             <TableCell>
                 <Content details={carrierName} variant={ContentVariant.BodySm} />
             </TableCell>
-            <TableCell >
-
+            <TableCell>
                 <Content details={task?.process} variant={ContentVariant.BodySm} />
             </TableCell>
             <TableCell>
-                {(SupportedTaskMap.includes(task?.taskType as TaskType)) ?
-
+                {SupportedTaskMap.includes(task?.taskType as TaskType) ? (
                     <>
-                        {task?.status === TaskStatus.InProgress && <Dropdown
-                            triggerIcon={<div className='pb-1'><Progress width={16} height={16} /></div>}
-                            triggerLabel="In Progress"
-                            options={statuses}
-                        />}
-                        {task?.status !== TaskStatus.InProgress && <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
-                            <Badge
-                                icon={badgeIcon}
-                                variant={badgeVariant}
-                                label={badgeLabel}
-                                rounded={true}
-                                className="flex gap-1 items-center"
+                        {task?.status === TaskStatus.InProgress && (
+                            <Dropdown
+                                triggerIcon={
+                                    <div className="pb-1">
+                                        <Progress width={16} height={16} />
+                                    </div>
+                                }
+                                triggerLabel="In Progress"
+                                options={statuses}
                             />
-                        </Typography>}
-                    </> :
+                        )}
+                        {task?.status !== TaskStatus.InProgress && (
+                            <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
+                                <Badge
+                                    icon={badgeIcon}
+                                    variant={badgeVariant}
+                                    label={badgeLabel}
+                                    rounded={true}
+                                    className="flex gap-1 items-center"
+                                />
+                            </Typography>
+                        )}
+                    </>
+                ) : (
                     <Content details={taskStatus} variant={ContentVariant.BodySm} />
-                }
+                )}
             </TableCell>
 
             <TableCell>
@@ -262,12 +285,8 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
                     />
                 </a>
             </TableCell>
-        </TableRow >
+        </TableRow>
     );
 };
 
 export default TaskQueueTableRow;
-
-
-
-

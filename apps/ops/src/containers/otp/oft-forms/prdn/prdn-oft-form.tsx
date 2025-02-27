@@ -27,6 +27,7 @@ export default function PrdnOftWithdrawalForm() {
         selectOneOptions,
         defaultValues,
         qualificationOptions,
+        showContractReplacement,
     } = usePrdnOftConfig(t);
 
     const {
@@ -75,13 +76,11 @@ export default function PrdnOftWithdrawalForm() {
                 title={t('amountDetails.surrenderingInstructions.title') as string}
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
+                showContractReplacement={showContractReplacement}
             />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
-            <CedingCompanyDistribution
-                qualificationOptions={qualificationOptions}
-                isFormStateReadOnly={isFormStateReadOnly}
-            />
+            <CedingCompanyDistribution qualificationOptions={qualificationOptions} isFormStateReadOnly={isFormStateReadOnly} />
             <FormDisbursement
                 options={disbursementOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -91,4 +90,3 @@ export default function PrdnOftWithdrawalForm() {
         </>
     );
 }
-
