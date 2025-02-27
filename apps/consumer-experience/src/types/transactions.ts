@@ -16,6 +16,7 @@ export interface BankRequest extends NonFinancialTransactionParameters {
   bankId?: string;
   bankAccountChangeRequest: BankAccountChangeRequest;
   deleteRequest?: boolean;
+  correlationId?: string;
 }
 
 export interface AddressRequest extends NonFinancialTransactionParameters {

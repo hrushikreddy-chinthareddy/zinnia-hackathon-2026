@@ -1,9 +1,10 @@
 'use client';
 
 import { AccountStatus } from '@zinnia/api-types/types/sor';
-import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
+import { SideSheet, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams, useSearchParams } from 'next/navigation';
 import { FC, ReactNode, useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { addBankRequest } from '@/actions/bpm/bank-actions';
 import { useNeedsVerificationCode } from '@/hooks/use-needs-verification-code';
@@ -12,6 +13,7 @@ import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 
 import styles from './AddBankSidesheet.module.css';
+import { ButtonWithAnalytics } from '../button-with-analytics/ButtonWithAnalytics';
 import { AddBank } from './form-steps/add/AddBank';
 import { Error } from '../transaction-steps/error/Error';
 import { Loading } from '../transaction-steps/loading/Loading';
@@ -53,6 +55,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
   );
 
   const search = useSearchParams();
+  const correlationId = uuidv4();
 
   useEffect(() => {
     if (search.get('addBank') === 'true') {
@@ -77,6 +80,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
       planCode: params.planCode,
       policyNumber: params.policyNumber,
       partyId,
+      correlationId,
       bankAccountChangeRequest: {
         bankAccount: {
           ...requestValues,
@@ -129,19 +133,24 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
       overrideOpen={open}
       closeCallback={onClose}
       trigger={
-        <Button
+        <ButtonWithAnalytics
           className={styles.addBank as string}
           size="small"
           mode="link"
           onClick={() => setOpen(true)}
+          analyticsTitle="add_a_bank_account"
         >
           <Icon small type={IconType.ADD} />
           Add a bank account
-        </Button>
+        </ButtonWithAnalytics>
       }
     >
       {!step && (
-        <AddBank cancelCallback={onClose} submitCallback={confirmAdd} />
+        <AddBank
+          cancelCallback={onClose}
+          submitCallback={handleAdd}
+          correlationId={correlationId}
+        />
       )}
       {step === FormSteps.LOADING && <Loading />}
       {step === FormSteps.ERROR && (

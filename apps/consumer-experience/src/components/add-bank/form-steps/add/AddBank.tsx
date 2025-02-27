@@ -4,6 +4,7 @@ import { Radio, Label, Button } from '@zinnia/bloom/components';
 import { FC } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
+import { ButtonWithAnalytics } from '@/components/button-with-analytics/ButtonWithAnalytics';
 import { BankFormFields } from '@/types/bank';
 import { isNumber } from '@/utils/regex';
 
@@ -12,15 +13,15 @@ import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
 import { FieldStatus } from '../../../field/types';
 
 export interface AddBankProps {
-  values?: BankFormFields;
   cancelCallback?: () => void;
   submitCallback?: (val: BankFormFields) => void;
-  removeCallback?: () => void;
+  correlationId?: string;
 }
 
 export const AddBank: FC<AddBankProps> = ({
   cancelCallback,
   submitCallback,
+  correlationId,
 }) => {
   const {
     control,
@@ -35,6 +36,8 @@ export const AddBank: FC<AddBankProps> = ({
       accountNumber: '',
     },
   });
+
+  console.log(errors, new Date());
 
   const handleCancel = () => {
     reset();
@@ -163,7 +166,16 @@ export const AddBank: FC<AddBankProps> = ({
       </div>
 
       <div className={styles.buttonContainer}>
-        <Button type="submit">Save account</Button>
+        {/* TODO: right now this will track the click regardless of whether
+        the form has errors or not. possibly change when the analytics
+        happens and doi it on SubmitHandler instead */}
+        <ButtonWithAnalytics
+          type="submit"
+          analyticsTitle="save bank account"
+          correlationId={correlationId}
+        >
+          Save account
+        </ButtonWithAnalytics>
         <Button onClick={handleCancel} className={styles.cancel} mode="link">
           Cancel
         </Button>

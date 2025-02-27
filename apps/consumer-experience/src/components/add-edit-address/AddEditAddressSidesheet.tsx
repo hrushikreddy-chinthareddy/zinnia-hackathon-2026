@@ -1,7 +1,7 @@
 'use client';
 
 import { AddressChange } from '@zinnia/api-types/types/bpm';
-import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
+import { SideSheet, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
@@ -10,6 +10,7 @@ import {
   putUpdateAddress,
   putEndDateAddress,
 } from '@/actions/bpm/address-actions';
+import { ButtonWithAnalytics } from '@/components/button-with-analytics/ButtonWithAnalytics';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { FormSteps } from '@/types/transactions';
 import { zipCodeInParts } from '@/utils/address';
@@ -202,7 +203,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
       overrideOpen={open}
       closeCallback={onClose}
       trigger={
-        <Button
+        <ButtonWithAnalytics
           className={
             actionType === FormActionType.ADD
               ? styles.addAddress
@@ -216,10 +217,11 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           aria-label={
             actionType === FormActionType.EDIT ? 'Edit or remove address' : ''
           }
+          analyticsTitle={triggerText}
         >
-          <Icon small={actionType === FormActionType.ADD} type={triggerIcon} />
+          <Icon small type={triggerIcon} />
           {triggerText}
-        </Button>
+        </ButtonWithAnalytics>
       }
     >
       {!step && (

@@ -71,7 +71,21 @@ const AddressGroup = ({
         <FieldData
           key={`key-${index}`}
           Label={
-            <Label>
+            <Label
+              {...(showEditButton && {
+                interactiveElements: [
+                  <AddEditAddressSidesheet
+                    key={address.addressId}
+                    actionType={FormActionType.EDIT}
+                    partyId={partyId}
+                    values={editValues}
+                    addressId={address.addressId}
+                    fullAddressData={address}
+                    disableEditingPreferredAddress={userOnlyHasOneAddress}
+                  />,
+                ],
+              })}
+            >
               {
                 displayAddressType[
                   address.addressType || AddressChange.addressType.RESIDENCE
@@ -97,16 +111,6 @@ const AddressGroup = ({
             zipExt={address.zipCodeExtension}
           />
         </FieldData>
-        {showEditButton && (
-          <AddEditAddressSidesheet
-            actionType={FormActionType.EDIT}
-            partyId={partyId}
-            values={editValues}
-            addressId={address.addressId}
-            fullAddressData={address}
-            disableEditingPreferredAddress={userOnlyHasOneAddress}
-          />
-        )}
       </div>
     );
   });
