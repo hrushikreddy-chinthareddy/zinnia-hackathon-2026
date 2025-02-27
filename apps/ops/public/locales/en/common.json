@@ -1422,7 +1422,8 @@
             "agentNigo": "Review Agent Issues",
             "PaymentProcessingNigo": "Review Premium Issues",
             "applicationNigo": "Review Application Issues",
-            "agentReview": "Validate Agent"
+            "agentReview": "Validate Agent",
+            "reviewOfac":"Review OFAC issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -5164,6 +5165,14 @@
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Validate Agent was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "ofacReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review OFAC Issues was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }

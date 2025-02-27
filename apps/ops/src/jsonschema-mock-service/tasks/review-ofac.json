@@ -1,0 +1,316 @@
+{
+    "formId": "bf4a42d8-696f-4407-ac96-3010a2b72097",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "OFAC_REVIEW",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Review OFAC Issues",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions"
+                        },
+                        "documents": {
+                            "type": "array",
+                            "title": "Supporting Information",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "documentId": {
+                                        "type": "string",
+                                        "ui:field": "title"
+                                    },
+                                    "documentName": {
+                                        "type": "string",
+                                        "ui:field": "subTitle"
+                                    },
+                                    "documentSource": {
+                                        "type": "string",
+                                        "ui:field": "subTitle"
+                                    }
+                                }
+                            }
+                        },
+                        "ofacRules": {
+                            "type": "array",
+                            "title": "",
+                            "items": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "issue": {
+                                        "type": "string",
+                                        "title": "Issue"
+                                    },
+                                    "rule": {
+                                        "type": "string",
+                                        "title": "Rule"
+                                    },
+                                    "applicationInformation": {
+                                        "type": "string",
+                                        "title": "Application Information"
+                                    },
+                                    "nmid": {
+                                        "type": "string",
+                                        "title": "Additional Info"
+                                    },
+                                    "externalId": {
+                                        "type": "string",
+                                        "title": "Additional Info"
+                                    }
+                                }
+                            }
+                        },
+                        "ofacDecision": {
+                            "type": "boolean",
+                            "title": "OFAC Decision",
+                            "enumNames": [
+                                "Accept",
+                                "Decline"
+                            ],
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    "dependencies": {
+                        "ofacDecision": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "ofacDecision": {
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "uploaddocuments": {
+                                            "type": "object",
+                                            "title": "Link or upload document",
+                                            "properties": {
+                                                "upload": {
+                                                    "type": "string"
+                                                },
+                                                "or": {
+                                                    "type": "string",
+                                                    "title": "or"
+                                                },
+                                                "attachment": {
+                                                    "type": "array",
+                                                    "title": "upload",
+                                                    "items": {
+                                                        "title": "upload",
+                                                        "type": "string",
+                                                        "format": "data-url"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "attachments": {
+                                            "type": "array",
+                                            "items": {
+                                                "documentName": {
+                                                    "title": "Name",
+                                                    "type": "string"
+                                                },
+                                                "documentId": {
+                                                    "title": "Document Id",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "ofacDecision": {
+                                            "enum": [
+                                                false
+                                            ]
+                                        },
+                                        "declineReason": {
+                                            "title": "Reason for decline",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "$ref": "#/definitions/declineReason"
+                                            }
+                                        }
+                                    }
+
+                                }
+                            ]
+                        }
+                    },
+                    "definitions": {
+                        "declineReason": {
+                            "enum": ["DEFAULT"]
+                        }
+                    },
+                    "required": [
+                        "ofacDecision"
+                    ]
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "props": {
+                            "description": "This customer's application was flagged for review. Accept or Decline the issues before submitting a final decision."
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "documents": {
+                        "props": {
+                            "readonly": true
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "addable": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "ObjectFieldTemplate": "CardTemplate",
+
+                                "cardType": "Document",
+                                "icon": "DOCUMENT_TEXT"
+                            },
+                            "documentId": {
+                                "ui:widget": "text"
+                            },
+                            "documentName": {
+                                "ui:widget": "text"
+                            },
+                            "documentSource": {
+                                "ui:widget": "text"
+                            }
+                        }
+                    },
+                    "ofacRules": {
+                        "ui:options": {
+                            "label": false,
+                            "ArrayFieldTemplate": "ArrayFieldTableTemplate"
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false
+                            },
+                            "issue": {
+                                "ui:placeholder": "Issue",
+                                "ui:helpText": "Issue",
+                                "ui:options": {
+                                    "label": false
+                                }
+                            },
+                            "rule": {
+                                "ui:options": {
+                                    "label": false
+                                }
+                            },
+                            "applicationInformation": {
+                                "ui:options": {
+                                    "label": false
+                                }
+                            },
+                            "nmid": {
+                                "ui:options": {
+                                    "label": false,
+                                    "widget": "hidden"
+                                }
+                            },
+                            "externalId": {
+                                "ui:options": {
+                                    "label": false,
+                                    "widget": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "ofacDecision": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true,
+                            "inline": true
+                        }
+                    },
+                    "uploaddocuments": {
+                        "inline": true,
+                        "ui:options": {
+                            "label": false
+                        },
+                        "upload": {
+                            "ui:widget": "AutoCompleteWidget",
+                            "ui:placeholder": "Find existing documents...",
+                            "ui:options": {
+                                "label": false,
+                                "icon": "Search"
+                            }
+                        },
+                        "or": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "attachment": {
+                            "ui:options": {
+                                "label": false,
+                                "showFiles": false
+                            },
+                            "ui:props": {
+                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiMethod": "get"
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
+                        }
+                    },
+                    "declineReason": {
+                        "ui:widget": "select",
+                        "ui:options": {
+                            "label": false,
+                            "enumOptions": [
+                                {
+                                    "label": "Default",
+                                    "value": "DEFAULT"
+                                }
+                            ]
+                        },
+                        "items": {
+                            "ui:options": {
+                                "label": "false"
+                            }
+                        },
+                        "ui:placeholder": "Select Issues"
+                    }
+                }
+            }
+        ]
+    }
+}
