@@ -1420,7 +1420,7 @@
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
-            "attachmentNigo": "Review Attachment Issues",
+            "attachmentNigo": "Review Application Issues",
             "PaymentProcessingNigo": "Review Premium Issues",
             "applicationNigo": "Review Application Issues",
             "agentReview": "Validate Agent"
@@ -5146,7 +5146,7 @@
     "nbAttachmentNigo": {
       "confirmStep": {
             "title": "Got It!",
-            "subTitle": "Task: Review Attachment Issues was submitted.",
+            "subTitle": "Task: Review Application Issues was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }

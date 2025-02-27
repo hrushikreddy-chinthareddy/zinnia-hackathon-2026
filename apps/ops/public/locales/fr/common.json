@@ -1418,7 +1418,7 @@
             "suitabilityReviewIssues": "Revoir Suitability Problèmes",
             "purchaseDocumentMatchingIssues": "Document de correspondance",
             "agentNigo": "Réviser les problèmes d'agent",
-            "attachmentNigo": "Réviser les problèmes d'attachment"
+            "attachmentNigo": "Réviser les problèmes d'application",
             "applicationNigo":"Réviser les problèmes d'application",
             "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements",
             "agentReview": "Valider l'agent"
@@ -5117,7 +5117,7 @@
     "nbAttachmentNigo": {
       "confirmStep": {
             "title": "Compris!",
-            "subTitle": "Tâche : Révision des problèmes d'attachment a été soumise.",
+            "subTitle": "Tâche : Révision des problèmes d'application a été soumise.",
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
         }
