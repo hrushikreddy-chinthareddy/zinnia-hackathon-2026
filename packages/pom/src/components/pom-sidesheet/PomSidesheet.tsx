@@ -2,8 +2,7 @@ import { FC, ReactNode, useState, cloneElement, isValidElement } from 'react';
 import { SideSheet, SideSheetProps } from '@zinnia/bloom/components';
 import { default as PomStyles } from '../../styles/pom.module.css';
 
-export interface PomSideSheetProps
-  extends Omit<SideSheetProps, 'children' | 'overrideOpen'> {
+export interface PomSideSheetProps extends Omit<SideSheetProps, 'children'> {
   trigger: ReactNode;
   children: ReactNode;
 }
@@ -18,7 +17,7 @@ export const PomSideSheet: FC<PomSideSheetProps> = ({
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { overrideOpen, ...rest } = props;
   // close sidesheet when the child component calls the onSideSheetClose function
   // for example, when the user clicks a "close" button in the child component, or "cancel"
   const childrenWithClose = isValidElement(children)
@@ -41,8 +40,8 @@ export const PomSideSheet: FC<PomSideSheetProps> = ({
 
   return (
     <SideSheet
-      {...props}
-      overrideOpen={isOpen}
+      {...rest}
+      overrideOpen={overrideOpen ?? isOpen}
       trigger={triggerWithClick}
       closeCallback={() => setIsOpen(false)}
     >

@@ -770,7 +770,9 @@
         "view": "Afficher",
         "with": "avec",
         "approved": "Approuvé",
-        "unapproved": "Désapprouvé"
+        "unapproved": "Désapprouvé",
+        "submit": "Soumettre",
+        "uploadDocument": "Uploader un document"
     },
     "dashboard": {
         "h1": "Recherche de politique",
