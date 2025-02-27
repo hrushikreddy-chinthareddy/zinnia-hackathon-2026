@@ -94,7 +94,10 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
     const title = extractField(properties, data, 'title');
     const subtitle = extractField(properties, data, 'subTitle');
 
-    if ((!title?.value && !subtitle?.value) || (cardType === CardTypes.Document && !data?.documentId)) {
+    if (
+        (!title?.value && !subtitle?.value && cardType !== CardTypes.Document && !data?.documentId) ||
+        (cardType === CardTypes.Document && !data?.documentId)
+    ) {
         return;
     }
 
@@ -118,12 +121,12 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                 </div>
                 <div className="grow">
                     <div className="text-sm font-bold">
-                        <PiiWrapper>{formatValueByDataType(title.field[0].dataType, title.value)}</PiiWrapper>
+                        {title?.field?.[0] && <PiiWrapper>{formatValueByDataType(title.field[0].dataType, title.value)}</PiiWrapper>}
                     </div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
                         <PiiWrapper>
-                            {subtitle?.field[0]?.title ? subtitle?.field[0].title + ': ' : ''}{' '}
-                            {formatValueByDataType(subtitle?.field?.[0]?.dataType, subtitle?.value)}
+                            {subtitle?.field?.[0] && subtitle?.field[0]?.title ? subtitle?.field[0].title + ': ' : ''}{' '}
+                            {subtitle?.field?.[0] && formatValueByDataType(subtitle?.field?.[0]?.dataType, subtitle?.value)}
                         </PiiWrapper>
                     </div>
                 </div>
