@@ -5,6 +5,7 @@ import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
+import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import SystematicWithdrawalProgram, { SSWProgramOptions } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-program';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
@@ -36,6 +37,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         signaturesConfig,
         signaturesNotaryConfig,
         additionalWithholdingAmountConfig,
+        irsSignatureConfig,
     } = getDlicConfig(t);
     const {
         formParty,
@@ -109,6 +111,8 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 ownerStateOfResidence={ownerStateOfResidence}
                 additionalWithHoldingConfig={additionalWithholdingAmountConfig}
             />
+            <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} />
+
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
 
