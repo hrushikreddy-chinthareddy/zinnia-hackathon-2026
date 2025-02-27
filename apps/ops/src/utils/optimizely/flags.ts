@@ -55,7 +55,7 @@ export enum FEATURE_FLAGS {
     ADDRESS_CHANGE_GDMN = 'case-management-otp-feature-gdmn-address-change',
     ADDRESS_CHANGE_USAA = 'case-management-otp-feature-usaa-address-change',
     ADDRESS_CHANGE_RSLN = 'case-management-otp-feature-rsln-address-change',
-    ADDRESS_CHANGE_ALLS = 'case-management-otp-feature-alls-address-change',
+    ADDRESS_CHANGE_PRUD = 'case-management-otp-feature-prud-address-change',
     ADDRESS_CHANGE_ALLM = 'case-management-otp-feature-allm-address-change',
     SEND_DOCUMENT_SHOW_CASE_BUTTON = 'contact-center-send-document-show-case',
     REREG_FLIC = 'case-management-otp_feature_flic_rereg',
