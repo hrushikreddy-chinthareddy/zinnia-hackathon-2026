@@ -30,7 +30,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const formState = useContext(TaskDataContext);
     const { task, setTask, setSubmitFailed, correlationId, initialTask } = formState;
     const [formSchema, setFormSchema] = useState(taskMetadata);
-    const formContext = { carrier: task.carrier, caseId: task.caseId, taskType: task.taskType };
+    const formContext = { carrier: task.carrier, caseId: task.caseId, taskType: task.taskType, correlationId: correlationId };
     const fetchData = async () => {
         const correlationId = task.data.matchingResult;
         if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
@@ -141,11 +141,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
-            setTask({
-                ...task,
-
+            setTask(ogTask => ({
+                ...ogTask,
                 data: event.formData,
-            });
+            }));
         },
 
         [setTask, task]
@@ -159,6 +158,22 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 ...dynamicData,
             },
         }));
+    };
+
+    const updateSchemaHandler = (dynamicData: any) => {
+        Object.keys(dynamicData).forEach(key => {
+            const currentSchema1 = {
+                ...formSchema,
+                formSchema: {
+                    ...formSchema.formSchema,
+                    definitions: {
+                        ...formSchema.formSchema.definitions,
+                        [key]: { ...dynamicData[key] },
+                    },
+                },
+            };
+            setFormSchema(oldSchema => ({ ...oldSchema, ...currentSchema1 }));
+        });
     };
 
     useEffect(() => {
@@ -211,7 +226,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onChange={handleChange}
             onSubmit={handleSubmit}
             readonly={readonly}
-            formContext={{ customData: { ...formContext, ...task.data }, setCustomData: setFormContext }}
+            formContext={{ customData: { ...formContext, ...task.data }, setCustomData: setFormContext, updateSchema: updateSchemaHandler }}
         ></DynamicForm>
     );
 });

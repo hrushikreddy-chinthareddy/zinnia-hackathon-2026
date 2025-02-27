@@ -1,6 +1,9 @@
 import type { StateTrainingItem } from '../../../types/training-education.types';
 import PomTable from '../../../components/pom-table/PomTable';
 import { generateStateTraining, generateTableRows } from '../__mocks';
+import { StateTrainingSidesheet } from './StateTrainingSidesheet';
+import clsx from 'clsx';
+import { default as PomStyles } from '../../../styles/pom.module.css';
 
 const tableHeaders: Record<keyof StateTrainingItem, string> = {
   vendor: 'Vendor',
@@ -13,8 +16,13 @@ const tableHeaders: Record<keyof StateTrainingItem, string> = {
 };
 
 const tableRows = (data: StateTrainingItem[]) =>
-  generateTableRows(data, (training) => ({
-    vendor: training.vendor,
+  generateTableRows(data, training => ({
+    vendor: (
+      <StateTrainingSidesheet
+        trigger={<span className={clsx(PomStyles.cta)}>{training.vendor}</span>}
+        stateTraining={training}
+      />
+    ),
     courseNumber: training.courseNumber,
     courseName: training.courseName,
     state: training.state,

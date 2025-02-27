@@ -22,10 +22,59 @@
     cursor: pointer;
 
     background-color: var(--color-button-primary-button-primary-default-fill, #fff);
-    border: var(--button-border-width) var(--button-border-style) var(--color-button-primary-button-primary-border);
+    border: var(--button-border-width) var(--button-border-style) var(--color-base-border-border-subtle);
     color: var(--color-button-primary-button-primary-default-text);
+}
+.iconInput {
+    --iconSize: 24px;
+    padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-spacing-padding-lg));
+    padding-right: calc(var(--iconSize) + var(--measure-spacing-padding-lg));
+    width: 100%;
+    border-radius: var(--measure-border-radius-radius-md);
+    border-left-width: var(--measure-border-width-stroke-sm);
+}
+
+.linkDocumentInput {
+    border-radius: var(--measure-border-radius-radius-md);
+    border-left-width: var(--measure-border-width-stroke-sm);
+    padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-dimension-padding-2xl));
+}
+
+.linkedDocument {
+    width: 400px;
 }
 
 .input {
     display: none;
+}
+
+.detailContainer {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    grid-template-columns: auto 1fr;
+    column-gap: 10px;
+}
+
+.title {
+    font-size: 14px;
+}
+
+.subTitle {
+    font-size: 14px;
+    color: var(--color-base-text-text-secondary);
+}
+
+.autoCompleteContainer {
+    width: 400px;
+    @media screen and (max-width: 600px) {
+        width: 100%;
+    }
 }

@@ -22,6 +22,7 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
             steps = getMatchDocumentPaymentReviewSteps(props);
             break;
         case TaskType.Agent_Nigo:
+        case TaskType.PremiumNigo:
             steps = getAgentNigoSteps(props);
             break;
         case TaskType.Application_Nigo:
