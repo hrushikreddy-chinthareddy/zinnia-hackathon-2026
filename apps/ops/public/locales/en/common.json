@@ -723,6 +723,7 @@
         "loadingThing": "Loading {{thing}}",
         "preview": "Preview",
         "rate": "rate",
+        "draft": "Draft",
         "submitPayment": "Submit payment",
         "successExclamation": "Success!",
         "total": "Total",

@@ -70,7 +70,7 @@ export const getCaseTaskById = async (taskId: string, accessToken?: string): Pro
     return getCaseTaskByIdSSR(taskId, accessToken);
 };
 
-export const updateCaseTask = async (task: ManagementTask): Promise<ManagementTask<TaskStatus> | null> => {
-    const body = { ...task, status: TaskStatus.Completed };
+export const updateCaseTask = async (task: ManagementTask, taskStatus?: TaskStatus): Promise<ManagementTask<TaskStatus> | null> => {
+    const body = { ...task, status: taskStatus || TaskStatus.Completed };
     return await updateTask(task.caseId, task.id, body);
 };

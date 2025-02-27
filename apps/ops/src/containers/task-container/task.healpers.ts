@@ -2,7 +2,7 @@ import { dataURItoBlob } from '@rjsf/utils';
 import dayjs from 'dayjs';
 
 import { TaskType } from '@deps/models/case/task';
-import { ManagementTask } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { updateCaseTask } from '@deps/operations/tasks/task-operations';
 import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
@@ -31,10 +31,10 @@ export const processPayload = (task: ManagementTask, correlationId: string): boo
     return success;
 };
 
-export const updateTask = async (task: ManagementTask, correlationId: string): Promise<boolean> => {
+export const updateTask = async (task: ManagementTask, correlationId: string, taskStatus?: TaskStatus): Promise<boolean> => {
     const success = await processPayload(task, correlationId);
     if (success) {
-        const taskResponse = await updateCaseTask(task);
+        const taskResponse = await updateCaseTask(task, taskStatus ?? TaskStatus.Completed);
         if (!taskResponse) {
             return false;
         }
