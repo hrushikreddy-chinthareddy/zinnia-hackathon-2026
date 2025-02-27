@@ -62,7 +62,7 @@ RUN echo "DATADOG_API_KEY=${DATADOG_API_KEY}" >> .env.production
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN pnpm turbo run build --filter=ops
-RUN pnpm run build-storybook --filter=ops
+# RUN pnpm run build-storybook --filter=ops
 RUN --mount=type=secret,id="DATADOG_API_KEY" DATADOG_API_KEY="$(cat /run/secrets/DATADOG_API_KEY)" npx @datadog/datadog-ci sourcemaps upload ./.next/static --service=zinnia-live-xd --release-version=${NEXT_PUBLIC_GIT_SHA} --minified-path-prefix=/static
 
 FROM base AS runner
