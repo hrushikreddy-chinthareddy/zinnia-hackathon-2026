@@ -16,6 +16,7 @@ export enum TaskType {
     SuitabilityReview = 'SUITABILITY_REVIEW',
     PURCHASE_DOCUMENT_MATCHING = 'PURCHASE_DOCUMENT_MATCHING',
     Agent_Nigo = 'NB_AGENT_NIGO',
+    PremiumNigo = 'NB_PAYMENT_PROCESSING_NIGO',
     Application_Nigo = 'NB_APPLICATION_NIGO',
     Agent_Review = 'NB_AGENT_REVIEW',
 }
@@ -169,4 +170,5 @@ export type ApiProps = {
 export enum DataFormattingTypes {
     SSN = 'ssn',
     Date = 'date',
+    Amount = 'amount',
 }

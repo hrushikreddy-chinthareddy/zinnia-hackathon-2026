@@ -1420,6 +1420,7 @@
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
+            "PaymentProcessingNigo": "Review Premium Issues",
             "applicationNigo": "Review Application Issues",
             "agentReview": "Validate Agent"
         },
@@ -5141,6 +5142,15 @@
             "secondaryCta": "Back to home"
         }
     },
+    "nbPaymentProcessingNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review initial premium was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+
     "nbApplicationNigo": {
         "confirmStep": {
             "title": "Got It!",
@@ -5149,6 +5159,7 @@
             "secondaryCta": "Back to home"
         }
     },
+
     "nbAgentReview": {
         "confirmStep": {
             "title": "Got It!",

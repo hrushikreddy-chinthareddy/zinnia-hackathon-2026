@@ -157,7 +157,7 @@
                             "ui:options": {
                                 "label": false,
                                 "inline": true,
-                                "prefix": "$"
+                                "dataType": "amount"
                             }
                         },
                         "payerDetails": {
