@@ -175,8 +175,7 @@ export const putEndDateBankAccount = async (
           parsedResponse: parsedResponse,
         })
       );
-      // TODO: make sure this is working as expected, was seeing error return
-      // as data at some point or i'm just losing it
+
       throw rawResponse;
     }
 
