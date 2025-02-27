@@ -93,8 +93,17 @@
                                             "enum": [
                                                 true
                                             ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "ofacDecision": {
+                                            "enum": [
+                                                false
+                                            ]
                                         },
-                                        "uploaddocuments": {
+                                        "uploadDocuments": {
                                             "type": "object",
                                             "title": "Link or upload document",
                                             "properties": {
@@ -128,15 +137,6 @@
                                                     "type": "string"
                                                 }
                                             }
-                                        }
-                                    }
-                                },
-                                {
-                                    "properties": {
-                                        "ofacDecision": {
-                                            "enum": [
-                                                false
-                                            ]
                                         },
                                         "declineReason": {
                                             "title": "Reason for decline",
@@ -253,10 +253,10 @@
                             "inline": true
                         }
                     },
-                    "uploaddocuments": {
+                    "uploadDocuments": {
                         "inline": true,
                         "ui:options": {
-                            "label": false
+                            "label": true
                         },
                         "upload": {
                             "ui:widget": "AutoCompleteWidget",
