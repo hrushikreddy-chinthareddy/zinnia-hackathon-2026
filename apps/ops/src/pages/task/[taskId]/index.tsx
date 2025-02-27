@@ -154,6 +154,7 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
+
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],
                 carrier: carrier?.toUpperCase(),

@@ -1,12 +1,14 @@
-import { dataURItoBlob } from '@rjsf/utils';
 import { AxiosResponse } from 'axios';
-import dayjs from 'dayjs';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { PolicyDocumentApiRequest, DocumentData, DocumentErrorResponse, EDSDocumentResponse } from '@deps/models/case/document';
-import { ManagementTask } from '@deps/models/case/task-instance';
-import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
+import {
+    PolicyDocumentApiRequest,
+    DocumentData,
+    DocumentErrorResponse,
+    EDSDocumentResponse,
+    EDSDocumentRequestBody,
+} from '@deps/models/case/document';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -30,25 +32,17 @@ export const getDocumentV2 = async (documentNumber: string, docType: string, cli
     }
 };
 
-export const uploadDocumentV2 = async (task: ManagementTask, document: any, correlationId: string): Promise<EDSDocumentResponse | null> => {
+export const uploadDocumentV2 = async (
+    metadata: EDSDocumentRequestBody,
+    document: any,
+    correlationId: string
+): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/upload`;
-        const { blob, name } = dataURItoBlob(document);
 
         const fileData = {
             file: document,
-            metadata: {
-                sourceFileName: name,
-                docAccessLevel: 'CLIENT_COPY',
-                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
-                docCategory: 'NEW_BUSINESS',
-                fileType: blob.type,
-                parentCarrierCode: task.carrier.toUpperCase(),
-                formType: 'NB Application',
-                docClassification: 'INBOUND',
-                zinniaLiveCaseId: task.caseId,
-                correlationId: correlationId,
-            },
+            metadata,
         };
 
         const { data } = await client.post<any, AxiosResponse>(url, fileData);

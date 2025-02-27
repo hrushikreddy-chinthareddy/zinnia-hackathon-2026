@@ -8,13 +8,11 @@ import {
     StrictRJSFSchema,
     WidgetProps,
 } from '@rjsf/utils';
-import { AxiosResponse } from 'axios';
 
 import SelectComponent from '@deps/components/select/select';
-import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
-import { ApiProps } from '@deps/models/case/task';
+import { csrApiHelper } from '@deps/helpers/csr-api-helper';
+import { ApiProps, ApiResponseTypes } from '@deps/models/case/task';
 import { baseAppUrl } from '@deps/queries/api-config';
-import { client } from '@deps/queries/api-utils/client';
 
 const baseUrl = baseAppUrl + '/api/';
 
@@ -81,22 +79,18 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         const newValue = getValue(false, value, enumOptions, selectedIndexes, multiple);
 
         if (!apiProps.apiUrl) return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
-        await fetchDetails(apiProps.apiUrl, value, newValue);
+        await fetchDetails(value, newValue);
     };
 
-    async function fetchDetails(apiUrl: string, value: string, newValue?: any) {
-        const payload = replacePlaceholders(apiProps.apiPayload, { ...formData?.customData, value });
-
-        const response = await client[apiProps?.apiMethod ?? 'get']<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload ?? undefined);
-
-        const data1 = replacePlaceholders(apiProps.responseData, response);
-
-        const data = {
-            [apiProps?.responseKey]: data1,
-        };
-
+    async function fetchDetails(value: string, newValue?: any) {
         onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
-        formData?.setCustomData && formData.setCustomData(data);
+        csrApiHelper(apiProps, { ...formContext?.customData, value }).then(response => {
+            if (apiProps.responseType === ApiResponseTypes.FormData) {
+                formData?.setCustomData && formData.setCustomData({ [apiProps?.dataKey]: response });
+            } else {
+                formData?.updateSchema && formData.updateSchema({ [apiProps?.dataKey]: response });
+            }
+        });
     }
 
     const showPlaceholderOption = !multiple && schema.default === undefined;

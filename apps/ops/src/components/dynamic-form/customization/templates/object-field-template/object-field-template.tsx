@@ -19,13 +19,16 @@ export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
         </Tooltip>
     );
 
+    const classes = props.uiSchema?.inline ? style.customRow : style.customColumn;
     const content = (
-        <div className="my-0 px-0 w-full">
+        <div className={`my-0 px-0 ${classes} `}>
             {props.properties
-                .filter(element => element.hidden !== true)
+                .filter(element => {
+                    return element.hidden !== true;
+                })
                 .map(element => {
                     return (
-                        <div key={element.name} className="property-wrapper flex flex-col">
+                        <div key={element.name} className={` ${style[uiOptions?.width as string]}`}>
                             {element.content}
                         </div>
                     );
