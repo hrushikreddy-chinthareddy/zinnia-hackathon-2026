@@ -30,7 +30,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const formState = useContext(TaskDataContext);
     const { task, setTask, setSubmitFailed, correlationId, initialTask } = formState;
     const [formSchema, setFormSchema] = useState(taskMetadata);
-    const formContext = { carrier: task.carrier, caseId: task.caseId, taskType: task.taskType };
+    const formContext = { carrier: task.carrier, caseId: task.caseId, taskType: task.taskType, correlationId: correlationId };
     const fetchData = async () => {
         const correlationId = task.data.matchingResult;
 
@@ -115,6 +115,21 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         }
     };
 
+    /**
+     * Cleans form data by removing properties marked for omission in the UI schema
+     */
+
+    const cleanForm = (formData: any) => {
+        let finalFormData = formData;
+        let iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
+        iterableProperties.forEach(property => {
+            if (taskMetadata.uiSchema?.[property]?.['ui:options']?.omitValue) {
+                delete finalFormData.data[property];
+            }
+        });
+        return finalFormData;
+    };
+
     const handleSubmit = useCallback(async () => {
 
         if (!isSubmit) {
@@ -124,7 +139,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             return;
         }
 
-        const taskPayload = buildTaskPayload(task, initialTask);
+        const taskPayload = buildTaskPayload(cleanForm(task), initialTask);
 
         const success = await updateTask(taskPayload, correlationId);
         removeFromCache('getTaskInstance', { taskId: task.id });
@@ -135,12 +150,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
-            console.log(event, 'formevent');
-            setTask({
-                ...task,
-
+            setTask(ogTask => ({
+                ...ogTask,
                 data: event.formData,
-            });
+            }));
         },
         [setTask, task]
     );
@@ -153,6 +166,22 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 ...dynamicData,
             },
         }));
+    };
+
+    const updateSchemaHandler = (dynamicData: any) => {
+        Object.keys(dynamicData).forEach(key => {
+            const currentSchema1 = {
+                ...formSchema,
+                formSchema: {
+                    ...formSchema.formSchema,
+                    definitions: {
+                        ...formSchema.formSchema.definitions,
+                        [key]: { ...dynamicData[key] },
+                    },
+                },
+            };
+            setFormSchema(oldSchema => ({ ...oldSchema, ...currentSchema1 }));
+        });
     };
 
     useEffect(() => {
@@ -218,7 +247,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onChange={handleChange}
             onSubmit={handleSubmit}
             readonly={readonly}
-            formContext={{ customData: { ...formContext, task }, setCustomData: setFormContext }}
+            formContext={{ customData: { ...formContext, ...task.data }, setCustomData: setFormContext, updateSchema: updateSchemaHandler }}
         ></DynamicForm>
     );
 });

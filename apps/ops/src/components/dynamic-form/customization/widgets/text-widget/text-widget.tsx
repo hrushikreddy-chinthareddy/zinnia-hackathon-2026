@@ -2,10 +2,11 @@ import { getUiOptions, WidgetProps } from '@rjsf/utils';
 
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { formatValueByDataType } from '../../templates/card-templates/card-template';
 
 export const TextWidget = function (props: WidgetProps) {
     const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder, formContext } = props;
-    const { inline, prefix, inlinetext } = getUiOptions(uiSchema);
+    const { inline, prefix, inlinetext, leading, dataType } = getUiOptions(uiSchema);
 
     let defaultValue = replacePlaceholders(value, { ...formContext }) || value;
 
@@ -14,8 +15,8 @@ export const TextWidget = function (props: WidgetProps) {
             <div className="grid grid-cols-2 text-md  max-w-screen-sm">
                 <div className="text-gray-500">{label}</div>
                 <div>
-                    {prefix ? prefix : ''}
-                    {value}
+                    {leading ? leading : ''}
+                    {formatValueByDataType((dataType as string) || 'text', value)}
                 </div>
             </div>
         );

@@ -19,6 +19,8 @@ export const SupportedTaskMap = [
     TaskType.Agent_Nigo,
     TaskType.Application_Nigo,
     TaskType.Standard_Document_Matching,
+    TaskType.PremiumNigo,
+    TaskType.Agent_Review,
 ];
 
 export function Task({ task }: { task: TaskView }) {
@@ -28,7 +30,9 @@ export function Task({ task }: { task: TaskView }) {
         [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReviewIssues'),
         [TaskType.PURCHASE_DOCUMENT_MATCHING]: t('caseOverview.tabs.purchaseDocumentMatchingIssues'),
         [TaskType.Agent_Nigo]: t('caseOverview.tabs.agentNigo'),
+        [TaskType.PremiumNigo]: t('caseOverview.tabs.PaymentProcessingNigo'),
         [TaskType.Application_Nigo]: t('caseOverview.tabs.applicationNigo'),
+        [TaskType.Agent_Review]: t('caseOverview.tabs.agentReview'),
     };
 
     const TaskTypeMap: Record<string, string> = {
@@ -55,8 +59,9 @@ export function Task({ task }: { task: TaskView }) {
 
     // if the task is part of an exception, add a dot before the task and change the color depending on the status
     if (task.hasParentException) {
-        beforeClasses = `before:text-[32px] before:content-["·"] ${task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
-            }`;
+        beforeClasses = `before:text-[32px] before:content-["·"] ${
+            task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
+        }`;
     }
 
     return (

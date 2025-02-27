@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import Appointments from '../../../views/licenses-appointments/appointments/Appointments';
-
 const meta = {
   title: 'Views/Appointments',
   component: Appointments,

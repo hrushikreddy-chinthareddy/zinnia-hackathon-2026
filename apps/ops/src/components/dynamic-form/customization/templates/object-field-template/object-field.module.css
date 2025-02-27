@@ -16,3 +16,25 @@
     line-height: var(--measure-line-height-font-line-height-medium);
     gap: var(--measure-dimension-gap-sm);
 }
+
+.customRow {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    /* flex grow 1 */
+    flex: auto 1 1;
+    /* media query for small screens */
+    @media screen and (max-width: 600px) {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 5px;
+        column-gap: 5px;
+        width: 100%;
+    }
+}
+
+.customColumn {
+    display: flex;
+    flex-direction: column;
+}
