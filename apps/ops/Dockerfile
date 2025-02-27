@@ -74,7 +74,7 @@ RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
 COPY --from=installer /app/apps/ops/public ./public
-COPY --from=installer /app/apps/ops/storybook-static ./storybook-static
+# COPY --from=installer /app/apps/ops/storybook-static ./storybook-static
 COPY --from=installer /app/apps/ops/next.config.js .
 COPY --from=installer /app/apps/ops/package.json .
 
