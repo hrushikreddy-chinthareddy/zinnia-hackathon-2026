@@ -60,7 +60,7 @@
     "generate-types:search": "npx openapi --input ./src/api-spec-search.yaml --output ./src/generated-types/search --exportCore false --exportServices false;",
     "generate-types:bpm": "npx openapi --input ./src/api-spec-bpm.yaml --output ./src/generated-types/bpm --exportCore false --exportServices false;",
     "generate-types:funds": "npx openapi --input ./src/api-spec-funds.yaml --output ./src/generated-types/funds --exportCore false --exportServices false;",
-    "generate-types:all": "echo",
+    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:documents-v3 && pnpm run generate-types:bpm && pnpm run generate-types:funds",
     "clean": "rm -rf ./dist"
   },
   "devDependencies": {
