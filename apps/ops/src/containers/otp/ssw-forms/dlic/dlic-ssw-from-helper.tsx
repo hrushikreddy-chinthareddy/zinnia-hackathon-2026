@@ -275,8 +275,8 @@ export default function getDlicConfig(t: TFunction) {
             },
             fields: [
                 {
-                    fieldLabel: t('distributionMethod.chooseTheBank'),
                     fieldName: BankingFields.Bank,
+                    fieldLabel: t('distributionMethod.chooseTheBank'),
                     component: DisbursementFields.SelectBank,
                 },
                 {
@@ -289,7 +289,8 @@ export default function getDlicConfig(t: TFunction) {
                     fieldName: BankingFields.AccountType,
                     fieldLabel: t('distributionMethod.accountType'),
                     component: DisbursementFields.AccountTypes,
-                    classNames: 'col-span-2 w-full',
+
+                    classNames: 'col-start-1 col-span-2 w-full',
                     isBankingField: true,
                 },
                 {
@@ -328,12 +329,18 @@ export default function getDlicConfig(t: TFunction) {
                     validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
                 },
                 {
+                    fieldName: BankingFields.AccountHolder,
+                    fieldLabel: t('distributionMethod.accountName'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                },
+                {
                     fieldName: BankingFields.BankName,
                     fieldLabel: t('distributionMethod.bankName'),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
-                    classNames: 'col-start-1',
                 },
+
                 {
                     fieldName: BankingFields.BankFurtherCreditName,
                     fieldLabel: t('distributionMethod.bankFurtherCreditName'),
@@ -345,21 +352,24 @@ export default function getDlicConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({ paymentMethod, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
+
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
-                    isVoidCheckAttached: voidCheck,
+                    isDirectDepositValid: selectedBank?.isDirectDepositValid?.text ?? true,
+                    accountHolder: selectedBank?.nameOnBankAccount ?? '',
                     accountNumber: selectedBank?.accountNumber ?? '',
                     accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
                     bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
+                    isDirectDeposit: selectedBank?.isDirectDeposit?.text ?? true,
+                    maskedAccountNumber: selectedBank?.maskedAccountNumber ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -370,29 +380,44 @@ export default function getDlicConfig(t: TFunction) {
                 bankFurtherCreditAccount,
                 bankFurtherCreditName,
                 bankRoutingNumber,
-                isVoidCheckAttached,
-                doesCheckMeetSecurityRequirements,
+                isDirectDepositValid,
+                maskedAccountNumber,
+                isDirectDeposit,
+                reEnterAccountNumber,
+                reEnterBankRoutingNumber,
             }: DisbursementParts) => {
+                const bank = isDirectDeposit
+                    ? [
+                          {
+                              ...DEFAULT_BANK_DETAILS,
+                              maskedAccountNumber: null,
+                              accountNumber,
+                              accountType: {
+                                  text: accountType,
+                              },
+                              bankName,
+                              nameOnBankAccount: accountHolder ?? '',
+                              routingNumber: bankRoutingNumber,
+                              bankFurtherCreditAccount,
+                              bankFurtherCreditName,
+                              isDirectDeposit: { text: true },
+                              isDirectDepositValid: { text: isDirectDepositValid },
+                              reEnterAccountNumber,
+                              reEnterBankRoutingNumber,
+                          },
+                      ]
+                    : [
+                          {
+                              ...DEFAULT_BANK_DETAILS,
+                              isDirectDeposit: { text: false },
+                              maskedAccountNumber: maskedAccountNumber ?? null,
+                          },
+                      ];
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
-                    bank: [
-                        {
-                            ...DEFAULT_BANK_DETAILS,
-                            accountNumber,
-                            accountType: {
-                                text: accountType,
-                            },
-                            bankName,
-                            nameOnBankAccount: accountHolder ?? '',
-                            routingNumber: bankRoutingNumber,
-                            bankFurtherCreditAccount,
-                            bankFurtherCreditName,
-                        },
-                    ],
-                    voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    bank: bank,
                 };
             },
         },
@@ -533,6 +558,17 @@ export default function getDlicConfig(t: TFunction) {
         },
     ];
 
+    const irsSignatureConfig = [
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'irs-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'irs-signature-sign-date',
+        },
+    ];
+
     return {
         formValidation: sswFormValidation,
         formPartyConfigs,
@@ -543,5 +579,6 @@ export default function getDlicConfig(t: TFunction) {
         signaturesConfig,
         signaturesNotaryConfig,
         additionalWithholdingAmountConfig,
+        irsSignatureConfig,
     };
 }
