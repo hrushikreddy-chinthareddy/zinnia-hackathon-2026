@@ -1420,7 +1420,8 @@
             "agentNigo": "Réviser les problèmes d'agent",
             "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements",
             "applicationNigo": "Réviser les problèmes d'agent",
-            "agentReview": "Valider l'agent"
+            "agentReview": "Valider l'agent",
+            "agentOnboardingNigo":"Réviser les problèmes d'onboarding"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -5133,6 +5134,14 @@
         "confirmStep": {
             "title": "Compris!",
             "subTitle": "Tâche : Valider que l'agent a été soumis.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "agentOnboardingNigo":{
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes d'onboarding a été soumise.",
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
         }

@@ -20,6 +20,7 @@ export const SupportedTaskMap = [
     TaskType.PremiumNigo,
     TaskType.Application_Nigo,
     TaskType.Agent_Review,
+    TaskType.Agent_Onboarding_Nigo
 ];
 
 export function Task({ task }: { task: TaskView }) {
@@ -32,6 +33,7 @@ export function Task({ task }: { task: TaskView }) {
         [TaskType.PremiumNigo]: t('caseOverview.tabs.PaymentProcessingNigo'),
         [TaskType.Application_Nigo]: t('caseOverview.tabs.applicationNigo'),
         [TaskType.Agent_Review]: t('caseOverview.tabs.agentReview'),
+        [TaskType.Agent_Onboarding_Nigo]: t('caseOverview.tabs.agentOnboardingNigo'),
     };
 
     const TaskTypeMap: Record<string, string> = {
