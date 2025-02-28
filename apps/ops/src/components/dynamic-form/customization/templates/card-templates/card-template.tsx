@@ -119,11 +119,11 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                 <div className="px-2">
                     <Icon width={25} height={25} type={IconType[icon as string as keyof typeof IconType] || IconType.CIRCLE_USER} />{' '}
                 </div>
-                <div className="grow">
-                    <div className="text-sm font-bold">
+                <div className="flex w-[436px]">
+                    <div className="font-bold text-md font-primary">
                         {title?.field?.[0] && <PiiWrapper>{formatValueByDataType(title.field[0].dataType, title.value)}</PiiWrapper>}
                     </div>
-                    <div className="flex items-center text-sm font-normal text-gray-300">
+                    <div className="flex text-md font-primary">
                         <PiiWrapper>
                             {subtitle?.field?.[0] && subtitle?.field[0]?.title ? subtitle?.field[0].title + ': ' : ''}{' '}
                             {subtitle?.field?.[0] && formatValueByDataType(subtitle?.field?.[0]?.dataType, subtitle?.value)}
