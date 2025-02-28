@@ -23,6 +23,7 @@ export interface AddressRequest extends NonFinancialTransactionParameters {
   addressId?: string;
   addressChangeRequest: AddressChangeRequest;
   deleteRequest?: boolean;
+  correlationId?: string;
 }
 
 export enum FormSteps {

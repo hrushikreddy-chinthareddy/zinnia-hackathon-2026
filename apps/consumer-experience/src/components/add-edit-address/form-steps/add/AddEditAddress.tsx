@@ -43,6 +43,7 @@ export interface AddEditAddressProps {
   values?: AddressFormFields;
   actionType?: FormActionType;
   cancelCallback?: () => void;
+  correlationId?: string;
   submitCallback?: (
     val: AddressFormFields,
     dirtyFields: AddressFormFields
@@ -60,6 +61,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
   removeCallback,
   actionType,
   disableEditingPreferredAddress,
+  correlationId,
 }) => {
   const {
     control,
@@ -284,7 +286,9 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
       </div>
 
       <div className={styles.buttonContainer}>
-        <ButtonWithAnalytics type="submit">{buttonText}</ButtonWithAnalytics>
+        <ButtonWithAnalytics type="submit" correlationId={correlationId}>
+          {buttonText}
+        </ButtonWithAnalytics>
         {actionType === FormActionType.EDIT && (
           <ButtonWithAnalytics
             onClick={removeCallback}

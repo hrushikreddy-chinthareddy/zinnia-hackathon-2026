@@ -46,7 +46,7 @@ type ConditionalProps =
     }
   | {
       type?: 'button' | 'reset';
-      correlationId?: never;
+      correlationId?: string;
     };
 
 type Props = ButtonProps & ConditionalProps;
