@@ -1,11 +1,12 @@
 import { getUiOptions, WidgetProps } from '@rjsf/utils';
 
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { formatValueByDataType } from '../../templates/card-templates/card-template';
 
 export const TextWidget = function (props: WidgetProps) {
-    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder } = props;
-    const { inline, leading, dataType } = getUiOptions(uiSchema);
+    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder, formContext } = props;
+    const { inline, prefix, inlinetext, leading, dataType } = getUiOptions(uiSchema);
 
     if (inline) {
         return (
@@ -18,6 +19,19 @@ export const TextWidget = function (props: WidgetProps) {
             </div>
         );
     }
+
+    if (inlinetext) {
+        return (
+            <div className="text-md ">
+                <div className="text-500">{label}</div>
+                <div>
+                    {prefix ? prefix : ''}
+                    {value}
+                </div>
+            </div>
+        );
+    }
+
     return (disabled as boolean) ? (
         <div>{value}</div>
     ) : (

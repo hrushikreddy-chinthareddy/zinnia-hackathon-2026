@@ -1419,9 +1419,13 @@
             "purchaseDocumentMatchingIssues": "Document de correspondance",
             "agentNigo": "Réviser les problèmes d'agent",
             "attachmentNigo": "Réviser les problèmes d'application",
-            "applicationNigo":"Réviser les problèmes d'application",
             "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements",
-            "agentReview": "Valider l'agent"
+            "applicationNigo": "Réviser les problèmes d'agent",
+            "agentReview": "Valider l'agent",
+            "reviewOfac": "Réviser les problèmes d'OFAC",
+            "agentOnboardingNigo": "Réviser les problèmes d'onboarding",
+            "standardDocumentMatching": "Document de correspondance",
+            "toaNigo": "Examiner les problèmes de transfert"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -5098,7 +5102,8 @@
             "title": "Compris!",
             "subTitle": "Tâche: Appariement de Document a été soumise.",
             "cta": "Aller à la Qualification",
-            "secondaryCta": "Retour à l'accueil"
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
         },
         "formErrors": {
             "caseNotFound": "Dossier non trouvé",
@@ -5111,11 +5116,12 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil"
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
         }
     },
     "nbAttachmentNigo": {
-      "confirmStep": {
+        "confirmStep": {
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'application a été soumise.",
             "cta": "Aller au transfert entrant",
@@ -5127,7 +5133,8 @@
             "title": "Compris !",
             "subTitle": "Tâche : Examen de la prime initiale soumis.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil"
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
         }
     },
     "nbApplicationNigo": {
@@ -5135,7 +5142,17 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'application a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil"
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "standardDocumentMatching": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche: Document de correspondance a été soumise.",
+            "cta": "Aller à la Qualification",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
         }
     },
     "nbAgentReview": {
@@ -5143,6 +5160,31 @@
             "title": "Compris!",
             "subTitle": "Tâche : Valider que l'agent a été soumis.",
             "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "ofacReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes d'OFAC a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "agentOnboardingNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes d'onboarding a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbToaNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Le transfert de révision a été soumis",
+            "cta": "Aller au transfert entrant ",
             "secondaryCta": "Retour à l'accueil"
         }
     },

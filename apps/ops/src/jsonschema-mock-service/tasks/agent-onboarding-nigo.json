@@ -1,8 +1,8 @@
 {
-    "formId": "a7b1bc65-1a6d-483c-b06a-aacab700d10b",
-    "process": "New Business",
+    "formId": "5eaf1248-2a7e-4ec6-8a01-87e1ac9fb395",
+    "process": "Agent Onboarding",
     "carrier": "WELB",
-    "taskType": "NB_ATTACHMENT_NIGO",
+    "taskType": "AGENT_ONBOARDING_NIGO",
     "formSchema": {
         "type": "object"
     },
@@ -12,22 +12,28 @@
     "schemaContent": {
         "tabSchemas": [
             {
-                "title": "Review Application Issues",
+                "title": "Review Onboarding Issues",
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "sectionHeader": {
-                            "type": "object",
-                            "title": "Processing Instructions"
-                        },
                         "issuesList": {
                             "type": "array",
-                            "title": "Issues",
+                            "title": "",
                             "items": {
                                 "type": "object",
+                                "title": "",
                                 "properties": {
-                                    "reason": {
-                                        "type": "string"
+                                    "detailedReason": {
+                                        "type": "string",
+                                        "title": "Issue"
+                                    },
+                                    "processingInstruction": {
+                                        "type": "string",
+                                        "title": "Rule"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
                                     }
                                 }
                             }
@@ -36,7 +42,7 @@
                             "type": "object",
                             "title": "Supporting Information",
                             "properties": {
-                                "onwerDetails": {
+                                "agentDetails": {
                                     "type": "object",
                                     "properties": {
                                         "firstName": {
@@ -44,9 +50,9 @@
                                             "title": "First Name",
                                             "ui:field": "title"
                                         },
-                                        "ssn": {
+                                        "agentNPN": {
                                             "type": "string",
-                                            "title": "SSN",
+                                            "title": "NPN",
                                             "ui:field": "subTitle"
                                         },
                                         "lastName": {
@@ -55,36 +61,31 @@
                                             "ui:field": "title"
                                         }
                                     }
-                                },
-                                "documentDetails": {
-                                    "type": "object",
-                                    "properties": {
-                                        "documentId": {
-                                            "type": "string",
-                                            "ui:field": "subTitle"
-                                        },
-                                        "documentSource": {
-                                            "type": "string",
-                                            "ui:field": "title"
-                                        }
-                                    }
                                 }
                             }
                         },
-                        "issueResolved": {
+                        "issuesResolved": {
                             "type": "boolean",
-                            "enumNames": ["Yes", "No"],
-                            "enum": [true, false],
-                            "title": "Can you resolve the issues?"
+                            "title": "Can you resolve the issues?",
+                            "enumNames": [
+                                "Yes",
+                                "No"
+                            ],
+                            "enum": [
+                                true,
+                                false
+                            ]
                         }
                     },
                     "dependencies": {
-                        "issueResolved": {
+                        "issuesResolved": {
                             "oneOf": [
                                 {
                                     "properties": {
-                                        "issueResolved": {
-                                            "enum": [true]
+                                        "issuesResolved": {
+                                            "enum": [
+                                                true
+                                            ]
                                         },
                                         "uploadDocuments": {
                                             "type": "object",
@@ -125,19 +126,24 @@
                                 },
                                 {
                                     "properties": {
-                                        "issueResolved": {
-                                            "enum": [false]
+                                        "issuesResolved": {
+                                            "enum": [
+                                                false
+                                            ]
                                         },
                                         "issueReason": {
                                             "type": "object",
                                             "title": "The status reason for the task will be set to:"
                                         }
-                                    },
-                                    "required": ["issueResolved"]
+                                    }
+
                                 }
                             ]
                         }
-                    }
+                    },
+                    "required": [
+                        "issuesResolved"
+                    ]
                 },
                 "uiSchema": {
                     "ui:globalOptions": {
@@ -149,55 +155,61 @@
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "sectionHeader": {
-                        "props": {
-                            "description": "Application form may be missing or mismatched for the signed state. Review the application and confirm that we can resolve the issue."
-                        },
-                        "ui:options": {
-                            "label": true,
-                            "ObjectFieldTemplate": "InstructionsTemplate"
-                        }
-                    },
                     "issuesList": {
+                        "ui:readonly": true,
                         "ui:options": {
-                            "ArrayFieldTemplate": "TextListTemplate",
-                            "keyName": "processingReason"
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false
+                            },
+                            "detailedReason": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": true,
+                                    "inline": true
+                                }
+                            },
+                            "processingInstruction": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": true,
+                                    "inline": true
+                                }
+                            },
+                            "resolved": {
+                                "ui:options": {
+                                    "label": true
+                                }
+                            }
                         }
                     },
                     "details": {
                         "ui:options": {
                             "label": true
                         },
-                        "onwerDetails": {
+                        "agentDetails": {
                             "ui:options": {
                                 "cardtype": "Detailed",
                                 "icon": "CIRCLE_USER",
                                 "label": false,
                                 "ObjectFieldTemplate": "CardTemplate",
-                                "key": "onwerDetails"
-                            }
-                        },
-                        "documentDetails": {
-                            "ui:options": {
-                                "canAdd": false,
-                                "label": false,
-                                "cardType": "Document",
-                                "icon": "DOCUMENT_TEXT",
-                                "ObjectFieldTemplate": "CardTemplate"
+                                "key": "agentDetails"
                             }
                         }
                     },
-                    "issueResolved": {
+                    "issuesResolved": {
                         "ui:widget": "radio",
                         "ui:options": {
+                            "label": true,
                             "inline": true
                         }
                     },
                     "uploadDocuments": {
                         "inline": true,
                         "ui:options": {
-                            "label": true,
-                            "omitValue": true
+                            "label": true
                         },
                         "upload": {
                             "ui:widget": "AutoCompleteWidget",

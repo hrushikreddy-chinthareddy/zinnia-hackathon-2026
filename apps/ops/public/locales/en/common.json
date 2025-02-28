@@ -1423,7 +1423,11 @@
             "attachmentNigo": "Review Application Issues",
             "PaymentProcessingNigo": "Review Premium Issues",
             "applicationNigo": "Review Application Issues",
-            "agentReview": "Validate Agent"
+            "agentReview": "Validate Agent",
+            "reviewOfac": "Review OFAC issues",
+            "agentOnboardingNigo": "Review Onboarding Issues",
+            "standardDocumentMatching": "Match Document",
+            "toaNigo": "Review Transfer Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -5132,7 +5136,8 @@
             "title": "Got It!",
             "subTitle": "Task: Match Document was submitted.",
             "cta": "Go to Qualification ",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     },
     "nbAgentNigo": {
@@ -5140,7 +5145,8 @@
             "title": "Got It!",
             "subTitle": "Task: Review Agent Issues was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     },
     "nbAttachmentNigo": {
@@ -5156,7 +5162,8 @@
             "title": "Got It!",
             "subTitle": "Task: Review initial premium was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     },
     "nbApplicationNigo": {
@@ -5164,13 +5171,48 @@
             "title": "Got It!",
             "subTitle": "Task: Review Application Issues was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "standardDocumentMatching": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Match Document was submitted.",
+            "cta": "Go to qualification",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     },
     "nbAgentReview": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Validate Agent was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "ofacReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review OFAC Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "agentOnboardingNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Onboarding Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "nbToaNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Transfer was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }

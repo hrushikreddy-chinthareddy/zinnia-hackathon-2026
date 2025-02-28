@@ -71,7 +71,13 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
 
     const handleDocumentSelection = (document: MetadataSearchResponse) => {
         const attachments = [...formContext?.customData?.attachments];
-        attachments.push({ documentId: document.documentId });
+        attachments.push({
+            documentId: document?.documentId || '',
+            docCategory: document?.documentCategory,
+            documentType: document?.documentType,
+            documentExt: document?.fileType,
+            documentName: document?.displayName || '',
+        });
         formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
         setFilteredDocuments([]);
     };
@@ -82,7 +88,7 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
                 <Icon type={icon as IconType} className={inputStyles.icon} color="#676767" />
                 <input
                     aria-labelledby="case-search-label"
-                    placeholder={Placeholder}
+                    placeholder={Placeholder || 'Find existing documents...'}
                     className={clsx(inputStyles.input, style.iconInput, style.linkDocumentInput)}
                     onChange={onChangeHandler}
                     key={id}
