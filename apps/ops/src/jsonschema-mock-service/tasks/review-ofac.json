@@ -37,6 +37,10 @@
                                     "documentSource": {
                                         "type": "string",
                                         "ui:field": "subTitle"
+                                    },
+                                    "carrier": {
+                                        "type": "string",
+                                        "default": "{{carrier}}"
                                     }
                                 }
                             }
