@@ -16,8 +16,9 @@ export enum TaskType {
     SuitabilityReview = 'SUITABILITY_REVIEW',
     PURCHASE_DOCUMENT_MATCHING = 'PURCHASE_DOCUMENT_MATCHING',
     Agent_Nigo = 'NB_AGENT_NIGO',
-    PremiumNigo = 'NB_PAYMENT_PROCESSING_NIGO',
     Application_Nigo = 'NB_APPLICATION_NIGO',
+    Standard_Document_Matching = "STANDARD_DOCUMENT_MATCHING",
+    PremiumNigo = 'NB_PAYMENT_PROCESSING_NIGO',
     Agent_Review = 'NB_AGENT_REVIEW',
     Agent_Onboarding_Nigo = 'AGENT_ONBOARDING_NIGO'
 }

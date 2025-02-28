@@ -3,13 +3,17 @@ import router from 'next/router';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/actions/external-link.svg';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 
 const HyperLinkWidget = (props: WidgetProps) => {
-    const { value, disabled, label, uiSchema } = props;
+    const { value, disabled, label, uiSchema, formContext } = props;
+
+    const defaultValue = replacePlaceholders(value, { ...formContext }) || value;
+    const defaultLabel = replacePlaceholders(label, { ...formContext }) || label;
 
     const uiOptions = getUiOptions(uiSchema as UiSchema);
 
-    return <HyperLink type={uiOptions.type} label={label} value={value} disabled={disabled} />;
+    return <HyperLink type={uiOptions.type} label={defaultLabel} value={defaultValue} disabled={disabled} />;
 };
 
 export default HyperLinkWidget;

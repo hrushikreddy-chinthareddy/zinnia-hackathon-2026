@@ -53,6 +53,50 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
                 ...updateTask,
             };
         }
+        case TaskType.Standard_Document_Matching: {
+            const correlationId = task.data.matchingResult;
+            let matchedData = {};
+            let matchingResult = task?.data?.matchingResult;
+
+            if (![MatchingCase.NO_MATCH, MatchingCase.ENTERED].includes(correlationId)) {
+                const potentialMatch = initialTask.data.potentialMatches?.find(
+                    (item: PotentialMatches) => item.correlationid === correlationId
+                );
+                const { entityType, recordId, zlCaseId, policyNumber, taskId, firstName, lastName } = potentialMatch;
+                matchedData = {
+                    entityType,
+                    recordId,
+                    zlCaseId,
+                    policyNumber,
+                    taskId,
+                    firstName,
+                    lastName,
+                };
+                matchingResult = MatchingCase.MATCH_FOUND;
+            }
+
+            let attachment = task.data?.attachments?.slice(-1) ?? [];
+            let matchedDocumentData = task.data?.matchedDocumentData ?? {};
+            if (matchedDocumentData && attachment.length > 0) {
+                matchedDocumentData = {
+                    ...matchedDocumentData,
+                    existingDocumentId: attachment[0]?.documentId,
+                };
+            }
+            const { attachments, caseOverview, matchCaseId, matchedCaseId, ...filteredData } = task.data ?? {};
+
+            updateTask = {
+                ...task,
+                data: {
+                    ...filteredData,
+                    matchingResult,
+                    matchedDocumentData,
+                    matchedData,
+                },
+            };
+
+            return updateTask;
+        }
         default:
             return task;
     }

@@ -11,6 +11,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { FormValidationErrors, NigoMessages } from '@deps/models/case/withdrawal/case';
 
 import { NigoDetails } from './nigo-details';
+import { isEmptyObject } from '@deps/helpers/objects.helper';
 
 interface NigoDetailsStepProps {
     nigoExceptions: any;
@@ -32,7 +33,7 @@ export const NigoDetailsStep = ({ nigoExceptions, nigoSubExceptions }: NigoDetai
 
         if (exceptions.length > 0) {
             exceptions.forEach((exception: string) => {
-                if (messages[exception] === undefined) {
+                if ( messages[exception] === undefined || isEmptyObject(messages[exception])) {
                     errors['noCategoryDetailsSelected'] = t('formErrors.formValidation.noCategoryDetailsSelected');
                 }
             });

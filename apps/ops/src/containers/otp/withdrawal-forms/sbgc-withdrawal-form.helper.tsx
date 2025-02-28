@@ -40,7 +40,7 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
-
+import { ProgramType } from '@deps/models/case/withdrawal/case';
 import { createValidator } from '../utils/helper-utils';
 
 export default function getSbgcConfig(t: TFunction) {
@@ -605,8 +605,8 @@ export default function getSbgcConfig(t: TFunction) {
             value: RestrictionOption.AdoptionChildBirth,
         },
     ];
-    const w4pSignaturesConfig = [
 
+    const w4pSignaturesConfig = [
         {
             component: SignatureFields.SignatureType,
             key: 'owner-type',
@@ -615,13 +615,26 @@ export default function getSbgcConfig(t: TFunction) {
             component: SignatureFields.SignaturePresent,
             key: 'owner-sign-present',
         },
-
         {
             component: SignatureFields.SignatureDate,
             key: 'owner-date',
         },
-    ]
+    ];
 
+    const programTypes = [
+        {
+            label: t(`amountDetails.programTypes.full`),
+            value: ProgramType.Full,
+        },
+        {
+            label: t(`amountDetails.programTypes.partial`),
+            value: ProgramType.Partial,
+        },
+        {
+            label: t(`amountDetails.programTypes.totalFreeAmt`),
+            value: ProgramType.TotalFreeAmt,
+        },
+    ];
 
     return {
         formPartyConfigs,
@@ -634,5 +647,6 @@ export default function getSbgcConfig(t: TFunction) {
         hardshipOptions,
         reasonOptions,
         disbursementOptions,
+        programTypes,
     };
 }
