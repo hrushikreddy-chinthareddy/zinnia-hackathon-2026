@@ -35,7 +35,7 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
         const value = event.target.value;
         const filteredData = documents.filter(item => item.documentId?.toLowerCase().includes(value?.toLowerCase()));
         setFilteredDocuments(filteredData);
-        setInputValue(value);
+        setInputValue('');
     };
 
     useEffect(() => {

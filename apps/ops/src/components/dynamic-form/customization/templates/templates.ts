@@ -12,6 +12,7 @@ import FileInfoTemplate from './object-field-template/file-info-template';
 import { ObjectFieldTemplate } from './object-field-template/object-field-template';
 import TextListTemplate from './text-list-template';
 import { TitleFieldTemplate } from './title-field-template/title-field-template';
+import AddressFieldTemplate from './address-field-template/address-field-template';
 
 export function generateTemplates() {
     return {
@@ -26,6 +27,7 @@ export function generateTemplates() {
         InstructionsTemplate,
         TextListTemplate,
         FileInfoTemplate,
+        AddressFieldTemplate,
         ButtonTemplates: { AddButton, RemoveButton, SubmitButton },
     };
 }

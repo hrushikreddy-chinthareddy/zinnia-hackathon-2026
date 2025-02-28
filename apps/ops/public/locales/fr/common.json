@@ -1423,7 +1423,8 @@
             "agentReview": "Valider l'agent",
             "reviewOfac": "Réviser les problèmes d'OFAC",
             "agentOnboardingNigo": "Réviser les problèmes d'onboarding",
-            "standardDocumentMatching": "Document de correspondance"
+            "standardDocumentMatching": "Document de correspondance",
+            "toaNigo": "Examiner les problèmes de transfert"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -5167,6 +5168,14 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'onboarding a été soumise.",
             "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbToaNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Le transfert de révision a été soumis",
+            "cta": "Aller au transfert entrant ",
             "secondaryCta": "Retour à l'accueil"
         }
     },
