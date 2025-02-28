@@ -22,6 +22,7 @@ export enum TaskType {
     Agent_Review = 'NB_AGENT_REVIEW',
     Review_Ofac = 'OFAC_REVIEW',
     Agent_Onboarding_Nigo = 'AGENT_ONBOARDING_NIGO',
+    TOA_Nigo = 'NB_TOA_NIGO',
 }
 
 export enum EarlyTaskType {

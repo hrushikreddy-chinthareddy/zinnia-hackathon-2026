@@ -23,6 +23,7 @@ export const SupportedTaskMap = [
     TaskType.Agent_Review,
     TaskType.Review_Ofac,
     TaskType.Agent_Onboarding_Nigo,
+    TaskType.TOA_Nigo,
 ];
 
 export function Task({ task }: { task: TaskView }) {

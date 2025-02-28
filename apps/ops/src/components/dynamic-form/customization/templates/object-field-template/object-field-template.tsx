@@ -28,7 +28,10 @@ export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
                 })
                 .map(element => {
                     return (
-                        <div key={element.name} className={` ${style[uiOptions?.width as string]}`}>
+                        <div
+                            key={element.name}
+                            className={uiOptions?.width ? `${style[uiOptions?.width as string]}` : 'property-wrapper flex flex-col'}
+                        >
                             {element.content}
                         </div>
                     );
