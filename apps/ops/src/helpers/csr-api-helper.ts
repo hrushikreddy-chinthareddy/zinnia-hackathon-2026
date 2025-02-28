@@ -13,9 +13,12 @@ export const csrApiHelper = async (props: ApiProps, formData: any) => {
         try {
             const payload = replacePlaceholders(apiPayload, formData);
             const { data } = await client.post<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload);
-            const filteredApiData = responseData ? replacePlaceholders(responseData, data) : data;
+            let filteredApiData = responseData ? replacePlaceholders(responseData, data) : data;
 
             if (response) {
+                if (typeof filteredApiData == 'string') {
+                    filteredApiData = filteredApiData.split(',').filter(Boolean);
+                }
                 const mapDataToKeys: Record<string, any> = {};
                 Object.keys(response).forEach(key => {
                     mapDataToKeys[key] = filteredApiData?.map((item: any) => {

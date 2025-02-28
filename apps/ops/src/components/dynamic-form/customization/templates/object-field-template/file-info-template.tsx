@@ -2,7 +2,16 @@ import { ArrayFieldTemplateProps } from '@rjsf/utils';
 import clsx from 'clsx';
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 function FileInfoTemplate(props: ArrayFieldTemplateProps) {
-    const { items, formData } = props;
+    let { items, formData, uiSchema } = props;
+
+    if (formData.length === 0) {
+        const formContextOptions: any = uiSchema?.['ui:options']?.formContext;
+
+        if (props.formContext[formContextOptions?.keyName][formContextOptions?.listName]) {
+            const data = props.formContext[formContextOptions?.keyName][formContextOptions?.listName];
+            formData = data.slice(-1);
+        }
+    }
 
     return (
         <div className={clsx('flex ')}>
