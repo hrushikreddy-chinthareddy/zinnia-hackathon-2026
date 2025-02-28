@@ -1,11 +1,12 @@
 'use client';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import { Button, Label, Loader } from '@zinnia/bloom/components';
+import { Label, Loader } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
+import { ButtonWithAnalytics } from '@/components/button-with-analytics/ButtonWithAnalytics';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
@@ -209,9 +210,9 @@ export const SummaryForm = ({
         />
       </div>
       <div className={styles.buttonGroup}>
-        <Button mode="primary" type="submit">
+        <ButtonWithAnalytics mode="primary" type="submit">
           Submit payment
-        </Button>
+        </ButtonWithAnalytics>
         <CancelDialogLink
           planCode={planCode}
           policyNumber={policyNumber}

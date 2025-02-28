@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './ConfirmDialog.module.css';
+import { ButtonWithAnalytics } from '../button-with-analytics/ButtonWithAnalytics';
 
 export interface ConfirmDialogProps {
   cancelText?: string;
@@ -73,7 +74,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           </Dialog.Description>
           <div className={styles.buttons}>
             <Dialog.DialogClose asChild>
-              <Button
+              <ButtonWithAnalytics
                 mode="primary"
                 onClick={() => {
                   confirmCallback?.();
@@ -81,7 +82,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                 aria-label={confirmDescription}
               >
                 {confirmText}
-              </Button>
+              </ButtonWithAnalytics>
             </Dialog.DialogClose>
             <Dialog.DialogClose asChild>
               <Button

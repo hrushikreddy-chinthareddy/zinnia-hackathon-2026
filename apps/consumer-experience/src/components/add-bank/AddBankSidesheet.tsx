@@ -138,7 +138,6 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
           size="small"
           mode="link"
           onClick={() => setOpen(true)}
-          analyticsTitle="add_a_bank_account"
         >
           <Icon small type={IconType.ADD} />
           Add a bank account

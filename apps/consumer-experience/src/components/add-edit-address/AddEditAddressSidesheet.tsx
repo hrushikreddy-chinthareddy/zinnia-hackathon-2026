@@ -217,7 +217,6 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           aria-label={
             actionType === FormActionType.EDIT ? 'Edit or remove address' : ''
           }
-          analyticsTitle={triggerText}
         >
           <Icon small type={triggerIcon} />
           {triggerText}
