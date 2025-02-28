@@ -78,14 +78,8 @@
                         "issueResolved": {
                             "type": "boolean",
                             "title": "OFAC Decision",
-                            "enumNames": [
-                                "Accept",
-                                "Decline"
-                            ],
-                            "enum": [
-                                true,
-                                false
-                            ]
+                            "enumNames": ["Accept", "Decline"],
+                            "enum": [true, false]
                         }
                     },
                     "dependencies": {
@@ -94,18 +88,23 @@
                                 {
                                     "properties": {
                                         "issueResolved": {
-                                            "enum": [
-                                                true
-                                            ]
+                                            "enum": [true]
                                         }
                                     }
                                 },
                                 {
                                     "properties": {
                                         "issueResolved": {
-                                            "enum": [
-                                                false
-                                            ]
+                                            "enum": [false]
+                                        },
+
+                                        "declineReason": {
+                                            "title": "Reason for decline",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "$ref": "#/definitions/declineReason"
+                                            }
                                         },
                                         "uploadDocuments": {
                                             "type": "object",
@@ -141,17 +140,8 @@
                                                     "type": "string"
                                                 }
                                             }
-                                        },
-                                        "declineReason": {
-                                            "title": "Reason for decline",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "$ref": "#/definitions/declineReason"
-                                            }
                                         }
                                     }
-
                                 }
                             ]
                         }
@@ -161,9 +151,7 @@
                             "enum": ["DEFAULT"]
                         }
                     },
-                    "required": [
-                        "issueResolved"
-                    ]
+                    "required": ["issueResolved"]
                 },
                 "uiSchema": {
                     "ui:globalOptions": {
@@ -195,7 +183,6 @@
                         "items": {
                             "ui:options": {
                                 "ObjectFieldTemplate": "CardTemplate",
-
                                 "cardType": "Document",
                                 "icon": "DOCUMENT_TEXT"
                             },
@@ -260,7 +247,8 @@
                     "uploadDocuments": {
                         "inline": true,
                         "ui:options": {
-                            "label": true
+                            "label": true,
+                            "omitValue": true
                         },
                         "upload": {
                             "ui:widget": "AutoCompleteWidget",
