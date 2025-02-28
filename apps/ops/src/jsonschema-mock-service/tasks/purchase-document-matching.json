@@ -41,7 +41,12 @@
                                     "type": "object",
                                     "title": "Supporting information",
                                     "properties": {
-                                        "payorName": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "Title",
+                                            "ui:field": "title"
+                                        },
+                                        "lastName": {
                                             "type": "string",
                                             "title": "Title",
                                             "ui:field": "title"
