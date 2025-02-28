@@ -1420,6 +1420,7 @@
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
+            "attachmentNigo": "Review Application Issues",
             "PaymentProcessingNigo": "Review Premium Issues",
             "applicationNigo": "Review Application Issues",
             "agentReview": "Validate Agent",
@@ -5148,6 +5149,14 @@
             "submitTask": "Submit"
         }
     },
+    "nbAttachmentNigo": {
+      "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Application Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+     },
     "nbPaymentProcessingNigo": {
         "confirmStep": {
             "title": "Got It!",
@@ -5157,11 +5166,10 @@
             "submitTask": "Submit"
         }
     },
-
     "nbApplicationNigo": {
         "confirmStep": {
             "title": "Got It!",
-            "subTitle": "Task: Review Agent Issues was submitted.",
+            "subTitle": "Task: Review Application Issues was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"

@@ -17,13 +17,14 @@ export const SupportedTaskMap = [
     TaskType.SuitabilityDataEntry,
     TaskType.PURCHASE_DOCUMENT_MATCHING,
     TaskType.Agent_Nigo,
+    TaskType.Attachment_Nigo,
     TaskType.Application_Nigo,
-    TaskType.Standard_Document_Matching,
     TaskType.PremiumNigo,
-    TaskType.Agent_Review,
     TaskType.Review_Ofac,
     TaskType.Agent_Onboarding_Nigo,
     TaskType.TOA_Nigo,
+    TaskType.Agent_Review,
+    TaskType.Standard_Document_Matching,
 ];
 
 export function Task({ task }: { task: TaskView }) {
@@ -33,6 +34,7 @@ export function Task({ task }: { task: TaskView }) {
         [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReviewIssues'),
         [TaskType.PURCHASE_DOCUMENT_MATCHING]: t('caseOverview.tabs.purchaseDocumentMatchingIssues'),
         [TaskType.Agent_Nigo]: t('caseOverview.tabs.agentNigo'),
+        [TaskType.Attachment_Nigo]: t('caseOverview.tabs.attachmentNigo'),
         [TaskType.PremiumNigo]: t('caseOverview.tabs.PaymentProcessingNigo'),
         [TaskType.Application_Nigo]: t('caseOverview.tabs.applicationNigo'),
         [TaskType.Agent_Review]: t('caseOverview.tabs.agentReview'),

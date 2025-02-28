@@ -226,6 +226,9 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 console.warn(`Required field ${field} is missing!`);
             }
         });
+        if (Object.keys(formData).length === 0) {
+            return data;
+        }
         return formData;
     };
     const setFormContext = (dynamicData: any) => {

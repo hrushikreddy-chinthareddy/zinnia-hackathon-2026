@@ -20,32 +20,8 @@
                             "type": "object",
                             "title": "Processing Instructions"
                         },
-                        "documents": {
-                            "type": "array",
-                            "title": "Supporting Information",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "documentId": {
-                                        "type": "string",
-                                        "ui:field": "title"
-                                    },
-                                    "documentName": {
-                                        "type": "string",
-                                        "ui:field": "subTitle"
-                                    },
-                                    "documentSource": {
-                                        "type": "string",
-                                        "ui:field": "subTitle"
-                                    },
-                                    "carrier": {
-                                        "type": "string",
-                                        "default": "{{carrier}}"
-                                    }
-                                }
-                            }
-                        },
-                        "ofacRules": {
+
+                        "rules": {
                             "type": "array",
                             "title": "",
                             "items": {
@@ -71,6 +47,36 @@
                                     "externalId": {
                                         "type": "string",
                                         "title": "Additional Info"
+                                    }
+                                }
+                            }
+                        },
+                        "details": {
+                            "type": "object",
+                            "properties": {
+                                "documentDetails": {
+                                    "type": "array",
+                                    "title": "Supporting Information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "subTitle"
+                                            },
+                                            "documentSource": {
+                                                "type": "string",
+                                                "ui:field": "subTitle"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -172,32 +178,38 @@
                             "ObjectFieldTemplate": "InstructionsTemplate"
                         }
                     },
-                    "documents": {
-                        "props": {
-                            "readonly": true
-                        },
+                    "details": {
                         "ui:options": {
-                            "label": true,
-                            "addable": false
+                            "label": false
                         },
-                        "items": {
+                        "documentDetails": {
+                            "props": {
+                                "readonly": true
+                            },
                             "ui:options": {
-                                "ObjectFieldTemplate": "CardTemplate",
-                                "cardType": "Document",
-                                "icon": "DOCUMENT_TEXT"
+                                "label": true,
+                                "addable": false
                             },
-                            "documentId": {
-                                "ui:widget": "text"
-                            },
-                            "documentName": {
-                                "ui:widget": "text"
-                            },
-                            "documentSource": {
-                                "ui:widget": "text"
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT"
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                }
                             }
                         }
                     },
-                    "ofacRules": {
+
+                    "rules": {
                         "ui:options": {
                             "label": false,
                             "ArrayFieldTemplate": "ArrayFieldTableTemplate"
