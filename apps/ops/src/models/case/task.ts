@@ -17,10 +17,11 @@ export enum TaskType {
     PURCHASE_DOCUMENT_MATCHING = 'PURCHASE_DOCUMENT_MATCHING',
     Agent_Nigo = 'NB_AGENT_NIGO',
     Application_Nigo = 'NB_APPLICATION_NIGO',
-    Standard_Document_Matching = "STANDARD_DOCUMENT_MATCHING",
+    Standard_Document_Matching = 'STANDARD_DOCUMENT_MATCHING',
     PremiumNigo = 'NB_PAYMENT_PROCESSING_NIGO',
     Agent_Review = 'NB_AGENT_REVIEW',
-    Agent_Onboarding_Nigo = 'AGENT_ONBOARDING_NIGO'
+    Review_Ofac = 'OFAC_REVIEW',
+    Agent_Onboarding_Nigo = 'AGENT_ONBOARDING_NIGO',
 }
 
 export enum EarlyTaskType {

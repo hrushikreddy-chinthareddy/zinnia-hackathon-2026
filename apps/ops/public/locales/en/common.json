@@ -1423,7 +1423,8 @@
             "PaymentProcessingNigo": "Review Premium Issues",
             "applicationNigo": "Review Application Issues",
             "agentReview": "Validate Agent",
-            "agentOnboardingNigo":"Review Onboarding Issues",
+            "reviewOfac": "Review OFAC issues",
+            "agentOnboardingNigo": "Review Onboarding Issues",
             "standardDocumentMatching": "Match Document"
         },
         "processDate": {
@@ -5135,7 +5136,6 @@
             "cta": "Go to Qualification ",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
-
         }
     },
     "nbAgentNigo": {
@@ -5182,6 +5182,14 @@
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
+        }
+    },
+    "ofacReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review OFAC Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
         }
     },
     "agentOnboardingNigo": {
