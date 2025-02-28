@@ -36,7 +36,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
         if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING || task.taskType === TaskType.Standard_Document_Matching) {
             if (correlationId === MatchingCase.ENTERED && task.data.caseId) {
-                console.log('EnteredMatchingCase');
                 try {
                     const matchedCase = await getCaseDetails(task.data.caseId);
 
@@ -133,7 +132,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const handleSubmit = useCallback(async () => {
 
         if (!isSubmit) {
-            console.log('notissubmit');
             await fetchData();
             onSubmit('');
             return;

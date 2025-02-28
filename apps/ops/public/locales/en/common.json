@@ -5168,7 +5168,7 @@
     "standardDocumentMatching": {
         "confirmStep": {
             "title": "Got It!",
-            "subTitle": "Task: Standard Document Matching was submitted.",
+            "subTitle": "Task: Match Document was submitted.",
             "cta": "Go to qualification",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"

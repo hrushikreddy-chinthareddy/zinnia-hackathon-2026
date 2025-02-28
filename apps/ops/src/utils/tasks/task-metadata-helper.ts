@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { FormMetadata, TaskType } from '@deps/models/case/task';
-import { MatchingCaseTypes, PotentialMatches } from '@deps/models/case/task/doc-matching-payment';
+import { PotentialMatches } from '@deps/models/case/task/doc-matching-payment';
 
 export const TaskMetadataHelper = (task: any, tasksMetadata: any[]) => {
     return tasksMetadata.map((taskMetadata: FormMetadata) => {
@@ -45,7 +45,7 @@ const generatePotentialMatchesOptions = (potentialMatches: PotentialMatches[]): 
             ?.map((item: PotentialMatches) => {
                 const id = uuidv4();
                 const subElement = {
-                    label: MatchingCaseTypes[item.entityType as keyof typeof MatchingCaseTypes] ?? '',
+                    label: '',
                     value: item?.zlCaseId ?? '',
                     title: item?.entityType ?? '',
                     url: `/cases/${item.zlCaseId}`,
