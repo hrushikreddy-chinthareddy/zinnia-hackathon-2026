@@ -20,10 +20,10 @@ export enum TaskType {
     PremiumNigo = 'NB_PAYMENT_PROCESSING_NIGO',
     Application_Nigo = 'NB_APPLICATION_NIGO',
     Agent_Review = 'NB_AGENT_REVIEW',
-    Standard_Document_Matching = 'Standard_Document_Matching',
     Review_Ofac = 'OFAC_REVIEW',
-    Agent_Onboarding_Nigo = 'Agent_Onboarding_Nigo',
-    TOA_Nigo = 'TOA_Nigo',
+    Agent_Onboarding_Nigo = 'AGENT_ONBOARDING_NIGO',
+    TOA_Nigo = 'NB_TOA_NIGO',
+    Standard_Document_Matching = 'STANDARD_DOCUMENT_MATCHING',
 }
 
 export enum EarlyTaskType {
