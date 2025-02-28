@@ -66,7 +66,11 @@
                                       "documentSource": {
                                           "type": "string",
                                           "ui:field": "title"
-                                      }
+                                      },
+                                      "carrier": {
+                                        "type": "string",
+                                        "default": "{{carrier}}"
+                                    }
                                   }
                               }
                           }
