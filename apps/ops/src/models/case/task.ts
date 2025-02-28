@@ -125,6 +125,7 @@ export interface renewalsFormParts {
 
 export type FormMetadata = {
     title?: string;
+    tab?: string;
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
     schemaContent?: {
