@@ -1,9 +1,9 @@
-import { Button } from '@zinnia/bloom/components';
 import { saveAs } from 'file-saver';
 
 import { Footer } from '@/components/footer/Footer';
 
 import styles from './PdfPreviewer.module.css';
+import { ButtonWithAnalytics } from '../button-with-analytics/ButtonWithAnalytics';
 
 export default function PreviewUnsupported({
   fileName,
@@ -22,7 +22,9 @@ export default function PreviewUnsupported({
         <div className={`card ${styles.cardContent}`}>
           <div>PDF Preview doesn't seem to be supported by this browser.</div>
           <div>
-            <Button onClick={saveDocument}>Download PDF</Button>
+            <ButtonWithAnalytics onClick={saveDocument}>
+              Download PDF
+            </ButtonWithAnalytics>
           </div>
         </div>
         <Footer />

@@ -16,6 +16,7 @@ import {
   useForm,
 } from 'react-hook-form';
 
+import { ButtonWithAnalytics } from '@/components/button-with-analytics/ButtonWithAnalytics';
 import { SelectResponsive } from '@/components/select-responsive/SelectResponsive';
 import { getDirtyValues } from '@/utils/forms';
 import { isNumberOrHyphen } from '@/utils/regex';
@@ -283,15 +284,15 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
       </div>
 
       <div className={styles.buttonContainer}>
-        <Button type="submit">{buttonText}</Button>
+        <ButtonWithAnalytics type="submit">{buttonText}</ButtonWithAnalytics>
         {actionType === FormActionType.EDIT && (
-          <Button
+          <ButtonWithAnalytics
             onClick={removeCallback}
             className={styles.delete}
             mode="error"
           >
             Remove address
-          </Button>
+          </ButtonWithAnalytics>
         )}
         <Button onClick={handleCancel} className={styles.cancel} mode="link">
           Cancel

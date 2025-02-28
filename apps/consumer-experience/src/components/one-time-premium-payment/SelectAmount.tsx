@@ -4,7 +4,6 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
-  Button,
   Icon,
   IconType,
   Label,
@@ -22,6 +21,7 @@ import { CancelDialogLink } from './CancelDialogLink';
 import { FormStepWrapper } from './FormStepWrapper';
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { getStepInfo, Steps } from './steps';
+import { ButtonWithAnalytics } from '../button-with-analytics/ButtonWithAnalytics';
 import { FieldDate } from '../field/date/FieldDate';
 import { FieldStatus } from '../field/types';
 import { FieldValue } from '../field/value/FieldValue';
@@ -226,9 +226,9 @@ export const SelectAmount = ({
         )}
 
         <div className={premiumStyles.buttonGroup}>
-          <Button mode="primary" type="submit">
+          <ButtonWithAnalytics mode="primary" type="submit">
             Continue
-          </Button>
+          </ButtonWithAnalytics>
           <CancelDialogLink
             planCode={planCode}
             policyNumber={policyNumber}
