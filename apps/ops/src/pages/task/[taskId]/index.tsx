@@ -11,7 +11,6 @@ import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
@@ -25,6 +24,7 @@ import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
 import { isProd } from '@deps/utils/environment.helper';
 import { applyDynamicOptions } from '../../../containers/task-container/task-handlers/handle-task';
+import { ProcessType } from '@deps/models/case/enums';
 
 type TaskPageProps = {
     task: ManagementTask;
@@ -172,15 +172,6 @@ export const getServerSideProps = withPageAuthRequired({
             const correlationId = caseDetails?.correlationId;
 
             const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
-
-            if (!currentTaskMetadata.length) {
-                const fallbackMetadata: FormMetadata = {
-                    title: '',
-                    formSchema: taskMetadata?.formSchema ?? {},
-                    uiSchema: taskMetadata?.uiSchema ?? {},
-                };
-                currentTaskMetadata.push(fallbackMetadata ?? {});
-            }
 
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
 

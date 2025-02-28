@@ -29,6 +29,7 @@ const baseUrl = baseAppUrl + '/api/';
 
 import FileAttachmentComponent from './file-attachment.component';
 import style from './file-widget.module.css';
+import { Loader } from '@zinnia/bloom/components';
 
 function addNameToDataURL(dataURL: string, name: string) {
     if (dataURL === null) {
@@ -143,7 +144,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     const sideSheet = useSideSheetContext();
 
     const [attachmentSchema, setAttachmentSchema] = useState<FormMetadata | null>(null);
-
+    const [loader, setLoader] = useState(false);
     const { props, showFiles } = getUiOptions<T, S, F>(uiSchema);
 
     const { apiUrl, apiMethod } = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
@@ -171,12 +172,12 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     useEffect(() => {
         const getAttachmentSchema = async () => {
             try {
+                setLoader(true);
                 const url = `${baseUrl}${apiUrl}`;
 
                 const { data } = await client[apiMethod ?? 'get']<FormMetadata, AxiosResponse>(url);
-                if (!data) {
-                    return;
-                }
+                if (!data) return;
+
                 const apiProps = typeof props === 'object' ? (data?.uiSchema?.options?.['ui:props'] as ApiProps) : ({} as ApiProps);
                 if (apiProps?.apiUrl) {
                     await csrApiHelper(apiProps, { ...formContext?.customData }).then(response => {
@@ -187,6 +188,8 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 setAttachmentSchema(data);
             } catch (err) {
                 console.log('🚀 ~ getAttachmentSchema ~ err:', err);
+            } finally {
+                setLoader(false);
             }
         };
         getAttachmentSchema();
@@ -255,21 +258,25 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
     return (
         <>
-            <div className="mt-1">
-                <label htmlFor={widgetProps.id} className={style.customFileUpload}>
-                    {schema?.title ?? t('upload')}
-                </label>
-                <BaseInputTemplate
-                    {...widgetProps}
-                    disabled={disabled || readonly}
-                    type="file"
-                    required={value ? false : required}
-                    onChangeOverride={handleChange}
-                    value=""
-                    accept={options.accept ? String(options.accept) : undefined}
-                    className={style.input}
-                />
-            </div>
+            {loader ? (
+                <Loader />
+            ) : (
+                <div className="mt-1">
+                    <label htmlFor={widgetProps.id} className={style.customFileUpload}>
+                        {schema?.title ?? t('upload')}
+                    </label>
+                    <BaseInputTemplate
+                        {...widgetProps}
+                        disabled={disabled || readonly}
+                        type="file"
+                        required={value ? false : required}
+                        onChangeOverride={handleChange}
+                        value=""
+                        accept={options.accept ? String(options.accept) : undefined}
+                        className={style.input}
+                    />
+                </div>
+            )}
             {showFiles && (
                 <FilesInfo<T, S, F>
                     filesInfo={filesInfo}
