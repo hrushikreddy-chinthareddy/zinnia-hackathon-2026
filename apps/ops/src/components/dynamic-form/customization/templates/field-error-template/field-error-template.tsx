@@ -11,9 +11,9 @@ export default function FieldErrorTemplate<T = any, S extends StrictRJSFSchema =
     const id = errorId<T>(idSchema);
 
     return (
-        <ul id={id}>
+        <ul id={id} className="mt-4">
             {errors.map((error, i) => {
-                return <AssistiveText key={i} text={props.schema.title + ' ' + error.toString()} variant={AssistiveTextVariant.Error} />;
+                return <AssistiveText key={i} text={error.toString()} variant={AssistiveTextVariant.Error} />;
             })}
         </ul>
     );

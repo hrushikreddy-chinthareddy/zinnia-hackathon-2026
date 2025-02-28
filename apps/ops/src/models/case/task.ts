@@ -19,7 +19,8 @@ export enum TaskType {
     Attachment_Nigo = 'NB_ATTACHMENT_NIGO',
     PremiumNigo = 'NB_PAYMENT_PROCESSING_NIGO',
     Application_Nigo = 'NB_APPLICATION_NIGO',
-    Agent_Review = 'NB_AGENT_REVIEW'
+    Agent_Review = 'NB_AGENT_REVIEW',
+    Standard_Document_Matching = "STANDARD_DOCUMENT_MATCHING"
 }
 
 export enum EarlyTaskType {

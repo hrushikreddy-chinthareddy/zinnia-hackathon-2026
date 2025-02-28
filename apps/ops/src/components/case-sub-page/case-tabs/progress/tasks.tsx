@@ -20,7 +20,8 @@ export const SupportedTaskMap = [
     TaskType.Attachment_Nigo,
     TaskType.Application_Nigo,
     TaskType.PremiumNigo,
-    TaskType.Agent_Review
+    TaskType.Agent_Review,
+    TaskType.Standard_Document_Matching
 ];
 
 export function Task({ task }: { task: TaskView }) {
