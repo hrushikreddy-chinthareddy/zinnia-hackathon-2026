@@ -162,7 +162,13 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
             };
 
             uploadDocumentV2(metaData, files[key], formContext?.correlationId || '').then(response => {
-                attachments.push({ documentId: response?.documentId });
+                attachments.push({
+                    documentId: response?.documentId,
+                    documentCategory: metaData?.docCategory,
+                    documentType: metaData?.documentType,
+                    documentExt: metaData?.fileType,
+                    documentName: name || '',
+                });
                 formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
                 sideSheet.onClose();
             });

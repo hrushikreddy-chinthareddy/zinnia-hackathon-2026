@@ -70,11 +70,14 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
     }, []);
 
     const handleDocumentSelection = (document: MetadataSearchResponse) => {
-        const attachments = [...(formContext?.customData?.attachments || [])];
-        if (attachments.includes(document?.documentId)) {
-            return;
-        }
-        attachments.push({ documentId: document.documentId });
+        const attachments = [...formContext?.customData?.attachments];
+        attachments.push({
+            documentId: document?.documentId || '',
+            docCategory: document?.documentCategory,
+            documentType: document?.documentType,
+            documentExt: document?.fileType,
+            documentName: document?.displayName || '',
+        });
         formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
         setFilteredDocuments([]);
     };
