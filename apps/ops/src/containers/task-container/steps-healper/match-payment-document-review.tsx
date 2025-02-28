@@ -6,7 +6,11 @@ import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
 export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, taskMetadata, task }: GetStepsProps) => {
-    const isSubmit = task.data.matchingResult === MatchingCase.REINDEX;
+    let isSubmit = task.data.matchingResult === MatchingCase.REINDEX;
+
+    if (task?.data?.isPrimaryDocumentPresent == true) {
+        isSubmit = true;
+    }
 
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
