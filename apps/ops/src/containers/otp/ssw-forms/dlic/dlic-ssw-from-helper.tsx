@@ -248,7 +248,6 @@ export default function getDlicConfig(t: TFunction) {
             disabled: sswType === SSWType.PercentOfAmountValue,
         },
         { label: t(`distributionInstruction.variableFunds`), value: FundWithdrawnMethod.SpecifyFunds },
-        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.VariableFunds },
     ];
 
     const w4pSignaturesConfig = [
@@ -568,6 +567,7 @@ export default function getDlicConfig(t: TFunction) {
             key: 'irs-signature-sign-date',
         },
     ];
+    const cslnCheckStates = ['CA', 'CO', 'TX'];
 
     return {
         formValidation: sswFormValidation,
@@ -580,5 +580,6 @@ export default function getDlicConfig(t: TFunction) {
         signaturesNotaryConfig,
         additionalWithholdingAmountConfig,
         irsSignatureConfig,
+        cslnCheckStates,
     };
 }
