@@ -1421,6 +1421,7 @@
             "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements",
             "applicationNigo": "Réviser les problèmes d'agent",
             "agentReview": "Valider l'agent",
+            "agentOnboardingNigo":"Réviser les problèmes d'onboarding",
             "standardDocumentMatching": "Document de correspondance"
         },
         "processDate": {
@@ -5150,6 +5151,14 @@
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
+        }
+    },
+    "agentOnboardingNigo":{
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes d'onboarding a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
         }
     },
     "unauthorized": {

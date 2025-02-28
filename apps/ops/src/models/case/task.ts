@@ -20,6 +20,7 @@ export enum TaskType {
     Standard_Document_Matching = "STANDARD_DOCUMENT_MATCHING",
     PremiumNigo = 'NB_PAYMENT_PROCESSING_NIGO',
     Agent_Review = 'NB_AGENT_REVIEW',
+    Agent_Onboarding_Nigo = 'AGENT_ONBOARDING_NIGO'
 }
 
 export enum EarlyTaskType {
