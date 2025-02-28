@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 
 import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
+import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
@@ -38,6 +39,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         signaturesNotaryConfig,
         additionalWithholdingAmountConfig,
         irsSignatureConfig,
+        cslnCheckStates,
     } = getDlicConfig(t);
     const {
         formParty,
@@ -115,7 +117,10 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
 
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
-
+            {(ownerStateOfResidence || contractIssueState) &&
+                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
+                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
+                )}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
