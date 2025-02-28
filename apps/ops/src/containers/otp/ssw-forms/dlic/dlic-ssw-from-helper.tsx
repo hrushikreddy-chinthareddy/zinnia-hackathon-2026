@@ -247,7 +247,7 @@ export default function getDlicConfig(t: TFunction) {
             value: FundWithdrawnMethod.Prorata,
             disabled: sswType === SSWType.PercentOfAmountValue,
         },
-        { label: t(`distributionInstruction.variableFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
     ];
 
     const w4pSignaturesConfig = [
