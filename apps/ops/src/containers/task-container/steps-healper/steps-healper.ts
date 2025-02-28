@@ -4,7 +4,6 @@ import { TaskType } from '@deps/models/case/task';
 import { getAgentNigoSteps } from './agent-nigo';
 import { getAgentReviewSteps } from './agent-review';
 import { getMatchDocumentPaymentReviewSteps } from './match-payment-document-review';
-import { getNewBusinessDataSteps } from './new-buisness-data';
 import { getSuitabilityReviewSteps } from './suitability-review-steps';
 import { getSuitabilitySteps } from './suitability-steps';
 import { GetStepsProps } from './types';
@@ -31,9 +30,6 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
             break;
         case TaskType.Agent_Review:
             steps = getAgentReviewSteps(props);
-            break;
-        case TaskType.NB_APP_DATA_ENTRY:
-            steps = getNewBusinessDataSteps(props);
             break;
         default:
             steps = [];

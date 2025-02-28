@@ -5118,8 +5118,7 @@
                 "start": "Start",
                 "nigoDetails": "Missing Information",
                 "suitabilityForm": "Suitability form",
-                "summary": "Summary",
-                "matchDocument": "Match Document"
+                "summary": "Summary"
             }
         },
         "formErrors": {
@@ -5148,6 +5147,15 @@
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review initial premium was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+
+    "nbApplicationNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Agent Issues was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }
