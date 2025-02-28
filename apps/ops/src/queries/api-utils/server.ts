@@ -108,7 +108,6 @@ export const requestHandler = async <T>(url: string, req: NextApiRequest, res: N
             function: 'requestHandler',
         });
         const accessToken = (await getAccessToken(req, res)).accessToken;
-        console.log(accessToken);
 
         try {
             if (req.method === 'PUT') return await putRequest(url, req, res, accessToken, { ...userInfo });
