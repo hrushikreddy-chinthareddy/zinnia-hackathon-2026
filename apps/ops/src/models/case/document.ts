@@ -163,7 +163,7 @@ export type EDSDocumentRequestBody = {
     docCategory: string;
     fileType: string;
     parentCarrierCode: string;
-    formType: string;
+    documentType: string;
     docClassification: string;
     zinniaLiveCaseId: string;
     correlationId: string;
