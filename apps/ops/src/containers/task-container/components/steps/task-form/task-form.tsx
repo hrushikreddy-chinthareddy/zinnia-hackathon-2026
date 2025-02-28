@@ -145,7 +145,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 ...ogTask,
                 data: event.formData,
             }));
-            console.log('🚀 ~ event.formData:', event.formData);
         },
 
         [setTask, task]

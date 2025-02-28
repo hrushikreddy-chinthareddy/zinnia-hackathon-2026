@@ -173,6 +173,15 @@ export const getServerSideProps = withPageAuthRequired({
 
             const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
 
+            if (!currentTaskMetadata.length) {
+                const fallbackMetadata: FormMetadata = {
+                    title: '',
+                    formSchema: taskMetadata?.formSchema ?? {},
+                    uiSchema: taskMetadata?.uiSchema ?? {},
+                };
+                currentTaskMetadata.push(fallbackMetadata ?? {});
+            }
+
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
 
             const taskInfoLink = buildCaseLink(caseId);
