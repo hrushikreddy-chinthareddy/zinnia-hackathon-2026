@@ -156,6 +156,19 @@ export type EDSDocumentRequest = {
     stockNumber: string;
 };
 
+export type EDSDocumentRequestBody = {
+    sourceFileName: string;
+    docAccessLevel: string;
+    documentDate: string;
+    docCategory: string;
+    fileType: string;
+    parentCarrierCode: string;
+    formType: string;
+    docClassification: string;
+    zinniaLiveCaseId: string;
+    correlationId: string;
+};
+
 export type EDSDocumentResponse = {
     documentId: string;
     correlationId: string;

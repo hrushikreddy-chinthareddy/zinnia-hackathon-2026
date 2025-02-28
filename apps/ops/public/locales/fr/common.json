@@ -770,7 +770,9 @@
         "view": "Afficher",
         "with": "avec",
         "approved": "Approuvé",
-        "unapproved": "Désapprouvé"
+        "unapproved": "Désapprouvé",
+        "submit": "Soumettre",
+        "uploadDocument": "Uploader un document"
     },
     "dashboard": {
         "h1": "Recherche de politique",
@@ -1416,7 +1418,9 @@
             "suitabilityReviewIssues": "Revoir Suitability Problèmes",
             "purchaseDocumentMatchingIssues": "Document de correspondance",
             "agentNigo": "Réviser les problèmes d'agent",
-            "applicationNigo":"Réviser les problèmes d'agent"
+            "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements",
+            "applicationNigo": "Réviser les problèmes d'agent",
+            "agentReview": "Valider l'agent"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -4324,7 +4328,7 @@
             },
             "title": "Compris!"
         }
-    },    
+    },
     "loanPayment": {
         "amount": {
             "label": "Montant",
@@ -5109,10 +5113,26 @@
             "secondaryCta": "Retour à l'accueil"
         }
     },
+    "nbPaymentProcessingNigo": {
+        "confirmStep": {
+            "title": "Compris !",
+            "subTitle": "Tâche : Examen de la prime initiale soumis.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
     "nbApplicationNigo": {
         "confirmStep": {
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbAgentReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Valider que l'agent a été soumis.",
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
         }

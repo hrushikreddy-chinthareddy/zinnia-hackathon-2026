@@ -56,5 +56,7 @@ export const TaskApiVersionMapper: Record<TaskType, ApiVersion> = {
     [TaskType.SuitabilityReview]: ApiVersion.v2,
     [TaskType.PURCHASE_DOCUMENT_MATCHING]: ApiVersion.v2,
     [TaskType.Agent_Nigo]: ApiVersion.v2,
+    [TaskType.PremiumNigo]: ApiVersion.v2,
     [TaskType.Application_Nigo]: ApiVersion.v2,
+    [TaskType.Agent_Review]: ApiVersion.v2,
 };
