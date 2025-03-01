@@ -136,7 +136,6 @@ export const getServerSideProps = withPageAuthRequired({
         let accessToken;
         try {
             accessToken = (await getAccessToken(req, res)).accessToken;
-            console.log("??adcce", accessToken)
         } catch (e) {
             logWarn('getServerSidePropsNigoEntryPage::Access token expired', {
                 ...parseErrorInformation(e),
@@ -383,7 +382,8 @@ export const getServerSideProps = withPageAuthRequired({
                 await searchPolicySSR(contractNum, [clientCode?.toUpperCase()], accessToken, 1, 0),
                 await getNigoExceptions(nigoFilters, accessToken),
             ]);
-            const planCode = policies ? policies[0]?.planCode : null;
+
+            const planCode = policies?.[0]?.planCode || null;
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
             logInfo('nigo-entry::Retrieved parties, document, planCode, nigoExceptions and correspondence case search result', {
                 taskId,

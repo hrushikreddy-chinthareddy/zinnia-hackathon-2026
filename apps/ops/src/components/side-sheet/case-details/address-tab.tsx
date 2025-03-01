@@ -6,6 +6,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { AddressTypeAndAddress } from '@deps/containers/small-data-card/address-data/address-data';
 
 import { addressType } from './case-details-content';
+import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
 
 interface AddressTabProps {
     addresses: addressType[];
@@ -16,7 +17,7 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent.addressHistoryTab' });
     const url = policyNumber && planCode ? `/policies/${planCode}/${policyNumber}/policy/policy-details` : null;
     return (
-        <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-5 md:px-6 lg:px-8 gap-4">
+        <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-4 md:px-6 lg:px-8 gap-4">
             {addresses?.map((address: any) => {
                 return (
                     <div key={address.addressId} className="px-4 mt-3">
@@ -35,7 +36,7 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
                     </div>
                 );
             })}
-
+            {(!addresses || addresses?.length === 0) &&  ( <EmptyCard text={t('noAddressesAvailable')} />)}
             { url && <div className="text-[--color-base-text-text-link] font-semibold text-md p-4">
                 <NavElement
                     className={'whitespace-normal break-words'}

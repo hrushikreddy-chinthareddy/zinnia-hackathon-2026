@@ -20,6 +20,7 @@ import { NigoDetailsStep } from './steps/nigo-details/nigo-details-step';
 import { SelOptionType } from './steps/service-form-review/service-form-review';
 import { ServiceFormReviewStep } from './steps/service-form-review/service-form-review-step';
 import TabGroupContainer from './tab-group-container';
+import { AdditionalDataInstance } from '@deps/models/case/additional-data-instance';
 
 interface NigoEntryContainerContainerProps {
     //policy: Policy;
@@ -55,7 +56,7 @@ const NigoEntryContainer = ({
 
     const [policy, setPolicy] = useState<Policy>();
     const [availableFormsTransactions, setAvailableFormsTransactions] = useState<AvailableFormsTransaction[]>([]);
-    const [prevTransactionDetails, setPrevTransactionDetails] = useState<TransactionDetails | null>(null);
+    const [prevTransactionDetails, setPrevTransactionDetails] = useState<AdditionalDataInstance | null>(null);
 
     const getTransactions = async (policyInfo: Policy) => {
         const transactionRequestBody: SearchTransactionRequestBody = {
@@ -101,8 +102,6 @@ const NigoEntryContainer = ({
         getTransactions(policy);
     }, [policy]);
 
-    console.log("??prevTransactionDetails", prevTransactionDetails)
-
     useEffect(() => {
 
         const searchCases = async () => {
@@ -118,10 +117,14 @@ const NigoEntryContainer = ({
             let searchCasesResponse = null;
             try {
                 searchCasesResponse = await getCases(filters);
-                const latestForm = searchCasesResponse?.data?.find(
-                    item => item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()
-                );
-                setPrevTransactionDetails(latestForm?.additionalData || null);
+                if (searchCasesResponse && 'total' in searchCasesResponse) {
+                    const latestForm = searchCasesResponse?.data?.find(
+                        item => item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()
+                    );
+                    setPrevTransactionDetails(latestForm?.additionalData || null);
+                } else {
+                    throw new Error(searchCasesResponse?.data?.err ? searchCasesResponse.data.err : 'Error fetching cases');
+                }
             } catch (error) {
                 console.error('an error occurred in case search', error);
                 setPrevTransactionDetails(null);
@@ -264,6 +267,8 @@ const NigoEntryContainer = ({
             documentNumber={documentNumber}
             docType={docType}
             documentData={documentData}
+            policyNumber={policyNumber}
+            clientCode={clientCode}
         ></TabGroupContainer>
     );
 };

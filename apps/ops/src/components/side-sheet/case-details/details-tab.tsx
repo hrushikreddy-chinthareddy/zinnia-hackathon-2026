@@ -17,22 +17,25 @@ type DetailTabProps = {
   carrierName: string;
   policy?: Policy;
   documentData: DocumentData;
+  policyNumber: string;
+  clientCode: string;
 };
 
-function DetailsTab({ carrierName, policy, documentData }: DetailTabProps) {
+function DetailsTab({ carrierName, policy, documentData, policyNumber, clientCode }: DetailTabProps) {
   const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent' });
   const url = policy ? `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/policy-details` : null;
   const formattedIssueDate = policy?.policyDates?.issueDate ? dayjs(policy?.policyDates?.issueDate).format(DEFAULT_EXTENDED_DATE_FORMAT) : DEFAULT_ERROR_STRING;
   const formattedApplicationDate = policy?.policyDates?.applicationDate ? dayjs(policy?.policyDates?.applicationDate).format(DEFAULT_EXTENDED_DATE_FORMAT) : DEFAULT_ERROR_STRING;
   const formattedContractValue = formatCurrencyLocal(documentData.contractValue as string);
+
   return (
     <>
       <div className="flex float-start">
-        <PolicyCarrierLogo carrierId={policy?.carrierId} />
+        <PolicyCarrierLogo carrierId={clientCode} />
         <div>
           <div className="text-md text-[--color-base-text-text-secondary]">{carrierName}</div>
-          <div className="text-md">{documentData?.productName}</div>
-          <div className="text-md">Contract #: {policy?.policyNumber || DEFAULT_ERROR_STRING}</div>
+          <div className="text-md">{documentData?.productName || DEFAULT_ERROR_STRING}</div>
+          <div className="text-md">Contract #: {policyNumber || DEFAULT_ERROR_STRING}</div>
         </div>
       </div>
       <div className=" grid grid-cols-2 gap-2 text-md">

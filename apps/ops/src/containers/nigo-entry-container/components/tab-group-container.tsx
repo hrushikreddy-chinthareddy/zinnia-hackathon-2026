@@ -34,6 +34,8 @@ type TabGroupContainerProps = {
     documentNumber?: string;
     docType: string;
     documentData: DocumentData;
+    policyNumber: string;
+    clientCode: string;
 };
 const TabGroupContent = ({
     steps,
@@ -42,6 +44,8 @@ const TabGroupContent = ({
     documentNumber = '',
     docType = '',
     documentData,
+    policyNumber,
+    clientCode
 }: TabGroupContainerProps) => {
     const [caseTableData, setCaseTableData] = useState<CaseTableData>({ cases: [], total: 0, loading: true, error: false });
     const [offset, setOffset] = useState(0);
@@ -51,7 +55,7 @@ const TabGroupContent = ({
 
     const fetchCases = useCallback(async () => {
         try {
-            const searchValueObject = { policyNumber: policy?.policyNumber };
+            const searchValueObject = { policyNumber: policyNumber };
 
             const updatedRequest: CaseSearchQuery = {
                 ...searchValueObject,
@@ -97,7 +101,7 @@ const TabGroupContent = ({
                 error: true,
             });
         }
-    }, [policy?.policyNumber, limit, offset, t]);
+    }, [policyNumber, limit, offset, t]);
 
     useEffect(() => {
         fetchCases();
@@ -106,7 +110,7 @@ const TabGroupContent = ({
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const sideSheet = useSideSheetContext();
     const globalValuesData = useMemo(() => policyDataToGlobalValues(new PolicyDetails(policy), t), [policy, t]);
-    const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
+    const { marketingName, planCode, productType, status, tooltip, variant } = globalValuesData;
     const handleClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
 
@@ -114,7 +118,7 @@ const TabGroupContent = ({
     };
 
     const openSideSheet = () => {
-        const content = <DocumentPortalPanel policy={policy} documentNumber={documentNumber} docType={docType} />;
+        const content = <DocumentPortalPanel policyNumber={policyNumber} clientCode={clientCode} documentNumber={documentNumber} docType={docType} />;
         sideSheet.changeSideSheetContent(t('nigoEntry.documentPanel.documents'), content);
         sideSheet.handleOpen(true);
     };
@@ -128,7 +132,7 @@ const TabGroupContent = ({
         openSideSheet();
     };
 
-    const { diaryNotes } = useDiaryNotes(policy?.policyNumber as string, policy?.carrierId as string, 0, 10);
+    const { diaryNotes } = useDiaryNotes(policyNumber, clientCode, 0, 10);
     const opeDiaryNotes = () => {
         const content = <DiaryNotesContent notesData={{ diaryNotes: diaryNotes } as any} />;
         sideSheet.changeSideSheetContent(t('site.navLinks.diaryNotes.text'), content);
@@ -145,6 +149,8 @@ const TabGroupContent = ({
                 limit={limit}
                 caseTableData={caseTableData}
                 setError={setError}
+                policyNumber={policyNumber}
+                clientCode={clientCode}
             />
         );
         sideSheet.changeSideSheetContent(t('site.navLinks.caseDetails.text'), content);
@@ -155,7 +161,7 @@ const TabGroupContent = ({
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
 
             <GlobalValuesBar
-                carrierId={policy?.carrierId}
+                carrierId={clientCode}
                 marketingName={marketingName}
                 owner={policyOwner}
                 jointOwner={jointOwner}
@@ -236,9 +242,11 @@ const TabGroupContent = ({
     );
 };
 
-const TabGroupContainer = ({ steps, policy, documentNumber, docType, documentData }: TabGroupContainerProps) => {
+const TabGroupContainer = ({ steps, policy, documentNumber, docType, documentData, policyNumber, clientCode }: TabGroupContainerProps) => {
+    const caseDetails = {policyNumber, carrierId: clientCode }
+
     return (
-        <DiaryNotesProvider caseDetails={policy as any}>
+        <DiaryNotesProvider caseDetails={caseDetails as any}>
             <WorkflowProvider>
                 <TabGroupContent
                     steps={steps}
@@ -247,6 +255,8 @@ const TabGroupContainer = ({ steps, policy, documentNumber, docType, documentDat
                     documentNumber={documentNumber}
                     docType={docType}
                     documentData={documentData}
+                    policyNumber={policyNumber}
+                    clientCode={clientCode}
                 />
             </WorkflowProvider>
         </DiaryNotesProvider>

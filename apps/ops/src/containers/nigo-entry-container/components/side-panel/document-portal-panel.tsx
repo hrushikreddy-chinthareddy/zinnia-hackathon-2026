@@ -21,15 +21,16 @@ type DocumentViewProps = {
     policy?: Policy;
     documentNumber: string;
     docType: string;
+    policyNumber: string;
+    clientCode: string
 };
 
-const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewProps) => {
+const DocumentPortalPanel = ({ policy, documentNumber, docType, policyNumber, clientCode }: DocumentViewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.documentPanel' });
     const [activeTab, setActiveTab] = useState(TabOptions.Working);
-    const clientCode = policy?.carrierId || '';
     const [loading, getPolicyDocs, workingDocument, relatedDocument] = useGetPolicyTypeDocs(
-        policy?.policyNumber || '',
-        policy?.carrierId || '',
+        policyNumber,
+        clientCode,
         docType,
         documentNumber
     );
@@ -40,8 +41,6 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
-    console.log("??relatedDocument", relatedDocument);
-    console.log("??workingDocument", workingDocument)
     const renderDocumentSection = (document: any, displayName: string, clientCode: string) => {
         return (
             <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]" key={document.documentId}>
@@ -68,9 +67,11 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Working}>
                 {workingDocument && renderDocumentSection(workingDocument, workingDocument?.displayName || '', clientCode)}
                 {isNullEmptyOrUndefined(workingDocument) &&
-                <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
-                <div className="text-sm font-bold"><PiiWrapper>Looks like there is't any documents to display.</PiiWrapper></div>
-            </div>
+                    <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
+                        <div className="text-sm font-bold">
+                            <PiiWrapper>{t('noDocumentAvailable')}</PiiWrapper>
+                        </div>
+                    </div>
                 }
             </TabContent>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
