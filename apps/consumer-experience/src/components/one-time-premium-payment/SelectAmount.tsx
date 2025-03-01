@@ -21,12 +21,12 @@ import { CancelDialogLink } from './CancelDialogLink';
 import { FormStepWrapper } from './FormStepWrapper';
 import premiumStyles from './OneTimePremiumPayment.module.css';
 import { getStepInfo, Steps } from './steps';
-import { ButtonWithAnalytics } from '../button-with-analytics/ButtonWithAnalytics';
-import { FieldDate } from '../field/date/FieldDate';
-import { FieldStatus } from '../field/types';
-import { FieldValue } from '../field/value/FieldValue';
-import { useOttp } from '../providers/one-time-premium-payment/OttpContext';
-import { OttpAction } from '../providers/one-time-premium-payment/types';
+import { Button } from '@/components/button/Button';
+import { FieldDate } from '@/components/field/date/FieldDate';
+import { FieldStatus } from '@/components/field/types';
+import { FieldValue } from '@/components/field/value/FieldValue';
+import { useOttp } from '@/components/providers/one-time-premium-payment/OttpContext';
+import { OttpAction } from '@/components/providers/one-time-premium-payment/types';
 
 export const dateInvalidMessage = 'Please enter a valid date';
 export const dateOutOfRangeMessage =
@@ -226,9 +226,9 @@ export const SelectAmount = ({
         )}
 
         <div className={premiumStyles.buttonGroup}>
-          <ButtonWithAnalytics mode="primary" type="submit">
+          <Button mode="primary" type="submit">
             Continue
-          </ButtonWithAnalytics>
+          </Button>
           <CancelDialogLink
             planCode={planCode}
             policyNumber={policyNumber}

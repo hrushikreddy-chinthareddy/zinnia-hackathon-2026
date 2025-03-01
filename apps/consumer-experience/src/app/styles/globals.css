@@ -5,6 +5,51 @@
 @import './spacing.css';
 @import './borders.css';
 
+@font-face {
+  font-family: Lato;
+  src: url('./fonts/Lato-Thin.ttf');
+  format: ('ttf');
+  font-display: block;
+  font-style: normal;
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: Lato;
+  src: url('./fonts/Lato-Light.ttf');
+  format: ('ttf');
+  font-display: block;
+  font-style: normal;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: Lato;
+  src: url('./fonts/Lato-Regular.ttf');
+  format: ('ttf');
+  font-display: block;
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Lato;
+  src: url('./fonts/Lato-Bold.ttf');
+  format: ('ttf');
+  font-display: block;
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: Lato;
+  src: url('./fonts/Lato-Black.ttf');
+  format: ('ttf');
+  font-display: block;
+  font-style: normal;
+  font-weight: 900;
+}
+
 /* TODO: this should be a token, right now setting it here prior to theme setting it */
 :root {
   --color-avatar-avatar-text: #fff;

@@ -1,9 +1,8 @@
-import { Button, Icon, IconType } from '@zinnia/bloom/components';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
-import { ButtonWithAnalytics } from '@/components/button-with-analytics/ButtonWithAnalytics';
-
 import styles from './Confirm.module.css';
+import { Button } from '@/components/button/Button';
 interface ConfirmProps {
   confirmTitle: string;
   confirmMessage?: string;
@@ -32,14 +31,14 @@ export const Confirm: FC<ConfirmProps> = ({
       {confirmMessage && (
         <p className="typography-content-body">{confirmMessage}</p>
       )}
-      <ButtonWithAnalytics
+      <Button
         onClick={confirmCallback}
         className={styles.confirmButton}
         mode="error"
         correlationId={correlationId}
       >
         {confirmButtonText}
-      </ButtonWithAnalytics>
+      </Button>
       <Button onClick={denyCallback} className={styles.close} mode="link">
         Cancel
       </Button>

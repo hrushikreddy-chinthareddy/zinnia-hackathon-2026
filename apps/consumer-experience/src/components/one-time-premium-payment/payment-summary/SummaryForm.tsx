@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { ButtonWithAnalytics } from '@/components/button-with-analytics/ButtonWithAnalytics';
+import { Button } from '@/components/button/Button';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
@@ -210,9 +210,9 @@ export const SummaryForm = ({
         />
       </div>
       <div className={styles.buttonGroup}>
-        <ButtonWithAnalytics mode="primary" type="submit">
+        <Button mode="primary" type="submit">
           Submit payment
-        </ButtonWithAnalytics>
+        </Button>
         <CancelDialogLink
           planCode={planCode}
           policyNumber={policyNumber}

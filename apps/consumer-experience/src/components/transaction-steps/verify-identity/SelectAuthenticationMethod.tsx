@@ -1,6 +1,6 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Radio } from '@zinnia/bloom/components';
+import { Button } from '@zinnia/bloom/components';
 import {
   Controller,
   FieldValues,
@@ -105,12 +105,12 @@ export const SelectAuthenticationMethod = ({
         defaultValue={userAuthentication?.defaultAuthentication}
         render={({ field }) => (
           <div className={styles.authenticationOptions}>
-            <Radio
+            {/* <Radio
               id="radio-account-type"
               onValueChange={field.onChange}
               defaultValue={userAuthentication?.defaultAuthentication}
               options={userAuthentication?.authenticationMethods || []}
-            />
+            /> */}
           </div>
         )}
       />

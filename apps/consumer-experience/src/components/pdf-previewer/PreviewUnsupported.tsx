@@ -3,7 +3,7 @@ import { saveAs } from 'file-saver';
 import { Footer } from '@/components/footer/Footer';
 
 import styles from './PdfPreviewer.module.css';
-import { ButtonWithAnalytics } from '../button-with-analytics/ButtonWithAnalytics';
+import { Button } from '@/components/button/Button';
 
 export default function PreviewUnsupported({
   fileName,
@@ -22,9 +22,7 @@ export default function PreviewUnsupported({
         <div className={`card ${styles.cardContent}`}>
           <div>PDF Preview doesn't seem to be supported by this browser.</div>
           <div>
-            <ButtonWithAnalytics onClick={saveDocument}>
-              Download PDF
-            </ButtonWithAnalytics>
+            <Button onClick={saveDocument}>Download PDF</Button>
           </div>
         </div>
         <Footer />

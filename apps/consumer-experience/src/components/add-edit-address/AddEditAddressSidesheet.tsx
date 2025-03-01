@@ -11,7 +11,7 @@ import {
   putUpdateAddress,
   putEndDateAddress,
 } from '@/actions/bpm/address-actions';
-import { ButtonWithAnalytics } from '@/components/button-with-analytics/ButtonWithAnalytics';
+import { Button } from '@/components/button/Button';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { FormSteps } from '@/types/transactions';
 import { zipCodeInParts } from '@/utils/address';
@@ -207,7 +207,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
       overrideOpen={open}
       closeCallback={onClose}
       trigger={
-        <ButtonWithAnalytics
+        <Button
           className={
             actionType === FormActionType.ADD
               ? styles.addAddress
@@ -224,7 +224,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
         >
           <Icon small type={triggerIcon} />
           {triggerText}
-        </ButtonWithAnalytics>
+        </Button>
       }
     >
       {!step && (

@@ -13,7 +13,7 @@ import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 
 import styles from './AddBankSidesheet.module.css';
-import { ButtonWithAnalytics } from '../button-with-analytics/ButtonWithAnalytics';
+import { Button } from '../button/Button';
 import { AddBank } from './form-steps/add/AddBank';
 import { Error } from '../transaction-steps/error/Error';
 import { Loading } from '../transaction-steps/loading/Loading';
@@ -133,7 +133,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
       overrideOpen={open}
       closeCallback={onClose}
       trigger={
-        <ButtonWithAnalytics
+        <Button
           className={styles.addBank as string}
           size="small"
           mode="link"
@@ -141,7 +141,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
         >
           <Icon small type={IconType.ADD} />
           Add a bank account
-        </ButtonWithAnalytics>
+        </Button>
       }
     >
       {!step && (

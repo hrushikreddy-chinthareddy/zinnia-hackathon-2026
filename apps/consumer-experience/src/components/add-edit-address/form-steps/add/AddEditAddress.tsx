@@ -3,7 +3,6 @@ import { AddressChange } from '@zinnia/api-types/types/bpm';
 import {
   Radio,
   Label,
-  Button,
   Checkbox,
   Icon,
   IconType,
@@ -16,16 +15,16 @@ import {
   useForm,
 } from 'react-hook-form';
 
-import { ButtonWithAnalytics } from '@/components/button-with-analytics/ButtonWithAnalytics';
 import { SelectResponsive } from '@/components/select-responsive/SelectResponsive';
 import { getDirtyValues } from '@/utils/forms';
 import { isNumberOrHyphen } from '@/utils/regex';
 import { states } from '@/utils/states';
 
 import styles from './AddEditAddress.module.css';
-import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
-import { FieldStatus } from '../../../field/types';
+import { FieldDataActive } from '@/components/field/data-active/FieldDataActive';
+import { FieldStatus } from '@/components/field/types';
 import { FormActionType } from '../../types';
+import { Button } from '@/components/button/Button';
 
 export interface AddressObj {
   addressVal: string;
@@ -286,17 +285,17 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
       </div>
 
       <div className={styles.buttonContainer}>
-        <ButtonWithAnalytics type="submit" correlationId={correlationId}>
+        <Button type="submit" correlationId={correlationId}>
           {buttonText}
-        </ButtonWithAnalytics>
+        </Button>
         {actionType === FormActionType.EDIT && (
-          <ButtonWithAnalytics
+          <Button
             onClick={removeCallback}
             className={styles.delete}
             mode="error"
           >
             Remove address
-          </ButtonWithAnalytics>
+          </Button>
         )}
         <Button onClick={handleCancel} className={styles.cancel} mode="link">
           Cancel
