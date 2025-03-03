@@ -792,8 +792,8 @@ importers:
         specifier: ^1.0.7
         version: 1.1.6(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@zinnia/bloom':
-        specifier: ^4.27.0
-        version: 4.29.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(date-fns@3.6.0)(rollup@4.34.8)(typescript@5.6.3)(vite@6.2.0(@types/node@20.17.19)(jiti@1.21.7)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0))
+        specifier: ^4.29.0
+        version: 4.29.0(@types/react-dom@18.3.5(@types/react@18.3.3))(@types/react@18.3.3)(date-fns@3.6.0)(rollup@4.28.1)(typescript@5.6.3)(vite@6.0.11(@types/node@22.8.6)(jiti@1.21.6)(less@4.2.0)(terser@5.36.0)(yaml@2.6.0))
       '@zinnia/utils':
         specifier: workspace:*
         version: link:../utils

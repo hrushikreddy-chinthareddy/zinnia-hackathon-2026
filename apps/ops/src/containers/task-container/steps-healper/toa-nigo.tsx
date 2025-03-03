@@ -1,30 +1,15 @@
-import { MatchingCase } from '@deps/models/case/task/doc-matching-payment';
-
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
-export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, taskMetadata, task }: GetStepsProps) => {
-    let isSubmit = task.data.matchingResult === MatchingCase.REINDEX;
-
-    if (task?.data?.isPrimaryDocumentPresent == true) {
-        isSubmit = true;
-    }
-
+export const getTOANigoSteps = ({ taskType, taskInfoLink, t, taskMetadata = [] }: GetStepsProps) => {
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
-        isVisible: () => index === 0 || !isSubmit,
-        component: (
-            <TaskFormStep
-                taskInfoLink={taskInfoLink}
-                isSubmit={index === 1 ? true : isSubmit}
-                taskMetadata={metadata}
-                key={`step_${index}`}
-            ></TaskFormStep>
-        ),
+        isVisible: () => true,
+        component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={true} taskMetadata={metadata} key={`step_${index}`}></TaskFormStep>,
         text: metadata?.title || '',
-        isSubmit: index === 1 ? true : isSubmit,
+        isSubmit: true,
         index: index,
         isCompleted: true,
         screenReaderLabel: metadata?.title || '',
