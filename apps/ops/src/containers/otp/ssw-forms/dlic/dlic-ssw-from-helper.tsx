@@ -50,27 +50,12 @@ import { createValidator } from '../../utils/helper-utils';
 
 export default function getDlicConfig(t: TFunction) {
     const formValidation = useCallback(
-        ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+        ({ formSignature }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
 
             const ownerSignature = formSignature?.signatures?.find(
                 sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
             );
-
-            if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
-                ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
-                }
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
-                ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
-                }
-            }
 
             // No choice made for signature
             if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
@@ -79,12 +64,6 @@ export default function getDlicConfig(t: TFunction) {
                 );
             }
 
-            if (
-                formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
-            ) {
-                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
-            }
             return errors;
         },
         [t]
