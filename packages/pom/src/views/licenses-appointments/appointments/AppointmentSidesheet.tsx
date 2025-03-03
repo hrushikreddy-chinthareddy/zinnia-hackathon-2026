@@ -2,10 +2,9 @@ import { Badge, BadgeVariant, Label } from '@zinnia/bloom/components';
 
 import { SideSheetProps } from '@zinnia/bloom/components';
 
-import { SideSheet } from '@zinnia/bloom/components';
-
 import { standardDateMonthDayYear, toTitleCase } from '@zinnia/utils';
-import { Appointment, AppointmentStatus } from '../../../types/types';
+import { Appointment, AppointmentStatus } from '../../../types';
+import { PomSideSheet } from '../../../components/pom-sidesheet/PomSidesheet';
 export interface AppointmentSidesheetProps
   extends Omit<SideSheetProps, 'children' | 'header'> {
   appointment: Appointment;
@@ -30,7 +29,11 @@ export const AppointmentSidesheet = ({
   ...props
 }: AppointmentSidesheetProps) => {
   return (
-    <SideSheet header={appointment.licenseNumber} trigger={trigger} {...props}>
+    <PomSideSheet
+      header={appointment.licenseNumber}
+      trigger={trigger}
+      {...props}
+    >
       <div className="pom_content-wrapper typography-content-body-sm">
         <div>
           <Label>Status</Label>
@@ -77,6 +80,6 @@ export const AppointmentSidesheet = ({
           <span>{standardDateMonthDayYear(appointment.effectiveDate)}</span>
         </div>
       </div>
-    </SideSheet>
+    </PomSideSheet>
   );
 };

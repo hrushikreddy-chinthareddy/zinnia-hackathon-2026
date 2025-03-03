@@ -322,6 +322,7 @@ const getFundViewModel = async (
         fundId: fundInfo?.fundId || allocationFund?.fundId,
         fundName: fundInfo?.fundAccountName || allocationFund?.fundName || DEFAULT_ERROR_STRING,
         fundValue: numberFormatify(allocationFund?.totalFundValue || allocationFund?.totalFundValue),
+        interestGuaranteedPeriod: allocationFund?.interestGuaranteedPeriod,
         interestRate: await getFundInterestRate(fundInfo, policy),
         nextSweepDate: getSweepDate(fundUsageInfo?.sweepDay),
         type: getFundType(fundInfo?.fundAccountType || allocationFund?.fundAccountType),

@@ -1,22 +1,18 @@
-import { FC, RefObject } from 'react';
+import clsx from 'clsx';
+import { FC } from 'react';
 
-import { OpenTransactions } from '@deps/components/dashboard/open-transactions/open-transactions';
-import SankeyChart from '@deps/components/dashboard/sankey-chart/sankey-chart';
+import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
+import ActiveAging from '@deps/components/dashboard/sections/active-aging/active-aging';
+import { NigoOpenTransactions } from '@deps/components/dashboard/sections/nigo-open-transactions/nigo-open-transactions';
+import SankeyChart from '@deps/components/dashboard/sections/sankey-chart/sankey-chart';
+import { SubmissionType } from '@deps/components/dashboard/sections/submission-type/submission-type';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { useResizeObserver } from '@deps/hooks/useResizeObserver';
 import { Statuses } from '@deps/models/case/case';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { useDashboardStore } from '@deps/store/store';
 
-interface ActiveApplicationsProps {
-    carrierHeaderRef: RefObject<HTMLElement>;
-    authorizedCarriers: string[];
-}
-
-export const ActiveApplications: FC<ActiveApplicationsProps> = ({ carrierHeaderRef, authorizedCarriers }) => {
-    const { height: carrierHeaderHeight } = useResizeObserver({ ref: carrierHeaderRef, box: 'border-box' });
-
+export const ActiveApplications: FC = () => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
     const carriers = Object.keys(selectedCarriers);
     const brokers = Object.keys(selectedBrokerDealers);
@@ -33,19 +29,25 @@ export const ActiveApplications: FC<ActiveApplicationsProps> = ({ carrierHeaderR
 
     return (
         <>
-            <div className="relative border-t-2 border-[--color-base-border-border-light]">
-                <div className={styles.container}>
-                    <CardContainer classNames="relative !pt-0" containerClassNames="mt-none">
-                        <SankeyChart key={JSON.stringify(baseFilter)} baseDashboardQueryFilter={baseFilter} />
-                    </CardContainer>
+            <div className={styles.container}>
+                <CardContainer
+                    classNames="relative !pt-0"
+                    containerClassNames={clsx(sharedStyles.dashboardCard, sharedStyles.dashboardCardFirst)}
+                >
+                    <SankeyChart key={JSON.stringify(baseFilter)} baseDashboardQueryFilter={baseFilter} />
+                </CardContainer>
+            </div>
+            <div className={styles.container}>
+                <div className={sharedStyles.dashboardCard}>
+                    <ActiveAging />
+                </div>
+                <div className={sharedStyles.dashboardCard}>
+                    <SubmissionType />
+                </div>
+                <div className={sharedStyles.dashboardCard}>
+                    <NigoOpenTransactions />
                 </div>
             </div>
-
-            <OpenTransactions
-                authorizedCarriers={authorizedCarriers}
-                baseDashboardQueryFilter={baseFilter}
-                carrierHeaderHeight={carrierHeaderHeight}
-            />
         </>
     );
 };

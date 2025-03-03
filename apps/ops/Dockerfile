@@ -42,7 +42,6 @@ ARG NEXT_PUBLIC_GOOGLEANALYTICS_ENV
 ARG NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY
 ARG NEXT_PUBLIC_GIT_SHA
 ARG DATADOG_API_KEY
-ARG NEXT_PUBLIC_DATA_API_BASE_URL
 
 # Save the public enviroment variables NEXTjs requires for the frontend.
 # THESE SHOULD NOT BE SECRETS
@@ -60,11 +59,10 @@ RUN echo "NEXT_PUBLIC_GOOGLEANALYTICS_ENV=${NEXT_PUBLIC_GOOGLEANALYTICS_ENV}" >>
 RUN echo "NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY=${NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY}" >> .env.production
 RUN echo "NEXT_PUBLIC_GIT_SHA=${NEXT_PUBLIC_GIT_SHA}" >> .env.production
 RUN echo "DATADOG_API_KEY=${DATADOG_API_KEY}" >> .env.production
-RUN echo "NEXT_PUBLIC_DATA_API_BASE_URL=${NEXT_PUBLIC_DATA_API_BASE_URL}" >> .env.production
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN pnpm turbo run build --filter=ops
-RUN pnpm run build-storybook --filter=ops
+# RUN pnpm run build-storybook --filter=ops
 RUN --mount=type=secret,id="DATADOG_API_KEY" DATADOG_API_KEY="$(cat /run/secrets/DATADOG_API_KEY)" npx @datadog/datadog-ci sourcemaps upload ./.next/static --service=zinnia-live-xd --release-version=${NEXT_PUBLIC_GIT_SHA} --minified-path-prefix=/static
 
 FROM base AS runner
@@ -76,7 +74,7 @@ RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
 COPY --from=installer /app/apps/ops/public ./public
-COPY --from=installer /app/apps/ops/storybook-static ./storybook-static
+# COPY --from=installer /app/apps/ops/storybook-static ./storybook-static
 COPY --from=installer /app/apps/ops/next.config.js .
 COPY --from=installer /app/apps/ops/package.json .
 

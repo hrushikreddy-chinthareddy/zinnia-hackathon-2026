@@ -1,11 +1,9 @@
-import { Badge, BadgeVariant, Label } from '@zinnia/bloom/components';
-
+import { BadgeVariant } from '@zinnia/bloom/components';
 import { SideSheetProps } from '@zinnia/bloom/components';
-
-import { SideSheet } from '@zinnia/bloom/components';
-
-import { License, LicenseStatus } from '../../../types/types';
+import { License, LicenseStatus } from '../../../types';
 import { standardDateMonthDayYear } from '@zinnia/utils';
+import { ViewSidesheet } from '../../../components/view-sidesheet/ViewSidesheet';
+
 export interface LicenseSidesheetProps
   extends Omit<SideSheetProps, 'children' | 'header'> {
   license: License;
@@ -27,61 +25,67 @@ export const LicenseSidesheet = ({
   license,
   ...props
 }: LicenseSidesheetProps) => {
+  const fields = [
+    {
+      label: 'Status',
+      value: license.status ?? 'Unknown',
+      isBadge: true,
+      badgeVariant: getBadgeVariant(license.status),
+    },
+    {
+      label: 'License number',
+      value: license.number,
+    },
+    {
+      label: 'State',
+      value: license.state,
+    },
+    {
+      label: 'Resident',
+      value: license.resident,
+    },
+    {
+      label: 'License type',
+      value: license.type,
+    },
+    {
+      label: 'Lines of authority',
+      value: (
+        <ol className="pom_ordered-list">
+          {license.lineOfAuthorities.map((lineOfAuthority) => (
+            <li key={lineOfAuthority.type}>{lineOfAuthority.type}</li>
+          ))}
+        </ol>
+      ),
+    },
+    {
+      label: 'Effective date',
+      value: standardDateMonthDayYear(license.effectiveDate),
+    },
+    {
+      label: 'Expiry date',
+      value: standardDateMonthDayYear(license.expirationDate),
+    },
+    {
+      label: 'Inactivation reason',
+      value: license.inactivationReason,
+    },
+    {
+      label: 'Suspension start date',
+      value: standardDateMonthDayYear(license.suspensionStartDate),
+    },
+    {
+      label: 'Suspension end date',
+      value: standardDateMonthDayYear(license.suspensionEndDate),
+    },
+  ];
+
   return (
-    <SideSheet header={license.number} trigger={trigger} {...props}>
-      <div className="pom_content-wrapper typography-content-body-sm">
-        <div>
-          <Label>Status</Label>
-          <Badge
-            label={license.status ?? 'Unknown'}
-            variant={getBadgeVariant(license.status)}
-          />
-        </div>
-        <div>
-          <Label>License number</Label>
-          <span>{license.number}</span>
-        </div>
-        <div>
-          <Label>State</Label>
-          <span>{license.state}</span>
-        </div>
-        <div>
-          <Label>Resident</Label>
-          <span>{license.resident}</span>
-        </div>
-        <div>
-          <Label>License type</Label>
-          <span>{license.type}</span>
-        </div>
-        <div>
-          <Label>Lines of authority</Label>
-          <ol className="pom_ordered-list">
-            {license.lineOfAuthorities.map((lineOfAuthority) => (
-              <li key={lineOfAuthority.type}>{lineOfAuthority.type}</li>
-            ))}
-          </ol>
-        </div>
-        <div>
-          <Label>Effective date</Label>
-          <span>{standardDateMonthDayYear(license.effectiveDate)}</span>
-        </div>
-        <div>
-          <Label>Expiry date</Label>
-          <span>{standardDateMonthDayYear(license.expirationDate)}</span>
-        </div>
-        <div>
-          <Label>Inactivation reason</Label>
-          <span>{license.inactivationReason}</span>
-        </div>
-        <div>
-          <Label>Suspension start date</Label>
-          <span>{standardDateMonthDayYear(license.suspensionStartDate)}</span>
-        </div>
-        <div>
-          <Label>Suspension end date</Label>
-          <span>{standardDateMonthDayYear(license.suspensionEndDate)}</span>
-        </div>
-      </div>
-    </SideSheet>
+    <ViewSidesheet
+      header={license.number}
+      trigger={trigger}
+      fields={fields}
+      {...props}
+    />
   );
 };

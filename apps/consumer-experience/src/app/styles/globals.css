@@ -30,14 +30,14 @@ body {
 
 body,
 main {
-  --border-style: var(--measure-dimension-stroke-sm, 2px) solid var(--color-base-border-border-light, #ededed);
+  --border-style: var(--measure-dimension-stroke-sm, 2px) solid
+    var(--color-base-border-border-light, #ededed);
 }
 
 main {
   /* This is set to min-height to enable scroll to top */
   min-height: 100svh;
   height: 100%;
-  overflow: auto;
 }
 
 a {
@@ -59,6 +59,40 @@ p:has(a) {
 
     &:hover {
       text-decoration: none;
+    }
+  }
+}
+
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 var(--measure-dimension-margin-xs);
+  /* This is to prevent the layout shift when a scrollbar is present
+  when the scrollbar isn't present 100vw and 100% are equal, so calculate when it is present
+  it does make things look a bit weird when the window is resized to below 400px because
+  the scroll bar is taking up space but it looks okay on mobile  */
+  padding-left: calc(100vw - 100%);
+  /* scrollbar-gutter: stable both-edges; */
+
+  .layout-wrapper-inner {
+    min-width: 344px;
+    width: 100%;
+  }
+}
+
+@media (width >= 500px) {
+  .layout-wrapper {
+    margin: 0 var(--measure-dimension-margin-sm);
+  }
+}
+
+@media (width >= 768px) {
+  .layout-wrapper {
+    margin: 0 var(--measure-dimension-margin-md);
+
+    .layout-wrapper-inner {
+      max-width: 744px;
     }
   }
 }
@@ -167,17 +201,17 @@ a:focus-visible {
 }
 
 .card-container {
-  >*:not(:last-child) {
+  > *:not(:last-child) {
     margin-bottom: 8px;
   }
 }
 
 .info-card-container {
-  >* {
+  > * {
     padding: var(--measure-dimension-padding-2xl) 0;
   }
 
-  >*:not(:last-of-type) {
+  > *:not(:last-of-type) {
     border-bottom: var(--border-style);
   }
 }
@@ -263,7 +297,8 @@ input[type='radio'] {
 .input-with-interaction {
   width: 100%;
   background-color: white;
-  border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-light);
+  border: var(--measure-dimension-stroke-sm) solid
+    var(--color-base-border-border-light);
   border-radius: var(--measure-dimension-radius-sm);
   padding: var(--measure-dimension-padding-lg);
   display: flex;

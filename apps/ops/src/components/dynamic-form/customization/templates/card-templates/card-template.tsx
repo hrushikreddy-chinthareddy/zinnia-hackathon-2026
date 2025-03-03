@@ -12,10 +12,11 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { formatSSN } from '@deps/helpers/string.helper';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
-import { CardTypes } from '@deps/models/case/task';
+import { CardTypes, DataFormattingTypes } from '@deps/models/case/task';
 import loadingImage from '@deps/styles/images/loader.png';
 
 export function CardTemplate(props: ObjectFieldTemplateProps) {
@@ -25,6 +26,11 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
 
     return (
         <>
+            {schema.title && (
+                <Typography variant={TypographyVariant.BodySmBold} className="mb-5">
+                    {schema.title}
+                </Typography>
+            )}
             <SingleCard
                 cardType={cardType as CardTypes}
                 icon={icon as IconType}
@@ -46,28 +52,76 @@ export type SingleCardProps = {
     className?: string;
     formData?: any;
 };
+
+const extractField = (
+    properties: Record<string, any>,
+    data: Record<string, any>,
+    fieldName: string
+): { field: Record<string, any>[]; keys: string[]; value: string } => {
+    const field = Object.entries(properties)
+        .filter(([_, value]) => (value as any)['ui:field'] === fieldName)
+        .map(([_, value]) => value as Record<string, any>); // Explicitly type field as an array of objects
+
+    const keys = Object.entries(properties)
+        .filter(([_, value]) => (value as any)['ui:field'] === fieldName)
+        .map(([key]) => key);
+
+    // Extract separator & placeholder once
+    const separator = field.length > 0 && typeof field[0]?.['ui:separator'] === 'string' ? field[0]['ui:separator'] : ' ';
+    const placeholder = field.length > 0 && typeof field[0]?.['ui:placeholder'] === 'string' ? field[0]['ui:placeholder'] + ' ' : '';
+
+    const value = keys
+        .reduce((result, key) => {
+            const fieldSchema = properties[key] || {};
+            const defaultValue = replacePlaceholders(fieldSchema, data)?.default || '';
+            const fieldValue = data?.[key] !== undefined ? data[key] : defaultValue;
+            if (fieldValue) {
+                result += (result ? separator : '') + fieldValue;
+            }
+            return result;
+        }, '')
+        ?.trim();
+
+    return { field, keys, value: value ? placeholder + value : '' };
+};
+
+export const formatValueByDataType = (dataType: string, value: any) => {
+    switch (dataType) {
+        case DataFormattingTypes.SSN:
+            return formatSSN(value);
+        case DataFormattingTypes.Amount:
+            return numberFormatify(Math.abs(value));
+        default:
+            return value;
+    }
+};
+
 export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, className, formData }: SingleCardProps) => {
     const { t } = useTranslation();
 
     const sideSheet = useSideSheetContext();
-    const title = properties ? Object.keys(properties)[0] : 'title';
-    const subtitle = properties ? Object.keys(properties)[1] : 'subtitle';
+
+    const title = extractField(properties, data, 'title');
+    const subtitle = extractField(properties, data, 'subTitle');
+
+    if (
+        (!title?.value && !subtitle?.value && cardType !== CardTypes.Document && !data?.documentId) ||
+        (cardType === CardTypes.Document && !data?.documentId)
+    ) {
+        return;
+    }
 
     const displayProperties = properties
         ? Object.entries(properties)
-              .filter(([key, prop]: [string, any]) => !prop.__additional_property)
+              .filter(([_, prop]: [string, any]) => !prop.__additional_property)
               .map(([key, prop]: [string, any]) => ({ key, ...prop }))
         : [];
 
     const handleCardClick = () => {
         const content = <DetailsCard details={data} sectionTitle={sectionTitle} properties={displayProperties} />;
-        sideSheet.changeSideSheetContent(data?.[title] || '', content);
+        sideSheet.changeSideSheetContent(title.value || '', content);
         sideSheet.handleOpen(true);
     };
-
-    if (cardType === CardTypes.Document && !data?.documentId) {
-        return;
-    }
 
     return (
         <>
@@ -76,21 +130,21 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                     <Icon width={25} height={25} type={IconType[icon as string as keyof typeof IconType] || IconType.CIRCLE_USER} />{' '}
                 </div>
                 <div className="grow">
-                    <div className="text-sm font-bold">
-                        <PiiWrapper>{data?.[title] ?? replacePlaceholders(properties?.[title], data)?.default ?? ''}</PiiWrapper>
+                    <div className="text-sm font-bold break-all">
+                        {title?.field?.[0] && <PiiWrapper>{formatValueByDataType(title.field[0].dataType, title.value)}</PiiWrapper>}
                     </div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
                         <PiiWrapper>
-                            {properties?.[subtitle] && typeof properties[subtitle] !== 'boolean' && 'title' in properties[subtitle]
-                                ? properties[subtitle].title
-                                : ''}{' '}
-                            {properties[subtitle].dataType === 'ssn'
-                                ? formatSSN(data?.[subtitle] ?? replacePlaceholders(properties[subtitle], data)?.default ?? '')
-                                : data?.[subtitle] ?? replacePlaceholders(properties[subtitle], data)?.default ?? ''}
+                            {subtitle?.field?.[0] && subtitle?.field[0]?.title ? subtitle?.field[0].title + ': ' : ''}{' '}
+                            {subtitle?.field?.[0] && formatValueByDataType(subtitle?.field?.[0]?.dataType, subtitle?.value)}
                         </PiiWrapper>
                     </div>
                 </div>
-                {cardType === CardTypes.Detailed && <DetailAction handleCardClick={handleCardClick} formData={data} />}
+                {cardType === CardTypes.Detailed && (
+                    <div onClick={handleCardClick}>
+                        <Icon width={25} height={25} type={IconType.CHEVRON_RIGHT} />
+                    </div>
+                )}
                 {cardType === CardTypes.Document && (
                     <DocumentActions document={replacePlaceholders(data, formData) || data} properties={displayProperties} t={t} />
                 )}
@@ -110,22 +164,15 @@ export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
                     return (
                         <Typography variant={TypographyVariant.BodySm} key={schema.key} className="p-1">
                             {schema?.title}:{' '}
-                            {schema?.dataType === 'ssn'
-                                ? formatSSN(details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--')
-                                : details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--'}
+                            {formatValueByDataType(
+                                schema?.dataType,
+                                details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--'
+                            )}
                         </Typography>
                     );
                 })}
             </div>
         </CardContainer>
-    );
-};
-
-const DetailAction = ({ handleCardClick }: any) => {
-    return (
-        <div onClick={handleCardClick}>
-            <Icon width={25} height={25} type={IconType.CHEVRON_RIGHT} />
-        </div>
     );
 };
 

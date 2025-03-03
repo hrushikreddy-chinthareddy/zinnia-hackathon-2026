@@ -1,219 +1,89 @@
-import {
-  Badge,
-  BadgeVariant,
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableHeaderCell,
-  TableRow,
-} from '@zinnia/bloom/components';
+import { Badge } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { default as styles } from './Appointments.module.css';
-import { Appointment, AppointmentStatus } from '../../../types/types';
+import { Appointment } from '../../../types';
+import { AddAppointmentSidesheet } from './add/AddAppointmentSidesheet';
+import CardSection from '../../../components/card-section/CardSection';
+import PomTable from '../../../components/pom-table/PomTable';
 import { AppointmentSidesheet } from './AppointmentSidesheet';
+import { generateAppointments } from './__mocks';
+import { getBadgeVariant } from './utils';
 
-// @TODO: move this once we properly set up data structures for pom
-const appointments: Appointment[] = [
-  {
-    id: '1',
-    carrier: 'AAA Insurance',
-    state: 'CA',
-    resident: 'Yes',
-    status: AppointmentStatus.APPROVED,
-    effectiveDate: '01/01/2023',
-    company: 'PBC Health Benefits Society',
-    licenseNumber: '0012149A',
-    lineOfAuthorities: [
-      {
-        type: 'lineOfAuthority1',
-        label: 'Line of Authority 1',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-      {
-        type: 'lineOfAuthority2',
-        label: 'Line of Authority 2',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-    ],
-  },
-  {
-    id: '2',
-    carrier: 'PBC Health Benefits Society',
-    state: 'AL',
-    resident: 'Yes',
-    status: AppointmentStatus.PENDING,
-    effectiveDate: '01/01/2023',
-    company: 'PBC Health Benefits Society',
-    licenseNumber: '0012149A',
-    lineOfAuthorities: [
-      {
-        type: 'lineOfAuthority1',
-        label: 'Line of Authority 1',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-      {
-        type: 'lineOfAuthority2',
-        label: 'Line of Authority 2',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-    ],
-  },
-  {
-    id: '3',
-    carrier: 'PBC Health Benefits Society',
-    state: 'AZ',
-    resident: 'Yes',
-    status: AppointmentStatus.TERMINATED,
-    effectiveDate: '01/01/2023',
-    company: 'AAA Insurance',
-    licenseNumber: '128815C',
-    lineOfAuthorities: [
-      {
-        type: 'lineOfAuthority1',
-        label: 'Line of Authority 1',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-      {
-        type: 'lineOfAuthority2',
-        label: 'Line of Authority 2',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-    ],
-  },
-  {
-    id: '4',
-    carrier: 'PBC Health Benefits Society',
-    state: 'UT',
-    resident: 'Yes',
-    status: AppointmentStatus.JUST_IN_TIME,
-    effectiveDate: '01/01/2023',
-    company: 'PBC Health Benefits Society',
-    licenseNumber: '0012149A',
-    lineOfAuthorities: [
-      {
-        type: 'lineOfAuthority1',
-        label: 'Line of Authority 1',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-      {
-        type: 'lineOfAuthority2',
-        label: 'Line of Authority 2',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-    ],
-  },
-  {
-    id: '5',
-    carrier: 'PBC Health Benefits Society',
-    state: 'UT',
-    resident: 'Yes',
-    status: AppointmentStatus.JUST_IN_TIME,
-    effectiveDate: '01/01/2023',
-    company: 'PBC Health Benefits Society',
-    licenseNumber: '0012149A',
-    lineOfAuthorities: [
-      {
-        type: 'lineOfAuthority1',
-        label: 'Line of Authority 1',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-      {
-        type: 'lineOfAuthority2',
-        label: 'Line of Authority 2',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-    ],
-  },
-];
+const tableHeaders = {
+  carrier: 'Carrier',
+  state: 'State',
+  resident: 'Resident',
+  status: 'Status',
+};
+
+const appointmentRow = (appointment: Appointment) => ({
+  carrier: (
+    <AppointmentSidesheet
+      trigger={<span className={clsx(styles.cta)}>{appointment.carrier}</span>}
+      appointment={appointment}
+    />
+  ),
+  state: appointment.state,
+  resident: appointment.resident,
+  status: (
+    <Badge
+      variant={getBadgeVariant(appointment.status)}
+      label={appointment.status}
+    />
+  ),
+});
+
+const expandableAppointmentRow = (
+  carrier: string,
+  appointments: Appointment[]
+) => {
+  const uniqueStates = new Set(appointments.map((app) => app.state));
+
+  return {
+    carrier: <span className={clsx(styles.cta)}>{carrier}</span>,
+    state: `${uniqueStates.size} State${uniqueStates.size > 1 ? 's' : ''}`,
+    resident: '',
+    status: '', // Empty status for summary row
+  };
+};
+
+const tableRows = (data: Appointment[]) => {
+  // 1- Group appointments by carrier '{Carrier: [Appointment, ...]}'
+  const grouped = data.reduce(
+    (acc, appointment) => {
+      const carrier = appointment.carrier;
+      if (!acc[carrier]) {
+        acc[carrier] = [];
+      }
+      acc[carrier].push(appointment);
+      return acc;
+    },
+    {} as Record<string, Appointment[]>
+  );
+
+  // 2- Create a row for grouped appointments
+  return Object.entries(grouped).map(([carrier, appointments]) => {
+    if (appointments.length === 1) {
+      return appointmentRow(appointments[0]);
+    }
+
+    // 3- If there are multiple appointments, create an expandable row with appointments under it
+    return [
+      expandableAppointmentRow(carrier, appointments),
+      ...appointments.map(appointmentRow),
+    ];
+  });
+};
 
 const Appointments = () => {
-  const getBadgeVariant = (status: AppointmentStatus): BadgeVariant => {
-    switch (status) {
-      case AppointmentStatus.PENDING:
-        return BadgeVariant.PENDING;
-      case AppointmentStatus.APPROVED:
-        return BadgeVariant.SUCCESS;
-      case AppointmentStatus.TERMINATED:
-        return BadgeVariant.ERROR;
-      case AppointmentStatus.JUST_IN_TIME:
-        return BadgeVariant.INFO;
-      default:
-        return BadgeVariant.DEFAULT;
-    }
-  };
-
   return (
-    <div className="card-section">
-      <h2>Appointments</h2>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHeaderCell className="typography-content-body-sm-bold">
-              Carrier
-            </TableHeaderCell>
-            <TableHeaderCell className="typography-content-body-sm-bold">
-              State
-            </TableHeaderCell>
-            <TableHeaderCell className="typography-content-body-sm-bold">
-              Resident
-            </TableHeaderCell>
-            <TableHeaderCell className="typography-content-body-sm-bold">
-              Status
-            </TableHeaderCell>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {appointments.map((appointment) => (
-            <TableRow key={appointment.id}>
-              <TableCell>
-                <AppointmentSidesheet
-                  trigger={
-                    <span
-                      className={clsx(
-                        styles.cta,
-                        'typography-nav-links-sm-inline'
-                      )}
-                    >
-                      {appointment.carrier}
-                    </span>
-                  }
-                  appointment={appointment}
-                ></AppointmentSidesheet>
-              </TableCell>
-              <TableCell>{appointment.state}</TableCell>
-              <TableCell>{appointment.resident}</TableCell>
-              <TableCell>
-                <Badge
-                  variant={getBadgeVariant(appointment.status)}
-                  label={appointment.status}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <CardSection title="Appointments" action={<AddAppointmentSidesheet />}>
+      <PomTable
+        headers={tableHeaders}
+        rows={tableRows(generateAppointments())}
+        emptyRowMessage="There are currently no appointments for this entity."
+      />
+    </CardSection>
   );
 };
 

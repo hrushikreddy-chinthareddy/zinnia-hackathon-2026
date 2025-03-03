@@ -69,7 +69,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     const [rmdProgram] = rmdPrograms.length
         ? rmdPrograms
         : policyDetails.systematicPrograms.getProgramsByType(TempAnnuityArrangementTypes.REQUIREDMINIMUMDISTRIBUTION);
-    const [withdrwalProgram] = withdrawalprograms.length
+    const [withdrawalProgram] = withdrawalprograms.length
         ? withdrawalprograms
         : policyDetails.systematicPrograms.getProgramsByType(TempAnnuityArrangementTypes.WITHDRAWAL);
 
@@ -92,12 +92,12 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                     <UpcomingPaymentCard
                         title={`${t('withdrawalAutopay')}`}
                         titleCase={false}
-                        autopayAmount={withdrwalProgram?.amount}
-                        paymentDate={withdrwalProgram?.nextProgramDate}
-                        bankDetails={getBankDetails(getParty(policyDetails.allParties, withdrwalProgram), withdrwalProgram)}
+                        autopayAmount={withdrawalProgram?.amount}
+                        paymentDate={withdrawalProgram?.nextProgramDate}
+                        bankDetails={getBankDetails(getParty(policyDetails.allParties, withdrawalProgram), withdrawalProgram)}
                         additionalCharges={getAddCharges({ flatExtra: getFlatExtra(policy.coverage), t })}
                         footerLinks={[
-                            withdrwalProgram?.nextProgramDate
+                            withdrawalProgram?.nextProgramDate
                                 ? {
                                       href: '#',
                                       text: t('manageAutopay'),
@@ -119,7 +119,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                         bankDetails={getBankDetails(getParty(policyDetails.allParties, rmdProgram), rmdProgram)}
                         additionalCharges={getAddCharges({ flatExtra: getFlatExtra(policy.coverage), t })}
                         footerLinks={[
-                            withdrwalProgram?.nextProgramDate
+                            withdrawalProgram?.nextProgramDate
                                 ? {
                                       href: '#',
                                       text: t('manageAutopay'),

@@ -9,11 +9,11 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { checkEligibilityNewLoan, TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 
-export interface PolicyLoanProps {
+export interface NewLoanProps {
     policy: Policy;
 }
 
-const NewLoan = ({ policy }: PolicyLoanProps) => {
+const NewLoan = ({ policy }: NewLoanProps) => {
     useEffect(() => {
         const checkEligibility = async () => {
             const eligibilityCheck = await checkEligibilityNewLoan(policy.product?.planCode, policy.policyNumber, policy.loanValues?.maximumLoanAmount);

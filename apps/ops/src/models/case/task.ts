@@ -15,7 +15,15 @@ export enum TaskType {
     SuitabilityDataEntry = 'SUITABILITY_DATA_ENTRY',
     SuitabilityReview = 'SUITABILITY_REVIEW',
     PURCHASE_DOCUMENT_MATCHING = 'PURCHASE_DOCUMENT_MATCHING',
-    Agent_Nigo = 'NEWBUSINESS_AGENT_NIGO',
+    Agent_Nigo = 'NB_AGENT_NIGO',
+    Attachment_Nigo = 'NB_ATTACHMENT_NIGO',
+    PremiumNigo = 'NB_PAYMENT_PROCESSING_NIGO',
+    Application_Nigo = 'NB_APPLICATION_NIGO',
+    Agent_Review = 'NB_AGENT_REVIEW',
+    Review_Ofac = 'OFAC_REVIEW',
+    Agent_Onboarding_Nigo = 'AGENT_ONBOARDING_NIGO',
+    TOA_Nigo = 'NB_TOA_NIGO',
+    Standard_Document_Matching = 'STANDARD_DOCUMENT_MATCHING',
 }
 
 export enum EarlyTaskType {
@@ -118,19 +126,16 @@ export interface renewalsFormParts {
     renewalRequestSignDate: string;
     subsequentTargetFunds: TargetFundAllocation[] | null;
 }
-
-export type FormMetadata = {
+export type TabSchema = {
     title?: string;
+    description?: string;
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
+};
+
+export type FormMetadata = TabSchema & {
     schemaContent?: {
-        tabSchemas: [
-            {
-                title?: string;
-                formSchema: RJSFSchema;
-                uiSchema: UiSchema;
-            }
-        ];
+        tabSchemas: TabSchema[];
     };
 };
 
@@ -142,6 +147,11 @@ export enum CardTypes {
     Document = 'Document',
 }
 
+export enum ApiResponseTypes {
+    FormData = 'formData',
+    Schema = 'schema',
+}
+
 export type ApiProps = {
     apiUrl: string;
     apiMethod: 'get' | 'post';
@@ -149,7 +159,18 @@ export type ApiProps = {
     apiHeaders: any;
     apiResponse: any;
     apiError: any;
-    responseKey: string;
+    dataKey: string;
     apiPayload: any;
     responseData: string;
+    response: {
+        enum: string;
+        enumNames: string;
+    };
+    responseType: ApiResponseTypes;
 };
+
+export enum DataFormattingTypes {
+    SSN = 'ssn',
+    Date = 'date',
+    Amount = 'amount',
+}

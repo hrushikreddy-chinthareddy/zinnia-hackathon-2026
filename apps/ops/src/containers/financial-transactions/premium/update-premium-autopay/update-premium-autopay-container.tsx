@@ -50,7 +50,7 @@ const UpdatePremiumAutopayContainer = ({ policy }: UpdatePremiumAutopayContainer
                 amountType: AmountType.AMOUNT,
                 frequency: autopay.frequency,
                 startDate: effectiveDateFormatted,
-                endDate: systematicProgram?.endDate,
+                endDate: systematicProgram?.endDate || dayjs().add(25, 'year').format(ZAHARA_API_DATE_FORMAT),
                 previousProgramDate: systematicProgram?.previousProgramDate,
                 nextProgramDate: effectiveDateFormatted,
                 party: {
@@ -72,7 +72,7 @@ const UpdatePremiumAutopayContainer = ({ policy }: UpdatePremiumAutopayContainer
                     setState={setAutopay as StartStepSetState}
                     state={autopay}
                     title={t('autopay.start.title')}
-                    subtitle={t('autopay.start.subtitle')}
+                    subtitle={t('autopay.start.subtitle') as string}
                 />
             ),
             screenReaderLabel: startLabel,

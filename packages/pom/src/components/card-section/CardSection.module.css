@@ -1,0 +1,6 @@
+.header {
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+  gap: var(--measure-dimension-gap-lg);
+}

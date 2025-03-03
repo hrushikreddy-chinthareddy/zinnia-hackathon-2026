@@ -103,7 +103,6 @@ export default function FieldDateSelect({
                     handleCustomSelection={handleCustomSelection}
                     datePickerType={datePickerType}
                     showMonths={showMonths}
-
                 />
             </div>
         </div>

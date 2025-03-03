@@ -169,7 +169,7 @@ const Step = ({ step, ...rest }: { step: TransformedStep } & React.HTMLAttribute
                     )}
                 </div>
                 <div className="flex w-full flex-col pl-6">
-                    <Exceptions exceptions={step.exceptions} />
+                    <Exceptions exceptions={step.exceptions} groupedExceptions={step.exceptionsGroupedByTask} />
                     <Tasks tasks={step.tasks} />
                 </div>
             </div>

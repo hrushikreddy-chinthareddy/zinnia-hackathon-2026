@@ -15,6 +15,7 @@ const WorkflowCard = ({ children, title, subtitle, footerContent, className }: W
     <div className={clsx('responsive-padding flex grow flex-col gap-6', className)}>
         <div className="flex flex-col gap-6" data-testid="workflow-card-header">
             <Typography data-testid="workflow-card-title" variant={TypographyVariant.H1}>
+                {/* TODO MG: why are we using autopay.summary.label here? */}
                 {title || 'autopay.summary.label'}
             </Typography>
             {!!subtitle && <Typography variant={TypographyVariant.Body}>{subtitle}</Typography>}

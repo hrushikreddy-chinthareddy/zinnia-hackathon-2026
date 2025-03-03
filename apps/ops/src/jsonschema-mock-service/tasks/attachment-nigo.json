@@ -1,0 +1,252 @@
+{
+    "formId": "a7b1bc65-1a6d-483c-b06a-aacab700d10b",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_ATTACHMENT_NIGO",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Review Application Issues",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions"
+                        },
+                        "issuesList": {
+                            "type": "array",
+                            "title": "Issues",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "reason": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting Information",
+                            "properties": {
+                                "onwerDetails": {
+                                    "type": "object",
+                                    "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "First Name",
+                                            "ui:field": "title"
+                                        },
+                                        "ssn": {
+                                            "type": "string",
+                                            "title": "SSN",
+                                            "ui:field": "subTitle"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Last Name",
+                                            "ui:field": "title"
+                                        }
+                                    }
+                                },
+                                "documentDetails": {
+                                    "type": "object",
+                                    "properties": {
+                                        "documentId": {
+                                            "type": "string",
+                                            "ui:field": "subTitle"
+                                        },
+                                        "documentSource": {
+                                            "type": "string",
+                                            "ui:field": "title"
+                                        },
+                                        "carrier": {
+                                            "type": "string",
+                                            "default": "{{carrier}}"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enumNames": ["Yes", "No"],
+                            "enum": [true, false],
+                            "title": "Can you resolve the issues?"
+                        }
+                    },
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "enum": [true]
+                                        },
+                                        "uploadDocuments": {
+                                            "type": "object",
+                                            "title": "Link or upload document",
+                                            "properties": {
+                                                "upload": {
+                                                    "type": "string"
+                                                },
+                                                "or": {
+                                                    "type": "string",
+                                                    "title": "or"
+                                                },
+                                                "attachment": {
+                                                    "type": "array",
+                                                    "title": "upload",
+                                                    "items": {
+                                                        "title": "upload",
+                                                        "type": "string",
+                                                        "format": "data-url"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "attachments": {
+                                            "type": "array",
+                                            "items": {
+                                                "documentName": {
+                                                    "title": "Name",
+                                                    "type": "string"
+                                                },
+                                                "documentId": {
+                                                    "title": "Document Id",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "enum": [false]
+                                        },
+                                        "issueReason": {
+                                            "type": "object",
+                                            "title": "The status reason for the task will be set to:"
+                                        }
+                                    },
+                                    "required": ["issueResolved"]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "props": {
+                            "description": "Application form may be missing or mismatched for the signed state. Review the application and confirm that we can resolve the issue."
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "issuesList": {
+                        "ui:options": {
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "keyName": "processingReason"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "onwerDetails": {
+                            "ui:options": {
+                                "cardtype": "Detailed",
+                                "icon": "CIRCLE_USER",
+                                "label": false,
+                                "ObjectFieldTemplate": "CardTemplate",
+                                "key": "onwerDetails"
+                            }
+                        },
+                        "documentDetails": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": false,
+                                "cardType": "Document",
+                                "icon": "DOCUMENT_TEXT",
+                                "ObjectFieldTemplate": "CardTemplate"
+                            }
+                        }
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "inline": true
+                        }
+                    },
+                    "uploadDocuments": {
+                        "inline": true,
+                        "ui:options": {
+                            "label": true,
+                            "omitValue": true
+                        },
+                        "upload": {
+                            "ui:widget": "AutoCompleteWidget",
+                            "ui:placeholder": "Find existing documents...",
+                            "ui:options": {
+                                "label": false,
+                                "icon": "Search"
+                            }
+                        },
+                        "or": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "attachment": {
+                            "ui:options": {
+                                "label": false,
+                                "showFiles": false
+                            },
+                            "ui:props": {
+                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiMethod": "get"
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
+                        }
+                    },
+                    "issueReason": {
+                        "props": {
+                            "description": "NIGO's unable to be resolved"
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

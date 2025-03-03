@@ -1,14 +1,14 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helper';
-import { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
 import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helper';
+import { getFrequency } from '@deps/helpers/systematic-program.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
-import { Policy, Reason } from '@deps/models/policy/sor-policy';
+import { Frequency, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { checkEligibilityLoanRepaymentOneTime, TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -25,6 +25,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'premium.upcoming',
     });
+    const { t: defaultT } = useTranslation();
     const { featureFlags } = useOptimizely();
 
     const [isLoanRepaymentEligible, setIsLoanRepaymentEligible] = useState<boolean | null>(null);
@@ -33,13 +34,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
 
     useEffect(() => {
         const checkEligibility = async () => {
-            if (!loanPaymentEnabled) {
-                setIsLoanRepaymentEligible(false);
-                setLoanRepaymentIneligibilityMessage('');
-
-                return;
-            }
-            const eligibilityResponse = await checkEligibilityLoanRepaymentOneTime(policy.product?.planCode, policy.policyNumber);
+            const eligibilityResponse = await checkEligibilityLoanRepaymentOneTime(policy.product?.planCode, policy.policyNumber, policy.loanValues?.totalLoanBalance);
             const eligible = eligibilityResponse.status === TransactionResponseStatus.Success;
 
             setIsLoanRepaymentEligible(eligible);
@@ -47,12 +42,12 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
             !eligible && setLoanRepaymentIneligibilityMessage(formatValidationResult(eligibilityResponse?.validationResult));
         };
         checkEligibility();
-    }, [loanPaymentEnabled, policy.policyNumber, policy.product?.planCode]);
+    }, [policy.loanValues?.totalLoanBalance, policy.policyNumber, policy.product?.planCode]);
 
     const { coverage, currency, parties, systematicPrograms = [], loanValues, allocation } = policy;
 
     const loanCarryingBalance = !!loanValues?.totalLoanBalance && loanValues?.totalLoanBalance > 0;
-    const upcomingPayment = systematicPrograms.find(({ reason }) => reason === Reason.LOANREPAYMENT);
+    const upcomingPayment = useMemo(() => systematicPrograms.find(({ reason }) => reason === Reason.LOANREPAYMENT), [systematicPrograms]);
 
     const payorParty = getParty(parties, upcomingPayment);
     const payorBankDetails = getBankDetails(payorParty, upcomingPayment);
@@ -78,25 +73,22 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                     additionalCharges={addCharges}
                     paymentFrequencyText={
                         t('paymentFrequencyText', {
-                            paymentMode: t('paymentMode.monthly'),
+                            paymentMode: getFrequency(upcomingPayment?.frequency as Frequency, defaultT),
                             paymentType: t('paymentType.loan'),
                         }) || undefined
                     }
                     paymentDateText={(!!upcomingPayment?.nextProgramDate && t('paymentDateText')) || undefined}
                     footerLinks={[
-                        upcomingPayment?.nextProgramDate
-                            ? {
-                                    href: '#',
-                                    text: t('manageAutopay'),
-                                    tooltip: isStillInactive.loanPageManageAutopay,
-                                    tempInactive: !!isStillInactive.loanPageManageAutopay,
-                                }
-                            : {
-                                    href: '#',
-                                    text: t('setUpAutopay'),
-                                    tooltip: isStillInactive.loanPageSetUpAutopay,
-                                    tempInactive: !!isStillInactive.loanPageSetUpAutopay,
-                                },
+                        {
+                            href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/manage-loan-payment`,
+                            text: t('manageAutopay'),
+                            isDisabled: !loanPaymentEnabled || !upcomingPayment?.nextProgramDate,
+                        },
+                        {
+                            href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/start-loan-payment`,
+                            text: t('setUpAutopay'),
+                            isDisabled: !loanPaymentEnabled || upcomingPayment?.nextProgramDate !== undefined,
+                        },
                         {
                             href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/loan-payment`,
                             text: t('oneTimePaymentText'),

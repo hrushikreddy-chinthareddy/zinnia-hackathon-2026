@@ -1,0 +1,83 @@
+{
+    "id": "TA000000019924",
+    "caseId": "CA0000394985",
+    "source": "BPM.PaymentProcessing",
+    "templateId": "a3959956-edcf-4a03-b6e7-283dee228817",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_PAYMENT_PROCESSING_NIGO",
+    "taskName": "Payment Processing NIGO",
+    "status": "NEW",
+    "data": {
+        "details": {
+            "paymentRecord": {
+                "entityId": "entity.1",
+                "paymentRecordId": "752a2457-7804-4ec8-863e-50dd50964f23",
+                "surrenderContractNumber": "0",
+                "surrenderCompanyName": "$randomCompanyName",
+                "exchangeType": 0,
+                "netAmount": 15000.0,
+                "grossAmount": 15000.0,
+                "paymentMethod": null,
+                "amountRequested": 15000.0,
+                "originalCostBasis": "0",
+                "address": {
+                    "addressType": null,
+                    "addressTypeDesc": null,
+                    "city": "string",
+                    "state": "AA",
+                    "zip": "12342",
+                    "country": "USA",
+                    "addressLines": ["2417 Spinka Dale", "string", "string"]
+                }
+            }
+        },
+        "issuesList": [
+            {
+                "id": "6fa7461d-d377-4675-a3dc-e1c931a11335",
+                "externalId": "6fa7461d-d377-4675-a3dc-e1c931a11335",
+                "nmId": "PP.EM.058",
+                "type": "NIGO",
+                "processingInstruction": "Reason: Suspense Amount received in the eApp form is 0$. Please revisit the supporting document. ",
+                "processingReason": "Suspense Amount received in the eApp form is 0$. Please revisit the supporting document.",
+                "processingResolution": "Please reach out to the people soft team to spend the cash manually"
+            }
+        ]
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-02-24T10:34:37Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-02-24T10:34:37Z",
+    "identifiers": [
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2501907"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000394985"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2501907"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "410289"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67bc2fdb05bed22312f9a8a4"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI011280282025020124"
+        }
+    ],
+    "externalId": "23dddb93-951a-4c91-b01b-7a107469a8ab"
+}

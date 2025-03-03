@@ -3,18 +3,22 @@
         &:first-of-type {
             & input {
                 border-radius: 0;
+
                 @media (min-width: 768px) {
                     border-radius: 0;
                 }
             }
         }
+
         &:last-of-type input {
-            border-radius: 0 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md);
+            border-radius: 0 0 var(--measure-dimension-radius-md) var(--measure-dimension-radius-md);
+
             @media (min-width: 768px) {
-                border-radius: 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0;
+                border-radius: 0 var(--measure-dimension-radius-md) var(--measure-dimension-radius-md) 0;
             }
         }
     }
+
     @media (min-width: 768px) {
         display: flex;
     }
@@ -26,13 +30,13 @@
 
 .input {
     --iconSize: 24px;
-    border: var(--measure-border-width-stroke-sm) solid var(--color-base-border-border-subtle);
+    border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-subtle);
     border-top-width: 0;
-    border-radius: 0 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md);
+    border-radius: 0 0 var(--measure-dimension-radius-md) var(--measure-dimension-radius-md);
     font-family: var(--font-family-secondary);
-    padding-block: var(--measure-spacing-padding-lg);
-    padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-spacing-padding-2xl));
-    padding-right: calc(var(--iconSize) + var(--measure-spacing-padding-lg));
+    padding-block: var(--measure-dimension-padding-lg);
+    padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-dimension-padding-2xl));
+    padding-right: calc(var(--iconSize) + var(--measure-dimension-padding-lg));
     width: 100%;
 
     /* Browser resets */
@@ -41,6 +45,7 @@
         -webkit-appearance: none;
         margin: 0;
     }
+
     &[type='number'] {
         appearance: textfield;
         -moz-appearance: textfield;
@@ -67,8 +72,8 @@
 
     @media (min-width: 768px) {
         border-left-width: 0;
-        border-top-width: var(--measure-border-width-stroke-sm);
-        border-radius: 0 var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0;
+        border-top-width: var(--measure-dimension-stroke-sm);
+        border-radius: 0 var(--measure-dimension-radius-md) var(--measure-dimension-radius-md) 0;
         min-width: 186px;
 
         &.wide {
@@ -89,6 +94,7 @@
     right: 8px;
     top: 8px;
     z-index: 2;
+
     &:hover&:after {
         content: none;
     }

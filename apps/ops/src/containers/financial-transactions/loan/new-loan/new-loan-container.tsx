@@ -45,9 +45,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
                 <StartStep
                     parentPage={ParentPage.Loans}
                     policy={policy}
-                    // TODO MG: confirm this should be withdrawal
-                    processType={Processes.Withdrawal}
-                    // processType={Processes.Loan}
+                    processType={Processes.Loan}
                     setState={setNewLoan as StartStepSetState}
                     state={newLoan}
                     title={t('start.title') as string}
@@ -87,7 +85,6 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
                     policy={policy}
                     setState={setNewLoan as PaymentStepSetState}
                     state={newLoan}
-                    subtitle={t('payment.title') as string}
                     validateTransaction={validateCall}
                 />
             ),
