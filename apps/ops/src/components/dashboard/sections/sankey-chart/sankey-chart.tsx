@@ -3,6 +3,7 @@ import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 
+import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import SelectSimple from '@deps/components/select/select';
@@ -15,7 +16,6 @@ import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
 import { SankeyCellText } from './sankey-cell-text';
-import { ChartHeader } from '../chart-header';
 
 interface Props {
     height?: number;

@@ -73,10 +73,9 @@ describe('TaskSideSheet', () => {
             expect(screen.getByText('Sidesheet.suitability.status.label')).toBeInTheDocument();
             expect(screen.getByText('Closed')).toBeInTheDocument();
             expect(screen.getByText('Sidesheet.suitability.createdlabel')).toBeInTheDocument();
-            expect(screen.getByText('2/20/2024')).toBeInTheDocument();
-            expect(screen.getByText('(temporal.timeago)')).toBeInTheDocument();
+            expect(screen.getByText('2/20/2024 at 5:54am MST')).toBeInTheDocument();
             expect(screen.getByText('Sidesheet.suitability.closedlabel')).toBeInTheDocument();
-            expect(screen.getByText('2/22/2024')).toBeInTheDocument();
+            expect(screen.getByText('2/22/2024 at 8:03am MST')).toBeInTheDocument();
             expect(screen.getByText('Sidesheet.suitability.suitabilitystatus.header')).toBeInTheDocument();
             expect(screen.getByText('Needs Review')).toBeInTheDocument();
             expect(screen.getByText('sideSheet.suitability.comments.header')).toBeInTheDocument();
@@ -106,8 +105,7 @@ describe('TaskSideSheet', () => {
             expect(screen.getByText('Sidesheet.suitability.status.label')).toBeInTheDocument();
             expect(screen.getByText('Open')).toBeInTheDocument();
             expect(screen.getByText('Sidesheet.suitability.createdlabel')).toBeInTheDocument();
-            expect(screen.getByText('2/20/2024')).toBeInTheDocument();
-            expect(screen.getByText('(temporal.timeago)')).toBeInTheDocument();
+            expect(screen.getByText('2/20/2024 at 5:54am MST')).toBeInTheDocument();
             expect(screen.getByText('Sidesheet.suitability.closedlabel')).toBeInTheDocument();
             expect(screen.getByText('--')).toBeInTheDocument();
             expect(screen.queryByText('Sidesheet.suitability.questionsheader')).toBeNull();

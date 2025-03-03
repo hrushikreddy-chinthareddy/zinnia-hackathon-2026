@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { CaseTypeFilter } from '@deps/components/dashboard/case-type-filter';
-import { TreeMapInsights } from '@deps/components/dashboard/tree-map-insights';
+import { TreeMapInsights } from '@deps/components/dashboard/charts/tree-map-insights';
+import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
 import { createBaseQuery, formatProcessFilter } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import CardContainer from '@deps/containers/card-container/card-container';

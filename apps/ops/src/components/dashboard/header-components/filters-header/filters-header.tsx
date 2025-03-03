@@ -6,8 +6,8 @@ import { forwardRef, useEffect, useMemo, useState } from 'react';
 
 import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import { ButtonSize } from '@deps/components/button/button';
-import { BrokerDealerFilter } from '@deps/components/dashboard/broker-dealer-filter/broker-dealer-filter';
-import styles from '@deps/components/dashboard/filters-header/filters-header.module.css';
+import { BrokerDealerFilter } from '@deps/components/dashboard/header-components/broker-dealer-filter/broker-dealer-filter';
+import styles from '@deps/components/dashboard/header-components/filters-header/filters-header.module.css';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';

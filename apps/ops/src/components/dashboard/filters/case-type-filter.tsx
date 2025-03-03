@@ -10,7 +10,7 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { useDashboardStore } from '@deps/store/store';
 
-import { createBaseQuery, formatProcessListOptions } from './utils';
+import { createBaseQuery, formatProcessListOptions } from '../utils';
 
 interface CaseTypeFilterProps {
     onValueChange: (value: Processes | undefined) => void;

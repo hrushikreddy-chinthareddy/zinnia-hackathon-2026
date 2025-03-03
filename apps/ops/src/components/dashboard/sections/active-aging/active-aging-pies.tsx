@@ -1,8 +1,7 @@
+import DistributionPieChartSmall from '@deps/components/dashboard/charts/distribution-charts/distribution-pie-chart-small';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { CaseDashboardStatsResponse, DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-
-import DistributionPieChartSmall from '../distribution-charts/distribution-pie-chart-small';
 
 interface Props {
     dashboardStatsResponse: CaseDashboardStatsResponse;

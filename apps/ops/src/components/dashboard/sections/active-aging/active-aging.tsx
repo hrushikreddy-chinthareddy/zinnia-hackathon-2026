@@ -5,6 +5,9 @@ import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
+import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
+import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
+import { createBaseQuery, formatProcessFilter } from '@deps/components/dashboard/utils';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -33,9 +36,6 @@ import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/ill
 
 import ActiveAgingBars from './active-aging-bars';
 import ActiveAgingPies from './active-aging-pies';
-import { CaseTypeFilter } from '../case-type-filter';
-import { ChartHeader } from '../chart-header';
-import { createBaseQuery, formatProcessFilter } from '../utils';
 
 const ActiveAging = () => {
     const agingChartsRef = useRef<HighchartsReactRefObject>(null);

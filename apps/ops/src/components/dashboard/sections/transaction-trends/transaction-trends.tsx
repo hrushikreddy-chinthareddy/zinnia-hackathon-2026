@@ -3,17 +3,17 @@ import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
 
-import { CaseTypeFilter } from '@deps/components/dashboard/case-type-filter';
-import { ChartHeader } from '@deps/components/dashboard/chart-header';
+import { AiInsightSummary } from '@deps/components/dashboard/ai-insight-summary/ai-insight-summary';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { TimeFilter } from '@deps/components/dashboard/time-filter/time-filter';
+import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
+import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
+import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { createBaseQuery, formatProcessFilter } from '@deps/components/dashboard/utils';
 import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Select from '@deps/components/select/select';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { TimeframeFilterOptions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
-import { InsightSummary } from '@deps/containers/dashboard/insight-summary/insight-summary';
 import { dashboardChartTitleFormat, splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
 import { processGroupedData } from '@deps/helpers/dashboard/line-and-volume-category-chart.helper';
 import { convertToQueryString } from '@deps/helpers/routing.helper';
@@ -24,7 +24,7 @@ import { useDashboardStore } from '@deps/store/store';
 
 import styles from './transaction-trends.module.css';
 import { TransactionTrendsTable } from './trends-table';
-import { LineAndVolumeCategoryChart } from '../line-and-volume-category-chart/line-and-volume-category-chart';
+import { LineAndVolumeCategoryChart } from '../../charts/line-and-volume-category-chart/line-and-volume-category-chart';
 
 const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
 
@@ -132,7 +132,7 @@ export const TransactionTrends = () => {
             <ChartHeader title="Transaction trends" subtitle={totalCases} description={`Top 5 ${splitAndSentenceCase(groupBy)}s`} />
             <div className="flex">
                 <div className={clsx('w-1/4', sharedStyles.aiInsightsContainer)}>
-                    <InsightSummary className="grow" prompt={prompt} content={content} />
+                    <AiInsightSummary className="grow" prompt={prompt} content={content} />
                 </div>
 
                 <div className={clsx('w-3/4', sharedStyles.chartContainer)}>

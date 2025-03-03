@@ -5,14 +5,14 @@ import HighchartsReact from 'highcharts-react-official';
 import { FC, useMemo, useState } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
-import { CaseTypeFilter } from '@deps/components/dashboard//case-type-filter';
-import { ChartHeader } from '@deps/components/dashboard//chart-header';
+import { AiInsightSummary } from '@deps/components/dashboard/ai-insight-summary/ai-insight-summary';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { TimeFilter } from '@deps/components/dashboard/time-filter/time-filter';
+import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
+import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
+import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { InsightSummary } from '@deps/containers/dashboard/insight-summary/insight-summary';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { Processes, Statuses } from '@deps/models/case/case';
@@ -24,9 +24,9 @@ import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
 
-import { formatProcessFilter, generateCarouselDataLengths, startDates, TimeframeFilterOptions } from '../utils';
 import styles from './case-to-close-time-chart.module.css';
 import { generateLabel, generateSeries, generateTooltip, getDaysFromSeconds } from './utils';
+import { formatProcessFilter, generateCarouselDataLengths, startDates, TimeframeFilterOptions } from '../../utils';
 
 export const CaseToCloseTimeChart: FC = () => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
@@ -155,7 +155,7 @@ export const CaseToCloseTimeChart: FC = () => {
                     ) : (
                         <>
                             <div className={clsx('w-1/4', styles.insightsContainer)}>
-                                <InsightSummary className="grow" prompt={prompt} content={content} />
+                                <AiInsightSummary className="grow" prompt={prompt} content={content} />
                             </div>
                             <div className={clsx('w-3/4', sharedStyles.chartContainer)}>
                                 <div className={sharedStyles.filterContainer}>

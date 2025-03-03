@@ -1,18 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { CaseTypeFilter } from '@deps/components/dashboard/case-type-filter';
+import { TreeMapInsights } from '@deps/components/dashboard/charts/tree-map-insights';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { TimeFilter } from '@deps/components/dashboard/time-filter/time-filter';
-import { TreeMapInsights } from '@deps/components/dashboard/tree-map-insights';
+import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
+import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
+import { TimeframeFilterOptions, startDates, formatProcessFilter, createBaseQuery } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { useDashboardStore } from '@deps/store/store';
-
-import { createBaseQuery, formatProcessFilter, startDates, TimeframeFilterOptions } from '../utils';
 
 export const NigoClosedTransactions = () => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);

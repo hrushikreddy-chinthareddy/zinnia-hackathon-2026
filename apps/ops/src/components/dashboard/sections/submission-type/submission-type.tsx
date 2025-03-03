@@ -5,12 +5,12 @@ import HighchartsReact from 'highcharts-react-official';
 import { FC, useEffect, useState } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
-import { CaseTypeFilter } from '@deps/components/dashboard/case-type-filter';
-import { ChartHeader } from '@deps/components/dashboard/chart-header';
+import { getPieChartData } from '@deps/components/dashboard/charts/distribution-charts/distribution-pie-chart-small-api-based';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { getPieChartData } from '@deps/components/dashboard/distribution-charts/distribution-pie-chart-small-api-based';
+import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
+import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
+import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
-import { TimeFilter } from '@deps/components/dashboard/time-filter/time-filter';
 import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import PageLoader from '@deps/components/page-loader/page-loader';
@@ -28,7 +28,7 @@ import { chunkArray } from '@deps/utils/array';
 import { Legend } from './legend';
 import styles from './submission-type.module.css';
 import { submissionTypeQuery, transformData, generateSeries } from './utils';
-import { TimeframeFilterOptions, formatProcessFilter, generateCarouselDataLengths, startDates } from '../utils';
+import { TimeframeFilterOptions, formatProcessFilter, generateCarouselDataLengths, startDates } from '../../utils';
 
 export const SubmissionType: FC = () => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);

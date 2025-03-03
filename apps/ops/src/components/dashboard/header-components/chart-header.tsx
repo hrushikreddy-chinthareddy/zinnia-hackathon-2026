@@ -1,9 +1,8 @@
 import { Tooltip } from '@zinnia/bloom/components';
 import { FC, ReactNode } from 'react';
 
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-
-import Typography, { TypographyVariant } from '../typography/typography';
 
 interface ChartHeaderProps {
     title: string | ReactNode;

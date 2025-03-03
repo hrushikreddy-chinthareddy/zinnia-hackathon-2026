@@ -1,5 +1,3 @@
-import { Link } from '@zinnia/bloom/components';
-import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
@@ -8,19 +6,21 @@ import HC_TREEMAP from 'highcharts/modules/treemap';
 import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
+import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
+import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { TimeframeFilterOptions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS, dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS } from '@deps/helpers/dashboard/dashboard-helpers';
+import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
+import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
-
-import PageLoader from '../page-loader/page-loader';
 
 const CHART_HEIGHT = 500;
 
@@ -30,40 +30,26 @@ if (typeof Highcharts === 'object') {
     HC_TREEMAP(Highcharts);
 }
 
-export type ExceptionInsightsProps = {
-    completedCasesByProcessSubType?: DashboardResponseData[];
-    selectedSubprocess: string;
-    selectedException: string | undefined;
-    timeframe: TimeframeFilterOptions;
+export type TreeMapInsightsProps = {
+    dashboardStatsData?: CaseDashboardStatsResponse;
+    heading: string;
     carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
+    FilterComponents: React.ReactNode;
 };
 
-export const ExceptionInsights = ({
-    completedCasesByProcessSubType,
-    selectedException = '',
-    selectedSubprocess = '',
-    timeframe,
-}: ExceptionInsightsProps) => {
+export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents }: TreeMapInsightsProps) => {
     const chartCompomentRef = useRef<HighchartsReact.RefObject>(null);
     const [aiSummary, setAiSummary] = useState<string | null>(null);
     const shouldShowCaseInsights = useCaseInsightsPermission();
     const [loading, setLoading] = useState(false);
 
-    const getOpenAiSummary = async (caseStats: DashboardResponseData[], processSubType: string) => {
+    // TODO: add context for secondary and tertiary groupings if applicable
+    const getOpenAiSummary = async (caseStats: DashboardResponseData[]) => {
         try {
             setLoading(true);
             const summary = await getCaseInsights({
                 content: JSON.stringify(caseStats),
-                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. The data provided to you here are completed ${dashboardChartTitleFormat(
-                    processSubType,
-                    false
-                )} applications, but the ${dashboardChartTitleFormat(
-                    processSubType,
-                    false
-                )} applications encountered NIGOs along their path to completion. The data is grouped by NIGO Category and the values represent a NIGO that occurred for a ${dashboardChartTitleFormat(
-                    processSubType,
-                    false
-                )} application. Avoid using phrases such as "the data". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to United States, including commas where appropriate. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
+                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. Avoid using phrases such as "the data". In your response, replace "exception" with "NIGO" and "exceptions" to "NIGOs". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
             });
             setLoading(false);
             return summary;
@@ -71,24 +57,14 @@ export const ExceptionInsights = ({
             return '';
         }
     };
-    const exceptions = useMemo(() => {
-        return completedCasesByProcessSubType
-            ? completedCasesByProcessSubType
-                  .find(item => item.name === selectedSubprocess)
-                  ?.values?.filter(item => item.name !== 'NULL_VALUE' && item.name !== '')
-            : null;
-    }, [completedCasesByProcessSubType, selectedSubprocess]);
-    const noData = !exceptions || exceptions?.length === 0;
-    const chartOptions: Highcharts.Options = useMemo(() => {
-        // todo: XG - add ref for keeping track of all exception types so we can animate smoothly
-        let seriesData: DashboardResponseData[] = [];
-        if (!exceptions || exceptions?.length === 0) {
-            seriesData = [];
-        } else {
-            seriesData = exceptions;
-        }
 
-        const chartData: Highcharts.SeriesTreemapOptions['data'] = seriesData.map((item: DashboardResponseData) => ({
+    const seriesData = dashboardStatsData?.data; // this will change once filters are added
+
+    const noData = !seriesData || seriesData?.length === 0 || dashboardStatsData?.totalElements === 0;
+
+    // this is the same code that is found in exception-insights.tsx
+    const chartOptions: Highcharts.Options = useMemo(() => {
+        const chartData: Highcharts.SeriesTreemapOptions['data'] = seriesData?.map((item: DashboardResponseData) => ({
             name: DASHBOARD_REPLACE_LABELS.includes(item.name) ? DASHBOARD_DEFAULT_LABEL : item.name,
             value: item.count,
             colorValue: item.count,
@@ -109,9 +85,6 @@ export const ExceptionInsights = ({
             chart: {
                 height: CHART_HEIGHT,
                 styledMode: false,
-                spacingTop: 0,
-                spacingLeft: 0,
-                spacingRight: 0,
             },
             credits: {
                 enabled: false,
@@ -125,7 +98,7 @@ export const ExceptionInsights = ({
                 {
                     type: 'treemap',
                     layoutAlgorithm: 'squarified',
-                    data: chartData,
+                    data: chartData || [],
                     colorAxis: 0,
                     colorKey: 'colorValue',
                     colors: caseChartHelpers.getTreeMapColors(),
@@ -139,13 +112,13 @@ export const ExceptionInsights = ({
                             // @ts-expect-error: this actually exists
                             const value = this.point.value;
                             // @ts-expect-error: this actually exists
+                            const dataLabel = this.point.dataLabel;
+                            const shape = this.point.shapeArgs;
+                            // @ts-expect-error: this actually exists
                             const seriesValues: Array<number> = this.series.valueData;
                             const total = seriesValues.reduce((sum, val) => sum + val, 0);
                             const len = (Number(value) / total) * 100;
                             const wrapper = document.createElement('div');
-                            // @ts-expect-error: this actually exists
-                            const dataLabel = this.point.dataLabel;
-                            const shape = this.point.shapeArgs;
                             wrapper.style.backgroundColor = 'var(--color-base-surface-surface-primary)';
                             wrapper.classList.add('rounded', 'typography-content-body');
                             wrapper.style.color = 'var(--color-base-text-text-primary)';
@@ -158,7 +131,6 @@ export const ExceptionInsights = ({
                             wrapper.style.margin = 'var(--measure-dimension-padding-xs)';
                             wrapper.style.padding = 'var(--measure-dimension-padding-xs)';
                             wrapper.style.alignItems = 'center';
-
                             const nameSpan = document.createElement('span');
                             // const valueSpan = document.createElement('span');
                             nameSpan.innerText = name;
@@ -166,13 +138,8 @@ export const ExceptionInsights = ({
                             //TODO: For some reason, dataLabel can be undefined sometimes and cause issues
                             if (dataLabel?.width + dataLabel?.padding >= shape?.width) {
                                 wrapper.style.whiteSpace = 'break-spaces';
-
-                                if (len < 1) {
-                                    wrapper.style.visibility = 'hidden';
-                                }
                             }
-
-                            if (dataLabel?.height + dataLabel?.padding >= shape?.height) {
+                            if (len < 1 || dataLabel?.height + dataLabel?.padding >= shape?.height) {
                                 wrapper.style.visibility = 'hidden';
                             }
                             wrapper.appendChild(nameSpan);
@@ -209,7 +176,7 @@ export const ExceptionInsights = ({
                     const ratio = `${value} / ${total}`;
 
                     nameSpan.innerText = this.point.name;
-                    valueSpan.innerText = ratio;
+                    valueSpan.innerText = ratio; //this.point.value;
                     wrapper.appendChild(nameSpan);
                     wrapper.appendChild(valueSpan);
                     return wrapper.outerHTML;
@@ -217,85 +184,64 @@ export const ExceptionInsights = ({
                 padding: 0,
             },
         };
-    }, [exceptions]);
-
-    const caseLink = useMemo(() => {
-        const href = new URL('/cases', window.location.origin);
-        if (selectedSubprocess.length > 0) {
-            href.searchParams.append('processSubType', selectedSubprocess);
-        }
-        if (selectedException.length > 0) {
-            href.searchParams.append('case', selectedException);
-        }
-        return href.toString();
-    }, [selectedSubprocess, selectedException]);
+    }, [seriesData]);
 
     useEffect(() => {
         if (!shouldShowCaseInsights) {
             return;
         }
-        if (exceptions?.length) {
-            getOpenAiSummary(exceptions, selectedSubprocess).then(summary => {
+        if (seriesData?.length) {
+            getOpenAiSummary(seriesData).then(summary => {
                 if (summary) {
                     setAiSummary(summary);
                 }
             });
         } else {
-            setAiSummary(`No NIGOs for ${dashboardChartTitleFormat(selectedSubprocess)} in the ${timeframe}.`);
+            setAiSummary('There are no NIGOs.');
         }
-    }, [exceptions, selectedSubprocess, shouldShowCaseInsights, timeframe]);
+    }, [seriesData, shouldShowCaseInsights]);
 
     return (
-        <div className={clsx('bg-white flex flex-col lg:flex-row gap-4')}>
-            <div className="basis-1/4 flex flex-col gap-4 items-start">
-                <div>
-                    <Typography variant={TypographyVariant.H3}>{dashboardChartTitleFormat(selectedSubprocess, false)}</Typography>
-                    <Typography variant={TypographyVariant.Label}>NIGO Distribution</Typography>
-                </div>
-                {loading ? (
-                    <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
-                        <PageLoader />
-                    </div>
-                ) : (
-                    <>
-                        {!!aiSummary?.length && (
-                            <>
-                                <div className="flex flow-col items-center align-middle gap-2">
-                                    <LightBulbIcon height={'24px'} width={'24px'} />
-                                    <Typography variant={TypographyVariant.LabelLg}>Insight</Typography>
-                                </div>
-                                <Typography variant={TypographyVariant.BodySm}>{aiSummary}</Typography>
-                            </>
-                        )}
-                        <Link
-                            size="small"
-                            className="mt-4 inline"
-                            href={caseLink}
-                            text={`View all ${dashboardChartTitleFormat(selectedSubprocess)} NIGOs`}
-                        />
-                    </>
-                )}
-            </div>
-            <div className="basis-3/4 flex flex-col">
-                <Typography className="ml-2" variant={TypographyVariant.LabelMd}>
-                    {toTitleCase(timeframe)}
-                </Typography>
-                <div
-                    className={clsx(
-                        `w-full h-[${CHART_HEIGHT}px]`,
-                        noData && 'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]'
-                    )}
-                >
-                    {noData ? (
-                        <div className="flex flex-col gap-2 items-center">
-                            <ChartBarsIcon height={'24px'} width={'24px'} />
-                            <Typography variant={TypographyVariant.BodyBold}>
-                                No NIGOs for {dashboardChartTitleFormat(selectedSubprocess)} in the {timeframe}
-                            </Typography>
+        <div className={clsx('bg-white')}>
+            <ChartHeader title={heading} subtitle={`There are ${wholeNumberFormatify(dashboardStatsData?.totalElements)} NIGOs`} />
+
+            <div className="flex flex-col lg:flex-row gap-4 mt-6">
+                <div className="w-1/4 flex flex-col gap-4 items-start">
+                    {loading ? (
+                        <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
+                            <PageLoader />
                         </div>
                     ) : (
-                        <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chartCompomentRef} />
+                        <>
+                            {!!aiSummary?.length && (
+                                <>
+                                    <div className="flex flow-col items-center align-middle gap-2">
+                                        <LightBulbIcon height={'24px'} width={'24px'} />
+                                        <Typography variant={TypographyVariant.LabelLg}>Insight</Typography>
+                                    </div>
+                                    <Typography variant={TypographyVariant.BodySm}>{aiSummary}</Typography>
+                                </>
+                            )}
+                        </>
                     )}
+                </div>
+                <div className={clsx('w-3/4 flex-col', sharedStyles.chartContainer)}>
+                    <div>{FilterComponents}</div>
+                    <div
+                        className={clsx(
+                            `w-full h-[${CHART_HEIGHT}px]`,
+                            noData && 'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]'
+                        )}
+                    >
+                        {noData ? (
+                            <div className="flex flex-col gap-2 items-center">
+                                <ChartBarsIcon height={'24px'} width={'24px'} />
+                                <Typography variant={TypographyVariant.BodyBold}>There are no NIGOs</Typography>
+                            </div>
+                        ) : (
+                            <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chartCompomentRef} />
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

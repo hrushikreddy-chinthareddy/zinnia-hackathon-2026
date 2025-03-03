@@ -16,7 +16,7 @@ type InsightSummaryProps = {
     className?: string;
 };
 
-export const InsightSummary = ({ content = '', prompt = '', dependencies = [], className }: InsightSummaryProps) => {
+export const AiInsightSummary = ({ content = '', prompt = '', dependencies = [], className }: InsightSummaryProps) => {
     const shouldShowCaseInsights = useCaseInsightsPermission();
     const enableInsights = true || (shouldShowCaseInsights && !!content.length && !!prompt.length);
     const {
