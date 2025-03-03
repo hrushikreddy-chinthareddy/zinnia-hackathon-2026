@@ -4285,7 +4285,7 @@
         "eligible": "Eligible",
         "eligibleForWithdrawal": "Eligible for withdrawal",
         "eligibleForWithdrawalTooltip": "Withdrawals from the account value are allowed right now. Withdrawals may reduce the death benefit.",
-        "freeWithdrawalAmount": "{{ amount }}: Free withdrawal amount",
+        "freeWithdrawalAmount": "Free withdrawal amount: {{ amount }}",
         "ineligible": "Ineligible",
         "maximumWithdrawalAmount": "Maximum withdrawal amount",
         "netSurrenderValue": "Net surrender value",
