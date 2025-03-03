@@ -1,4 +1,5 @@
 import type TrainingEducation from '../views/training-education/TrainingEducation';
+import type { SearchResult } from './search.types';
 
 // @TODO: this is temporary, until we import api types
 export enum ProducerType {
@@ -75,3 +76,4 @@ export enum YesNo {
 }
 
 export { TrainingEducation };
+export { SearchResult };

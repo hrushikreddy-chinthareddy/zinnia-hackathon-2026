@@ -2,6 +2,7 @@ import { ProducerType } from './types';
 import { HashRouter, Route, Routes } from 'react-router';
 import './styles/globals.css';
 import Producer from './views/producer/Producer';
+import { Search } from './views/search/Search';
 
 export const Pom = ({
   translations,
@@ -25,9 +26,8 @@ export const Pom = ({
             element={<Producer producerType={ProducerType.CORPORATION} />}
           />
         </Route>
+        <Route path="/search" element={<Search />}></Route>
       </Routes>
     </HashRouter>
   );
 };
-
-
