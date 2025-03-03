@@ -127,20 +127,16 @@ export interface renewalsFormParts {
     renewalRequestSignDate: string;
     subsequentTargetFunds: TargetFundAllocation[] | null;
 }
-
-export type FormMetadata = {
+export type TabSchema = {
     title?: string;
-    tab?: string;
+    description?: string;
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
+};
+
+export type FormMetadata = TabSchema & {
     schemaContent?: {
-        tabSchemas: [
-            {
-                title?: string;
-                formSchema: RJSFSchema;
-                uiSchema: UiSchema;
-            }
-        ];
+        tabSchemas: TabSchema[];
     };
 };
 

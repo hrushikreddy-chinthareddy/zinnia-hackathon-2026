@@ -1,0 +1,59 @@
+{
+    "id": "TA000000020219",
+    "caseId": "CA0000396288",
+    "source": "BPM.AgentOnboarding",
+    "templateId": "953cd2c8-303a-4e13-ac38-d3c468709906",
+    "process": "Agent Onboarding",
+    "carrier": "WELB",
+    "taskType": "AGENT_ONBOARDING_NIGO",
+    "taskName": "Agent Onboarding NIGO",
+    "status": "NEW",
+    "data": {
+        "details": {
+            "agentDetails": {
+                "agentNPN": "1234",
+                "agentTaxId": "147258314",
+                "firstName": "test",
+                "lastName": "test"
+            }
+        },
+        "issuesList": [
+            {
+                "id": "e989d8bc-20c5-4d26-9930-2534ca7d4f41",
+                "nmid": "AO.EM.001",
+                "type": "NIGO",
+                "category": "Agent onboarding",
+                "reason": "Missing form",
+                "detailedReason": "Missing form",
+                "processingInstruction": "Request a completed onboarding packet from the submitter.",
+                "processingReason": "Agent's Onboarding packet is missing.",
+                "processingResolution": "Form must be completed and submitted."
+            }
+        ],
+        "nigos": ["EX000000009871"]
+    },
+    "mappedExceptions": ["EX000000009871"],
+    "mappedDocuments": [],
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-02-28T10:24:22Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-02-28T10:24:22Z",
+    "identifiers": [
+        {
+            "identifier": "batchId",
+            "value": "080094114_R"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000396288"
+        },
+        {
+            "identifier": "agentTaxId",
+            "value": "147258314"
+        }
+    ],
+    "externalId": "caf3c452-9aa8-4e80-b533-8c7d57fe9bff"
+}
