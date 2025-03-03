@@ -202,7 +202,7 @@ class ServerHttpRequest extends HttpRequest {
   refreshToken = async () => {
     const session = await getSession();
 
-    return fetch(`${process.env.AUTHO_MANAGEMENT_API_AUDIENCE}/oauth/token`, {
+    return fetch(`${process.env.AUTH0_MANAGEMENT_API_AUDIENCE}/oauth/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
