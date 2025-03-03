@@ -25,6 +25,7 @@ export const SupportedTaskMap = [
     TaskType.TOA_Nigo,
     TaskType.Agent_Review,
     TaskType.Standard_Document_Matching,
+    TaskType.Prenote_Nigo,
 ];
 
 export function Task({ task }: { task: TaskView }) {
