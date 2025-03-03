@@ -90,7 +90,7 @@
       "dependsOn": ["^build"]
     },
     "ops#test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "^pom#build"]
     },
     "test": {},
     "build-storybook": {},
