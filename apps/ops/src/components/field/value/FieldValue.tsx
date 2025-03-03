@@ -18,6 +18,7 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
             fieldSize,
             currencySymbol,
             onChange,
+            type,
             placeholder = 'Replace this text',
             ...props
         },
@@ -62,7 +63,7 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
                         <span className={clsx(fieldStyles[fieldStatus])}>{currencySymbol || '$'}</span>
                     </div>
                     <input
-                        type="text"
+                        type={type ?? 'text'}
                         className={clsx(
                             fieldStyles.input,
                             fieldSize && fieldStyles[fieldSize],
