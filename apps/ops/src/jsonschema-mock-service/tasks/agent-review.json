@@ -1,10 +1,14 @@
 {
     "formId": "3fbd2003-d32e-46b7-800a-12ce72676e12",
-    "carrier": "WELB",
     "process": "New Business",
+    "carrier": "WELB",
     "taskType": "NB_AGENT_REVIEW",
-    "formSchema": { "type": "object" },
-    "uiSchema": { "type": "object" },
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
     "schemaContent": {
         "tabSchemas": [
             {
@@ -65,6 +69,10 @@
                                         },
                                         "createdDate": {
                                             "type": "string"
+                                        },
+                                        "carrier": {
+                                            "type": "string",
+                                            "default": "{{carrier}}"
                                         }
                                     }
                                 }
@@ -106,6 +114,7 @@
                                         },
                                         "reviewFailureReasonDisplay": {
                                             "type": "array",
+                                            "title": "These issues will be created for the case:",
                                             "items": {
                                                 "type": "string"
                                             }
@@ -187,10 +196,9 @@
                     },
                     "reviewFailureReasonDisplay": {
                         "ui:options": {
-                            "label": false,
+                            "label": true,
                             "ArrayFieldTemplate": "TextListTemplate",
                             "hasBg": true,
-                            "textListTitle": "These issues will be created for the case:",
                             "formContext": {
                                 "keyName": "customData",
                                 "listName": "declineReason"
