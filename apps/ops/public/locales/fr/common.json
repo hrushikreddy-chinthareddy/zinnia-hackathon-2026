@@ -5191,5 +5191,14 @@
     "unauthorized": {
         "title": "Non autorisé",
         "message": "Vous n'avez pas accès à cette information."
+    },
+    "nbAppDataEntry": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Valider que l'agent a été soumis.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }

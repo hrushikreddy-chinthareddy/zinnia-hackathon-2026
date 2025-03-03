@@ -14,16 +14,16 @@ export const getNewBusinessDataSteps = ({ taskType, taskInfoLink, t, taskMetadat
     component: (
       <TaskFormStep
         taskInfoLink={taskInfoLink}
-        isSubmit={index === 1 ? true : isSubmit}
+        isSubmit={index === 0 ? true : isSubmit}
         taskMetadata={metadata}
         key={`step_${index}`}
       ></TaskFormStep>
     ),
-    text: metadata?.tab || '',
+    text: metadata?.title || '',
     isSubmit: index === 1 ? true : isSubmit,
     index: index,
     isCompleted: true,
-    screenReaderLabel: metadata?.tab || '',
+    screenReaderLabel: metadata?.title || '',
   }));
 
   const staticSteps: Step[] = [

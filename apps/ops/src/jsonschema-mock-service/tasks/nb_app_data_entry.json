@@ -1,0 +1,157 @@
+{
+    "formId": "c0c1c9b9-741b-4272-8cf4-48cd0d7cb0f2",
+    "process": "Qualification",
+    "carrier": "WELB",
+    "taskType": "NB_APP_DATA_ENTRY",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "New Business Data Entry",
+                "formSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "type": "object",
+                    "definitions": {
+                        "caseTypeEnum": {},
+                        "caseSubTypeEnum": {},
+                        "isDuplicateEnum": {
+                            "enumNames": ["Yes", "No"],
+                            "enum": ["DUPLICATE", "MATCH_FOUND"]
+                        }
+                    },
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions"
+                        },
+
+                        "details": {
+                            "type": "object",
+                            "properties": {
+                                "payerDetails": {
+                                    "type": "object",
+                                    "title": "Supporting information",
+
+                                    "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "Title",
+                                            "ui:field": "title"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Title",
+                                            "ui:field": "title"
+                                        },
+                                        "taxId": {
+                                            "type": "string",
+                                            "title": "SSN",
+                                            "dataType": "ssn",
+                                            "ui:field": "subTitle"
+                                        }
+                                    }
+                                },
+                                "purchaseDocument": {
+                                    "type": "object",
+                                    "title": "",
+                                    "label": true,
+                                    "properties": {
+                                        "documentName": {
+                                            "type": "string",
+                                            "title": "Document Name",
+                                            "ui:field": "title"
+                                        },
+                                        "docType": {
+                                            "type": "string",
+                                            "title": "Document Name",
+                                            "ui:field": "title"
+                                        },
+
+                                        "documentId": {
+                                            "type": "string",
+                                            "ui:field": "subTitle"
+                                        },
+                                        "documentSource": {
+                                            "type": "string"
+                                        },
+                                        "createdDate": {
+                                            "type": "string"
+                                        },
+                                        "carrier": {
+                                            "type": "string",
+                                            "default": "{{carrier}}"
+                                        }
+                                    }
+                                },
+                                "caseOverview": {
+                                    "type": "string",
+                                    "title": "Open Form for Data Entry",
+                                    "default": "/cases/{}"
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "props": {
+                            "description": "Review supporting information and determine if the document can be matched to an existing case. Search all cases and review any suggested potential matches. Confirm the matching Case ID, if possible. If there's no existing case to match the document to, mark the task as pending and wait for the application to arrive."
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+
+                        "payerDetails": {
+                            "ui:options": {
+                                "title": "Title",
+                                "cardType": "Detailed",
+                                "icon": "CIRCLE_USER",
+                                "label": true,
+                                "ObjectFieldTemplate": "CardTemplate"
+                            }
+                        },
+                        "purchaseDocument": {
+                            "props": {
+                                "readonly": true
+                            },
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": false,
+                                "cardType": "Document",
+                                "icon": "DOCUMENT_TEXT",
+                                "ObjectFieldTemplate": "CardTemplate"
+                            }
+                        },
+                        "caseOverview": {
+                            "ui:options": {
+                                "label": false,
+                                "type": "link"
+                            },
+                            "ui:widget": "HyperLinkWidget"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
