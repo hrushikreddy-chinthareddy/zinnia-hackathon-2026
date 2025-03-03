@@ -31,12 +31,12 @@ import { formatPhone, safeString, toTitleCase } from './string.helper';
 export const getHeaderIcon = (partyType: string | undefined): JSX.Element => {
     switch (partyType) {
         case PartyType.TRUST:
-            return <DocumentIcon height={24} className="self-center" />;
+            return <DocumentIcon height={24} width={24} className="self-center" />;
         case PartyType.ORGANIZATION:
-            return <OfficeBuildingIcon height={24} className="self-center" />;
+            return <OfficeBuildingIcon height={24} width={24} className="self-center" />;
         case PartyType.INDIVIDUAL:
         default:
-            return <User role="presentation" height={24} className="self-center" />;
+            return <User role="presentation" height={24} width={24} className="self-center" />;
     }
 };
 

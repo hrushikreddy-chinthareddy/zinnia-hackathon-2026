@@ -51,7 +51,9 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
     const selectedPartyRoles = selectedPolicyPartyRoles.map(roleObject => {
         return roleObject.partyRole?.toLowerCase();
     });
-    const isAgent = selectedPartyRoles.includes('primarywritingagent') || selectedPartyRoles.includes('primaryservicingagent');
+    const isAgent =
+        selectedPartyRoles.includes(PartyRole.PRIMARYWRITINGAGENT.toLowerCase()) ||
+        selectedPartyRoles.includes(PartyRole.PRIMARYSERVICINGAGENT.toLowerCase());
 
     if (isAgent) {
         return <AgentSubPage partyId={partyId} />;
@@ -69,7 +71,7 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
 
                 {beneficiaryRole && (
                     <>
-                        <hr className=" h-0.5 border-none bg-gray-100" />
+                        <hr className="h-0.5 border-none bg-gray-100" />
                         <AllocationCard
                             allocation={selectedPolicyParty?.beneficiaryPercentage}
                             editable={editable}
@@ -81,7 +83,7 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
                     </>
                 )}
 
-                <hr className=" h-0.5 border-none bg-gray-100" />
+                <hr className="h-0.5 border-none bg-gray-100" />
                 <IdentificationCard selectedPolicyParty={newSelectedPolicyParty} isAnnuity={policyDetails.isAnnuity} />
 
                 <hr className="h-0.5 border-none bg-gray-100" />

@@ -10,7 +10,7 @@ import { calculateAgeNumber } from '@deps/helpers/age.helper';
 import { getHeaderIcon, getHeaderText, getPrefCommunicationType } from '@deps/helpers/party-info-helper';
 import { orderObjectsByString } from '@deps/helpers/sort.helper';
 import { formatDate } from '@deps/helpers/string.helper';
-import { PartyStatus, PartyType, PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
+import { PartyRole, PartyStatus, PartyType, PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { ReactComponent as UserGroup } from '@deps/styles/elements/icons/icons_outlined/user-group.svg';
 
@@ -37,7 +37,9 @@ const InteriorPeoplePageHeaderContainer = ({
     const selectedPartyRoles = selectedPolicyPartyRoles?.map(roleObject => {
         return roleObject.partyRole?.toLowerCase();
     });
-    const isAgent = selectedPartyRoles?.includes('primarywritingagent') || selectedPartyRoles?.includes('primaryservicingagent');
+    const isAgent =
+        selectedPartyRoles?.includes(PartyRole.PRIMARYWRITINGAGENT.toLowerCase()) ||
+        selectedPartyRoles?.includes(PartyRole.PRIMARYSERVICINGAGENT.toLowerCase());
 
     // for header text siblings group one
     // pronouns and edit button
@@ -118,7 +120,7 @@ const InteriorPeoplePageHeaderContainer = ({
     const tags = useMemo(() => selectedPolicyPartyRoles && getPartyRoles(selectedPolicyPartyRoles, t), [selectedPolicyPartyRoles, t]);
 
     const partyRoleTags = (
-        <div className="mt-1 flex xs:flex-col md:flex-row md:items-center md:align-middle">
+        <div className="mt-1 flex xs:flex-col md:flex-row md:items-center md:align-middle lg:ml-8">
             <div className="flex flex-wrap gap-1">
                 {tags?.map((tag: { text: string }) => (
                     <span key={tag.text} className="pointer-events-none">
