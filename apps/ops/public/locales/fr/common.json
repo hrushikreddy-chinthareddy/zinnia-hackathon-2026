@@ -2986,9 +2986,10 @@
                 "checkingEndingIn": "Compte courant se terminant par {{accountNumber}}",
                 "COSTOFINSURANCE": "Coût de l'assurance",
                 "EXPENSECHARGE": "Frais de gestion",
-                "UNITEXPENSECHARGE": "Frais d'unité",
+                "MARKETVALUEADJUSTMENT": "Ajustement de la valeur marchande",
                 "RIDERCHARGE": "Frais de garantie supplémentaire",
                 "SURRENDERCHARGE": "Frais de rachat",
+                "UNITEXPENSECHARGE": "Frais d'unité",
                 "WITHDRAWALCHARGE": "Frais de retrait",
                 "proRata": "Pro rata",
                 "disbursementType": "Distribution {{disbursementType}}"
