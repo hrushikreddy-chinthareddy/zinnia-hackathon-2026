@@ -2791,7 +2791,8 @@
                 "nextSweepDate": "Next sweep date",
                 "nextSweepDateTooltip": "On this date, all money in the holding fund will be \"swept\" or moved into the policy's various funds, according to the owner's selected fund allocations. In most cases, the sweep date happens on the same date every month.",
                 "noFunds": "Nothing to show.",
-                "type": "Type"
+                "type": "Type",
+                "years": "$t(temporal.years, {{count}})"
             },
             "segmentsTable": {
                 "segmentID": "Segment ID",
@@ -3188,7 +3189,9 @@
         "timeago_other": "{{count}} $t(temporal.{{unit}})s ago {{formattedDate}}",
         "nYears": "{{n}} years",
         "oneYear": "1 year",
-        "timeLeft": "{{timespan}} left"
+        "timeLeft": "{{timespan}} left",
+        "years_one": "{{count}} year",
+        "years_other": "{{count}} years"
     },
     "sideSheet": {
         "posted": "Posted",
