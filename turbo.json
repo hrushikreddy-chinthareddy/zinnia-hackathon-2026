@@ -90,7 +90,7 @@
       "dependsOn": ["^build"]
     },
     "ops#test": {
-      "dependsOn": ["^build", "@zinnia/pom#build"]
+      "dependsOn": ["^build"]
     },
     "test": {},
     "build-storybook": {},
