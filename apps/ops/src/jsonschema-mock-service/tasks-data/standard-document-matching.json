@@ -1,0 +1,73 @@
+{
+    "id": "TA000000020060",
+    "caseId": "CA0000395559",
+    "source": "BPM.IndexationOrkestr",
+    "templateId": "2470c5ff-0ee8-40eb-ba66-a91d6ce1fa43",
+    "process": "Qualification",
+    "carrier": "WELB",
+    "taskType": "STANDARD_DOCUMENT_MATCHING",
+    "taskName": "Standard document matching",
+    "status": "NEW",
+    "data": {
+        "details": {
+            "documents": [
+                {
+                    "documentId": "e9ab5272-10a7-4e0a-8d12-073861dea25f",
+                    "docType": "NB Application",
+                    "metadata": {
+                        "productName": "PROTECTED DEFERRED ANNUITY",
+                        "formId": "01006170724US"
+                    }
+                },
+                {
+                    "documentId": "e9ab5272-10a7-4e0a-8d12-073861dea25g",
+                    "docType": "NB Supporting Document",
+                    "metadata": {
+                        "formId": "F-62347"
+                    }
+                }
+            ]
+        },
+        "potentialMatches": [
+            {
+                "taxId": "202512425",
+                "applicationId": "WELLANI041120241125012496",
+                "zlCaseId": "CA0000394980",
+                "policyNumber": "ADA2501906",
+                "firstName": "CHRISTY",
+                "lastName": "COOSENBERRY",
+                "correlationid": "b1e3617f-35d8-4e8f-a43f-faafd4b827ac",
+                "entityType": "NB_APPLICATION_DATA",
+                "recordId": "67bc2c03e02b754bac38504b"
+            },
+            {
+                "taxId": "202512425",
+                "applicationId": "WELLANI041120241125012497",
+                "zlCaseId": "CA0000395020",
+                "policyNumber": "ADA2501924",
+                "firstName": "CHRISTY",
+                "lastName": "COOSENBERRY",
+                "correlationid": "b738b2ab-6e2e-4d47-8f79-c18d7d4f398f",
+                "entityType": "NB_APPLICATION_DATA",
+                "recordId": "67bc5547e02b754bac3850be"
+            }
+        ],
+        "isPrimaryDocumentPresent": true
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-02-25T13:34:43Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-02-25T13:34:43Z",
+    "identifiers": [
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000395559"
+        }
+    ],
+    "externalId": "841a7bb2-da33-46e4-9721-f1981b41ce43"
+}

@@ -1,0 +1,136 @@
+{
+    "id": "TA000000019718",
+    "caseId": "CA0000394579",
+    "source": "BPM.TransferProcessing",
+    "templateId": "0dd74123-753e-4eac-8049-eab7b85f907f",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_TOA_NIGO",
+    "taskName": "TOA NIGO",
+    "status": "INPROGRESS",
+    "data": {
+        "details": {
+            "exchangeReplace": {
+                "entityId": "entity.1",
+                "paymentRecordId": "7c2a6358-e0ef-492f-9686-dda4e8fbfda1",
+                "surrenderContractNumber": "N000063960",
+                "surrenderCompanyName": "United States Life Insurance Company",
+                "exchangeType": 9,
+                "eappErId": "1",
+                "netAmount": 0,
+                "grossAmount": 0,
+                "paymentMethod": "EXCREP",
+                "amountRequested": 75000,
+                "address": {
+                    "addressLine1": "Attn Annuity Service Center",
+                    "addressLine2": "1050 N Western St",
+                    "addressLine3": null,
+                    "city": "Amarillo",
+                    "state": "TX",
+                    "zip": "79106",
+                    "country": "USA"
+                }
+            },
+            "policyNumber": "ADA2501850",
+            "documents": [
+                {
+                    "documentId": "67b70d0dd55e9201cecf6552",
+                    "documentName": "WELLANI041120241125012987_001_Replacement of Life Insurance or Annuities_5.pdf",
+                    "documentSource": "EDS",
+                    "documentExt": "pdf",
+                    "documentType": "NB State Replacement"
+                },
+                {
+                    "documentId": "67b70d0ed55e9201cecf6553",
+                    "documentName": "WELLANI041120241125012987_001_1035 Exchange  Rollover  Transfer eForm_6.pdf",
+                    "documentSource": "EDS",
+                    "documentExt": "pdf",
+                    "documentType": "NB Accord"
+                },
+                {
+                    "documentId": "67b70d0bd55e9201cecf654e",
+                    "documentName": "WELLANI041120241125012987_001_Deferred Annuity Application_1.pdf",
+                    "documentSource": "EDS",
+                    "documentExt": "pdf",
+                    "documentType": "NB Application"
+                }
+            ]
+        },
+        "issuesList": [
+            {
+                "id": "66ffd607-9fc0-4f7c-9718-fc8c883d4c7e",
+                "externalId": "66ffd607-9fc0-4f7c-9718-fc8c883d4c7e",
+                "nmid": "TP.EM.027",
+                "type": "NIGO",
+                "category": "FORM",
+                "reason": "SUPPORTING DOCUMENTATION IS MISSING",
+                "detailedReason": "NAIC PAPERWORK",
+                "processingInstruction": "Reason: The replacement form we received is incorrect for the state where the product was sold.  Resolution: Replacement form ${formTypeId received on [1, 2] is incorrect for Contract State.",
+                "processingReason": "The replacement form we received is incorrect for the state where the product was sold. ",
+                "processingResolution": "Replacement form ${formTypeId received on [1, 2] is incorrect for Contract State."
+            }
+        ],
+        "nigos": ["EX000000009258"]
+    },
+    "mappedExceptions": ["EX000000009258"],
+    "mappedDocuments": [
+        {
+            "documentId": "67b70d0ed55e9201cecf6553",
+            "documentName": "WELLANI041120241125012987_001_1035 Exchange  Rollover  Transfer eForm_6.pdf",
+            "documentSource": "EDS",
+            "createdDate": null,
+            "fileType": "pdf"
+        },
+        {
+            "documentId": "67b70d0bd55e9201cecf654e",
+            "documentName": "WELLANI041120241125012987_001_Deferred Annuity Application_1.pdf",
+            "documentSource": "EDS",
+            "createdDate": null,
+            "fileType": "pdf"
+        },
+        {
+            "documentId": "67b70d0dd55e9201cecf6552",
+            "documentName": "WELLANI041120241125012987_001_Replacement of Life Insurance or Annuities_5.pdf",
+            "documentSource": "EDS",
+            "createdDate": null,
+            "fileType": "pdf"
+        }
+    ],
+    "escalated": false,
+    "assignee": "vikram.prasad@zinnia.com",
+    "assigneePartyId": "16c400819fa14b26a6fd89aab0684e48",
+    "assignedAt": "2024-11-25T18:22:31Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-02-21T08:31:29Z",
+    "updatedBy": "vikram.prasad@zinnia.com",
+    "updatedByPartyId": "16c400819fa14b26a6fd89aab0684e48",
+    "updatedAt": "2025-02-26T13:48:37Z",
+    "identifiers": [
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2501850"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "410027"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000394579"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2501850"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI041120241125012987"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67b70d0ed55e9201cecf6553"
+        }
+    ],
+    "externalId": "cb891650-fcc8-40a1-bb0b-573228abd7c7"
+}

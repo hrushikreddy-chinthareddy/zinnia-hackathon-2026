@@ -1,0 +1,75 @@
+{
+    "id": "TA000000019109",
+    "caseId": "CA0000393720",
+    "source": "BPM.AgentCheck",
+    "templateId": "930ff760-bf59-4fbf-bc3e-46016c533dc3",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_AGENT_REVIEW",
+    "taskName": "Agent Review",
+    "status": "INPROGRESS",
+    "data": {
+        "details": {
+            "agentDetails": {
+                "agentExternalId": "",
+                "firstName": "AGENT",
+                "lastName": "TEST",
+                "taxId": "",
+                "crdNumber": "123456789",
+                "nationalProducerNumber": ""
+            }
+        },
+        "issuesList": [
+            {
+                "id": "0ac3851c-cc8d-4a53-b0b4-a50591ec4b90",
+                "externalId": "0ac3851c-cc8d-4a53-b0b4-a50591ec4b90",
+                "nmid": "EM.034",
+                "type": "NOTE",
+                "category": "AGENT",
+                "processingInstruction": "Reason: NA Resolution: Agent couldn't be validated. Review agent details and check whether agent has: a license, appointment status, and line of business, and all necessary trainings completed within appropriate time frames.",
+                "processingReason": "NA",
+                "processingResolution": "Agent couldn't be validated. Review agent details and check whether agent has: a license, appointment status, and line of business, and all necessary trainings completed within appropriate time frames."
+            }
+        ]
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "new_business",
+    "escalated": false,
+    "assignee": "vikram.prasad@zinnia.com",
+    "assigneePartyId": "16c400819fa14b26a6fd89aab0684e48",
+    "assignedAt": "2025-02-20T10:56:06Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-02-18T08:07:06Z",
+    "updatedBy": "vikram.prasad@zinnia.com",
+    "updatedByPartyId": "16c400819fa14b26a6fd89aab0684e48",
+    "updatedAt": "2025-02-20T10:56:09Z",
+    "identifiers": [
+        {
+            "identifier": "businessKey",
+            "value": "409459"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67b43fa5e8d16e60977dbf46"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2501677"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000393720"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI041120242020251880"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2501677"
+        }
+    ],
+    "externalId": "feaab733-674f-460d-9fae-43d9e2924aee"
+}
