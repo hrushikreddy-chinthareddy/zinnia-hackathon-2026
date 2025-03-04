@@ -1,3 +1,4 @@
+import { mockService } from '@deps/jsonschema-mock-service/mock-service';
 import { CaseType } from '@deps/models/case/case';
 import { ApiVersion, ProcessType } from '@deps/models/case/enums';
 import { CaseApiVersionMapper } from '@deps/models/case/helpers';
@@ -66,7 +67,14 @@ export const fetchTasks = async (caseId: string, caseType: CaseType) => {
 export const getTaskFormMetadata = async (clientId: string, taskType: TaskType, processType?: ProcessType, accessToken?: string) => {
     return getTaskFormMetadataSSR(clientId, taskType, processType, accessToken);
 };
-export const getCaseTaskById = async (taskId: string, accessToken?: string): Promise<ManagementTask<TaskStatus> | null> => {
+export const getCaseTaskById = async (
+    taskId: string,
+    accessToken?: string,
+    taskType?: TaskType
+): Promise<ManagementTask<TaskStatus> | null> => {
+    if (taskType) {
+        return mockService.getCaseTaskByIdSSRMock(taskType);
+    }
     return getCaseTaskByIdSSR(taskId, accessToken);
 };
 

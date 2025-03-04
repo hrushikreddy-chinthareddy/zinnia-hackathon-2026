@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@radix-ui/react-popover": "^1.0.7",
-    "@zinnia/bloom": "^4.27.0",
+    "@zinnia/bloom": "^4.29.0",
     "@zinnia/utils": "workspace:*",
     "clsx": "^2.1.0",
     "next-i18next": "^13.1.5",

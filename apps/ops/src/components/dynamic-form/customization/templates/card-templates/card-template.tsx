@@ -12,6 +12,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { formatSSN } from '@deps/helpers/string.helper';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
@@ -52,32 +53,44 @@ export type SingleCardProps = {
     formData?: any;
 };
 
-const extractField = (properties: any, data: any, fieldName: string): { field: { [key: string]: any }; keys: string[]; value: string } => {
+const extractField = (
+    properties: Record<string, any>,
+    data: Record<string, any>,
+    fieldName: string
+): { field: Record<string, any>[]; keys: string[]; value: string } => {
     const field = Object.entries(properties)
         .filter(([_, value]) => (value as any)['ui:field'] === fieldName)
-        .map(([_, value]) => value);
+        .map(([_, value]) => value as Record<string, any>); // Explicitly type field as an array of objects
 
     const keys = Object.entries(properties)
         .filter(([_, value]) => (value as any)['ui:field'] === fieldName)
         .map(([key]) => key);
 
+    // Extract separator & placeholder once
+    const separator = field.length > 0 && typeof field[0]?.['ui:separator'] === 'string' ? field[0]['ui:separator'] : ' ';
+    const placeholder = field.length > 0 && typeof field[0]?.['ui:placeholder'] === 'string' ? field[0]['ui:placeholder'] + ' ' : '';
+
     const value = keys
         .reduce((result, key) => {
-            const defaultValue = replacePlaceholders(properties[key], data)?.default || '';
-            if (data?.[key] || defaultValue) {
-                result += ' ' + (data[key] !== undefined ? data[key] : defaultValue);
+            const fieldSchema = properties[key] || {};
+            const defaultValue = replacePlaceholders(fieldSchema, data)?.default || '';
+            const fieldValue = data?.[key] !== undefined ? data[key] : defaultValue;
+            if (fieldValue) {
+                result += (result ? separator : '') + fieldValue;
             }
             return result;
         }, '')
         ?.trim();
 
-    return { field, keys, value };
+    return { field, keys, value: value ? placeholder + value : '' };
 };
 
-const formatValueByDataType = (dataType: string, value: any) => {
+export const formatValueByDataType = (dataType: string, value: any) => {
     switch (dataType) {
         case DataFormattingTypes.SSN:
             return formatSSN(value);
+        case DataFormattingTypes.Amount:
+            return numberFormatify(Math.abs(value));
         default:
             return value;
     }
@@ -91,7 +104,10 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
     const title = extractField(properties, data, 'title');
     const subtitle = extractField(properties, data, 'subTitle');
 
-    if ((!title?.value && !subtitle?.value) || (cardType === CardTypes.Document && !data?.documentId)) {
+    if (
+        (!title?.value && !subtitle?.value && cardType !== CardTypes.Document && !data?.documentId) ||
+        (cardType === CardTypes.Document && !data?.documentId)
+    ) {
         return;
     }
 
@@ -114,13 +130,13 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                     <Icon width={25} height={25} type={IconType[icon as string as keyof typeof IconType] || IconType.CIRCLE_USER} />{' '}
                 </div>
                 <div className="grow">
-                    <div className="text-sm font-bold">
-                        <PiiWrapper>{formatValueByDataType(title.field[0].dataType, title.value)}</PiiWrapper>
+                    <div className="text-sm font-bold break-all">
+                        {title?.field?.[0] && <PiiWrapper>{formatValueByDataType(title.field[0].dataType, title.value)}</PiiWrapper>}
                     </div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
                         <PiiWrapper>
-                            {subtitle?.field[0]?.title ? subtitle?.field[0].title + ': ' : ''}{' '}
-                            {formatValueByDataType(subtitle?.field?.[0]?.dataType, subtitle?.value)}
+                            {subtitle?.field?.[0] && subtitle?.field[0]?.title ? subtitle?.field[0].title + ': ' : ''}{' '}
+                            {subtitle?.field?.[0] && formatValueByDataType(subtitle?.field?.[0]?.dataType, subtitle?.value)}
                         </PiiWrapper>
                     </div>
                 </div>

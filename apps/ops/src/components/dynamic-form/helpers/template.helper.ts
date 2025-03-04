@@ -5,16 +5,20 @@ import ArrayFieldTemplate from '../customization/templates/array-field-template/
 import { CardTemplate } from '../customization/templates/card-templates/card-template';
 import InstructionsTemplate from '../customization/templates/instructions-template/instructions-template';
 import TextListTemplate from '../customization/templates/text-list-template';
+import FileInfoTemplate from '../customization/templates/object-field-template/file-info-template';
+import AddressFieldTemplate from '../customization/templates/address-field-template/address-field-template';
 
 export const UIArrayTemplateMap: Record<string, (props: ArrayFieldTemplateProps) => React.JSX.Element> = {
     ['ArrayFieldTemplate']: ArrayFieldTemplate,
     ['ArrayFieldTableTemplate']: ArrayFieldTableTemplate,
     ['TextListTemplate']: TextListTemplate,
+    ['FileInfoTemplate']: FileInfoTemplate,
 };
 
 export const UIObjectTemplateMap: Record<string, (props: any) => React.JSX.Element> = {
     ['CardTemplate']: CardTemplate,
     ['InstructionsTemplate']: InstructionsTemplate,
+    ['AddressFieldTemplate']: AddressFieldTemplate,
 };
 
 export const ApplyUITemplates = (uiSchema: UiSchema) => {

@@ -16,7 +16,7 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 import { ReactComponent as ChartSquare } from '@deps/styles/elements/icons/icons_outlined/chart-square-bar.svg';
 import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_outlined/light-bulb.svg';
 
-import DistributionPieChartSmallAPIBased from '../distribution-charts/distribution-pie-chart-small-api-based';
+import DistributionPieChartSmallAPIBased from '../charts/distribution-charts/distribution-pie-chart-small-api-based';
 
 interface Props {
     dashboardStatsResponse?: CaseDashboardStatsResponse;

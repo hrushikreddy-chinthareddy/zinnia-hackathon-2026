@@ -7,15 +7,15 @@ import CallLogCard from '@deps/components/card/card-call-log/card-call-log';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { parseAndFormatDate } from '@deps/helpers/string.helper';
-import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
+import { formatDateTime } from '@deps/helpers/string.helper';
 import { TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskComment, TaskStatus } from '@deps/models/case/task-instance';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CircleCheckedIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChatIcon } from '@deps/styles/elements/icons/icons_outlined/chat-2.svg';
-import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { formatTimestamp } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 
 const SpecificTaskBody = (task: ManagementTask) => {
     const { t } = useTranslation();
@@ -71,11 +71,10 @@ export default function TaskSideSheet({ taskId }: { taskId: string }) {
 
     if (!task) return null;
 
-    const { unit: createdUnit, count: createdCount } = getTimeAgoUnitValue(task.createdAt) || {};
-    const formattedCreated = parseAndFormatDate(NUMERIC_DATE_FORMAT, DEFAULT_DATE_FORMAT, task.createdAt);
-    const formattedUpdated = parseAndFormatDate(NUMERIC_DATE_FORMAT, DEFAULT_DATE_FORMAT, task.updatedAt);
+    const formattedCreated = formatDateTime(task.createdAt);
+    const formattedUpdated = formatDateTime(task.updatedAt);
     const isClosed = task.status === TaskStatus.Closed;
-    const closedContext = isClosed ? formattedUpdated : DEFAULT_ERROR_STRING;
+    const closedContext = isClosed && formattedUpdated ? formatTimestamp(formattedUpdated) : DEFAULT_ERROR_STRING;
 
     const noCommentsAvailable = !task.data || !task.data?.notes || task.data?.notes?.length === 0;
     const descendingByDateComments = task.data?.notes?.sort((a: TaskComment, b: TaskComment) => {
@@ -109,10 +108,7 @@ export default function TaskSideSheet({ taskId }: { taskId: string }) {
                 <div className="flex flex-row items-center gap-1">
                     <Label label={t('sideSheet.suitability.createdLabel')} variant={LabelVariant.FieldLabel} className="w-[75px] py-2" />
                     <Typography variant={TypographyVariant.BodySm} className="py-2">
-                        {formattedCreated}
-                        <span className="text-gray-600">
-                            &nbsp;{`(${t('temporal.timeago', { formattedDate: '', count: createdCount, unit: createdUnit }).trim()})`}
-                        </span>
+                         {formattedCreated ? formatTimestamp(formattedCreated) : 'N/A'}
                     </Typography>
                 </div>
 

@@ -238,8 +238,10 @@ const getActualWithdrawalAmount = (
     }
 
     const taxWithheldAmounts = quote ? quote?.taxWithheldAmounts : transaction?.taxWithheldAmounts;
-    const federalTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withheldAmount || 0;
-    const stateTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withheldAmount || 0;
+    const federalTaxWithheld =
+        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withheldAmount || 0;
+    const stateTaxWithheld =
+        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withheldAmount || 0;
 
     const totalChargesWithoutTaxes = transaction.charges
         ? transaction.charges.reduce((acc, charge) => {
@@ -338,7 +340,7 @@ const getWithdrawalCharges = (
     return [
         ...(charges?.map(charge => ({
             amount: negativeNumberFormatify(charge.chargeAmount) as string,
-            label: t(`policy.history.withdrawalSidesheet.${charge.chargeType}`) as string,
+            label: t(`policy.history.withdrawalSidesheet.${charge.chargeType}`, charge.chargeType as string) as string,
         })) || []),
         {
             amount: !charges ? negativeNumberFormatify(totalChargesWithoutTaxes) : numberFormatify(0),
@@ -458,8 +460,10 @@ const getWithdrawalTotalPayment = (
     const { appliedAmount, disbursementType } = transactionAmounts ?? {};
 
     const taxWithheldAmounts = quote ? quote?.taxWithheldAmounts : transaction?.taxWithheldAmounts;
-    const federalTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withheldAmount || 0;
-    const stateTaxWithheld = taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withheldAmount || 0;
+    const federalTaxWithheld =
+        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withheldAmount || 0;
+    const stateTaxWithheld =
+        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withheldAmount || 0;
     const totalChargesWithoutTaxes = getChargesWithoutTaxes(charges as TransactionChargesItem[]);
 
     let withdrawalAmount;

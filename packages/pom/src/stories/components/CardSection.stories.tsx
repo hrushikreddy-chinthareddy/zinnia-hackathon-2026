@@ -1,8 +1,8 @@
 import CardSection from '../../components/card-section/CardSection';
 import { Meta, StoryObj } from '@storybook/react';
-import { Default as AmlTrainingDefault } from '../views/training-education/AmlTraining.stories';
-import { Default as ProductTrainingDefault } from '../views/training-education/ProductTraining.stories';
-import { Default as StateTrainingDefault } from '../views/training-education/StateTraining.stories';
+import { Table as AmlTrainingDefault } from '../views/training-education/aml-training/AmlTraining.stories';
+import { Table as ProductTrainingDefault } from '../views/training-education/product-training/ProductTraining.stories';
+import { Table as StateTrainingDefault } from '../views/training-education/state-training/StateTraining.stories';
 import AmlTraining from '../../views/training-education/aml-training/AmlTraining';
 import ProductTraining from '../../views/training-education/product-training/ProductTraining';
 import StateTraining from '../../views/training-education/state-training/StateTraining';

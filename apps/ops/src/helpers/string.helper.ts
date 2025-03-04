@@ -135,6 +135,11 @@ export const parseAndFormatDate = (inputFormat: string, outputFormat: string, da
     return date;
 };
 
+export const formatDateTime = (dateTime?: string) => {
+    if (dateTime) return new Date(dateTime).toISOString();
+    return null;
+};
+
 export const hasDigitsRegex = new RegExp(/\d+/);
 
 // Converts yyyy-mm-dd strings into m/d/yyyy
