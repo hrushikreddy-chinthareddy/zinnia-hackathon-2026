@@ -41,6 +41,7 @@ export function Task({ task }: { task: TaskView }) {
         [TaskType.Agent_Review]: t('caseOverview.tabs.agentReview'),
         [TaskType.Review_Ofac]: t('caseOverview.tabs.reviewOfac'),
         [TaskType.Agent_Onboarding_Nigo]: t('caseOverview.tabs.agentOnboardingNigo'),
+        [TaskType.AppDataEntry]: t('caseOverview.tabs.appDataEntry'),
     };
 
     const TaskTypeMap: Record<string, string> = {

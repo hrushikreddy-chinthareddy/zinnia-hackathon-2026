@@ -1427,7 +1427,8 @@
             "reviewOfac": "Review OFAC issues",
             "agentOnboardingNigo": "Review Onboarding Issues",
             "standardDocumentMatching": "Match Document",
-            "toaNigo": "Review Transfer Issues"
+            "toaNigo": "Review Transfer Issues",
+            "appDataEntry": "New Business Data Entry"
         },
         "processDate": {
             "canceled": "Canceled on",

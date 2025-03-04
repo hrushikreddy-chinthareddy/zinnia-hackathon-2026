@@ -1425,7 +1425,8 @@
             "reviewOfac": "Réviser les problèmes d'OFAC",
             "agentOnboardingNigo": "Réviser les problèmes d'onboarding",
             "standardDocumentMatching": "Document de correspondance",
-            "toaNigo": "Examiner les problèmes de transfert"
+            "toaNigo": "Examiner les problèmes de transfert",
+            "appDataEntry": "Résoudre les problèmes de saisie des données de l'application"
         },
         "processDate": {
             "cancled": "Annulé le",
