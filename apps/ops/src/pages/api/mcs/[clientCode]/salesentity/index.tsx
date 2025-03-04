@@ -6,13 +6,10 @@ import { requestHandler } from '@deps/queries/api-utils/server';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { ErrorResponse } from '@deps/types/api';
 import { CheckTupleResponse } from '@deps/types/fga';
+import { fullyMaskMcsResponse, mcsResponseSanitizer } from '@deps/utils/sanitizers';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-
-// BPB - TODO: MASK STUFF
-const mcsResponseSanitizer = (response: any) => response;
-const fullyMaskMcsResponse = (response: any) => response;
 
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>, loggingContext: object) => {

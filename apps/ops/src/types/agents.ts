@@ -82,37 +82,8 @@ export interface AgentData {
     welcomeLetterRouting: unknown | null;
     welcomeLetterRoutingId: unknown | null;
     wireIndicator: boolean | null;
-    addresses: {
-        addressLine1: string | null;
-        addressLine2: string | null;
-        addressLine3: string | null;
-        addressLine4: string | null;
-        addressType: string | null;
-        addressTypeId: number | null;
-        city: string | null;
-        country: string | null; // 3-letter country code?
-        countryCodeId: number | null;
-        createDate: string | null;
-        createUserId: string | null;
-        id: string | null;
-        linkId: string | null;
-        modifyDate: string | null;
-        modifyUserId: string | null;
-        salesEntityId: string | null;
-        stateCode: string | null; // 2-digit state code?
-        zip: string | null;
-    }[];
-    emails: {
-        createDate: string | null;
-        createUserId: string | null;
-        email: string | null;
-        emailType: string | null;
-        emailTypeId: number | null;
-        id: string | null;
-        modifyDate: string | null;
-        modifyUserId: string | null;
-        salesEntityId: string | null;
-    }[];
+    addresses: AgentAddress[];
+    emails: AgentEmail[];
     individuals: {
         birthDate: string | null;
         businessName: string | null;
@@ -138,20 +109,7 @@ export interface AgentData {
         taxIdTypeId: string | null;
         fullName: string | null;
     }[];
-    phones: {
-        areaCode: string | null;
-        countryCode: string | null;
-        createDate: string | null;
-        createUser: string | null;
-        extension: string | null;
-        id: string | null;
-        modifyDate: string | null;
-        modifyUser: string | null;
-        number: string | null;
-        phoneType: string | null;
-        phoneTypeId: number | null;
-        salesEntityId: string | null;
-    }[];
+    phones: AgentPhone[];
     // BPB - ToDo - type this when needed
     appointments: unknown[];
     hierarchy: {
@@ -175,6 +133,54 @@ export interface AgentData {
     salesHierarchy: unknown[];
     // BPB - ToDo - type this when needed
     training: unknown[];
+}
+
+export interface AgentAddress {
+    addressLine1: string | null;
+    addressLine2: string | null;
+    addressLine3: string | null;
+    addressLine4: string | null;
+    addressType: string | null;
+    addressTypeId: number | null;
+    city: string | null;
+    country: string | null; // 3-letter country code?
+    countryCodeId: number | null;
+    createDate: string | null;
+    createUserId: string | null;
+    id: string | null;
+    linkId: string | null;
+    modifyDate: string | null;
+    modifyUserId: string | null;
+    salesEntityId: string | null;
+    stateCode: string | null; // 2-digit state code?
+    zip: string | null;
+}
+
+export interface AgentPhone {
+    areaCode: string | null;
+    countryCode: string | null;
+    createDate: string | null;
+    createUser: string | null;
+    extension: string | null;
+    id: string | null;
+    modifyDate: string | null;
+    modifyUser: string | null;
+    number: string | null;
+    phoneType: string | null;
+    phoneTypeId: number | null;
+    salesEntityId: string | null;
+}
+
+export interface AgentEmail {
+    createDate: string | null;
+    createUserId: string | null;
+    email: string | null;
+    emailType: string | null;
+    emailTypeId: number | null;
+    id: string | null;
+    modifyDate: string | null;
+    modifyUserId: string | null;
+    salesEntityId: string | null;
 }
 
 export interface AgentDataResponse {

@@ -19,6 +19,7 @@ import {
     TaxWithholding,
 } from '@deps/models/policy/sor-policy';
 import { GetPolicyResponse } from '@deps/queries/api/policies';
+import { AgentAddress, AgentData, AgentDataResponse, AgentEmail, AgentPhone } from '@deps/types/agents';
 import { CaseSearchResponse } from '@deps/types/search';
 
 import { logError, parseErrorInformation } from './server-logging';
@@ -363,4 +364,89 @@ export const caseSearchFullMasker = ({ data, ...rest }: CaseSearchResponse): Cas
         logError('Error sanitizing case search results', { ...parseErrorInformation(e) });
         throw e;
     }
+};
+
+export const mcsResponseSanitizer = (mcsResponse: AgentDataResponse): AgentDataResponse => {
+    try {
+        const response = agentSanitizer(mcsResponse.items[0]);
+        return { ...mcsResponse, items: [response] };
+    } catch (e) {
+        logError('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
+        throw e;
+    }
+};
+
+export const agentSanitizer = (agent: AgentData): AgentData => {
+    try {
+        const { bankAccountNumber, taxId, individuals, ...rest } = agent;
+        const firstAgent = individuals?.[0];
+        return {
+            ...rest,
+            bankAccountNumber: formatAccountNumber(bankAccountNumber || undefined),
+            taxId: formatSSN(taxId || firstAgent?.taxId || undefined),
+            individuals: [{ ...firstAgent, taxId: formatSSN(firstAgent.taxId || undefined) }],
+        };
+    } catch (e) {
+        logError('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
+        throw e;
+    }
+};
+
+export const fullyMaskMcsResponse = (mcsResponse: AgentDataResponse): AgentDataResponse => {
+    try {
+        const agent = agentSanitizer(mcsResponse.items[0]);
+
+        const { bankAccountNumber, taxId, individuals, addresses, phones, emails, ...rest } = agent;
+        const firstAgent = individuals?.[0];
+        const response = {
+            ...rest,
+            bankAccountNumber: formatAccountNumber(bankAccountNumber || undefined),
+            taxId: toMaskedStringOrNull(taxId || firstAgent?.taxId || undefined),
+            individuals: [{ ...firstAgent, taxId: toMaskedStringOrNull(firstAgent.taxId || undefined) }],
+            addresses: fullyMaskAgentAddresses(addresses),
+            phones: fullyMaskAgentPhones(phones) || [],
+            emails: fullyMaskAgentEmails(emails) || [],
+        };
+
+        return { ...mcsResponse, items: [response] };
+    } catch (e) {
+        logError('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
+        throw e;
+    }
+};
+
+const fullyMaskAgentAddresses = (addresses: AgentAddress[]): AgentAddress[] => {
+    return addresses.map(address => {
+        return {
+            ...address,
+            addressLine1: toMaskedStringOrNull(address?.addressLine1),
+            addressLine2: toMaskedStringOrNull(address?.addressLine2),
+            addressLine3: toMaskedStringOrNull(address?.addressLine3),
+            addressLine4: toMaskedStringOrNull(address?.addressLine3),
+            city: toMaskedStringOrNull(address?.city),
+            stateCode: toMaskedStringOrNull(address?.stateCode),
+            zip: toMaskedStringOrNull(address?.zip),
+        };
+    });
+};
+
+const fullyMaskAgentPhones = (phones: AgentPhone[] | undefined): AgentPhone[] | undefined => {
+    return phones?.map(({ areaCode, countryCode, number, extension, ...rest }) => {
+        return {
+            ...rest,
+            areaCode: toMaskedStringOrNull(areaCode),
+            countryCode: toMaskedStringOrNull(countryCode),
+            number: toMaskedStringOrNull(number),
+            extension: toMaskedStringOrNull(extension),
+        };
+    });
+};
+
+const fullyMaskAgentEmails = (emails: AgentEmail[] | undefined): AgentEmail[] | undefined => {
+    return emails?.map(email => {
+        return {
+            ...email,
+            email: toMaskedStringOrNull(email?.email),
+        };
+    });
 };
