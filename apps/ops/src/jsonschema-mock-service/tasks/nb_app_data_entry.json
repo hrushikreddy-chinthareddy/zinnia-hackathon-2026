@@ -1,6 +1,6 @@
 {
-    "formId": "c0c1c9b9-741b-4272-8cf4-48cd0d7cb0f2",
-    "process": "Qualification",
+    "formId": "4debf6b0-3766-4dcf-ad40-a676e3cf0699",
+    "process": "New Business",
     "carrier": "WELB",
     "taskType": "NB_APP_DATA_ENTRY",
     "formSchema": {
@@ -16,27 +16,17 @@
                 "formSchema": {
                     "$schema": "http://json-schema.org/draft-07/schema#",
                     "type": "object",
-                    "definitions": {
-                        "caseTypeEnum": {},
-                        "caseSubTypeEnum": {},
-                        "isDuplicateEnum": {
-                            "enumNames": ["Yes", "No"],
-                            "enum": ["DUPLICATE", "MATCH_FOUND"]
-                        }
-                    },
                     "properties": {
                         "sectionHeader": {
                             "type": "object",
                             "title": "Processing Instructions"
                         },
-
                         "details": {
                             "type": "object",
                             "properties": {
-                                "payerDetails": {
+                                "annuitantDetails": {
                                     "type": "object",
                                     "title": "Supporting information",
-
                                     "properties": {
                                         "firstName": {
                                             "type": "string",
@@ -48,7 +38,7 @@
                                             "title": "Title",
                                             "ui:field": "title"
                                         },
-                                        "taxId": {
+                                        "ssn": {
                                             "type": "string",
                                             "title": "SSN",
                                             "dataType": "ssn",
@@ -56,44 +46,39 @@
                                         }
                                     }
                                 },
-                                "purchaseDocument": {
-                                    "type": "object",
-                                    "title": "",
-                                    "label": true,
-                                    "properties": {
-                                        "documentName": {
-                                            "type": "string",
-                                            "title": "Document Name",
-                                            "ui:field": "title"
-                                        },
-                                        "docType": {
-                                            "type": "string",
-                                            "title": "Document Name",
-                                            "ui:field": "title"
-                                        },
-
-                                        "documentId": {
-                                            "type": "string",
-                                            "ui:field": "subTitle"
-                                        },
-                                        "documentSource": {
-                                            "type": "string"
-                                        },
-                                        "createdDate": {
-                                            "type": "string"
-                                        },
-                                        "carrier": {
-                                            "type": "string",
-                                            "default": "{{carrier}}"
+                                "documentDetails": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle"
+                                            },
+                                            "docType": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
                                         }
                                     }
-                                },
-                                "caseOverview": {
-                                    "type": "string",
-                                    "title": "Open Form for Data Entry",
-                                    "default": "/cases/{}"
                                 }
                             }
+                        },
+                        "dataEntryForm": {
+                            "type": "string",
+                            "title": "Open Form for Data Entry",
+                            "default": "{{customData.baseUrl}}?caseId={{customData.caseId}}&corelationId={{customData.corelationId}}"
                         }
                     }
                 },
@@ -121,7 +106,7 @@
                             "label": false
                         },
 
-                        "payerDetails": {
+                        "annuitantDetails": {
                             "ui:options": {
                                 "title": "Title",
                                 "cardType": "Detailed",
@@ -130,25 +115,29 @@
                                 "ObjectFieldTemplate": "CardTemplate"
                             }
                         },
-                        "purchaseDocument": {
-                            "props": {
-                                "readonly": true
-                            },
+                        "documentDetails": {
                             "ui:options": {
                                 "canAdd": false,
-                                "label": false,
-                                "cardType": "Document",
-                                "icon": "DOCUMENT_TEXT",
-                                "ObjectFieldTemplate": "CardTemplate"
-                            }
-                        },
-                        "caseOverview": {
-                            "ui:options": {
-                                "label": false,
-                                "type": "link"
+                                "label": true,
+                                "addable": false
                             },
-                            "ui:widget": "HyperLinkWidget"
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                }
+                            }
                         }
+                    },
+                    "dataEntryForm": {
+                        "ui:options": {
+                            "label": false,
+                            "type": "link",
+                            "omitValue": true
+                        },
+                        "ui:widget": "HyperLinkWidget"
                     }
                 }
             }

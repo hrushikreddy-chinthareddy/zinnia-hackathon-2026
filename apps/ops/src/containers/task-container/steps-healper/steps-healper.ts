@@ -36,7 +36,7 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
         case TaskType.Agent_Review:
             steps = getAgentReviewSteps(props);
             break;
-        case TaskType.NB_APP_DATA_ENTRY:
+        case TaskType.AppDataEntry:
             steps = getNewBusinessDataSteps(props);
             break;
         case TaskType.TOA_Nigo:
