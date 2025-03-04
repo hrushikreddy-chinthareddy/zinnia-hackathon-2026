@@ -78,7 +78,7 @@
                         "dataEntryForm": {
                             "type": "string",
                             "title": "Open Form for Data Entry",
-                            "default": "{{customData.baseUrl}}?caseId={{customData.caseId}}&corelationId={{customData.corelationId}}"
+                            "default": "{{customData.baseUrl}}?caseId={{customData.caseId}}&correlationId={{customData.correlationId}}"
                         }
                     }
                 },
@@ -105,7 +105,6 @@
                         "ui:options": {
                             "label": false
                         },
-
                         "annuitantDetails": {
                             "ui:options": {
                                 "title": "Title",
@@ -118,7 +117,7 @@
                         "documentDetails": {
                             "ui:options": {
                                 "canAdd": false,
-                                "label": true,
+                                "label": false,
                                 "addable": false
                             },
                             "items": {
