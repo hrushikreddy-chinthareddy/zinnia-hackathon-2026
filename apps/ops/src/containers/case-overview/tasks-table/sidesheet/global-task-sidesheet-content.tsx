@@ -46,7 +46,7 @@ export interface DocumentItemProps {
     taskCarrier: string;
 }
 
-export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescription }: { taskId: string; type?: string, taskDescription?: string }) {
+export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescription, taskName}: { taskId: string; type?: string, taskDescription?: string, taskName?: string }) {
     const { t } = useTranslation();
 
     const [loading, setLoading] = useState(true);
@@ -319,7 +319,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 taskId={task.id}
                 taskStatus={task.status}
                 taskDescription={taskDescription}
-                taskName={task.taskName}
+                taskName={taskName}
             />
         );
         sideSheet.changeSideSheetContent(t('taskManagementQueue.updateTaskStatusDrawer.updateTaskStatus'), content);
