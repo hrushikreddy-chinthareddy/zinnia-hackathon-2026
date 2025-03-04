@@ -3,10 +3,10 @@ import { TaskType } from '@deps/models/case/task';
 
 import { getAgentNigoSteps } from './agent-nigo';
 import { getAgentReviewSteps } from './agent-review';
-import { getTOANigoSteps } from './toa-nigo';
 import { getMatchDocumentPaymentReviewSteps } from './match-payment-document-review';
 import { getSuitabilityReviewSteps } from './suitability-review-steps';
 import { getSuitabilitySteps } from './suitability-steps';
+import { getTOANigoSteps } from './toa-nigo';
 import { GetStepsProps } from './types';
 
 export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] => {
@@ -29,6 +29,7 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
         case TaskType.Attachment_Nigo:
         case TaskType.Review_Ofac:
         case TaskType.Agent_Onboarding_Nigo:
+        case TaskType.Agent_Onboarding_Review:
             steps = getAgentNigoSteps(props);
             break;
 

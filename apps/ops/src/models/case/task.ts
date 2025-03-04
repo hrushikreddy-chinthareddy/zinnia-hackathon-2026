@@ -25,6 +25,7 @@ export enum TaskType {
     TOA_Nigo = 'NB_TOA_NIGO',
     Standard_Document_Matching = 'STANDARD_DOCUMENT_MATCHING',
     Prenote_Nigo = 'NB_PRENOTE_NIGO',
+    Agent_Onboarding_Review = 'AGENT_ONBOARDING_REVIEW'
 }
 
 export enum EarlyTaskType {

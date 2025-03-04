@@ -1,0 +1,185 @@
+{
+    "formId": "",
+    "process": "Agent Onboarding",
+    "carrier": "WELB",
+    "taskType": "AGENT_ONBOARDING_REVIEW",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Validate Onboarding Issues",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions"
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting Information",
+                            "properties": {
+                                "agentDetails": {
+                                    "type": "object",
+                                    "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "First Name",
+                                            "ui:field": "title"
+                                        },
+                                        "agentNPN": {
+                                            "type": "string",
+                                            "title": "NPN",
+                                            "ui:field": "subTitle"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Last Name",
+                                            "ui:field": "title"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issuesResolved": {
+                            "type": "boolean",
+                            "title": "Can you resolve the issues?",
+                            "enumNames": [
+                                "Yes, I can proceed to the next step",
+                                "No, there are one or more issues that need to be logged"
+                            ],
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    "dependencies": {
+                        "issuesResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issuesResolved": {
+                                            "enum": [
+                                                true
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issuesResolved": {
+                                            "enum": [
+                                                false
+                                            ]
+                                        },
+                                        "declineReason": {
+                                            "title": "",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "$ref": "#/definitions/declineReason"
+                                            }
+                                        },
+                                        "reviewFailureReasonDisplay": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "title": "These issues will be created for the case:"
+                                        }
+                                    }
+
+                                }
+                            ]
+                        }
+                    },
+                    "definitions": {
+                        "declineReason": {
+                            "enum": ["DEFAULT"]
+                        }
+                    },
+                    "required": [
+                        "issuesResolved"
+                    ]
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "props": {
+                            "description": "Complete onboarding validation manually and enter agent information in MCS. Use selection to confirm agent in is good order. Else, log appropriate NIGO's."
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "agentDetails": {
+                            "ui:options": {
+                                "cardtype": "Detailed",
+                                "icon": "CIRCLE_USER",
+                                "label": false,
+                                "ObjectFieldTemplate": "CardTemplate",
+                                "key": "agentDetails"
+                            }
+                        }
+                    },
+                    "issuesResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true,
+                            "inline": true
+                        }
+                    },
+                    "declineReason": {
+                        "ui:widget": "select",
+                        "ui:options": {
+                            "label": false,
+                            "enumOptions": [
+                                {
+                                    "label": "Default",
+                                    "value": "DEFAULT"
+                                }
+                            ]
+                        },
+                        "items": {
+                            "ui:options": {
+                                "label": "false"
+                            }
+                        },
+                        "ui:placeholder": "Select Issues"
+                    },
+                    "reviewFailureReasonDisplay": {
+                        "ui:options": {
+                            "label": true,
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "hasBg": true,
+                            "formContext": {
+                                "keyName": "customData",
+                                "listName": "declineReason"
+                            },
+                            "omitValue": true
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

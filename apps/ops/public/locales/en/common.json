@@ -1427,7 +1427,8 @@
             "reviewOfac": "Review OFAC issues",
             "agentOnboardingNigo": "Review Onboarding Issues",
             "standardDocumentMatching": "Match Document",
-            "toaNigo": "Review Transfer Issues"
+            "toaNigo": "Review Transfer Issues",
+            "agentOnboardingReview":"Validate Onboarding Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -5217,6 +5218,14 @@
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review Transfer was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "agentOnboardingReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Validate Onboarding Issues was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }
