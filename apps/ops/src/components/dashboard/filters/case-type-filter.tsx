@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { t } from 'i18next';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import styles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { FieldSize } from '@deps/components/fields/field';
@@ -25,6 +25,7 @@ export enum ExtendedProcesses {
 
 export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, defaultProcess, caseStatus, value }) => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
+    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(defaultProcess);
 
     const processFilter: DashboardSearchFilter = {
         caseStatus,
@@ -48,6 +49,7 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, default
     });
 
     const handleChange = (value: string) => {
+        setSelectedProcess(value as Processes | ExtendedProcesses);
         onValueChange(value as Processes | ExtendedProcesses);
     };
 
@@ -61,7 +63,7 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, default
             name="process-type-dropdown-btn"
             placeholder={t('selectProcessType') || ''}
             onChange={handleChange}
-            value={value || defaultProcess}
+            value={value || selectedProcess}
             defaultValue={defaultProcess}
         />
     );
