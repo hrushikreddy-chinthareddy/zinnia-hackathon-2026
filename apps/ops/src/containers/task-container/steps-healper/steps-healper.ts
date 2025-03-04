@@ -36,6 +36,7 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
             steps = getAgentReviewSteps(props);
             break;
         case TaskType.TOA_Nigo:
+        case TaskType.Prenote_Nigo:
             steps = getTOANigoSteps(props);
             break;
         default:
