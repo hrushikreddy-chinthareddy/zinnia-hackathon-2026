@@ -8,7 +8,7 @@ import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import { TranslationFiles } from '@deps/config/translations';
 import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helper';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import styles from './funds-table.module.css';
@@ -38,15 +38,22 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
     const hasSomeSweepDate = funds?.some(fund => fund.nextSweepDate !== DEFAULT_ERROR_STRING);
     const hasGuaranteePeriod = policy.isAnnuity;
 
-    const renderGuaranteePeriod = () => {
+    const renderGuaranteePeriod = (fund: FundViewModel) => {
         if (!hasGuaranteePeriod) {
             return null;
         }
 
-        // TODO RS: we need real data when it's ready
+        // NOTE!!!
+        // Per Amanda Boyer, the guarnatee period is *almost* always in years
+        // There's a backlog item to provide interestGuaranteePeriodMode to provide support for 2 obscure funds that are in quarters
+        // This will be fine per Maureen until we revisit at that point.
+        const guaranteePeriodContent = isNullEmptyOrUndefined(fund.interestGuaranteedPeriod)
+            ? DEFAULT_ERROR_STRING
+            : t('years', { count: fund.interestGuaranteedPeriod });
+
         return (
             <TableCell className={styles.typeCell}>
-                <Content details={DEFAULT_ERROR_STRING} variant={ContentVariant.BodySm} />
+                <Content details={guaranteePeriodContent} variant={ContentVariant.BodySm} />
             </TableCell>
         );
     };
@@ -130,7 +137,7 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
                                 <TableCell className={styles.typeCell}>
                                     <Content details={toSentenceCase(fund.type)} variant={ContentVariant.BodySm} />
                                 </TableCell>
-                                {hasGuaranteePeriod && renderGuaranteePeriod()}
+                                {hasGuaranteePeriod && renderGuaranteePeriod(fund)}
                                 <TableCell className={styles.interestRateCell}>
                                     <Content details={fund.interestRate} variant={ContentVariant.BodySm} />
                                 </TableCell>

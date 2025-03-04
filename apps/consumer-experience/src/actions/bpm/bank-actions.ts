@@ -175,6 +175,7 @@ export const putEndDateBankAccount = async (
           parsedResponse: parsedResponse,
         })
       );
+
       throw rawResponse;
     }
 
@@ -186,7 +187,6 @@ export const putEndDateBankAccount = async (
     return { data: { ...parsedResponse, messages }, error: null };
   } catch (e) {
     logError('Error deleting bank', e);
-
     return {
       data: null,
       error: {
