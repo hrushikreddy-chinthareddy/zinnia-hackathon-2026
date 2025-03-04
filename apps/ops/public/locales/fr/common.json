@@ -1425,7 +1425,9 @@
             "reviewOfac": "Réviser les problèmes d'OFAC",
             "agentOnboardingNigo": "Réviser les problèmes d'onboarding",
             "standardDocumentMatching": "Document de correspondance",
-            "toaNigo": "Examiner les problèmes de transfert"
+            "toaNigo": "Examiner les problèmes de transfert",
+            "appDataEntry": "Résoudre les problèmes de saisie des données de l'application",
+            "agentOnboardingReview": "Valider les problèmes d'onboarding"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -2770,7 +2772,8 @@
                 "nextSweepDate": "Prochaine date de balayage",
                 "nextSweepDateTooltip": "À cette date, tout l'argent du fonds de réserve sera \"balayé\" ou transféré dans les différents fonds de la police, selon les allocations de fonds sélectionnées par le propriétaire. Dans la plupart des cas, la date de balayage se produit le même jour chaque mois.",
                 "noFunds": "Rien à afficher.",
-                "type": "Type"
+                "type": "Type",
+                "years": "$t(temporal.years, {{count}})"
             },
             "segmentsTable": {
                 "segmentID": "ID de segment.",
@@ -2986,9 +2989,10 @@
                 "checkingEndingIn": "Compte courant se terminant par {{accountNumber}}",
                 "COSTOFINSURANCE": "Coût de l'assurance",
                 "EXPENSECHARGE": "Frais de gestion",
-                "UNITEXPENSECHARGE": "Frais d'unité",
+                "MARKETVALUEADJUSTMENT": "Ajustement de la valeur marchande",
                 "RIDERCHARGE": "Frais de garantie supplémentaire",
                 "SURRENDERCHARGE": "Frais de rachat",
+                "UNITEXPENSECHARGE": "Frais d'unité",
                 "WITHDRAWALCHARGE": "Frais de retrait",
                 "proRata": "Pro rata",
                 "disbursementType": "Distribution {{disbursementType}}"
@@ -3167,7 +3171,9 @@
         "timeago_other": "Il y a {{count}} $t(temporal.{{unit}}) {{formattedDate}}",
         "nYears": "{{n}} ans",
         "oneYear": "1 an",
-        "timeLeft": "Il reste {{timespan}}"
+        "timeLeft": "Il reste {{timespan}}",
+        "years_one": "{{count}} an",
+        "years_other": "{{count}} ans"
     },
     "sideSheet": {
         "posted": "Publié",
@@ -4255,7 +4261,7 @@
         "eligible": "Éligible",
         "eligibleForWithdrawal": "Éligible au retrait",
         "eligibleForWithdrawalTooltip": "Les retraits de la valeur du compte sont autorisés actuellement. Les retraits peuvent réduire le bénéfice décès.",
-        "freeWithdrawalAmount": "Montant de retrait gratuit",
+        "freeWithdrawalAmount": "Montant de retrait gratuit: {{ amount }}",
         "ineligible": "Non éligible",
         "maximumWithdrawal": "Montant maximal de retrait",
         "netSurrenderValue": "Valeur de rachat nette",
@@ -5188,8 +5194,25 @@
             "secondaryCta": "Retour à l'accueil"
         }
     },
+    "agentOnboardingReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Valider des problèmes d'onboarding a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
     "unauthorized": {
         "title": "Non autorisé",
         "message": "Vous n'avez pas accès à cette information."
+    },
+    "nbAppDataEntry": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Valider que l'agent a été soumis.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }

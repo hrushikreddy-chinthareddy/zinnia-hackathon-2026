@@ -23,7 +23,16 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
                     (item: PotentialMatches) => item.correlationid === correlationId
                 );
 
-                const { entityType, recordId, zlCaseId, policyNumber, taskId, firstName, lastName } = potentialMatch;
+                let entityType, recordId;
+                if (potentialMatch) {
+                    entityType = potentialMatch?.entityType;
+                    recordId = potentialMatch?.recordId;
+                } else {
+                    const transactionMatch = task.data?.transactionOptions?.find((item: any) => item.value === task.data?.transactions);
+                    entityType = transactionMatch?.subElement?.entityType;
+                    recordId = transactionMatch?.subElement?.recordId;
+                }
+
                 const paymentRecordId = task?.data?.transactions ?? null;
 
                 updateTask;
@@ -35,11 +44,6 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
                         matchedData: {
                             entityType,
                             recordId,
-                            zlCaseId,
-                            policyNumber,
-                            taskId,
-                            firstName,
-                            lastName,
                             linkedData: {
                                 paymentRecordId: paymentRecordId,
                             },

@@ -336,7 +336,7 @@ export const getServerSideProps = withPageAuthRequired({
             });
 
             const nigoFilters = {
-                categoryIds: ['Form', 'Signature', 'Account Information'],
+                categoryIds: ['Form', 'Signature', 'Account Information', 'Data Entry'],
                 carrier: clientCode?.toUpperCase(),
                 process: activeForm?.process,
             };

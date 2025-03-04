@@ -1,8 +1,4 @@
-import {
-  AssistiveText,
-  AssistiveTextVariant,
-  Label,
-} from '@zinnia/bloom/components';
+import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import React, { useState, ChangeEvent, cloneElement } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,10 +23,6 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
     },
     forwardRef
   ) => {
-    if ((label.type as React.JSXElementConstructor<any>).name !== Label.name) {
-      throw new Error('Required field: label is not of type Label');
-    }
-
     if (props.disabled) {
       fieldStatus = FieldStatus.INACTIVE;
     }
@@ -51,10 +43,12 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
 
     const inputId = uuidv4();
 
-    const clonedLabel = cloneElement(label, {
-      labelFor: inputId,
-      status: fieldStatus,
-    });
+    const clonedLabel = label
+      ? cloneElement(label, {
+          labelFor: inputId,
+          status: fieldStatus,
+        })
+      : null;
 
     return (
       <div>

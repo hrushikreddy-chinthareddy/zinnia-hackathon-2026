@@ -1,8 +1,9 @@
 import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
-import { MfaChallenge } from '@/components/login/MfaChallenge';
+import { MfaChallengeOld } from '@/components/login/MfaChallengeOld';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
+import { MfaChallengeLogin } from './MfaChallengeLogin';
 import { GenericLoginPage } from '../../GenericLoginPage';
 
 export default async function MfaChallengePage({
@@ -12,13 +13,15 @@ export default async function MfaChallengePage({
 }) {
   const featureFlagDecisions = await getFeatureFlags();
 
-  if (!featureFlagDecisions[FEATURE_FLAGS.ANNUITY_MODE]) {
+  // Leaving this here for now because for some reason this flow
+  // does not work on mobile created CUI-697 to address
+  if (!featureFlagDecisions[FEATURE_FLAGS.TRANSACTION_LEVEL_CODE_ADD_BANK]) {
     return (
       <GenericInfoPage
         title="Enter your code."
         description="Enter your 6-digit verification code."
         action={
-          <MfaChallenge
+          <MfaChallengeOld
             enrollment={searchParams.enrollment}
             id={searchParams.id}
           />
@@ -32,7 +35,7 @@ export default async function MfaChallengePage({
       title="Enter your code."
       description="Enter your 6-digit verification code."
       action={
-        <MfaChallenge
+        <MfaChallengeLogin
           enrollment={searchParams.enrollment}
           id={searchParams.id}
         />

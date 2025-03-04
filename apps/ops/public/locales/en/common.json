@@ -1427,7 +1427,9 @@
             "reviewOfac": "Review OFAC issues",
             "agentOnboardingNigo": "Review Onboarding Issues",
             "standardDocumentMatching": "Match Document",
-            "toaNigo": "Review Transfer Issues"
+            "toaNigo": "Review Transfer Issues",
+            "appDataEntry": "New Business Data Entry",
+            "agentOnboardingReview": "Validate Onboarding Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -2791,7 +2793,8 @@
                 "nextSweepDate": "Next sweep date",
                 "nextSweepDateTooltip": "On this date, all money in the holding fund will be \"swept\" or moved into the policy's various funds, according to the owner's selected fund allocations. In most cases, the sweep date happens on the same date every month.",
                 "noFunds": "Nothing to show.",
-                "type": "Type"
+                "type": "Type",
+                "years": "$t(temporal.years, {{count}})"
             },
             "segmentsTable": {
                 "segmentID": "Segment ID",
@@ -3008,9 +3011,10 @@
                 "checkingEndingIn": "Checking ending in {{ accountNumber }}",
                 "COSTOFINSURANCE": "Cost of insurance",
                 "EXPENSECHARGE": "Expense charge",
-                "UNITEXPENSECHARGE": "UNITEXPENSE charge",
+                "MARKETVALUEADJUSTMENT": "Market value adjustment",
                 "RIDERCHARGE": "Rider charge",
                 "SURRENDERCHARGE": "Surrender charge",
+                "UNITEXPENSECHARGE": "UNITEXPENSE charge",
                 "WITHDRAWALCHARGE": "Withdrawal charge",
                 "proRata": "Pro rata",
                 "disbursementType": "{{disbursementType}} disbursement"
@@ -3187,7 +3191,9 @@
         "timeago_other": "{{count}} $t(temporal.{{unit}})s ago {{formattedDate}}",
         "nYears": "{{n}} years",
         "oneYear": "1 year",
-        "timeLeft": "{{timespan}} left"
+        "timeLeft": "{{timespan}} left",
+        "years_one": "{{count}} year",
+        "years_other": "{{count}} years"
     },
     "sideSheet": {
         "posted": "Posted",
@@ -4281,7 +4287,7 @@
         "eligible": "Eligible",
         "eligibleForWithdrawal": "Eligible for withdrawal",
         "eligibleForWithdrawalTooltip": "Withdrawals from the account value are allowed right now. Withdrawals may reduce the death benefit.",
-        "freeWithdrawalAmount": "{{ amount }}: Free withdrawal amount",
+        "freeWithdrawalAmount": "Free withdrawal amount: {{ amount }}",
         "ineligible": "Ineligible",
         "maximumWithdrawalAmount": "Maximum withdrawal amount",
         "netSurrenderValue": "Net surrender value",
@@ -5122,7 +5128,8 @@
                 "start": "Start",
                 "nigoDetails": "Missing Information",
                 "suitabilityForm": "Suitability form",
-                "summary": "Summary"
+                "summary": "Summary",
+                "matchDocument": "Match Document"
             }
         },
         "formErrors": {
@@ -5150,13 +5157,13 @@
         }
     },
     "nbAttachmentNigo": {
-      "confirmStep": {
+        "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review Application Issues was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }
-     },
+    },
     "nbPaymentProcessingNigo": {
         "confirmStep": {
             "title": "Got It!",
@@ -5217,8 +5224,25 @@
             "secondaryCta": "Back to home"
         }
     },
+    "agentOnboardingReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Validate Onboarding Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."
+    },
+    "nbAppDataEntry": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: New Business Data Entry was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     }
 }

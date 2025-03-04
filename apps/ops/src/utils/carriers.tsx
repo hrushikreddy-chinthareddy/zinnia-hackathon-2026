@@ -45,9 +45,15 @@ const carriers = {
     WELB: 'Wellabe',
 };
 
-export const getCarrierNameByClientId = (clientId: string): string => {
+export const getCarrierNameByClientId = (clientId: string, showClientCode: boolean = false): string => {
     if (!clientId) return '';
-    return carriers[clientId.toUpperCase() as keyof typeof carriers] || '';
+    const carrierName = carriers[clientId.toUpperCase() as keyof typeof carriers];
+
+    if (showClientCode) {
+        return carrierName ? carrierName + ' (' + clientId.toUpperCase() + ')' : '';
+    } else {
+        return carrierName || '';
+    }
 };
 
 const carrierNameClientIdMappings = (activeCarriers: typeof carriers) => {

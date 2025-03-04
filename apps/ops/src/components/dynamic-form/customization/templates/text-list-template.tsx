@@ -23,9 +23,8 @@ export default function TextListTemplate(props: ArrayFieldTemplateProps): JSX.El
     if (typeof keyName === 'string') {
         list = formData.map((item: { [key: string]: any }) => item[keyName]) ?? [];
     }
-
-    if (list.length === 0) {
-        const formContextOptions: any = uiSchema?.['ui:options']?.formContext;
+    const formContextOptions: any = uiSchema?.['ui:options']?.formContext;
+    if (list.length === 0 && formContextOptions) {
         if (props.formContext[formContextOptions?.keyName][formContextOptions?.listName]) {
             const data = props.formContext[formContextOptions?.keyName][formContextOptions?.listName];
             list = data;

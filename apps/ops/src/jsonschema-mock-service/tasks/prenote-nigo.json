@@ -1,0 +1,485 @@
+{
+    "formId": "d30857ef-cf3f-46dc-b461-694c5b0e0c19",
+    "process": "PrenoteProcessing",
+    "carrier": "WELB",
+    "taskType": "NB_PRENOTE_NIGO",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "process": "PrenoteProcessing",
+                "carrier": "WELB",
+                "taskType": "NB_PRENOTE_NIGO",
+                "title": "Review Transfer Issues",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions"
+                        },
+                        "issuesList": {
+                            "type": "array",
+                            "title": "Issues",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "reason": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Details"
+                        },
+                        "paymentRecordId": {
+                            "type": "string",
+                            "title": "Payment record ID"
+                        },
+                        "documents": {
+                            "type": "array",
+                            "title": "Supporting Information",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "documentId": {
+                                        "type": "string",
+                                        "ui:field": "subTitle",
+                                        "ui:placeholder": "Documemt ID: "
+                                    },
+                                    "documentType": {
+                                        "type": "string",
+                                        "ui:field": "title",
+                                        "ui:separator": " - "
+                                    },
+                                    "documentName": {
+                                        "type": "string",
+                                        "ui:field": "title",
+                                        "ui:separator": " - "
+                                    },
+                                    "documentSource": {
+                                        "type": "string"
+                                    },
+                                    "documentExt": {
+                                        "type": "string"
+                                    },
+                                    "carrier": {
+                                        "type": "string",
+                                        "default": "{{carrier}}"
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enum": [true, false],
+                            "enumNames": ["Yes", "No"],
+                            "title": "Can you proceed ?"
+                        }
+                    },
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": true
+                                        },
+                                        "surrenderCompanyName": {
+                                            "type": "string",
+                                            "title": "Surrender carrier name,"
+                                        },
+                                        "surrenderContractNumber": {
+                                            "type": "string",
+                                            "title": "Surrender carrier contract number"
+                                        },
+                                        "isEligible": {
+                                            "type": "boolean",
+                                            "enum": [true, false],
+                                            "enumNames": ["Yes", "No"],
+                                            "title": "Eligibility indicator"
+                                        },
+                                        "grossAmount": {
+                                            "type": "number",
+                                            "title": "Gross Amount"
+                                        },
+                                        "deliveryMethod": {
+                                            "type": "string",
+                                            "enum": ["MAIL", "FAX"],
+                                            "enumNames": ["Mail", "Fax"],
+                                            "title": "LOA Delivery method"
+                                        },
+                                        "address": {
+                                            "type": "object",
+                                            "title": "",
+                                            "properties": {
+                                                "addressLine1": {
+                                                    "type": "string",
+                                                    "title": "Address"
+                                                },
+                                                "addressLine2": {
+                                                    "type": "string",
+                                                    "title": "Address 2"
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "title": "City"
+                                                },
+                                                "state": {
+                                                    "type": "string",
+                                                    "title": "State",
+                                                    "$ref": "#/definitions/stateEnum"
+                                                },
+                                                "zip": {
+                                                    "type": "string",
+                                                    "title": "Zip"
+                                                },
+                                                "zip4": {
+                                                    "type": "string",
+                                                    "title": "Zip+4"
+                                                }
+                                            }
+                                        },
+                                        "deliveryFaxNumber": {
+                                            "type": "string",
+                                            "title": "Fax number"
+                                        },
+                                        "documentList": {
+                                            "type": "object",
+                                            "title": "Link or upload document",
+                                            "properties": {
+                                                "upload": {
+                                                    "type": "string"
+                                                },
+                                                "or": {
+                                                    "type": "string",
+                                                    "title": "or"
+                                                },
+                                                "attachment": {
+                                                    "type": "array",
+                                                    "title": "upload",
+                                                    "items": {
+                                                        "title": "upload",
+                                                        "type": "string",
+                                                        "format": "data-url"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "attachments": {
+                                            "type": "array",
+                                            "items": {
+                                                "documentName": {
+                                                    "title": "Name",
+                                                    "type": "string"
+                                                },
+                                                "documentId": {
+                                                    "title": "Document Id",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": false
+                                        },
+                                        "statusReason": {
+                                            "type": "object",
+                                            "title": "The status reason for the task will be set to:"
+                                        },
+                                        "communicationSent": {
+                                            "type": "boolean",
+                                            "title": "The required communication has been sent"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "required": ["issueResolved"],
+                    "definitions": {
+                        "stateEnum": {
+                            "enum": [
+                                "AA",
+                                "AE",
+                                "AK",
+                                "AL",
+                                "AP",
+                                "AR",
+                                "AZ",
+                                "CA",
+                                "CD",
+                                "CO",
+                                "CT",
+                                "DC",
+                                "DE",
+                                "FL",
+                                "FN",
+                                "GA",
+                                "GU",
+                                "HI",
+                                "IA",
+                                "ID",
+                                "IL",
+                                "IN",
+                                "KS",
+                                "KY",
+                                "LA",
+                                "MA",
+                                "MD",
+                                "ME",
+                                "MI",
+                                "MN",
+                                "MO",
+                                "MS",
+                                "MT",
+                                "NC",
+                                "ND",
+                                "NE",
+                                "NH",
+                                "NJ",
+                                "NM",
+                                "NV",
+                                "NY",
+                                "OH",
+                                "OK",
+                                "OR",
+                                "PA",
+                                "PR",
+                                "RI",
+                                "SC",
+                                "SD",
+                                "TN",
+                                "TX",
+                                "UT",
+                                "VA",
+                                "VI",
+                                "VT",
+                                "WA",
+                                "WI",
+                                "WV",
+                                "WY"
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "props": {
+                            "description": "Review the information and see if it can be resolved."
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "issuesList": {
+                        "ui:options": {
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "keyName": "processingReason"
+                        },
+                        "ui:dataPath": ["issuesList"]
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        }
+                    },
+                    "paymentRecordId": {
+                        "ui-widget": "ValueWidget",
+                        "ui:options": {
+                            "label": false,
+                            "inline": true,
+                            "prefix": ""
+                        },
+                        "ui:dataPath": ["details", "exchangeReplace", "paymentRecordId"]
+                    },
+                    "documents": {
+                        "props": {
+                            "readonly": true
+                        },
+                        "items": {
+                            "ui:options": {
+                                "ObjectFieldTemplate": "CardTemplate",
+                                "cardType": "Document",
+                                "icon": "DOCUMENT_TEXT",
+                                "nobackground": true
+                            },
+                            "documentId": {
+                                "ui:widget": "text"
+                            },
+                            "documentName": {
+                                "ui:widget": "text"
+                            },
+                            "documentSource": {
+                                "ui:widget": "text"
+                            },
+                            "documentType": {
+                                "ui:widget": "text"
+                            }
+                        },
+                        "ui:options": {
+                            "addable": false
+                        },
+                        "ui:dataPath": ["details", "documents"]
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "inline": true
+                        },
+                        "ui:dataPath": ["issueResolved"]
+                    },
+                    "surrenderCompanyName": {
+                        "ui:widget": "text",
+                        "ui:dataPath": ["details", "exchangeReplace", "surrenderCompanyName"]
+                    },
+                    "surrenderContractNumber": {
+                        "ui:widget": "text",
+                        "ui:dataPath": ["details", "exchangeReplace", "surrenderContractNumber"]
+                    },
+                    "isEligible": {
+                        "ui:widget": "radio",
+                        "ui:dataPath": ["details", "exchangeReplace", "eligibilityIndicator"]
+                    },
+                    "grossAmount": {
+                        "ui:options": {
+                            "widget": "ValueWidget"
+                        },
+                        "ui:dataPath": ["details", "exchangeReplace", "grossAmount"]
+                    },
+                    "deliveryMethod": {
+                        "ui:widget": "radio",
+                        "ui:dataPath": ["details", "exchangeReplace", "deliveryMethod"]
+                    },
+                    "address": {
+                        "ui:options": {
+                            "label": false,
+                            "ObjectFieldTemplate": "AddressFieldTemplate"
+                        },
+                        "addressLine1": {
+                            "ui:widget": "text",
+                            "ui:options": {
+                                "width": 100
+                            }
+                        },
+                        "addressLine2": {
+                            "ui:widget": "text",
+                            "ui:options": {
+                                "width": 100
+                            }
+                        },
+                        "city": {
+                            "ui:widget": "text",
+                            "ui:options": {
+                                "width": 60
+                            }
+                        },
+                        "state": {
+                            "ui:widget": "select",
+                            "ui:options": {
+                                "width": 40
+                            }
+                        },
+                        "zip": {
+                            "ui:widget": "text",
+                            "ui:options": {
+                                "width": 25
+                            }
+                        },
+                        "zip4": {
+                            "ui:widget": "text",
+                            "ui:options": {
+                                "width": 25
+                            }
+                        },
+                        "ui:dataPath": ["details", "exchangeReplace", "address"]
+                    },
+                    "deliveryFaxNumber": {
+                        "ui:widget": "text",
+                        "ui:options": {
+                            "label": true,
+                            "width": 100
+                        },
+                        "ui:dataPath": ["details", "exchangeReplace", "deliveryFaxNumber"]
+                    },
+                    "documentList": {
+                        "inline": true,
+                        "ui:options": {
+                            "label": true,
+                            "omitValue": true
+                        },
+                        "ui:dataPath": ["documentList"],
+                        "upload": {
+                            "ui:widget": "AutoCompleteWidget",
+                            "ui:placeholder": "Find existing documents...",
+                            "ui:options": {
+                                "label": false,
+                                "icon": "Search"
+                            }
+                        },
+                        "or": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "attachment": {
+                            "ui:options": {
+                                "label": false,
+                                "showFiles": false
+                            },
+                            "ui:props": {
+                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiMethod": "get"
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "ui:dataPath": ["attachments"],
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
+                        }
+                    },
+                    "statusReason": {
+                        "props": {
+                            "description": "NIGOs unable to be resolved"
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "communicationSent": {
+                        "ui:options": {
+                            "widget": "CheckboxWidget",
+                            "label": true
+                        },
+                        "ui:dataPath": ["details", "exchangeReplace", "communicationSent"]
+                    }
+                }
+            }
+        ]
+    }
+}

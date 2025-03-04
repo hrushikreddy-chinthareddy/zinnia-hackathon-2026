@@ -20,10 +20,13 @@ export enum TaskType {
     PremiumNigo = 'NB_PAYMENT_PROCESSING_NIGO',
     Application_Nigo = 'NB_APPLICATION_NIGO',
     Agent_Review = 'NB_AGENT_REVIEW',
+    AppDataEntry = 'NB_APP_DATA_ENTRY',
     Review_Ofac = 'OFAC_REVIEW',
     Agent_Onboarding_Nigo = 'AGENT_ONBOARDING_NIGO',
     TOA_Nigo = 'NB_TOA_NIGO',
     Standard_Document_Matching = 'STANDARD_DOCUMENT_MATCHING',
+    Prenote_Nigo = 'NB_PRENOTE_NIGO',
+    Agent_Onboarding_Review = 'AGENT_ONBOARDING_REVIEW'
 }
 
 export enum EarlyTaskType {
@@ -126,19 +129,16 @@ export interface renewalsFormParts {
     renewalRequestSignDate: string;
     subsequentTargetFunds: TargetFundAllocation[] | null;
 }
-
-export type FormMetadata = {
+export type TabSchema = {
     title?: string;
+    description?: string;
     formSchema: RJSFSchema;
     uiSchema: UiSchema;
+};
+
+export type FormMetadata = TabSchema & {
     schemaContent?: {
-        tabSchemas: [
-            {
-                title?: string;
-                formSchema: RJSFSchema;
-                uiSchema: UiSchema;
-            }
-        ];
+        tabSchemas: TabSchema[];
     };
 };
 
