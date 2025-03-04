@@ -11,7 +11,8 @@ import toaNigoData from '@deps/jsonschema-mock-service/tasks-data/toa-nigo.json'
 import agentOnboardingNigoData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-nigo.json';
 import attachmentNigoData from '@deps/jsonschema-mock-service/tasks-data/attachment-nigo.json';
 import agentReviewData from '@deps/jsonschema-mock-service/tasks-data/agent-review.json';
-import appDataEnteyData from '@deps/jsonschema-mock-service/tasks-data/app-data-entry.json';
+import agentOnboardingReviewData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-review.json';
+import appDataEnteyData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-review.json';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 
@@ -52,6 +53,8 @@ export const getCaseTaskByIdSSRMock = async (taskType: TaskType): Promise<Manage
             return agentReviewData as ManagementTask<TaskStatus>;
         case TaskType.AppDataEntry:
             return appDataEnteyData as ManagementTask<TaskStatus>;
+        case TaskType.Agent_Onboarding_Review:
+            return agentOnboardingReviewData as ManagementTask<TaskStatus>;
         default:
             return null;
     }
