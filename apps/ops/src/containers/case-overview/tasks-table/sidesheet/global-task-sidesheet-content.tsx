@@ -313,7 +313,15 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     };
 
     const openSideSheet = () => {
-        const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} taskDescription={taskDescription} />;
+        const content = (
+            <TaskQueueDrawer
+                onClose={sideSheet.onClose}
+                taskId={task.id}
+                taskStatus={task.status}
+                taskDescription={taskDescription}
+                taskName={task.taskName}
+            />
+        );
         sideSheet.changeSideSheetContent(t('taskManagementQueue.updateTaskStatusDrawer.updateTaskStatus'), content);
         sideSheet.handleOpen(true);
     };

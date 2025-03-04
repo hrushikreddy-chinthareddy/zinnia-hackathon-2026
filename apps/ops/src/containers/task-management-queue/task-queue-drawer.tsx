@@ -19,7 +19,7 @@ import { useSideSheetContext } from "@deps/contexts/SideSheetContext";
 import GlobalTaskSideSheet from "../case-overview/tasks-table/sidesheet/global-task-sidesheet-content";
 import { NUMERIC_DATE_FORMAT } from "@deps/types/constants";
 
-function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription }: { onClose: () => void, getTasks?: () => void, taskStatus: TaskStatus, taskId: string, taskDescription?: string }) {
+function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription, taskName }: { onClose: () => void, getTasks?: () => void, taskStatus: TaskStatus, taskId: string, taskDescription?: string, taskName?: string }) {
   const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
   const [date, setDate] = useState(tomorrow)
   const [timer] = useState(performance.now());
@@ -46,10 +46,9 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
   ];
 
 
-
   const openGlobalSideSheet = () => {
     const content = <GlobalTaskSideSheet taskId={taskId} taskDescription={taskDescription as TaskType} />;
-    sideSheet.changeSideSheetContent(`${t('sideSheet.task.taskHeading')}: ${TaskTitle[taskDescription as TaskType]}`, content);
+    sideSheet.changeSideSheetContent(`${taskName ? `${t('sideSheet.task.taskHeading')}: ${taskName}` : t('sideSheet.task.taskHeading')}`, content);
     sideSheet.handleOpen(true);
   };
   const updateTaskStatus = async () => {
