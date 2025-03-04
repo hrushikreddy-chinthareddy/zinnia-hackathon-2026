@@ -297,7 +297,12 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             Remove address
           </Button>
         )}
-        <Button onClick={handleCancel} className={styles.cancel} mode="link">
+        <Button
+          onClick={handleCancel}
+          className={styles.cancel}
+          mode="link"
+          additionalContext="add edit address"
+        >
           Cancel
         </Button>
       </div>

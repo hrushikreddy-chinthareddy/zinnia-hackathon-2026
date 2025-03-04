@@ -89,6 +89,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                 mode="secondary"
                 onClick={cancel}
                 aria-label={cancelDescription}
+                additionalContext={cancelDescription}
               >
                 {cancelText}
               </Button>

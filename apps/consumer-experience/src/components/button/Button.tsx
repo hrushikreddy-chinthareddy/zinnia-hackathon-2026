@@ -9,28 +9,36 @@ import { useRef } from 'react';
 import { useUser } from '@/hooks/use-user';
 import { analytics } from '@/utils/segment';
 
-type ConditionalProps =
-  | {
-      type: 'submit';
-      /**
-       * If the button is used in a transaction flow,
-       * include the correlationId associated with that transaction
-       */
-      correlationId?: string;
-    }
-  | {
-      type?: 'button' | 'reset';
-      correlationId?: string;
-    };
+interface AdditionalProps {
+  correlationId?: string;
+  /**
+   * Button to provide additional segment context about where the action
+   * took place
+   */
+  additionalContext?: string;
+}
 
-type Props = ButtonProps & ConditionalProps;
+type Props = ButtonProps & AdditionalProps;
 
-export const Button = ({ children, correlationId, ...props }: Props) => {
+/**
+ * A button wrapper that includes segment tracking
+ *
+ * ATTENTION!! If the button does not include action context in the text of the button
+ * AND does not include aria-label e.g. a cancel button on a transaction
+ * include additional context via the additionalContext prop
+ */
+export const Button = ({
+  additionalContext,
+  children,
+  correlationId,
+  ...props
+}: Props) => {
   const { user } = useUser();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const trackAndClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     analytics.track('button_clicked', {
+      additionalContext,
       buttonText:
         buttonRef.current?.innerText ||
         props['aria-label'] ||

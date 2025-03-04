@@ -164,13 +164,15 @@ export const AddBank: FC<AddBankProps> = ({
       </div>
 
       <div className={styles.buttonContainer}>
-        {/* TODO: right now this will track the click regardless of whether
-        the form has errors or not. possibly change when the analytics
-        happens and doi it on SubmitHandler instead */}
         <Button type="submit" correlationId={correlationId}>
           Save account
         </Button>
-        <Button onClick={handleCancel} className={styles.cancel} mode="link">
+        <Button
+          onClick={handleCancel}
+          className={styles.cancel}
+          mode="link"
+          additionalContext="add bank"
+        >
           Cancel
         </Button>
       </div>
