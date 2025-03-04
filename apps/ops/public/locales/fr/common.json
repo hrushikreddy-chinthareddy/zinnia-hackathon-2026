@@ -1426,6 +1426,7 @@
             "agentOnboardingNigo": "Réviser les problèmes d'onboarding",
             "standardDocumentMatching": "Document de correspondance",
             "toaNigo": "Examiner les problèmes de transfert",
+            "appDataEntry": "Résoudre les problèmes de saisie des données de l'application",
             "agentOnboardingReview": "Valider les problèmes d'onboarding"
         },
         "processDate": {
@@ -5204,5 +5205,14 @@
     "unauthorized": {
         "title": "Non autorisé",
         "message": "Vous n'avez pas accès à cette information."
+    },
+    "nbAppDataEntry": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Valider que l'agent a été soumis.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }

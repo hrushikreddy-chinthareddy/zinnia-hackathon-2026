@@ -122,7 +122,7 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-            if (!(taskUserOverride === true && !isProd())) {
+            if (!(!isProd() && (taskUserOverride || taskTypeOverride))) {
                 if (
                     !(
                         user.email &&

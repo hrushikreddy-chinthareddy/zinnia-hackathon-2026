@@ -1428,7 +1428,8 @@
             "agentOnboardingNigo": "Review Onboarding Issues",
             "standardDocumentMatching": "Match Document",
             "toaNigo": "Review Transfer Issues",
-            "agentOnboardingReview":"Validate Onboarding Issues"
+            "appDataEntry": "New Business Data Entry",
+            "agentOnboardingReview": "Validate Onboarding Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -5127,7 +5128,8 @@
                 "start": "Start",
                 "nigoDetails": "Missing Information",
                 "suitabilityForm": "Suitability form",
-                "summary": "Summary"
+                "summary": "Summary",
+                "matchDocument": "Match Document"
             }
         },
         "formErrors": {
@@ -5155,13 +5157,13 @@
         }
     },
     "nbAttachmentNigo": {
-      "confirmStep": {
+        "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review Application Issues was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }
-     },
+    },
     "nbPaymentProcessingNigo": {
         "confirmStep": {
             "title": "Got It!",
@@ -5233,5 +5235,14 @@
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."
+    },
+    "nbAppDataEntry": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: New Business Data Entry was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     }
 }
