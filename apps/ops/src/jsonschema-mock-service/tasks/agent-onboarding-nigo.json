@@ -61,20 +61,40 @@
                                             "ui:field": "title"
                                         }
                                     }
+                                },
+                                "documents": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentId": {
+                                                "type": "string"
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "subTitle"
+                                            },
+                                            "documentExt": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         },
                         "issuesResolved": {
                             "type": "boolean",
                             "title": "Can you resolve the issues?",
-                            "enumNames": [
-                                "Yes",
-                                "No"
-                            ],
-                            "enum": [
-                                true,
-                                false
-                            ]
+                            "enumNames": ["Yes", "No"],
+                            "enum": [true, false]
                         }
                     },
                     "dependencies": {
@@ -83,9 +103,7 @@
                                 {
                                     "properties": {
                                         "issuesResolved": {
-                                            "enum": [
-                                                true
-                                            ]
+                                            "enum": [true]
                                         },
                                         "uploadDocuments": {
                                             "type": "object",
@@ -127,23 +145,18 @@
                                 {
                                     "properties": {
                                         "issuesResolved": {
-                                            "enum": [
-                                                false
-                                            ]
+                                            "enum": [false]
                                         },
                                         "issueReason": {
                                             "type": "object",
                                             "title": "The status reason for the task will be set to:"
                                         }
                                     }
-
                                 }
                             ]
                         }
                     },
-                    "required": [
-                        "issuesResolved"
-                    ]
+                    "required": ["issuesResolved"]
                 },
                 "uiSchema": {
                     "ui:globalOptions": {
@@ -196,6 +209,21 @@
                                 "label": false,
                                 "ObjectFieldTemplate": "CardTemplate",
                                 "key": "agentDetails"
+                            }
+                        },
+                        "documents": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": false,
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                }
                             }
                         }
                     },
