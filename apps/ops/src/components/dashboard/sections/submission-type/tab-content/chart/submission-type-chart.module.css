@@ -17,9 +17,3 @@
 .legendContainer {
     margin-bottom: var(--measure-dimension-gap-lg);
 }
-
-.timeFilterContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-}

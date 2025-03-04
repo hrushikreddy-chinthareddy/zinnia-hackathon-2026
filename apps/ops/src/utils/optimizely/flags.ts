@@ -143,4 +143,5 @@ export enum FEATURE_FLAGS {
     CASE_ADVISORS_EXCEL_ADDITIONAL_CARRIER_SUPPORT = 'case_advisors_excel_additional_carrier_support',
     DASHBOARD_CASE_TIMING_CHART = 'dashboard_case_timing_chart',
     LOAN_PAYMENT_TRANSACTION = 'loan_payment_transaction',
+    DASHBOARD_SECTION_TAB_VIEW = 'dashboard_section_tab_view',
 }

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { TreeMapInsights } from '@deps/components/dashboard/charts/tree-map-insights';
-import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
+import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { createBaseQuery, formatProcessFilter } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import CardContainer from '@deps/containers/card-container/card-container';
@@ -15,7 +15,7 @@ import { useDashboardStore } from '@deps/store/store';
 export const NigoOpenTransactions = () => {
     const { createdDateStart } = getStartAndEndDates('All');
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
-    const [selectedProcess, setSelectedProcess] = useState<Processes | undefined>(Processes.NewBusiness);
+    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
 
     const filter: DashboardSearchFilter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],

@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { AiInsightSummary } from '@deps/components/dashboard/ai-insight-summary/ai-insight-summary';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
+import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { createBaseQuery, formatProcessFilter } from '@deps/components/dashboard/utils';
@@ -32,7 +32,7 @@ const defaultDateFormat = 'YYYY-MM-DD';
 
 export const TransactionTrends = () => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
-    const [selectedProcess, setSelectedProcess] = useState<Processes | undefined>(Processes.NewBusiness);
+    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
 
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
     const [groupBy, setGroupBy] = useState<GroupByOptions>(

@@ -6,9 +6,10 @@ interface TimeFilterProps {
     defaultValue: RadioOption['value'];
     onValueChange: (val: string) => void;
     timeframeOptions?: { [key: string]: string };
+    controlledTimeValue?: RadioOption['value'];
 }
 
-export const TimeFilter: FC<TimeFilterProps> = ({ defaultValue, onValueChange, timeframeOptions }) => {
+export const TimeFilter: FC<TimeFilterProps> = ({ defaultValue, onValueChange, timeframeOptions, controlledTimeValue }) => {
     const [time, setTime] = useState(defaultValue);
     const options = timeframeOptions
         ? Object.values(timeframeOptions).map(option => ({
@@ -28,11 +29,17 @@ export const TimeFilter: FC<TimeFilterProps> = ({ defaultValue, onValueChange, t
         setTime(val);
         onValueChange(val);
     };
-    const timerangeText = getDateRangeText(time as TimeframeFilterOptions);
+    const timerangeText = getDateRangeText((controlledTimeValue as TimeframeFilterOptions) || (time as TimeframeFilterOptions));
     return (
         <div>
             <p className="field-label text-right my-4">{timerangeText}</p>
-            <ChipRadio id="timeframe-select" options={options} defaultValue={defaultValue} onValueChange={handleTimeChange} />
+            <ChipRadio
+                id="timeframe-select"
+                options={options}
+                defaultValue={defaultValue}
+                onValueChange={handleTimeChange}
+                value={controlledTimeValue || time}
+            />
         </div>
     );
 };

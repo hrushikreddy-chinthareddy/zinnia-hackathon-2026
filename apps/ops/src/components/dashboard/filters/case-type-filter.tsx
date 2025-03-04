@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { t } from 'i18next';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import styles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { FieldSize } from '@deps/components/fields/field';
@@ -13,18 +13,18 @@ import { useDashboardStore } from '@deps/store/store';
 import { createBaseQuery, formatProcessListOptions } from '../utils';
 
 interface CaseTypeFilterProps {
-    onValueChange: (value: Processes | undefined) => void;
+    onValueChange: (value: Processes | ExtendedProcesses) => void;
     defaultProcess: Processes;
     caseStatus: Statuses[];
+    value?: Processes | ExtendedProcesses;
 }
 
-enum ExtendedProcesses {
+export enum ExtendedProcesses {
     ALL = 'all',
 }
 
-export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, defaultProcess, caseStatus }) => {
+export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, defaultProcess, caseStatus, value }) => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
-    const [value, setValue] = useState(defaultProcess);
 
     const processFilter: DashboardSearchFilter = {
         caseStatus,
@@ -48,12 +48,7 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, default
     });
 
     const handleChange = (value: string) => {
-        setValue(value as Processes);
-        if (value === ExtendedProcesses.ALL) {
-            onValueChange(undefined);
-            return;
-        }
-        onValueChange(value as Processes);
+        onValueChange(value as Processes | ExtendedProcesses);
     };
 
     return (
@@ -66,7 +61,7 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, default
             name="process-type-dropdown-btn"
             placeholder={t('selectProcessType') || ''}
             onChange={handleChange}
-            value={value}
+            value={value || defaultProcess}
             defaultValue={defaultProcess}
         />
     );

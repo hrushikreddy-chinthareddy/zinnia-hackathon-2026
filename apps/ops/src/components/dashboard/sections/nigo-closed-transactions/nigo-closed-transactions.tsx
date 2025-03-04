@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { TreeMapInsights } from '@deps/components/dashboard/charts/tree-map-insights';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
+import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { TimeframeFilterOptions, startDates, formatProcessFilter, createBaseQuery } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
@@ -15,7 +15,7 @@ import { useDashboardStore } from '@deps/store/store';
 
 export const NigoClosedTransactions = () => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
-    const [selectedProcess, setSelectedProcess] = useState<Processes | undefined>(Processes.NewBusiness);
+    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
 
     const filter: DashboardSearchFilter = {
