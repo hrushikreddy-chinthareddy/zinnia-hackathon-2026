@@ -62,17 +62,25 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType, policyNumber, cl
         );
     };
 
+    const displayNoFormAvailable = () => {
+       return (
+            <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
+                <div className="text-sm font-bold">
+                    <AssistiveText
+                        text={t('noFormAvailable')}
+                        variant={AssistiveTextVariant.Default}
+                        iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
+                    />
+                </div>
+            </div>
+       );
+    };
+
     const renderTabContent = (
         <>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Working}>
                 {workingDocument && renderDocumentSection(workingDocument, workingDocument?.displayName || '', clientCode)}
-                {isNullEmptyOrUndefined(workingDocument) &&
-                    <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
-                        <div className="text-sm font-bold">
-                            <PiiWrapper>{t('noDocumentAvailable')}</PiiWrapper>
-                        </div>
-                    </div>
-                }
+                {isNullEmptyOrUndefined(workingDocument) && displayNoFormAvailable()}
             </TabContent>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
                 {relatedDocument?.length !== 0 && (
@@ -82,17 +90,7 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType, policyNumber, cl
                         ))}
                     </>
                 )}
-                {relatedDocument?.length === 0 || isNullEmptyOrUndefined(relatedDocument) && (
-                    <div className="border-box w-full lg:px-[30px] mt-2">
-                        <div className="w-full rounded border-2 border border-gray-100 bg-gray-50 p-8">
-                            <AssistiveText
-                                text={t('noFormAvailable')}
-                                variant={AssistiveTextVariant.Default}
-                                iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
-                            />
-                        </div>
-                    </div>
-                )}
+                {relatedDocument?.length === 0 && displayNoFormAvailable()}
             </TabContent>
         </>
     );
