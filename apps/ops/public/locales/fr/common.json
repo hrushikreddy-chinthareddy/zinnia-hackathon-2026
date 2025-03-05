@@ -272,7 +272,7 @@
         "taskTitle": "Mes Tâches",
         "noTasksFoundTitle": "Votre liste de tâches est actuellement vide.",
         "noTasksMessage": "Cliquez sur « Réclamer une tâche » pour commencer.",
-        "claimTaskError": "Erreur de tâche de réclamation :",
+        "claimTaskError": "Vous n'avez pas les autorisations nécessaires pour accéder à cette fonctionnalité. Veuillez contacter l'administrateur pour obtenir de l'aide.",
         "unassignTask": "Annuler l'attribution d'une tâche",
         "unassignTaskError": "Erreur de désattribution de tâche :",
         "startTask": "Démarrer la tâche",
