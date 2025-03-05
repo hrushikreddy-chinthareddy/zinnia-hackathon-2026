@@ -1708,7 +1708,8 @@
                     "interestEarningDividendsGains": "Interset/Gains/Dividendes/Gains",
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Option de revenu viager conjoint",
-                    "singleLifetimeIncomeOption": "Option de revenu viager unique"
+                    "singleLifetimeIncomeOption": "Option de revenu viager unique",
+                    "interestEarned": "Intérêt gagné"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Veuillez spécifier le fonds pour configurer SSW avec le pourcentage d'A.V.",
@@ -1731,6 +1732,9 @@
                         "level": "Niveau",
                         "increasing": "Croissant"
                     }
+                },
+                "singleLifeTimeIncome": {
+                    "title": "Nom de Income Life converti au-dessus de la ligne en français"
                 }
             },
             "rmdMethod": {

@@ -1715,7 +1715,8 @@
                     "interestEarningDividendsGains": "Interest/Earnings/Dividends/Gains",
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Joint Lifetime Income Option",
-                    "singleLifetimeIncomeOption": "Single Lifetime Income Option"
+                    "singleLifetimeIncomeOption": "Single Lifetime Income Option",
+                    "interestEarned": "Interest earned"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Please specify the fund to setup SSW with Percent of A.V",
@@ -1738,6 +1739,9 @@
                         "level": "Level",
                         "increasing": "Increasing"
                     }
+                },
+                "singleLifeTimeIncome": {
+                    "title": "Name of Income Life"
                 }
             },
             "rmdMethod": {
