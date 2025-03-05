@@ -14,10 +14,12 @@ const UserProvider: React.FC<UserProviderProps> = ({
   user: initialUser,
   children,
 }) => {
-  const [user] = useState<User | undefined>(initialUser);
+  const [user, setUser] = useState<User | undefined>(initialUser);
 
   return (
-    <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
   );
 };
 
