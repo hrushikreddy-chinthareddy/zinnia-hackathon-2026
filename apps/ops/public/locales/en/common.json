@@ -856,7 +856,10 @@
             }
         },
         "caseId": "Case ID: ",
-        "documentNumber": "Document: "
+        "documentNumber": "Document: ",
+        "noDocumentFound": "No documents found",
+        "documentSelectError": "Document already selected",
+        "fetchingDocuments": "Fetching Documents..."
     },
     "caseManagementDashboard": {
         "h1": "Case Management",
