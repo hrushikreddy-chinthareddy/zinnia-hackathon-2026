@@ -82,7 +82,7 @@ const generateCaseLink = (
 
     return `/cases?process=${
         process === 'all' ? '' : process
-    }&${carrierOrProduct}=${name}&applicationType=${method}&createdDateStart=${createdStartDate}&casesStatus=${[
+    }&${carrierOrProduct}=${name}&applicationType=${method}&createdDateStart=${createdStartDate}&caseStatus=${[
         Statuses.InProgress,
         Statuses.Exception,
         Statuses.NotStarted,
