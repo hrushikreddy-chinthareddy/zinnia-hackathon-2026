@@ -147,7 +147,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
       {!step && (
         <AddBank
           cancelCallback={onClose}
-          submitCallback={handleAdd}
+          submitCallback={confirmAdd}
           correlationId={correlationId}
         />
       )}
