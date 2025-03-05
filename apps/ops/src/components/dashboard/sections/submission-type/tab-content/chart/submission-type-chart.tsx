@@ -148,65 +148,72 @@ export const SubmissionTypeChart: FC = () => {
                 titleToolTip={SubmissionMethodTooltip}
                 description="The distribution of incoming case requests by submission method, comparing Electronic (E-App) and Paper submissions."
             />
-            {graphStatsLoading || pieChartStatsLoading ? (
-                <div className="grid place-content-center h-full w-full min-h-[400px]">
-                    <PageLoader />
-                </div>
-            ) : graphStatsError || pieChartStatsError ? (
-                <div className="grid place-content-center h-full w-full min-h-[400px]">
-                    <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
-                        <ChartBarsIcon height={'24px'} width={'24px'} />
-                        {'Something went wrong fetching the application types, please try again by refreshing the page'}
-                    </Typography>
-                </div>
-            ) : (
-                <BlurOverlayLoader loading={pieChartStatsFetching || graphStatsFetching}>
-                    <div className="flex bg-[--color-base-surface-surface-primary] mt-6">
-                        <CaseStatBlock
-                            dashboardStatsResponse={pieChartStats}
-                            blockLabel="All submissions"
-                            timeFrameLabel={''}
-                            statMeasurementLabel="case"
-                            classNames={styles.statBlock}
-                            variant="single"
-                            loading={graphStatsLoading || pieChartStatsLoading}
-                            chartConfig={{
-                                series: pieChartSeriesData,
-                                legend: pieChartLegendConfig,
-                                chart: { height: 280, marginBottom: 80 },
-                            }}
-                            showStatDetails={false}
-                            showInsights={false}
-                        />
-                        <div className={clsx('w-3/4', sharedStyles.chartContainer)}>
-                            <div className={sharedStyles.timeFilterContainer}>
-                                <div className="w-1/2 flex gap-2">
-                                    <Select
-                                        maxContentWidth
-                                        label="Group by"
-                                        className={sharedStyles.selectDropdowns}
-                                        options={submissionVsOptions}
-                                        value={submissionVs}
-                                        size={FieldSize.XS}
-                                        onChange={val => setSubmissionVs(val as GroupByOptions)}
-                                    />
 
-                                    <CaseTypeFilter
-                                        onValueChange={setSelectedProcess}
-                                        caseStatus={[Statuses.InProgress, Statuses.Exception, Statuses.NotStarted]}
-                                        defaultProcess={Processes.NewBusiness}
-                                        value={selectedProcess}
-                                    />
-                                </div>
-                                <div className="w-1/2">
-                                    <TimeFilter
-                                        defaultValue={timeframe}
-                                        onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
-                                        controlledTimeValue={timeframe}
-                                    />
-                                </div>
+            <BlurOverlayLoader loading={pieChartStatsFetching || graphStatsFetching}>
+                <div className="flex bg-[--color-base-surface-surface-primary] mt-6">
+                    <CaseStatBlock
+                        dashboardStatsResponse={pieChartStats}
+                        blockLabel="All submissions"
+                        timeFrameLabel={''}
+                        statMeasurementLabel="case"
+                        classNames={styles.statBlock}
+                        variant="single"
+                        loading={graphStatsLoading || pieChartStatsLoading}
+                        chartConfig={{
+                            series: pieChartSeriesData,
+                            legend: pieChartLegendConfig,
+                            chart: { height: 280, marginBottom: 80 },
+                        }}
+                        showStatDetails={false}
+                        showInsights={false}
+                    />
+                    <div className={clsx('w-3/4', sharedStyles.chartContainer)}>
+                        <div className={sharedStyles.timeFilterContainer}>
+                            <div className="w-1/2 flex gap-2">
+                                <Select
+                                    maxContentWidth
+                                    label="Group by"
+                                    className={sharedStyles.selectDropdowns}
+                                    options={submissionVsOptions}
+                                    value={submissionVs}
+                                    size={FieldSize.XS}
+                                    onChange={val => setSubmissionVs(val as GroupByOptions)}
+                                />
+
+                                <CaseTypeFilter
+                                    onValueChange={setSelectedProcess}
+                                    caseStatus={[Statuses.InProgress, Statuses.Exception, Statuses.NotStarted]}
+                                    defaultProcess={Processes.NewBusiness}
+                                    value={selectedProcess}
+                                />
                             </div>
-
+                            <div className="w-1/2">
+                                <TimeFilter
+                                    defaultValue={timeframe}
+                                    onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
+                                    controlledTimeValue={timeframe}
+                                />
+                            </div>
+                        </div>
+                        {graphStatsLoading || pieChartStatsLoading ? (
+                            <div className="grid place-content-center h-full w-full min-h-[400px]">
+                                <PageLoader />
+                            </div>
+                        ) : graphStatsError || pieChartStatsError ? (
+                            <div className="grid place-content-center h-full w-full min-h-[400px]">
+                                <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                                    <ChartBarsIcon height={'24px'} width={'24px'} />
+                                    {'Something went wrong fetching the application types, please try again by refreshing the page'}
+                                </Typography>
+                            </div>
+                        ) : pieChartStats?.data?.length === 0 || graphStats?.data?.length === 0 ? (
+                            <div className="grid place-content-center h-full w-full min-h-[400px]">
+                                <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                                    <ChartBarsIcon height={'24px'} width={'24px'} />
+                                    {'There is no data for this selection'}
+                                </Typography>
+                            </div>
+                        ) : (
                             <Carousel
                                 slideStyle="my-8 pt-6"
                                 slides={statsWithChartData.map((stat, index) => {
@@ -223,10 +230,10 @@ export const SubmissionTypeChart: FC = () => {
                                     <Legend title="Case Submissions" items={legendItems} containerClass={styles.legendContainer} />
                                 }
                             />
-                        </div>
+                        )}
                     </div>
-                </BlurOverlayLoader>
-            )}
+                </div>
+            </BlurOverlayLoader>
         </CardContainer>
     );
 };
