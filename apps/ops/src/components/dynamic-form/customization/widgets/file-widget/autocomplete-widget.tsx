@@ -124,7 +124,11 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
                 documentExt: document?.fileType,
                 documentName: document?.displayName || '',
             });
-            formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
+            if (Array.isArray(attachments) && attachments.length >= 1 && uiSchema?.['ui:options']?.singleDocument == true) {
+                formContext?.setCustomData && formContext.setCustomData({ attachments: attachments.slice(-1) });
+            } else {
+                formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
+            }
         } else {
             setError(true);
         }
