@@ -19,7 +19,7 @@
             "martialStatusEnum": {
                 "enum": ["SINGLE", "MARRIED", "DIVORCED", "WIDOWED", "UNKNOWN", "LEGALLY_SEPARATED"]
             },
-            "birthCountryEnum": {
+            "stateEnum": {
                 "enum": [
                     "AA",
                     "AE",
@@ -82,69 +82,7 @@
                     "WY"
                 ]
             },
-            "birthJurisdictionStateEnum": {
-                "enum": [
-                    "AA",
-                    "AE",
-                    "AK",
-                    "AL",
-                    "AP",
-                    "AR",
-                    "AZ",
-                    "CA",
-                    "CD",
-                    "CO",
-                    "CT",
-                    "DC",
-                    "DE",
-                    "FL",
-                    "FN",
-                    "GA",
-                    "GU",
-                    "HI",
-                    "IA",
-                    "ID",
-                    "IL",
-                    "IN",
-                    "KS",
-                    "KY",
-                    "LA",
-                    "MA",
-                    "MD",
-                    "ME",
-                    "MI",
-                    "MN",
-                    "MO",
-                    "MS",
-                    "MT",
-                    "NC",
-                    "ND",
-                    "NE",
-                    "NH",
-                    "NJ",
-                    "NM",
-                    "NV",
-                    "NY",
-                    "OH",
-                    "OK",
-                    "OR",
-                    "PA",
-                    "PR",
-                    "RI",
-                    "SC",
-                    "SD",
-                    "TN",
-                    "TX",
-                    "UT",
-                    "VA",
-                    "VI",
-                    "VT",
-                    "WA",
-                    "WI",
-                    "WV",
-                    "WY"
-                ]
-            },
+
             "govtIdTypeEnum": {
                 "enum": ["SSN", "PASSPORT", "DRIVER_LICENSE", "ARMED_FORCEID"]
             },
@@ -260,7 +198,67 @@
                 "enum": ["OWNER", "AGENT"]
             },
             "signatureInfo_signatureStateEnum": {
-                "enum": ["US"]
+                "enum": [
+                    "AA",
+                    "AE",
+                    "AK",
+                    "AL",
+                    "AP",
+                    "AR",
+                    "AZ",
+                    "CA",
+                    "CD",
+                    "CO",
+                    "CT",
+                    "DC",
+                    "DE",
+                    "FL",
+                    "FN",
+                    "GA",
+                    "GU",
+                    "HI",
+                    "IA",
+                    "ID",
+                    "IL",
+                    "IN",
+                    "KS",
+                    "KY",
+                    "LA",
+                    "MA",
+                    "MD",
+                    "ME",
+                    "MI",
+                    "MN",
+                    "MO",
+                    "MS",
+                    "MT",
+                    "NC",
+                    "ND",
+                    "NE",
+                    "NH",
+                    "NJ",
+                    "NM",
+                    "NV",
+                    "NY",
+                    "OH",
+                    "OK",
+                    "OR",
+                    "PA",
+                    "PR",
+                    "RI",
+                    "SC",
+                    "SD",
+                    "TN",
+                    "TX",
+                    "UT",
+                    "VA",
+                    "VI",
+                    "VT",
+                    "WA",
+                    "WI",
+                    "WV",
+                    "WY"
+                ]
             },
             "signatureInfo_signatoryDesignationEnum": {
                 "enum": ["TRUSTEE", "EXECUTOR", "CUSTODIAN", "GUARDIAN", "ATTORNEY_IN_FACT"]
@@ -312,7 +310,7 @@
                             "uniqueItems": true
                         },
                         "fullName": {
-                            "type": "string",
+                            "type": ["string", "null"],
                             "title": "Full name"
                         },
                         "person": {
@@ -350,18 +348,6 @@
                                     "type": "string",
                                     "title": "Marital status",
                                     "$ref": "#/definitions/martialStatusEnum"
-                                },
-                                "birthCountry": {
-                                    "type": "string",
-                                    "title": "Birth country",
-                                    "$ref": "#/definitions/birthCountryEnum",
-                                    "uniqueItems": true
-                                },
-                                "birthJurisdictionState": {
-                                    "type": "string",
-                                    "title": "Birth jurisdiction state",
-                                    "$ref": "#/definitions/birthJurisdictionStateEnum",
-                                    "uniqueItems": true
                                 }
                             },
                             "required": ["firstName", "gender", "age", "martialStatus"]
@@ -416,8 +402,10 @@
                                         "title": "city"
                                     },
                                     "state": {
+                                        "uniqueItems": true,
                                         "type": "string",
-                                        "title": "state"
+                                        "title": "State",
+                                        "$ref": "#/definitions/stateEnum"
                                     },
                                     "country": {
                                         "type": "string",
@@ -476,6 +464,7 @@
             "policyData": {
                 "type": "object",
                 "title": "Policy Data",
+
                 "properties": {
                     "lineOfBusiness": {
                         "type": "string",
@@ -1075,25 +1064,7 @@
                     "otherDependents"
                 ]
             },
-            "californiaResidentQuestions": {
-                "type": "object",
-                "title": "California Resident Questions",
-                "properties": {
-                    "applyForMeansTestedBenefits": {
-                        "type": "string",
-                        "title": "Apply for means tested benefits"
-                    },
-                    "buyingForGovernmentBenefits": {
-                        "type": "string",
-                        "title": "Buying for government benefits"
-                    },
-                    "reverseMortgage": {
-                        "type": "string",
-                        "title": "Reverse mortgage"
-                    }
-                },
-                "required": ["applyForMeansTestedBenefits", "buyingForGovernmentBenefits", "reverseMortgage"]
-            },
+
             "signatureInfo": {
                 "type": "array",
                 "title": "Signature Information",
@@ -1140,8 +1111,64 @@
                     ]
                 }
             }
-        }
+        },
+        "allOf": [
+            {
+                "if": {
+                    "properties": {
+                        "parties": {
+                            "type": "array",
+                            "contains": {
+                                "type": "object",
+                                "properties": {
+                                    "addresses": {
+                                        "type": "array",
+                                        "contains": {
+                                            "type": "object",
+                                            "properties": {
+                                                "state": {
+                                                    "const": "CA"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "then": {
+                    "properties": {
+                        "californiaResidentQuestions": {
+                            "type": "object",
+                            "title": "California Resident Questions",
+                            "properties": {
+                                "applyForMeansTestedBenefits": {
+                                    "type": "string",
+                                    "title": "Apply for means tested benefits"
+                                },
+                                "buyingForGovernmentBenefits": {
+                                    "type": "string",
+                                    "title": "Buying for government benefits"
+                                },
+                                "reverseMortgage": {
+                                    "type": "string",
+                                    "title": "Reverse mortgage"
+                                }
+                            },
+                            "required": ["applyForMeansTestedBenefits", "buyingForGovernmentBenefits", "reverseMortgage"]
+                        }
+                    }
+                },
+                "else": {
+                    "not": {
+                        "required": ["californiaResidentQuestions"]
+                    }
+                }
+            }
+        ]
     },
+
     "uiSchema": {
         "$schema": "http: //json-schema.org/draft-07/schema#",
         "ui:globalOptions": {
@@ -1220,138 +1247,6 @@
                         "ui:options": {
                             "enumNames": ["Single", "Married", "Divorced", "Widowed", "Unknown", "Legally Seperated"]
                         }
-                    },
-                    "birthCountry": {
-                        "uniqueItems": true,
-                        "ui:options": {
-                            "enumNames": [
-                                "Armed Forces Americas (except Canada)",
-                                "Armed Forces Canada, Africa, Europe, Middle East",
-                                "Alaska",
-                                "Alabama",
-                                "US Armed Forces Pacific",
-                                "Arkansas",
-                                "Arizona",
-                                "California",
-                                "Chad",
-                                "Colorado",
-                                "Connecticut",
-                                "District of Columbia",
-                                "Delaware",
-                                "Florida",
-                                "Estonia",
-                                "Georgia",
-                                "Guam",
-                                "Hawaii",
-                                "Iowa",
-                                "Idaho",
-                                "Illinois",
-                                "Indiana",
-                                "Kansas",
-                                "Kentucky",
-                                "Louisiana",
-                                "Massachusetts",
-                                "Maryland",
-                                "Maine",
-                                "Michigan",
-                                "Minnesota",
-                                "Missouri",
-                                "Mississippi",
-                                "Montana",
-                                "North Carolina",
-                                "North Dakota",
-                                "Nebraska",
-                                "New Hampshire",
-                                "New Jersey",
-                                "New Mexico",
-                                "Nevada",
-                                "New York",
-                                "Ohio",
-                                "Oklahoma",
-                                "Oregon",
-                                "Pennsylvania",
-                                "Puerto Rico",
-                                "Rhode Island",
-                                "South Carolina",
-                                "South Dakota",
-                                "Tennessee",
-                                "Texas",
-                                "Utah",
-                                "Virginia",
-                                "Virgin Islands",
-                                "Vermont",
-                                "Washington",
-                                "Wisconsin",
-                                "West Virginia",
-                                "Wyoming"
-                            ]
-                        }
-                    },
-                    "birthJurisdictionState": {
-                        "uniqueItems": true,
-                        "ui:options": {
-                            "enumNames": [
-                                "Armed Forces Americas (except Canada)",
-                                "Armed Forces Canada, Africa, Europe, Middle East",
-                                "Alaska",
-                                "Alabama",
-                                "US Armed Forces Pacific",
-                                "Arkansas",
-                                "Arizona",
-                                "California",
-                                "Chad",
-                                "Colorado",
-                                "Connecticut",
-                                "District of Columbia",
-                                "Delaware",
-                                "Florida",
-                                "Estonia",
-                                "Georgia",
-                                "Guam",
-                                "Hawaii",
-                                "Iowa",
-                                "Idaho",
-                                "Illinois",
-                                "Indiana",
-                                "Kansas",
-                                "Kentucky",
-                                "Louisiana",
-                                "Massachusetts",
-                                "Maryland",
-                                "Maine",
-                                "Michigan",
-                                "Minnesota",
-                                "Missouri",
-                                "Mississippi",
-                                "Montana",
-                                "North Carolina",
-                                "North Dakota",
-                                "Nebraska",
-                                "New Hampshire",
-                                "New Jersey",
-                                "New Mexico",
-                                "Nevada",
-                                "New York",
-                                "Ohio",
-                                "Oklahoma",
-                                "Oregon",
-                                "Pennsylvania",
-                                "Puerto Rico",
-                                "Rhode Island",
-                                "South Carolina",
-                                "South Dakota",
-                                "Tennessee",
-                                "Texas",
-                                "Utah",
-                                "Virginia",
-                                "Virgin Islands",
-                                "Vermont",
-                                "Washington",
-                                "Wisconsin",
-                                "West Virginia",
-                                "Wyoming"
-                            ]
-                        }
                     }
                 },
                 "govtIdInfo": {
@@ -1398,7 +1293,70 @@
                             "ui:options": {}
                         },
                         "state": {
-                            "ui:options": {}
+                            "uniqueItems": true,
+                            "ui:options": {
+                                "enumNames": [
+                                    "Armed Forces Americas (except Canada)",
+                                    "Armed Forces Canada, Africa, Europe, Middle East",
+                                    "Alaska",
+                                    "Alabama",
+                                    "US Armed Forces Pacific",
+                                    "Arkansas",
+                                    "Arizona",
+                                    "California",
+                                    "Chad",
+                                    "Colorado",
+                                    "Connecticut",
+                                    "District of Columbia",
+                                    "Delaware",
+                                    "Florida",
+                                    "Estonia",
+                                    "Georgia",
+                                    "Guam",
+                                    "Hawaii",
+                                    "Iowa",
+                                    "Idaho",
+                                    "Illinois",
+                                    "Indiana",
+                                    "Kansas",
+                                    "Kentucky",
+                                    "Louisiana",
+                                    "Massachusetts",
+                                    "Maryland",
+                                    "Maine",
+                                    "Michigan",
+                                    "Minnesota",
+                                    "Missouri",
+                                    "Mississippi",
+                                    "Montana",
+                                    "North Carolina",
+                                    "North Dakota",
+                                    "Nebraska",
+                                    "New Hampshire",
+                                    "New Jersey",
+                                    "New Mexico",
+                                    "Nevada",
+                                    "New York",
+                                    "Ohio",
+                                    "Oklahoma",
+                                    "Oregon",
+                                    "Pennsylvania",
+                                    "Puerto Rico",
+                                    "Rhode Island",
+                                    "South Carolina",
+                                    "South Dakota",
+                                    "Tennessee",
+                                    "Texas",
+                                    "Utah",
+                                    "Virginia",
+                                    "Virgin Islands",
+                                    "Vermont",
+                                    "Washington",
+                                    "Wisconsin",
+                                    "West Virginia",
+                                    "Wyoming"
+                                ]
+                            }
                         },
                         "country": {
                             "ui:options": {}
@@ -1863,7 +1821,6 @@
                 }
             }
         },
-
         "additionalInfo": {
             "ui:options": {
                 "classNames": "divider"
@@ -1905,7 +1862,67 @@
                 "signatureCity": {},
                 "signatureState": {
                     "ui:options": {
-                        "enumNames": ["AA"]
+                        "enumNames": [
+                            "Armed Forces Americas (except Canada)",
+                            "Armed Forces Canada, Africa, Europe, Middle East",
+                            "Alaska",
+                            "Alabama",
+                            "US Armed Forces Pacific",
+                            "Arkansas",
+                            "Arizona",
+                            "California",
+                            "Chad",
+                            "Colorado",
+                            "Connecticut",
+                            "District of Columbia",
+                            "Delaware",
+                            "Florida",
+                            "Estonia",
+                            "Georgia",
+                            "Guam",
+                            "Hawaii",
+                            "Iowa",
+                            "Idaho",
+                            "Illinois",
+                            "Indiana",
+                            "Kansas",
+                            "Kentucky",
+                            "Louisiana",
+                            "Massachusetts",
+                            "Maryland",
+                            "Maine",
+                            "Michigan",
+                            "Minnesota",
+                            "Missouri",
+                            "Mississippi",
+                            "Montana",
+                            "North Carolina",
+                            "North Dakota",
+                            "Nebraska",
+                            "New Hampshire",
+                            "New Jersey",
+                            "New Mexico",
+                            "Nevada",
+                            "New York",
+                            "Ohio",
+                            "Oklahoma",
+                            "Oregon",
+                            "Pennsylvania",
+                            "Puerto Rico",
+                            "Rhode Island",
+                            "South Carolina",
+                            "South Dakota",
+                            "Tennessee",
+                            "Texas",
+                            "Utah",
+                            "Virginia",
+                            "Virgin Islands",
+                            "Vermont",
+                            "Washington",
+                            "Wisconsin",
+                            "West Virginia",
+                            "Wyoming"
+                        ]
                     }
                 },
                 "signatoryDesignation": {
@@ -1936,7 +1953,7 @@
                         "martialStatusEnum": {
                             "enum": ["SINGLE", "MARRIED", "DIVORCED", "WIDOWED", "UNKNOWN", "LEGALLY_SEPARATED"]
                         },
-                        "birthCountryEnum": {
+                        "stateEnum": {
                             "enum": [
                                 "AA",
                                 "AE",
@@ -1999,69 +2016,7 @@
                                 "WY"
                             ]
                         },
-                        "birthJurisdictionStateEnum": {
-                            "enum": [
-                                "AA",
-                                "AE",
-                                "AK",
-                                "AL",
-                                "AP",
-                                "AR",
-                                "AZ",
-                                "CA",
-                                "CD",
-                                "CO",
-                                "CT",
-                                "DC",
-                                "DE",
-                                "FL",
-                                "FN",
-                                "GA",
-                                "GU",
-                                "HI",
-                                "IA",
-                                "ID",
-                                "IL",
-                                "IN",
-                                "KS",
-                                "KY",
-                                "LA",
-                                "MA",
-                                "MD",
-                                "ME",
-                                "MI",
-                                "MN",
-                                "MO",
-                                "MS",
-                                "MT",
-                                "NC",
-                                "ND",
-                                "NE",
-                                "NH",
-                                "NJ",
-                                "NM",
-                                "NV",
-                                "NY",
-                                "OH",
-                                "OK",
-                                "OR",
-                                "PA",
-                                "PR",
-                                "RI",
-                                "SC",
-                                "SD",
-                                "TN",
-                                "TX",
-                                "UT",
-                                "VA",
-                                "VI",
-                                "VT",
-                                "WA",
-                                "WI",
-                                "WV",
-                                "WY"
-                            ]
-                        },
+
                         "govtIdTypeEnum": {
                             "enum": ["SSN", "PASSPORT", "DRIVER_LICENSE", "ARMED_FORCEID"]
                         },
@@ -2191,7 +2146,67 @@
                             "enum": ["OWNER", "AGENT"]
                         },
                         "signatureInfo_signatureStateEnum": {
-                            "enum": ["US"]
+                            "enum": [
+                                "AA",
+                                "AE",
+                                "AK",
+                                "AL",
+                                "AP",
+                                "AR",
+                                "AZ",
+                                "CA",
+                                "CD",
+                                "CO",
+                                "CT",
+                                "DC",
+                                "DE",
+                                "FL",
+                                "FN",
+                                "GA",
+                                "GU",
+                                "HI",
+                                "IA",
+                                "ID",
+                                "IL",
+                                "IN",
+                                "KS",
+                                "KY",
+                                "LA",
+                                "MA",
+                                "MD",
+                                "ME",
+                                "MI",
+                                "MN",
+                                "MO",
+                                "MS",
+                                "MT",
+                                "NC",
+                                "ND",
+                                "NE",
+                                "NH",
+                                "NJ",
+                                "NM",
+                                "NV",
+                                "NY",
+                                "OH",
+                                "OK",
+                                "OR",
+                                "PA",
+                                "PR",
+                                "RI",
+                                "SC",
+                                "SD",
+                                "TN",
+                                "TX",
+                                "UT",
+                                "VA",
+                                "VI",
+                                "VT",
+                                "WA",
+                                "WI",
+                                "WV",
+                                "WY"
+                            ]
                         },
                         "signatureInfo_signatoryDesignationEnum": {
                             "enum": ["TRUSTEE", "EXECUTOR", "CUSTODIAN", "GUARDIAN", "ATTORNEY_IN_FACT"]
@@ -2243,7 +2258,7 @@
                                         "uniqueItems": true
                                     },
                                     "fullName": {
-                                        "type": "string",
+                                        "type": ["string", "null"],
                                         "title": "Full name"
                                     },
                                     "person": {
@@ -2281,18 +2296,6 @@
                                                 "type": "string",
                                                 "title": "Marital status",
                                                 "$ref": "#/definitions/martialStatusEnum"
-                                            },
-                                            "birthCountry": {
-                                                "type": "string",
-                                                "title": "Birth country",
-                                                "$ref": "#/definitions/birthCountryEnum",
-                                                "uniqueItems": true
-                                            },
-                                            "birthJurisdictionState": {
-                                                "type": "string",
-                                                "title": "Birth jurisdiction state",
-                                                "$ref": "#/definitions/birthJurisdictionStateEnum",
-                                                "uniqueItems": true
                                             }
                                         },
                                         "required": ["firstName", "gender", "age", "martialStatus"]
@@ -2347,8 +2350,11 @@
                                                     "title": "city"
                                                 },
                                                 "state": {
+                                                    "uniqueItems": true,
                                                     "type": "string",
-                                                    "title": "state"
+                                                    "title": "State",
+                                                    "$ref": "#/definitions/stateEnum",
+                                                    "default": ""
                                                 },
                                                 "country": {
                                                     "type": "string",
@@ -2865,6 +2871,7 @@
                                         },
                                         "productConsDiscussed": {
                                             "type": "object",
+                                            "title": "Product cons discussed",
                                             "properties": {
                                                 "byAgent": {
                                                     "type": "array",
@@ -2999,25 +3006,7 @@
                                 "otherDependents"
                             ]
                         },
-                        "californiaResidentQuestions": {
-                            "type": "object",
-                            "title": "California Resident Questions",
-                            "properties": {
-                                "applyForMeansTestedBenefits": {
-                                    "type": "string",
-                                    "title": "Apply for means tested benefits"
-                                },
-                                "buyingForGovernmentBenefits": {
-                                    "type": "string",
-                                    "title": "Buying for government benefits"
-                                },
-                                "reverseMortgage": {
-                                    "type": "string",
-                                    "title": "Reverse mortgage"
-                                }
-                            },
-                            "required": ["applyForMeansTestedBenefits", "buyingForGovernmentBenefits", "reverseMortgage"]
-                        },
+
                         "signatureInfo": {
                             "type": "array",
                             "title": "Signature Information",
@@ -3064,7 +3053,62 @@
                                 ]
                             }
                         }
-                    }
+                    },
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "parties": {
+                                        "type": "array",
+                                        "contains": {
+                                            "type": "object",
+                                            "properties": {
+                                                "addresses": {
+                                                    "type": "array",
+                                                    "contains": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "state": {
+                                                                "const": "CA"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "californiaResidentQuestions": {
+                                        "type": "object",
+                                        "title": "California Resident Questions",
+                                        "properties": {
+                                            "applyForMeansTestedBenefits": {
+                                                "type": "string",
+                                                "title": "Apply for means tested benefits"
+                                            },
+                                            "buyingForGovernmentBenefits": {
+                                                "type": "string",
+                                                "title": "Buying for government benefits"
+                                            },
+                                            "reverseMortgage": {
+                                                "type": "string",
+                                                "title": "Reverse mortgage"
+                                            }
+                                        },
+                                        "required": ["applyForMeansTestedBenefits", "buyingForGovernmentBenefits", "reverseMortgage"]
+                                    }
+                                }
+                            },
+                            "else": {
+                                "not": {
+                                    "required": ["californiaResidentQuestions"]
+                                }
+                            }
+                        }
+                    ]
                 },
                 "uiSchema": {
                     "$schema": "http: //json-schema.org/draft-07/schema#",
@@ -3151,138 +3195,6 @@
                                     "ui:options": {
                                         "enumNames": ["Single", "Married", "Divorced", "Widowed", "Unknown", "Legally Seperated"]
                                     }
-                                },
-                                "birthCountry": {
-                                    "uniqueItems": true,
-                                    "ui:options": {
-                                        "enumNames": [
-                                            "AA",
-                                            "AE",
-                                            "AK",
-                                            "AL",
-                                            "AP",
-                                            "AR",
-                                            "AZ",
-                                            "CA",
-                                            "CD",
-                                            "CO",
-                                            "CT",
-                                            "DC",
-                                            "DE",
-                                            "FL",
-                                            "FN",
-                                            "GA",
-                                            "GU",
-                                            "HI",
-                                            "IA",
-                                            "ID",
-                                            "IL",
-                                            "IN",
-                                            "KS",
-                                            "KY",
-                                            "LA",
-                                            "MA",
-                                            "MD",
-                                            "ME",
-                                            "MI",
-                                            "MN",
-                                            "MO",
-                                            "MS",
-                                            "MT",
-                                            "NC",
-                                            "ND",
-                                            "NE",
-                                            "NH",
-                                            "NJ",
-                                            "NM",
-                                            "NV",
-                                            "NY",
-                                            "OH",
-                                            "OK",
-                                            "OR",
-                                            "PA",
-                                            "PR",
-                                            "RI",
-                                            "SC",
-                                            "SD",
-                                            "TN",
-                                            "TX",
-                                            "UT",
-                                            "VA",
-                                            "VI",
-                                            "VT",
-                                            "WA",
-                                            "WI",
-                                            "WV",
-                                            "WY"
-                                        ]
-                                    }
-                                },
-                                "birthJurisdictionState": {
-                                    "uniqueItems": true,
-                                    "ui:options": {
-                                        "enumNames": [
-                                            "AA",
-                                            "AE",
-                                            "AK",
-                                            "AL",
-                                            "AP",
-                                            "AR",
-                                            "AZ",
-                                            "CA",
-                                            "CD",
-                                            "CO",
-                                            "CT",
-                                            "DC",
-                                            "DE",
-                                            "FL",
-                                            "FN",
-                                            "GA",
-                                            "GU",
-                                            "HI",
-                                            "IA",
-                                            "ID",
-                                            "IL",
-                                            "IN",
-                                            "KS",
-                                            "KY",
-                                            "LA",
-                                            "MA",
-                                            "MD",
-                                            "ME",
-                                            "MI",
-                                            "MN",
-                                            "MO",
-                                            "MS",
-                                            "MT",
-                                            "NC",
-                                            "ND",
-                                            "NE",
-                                            "NH",
-                                            "NJ",
-                                            "NM",
-                                            "NV",
-                                            "NY",
-                                            "OH",
-                                            "OK",
-                                            "OR",
-                                            "PA",
-                                            "PR",
-                                            "RI",
-                                            "SC",
-                                            "SD",
-                                            "TN",
-                                            "TX",
-                                            "UT",
-                                            "VA",
-                                            "VI",
-                                            "VT",
-                                            "WA",
-                                            "WI",
-                                            "WV",
-                                            "WY"
-                                        ]
-                                    }
                                 }
                             },
                             "govtIdInfo": {
@@ -3336,8 +3248,72 @@
                                         "ui:options": {}
                                     },
                                     "state": {
-                                        "ui:options": {}
+                                        "uniqueItems": true,
+                                        "ui:options": {
+                                            "enumNames": [
+                                                "Armed Forces Americas (except Canada)",
+                                                "Armed Forces Canada, Africa, Europe, Middle East",
+                                                "Alaska",
+                                                "Alabama",
+                                                "US Armed Forces Pacific",
+                                                "Arkansas",
+                                                "Arizona",
+                                                "California",
+                                                "Chad",
+                                                "Colorado",
+                                                "Connecticut",
+                                                "District of Columbia",
+                                                "Delaware",
+                                                "Florida",
+                                                "Estonia",
+                                                "Georgia",
+                                                "Guam",
+                                                "Hawaii",
+                                                "Iowa",
+                                                "Idaho",
+                                                "Illinois",
+                                                "Indiana",
+                                                "Kansas",
+                                                "Kentucky",
+                                                "Louisiana",
+                                                "Massachusetts",
+                                                "Maryland",
+                                                "Maine",
+                                                "Michigan",
+                                                "Minnesota",
+                                                "Missouri",
+                                                "Mississippi",
+                                                "Montana",
+                                                "North Carolina",
+                                                "North Dakota",
+                                                "Nebraska",
+                                                "New Hampshire",
+                                                "New Jersey",
+                                                "New Mexico",
+                                                "Nevada",
+                                                "New York",
+                                                "Ohio",
+                                                "Oklahoma",
+                                                "Oregon",
+                                                "Pennsylvania",
+                                                "Puerto Rico",
+                                                "Rhode Island",
+                                                "South Carolina",
+                                                "South Dakota",
+                                                "Tennessee",
+                                                "Texas",
+                                                "Utah",
+                                                "Virginia",
+                                                "Virgin Islands",
+                                                "Vermont",
+                                                "Washington",
+                                                "Wisconsin",
+                                                "West Virginia",
+                                                "Wyoming"
+                                            ]
+                                        }
                                     },
+
                                     "country": {
                                         "ui:options": {}
                                     },
@@ -3783,7 +3759,67 @@
                             "signatureCity": {},
                             "signatureState": {
                                 "ui:options": {
-                                    "enumNames": ["AA"]
+                                    "enumNames": [
+                                        "Armed Forces Americas (except Canada)",
+                                        "Armed Forces Canada, Africa, Europe, Middle East",
+                                        "Alaska",
+                                        "Alabama",
+                                        "US Armed Forces Pacific",
+                                        "Arkansas",
+                                        "Arizona",
+                                        "California",
+                                        "Chad",
+                                        "Colorado",
+                                        "Connecticut",
+                                        "District of Columbia",
+                                        "Delaware",
+                                        "Florida",
+                                        "Estonia",
+                                        "Georgia",
+                                        "Guam",
+                                        "Hawaii",
+                                        "Iowa",
+                                        "Idaho",
+                                        "Illinois",
+                                        "Indiana",
+                                        "Kansas",
+                                        "Kentucky",
+                                        "Louisiana",
+                                        "Massachusetts",
+                                        "Maryland",
+                                        "Maine",
+                                        "Michigan",
+                                        "Minnesota",
+                                        "Missouri",
+                                        "Mississippi",
+                                        "Montana",
+                                        "North Carolina",
+                                        "North Dakota",
+                                        "Nebraska",
+                                        "New Hampshire",
+                                        "New Jersey",
+                                        "New Mexico",
+                                        "Nevada",
+                                        "New York",
+                                        "Ohio",
+                                        "Oklahoma",
+                                        "Oregon",
+                                        "Pennsylvania",
+                                        "Puerto Rico",
+                                        "Rhode Island",
+                                        "South Carolina",
+                                        "South Dakota",
+                                        "Tennessee",
+                                        "Texas",
+                                        "Utah",
+                                        "Virginia",
+                                        "Virgin Islands",
+                                        "Vermont",
+                                        "Washington",
+                                        "Wisconsin",
+                                        "West Virginia",
+                                        "Wyoming"
+                                    ]
                                 }
                             },
                             "signatoryDesignation": {
