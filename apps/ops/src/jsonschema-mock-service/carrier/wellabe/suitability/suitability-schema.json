@@ -583,10 +583,7 @@
                         "title": "Material change expected",
                         "$ref": "#/definitions/materialChangeExpEnum"
                     },
-                    "materialChangeReason": {
-                        "type": "string",
-                        "title": "Material Purchase reason"
-                    },
+
                     "materialChangeDetails": {
                         "type": "array",
                         "title": "Material Change Details",
@@ -641,6 +638,24 @@
                     "otherTaxBand": {
                         "type": "string",
                         "title": "Other tax band"
+                    }
+                },
+                "dependencies": {
+                    "materialChangeExp": {
+                        "if": {
+                            "properties": {
+                                "materialChangeExp": { "const": "YES" }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "materialChangeReason": {
+                                    "type": "string",
+                                    "title": "Material Purchase reason"
+                                }
+                            },
+                            "required": ["materialChangeReason"]
+                        }
                     }
                 },
                 "required": [
@@ -2550,10 +2565,7 @@
                                     "title": "Material change expected",
                                     "$ref": "#/definitions/materialChangeExpEnum"
                                 },
-                                "materialChangeReason": {
-                                    "type": "string",
-                                    "title": "Material Purchase reason"
-                                },
+
                                 "materialChangeDetails": {
                                     "type": "array",
                                     "title": "Material Change Details",
@@ -2609,6 +2621,24 @@
                                 "otherTaxBand": {
                                     "type": "string",
                                     "title": "Other tax band"
+                                }
+                            },
+                            "dependencies": {
+                                "materialChangeExp": {
+                                    "if": {
+                                        "properties": {
+                                            "materialChangeExp": { "const": "YES" }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "materialChangeReason": {
+                                                "type": "string",
+                                                "title": "Material Purchase reason"
+                                            }
+                                        },
+                                        "required": ["materialChangeReason"]
+                                    }
                                 }
                             },
                             "required": [
