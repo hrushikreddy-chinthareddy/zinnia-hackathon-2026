@@ -1974,8 +1974,7 @@
                 "or": "Or",
                 "preTaxBalance": "Pre-tax balance",
                 "prorata": "Prorata",
-                "specifyFunds": "Specify funds",
-                "variableFunds": "Variable funds"
+                "specifyFunds": "Specify funds"
             },
             "distributionReason": {
                 "addDate": "Add date",
@@ -5159,13 +5158,13 @@
         }
     },
     "nbAttachmentNigo": {
-      "confirmStep": {
+        "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Review Application Issues was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }
-     },
+    },
     "nbPaymentProcessingNigo": {
         "confirmStep": {
             "title": "Got It!",

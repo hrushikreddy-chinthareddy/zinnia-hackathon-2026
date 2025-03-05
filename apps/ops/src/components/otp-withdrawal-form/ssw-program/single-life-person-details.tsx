@@ -57,7 +57,7 @@ const SingleLifePersonDetails = ({ personDetails }: SingleLifePersonDetailsProps
                         id={personDetails.taxId}
                         checked={isSelected}
                         className="sr-only"
-                        name="case-documents"
+                        name="tax-id"
                         type="radio"
                         onClick={() => {
                             setIsSelected(!isSelected);
