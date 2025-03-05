@@ -500,15 +500,7 @@
                         "title": "Replacement indicator",
                         "$ref": "#/definitions/replacementIndEnum"
                     },
-                    "replacementReason": {
-                        "type": "string",
-                        "title": "Replacement Purchase reason"
-                    },
-                    "replacedContractType": {
-                        "type": "string",
-                        "title": "Replaced contract type",
-                        "$ref": "#/definitions/replacedContractTypeEnum"
-                    },
+
                     "additionalInformation": {
                         "type": "object",
                         "title": "Additional Information",
