@@ -502,7 +502,7 @@
                     },
                     "replacementReason": {
                         "type": "string",
-                        "title": "ReplaPurchase reason"
+                        "title": "Replacement Purchase reason"
                     },
                     "replacedContractType": {
                         "type": "string",
@@ -532,7 +532,30 @@
                         "required": ["soldPoliciesToApplicant"]
                     }
                 },
-                "required": ["replacementInd", "additionalInformation"]
+                "required": ["replacementInd", "additionalInformation"],
+                "dependencies": {
+                    "replacementInd": {
+                        "if": {
+                            "properties": {
+                                "replacementInd": { "const": "YES" }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "replacementReason": {
+                                    "type": "string",
+                                    "title": "Replacement purchase reason"
+                                },
+                                "replacedContractType": {
+                                    "type": "string",
+                                    "title": "Replaced contract type",
+                                    "$ref": "#/definitions/replacedContractTypeEnum"
+                                }
+                            },
+                            "required": ["replacementReason", "replacedContractType"]
+                        }
+                    }
+                }
             },
             "fiscalData": {
                 "type": "object",
@@ -2452,15 +2475,7 @@
                                     "title": "Replacement indicator",
                                     "$ref": "#/definitions/replacementIndEnum"
                                 },
-                                "replacementReason": {
-                                    "type": "string",
-                                    "title": "ReplaPurchase reason"
-                                },
-                                "replacedContractType": {
-                                    "type": "string",
-                                    "title": "Replaced contract type",
-                                    "$ref": "#/definitions/replacedContractTypeEnum"
-                                },
+
                                 "additionalInformation": {
                                     "type": "object",
                                     "title": "Additional Information",
@@ -2484,7 +2499,30 @@
                                     "required": ["soldPoliciesToApplicant"]
                                 }
                             },
-                            "required": ["replacementInd", "additionalInformation"]
+                            "required": ["replacementInd", "additionalInformation"],
+                            "dependencies": {
+                                "replacementInd": {
+                                    "if": {
+                                        "properties": {
+                                            "replacementInd": { "const": "YES" }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "replacementReason": {
+                                                "type": "string",
+                                                "title": "Replacement purchase reason"
+                                            },
+                                            "replacedContractType": {
+                                                "type": "string",
+                                                "title": "Replaced contract type",
+                                                "$ref": "#/definitions/replacedContractTypeEnum"
+                                            }
+                                        },
+                                        "required": ["replacementReason", "replacedContractType"]
+                                    }
+                                }
+                            }
                         },
                         "fiscalData": {
                             "type": "object",
@@ -3326,7 +3364,7 @@
                                 "employmentStatus": {
                                     "ui:options": {
                                         "label": true,
-                                        "enumNames": ["Active", "Retired", "Disabled", "TerminatedD", "Others"]
+                                        "enumNames": ["Active", "Retired", "Disabled", "Terminated", "Others"]
                                     }
                                 },
                                 "occupation": {
