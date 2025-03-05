@@ -182,6 +182,9 @@
             "liquidityOptions_distributionOptionEnum": {
                 "enum": ["PENALTY-FREE-WITHDRWAWAL", "ANNUITIZE", "LUMP_SUM", "REQUIRED_MINIMUM_DISTRIBUTION", "NO_PLANS_TO_ACCESS"]
             },
+            "liquidityOptions_planToHoldAnnuityEnum": {
+                "enum": ["1", "2", "3", "4", "5"]
+            },
             "financialObjectives_annuityMeetsFinancialNeedsEnum": {
                 "enum": ["YES", "NO"]
             },
@@ -734,8 +737,7 @@
                                             "type": "string",
                                             "title": "Amount"
                                         }
-                                    },
-                                    "required": ["qualificationType", "assetType", "amount"]
+                                    }
                                 }
                             }
                         },
@@ -843,7 +845,9 @@
                     },
                     "planToHoldAnnuity": {
                         "type": "string",
-                        "title": "Plan to hold annuity"
+                        "title": "Plan to hold annuity",
+
+                        "$ref": "#/definitions/liquidityOptions_planToHoldAnnuityEnum"
                     },
                     "explainedOtherCharges": {
                         "type": "string",
@@ -1749,7 +1753,12 @@
             "firstPayoutOption": {},
             "surrenderChargeConsentUnderAge": {},
             "possibleReductionInValue": {},
-            "planToHoldAnnuity": {},
+            "planToHoldAnnuity": {
+                "ui:options": {
+                    "enumNames": ["0-2 Years", "3-4 Years", "4-5 Years", "5-6 Years", "7+ Years"],
+                    "label": true
+                }
+            },
             "explainedOtherCharges": {},
             "benefitAnnuityQuestions": {
                 "understandIncomeAdjustmentFactor": {},
@@ -2159,6 +2168,9 @@
                                 "REQUIRED_MINIMUM_DISTRIBUTION",
                                 "NO_PLANS_TO_ACCESS"
                             ]
+                        },
+                        "liquidityOptions_planToHoldAnnuityEnum": {
+                            "enum": ["1", "2", "3", "4", "5"]
                         },
                         "financialObjectives_annuityMeetsFinancialNeedsEnum": {
                             "enum": ["YES", "NO"]
@@ -2716,8 +2728,7 @@
                                                         "type": "string",
                                                         "title": "Amount"
                                                     }
-                                                },
-                                                "required": ["qualificationType", "assetType", "amount"]
+                                                }
                                             }
                                         }
                                     },
@@ -2815,7 +2826,9 @@
                                 },
                                 "planToHoldAnnuity": {
                                     "type": "string",
-                                    "title": "Plan to hold annuity"
+                                    "title": "Plan to hold annuity",
+
+                                    "$ref": "#/definitions/liquidityOptions_planToHoldAnnuityEnum"
                                 },
                                 "explainedOtherCharges": {
                                     "type": "string",
@@ -3725,7 +3738,12 @@
                         "firstPayoutOption": {},
                         "surrenderChargeConsentUnderAge": {},
                         "possibleReductionInValue": {},
-                        "planToHoldAnnuity": {},
+                        "planToHoldAnnuity": {
+                            "ui:options": {
+                                "enumNames": ["0-2 Years", "3-4 Years", "4-5 Years", "5-6 Years", "7+ Years"],
+                                "label": true
+                            }
+                        },
                         "explainedOtherCharges": {},
                         "benefitAnnuityQuestions": {
                             "understandIncomeAdjustmentFactor": {},
