@@ -110,8 +110,6 @@ export const PeopleSubPage: React.FC = () => {
                     agentData.push(new AgentParty(result, agent));
                 } catch (error) {
                     console.error('Unable to fetch agent details', error);
-                } finally {
-                    // setIsLoading(false);
                 }
             }
             setAgentData(agentData);
