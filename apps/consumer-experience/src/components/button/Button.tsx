@@ -3,6 +3,8 @@
 import {
   Button as BloomButton,
   type ButtonProps,
+  Loader,
+  LoaderVariant,
 } from '@zinnia/bloom/components';
 import { useRef } from 'react';
 
@@ -16,6 +18,7 @@ interface AdditionalProps {
    * took place
    */
   additionalContext?: string;
+  loading?: boolean;
 }
 
 type Props = ButtonProps & AdditionalProps;
@@ -31,6 +34,7 @@ export const Button = ({
   additionalContext,
   children,
   correlationId,
+  loading,
   ...props
 }: Props) => {
   const { user } = useUser();
@@ -52,7 +56,14 @@ export const Button = ({
 
   return (
     <BloomButton {...props} onClick={trackAndClick} ref={buttonRef}>
-      {children}
+      <>
+        {children}
+        {loading && (
+          <span className="ml-sm">
+            <Loader variant={LoaderVariant.CTA} />
+          </span>
+        )}
+      </>
     </BloomButton>
   );
 };
