@@ -3236,7 +3236,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Dernière mise à jour",
-                "caseId": "ID du cas"
+                "caseId": "ID du cas",
+                "noCasesAvailable": "No related cases available."
             },
             "addressHistoryTab": {
                 "defaultAddress": "Adresse par défaut",
@@ -3244,7 +3245,8 @@
                 "mailingAddress": "Adresse postale",
                 "viewFullDeatils": "Voir les détails",
                 "preferredAddress": "Adresse choisie",
-                "agentAddress": "Adresse de l'agent"
+                "agentAddress": "Adresse de l'agent",
+                "noAddressesAvailable": "No addresses available."
             }
         },
         "correspondence": "Correspondence ({{count}})",
@@ -4875,7 +4877,8 @@
             "documents": "Documents",
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible.",
-            "taskTitle": "Détails de la tâche"
+            "taskTitle": "Détails de la tâche",
+             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -4894,7 +4897,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Dernière mise à jour",
-                "caseId": "ID du cas"
+                "caseId": "ID du cas",
+                "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {
@@ -4947,7 +4951,8 @@
                     "noDocTypeToReindex": "Veuillez indiquer le type de document pour la réindexation",
                     "noNotes": "Veuillez saisir des notes"
                 }
-            }
+            },
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "formSelection": {
             "title": "Sélection de nouveau formulaire",
@@ -5070,7 +5075,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "ID du document",
-            "noFormAvailable": "Aucun formulaire disponible."
+            "noFormAvailable": "Aucun formulaire disponible.",
+             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         }
     },
     "suitabilityReview": {

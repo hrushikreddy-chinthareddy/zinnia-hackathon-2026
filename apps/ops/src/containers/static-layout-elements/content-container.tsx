@@ -65,7 +65,7 @@ const ContentContainer = ({
 
         return (
             <GlobalValuesBar
-                carrierId={policy.carrierId}
+                carrierId={policy?.carrierId}
                 highlight={highlight}
                 isNavDrawerOpen={isNavDrawerOpen}
                 marketingName={marketingName}
