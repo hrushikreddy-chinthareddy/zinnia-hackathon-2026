@@ -437,15 +437,11 @@
                                     "title": "Occupation"
                                 }
                             },
-                            "allOf": [
-                                {
+                            "dependencies": {
+                                "employmentStatus": {
                                     "if": {
                                         "properties": {
-                                            "employmentStatus": {
-                                                "contains": {
-                                                    "const": "DISABLED"
-                                                }
-                                            }
+                                            "employmentStatus": { "const": "DISABLED" }
                                         }
                                     },
                                     "then": {
@@ -459,7 +455,7 @@
                                         "required": ["disabilityExplanation"]
                                     }
                                 }
-                            ]
+                            }
                         }
                     }
                 }
@@ -2522,15 +2518,11 @@
                                                 "title": "Occupation"
                                             }
                                         },
-                                        "allOf": [
-                                            {
+                                        "dependencies": {
+                                            "employmentStatus": {
                                                 "if": {
                                                     "properties": {
-                                                        "employmentStatus": {
-                                                            "contains": {
-                                                                "const": "DISABLED"
-                                                            }
-                                                        }
+                                                        "employmentStatus": { "const": "DISABLED" }
                                                     }
                                                 },
                                                 "then": {
@@ -2544,7 +2536,7 @@
                                                     "required": ["disabilityExplanation"]
                                                 }
                                             }
-                                        ]
+                                        }
                                     }
                                 }
                             }
