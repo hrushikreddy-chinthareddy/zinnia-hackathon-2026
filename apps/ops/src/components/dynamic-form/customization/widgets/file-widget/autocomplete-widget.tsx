@@ -33,7 +33,7 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
     const [filteredDocuments, setFilteredDocuments] = useState<MetadataSearchResponse[]>([]);
     const [inputValue, setInputValue] = useState<string>();
     const inputRef = useRef<HTMLDivElement>(null);
-    const [fetchingDocuments, setFetchingDocuments] = useState<string>('');
+    const [fetchingDocuments, setFetchingDocuments] = useState<boolean | null>(null);
     const [error, setError] = useState<boolean>(false);
     const { t } = useTranslation(undefined, { keyPrefix: 'taskManagementQueue' });
 
@@ -45,7 +45,7 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
 
     useEffect(() => {
         const fetchApiData = async (value: string) => {
-            setFetchingDocuments('true');
+            setFetchingDocuments(true);
             const searchBody: SearchRequest = {
                 documentClassification: SearchRequest.documentClassification.INBOUND,
                 zinniaLiveCaseId: formContext?.customData?.caseId,
@@ -71,7 +71,7 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
                     fileName: 'autocomplete-widget::fetchApiData',
                 });
             } finally {
-                setFetchingDocuments('false');
+                setFetchingDocuments(false);
             }
         };
         fetchApiData(value);
@@ -174,8 +174,8 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
                         </ClickContainer>
                     ))}
                 </div>
-                {fetchingDocuments == 'false' && documents.length == 0 && <div className="mt-2">{t('noDocumentFound')}</div>}
-                {fetchingDocuments == 'true' && <div className="mt-2">{t('fetchingDocuments')}</div>}
+                {fetchingDocuments == false && documents.length == 0 && <div className="mt-2">{t('noDocumentFound')}</div>}
+                {fetchingDocuments == true && <div className="mt-2">{t('fetchingDocuments')}</div>}
             </div>
         </>
     );
