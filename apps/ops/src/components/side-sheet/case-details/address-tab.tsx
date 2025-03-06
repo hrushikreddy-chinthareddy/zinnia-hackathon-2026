@@ -3,10 +3,10 @@ import { useTranslation } from 'next-i18next';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
+import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
 import { AddressTypeAndAddress } from '@deps/containers/small-data-card/address-data/address-data';
 
 import { addressType } from './case-details-content';
-import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
 
 interface AddressTabProps {
     addresses: addressType[];

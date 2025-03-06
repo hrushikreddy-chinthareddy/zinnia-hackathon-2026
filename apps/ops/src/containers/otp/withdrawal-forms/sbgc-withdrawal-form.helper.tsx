@@ -32,7 +32,7 @@ import {
     PhoneTypes,
     RestrictionOption,
     AccountType,
-} from '@deps/models/case/withdrawal/case';
+ ProgramType } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementParts,
@@ -40,7 +40,7 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { ProgramType } from '@deps/models/case/withdrawal/case';
+
 import { createValidator } from '../utils/helper-utils';
 
 export default function getSbgcConfig(t: TFunction) {

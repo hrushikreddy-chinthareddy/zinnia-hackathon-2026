@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+import { AdditionalDataInstance } from '@deps/models/case/additional-data-instance';
 import { Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { AvailableFormsTransaction, SearchTransactionRequestBody } from '@deps/models/case/send-document';
@@ -11,6 +12,7 @@ import { TransactionDetails } from '@deps/pages/nigo-entry';
 import { getSearchTransactions, getTransactionSubTypes, searchForms } from '@deps/queries/api/c2web';
 import { getCases } from '@deps/queries/api/cases';
 import { fetchPolicy } from '@deps/queries/api/policies';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import { useNigoEntry } from './nigo-entry-provider';
 import ConfirmStep from './steps/confirm/confirm-step';
@@ -20,8 +22,6 @@ import { NigoDetailsStep } from './steps/nigo-details/nigo-details-step';
 import { SelOptionType } from './steps/service-form-review/service-form-review';
 import { ServiceFormReviewStep } from './steps/service-form-review/service-form-review-step';
 import TabGroupContainer from './tab-group-container';
-import { AdditionalDataInstance } from '@deps/models/case/additional-data-instance';
-import { browserLogInfo } from '@deps/utils/browser-logging';
 
 interface NigoEntryContainerContainerProps {
     policyNumber: string;

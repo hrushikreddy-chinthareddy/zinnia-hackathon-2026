@@ -14,7 +14,7 @@ import {
 import { CommunicationTypes, Confirm } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { browserLogWarn } from '@deps/utils/browser-logging';
+import { browserLogWarn , browserLogInfo } from '@deps/utils/browser-logging';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
@@ -22,7 +22,6 @@ import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive
 import { Loader } from '../page-loader';
 import { RadioItem } from '../radio/radio';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
-import { browserLogInfo } from '@deps/utils/browser-logging';
 
 const getDefaultCommunicationType = (communicationOptions?: RadioItem[]) => {
     if (!communicationOptions) return '';

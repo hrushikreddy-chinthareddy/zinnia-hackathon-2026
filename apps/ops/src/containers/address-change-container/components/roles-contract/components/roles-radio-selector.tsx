@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { useTranslation } from 'next-i18next';
+import * as React from 'react';
 
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';

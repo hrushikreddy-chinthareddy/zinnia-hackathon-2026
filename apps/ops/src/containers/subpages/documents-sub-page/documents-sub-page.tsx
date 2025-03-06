@@ -58,7 +58,7 @@ const NormalDocs = ({
     isFirstYearSelected: boolean;
 }) => {
     const { t } = useTranslation();
-    const limit = 2;
+    const limit = 25;
     const [offset, setOffset] = useState(0);
 
     const searchParams = useMemo<SearchRequest | null>(() => {

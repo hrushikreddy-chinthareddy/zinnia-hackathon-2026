@@ -1,3 +1,4 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { TFunction } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -8,9 +9,8 @@ import SecondaryCallLog from '@deps/components/side-sheet/call-logs/secondary-ca
 import SideSheetEmpty from '@deps/components/side-sheet/side-sheet-empty/side-sheet-empty';
 import { CallLog } from '@deps/models/case/call-log';
 import { getCaseCallLogs } from '@deps/queries/api/contracts';
-import { ReactComponent as PhoneIcon } from '@deps/styles/elements/icons/icons_outlined/phone.svg';
-import { Icon, IconType } from '@zinnia/bloom/components';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { ReactComponent as PhoneIcon } from '@deps/styles/elements/icons/icons_outlined/phone.svg';
 
 interface CallLogsContentProps {
     contractNumber?: string;

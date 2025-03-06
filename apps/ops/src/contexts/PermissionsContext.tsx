@@ -11,9 +11,8 @@ import {
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
-import { PermissionsModel, UserPermission } from '@deps/models/user-profile';
+import { UserPermission } from '@deps/models/user-profile';
 import { checkTuple, getCarrierList, bulkCheckResponseClient } from '@deps/queries/api/fga';
-import { AUDIENCE } from '@deps/queries/api-config';
 import { FgaRelation } from '@deps/types/fga';
 import { HasPermission } from '@deps/types/permissionsCookie';
 import {
@@ -25,7 +24,6 @@ import {
 } from '@deps/utils/permissionsCookie';
 
 export interface PermissionsContextProps {
-    permissions: PermissionsModel;
     getSessionId: () => string;
     getUserPartyId: () => string;
     getIsAdvisorsExcel: () => Promise<boolean>;
@@ -52,8 +50,6 @@ export const usePermissionsContext = () => {
 };
 
 export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
-    const permissionsKey = AUDIENCE + '/permissions';
-
     const { user } = useUser();
     const partyId = user?.partyId as string;
     const sessionId = user?.sid as string;
@@ -181,13 +177,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         return partyId;
     };
 
-    const getPermissionSet = (): PermissionsModel => {
-        if (!user || !user[permissionsKey]) return {} as PermissionsModel;
-
-        const permissions: PermissionsModel = user[permissionsKey] as PermissionsModel;
-        return permissions;
-    };
-
     const getClientIds = async (permission: UserPermission): Promise<string[]> => {
         if (!partyId || !permission) return [];
 
@@ -217,12 +206,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         return hasPermission(permission, `policy:${policyNumber}_${planCode}`);
     };
 
-    const permissions = getPermissionSet();
-
     return (
         <PermissionContext.Provider
             value={{
-                permissions, // BPB - clear this up
                 getIsAdvisorsExcel,
                 getClientIds,
                 getSessionId,
