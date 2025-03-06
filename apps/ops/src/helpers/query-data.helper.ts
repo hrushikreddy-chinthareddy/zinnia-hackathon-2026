@@ -7,7 +7,7 @@ import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next
 import { DocumentContext } from 'next/document';
 
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
-import { getCarrierListServerSSR } from '@deps/queries/api/fga';
+import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { PRODUCTION_HOST_NAME } from '@deps/types/constants';
 
 export const getInitialData = async (ctx: DocumentContext) => {
@@ -41,13 +41,11 @@ export const getUserData = async (ctx: GetServerSidePropsContext) => {
 };
 
 export const doesUserHavePagePermissions = async (
-    accessToken: string | undefined,
-    user: UserProfile,
+    context: GetServerSidePropsContext,
     permission: UserPermission,
     carrier: string | null = null
 ): Promise<boolean> => {
-    if (!user || !permission || !accessToken) return false;
-    const carriers = await getCarrierListServerSSR(accessToken, user.partyId, permission);
+    const carriers = await listCarriersPage(context, permission);
 
     if (carriers.length > 0 && carrier === null) {
         return true;

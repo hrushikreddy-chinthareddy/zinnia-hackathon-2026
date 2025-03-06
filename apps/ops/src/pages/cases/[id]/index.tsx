@@ -13,7 +13,7 @@ import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Case } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
-import { checkTupleSsr } from '@deps/queries/api/fga';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import getCase from '@deps/queries/server/case/get-case';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
@@ -58,12 +58,8 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
 
-        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
-            accessToken,
-            user,
-            UserPermission.AllowReadCaseManagement
-        );
-        const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
+        const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE);
 
         if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {
             return {

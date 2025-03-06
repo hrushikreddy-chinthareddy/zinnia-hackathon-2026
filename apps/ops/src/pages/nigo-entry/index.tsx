@@ -10,7 +10,7 @@ import { NigoEntryProvider } from '@deps/containers/nigo-entry-container/compone
 import { getNigoExceptions } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.helper';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
@@ -141,7 +141,7 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
         // Create a permissions object to pass to the page, strongly typed using the enum.
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadOtpRenewals);
+        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
 
         if (!doesUserHasPagePermissions) {
             return {

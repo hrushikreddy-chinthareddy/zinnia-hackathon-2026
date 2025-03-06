@@ -6,7 +6,7 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { UserPermission } from '@deps/models/user-profile';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
@@ -31,11 +31,9 @@ const Custom403Page = () => {
 
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async context => {
-        const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, res, req } = context;
-        let accessToken;
         try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
+            (await getAccessToken(req, res)).accessToken;
         } catch (e) {
             logWarn('pages/403:: Access token expired', {
                 ...parseErrorInformation(e),
@@ -51,8 +49,11 @@ export const getServerSideProps = withPageAuthRequired({
         };
 
         // We can use the enum to access the permissions object.
-        permissions[UserPermission.AllowReadCaseManagement] = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadCaseManagement);
-        permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadPolicyAdmin);
+        permissions[UserPermission.AllowReadCaseManagement] = await doesUserHavePagePermissions(
+            context,
+            UserPermission.AllowReadCaseManagement
+        );
+        permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
 
         const translations = await serverSideTranslations(
             locale,

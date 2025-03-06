@@ -59,37 +59,6 @@ export const checkDashboardAccessClient = async ({ partyId }: { partyId: string 
     }
 };
 
-export const checkTupleSsr = async (accessToken: string, partyId: string, relation: string, tupleObject: string): Promise<boolean> => {
-    if (!accessToken || !partyId) {
-        return false;
-    }
-
-    try {
-        const tuple = {
-            user: `party:${partyId}`,
-            relation,
-            object: tupleObject,
-        };
-
-        const { data } = await serverApi.post<Tuple, AxiosResponse<CheckTupleResponse>>(checkTupleUrlSsr, tuple, {
-            authorization: `Bearer ${accessToken}`,
-        });
-
-        return data?.allowed || false;
-    } catch (error: any) {
-        logWarn('checkTupleSsr::An error occurred while checking tuple', {
-            file: 'queries/api/fga',
-            function: 'checkTupleSsr',
-            url: checkTupleUrlSsr,
-            partyId,
-            relation,
-            tupleObject,
-        });
-
-        return false;
-    }
-};
-
 export const checkTuple = async (partyId: string, relation: string, tupleObject: string): Promise<boolean> => {
     const tuple = {
         user: `party:${partyId}`,
