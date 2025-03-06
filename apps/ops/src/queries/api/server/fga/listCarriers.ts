@@ -8,8 +8,10 @@ import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { GetCarrierListQuery } from '@deps/types/fga';
 import { addCarrierListToCookie, checkPermissionsCookieForCarrierList } from '@deps/utils/permissionsCookie';
 import { logWarn } from '@deps/utils/server-logging';
+
 const listCarrierUrlSsr = `${apiServerBaseUrl}/fga/v1/list-carriers`;
 
+// handles getting the auth token and checking the permissions cookie for listCarriers requests from a nextjs page
 export const listCarriersPage = async (ctx: GetServerSidePropsContext, relation: string): Promise<string[]> => {
     try {
         const val = checkPermissionsCookieForCarrierList(relation, ctx.req, ctx.res);
@@ -20,7 +22,7 @@ export const listCarriersPage = async (ctx: GetServerSidePropsContext, relation:
 
         const user = await getUserData(ctx);
         const accessToken = (await getAccessToken(ctx.req, ctx.res)).accessToken;
-        const result = await getCarrierListServerSSR(accessToken as string, user.partyId, relation);
+        const result = await getCarrierListSSR(accessToken as string, user.partyId, relation);
         addCarrierListToCookie(relation, result, ctx.req, ctx.res);
         return result;
     } catch (e) {
@@ -33,7 +35,9 @@ export const listCarriersPage = async (ctx: GetServerSidePropsContext, relation:
     }
 };
 
-export const getCarrierListServerSSR = async (accessToken: string, partyId: string, relation: string): Promise<string[]> => {
+// THIS SHOULD NOT BE DIRECTLY USED!
+// We should always be checking the permissions storage before making a listCarriers request
+const getCarrierListSSR = async (accessToken: string, partyId: string, relation: string): Promise<string[]> => {
     try {
         const { data } = await serverApi.post<GetCarrierListQuery, AxiosResponse>(
             listCarrierUrlSsr,

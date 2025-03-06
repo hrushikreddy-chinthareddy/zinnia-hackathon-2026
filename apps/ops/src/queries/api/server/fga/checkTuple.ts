@@ -11,7 +11,9 @@ import { logWarn } from '@deps/utils/server-logging';
 
 const checkTupleUrlSsr = `${apiServerBaseUrl}/fga/v1/check`;
 
-export const checkTuple = async (accessToken: string, partyId: string, relation: string, tupleObject: string): Promise<boolean> => {
+// THIS SHOULD NOT BE USED DIRECTLY!  We should always be checking the permissions storage before making a checkTuple request
+// Use checkTuplePage or checkTupleApi depending on the use case
+const checkTuple = async (accessToken: string, partyId: string, relation: string, tupleObject: string): Promise<boolean> => {
     if (!accessToken || !partyId) {
         return false;
     }

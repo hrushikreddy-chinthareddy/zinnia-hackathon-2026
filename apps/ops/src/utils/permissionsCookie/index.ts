@@ -4,9 +4,6 @@ import { DEFAULT_PERMISSIONS_COOKIE, PERMISSIONS_COOKIE_NAME, PermissionsCookie 
 
 import { logWarn } from '../server-logging';
 
-// NOTE:  This is a set of helper functions for the permissions cookie on the client side of the application
-// Server-Side code should not use these, as the cookie read/write functionality requires different dependencies
-
 export const addTupleToCookie = (relation: string, tupleObject: string, result: boolean, req?: any, res?: any) => {
     try {
         const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res }) ?? DEFAULT_PERMISSIONS_COOKIE;
