@@ -80,7 +80,7 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
                             data-testid="claim-task"
                             aria-label={t('claimTask') as string}
                             size={ButtonSize.Small}
-                            disabled={false}
+                            disabled={taskDetails.length > 0}
                             variant={ButtonVariant.Default}
                         >
                             {t('claimTask')}
