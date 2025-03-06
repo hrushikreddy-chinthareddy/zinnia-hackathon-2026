@@ -5,9 +5,14 @@ import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@d
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
+import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
+
+type error = {
+    error: string;
+};
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<any>, logCtx) => {
+    async (req: NextApiRequest, res: NextApiResponse<ClaimNextTask | null | error>, logCtx) => {
         const now = performance.now();
         const method = req.method;
         const { taskId } = req.query;
