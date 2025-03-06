@@ -4,9 +4,10 @@ import {
     checkIfUserHasCaseInsightsAccess,
     checkIfUserHasDashboardAccess,
     checkIfUserIsSuperAdmin,
+    createBulkCheckBodyRequest,
+    FGA_Tuple,
     FgaRoles,
 } from '@zinnia/utils';
-import { getCookie, setCookie } from 'cookies-next';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
@@ -14,7 +15,14 @@ import { PermissionsModel, UserPermission } from '@deps/models/user-profile';
 import { checkTuple, getCarrierList, bulkCheckResponseClient } from '@deps/queries/api/fga';
 import { AUDIENCE } from '@deps/queries/api-config';
 import { FgaRelation } from '@deps/types/fga';
-import { DEFAULT_PERMISSIONS_COOKIE, HasPermission, PERMISSIONS_COOKIE_NAME, PermissionsCookie } from '@deps/types/permissionsCookie';
+import { HasPermission } from '@deps/types/permissionsCookie';
+import {
+    addCarrierListToCookie,
+    addTupleToCookie,
+    doesPermissionsHaveCarrierRelation,
+    checkPermissionsCookieForCarrierList,
+    checkPermissionsCookieForTuple,
+} from '@deps/utils/permissionsCookie';
 
 export interface PermissionsContextProps {
     permissions: PermissionsModel;
@@ -54,84 +62,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const [hasDashboardPermission, setHasDashboardPermission] = useState(false);
     const [hasCaseInsightPermission, setHasCaseInsightPermission] = useState(false);
 
-    const addTupleToCookie = (relation: string, tupleObject: string, result: boolean) => {
-        const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME) ?? DEFAULT_PERMISSIONS_COOKIE;
-        const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
-        if (!permissions.tuples?.[relation]) {
-            permissions.tuples[relation] = {};
-        }
-        permissions.tuples[relation][tupleObject] = result;
-        setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions));
-    };
-
-    const addCarrierListToCookie = (relation: string, carrierList: string[]) => {
-        const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME) ?? DEFAULT_PERMISSIONS_COOKIE;
-        const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
-        permissions.carriers[relation] = carrierList;
-        setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions));
-    };
-
-    const checkPermissionsCookieForCarrier = (relation: string, tupleObject: string, carrier: string): boolean => {
-        try {
-            if (!relation || !tupleObject || !carrier) {
-                throw new Error('Missing carrier, relation or tupleObject');
-            }
-
-            const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME);
-            if (!permissionsCookie) {
-                return false;
-            }
-
-            const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
-            return !!permissions.carriers?.[relation]?.includes(carrier);
-        } catch (error) {
-            console.error('checkPermissionsCookieForCarrier::An error occurred while checking permissions cookie', error);
-            return false;
-        }
-    };
-
-    const checkPermissionsCookieForTuple = (relation: string, tupleObject: string): boolean | undefined => {
-        try {
-            if (!relation || !tupleObject) {
-                throw new Error('Missing relation or tupleObject');
-            }
-
-            const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME);
-            if (!permissionsCookie) {
-                return false;
-            }
-
-            const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
-            return permissions.tuples?.[relation]?.[tupleObject];
-        } catch (error) {
-            console.error('checkPermissionsCookieForTuple::An error occurred while checking permissions cookie', error);
-            return undefined;
-        }
-    };
-
-    const checkPermissionsCookieForCarrierList = (relation: string): string[] | undefined => {
-        try {
-            if (!relation) {
-                throw new Error('Missing relation');
-            }
-
-            const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME);
-            if (!permissionsCookie) {
-                return undefined;
-            }
-
-            const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
-            return permissions.carriers?.[relation];
-        } catch (error) {
-            console.error('checkPermissionsCookieForCarrierList::An error occurred while checking permissions cookie', error);
-            return undefined;
-        }
-    };
-
+    // restrict fga tuple checks to tuples that don't already exist in the cookie
     const hasPermission = async (relation: string, tupleObject: string, carrier?: string): Promise<boolean> => {
         // check if the user has the relation at the carrier level
         // if it doesn't exist OR is false at the carrier level, we need to do a tuple check before returning false
-        if (carrier && checkPermissionsCookieForCarrier(relation, tupleObject, carrier)) {
+        if (carrier && doesPermissionsHaveCarrierRelation(relation, carrier)) {
             return true;
         }
 
@@ -147,7 +82,27 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         return result;
     };
 
-    const getCarriersList = async (relation: string, policyNumber?: string, planCode?: string): Promise<string[]> => {
+    // restrict bulk checks to tuples that don't already exist in the cookie
+    const bulkCheckPermissions = async ({ tuples }: { tuples: FGA_Tuple[] }): Promise<BulkCheckTuple[]> => {
+        const checkedTuples = tuples.map(tuple => {
+            return { ...tuple, allowed: checkPermissionsCookieForTuple(tuple.relation, tuple.object) };
+        });
+        const neededTuples = checkedTuples.filter(tuple => tuple.allowed === undefined);
+        if (neededTuples.length) {
+            const result = await bulkCheckResponseClient({ tuples: neededTuples });
+            result?.tuples?.forEach(tuple => {
+                addTupleToCookie(tuple.relation, tuple.object, tuple.allowed);
+                const index = checkedTuples.findIndex(t => t.relation === tuple.relation && t.object === tuple.object);
+                if (index !== -1) {
+                    checkedTuples[index].allowed = tuple.allowed;
+                }
+            });
+        }
+
+        return checkedTuples.map(tuple => ({ ...tuple, allowed: !!tuple.allowed }));
+    };
+
+    const getCarriersList = async (relation: string): Promise<string[]> => {
         const cookieCarrierList = checkPermissionsCookieForCarrierList(relation);
         if (cookieCarrierList !== undefined) {
             return cookieCarrierList;
@@ -162,8 +117,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         const getRoles = async () => {
             try {
                 if (!partyId) return;
-                const roles = await bulkCheckResponseClient(partyId);
-                const tuples = roles?.tuples ?? [];
+                const tuples = await bulkCheckPermissions(createBulkCheckBodyRequest(partyId));
                 tuples.forEach(tuple => {
                     addTupleToCookie(tuple.relation, tuple.object, tuple.allowed);
                 });

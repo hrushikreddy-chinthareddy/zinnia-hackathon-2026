@@ -1,4 +1,3 @@
-import { checkIfUserIsSuperAdmin, createBulkCheckBodyRequest, checkIfUserHasDashboardAccess } from '@zinnia/utils';
 import { AxiosResponse } from 'axios';
 
 import { UserPermission } from '@deps/models/user-profile';
@@ -6,54 +5,20 @@ import { CheckTupleResponse, Tuple, GetCarrierListQuery, TupleRequest, TupleResp
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logError, logWarn } from '@deps/utils/server-logging';
 
-import { apiServerBaseUrl, baseAppUrl } from '../api-config';
+import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
-import { serverApi } from '../api-utils/serverApiClient';
 
-const checkTupleUrlSsr = `${apiServerBaseUrl}/fga/v1/check`;
-const listCarrierUrlSsr = `${apiServerBaseUrl}/fga/v1/list-carriers`;
 const baseUrl = baseAppUrl + '/api/fga/v1';
 const bulkCheckUrl = baseUrl + '/bulk-check';
 
-export const bulkCheckResponseClient = async (partyId: string) => {
+export const bulkCheckResponseClient = async (body?: TupleRequest) => {
     try {
-        if (!partyId) {
-            return;
-        }
-        const body = createBulkCheckBodyRequest(partyId);
         const { data } = await client.post<TupleRequest, AxiosResponse<TupleResponse>>(bulkCheckUrl, body);
         return data;
     } catch (e) {
         logError('bulkCheckResponse::An error occurred while calling bulk check endpoint', {
             file: 'queries/api/fga',
             function: 'bulkCheckResponse',
-            url: bulkCheckUrl,
-        });
-    }
-};
-
-export const checkIsSuperAdminClient = async ({ partyId }: { partyId: string }) => {
-    try {
-        const data = await bulkCheckResponseClient(partyId);
-        if (data === undefined) throw new Error('response is undefined');
-        return checkIfUserIsSuperAdmin(data.tuples);
-    } catch (e) {
-        logError('checkIsSuperAdmin::An error occurred while checking tuples', {
-            file: 'queries/api/fga',
-            function: 'bulkCheckResponse',
-            url: bulkCheckUrl,
-        });
-    }
-};
-export const checkDashboardAccessClient = async ({ partyId }: { partyId: string }) => {
-    try {
-        const data = await bulkCheckResponseClient(partyId);
-        if (data === undefined) throw new Error('response is undefined');
-        return checkIfUserHasDashboardAccess(data.tuples);
-    } catch (e) {
-        logError('checkDashboardAccessClient::An error occurred while checking tuples', {
-            file: 'queries/api/fga',
-            function: 'checkDashboardAccessClient',
             url: bulkCheckUrl,
         });
     }
@@ -76,29 +41,6 @@ export const checkTuple = async (partyId: string, relation: string, tupleObject:
     writeToCache('checkTuple', tuple, result);
 
     return result;
-};
-
-export const getCarrierListServerSSR = async (accessToken: string, partyId: string, relation: UserPermission): Promise<string[]> => {
-    try {
-        const { data } = await serverApi.post<GetCarrierListQuery, AxiosResponse>(
-            listCarrierUrlSsr,
-            {
-                user: `party:${partyId}`,
-                relation,
-            },
-            {
-                authorization: `Bearer ${accessToken}`,
-            }
-        );
-        return data?.carriers || [];
-    } catch (error: any) {
-        logWarn('getCarrierListServerSSR::An error occurred while getting the carrier list', {
-            file: 'queries/api/fga',
-            function: 'getCarrierListServerSSR',
-            url: listCarrierUrlSsr,
-        });
-        return [];
-    }
 };
 
 export const getCarrierList = async (

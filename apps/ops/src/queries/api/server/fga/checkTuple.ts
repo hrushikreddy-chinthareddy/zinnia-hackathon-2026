@@ -1,13 +1,12 @@
 import { getAccessToken, getSession } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
-import { getCookie, setCookie } from 'cookies-next';
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
 
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { CheckTupleResponse, Tuple } from '@deps/types/fga';
-import { DEFAULT_PERMISSIONS_COOKIE, PERMISSIONS_COOKIE_NAME, PermissionsCookie } from '@deps/types/permissionsCookie';
+import { addTupleToCookie, checkPermissionsCookieForTuple } from '@deps/utils/permissionsCookie';
 import { logWarn } from '@deps/utils/server-logging';
 
 const checkTupleUrlSsr = `${apiServerBaseUrl}/fga/v1/check`;
@@ -46,20 +45,16 @@ export const checkTuple = async (accessToken: string, partyId: string, relation:
 // handles getting the auth token and checking the permissions cookie for page requests
 export const checkTuplePage = async (ctx: GetServerSidePropsContext, relation: string, tupleObject: string) => {
     try {
-        const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req: ctx.req, res: ctx.res }) || DEFAULT_PERMISSIONS_COOKIE;
-        const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
-        if (permissions.tuples?.[relation]?.[tupleObject] !== undefined) {
-            return permissions.tuples?.[relation]?.[tupleObject];
+        const val = checkPermissionsCookieForTuple(relation, tupleObject, ctx.req, ctx.res);
+        if (val !== undefined) {
+            return val;
         }
 
         const user = await getUserData(ctx);
         const accessToken = (await getAccessToken(ctx.req, ctx.res)).accessToken;
         const result = await checkTuple(accessToken as string, user.partyId, relation, tupleObject);
-        if (!permissions.tuples?.[relation]) {
-            permissions.tuples[relation] = {};
-        }
-        permissions.tuples[relation][tupleObject] = result;
-        setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), { req: ctx.req, res: ctx.res });
+
+        addTupleToCookie(relation, tupleObject, result, ctx.req, ctx.res);
         return result;
     } catch (e) {
         logWarn('checkTuplePage::An error occurred while checking tuple', {
@@ -75,19 +70,16 @@ export const checkTuplePage = async (ctx: GetServerSidePropsContext, relation: s
 // handles getting the auth token and checking the permissions cookie for API requests
 export const checkTupleApi = async (req: NextApiRequest, res: NextApiResponse, relation: string, tupleObject: string) => {
     try {
-        const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res }) || DEFAULT_PERMISSIONS_COOKIE;
-        const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
-        if (permissions.tuples?.[relation]?.[tupleObject] !== undefined) {
-            return permissions.tuples?.[relation]?.[tupleObject];
+        const val = checkPermissionsCookieForTuple(relation, tupleObject, req, res);
+        if (val !== undefined) {
+            return val;
         }
+
         const session = await getSession(req, res);
         const accessToken = session?.accessToken;
         const result = await checkTuple(accessToken as string, session?.user?.partyId, relation, tupleObject);
-        if (!permissions.tuples?.[relation]) {
-            permissions.tuples[relation] = {};
-        }
-        permissions.tuples[relation][tupleObject] = result;
-        setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), { req, res });
+
+        addTupleToCookie(relation, tupleObject, result, req, res);
         return result;
     } catch (e) {
         logWarn('checkTupleApi::An error occurred while checking tuple', {
