@@ -614,19 +614,34 @@
                                                 "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
                                             },
                                             "isApplicable": {
-                                                "type": "string",
-                                                "title": "Is Applicable"
-                                            },
-                                            "numberOfYears": {
-                                                "type": "string",
-                                                "title": "Number of Years"
-                                            },
-                                            "amount": {
-                                                "type": "string",
-                                                "title": "Amount"
+                                                "type": "boolean",
+                                                "title": "Is Applicable",
+                                                "$ref": "#/definitions/isApplicableEnum"
                                             }
                                         },
-                                        "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
+                                        "required": ["changeType", "isApplicable"],
+                                        "dependencies": {
+                                            "isApplicable": {
+                                                "if": {
+                                                    "properties": {
+                                                        "isApplicable": { "const": "YES" }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "numberOfYears": {
+                                                            "type": "string",
+                                                            "title": "Number of Years"
+                                                        },
+                                                        "amount": {
+                                                            "type": "string",
+                                                            "title": "Amount"
+                                                        }
+                                                    },
+                                                    "required": ["numberOfYears", "amount"]
+                                                }
+                                            }
+                                        }
                                     }
                                 },
                                 "totalAssets": {
@@ -706,19 +721,34 @@
                                                 "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
                                             },
                                             "isApplicable": {
-                                                "type": "string",
-                                                "title": "Is Applicable"
-                                            },
-                                            "numberOfYears": {
-                                                "type": "string",
-                                                "title": "Number of Years"
-                                            },
-                                            "amount": {
-                                                "type": "string",
-                                                "title": "Amount"
+                                                "type": "boolean",
+                                                "title": "Is Applicable",
+                                                "$ref": "#/definitions/isApplicableEnum"
                                             }
                                         },
-                                        "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
+                                        "required": ["changeType", "isApplicable"],
+                                        "dependencies": {
+                                            "isApplicable": {
+                                                "if": {
+                                                    "properties": {
+                                                        "isApplicable": { "const": "YES" }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "numberOfYears": {
+                                                            "type": "string",
+                                                            "title": "Number of Years"
+                                                        },
+                                                        "amount": {
+                                                            "type": "string",
+                                                            "title": "Amount"
+                                                        }
+                                                    },
+                                                    "required": ["numberOfYears", "amount"]
+                                                }
+                                            }
+                                        }
                                     }
                                 },
                                 "totalAssets": {
@@ -1393,7 +1423,9 @@
                         "govtIdExpDate": {
                             "format": "date",
 
-                            "ui:options": {}
+                            "ui:options": {
+                                "futureDateEnabled": true
+                            }
                         }
                     }
                 },
@@ -1649,18 +1681,19 @@
                         }
                     },
                     "isApplicable": {
+                        "ui:widget": "select",
                         "ui:options": {
                             "enumNames": ["Yes", "No"]
                         }
                     },
                     "numberOfYears": {
                         "ui:options": {
-                            "label": false
+                            "label": true
                         }
                     },
                     "amount": {
                         "ui:options": {
-                            "label": false
+                            "label": true
                         }
                     }
                 }
@@ -2698,19 +2731,35 @@
                                                             "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
                                                         },
                                                         "isApplicable": {
-                                                            "type": "string",
-                                                            "title": "Is Applicable"
-                                                        },
-                                                        "numberOfYears": {
-                                                            "type": "string",
-                                                            "title": "Number of Years"
-                                                        },
-                                                        "amount": {
-                                                            "type": "string",
-                                                            "title": "Amount"
+                                                            "type": "boolean",
+                                                            "title": "Is Applicable",
+                                                            "$ref": "#/definitions/isApplicableEnum"
                                                         }
                                                     },
-                                                    "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
+
+                                                    "required": ["changeType", "isApplicable"],
+                                                    "dependencies": {
+                                                        "isApplicable": {
+                                                            "if": {
+                                                                "properties": {
+                                                                    "isApplicable": { "const": "YES" }
+                                                                }
+                                                            },
+                                                            "then": {
+                                                                "properties": {
+                                                                    "numberOfYears": {
+                                                                        "type": "string",
+                                                                        "title": "Number of Years"
+                                                                    },
+                                                                    "amount": {
+                                                                        "type": "string",
+                                                                        "title": "Amount"
+                                                                    }
+                                                                },
+                                                                "required": ["numberOfYears", "amount"]
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             },
                                             "totalAssets": {
@@ -2791,19 +2840,34 @@
                                                             "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
                                                         },
                                                         "isApplicable": {
-                                                            "type": "string",
-                                                            "title": "Is Applicable"
-                                                        },
-                                                        "numberOfYears": {
-                                                            "type": "string",
-                                                            "title": "Number of Years"
-                                                        },
-                                                        "amount": {
-                                                            "type": "string",
-                                                            "title": "Amount"
+                                                            "type": "boolean",
+                                                            "title": "Is Applicable",
+                                                            "$ref": "#/definitions/isApplicableEnum"
                                                         }
                                                     },
-                                                    "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
+                                                    "required": ["changeType", "isApplicable"],
+                                                    "dependencies": {
+                                                        "isApplicable": {
+                                                            "if": {
+                                                                "properties": {
+                                                                    "isApplicable": { "const": "YES" }
+                                                                }
+                                                            },
+                                                            "then": {
+                                                                "properties": {
+                                                                    "numberOfYears": {
+                                                                        "type": "string",
+                                                                        "title": "Number of Years"
+                                                                    },
+                                                                    "amount": {
+                                                                        "type": "string",
+                                                                        "title": "Amount"
+                                                                    }
+                                                                },
+                                                                "required": ["numberOfYears", "amount"]
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             },
                                             "totalAssets": {
@@ -3474,7 +3538,9 @@
                                     "govtIdExpDate": {
                                         "format": "date",
 
-                                        "ui:options": {}
+                                        "ui:options": {
+                                            "futureDateEnabled": true
+                                        }
                                     }
                                 }
                             },
@@ -3728,18 +3794,19 @@
                                     }
                                 },
                                 "isApplicable": {
+                                    "ui:widget": "select",
                                     "ui:options": {
                                         "enumNames": ["Yes", "No"]
                                     }
                                 },
                                 "numberOfYears": {
                                     "ui:options": {
-                                        "label": false
+                                        "label": true
                                     }
                                 },
                                 "amount": {
                                     "ui:options": {
-                                        "label": false
+                                        "label": true
                                     }
                                 }
                             }
