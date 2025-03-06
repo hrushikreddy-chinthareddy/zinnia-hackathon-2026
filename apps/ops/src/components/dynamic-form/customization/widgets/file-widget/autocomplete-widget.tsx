@@ -39,18 +39,8 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
 
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        if (value.trim() === '') {
-            setFilteredDocuments(documents);
-        } else {
-            const filteredData = documents.filter(
-                item =>
-                    item.documentId?.toLowerCase().includes(value?.toLowerCase()) ||
-                    item?.displayName?.toLowerCase().includes(value?.toLowerCase())
-            );
-            setFilteredDocuments(filteredData);
-        }
+        filterDocuments(value);
         setInputValue(value);
-        setError(false);
     };
 
     useEffect(() => {
@@ -88,19 +78,27 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
     }, []);
 
     const onFocusHandler = () => {
-        if (!inputValue) {
-            setFilteredDocuments(documents);
-        } else {
-            const filteredData = documents.filter(item => item.documentId?.toLowerCase().includes(inputValue?.toLowerCase()));
-            setFilteredDocuments(filteredData);
-        }
-        setError(false);
+        filterDocuments(inputValue ?? '');
     };
 
     const handleClickOutside = (event: MouseEvent) => {
         if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
             setFilteredDocuments([]);
         }
+    };
+
+    const filterDocuments = (searchValue: string) => {
+        if (!searchValue.trim()) {
+            setFilteredDocuments(documents);
+        } else {
+            const filteredData = documents.filter(
+                item =>
+                    item.documentId?.toLowerCase().includes(searchValue.toLowerCase()) ||
+                    item.displayName?.toLowerCase().includes(searchValue.toLowerCase())
+            );
+            setFilteredDocuments(filteredData);
+        }
+        setError(false);
     };
 
     useEffect(() => {
