@@ -8,10 +8,10 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useTask } from '@deps/containers/task-container/task-provider';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { isEmptyObject } from '@deps/helpers/objects.helper';
 import { FormValidationErrors, NigoMessages } from '@deps/models/case/withdrawal/case';
 
 import { NigoDetails } from './nigo-details';
-import { isEmptyObject } from '@deps/helpers/objects.helper';
 
 interface NigoDetailsStepProps {
     nigoExceptions: any;

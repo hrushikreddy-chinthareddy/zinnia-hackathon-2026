@@ -9,8 +9,8 @@ import { getSelectedPolicyParty } from '@deps/helpers/party-info-helper';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { UserPermission } from '@deps/models/user-profile';
-import { checkTupleSsr } from '@deps/queries/api/fga';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { FgaRelation } from '@deps/types/fga';
 import { logWarn, logError, getUserInfoFromUser, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
@@ -37,8 +37,8 @@ export const getServerSidePropsPolicyDetailsPage = async (context: GetServerSide
     };
 
     // We can use the enum to access the permissions object.
-    permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadPolicyAdmin);
-    const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+    permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
+    const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE);
 
     // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
     if (!isAdvisorsExcel && !permissions[UserPermission.AllowReadPolicyAdmin]) {
@@ -51,7 +51,7 @@ export const getServerSidePropsPolicyDetailsPage = async (context: GetServerSide
     }
 
     // We can use the enum to access the permissions object.
-    permissions[UserPermission.AllowEditPolicy] = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowEditPolicy);
+    permissions[UserPermission.AllowEditPolicy] = await doesUserHavePagePermissions(context, UserPermission.AllowEditPolicy);
 
     try {
         const translations = await serverSideTranslations(

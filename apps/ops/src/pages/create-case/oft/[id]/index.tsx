@@ -83,7 +83,7 @@ const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): R
     [Carrier.USAA]: <UsaaOftWithdrawalForm />,
     [Carrier.NASU]: <NasuOftWithdrawalForm />,
     [Carrier.ULPC]: <UlpcOftWithdrawalForm />,
-    [Carrier.PRDN]: <PrdnOftWithdrawalForm />
+    [Carrier.PRDN]: <PrdnOftWithdrawalForm />,
 });
 
 export default function OftCase({ document, form, featureFlagDecisions, user }: OftCaseProps) {
@@ -238,7 +238,7 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
 
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadOtpRenewals);
+        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
         if (!doesUserHasPagePermissions) {
             return {
                 redirect: {

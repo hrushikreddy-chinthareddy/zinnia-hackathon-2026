@@ -1,6 +1,6 @@
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
-import { useCallback } from 'react';
 import { useTranslation } from 'next-i18next';
+import { useCallback } from 'react';
 
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';

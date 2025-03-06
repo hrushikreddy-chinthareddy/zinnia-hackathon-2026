@@ -119,8 +119,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
      */
 
     const cleanForm = (formData: any) => {
-        let finalFormData = formData;
-        let iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
+        const finalFormData = formData;
+        const iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
         iterableProperties.forEach(property => {
             if (taskMetadata.uiSchema?.[property]?.['ui:options']?.omitValue) {
                 delete finalFormData.data[property];

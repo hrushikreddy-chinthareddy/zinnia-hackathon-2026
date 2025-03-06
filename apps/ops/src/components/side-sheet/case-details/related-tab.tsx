@@ -8,9 +8,9 @@ import { ErrorMessagePart } from "@deps/components/error/Error";
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
 import PaginationControls from "@deps/components/pagination/pagination";
 import { TranslationFiles } from "@deps/config/translations";
+import EmptyCard from "@deps/containers/people-data-cards/empty-card/empty-card";
 import { CaseTableData } from "@deps/contexts/CaseManagementFilters";
 import { DEFAULT_EXTENDED_DATE_FORMAT } from "@deps/types/constants";
-import EmptyCard from "@deps/containers/people-data-cards/empty-card/empty-card";
 
 
 type relatedTabProps = {

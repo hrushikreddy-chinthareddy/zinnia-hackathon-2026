@@ -5,10 +5,10 @@ import { lookup } from 'mime-types';
 import { DocumentDownloadV2, DocumentDownloadV2WithMime } from '@deps/models/case/document';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
+import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 import { getUserInfoForLogging, logCompliance, logError, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 
 const baseUrl = `${apiServerBaseUrl}/document/v2`;
 

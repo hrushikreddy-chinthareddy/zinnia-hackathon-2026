@@ -1,6 +1,7 @@
 import { Icon, TabTrigger, IconType } from '@zinnia/bloom/components';
-import { default as styles } from './TabTitle.module.css';
 import clsx from 'clsx';
+
+import { default as styles } from './TabTitle.module.css';
 
 export const TabTitle = ({ value, icon, label }: { value: string; icon: IconType; label: string }) => {
     return (

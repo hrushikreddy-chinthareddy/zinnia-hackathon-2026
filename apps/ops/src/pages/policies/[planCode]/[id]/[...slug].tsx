@@ -33,8 +33,8 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { PolicyAllOfPartiesItem, Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
-import { checkTupleSsr } from '@deps/queries/api/fga';
 import { fetchPolicy } from '@deps/queries/api/policies';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { MOCK_COOKIE_KEY, PREV_POLICY_COOKIE_KEY } from '@deps/queries/api-utils/serverClientUtils';
 import { getMockPolicy } from '@deps/services/mocks/mock-policy.helper';
 import { FgaRelation } from '@deps/types/fga';
@@ -286,9 +286,8 @@ export const getServerSideProps = withPageAuthRequired({
         // Get the user object from the Auth0 Session
         const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, res, req } = context;
-        let accessToken;
         try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
+            (await getAccessToken(req, res)).accessToken;
         } catch (e) {
             logWarn('policies/:id/:slug:: Access token expired', {
                 ...parseErrorInformation(e),
@@ -304,13 +303,9 @@ export const getServerSideProps = withPageAuthRequired({
         };
 
         // We can use the enum to access the permissions object.
-        permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(
-            accessToken,
-            user,
-            UserPermission.AllowReadPolicyAdmin
-        );
+        permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
 
-        const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+        const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE);
 
         // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
         if (!isAdvisorsExcel && !permissions[UserPermission.AllowReadPolicyAdmin]) {

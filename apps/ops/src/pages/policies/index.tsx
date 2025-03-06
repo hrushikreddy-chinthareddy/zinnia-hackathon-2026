@@ -27,8 +27,8 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
-import { checkTupleSsr } from '@deps/queries/api/fga';
 import { searchPolicy } from '@deps/queries/api/policies';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { isResetQueryParam } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { FgaRelation } from '@deps/types/fga';
@@ -311,9 +311,8 @@ export const getServerSideProps = withPageAuthRequired({
         // Get the user object from the Auth0 Session
         const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, res, req } = context;
-        let accessToken;
         try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
+            (await getAccessToken(req, res)).accessToken;
         } catch (e) {
             logWarn('policies/index:: Access token expired', {
                 ...parseErrorInformation(e),
@@ -323,8 +322,8 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
         // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadPolicyAdmin);
-        const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
+        const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE);
 
         if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
             return {

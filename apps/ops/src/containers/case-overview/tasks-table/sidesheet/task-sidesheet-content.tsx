@@ -4,6 +4,7 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import CallLogCard from '@deps/components/card/card-call-log/card-call-log';
+import { formatTimestamp } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -15,7 +16,6 @@ import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as CircleCheckedIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChatIcon } from '@deps/styles/elements/icons/icons_outlined/chat-2.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { formatTimestamp } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 
 const SpecificTaskBody = (task: ManagementTask) => {
     const { t } = useTranslation();

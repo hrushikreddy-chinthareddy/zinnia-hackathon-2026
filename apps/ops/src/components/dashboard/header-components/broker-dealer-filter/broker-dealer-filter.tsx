@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
+import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';

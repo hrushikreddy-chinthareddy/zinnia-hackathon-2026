@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import { TranslationFiles } from '@deps/config/translations';
+import { MessageType } from '@deps/models/case/task';
 import { AssignedTask } from '@deps/models/case/task-instance';
 import { claimNextTask } from '@deps/queries/api/v1/claim-task';
 import { getAssignedTasks } from '@deps/queries/api/v1/task';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-import { MessageType } from '@deps/models/case/task';
 
 import TaskQueueTable from './task-queue-table';
 

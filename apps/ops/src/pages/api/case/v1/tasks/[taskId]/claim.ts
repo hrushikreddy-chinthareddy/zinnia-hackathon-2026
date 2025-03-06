@@ -1,8 +1,10 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { apiServerBaseUrl } from '@deps/queries/api-config';
+
 import { claimTask } from '@deps/queries/api/v1/task';
+import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default withAuthAndLogging(
