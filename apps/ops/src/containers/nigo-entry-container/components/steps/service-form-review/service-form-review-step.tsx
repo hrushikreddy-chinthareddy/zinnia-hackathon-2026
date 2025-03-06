@@ -27,7 +27,6 @@ import { getCaseType } from '../form-entry/form-entry-step.helper';
 
 interface ServiceFormReviewStepProps {
     documentNumber: string;
-    //policy?: Policy;
     policyNumber: string;
     docType: string;
     clientCode: string;
@@ -38,7 +37,7 @@ interface ServiceFormReviewStepProps {
 export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, clientCode, document} : ServiceFormReviewStepProps ) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
     const { goToNext } = useWorkflow();
-    //const { policyNumber } = policy || {};
+
     const { sectionOption, documentIndexingInfo, formErrors, setFormErrors, setSubmitFailed } = useNigoEntry();
     const formState = useContext(FormDataContext);
 
