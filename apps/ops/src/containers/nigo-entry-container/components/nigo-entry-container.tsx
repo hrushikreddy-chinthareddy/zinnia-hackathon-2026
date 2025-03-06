@@ -21,10 +21,9 @@ import { SelOptionType } from './steps/service-form-review/service-form-review';
 import { ServiceFormReviewStep } from './steps/service-form-review/service-form-review-step';
 import TabGroupContainer from './tab-group-container';
 import { AdditionalDataInstance } from '@deps/models/case/additional-data-instance';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 interface NigoEntryContainerContainerProps {
-    //policy: Policy;
-    //availableFormsTransactions: AvailableFormsTransaction[];
     policyNumber: string;
     planCode: string;
     documentNumber: string;
@@ -40,8 +39,6 @@ interface NigoEntryContainerContainerProps {
 const NigoEntryContainer = ({
     documentData,
     documentNumber,
-    //policy,
-    //availableFormsTransactions,
     policyNumber,
     planCode,
     docType,
@@ -49,7 +46,6 @@ const NigoEntryContainer = ({
     nigoExceptions,
     nigoSubExceptions,
     taskInfoLink,
-    //prevTransactionDetails,
 }: NigoEntryContainerContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry' });
     const { setTransactionType, setTransactionSubType, setDocument, sectionOption } = useNigoEntry();
@@ -88,7 +84,11 @@ const NigoEntryContainer = ({
 
                 setPolicy(data);
             } catch (error) {
-                console.error('an error occurred in policy retrieval', error);
+                browserLogInfo('nigo-entry-container::getPolicy', {
+                    message: 'Error occurred in policy retrieval',
+                    payload: { policyNumber, planCode},
+                    file: 'nigo-entry-container',
+                });
             }
         };
 
@@ -126,23 +126,18 @@ const NigoEntryContainer = ({
                     throw new Error(searchCasesResponse?.data?.err ? searchCasesResponse.data.err : 'Error fetching cases');
                 }
             } catch (error) {
-                console.error('an error occurred in case search', error);
+                browserLogInfo('nigo-entry-container::searchCases', {
+                    message: 'Error occurred in policy retrieval',
+                    payload: { policyNumber, planCode},
+                    file: 'nigo-entry-container',
+                });
                 setPrevTransactionDetails(null);
             }
-
-
-
         };
         if (policyNumber && clientCode) {
             searchCases();
         }
     }, [clientCode, docType, policyNumber]);
-
-    /*const transactionOptions = useMemo(() => {
-        return availableFormsTransactions?.map(transaction => {
-            return { label: transaction.name, value: transaction.id };
-        });
-    }, [availableFormsTransactions]);*/
 
     useEffect(() => {
         const initialize = async () => {
@@ -204,7 +199,6 @@ const NigoEntryContainer = ({
                 isVisible: () => true,
                 component: (
                     <ServiceFormReviewStep
-                        //policy={policy}
                         policyNumber={policyNumber}
                         documentNumber={documentNumber}
                         docType={docType}
