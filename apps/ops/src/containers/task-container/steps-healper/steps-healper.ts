@@ -6,6 +6,7 @@ import { getAgentReviewSteps } from './agent-review';
 import { getMatchDocumentPaymentReviewSteps } from './match-payment-document-review';
 import { getSuitabilityReviewSteps } from './suitability-review-steps';
 import { getSuitabilitySteps } from './suitability-steps';
+import { getTOANigoSteps } from './toa-nigo';
 import { GetStepsProps } from './types';
 
 export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] => {
@@ -24,13 +25,21 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
             break;
         case TaskType.Agent_Nigo:
         case TaskType.PremiumNigo:
-            steps = getAgentNigoSteps(props);
-            break;
         case TaskType.Application_Nigo:
+        case TaskType.Attachment_Nigo:
+        case TaskType.Review_Ofac:
+        case TaskType.Agent_Onboarding_Nigo:
+        case TaskType.AppDataEntry:
+        case TaskType.Agent_Onboarding_Review:
             steps = getAgentNigoSteps(props);
             break;
+
         case TaskType.Agent_Review:
             steps = getAgentReviewSteps(props);
+            break;
+        case TaskType.TOA_Nigo:
+        case TaskType.Prenote_Nigo:
+            steps = getTOANigoSteps(props);
             break;
         default:
             steps = [];

@@ -6,8 +6,7 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
 
     if (formData.length === 0) {
         const formContextOptions: any = uiSchema?.['ui:options']?.formContext;
-
-        if (props.formContext[formContextOptions?.keyName][formContextOptions?.listName]) {
+        if (formContextOptions && props.formContext[formContextOptions?.keyName][formContextOptions?.listName]) {
             const data = props.formContext[formContextOptions?.keyName][formContextOptions?.listName];
             formData = data.slice(-1);
         }

@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
-import { CaseToCloseTimeChart } from '@deps/components/dashboard/case-to-close-time-chart/case-to-close-time-chart';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { NigoClosedTransactions } from '@deps/components/dashboard/nigo-closed-transactions/nigo-closed-transactions';
-import { TransactionTrends } from '@deps/components/dashboard/transaction-trends/transaction-trends';
+import { CaseToCloseTimeChart } from '@deps/components/dashboard/sections/case-to-close-time-chart/case-to-close-time-chart';
+import { NigoClosedTransactions } from '@deps/components/dashboard/sections/nigo-closed-transactions/nigo-closed-transactions';
+import { TransactionTrends } from '@deps/components/dashboard/sections/transaction-trends/transaction-trends';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';

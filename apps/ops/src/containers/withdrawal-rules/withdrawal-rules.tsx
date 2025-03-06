@@ -111,7 +111,9 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
                                         label={t('withdrawals.rmd.calculationDate')}
                                     />
                                     <Typography variant={TypographyVariant.BodySm} className="mt-[5px]">
-                                        {dayjs(policyDetails.requiredMinimumDistribution.calculationDate).format(DEFAULT_DATE_FORMAT)}
+                                        {policyDetails?.requiredMinimumDistribution?.calculationDate
+                                            ? dayjs(policyDetails.requiredMinimumDistribution.calculationDate).format(DEFAULT_DATE_FORMAT)
+                                            : DEFAULT_ERROR_STRING}
                                     </Typography>
                                 </div>
                                 <div className="flex w-[208px] flex-col items-start xl:w-fit">

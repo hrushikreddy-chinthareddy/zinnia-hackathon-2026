@@ -5,6 +5,14 @@ import wellabeSuitabilityReviewData from '@deps/jsonschema-mock-service/carrier/
 import purchaseDocumentMatchingData from '@deps/jsonschema-mock-service/tasks-data/purchase-document-matching.json';
 import agentNigoData from '@deps/jsonschema-mock-service/tasks-data/agent-nigo.json';
 import applicationNigoData from '@deps/jsonschema-mock-service/tasks-data/application-nigo.json';
+import premiumNigoData from '@deps/jsonschema-mock-service/tasks-data/premium-nigo.json';
+import standardDocumentMatchingData from '@deps/jsonschema-mock-service/tasks-data/standard-document-matching.json';
+import toaNigoData from '@deps/jsonschema-mock-service/tasks-data/toa-nigo.json';
+import agentOnboardingNigoData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-nigo.json';
+import attachmentNigoData from '@deps/jsonschema-mock-service/tasks-data/attachment-nigo.json';
+import agentReviewData from '@deps/jsonschema-mock-service/tasks-data/agent-review.json';
+import agentOnboardingReviewData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-review.json';
+import appDataEnteyData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-review.json';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 
@@ -31,6 +39,22 @@ export const getCaseTaskByIdSSRMock = async (taskType: TaskType): Promise<Manage
             return agentNigoData as ManagementTask<TaskStatus>;
         case TaskType.Application_Nigo:
             return applicationNigoData as ManagementTask<TaskStatus>;
+        case TaskType.PremiumNigo:
+            return premiumNigoData as ManagementTask<TaskStatus>;
+        case TaskType.Standard_Document_Matching:
+            return standardDocumentMatchingData as ManagementTask<TaskStatus>;
+        case TaskType.TOA_Nigo:
+            return toaNigoData as ManagementTask<TaskStatus>;
+        case TaskType.Agent_Onboarding_Nigo:
+            return agentOnboardingNigoData as ManagementTask<TaskStatus>;
+        case TaskType.Attachment_Nigo:
+            return attachmentNigoData as ManagementTask<TaskStatus>;
+        case TaskType.Agent_Review:
+            return agentReviewData as ManagementTask<TaskStatus>;
+        case TaskType.AppDataEntry:
+            return appDataEnteyData as ManagementTask<TaskStatus>;
+        case TaskType.Agent_Onboarding_Review:
+            return agentOnboardingReviewData as ManagementTask<TaskStatus>;
         default:
             return null;
     }

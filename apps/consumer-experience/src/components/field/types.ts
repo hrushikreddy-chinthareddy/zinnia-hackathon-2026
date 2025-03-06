@@ -21,7 +21,7 @@ export enum FieldValueSize {
 }
 
 export interface FieldTypes extends InputHTMLAttributes<HTMLInputElement> {
-  label: React.ReactElement<LabelProps>;
+  label?: React.ReactElement<LabelProps>;
   errorMessage?: string;
   fieldStatus?: FieldStatus;
   fieldSize?: FieldValueSize;

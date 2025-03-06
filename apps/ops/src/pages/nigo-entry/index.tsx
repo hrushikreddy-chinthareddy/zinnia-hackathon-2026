@@ -43,10 +43,8 @@ export type TransactionDetails = {
 
 interface NigoEntryProps extends SegmentTrackedPageProps {
     documentNumber: string;
-    //policy: Policy;
     policyNumber: string;
     planCode: string;
-    //availableFormsTransactions: AvailableFormsTransaction[];
     docType: string;
     clientCode: string;
     nigoExceptions: any;
@@ -69,7 +67,6 @@ const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: F
 const NigoEntry = ({
     policyNumber,
     planCode,
-    //availableFormsTransactions,
     documentNumber,
     docType,
     clientCode,
@@ -107,10 +104,8 @@ const NigoEntry = ({
                 <NigoEntryProvider>
                     <NigoEntryContainer
                         documentNumber={documentNumber}
-                        //policy={policy}
                         policyNumber={policyNumber}
                         planCode={planCode}
-                        //availableFormsTransactions={availableFormsTransactions}
                         docType={docType}
                         clientCode={clientCode}
                         nigoExceptions={nigoExceptions}
@@ -273,91 +268,6 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            /*const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
-            const planCode = response ? response[0]?.planCode : null;
-            if (!planCode) {
-                logWarn('nigo-entry::Policy plan code not found', {
-                    taskId,
-                    documentNumber,
-                    documentType: docType,
-                    clientCode,
-                    contractNum,
-                    file: 'pages/nigo-entry',
-                    function: 'getServerSideProps',
-                    user: userInfoForLogging.email,
-                });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
-                        permanent: false,
-                    },
-                };
-            }
-            logInfo('nigo-entry::Policy plan code found', {
-                taskId,
-                documentNumber,
-                documentType: docType,
-                clientCode,
-                contractNum,
-                file: 'pages/nigo-entry',
-                function: 'getServerSideProps',
-                user: userInfoForLogging.email,
-            });
-
-            const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging, true);
-            if (!policy) {
-                logWarn('nigo-entry::Policy not found', {
-                    taskId,
-                    documentNumber,
-                    documentType: docType,
-                    clientCode,
-                    contractNum,
-                    file: 'pages/nigo-entry',
-                    function: 'getServerSideProps',
-                    user: userInfoForLogging.email,
-                });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
-                        permanent: false,
-                    },
-                };
-            }
-            logInfo('nigo-entry::Policy found', {
-                taskId,
-                documentNumber,
-                documentType: docType,
-                clientCode,
-                contractNum,
-                file: 'pages/nigo-entry',
-                function: 'getServerSideProps',
-                user: userInfoForLogging.email,
-            });*/
-
-
-
-            /*const transactionRequestBody: SearchTransactionRequestBody = {
-                carrier: policy.carrierId || '',
-                issueState: policy.issueState || '',
-                planCode: policy.product?.planCode || '',
-            };
-
-            const [availableFormsTransactions, nigoExceptionResponse] = await Promise.all([
-                await getSearchTransactionsSSR(transactionRequestBody, accessToken, userInfoForLogging),
-                await getNigoExceptions(nigoFilters, accessToken),
-            ]);
-            logInfo('nigo-entry::Retrieved available forms transactions and nigo exceptions', {
-                taskId,
-                documentNumber,
-                documentType: docType,
-                clientCode,
-                contractNum,
-                file: 'pages/nigo-entry',
-                function: 'getServerSideProps',
-                user: userInfoForLogging.email,
-            });*/
-
-
             const taskInfoLink = buildTaskLink(taskId, form.caseId, caseType, documentNumber, clientCode);
             const filters = {
                 policyNumber: contractNum,
@@ -370,7 +280,7 @@ export const getServerSideProps = withPageAuthRequired({
             };
 
             const nigoFilters = {
-                categoryIds: ['Form', 'Signature', 'Account Information'],
+                categoryIds: ['Form', 'Signature', 'Account Information', 'Data Entry'],
                 carrier: clientCode?.toUpperCase(),
                 process: activeForm?.process,
             };
@@ -437,7 +347,6 @@ export const getServerSideProps = withPageAuthRequired({
                     docType: docType,
                     planCode,
                     policyNumber: contractNum,
-                    //availableFormsTransactions,
                     nigoExceptions,
                     nigoSubExceptions,
                     user,
@@ -449,7 +358,7 @@ export const getServerSideProps = withPageAuthRequired({
                 },
             };
         } catch (error) {
-            logError('getServerSidePropsNigoEntryPage', { ...parseErrorInformation(error), taskId, user: userInfoForLogging.email, error });
+            logError('nigoEnty::Error', { ...parseErrorInformation(error), taskId, user: userInfoForLogging.email, error });
             return {
                 props: {},
             };
