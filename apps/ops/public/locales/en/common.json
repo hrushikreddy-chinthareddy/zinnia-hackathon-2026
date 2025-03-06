@@ -1715,7 +1715,8 @@
                     "interestEarningDividendsGains": "Interest/Earnings/Dividends/Gains",
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Joint Lifetime Income Option",
-                    "singleLifetimeIncomeOption": "Single Lifetime Income Option"
+                    "singleLifetimeIncomeOption": "Single Lifetime Income Option",
+                    "interestEarned": "Interest earned"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Please specify the fund to setup SSW with Percent of A.V",
@@ -1738,6 +1739,9 @@
                         "level": "Level",
                         "increasing": "Increasing"
                     }
+                },
+                "singleLifeTimeIncome": {
+                    "title": "Name of Income Life"
                 }
             },
             "rmdMethod": {
@@ -3254,7 +3258,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Last updated",
-                "caseId": "Case ID "
+                "caseId": "Case ID ",
+                "noCasesAvailable": "No related cases available."
             },
             "addressHistoryTab": {
                 "defaultAddress": "Default Address",
@@ -3262,7 +3267,8 @@
                 "mailingAddress": "Mailing Address",
                 "viewFullDeatils": "View full details",
                 "preferredAddress": "Preferred Address",
-                "agentAddress": "Agent Address"
+                "agentAddress": "Agent Address",
+                "noAddressesAvailable": "No addresses available."
             }
         },
         "correspondence": "Correspondence ({{count}})",
@@ -3296,7 +3302,7 @@
             "noAssignee": "Only the assignee can start this task",
             "startTask": "Start task",
             "claimTask": "Claim task",
-            "claimTaskError": "The system has encountered a temporary error. Please try again.",
+            "claimTaskError": "You don’t have the necessary permissions to access this feature. Please reach out to the administrator for assistance.",
             "taskHeading": "Task",
             "taskDetails": {
                 "purchaseDocumentMatching": "As part of the document matching process for the purchase document, one or more documents require review and confirmation to ensure proper alignment before proceeding with contract issuance",
@@ -4898,7 +4904,8 @@
             "documents": "Documents",
             "documentId": "Document ID",
             "noFormAvailable": "No form available.",
-            "taskTitle": "Task details"
+            "taskTitle": "Task details",
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -4917,7 +4924,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Last updated",
-                "caseId": "Case ID "
+                "caseId": "Case ID ",
+                 "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {
@@ -4971,7 +4979,8 @@
                     "noDocTypeToReindex": "Please document type for re-indexing",
                     "noNotes": "Please enter notes"
                 }
-            }
+            },
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "formSelection": {
             "title": "New Form Selection",
@@ -5058,7 +5067,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "Document ID",
-            "noFormAvailable": "No form available."
+            "noFormAvailable": "No form available.",
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         }
     },
     "suitabilityDataEntry": {

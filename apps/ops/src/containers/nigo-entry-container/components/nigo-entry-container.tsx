@@ -1,13 +1,16 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+import { Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
-import { AvailableFormsTransaction } from '@deps/models/case/send-document';
+import { AvailableFormsTransaction, SearchTransactionRequestBody } from '@deps/models/case/send-document';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionDetails } from '@deps/pages/nigo-entry';
-import { getTransactionSubTypes, searchForms } from '@deps/queries/api/c2web';
+import { getSearchTransactions, getTransactionSubTypes, searchForms } from '@deps/queries/api/c2web';
+import { getCases } from '@deps/queries/api/cases';
+import { fetchPolicy } from '@deps/queries/api/policies';
 
 import { useNigoEntry } from './nigo-entry-provider';
 import ConfirmStep from './steps/confirm/confirm-step';
@@ -17,10 +20,12 @@ import { NigoDetailsStep } from './steps/nigo-details/nigo-details-step';
 import { SelOptionType } from './steps/service-form-review/service-form-review';
 import { ServiceFormReviewStep } from './steps/service-form-review/service-form-review-step';
 import TabGroupContainer from './tab-group-container';
+import { AdditionalDataInstance } from '@deps/models/case/additional-data-instance';
 
 interface NigoEntryContainerContainerProps {
-    policy: Policy;
-    availableFormsTransactions: AvailableFormsTransaction[];
+    //policy: Policy;
+    //availableFormsTransactions: AvailableFormsTransaction[];
+    policyNumber: string;
     planCode: string;
     documentNumber: string;
     docType: string;
@@ -35,23 +40,109 @@ interface NigoEntryContainerContainerProps {
 const NigoEntryContainer = ({
     documentData,
     documentNumber,
-    policy,
-    availableFormsTransactions,
+    //policy,
+    //availableFormsTransactions,
+    policyNumber,
+    planCode,
     docType,
     clientCode,
     nigoExceptions,
     nigoSubExceptions,
     taskInfoLink,
-    prevTransactionDetails,
+    //prevTransactionDetails,
 }: NigoEntryContainerContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry' });
     const { setTransactionType, setTransactionSubType, setDocument, sectionOption } = useNigoEntry();
+
+    const [policy, setPolicy] = useState<Policy>();
+    const [availableFormsTransactions, setAvailableFormsTransactions] = useState<AvailableFormsTransaction[]>([]);
+    const [prevTransactionDetails, setPrevTransactionDetails] = useState<AdditionalDataInstance | null>(null);
+
+    const getTransactions = async (policyInfo: Policy) => {
+        const transactionRequestBody: SearchTransactionRequestBody = {
+            carrier: policyInfo?.carrierId || '',
+            issueState: policyInfo?.issueState || '',
+            planCode: policyInfo?.product?.planCode || '',
+        };
+        const data = await getSearchTransactions(transactionRequestBody);
+        if (!data) {
+            return;
+        }
+        setAvailableFormsTransactions(data);
+    };
 
     const transactionOptions = useMemo(() => {
         return availableFormsTransactions?.map(transaction => {
             return { label: transaction.name, value: transaction.id };
         });
     }, [availableFormsTransactions]);
+
+    useEffect(() => {
+        const getPolicy = async () => {
+            try {
+                // Fetch policy
+                const data = await fetchPolicy(policyNumber, planCode);
+                if (!data) {
+                    return;
+                }
+
+                setPolicy(data);
+            } catch (error) {
+                console.error('an error occurred in policy retrieval', error);
+            }
+        };
+
+        getPolicy();
+    }, [policyNumber, planCode]);
+
+    useEffect(() => {
+        if (!policy) {
+            return;
+        }
+        getTransactions(policy);
+    }, [policy]);
+
+    useEffect(() => {
+
+        const searchCases = async () => {
+            const filters = {
+                policyNumber: policyNumber,
+                limit: 25,
+                offset: 0,
+                sortDirection: 'desc',
+                sortBy: 'createdAt',
+                carrier: [clientCode?.toUpperCase()],
+                process: [Processes.Correspondence as string],
+            };
+            let searchCasesResponse = null;
+            try {
+                searchCasesResponse = await getCases(filters);
+                if (searchCasesResponse && 'total' in searchCasesResponse) {
+                    const latestForm = searchCasesResponse?.data?.find(
+                        item => item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()
+                    );
+                    setPrevTransactionDetails(latestForm?.additionalData || null);
+                } else {
+                    throw new Error(searchCasesResponse?.data?.err ? searchCasesResponse.data.err : 'Error fetching cases');
+                }
+            } catch (error) {
+                console.error('an error occurred in case search', error);
+                setPrevTransactionDetails(null);
+            }
+
+
+
+        };
+        if (policyNumber && clientCode) {
+            searchCases();
+        }
+    }, [clientCode, docType, policyNumber]);
+
+    /*const transactionOptions = useMemo(() => {
+        return availableFormsTransactions?.map(transaction => {
+            return { label: transaction.name, value: transaction.id };
+        });
+    }, [availableFormsTransactions]);*/
 
     useEffect(() => {
         const initialize = async () => {
@@ -71,12 +162,12 @@ const NigoEntryContainer = ({
                         setTransactionSubType({ selected: transSubType, list: options });
 
                         const formSearchRequestBody = {
-                            contractNumber: policy.policyNumber ?? '',
-                            planCode: policy.product?.planCode ?? '',
+                            contractNumber: policy?.policyNumber ?? '',
+                            planCode: policy?.product?.planCode ?? '',
                             transactionType: transType,
                             transactionSubType: transSubType,
                             carrier: policy?.carrierId ?? '',
-                            issueState: policy.issueState ?? '',
+                            issueState: policy?.issueState ?? '',
                             ctiCallNumber: '',
                         };
                         const searchResponse = await searchForms(formSearchRequestBody);
@@ -95,9 +186,9 @@ const NigoEntryContainer = ({
         }
     }, [
         policy?.carrierId,
-        policy.issueState,
-        policy.policyNumber,
-        policy.product?.planCode,
+        policy?.issueState,
+        policy?.policyNumber,
+        policy?.product?.planCode,
         prevTransactionDetails,
         setDocument,
         setTransactionSubType,
@@ -113,7 +204,8 @@ const NigoEntryContainer = ({
                 isVisible: () => true,
                 component: (
                     <ServiceFormReviewStep
-                        policy={policy}
+                        //policy={policy}
+                        policyNumber={policyNumber}
                         documentNumber={documentNumber}
                         docType={docType}
                         clientCode={clientCode}
@@ -128,7 +220,7 @@ const NigoEntryContainer = ({
             {
                 ariaLabel: t('tabs.formEntry'),
                 isVisible: () => sectionOption === SelOptionType.DATA_ENTRY,
-                component: <FormEntryStep document={documentData} clientCode={clientCode} docType={docType} planCode={policy.product?.planCode || ''}/>,
+                component: <FormEntryStep document={documentData} clientCode={clientCode} docType={docType} planCode={policy?.product?.planCode || planCode}/>,
                 screenReaderLabel: t('tabs.formEntry'),
                 index: 1,
                 text: t('tabs.formEntry'),
@@ -175,6 +267,8 @@ const NigoEntryContainer = ({
             documentNumber={documentNumber}
             docType={docType}
             documentData={documentData}
+            policyNumber={policyNumber}
+            clientCode={clientCode}
         ></TabGroupContainer>
     );
 };

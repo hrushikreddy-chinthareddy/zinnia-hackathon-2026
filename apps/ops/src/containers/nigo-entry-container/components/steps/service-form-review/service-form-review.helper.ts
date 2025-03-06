@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { CaseType } from '@deps/models/case/case';
 import { PolicyDocuments, PolicyDocument } from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';
@@ -18,6 +19,8 @@ export const useGetPolicyTypeDocs = (
     const [relatedDocument, setRelatedDocument] = useState<PolicyDocument[]>();
     const getPolicyDocs = useCallback(async () => {
         if (loading) return;
+
+        if (isNullEmptyOrUndefined(id) || isNullEmptyOrUndefined(clientCode)) return;
 
         try {
             setLoading(true);

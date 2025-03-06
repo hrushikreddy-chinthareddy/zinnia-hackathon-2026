@@ -2,8 +2,8 @@ import { useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 
-import Typography, { TypographyVariant } from "../typography/typography";
 import { PiiWrapper } from '../pii/PiiWrapper';
+import Typography, { TypographyVariant } from "../typography/typography";
 
 interface DocumentInfoProps {
     documentNumber: string;
