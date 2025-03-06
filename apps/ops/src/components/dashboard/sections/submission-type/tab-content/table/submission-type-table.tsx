@@ -185,12 +185,23 @@ export const SubmissionTypeTable = () => {
         }
     }, [sortedData, goToPage, offset]);
 
+    const totalCaseCount = graphStats?.data?.map(stat => stat.count).reduce((a, b) => a + b, 0);
+
+    const totalCases = graphStatsFetching ? (
+        <div className="blur">
+            <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+        </div>
+    ) : (
+        <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+    );
+
     return (
         <CardContainer>
             <ChartHeader
                 title="Submission Method"
-                subtitle="Submissions by Carrier, Product, or Distribution Partner"
+                subtitle={totalCases}
                 titleToolTip={SubmissionMethodTooltip}
+                description="The distribution of incoming case requests by submission method, comparing Electronic (E-App) and Paper submissions."
             />
             <div className={sharedStyles.searchContainer}>
                 <FieldDataActive
@@ -308,7 +319,7 @@ export const SubmissionTypeTable = () => {
                             </TableBody>
                         </Table>
                     )}
-                    {!graphStatsError && searchedData?.length > 0 && (
+                    {!graphStatsError && searchedData?.length > 0 && searchedData.length > limit && (
                         <div className={sharedStyles.paginationContainer}>
                             <Pagination limit={limit} offset={offset} total={searchedData?.length || 0} goToPage={goToPage} />
                         </div>
