@@ -556,91 +556,10 @@
                 "type": "object",
                 "title": "Fiscal Data",
                 "properties": {
-                    "annualIncome": {
-                        "type": "string",
-                        "title": "Annual income"
-                    },
-                    "netWorth": {
-                        "type": "string",
-                        "title": "Net worth"
-                    },
-                    "liquidNetWorth": {
-                        "type": "string",
-                        "title": "Liquid net worth"
-                    },
-                    "sourceOfIncome": {
-                        "type": "array",
-                        "title": "Source of income",
-                        "items": {
-                            "type": "string",
-                            "$ref": "#/definitions/sourceOfIncomeEnum"
-                        },
-                        "uniqueItems": true
-                    },
-                    "sourceOfIncomeOther": {
-                        "type": "string",
-                        "title": "Other source of income"
-                    },
                     "materialChangeExp": {
                         "type": "string",
                         "title": "Material change expected",
                         "$ref": "#/definitions/materialChangeExpEnum"
-                    },
-
-                    "materialChangeDetails": {
-                        "type": "array",
-                        "title": "Material Change Details",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "changeType": {
-                                    "type": "string",
-                                    "title": "Change Type",
-                                    "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
-                                },
-                                "isApplicable": {
-                                    "type": "string",
-                                    "title": "Is Applicable"
-                                },
-                                "numberOfYears": {
-                                    "type": "string",
-                                    "title": "Number of Years"
-                                },
-                                "amount": {
-                                    "type": "string",
-                                    "title": "Amount"
-                                }
-                            },
-                            "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
-                        }
-                    },
-                    "totalAssets": {
-                        "type": "string",
-                        "title": "Total assets"
-                    },
-                    "totalDebt": {
-                        "type": "string",
-                        "title": "Total debt"
-                    },
-                    "annualExpenses": {
-                        "type": "string",
-                        "title": "Annual expenses"
-                    },
-                    "sourceOfFunds": {
-                        "type": "array",
-                        "title": "Source of funds",
-                        "items": {
-                            "$ref": "#/definitions/sourceOfFundsEnum"
-                        },
-                        "uniqueItems": true
-                    },
-                    "federalTaxBand": {
-                        "type": "string",
-                        "title": "Federal tax band"
-                    },
-                    "otherTaxBand": {
-                        "type": "string",
-                        "title": "Other tax band"
                     }
                 },
                 "dependencies": {
@@ -655,9 +574,187 @@
                                 "materialChangeReason": {
                                     "type": "string",
                                     "title": "Material Purchase reason"
+                                },
+                                "annualIncome": {
+                                    "type": "string",
+                                    "title": "Annual income"
+                                },
+                                "netWorth": {
+                                    "type": "string",
+                                    "title": "Net worth"
+                                },
+                                "liquidNetWorth": {
+                                    "type": "string",
+                                    "title": "Liquid net worth"
+                                },
+                                "sourceOfIncome": {
+                                    "type": "array",
+                                    "title": "Source of income",
+                                    "items": {
+                                        "type": "string",
+                                        "$ref": "#/definitions/sourceOfIncomeEnum"
+                                    },
+                                    "uniqueItems": true
+                                },
+                                "sourceOfIncomeOther": {
+                                    "type": "string",
+                                    "title": "Other source of income"
+                                },
+                                "materialChangeExp": {
+                                    "type": "string",
+                                    "title": "Material change expected",
+                                    "$ref": "#/definitions/materialChangeExpEnum"
+                                },
+
+                                "materialChangeDetails": {
+                                    "type": "array",
+                                    "title": "Material Change Details",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "changeType": {
+                                                "type": "string",
+                                                "title": "Change Type",
+                                                "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
+                                            },
+                                            "isApplicable": {
+                                                "type": "string",
+                                                "title": "Is Applicable"
+                                            },
+                                            "numberOfYears": {
+                                                "type": "string",
+                                                "title": "Number of Years"
+                                            },
+                                            "amount": {
+                                                "type": "string",
+                                                "title": "Amount"
+                                            }
+                                        },
+                                        "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
+                                    }
+                                },
+                                "totalAssets": {
+                                    "type": "string",
+                                    "title": "Total assets"
+                                },
+                                "totalDebt": {
+                                    "type": "string",
+                                    "title": "Total debt"
+                                },
+                                "annualExpenses": {
+                                    "type": "string",
+                                    "title": "Annual expenses"
+                                },
+                                "sourceOfFunds": {
+                                    "type": "array",
+                                    "title": "Source of funds",
+                                    "items": {
+                                        "type": "string",
+                                        "$ref": "#/definitions/sourceOfFundsEnum"
+                                    },
+                                    "uniqueItems": true
+                                },
+                                "federalTaxBand": {
+                                    "type": "string",
+                                    "title": "Federal tax band"
+                                },
+                                "otherTaxBand": {
+                                    "type": "string",
+                                    "title": "Other tax band"
                                 }
                             },
+
                             "required": ["materialChangeReason"]
+                        },
+                        "else": {
+                            "properties": {
+                                "annualIncome": {
+                                    "type": "string",
+                                    "title": "Annual income"
+                                },
+                                "netWorth": {
+                                    "type": "string",
+                                    "title": "Net worth"
+                                },
+                                "liquidNetWorth": {
+                                    "type": "string",
+                                    "title": "Liquid net worth"
+                                },
+                                "sourceOfIncome": {
+                                    "type": "array",
+                                    "title": "Source of income",
+                                    "items": {
+                                        "type": "string",
+                                        "$ref": "#/definitions/sourceOfIncomeEnum"
+                                    },
+                                    "uniqueItems": true
+                                },
+                                "sourceOfIncomeOther": {
+                                    "type": "string",
+                                    "title": "Other source of income"
+                                },
+                                "materialChangeExp": {
+                                    "type": "string",
+                                    "title": "Material change expected",
+                                    "$ref": "#/definitions/materialChangeExpEnum"
+                                },
+                                "materialChangeDetails": {
+                                    "type": "array",
+                                    "title": "Material Change Details",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "changeType": {
+                                                "type": "string",
+                                                "title": "Change Type",
+                                                "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
+                                            },
+                                            "isApplicable": {
+                                                "type": "string",
+                                                "title": "Is Applicable"
+                                            },
+                                            "numberOfYears": {
+                                                "type": "string",
+                                                "title": "Number of Years"
+                                            },
+                                            "amount": {
+                                                "type": "string",
+                                                "title": "Amount"
+                                            }
+                                        },
+                                        "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
+                                    }
+                                },
+                                "totalAssets": {
+                                    "type": "string",
+                                    "title": "Total assets"
+                                },
+                                "totalDebt": {
+                                    "type": "string",
+                                    "title": "Total debt"
+                                },
+                                "annualExpenses": {
+                                    "type": "string",
+                                    "title": "Annual expenses"
+                                },
+                                "sourceOfFunds": {
+                                    "type": "array",
+                                    "title": "Source of funds",
+                                    "items": {
+                                        "type": "string",
+                                        "$ref": "#/definitions/sourceOfFundsEnum"
+                                    },
+                                    "uniqueItems": true
+                                },
+                                "federalTaxBand": {
+                                    "type": "string",
+                                    "title": "Federal tax band"
+                                },
+                                "otherTaxBand": {
+                                    "type": "string",
+                                    "title": "Other tax band"
+                                }
+                            }
                         }
                     }
                 },
@@ -672,8 +769,7 @@
                     "totalDebt",
                     "annualExpenses",
                     "sourceOfFunds",
-                    "federalTaxBand",
-                    "otherTaxBand"
+                    "federalTaxBand"
                 ]
             },
             "financialExperience": {
@@ -1300,6 +1396,7 @@
                         },
                         "govtIdExpDate": {
                             "format": "date",
+
                             "ui:options": {}
                         }
                     }
@@ -2547,92 +2644,10 @@
                             "type": "object",
                             "title": "Fiscal Data",
                             "properties": {
-                                "annualIncome": {
-                                    "type": "string",
-                                    "title": "Annual income"
-                                },
-                                "netWorth": {
-                                    "type": "string",
-                                    "title": "Net worth"
-                                },
-                                "liquidNetWorth": {
-                                    "type": "string",
-                                    "title": "Liquid net worth"
-                                },
-                                "sourceOfIncome": {
-                                    "type": "array",
-                                    "title": "Source of income",
-                                    "items": {
-                                        "type": "string",
-                                        "$ref": "#/definitions/sourceOfIncomeEnum"
-                                    },
-                                    "uniqueItems": true
-                                },
-                                "sourceOfIncomeOther": {
-                                    "type": "string",
-                                    "title": "Other source of income"
-                                },
                                 "materialChangeExp": {
                                     "type": "string",
                                     "title": "Material change expected",
                                     "$ref": "#/definitions/materialChangeExpEnum"
-                                },
-
-                                "materialChangeDetails": {
-                                    "type": "array",
-                                    "title": "Material Change Details",
-                                    "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "changeType": {
-                                                "type": "string",
-                                                "title": "Change Type",
-                                                "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
-                                            },
-                                            "isApplicable": {
-                                                "type": "string",
-                                                "title": "Is Applicable"
-                                            },
-                                            "numberOfYears": {
-                                                "type": "string",
-                                                "title": "Number of Years"
-                                            },
-                                            "amount": {
-                                                "type": "string",
-                                                "title": "Amount"
-                                            }
-                                        },
-                                        "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
-                                    }
-                                },
-                                "totalAssets": {
-                                    "type": "string",
-                                    "title": "Total assets"
-                                },
-                                "totalDebt": {
-                                    "type": "string",
-                                    "title": "Total debt"
-                                },
-                                "annualExpenses": {
-                                    "type": "string",
-                                    "title": "Annual expenses"
-                                },
-                                "sourceOfFunds": {
-                                    "type": "array",
-                                    "title": "Source of funds",
-                                    "items": {
-                                        "type": "string",
-                                        "$ref": "#/definitions/sourceOfFundsEnum"
-                                    },
-                                    "uniqueItems": true
-                                },
-                                "federalTaxBand": {
-                                    "type": "string",
-                                    "title": "Federal tax band"
-                                },
-                                "otherTaxBand": {
-                                    "type": "string",
-                                    "title": "Other tax band"
                                 }
                             },
                             "dependencies": {
@@ -2647,9 +2662,188 @@
                                             "materialChangeReason": {
                                                 "type": "string",
                                                 "title": "Material Purchase reason"
+                                            },
+                                            "annualIncome": {
+                                                "type": "string",
+                                                "title": "Annual income"
+                                            },
+                                            "netWorth": {
+                                                "type": "string",
+                                                "title": "Net worth"
+                                            },
+                                            "liquidNetWorth": {
+                                                "type": "string",
+                                                "title": "Liquid net worth"
+                                            },
+                                            "sourceOfIncome": {
+                                                "type": "array",
+                                                "title": "Source of income",
+                                                "items": {
+                                                    "type": "string",
+                                                    "$ref": "#/definitions/sourceOfIncomeEnum"
+                                                },
+                                                "uniqueItems": true
+                                            },
+                                            "sourceOfIncomeOther": {
+                                                "type": "string",
+                                                "title": "Other source of income"
+                                            },
+                                            "materialChangeExp": {
+                                                "type": "string",
+                                                "title": "Material change expected",
+                                                "$ref": "#/definitions/materialChangeExpEnum"
+                                            },
+
+                                            "materialChangeDetails": {
+                                                "type": "array",
+                                                "title": "Material Change Details",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "changeType": {
+                                                            "type": "string",
+                                                            "title": "Change Type",
+                                                            "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
+                                                        },
+                                                        "isApplicable": {
+                                                            "type": "string",
+                                                            "title": "Is Applicable"
+                                                        },
+                                                        "numberOfYears": {
+                                                            "type": "string",
+                                                            "title": "Number of Years"
+                                                        },
+                                                        "amount": {
+                                                            "type": "string",
+                                                            "title": "Amount"
+                                                        }
+                                                    },
+                                                    "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
+                                                }
+                                            },
+                                            "totalAssets": {
+                                                "type": "string",
+                                                "title": "Total assets"
+                                            },
+                                            "totalDebt": {
+                                                "type": "string",
+                                                "title": "Total debt"
+                                            },
+                                            "annualExpenses": {
+                                                "type": "string",
+                                                "title": "Annual expenses"
+                                            },
+                                            "sourceOfFunds": {
+                                                "type": "array",
+                                                "title": "Source of funds",
+                                                "items": {
+                                                    "type": "string",
+                                                    "$ref": "#/definitions/sourceOfFundsEnum"
+                                                },
+                                                "uniqueItems": true
+                                            },
+                                            "federalTaxBand": {
+                                                "type": "string",
+                                                "title": "Federal tax band"
+                                            },
+                                            "otherTaxBand": {
+                                                "type": "string",
+                                                "title": "Other tax band"
                                             }
                                         },
+
                                         "required": ["materialChangeReason"]
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "annualIncome": {
+                                                "type": "string",
+                                                "title": "Annual income"
+                                            },
+                                            "netWorth": {
+                                                "type": "string",
+                                                "title": "Net worth"
+                                            },
+                                            "liquidNetWorth": {
+                                                "type": "string",
+                                                "title": "Liquid net worth"
+                                            },
+                                            "sourceOfIncome": {
+                                                "type": "array",
+                                                "title": "Source of income",
+                                                "items": {
+                                                    "type": "string",
+                                                    "$ref": "#/definitions/sourceOfIncomeEnum"
+                                                },
+                                                "uniqueItems": true
+                                            },
+                                            "sourceOfIncomeOther": {
+                                                "type": "string",
+                                                "title": "Other source of income"
+                                            },
+                                            "materialChangeExp": {
+                                                "type": "string",
+                                                "title": "Material change expected",
+                                                "$ref": "#/definitions/materialChangeExpEnum"
+                                            },
+
+                                            "materialChangeDetails": {
+                                                "type": "array",
+                                                "title": "Material Change Details",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "changeType": {
+                                                            "type": "string",
+                                                            "title": "Change Type",
+                                                            "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
+                                                        },
+                                                        "isApplicable": {
+                                                            "type": "string",
+                                                            "title": "Is Applicable"
+                                                        },
+                                                        "numberOfYears": {
+                                                            "type": "string",
+                                                            "title": "Number of Years"
+                                                        },
+                                                        "amount": {
+                                                            "type": "string",
+                                                            "title": "Amount"
+                                                        }
+                                                    },
+                                                    "required": ["changeType", "isApplicable", "numberOfYears", "amount"]
+                                                }
+                                            },
+                                            "totalAssets": {
+                                                "type": "string",
+                                                "title": "Total assets"
+                                            },
+                                            "totalDebt": {
+                                                "type": "string",
+                                                "title": "Total debt"
+                                            },
+                                            "annualExpenses": {
+                                                "type": "string",
+                                                "title": "Annual expenses"
+                                            },
+                                            "sourceOfFunds": {
+                                                "type": "array",
+                                                "title": "Source of funds",
+                                                "items": {
+                                                    "type": "string",
+                                                    "$ref": "#/definitions/sourceOfFundsEnum"
+                                                },
+                                                "uniqueItems": true
+                                            },
+                                            "federalTaxBand": {
+                                                "type": "string",
+                                                "title": "Federal tax band"
+                                            },
+                                            "otherTaxBand": {
+                                                "type": "string",
+                                                "title": "Other tax band"
+                                            }
+                                        }
                                     }
                                 }
                             },
@@ -3287,6 +3481,7 @@
                                     },
                                     "govtIdExpDate": {
                                         "format": "date",
+
                                         "ui:options": {}
                                     }
                                 }
