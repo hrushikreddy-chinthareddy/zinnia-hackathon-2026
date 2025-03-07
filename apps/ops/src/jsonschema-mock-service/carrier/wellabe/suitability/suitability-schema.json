@@ -402,7 +402,7 @@
                                     },
                                     "city": {
                                         "type": "string",
-                                        "title": "city"
+                                        "title": "City"
                                     },
                                     "state": {
                                         "uniqueItems": true,
@@ -412,7 +412,7 @@
                                     },
                                     "country": {
                                         "type": "string",
-                                        "title": "country"
+                                        "title": "Country"
                                     },
                                     "zip": {
                                         "type": "string",
@@ -2515,7 +2515,7 @@
                                                 },
                                                 "city": {
                                                     "type": "string",
-                                                    "title": "city"
+                                                    "title": "City"
                                                 },
                                                 "state": {
                                                     "uniqueItems": true,
@@ -2526,7 +2526,7 @@
                                                 },
                                                 "country": {
                                                     "type": "string",
-                                                    "title": "country"
+                                                    "title": "Country"
                                                 },
                                                 "zip": {
                                                     "type": "string",
