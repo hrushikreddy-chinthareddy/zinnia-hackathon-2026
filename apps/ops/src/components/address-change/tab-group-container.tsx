@@ -41,7 +41,7 @@ const TabGroupContent = ({ steps, policy, showJointOwner = false }: TabGroupCont
     const jointOwner = policy?.parties?.find(party => party.partyId === jointOwnerId);
 
     const sideSheet = useSideSheetContext();
-    const { diaryNotes } = useDiaryNotes(policy.policyNumber as string, policy.carrierId as string, 0, 10);
+    const { diaryNotes } = useDiaryNotes(policy?.policyNumber as string, policy?.carrierId as string, 0, 10);
     const openSideSheet = () => {
         const content = <DiaryNotesContent notesData={{ diaryNotes: diaryNotes } as any} />;
         sideSheet.changeSideSheetContent(t('site.navLinks.diaryNotes.text'), content);

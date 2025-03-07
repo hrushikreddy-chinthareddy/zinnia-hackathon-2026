@@ -59,7 +59,7 @@ const GlobalValuesBar = ({
                     tooltipPlacements={tooltipPlacements}
                     variant={variant}
                 />
-                {divider && <div className="mx-8 flex w-0.5 border-l-2 border-l-gray-200" />}
+                {policyNumber && divider && <div className="mx-8 flex w-0.5 border-l-2 border-l-gray-200" />}
                 <PolicyOwner
                     owner={owner}
                     planCode={planCode}
@@ -67,13 +67,15 @@ const GlobalValuesBar = ({
                     displaySSN={showJointOwner}
                     showLink={showLink}
                 />
-                <div className="mx-4 flex w-0.5" />
                 {showJointOwner && (
-                    <PolicyJointOwner jointOwner={jointOwner} planCode={planCode} policyNumber={policyNumber} showLink={showLink} />
+                    <>
+                        {jointOwner && <div className="mx-4 flex w-0.5" />}
+                        <PolicyJointOwner jointOwner={jointOwner} planCode={planCode} policyNumber={policyNumber} showLink={showLink} />
+                    </>
                 )}
                 {showDocument &&
                     <>
-                        <div className="mx-4 flex w-0.5" />
+                        {documentNumber && <div className="mx-4 flex w-0.5" /> }
                         <DocumentInfo documentNumber={documentNumber ?? ''} />
                     </>
                 }

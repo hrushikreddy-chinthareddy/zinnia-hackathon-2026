@@ -11,6 +11,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { WithdrawalType, ProgramType, FormProgram, ProgramSubType, AmountType } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
 import { SimpleOption } from '../select/select.helpers';
 
 const dollarIcon = <span>$</span>;

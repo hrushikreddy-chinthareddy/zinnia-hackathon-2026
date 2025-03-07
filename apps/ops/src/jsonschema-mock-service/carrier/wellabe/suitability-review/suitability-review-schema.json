@@ -17,8 +17,8 @@
                     "$schema": "http://json-schema.org/draft-07/schema#",
                     "type": "object",
                     "definitions": {
-                        "suitabilityStatus": {
-                            "enum": ["ACCEPT", "DECLINE"]
+                        "suitabilityStatusEnum": {
+                            "enum": [true, false]
                         },
                         "declineReason": {
                             "enum": [
@@ -85,42 +85,9 @@
                                 }
                             }
                         },
-                        "suitabilityReviewStatus": {
-                            "type": "object",
-                            "required": ["suitabilityStatus"],
-                            "properties": {
-                                "suitabilityStatus": {
-                                    "type": "string",
-                                    "title": "Suitability decision",
-                                    "$ref": "#/definitions/suitabilityStatus",
-                                    "default": "ACCEPT"
-                                }
-                            },
-                            "allOf": [
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "suitabilityStatus": {
-                                                "const": "DECLINE"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "declineReason": {
-                                                "type": "array",
-                                                "title": "Reason for decline",
-                                                "items": {
-                                                    "type": "string",
-                                                    "$ref": "#/definitions/declineReason"
-                                                },
-                                                "uniqueItems": true
-                                            }
-                                        },
-                                        "required": ["declineReason"]
-                                    }
-                                }
-                            ]
+                        "issueResolved": {
+                            "title": "Suitability decision",
+                            "$ref": "#/definitions/suitabilityStatusEnum"
                         },
                         "attachment": {
                             "type": "array",
@@ -130,9 +97,39 @@
                                 "format": "data-url"
                             }
                         }
-                    }
+                    },
+                    "required": ["issueResolved"],
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "issueResolved": {
+                                        "const": true
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {}
+                            },
+                            "else": {
+                                "properties": {
+                                    "declineReason": {
+                                        "type": "array",
+                                        "title": "Reason for decline",
+                                        "items": {
+                                            "type": "string",
+                                            "$ref": "#/definitions/declineReason"
+                                        },
+                                        "uniqueItems": true
+                                    }
+                                },
+                                "required": ["declineReason"]
+                            }
+                        }
+                    ]
                 },
                 "uiSchema": {
+                    "ui:order": ["rules", "issueResolved", "declineReason", "attachment"],
                     "$schema": "http: //json-schema.org/draft-07/schema#",
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
@@ -190,60 +187,58 @@
                             }
                         }
                     },
-                    "suitabilityReviewStatus": {
+
+                    "issueResolved": {
+                        "ui:widget": "radio",
                         "ui:options": {
-                            "label": false
-                        },
-                        "suitabilityStatus": {
-                            "ui:options": {
-                                "widget": "radio",
-                                "help": "Select suitability review decision",
-                                "enumNames": ["Accept", "Decline"]
-                            }
-                        },
-                        "declineReason": {
-                            "ui:options": {
-                                "label": false,
-                                "help": "Provide decline reason",
-                                "class": "mt-0",
-                                "enumNames": [
-                                    "Declined SPIF on internal transfer",
-                                    "Loss of benefit base",
-                                    "Low Income",
-                                    "Low liquid asset",
-                                    "High Debt",
-                                    "High % of net worth in annuities/life",
-                                    "Low net worth",
-                                    "Replacement less than 1 year",
-                                    "Requirements not received",
-                                    "Surrender Charges",
-                                    "Trust structure not accepted",
-                                    "Inherited distributions not compliant",
-                                    "Inherited liquidated while in surrender",
-                                    "Recently written replacement by same agent",
-                                    "Lack of response from agent",
-                                    "Non-resident sale not acceptable",
-                                    "Tax qualification not acceptable",
-                                    "Negative disposable income",
-                                    "Negative net worth",
-                                    "Goal is income",
-                                    "Replacement history",
-                                    "Unemployed",
-                                    "New York resident",
-                                    "Assisted living or nursing home",
-                                    "Over max issue age",
-                                    "Outstanding loan",
-                                    "Recently issued replacement",
-                                    "Goals conflicting or don't match explanation",
-                                    "Reverse mortgage"
-                                ]
-                            }
+                            "help": "Select suitability review decision",
+                            "enumNames": ["Accept", "Decline"]
                         }
                     },
+                    "declineReason": {
+                        "ui:options": {
+                            "label": false,
+                            "help": "Provide decline reason",
+                            "class": "mt-0",
+                            "enumNames": [
+                                "Declined SPIF on internal transfer",
+                                "Loss of benefit base",
+                                "Low Income",
+                                "Low liquid asset",
+                                "High Debt",
+                                "High % of net worth in annuities/life",
+                                "Low net worth",
+                                "Replacement less than 1 year",
+                                "Requirements not received",
+                                "Surrender Charges",
+                                "Trust structure not accepted",
+                                "Inherited distributions not compliant",
+                                "Inherited liquidated while in surrender",
+                                "Recently written replacement by same agent",
+                                "Lack of response from agent",
+                                "Non-resident sale not acceptable",
+                                "Tax qualification not acceptable",
+                                "Negative disposable income",
+                                "Negative net worth",
+                                "Goal is income",
+                                "Replacement history",
+                                "Unemployed",
+                                "New York resident",
+                                "Assisted living or nursing home",
+                                "Over max issue age",
+                                "Outstanding loan",
+                                "Recently issued replacement",
+                                "Goals conflicting or don't match explanation",
+                                "Reverse mortgage"
+                            ]
+                        }
+                    },
+
                     "attachment": {
                         "ui:options": {
                             "label": false,
-                            "showFiles": true
+                            "showFiles": true,
+                            "omitValue": true
                         },
                         "ui:props": {
                             "apiUrl": "case/v1/form/metadata?process=Suitability&taskType=UI_UPLOAD_DOCUMENT&carrier=null",

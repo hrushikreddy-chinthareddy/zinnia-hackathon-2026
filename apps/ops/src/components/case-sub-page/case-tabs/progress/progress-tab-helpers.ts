@@ -16,9 +16,9 @@ import { StageInstance } from '@deps/models/case/stage-instance';
 import { MultiStepInstance, SingleStepInstance, StepInstance } from '@deps/models/case/step-instance';
 import { TaskInstance, TaskStatus } from '@deps/models/case/task-instance';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { GroupedExceptions } from './progress-tab-types';
 
-import { CaseAdditionalData, ExceptionView, TaskView } from './progress-tab-types';
+import { GroupedExceptions , CaseAdditionalData, ExceptionView, TaskView } from './progress-tab-types';
+
 
 export interface DocumentView extends DocumentInstance {
     previewDocProps: DocumentPreviewerProps;

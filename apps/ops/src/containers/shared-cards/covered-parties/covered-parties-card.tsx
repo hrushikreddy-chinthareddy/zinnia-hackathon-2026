@@ -8,9 +8,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { getRiskClass } from '@deps/helpers/party-info-helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { ReactComponent as ShieldHeart } from '@deps/styles/elements/icons/navigation/shield-heart.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 
 const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.detailCards.coveredParty' });

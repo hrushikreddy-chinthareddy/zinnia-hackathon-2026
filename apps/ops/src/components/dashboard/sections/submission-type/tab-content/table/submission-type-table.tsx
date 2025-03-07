@@ -13,12 +13,13 @@ import {
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
+import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
-import { TimeframeFilterOptions } from '@deps/components/dashboard/utils';
+import { startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
 import { FieldSize } from '@deps/components/fields/field';
+import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -66,6 +67,27 @@ enum SortOrder {
     ASC = 'asc',
     DESC = 'desc',
 }
+
+const generateCaseLink = (
+    process: Processes | ExtendedProcesses | undefined,
+    name: string,
+    submissionMethod: string,
+    timeframe: TimeframeFilterOptions,
+    groupBy: GroupByOptions
+) => {
+    const method = submissionMethod === 'Electronic (E-App)' ? 'electronic' : 'paper';
+    const carrierOrProduct =
+        groupBy === GroupByOptions.ProductName ? 'productName' : groupBy === GroupByOptions.Carrier ? 'carrier' : 'brokerDealerName';
+    const createdStartDate = startDates[timeframe];
+
+    return `/cases?process=${
+        process === 'all' ? '' : process
+    }&${carrierOrProduct}=${name}&applicationType=${method}&createdDateStart=${createdStartDate}&caseStatus=${[
+        Statuses.InProgress,
+        Statuses.Exception,
+        Statuses.NotStarted,
+    ].join('&caseStatus=')}`;
+};
 
 export const SubmissionTypeTable = () => {
     const [offset, setOffset] = useState(0);
@@ -206,11 +228,18 @@ export const SubmissionTypeTable = () => {
             </div>
             <div className={sharedStyles.tableContainer}>
                 <BlurOverlayLoader loading={graphStatsFetching || graphStatsLoading}>
-                    {graphStatsError || searchedData?.length === 0 ? (
+                    {graphStatsError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
                                 {'Something went wrong fetching the application types, please try again by refreshing the page'}
+                            </Typography>
+                        </div>
+                    ) : searchedData?.length === 0 ? (
+                        <div className="grid place-content-center h-full w-full min-h-[400px]">
+                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                                <ChartBarsIcon height={'24px'} width={'24px'} />
+                                {'There is no data for this selection'}
                             </Typography>
                         </div>
                     ) : (
@@ -247,6 +276,7 @@ export const SubmissionTypeTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
+                                    <TableHeaderCell>Actions</TableHeaderCell>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -256,6 +286,22 @@ export const SubmissionTypeTable = () => {
                                             <TableCell>{item.name}</TableCell>
                                             <TableCell>{item.submissionMethod}</TableCell>
                                             <TableCell>{item.count}</TableCell>
+                                            <TableCell>
+                                                <NavElement
+                                                    type={NavElementType.Link}
+                                                    target="_blank"
+                                                    href={generateCaseLink(
+                                                        selectedProcess,
+                                                        item.name,
+                                                        item.submissionMethod,
+                                                        timeframe,
+                                                        submissionVs
+                                                    )}
+                                                    rel="noreferrer"
+                                                >
+                                                    View cases
+                                                </NavElement>
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}

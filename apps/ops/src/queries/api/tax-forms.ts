@@ -5,9 +5,9 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse, isCancel } from 'axios';
 import { DocumentDownloadV2 } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody, SearchTaxFormResponseBody } from '@deps/models/case/send-tax-forms';
 import { client } from '@deps/queries/api-utils/client';
+import { ApiResponse } from '@deps/types/api-response';
 
 import { baseAppUrl } from '../api-config';
-import { ApiResponse } from '@deps/types/api-response';
 
 const baseUrl = baseAppUrl + '/api/document/v2/';
 const baseUrlV3 = baseAppUrl + '/api/document/v3/documents/';

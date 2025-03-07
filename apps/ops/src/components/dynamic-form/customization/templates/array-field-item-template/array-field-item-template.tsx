@@ -29,7 +29,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
         fontWeight: 'bold',
     };
 
-    let nobackground = uiSchema?.['ui:options']?.nobackground ?? false;
+    const nobackground = uiSchema?.['ui:options']?.nobackground ?? false;
 
     return (
         <>

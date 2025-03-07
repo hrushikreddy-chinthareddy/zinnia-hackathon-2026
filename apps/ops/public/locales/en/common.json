@@ -856,7 +856,10 @@
             }
         },
         "caseId": "Case ID: ",
-        "documentNumber": "Document: "
+        "documentNumber": "Document: ",
+        "noDocumentFound": "No documents found",
+        "documentSelectError": "Document already selected",
+        "fetchingDocuments": "Fetching Documents..."
     },
     "caseManagementDashboard": {
         "h1": "Case Management",
@@ -1412,7 +1415,8 @@
                 "source of premium": "Source of Premium: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}",
                 "ceding carrier": "Ceding Carrier: {{label}}",
-                "premium source": "Premium Source: {{label}}"
+                "premium source": "Premium Source: {{label}}",
+                "re-illustration": "Re-Illustration: {{label}}"
             },
             "reviewIssues": "Review {{taskType}}",
             "suitabilityReview": "suitability",
@@ -3258,7 +3262,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Last updated",
-                "caseId": "Case ID "
+                "caseId": "Case ID ",
+                "noCasesAvailable": "No related cases available."
             },
             "addressHistoryTab": {
                 "defaultAddress": "Default Address",
@@ -3266,7 +3271,8 @@
                 "mailingAddress": "Mailing Address",
                 "viewFullDeatils": "View full details",
                 "preferredAddress": "Preferred Address",
-                "agentAddress": "Agent Address"
+                "agentAddress": "Agent Address",
+                "noAddressesAvailable": "No addresses available."
             }
         },
         "correspondence": "Correspondence ({{count}})",
@@ -4902,7 +4908,8 @@
             "documents": "Documents",
             "documentId": "Document ID",
             "noFormAvailable": "No form available.",
-            "taskTitle": "Task details"
+            "taskTitle": "Task details",
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -4921,7 +4928,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Last updated",
-                "caseId": "Case ID "
+                "caseId": "Case ID ",
+                 "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {
@@ -4975,7 +4983,8 @@
                     "noDocTypeToReindex": "Please document type for re-indexing",
                     "noNotes": "Please enter notes"
                 }
-            }
+            },
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "formSelection": {
             "title": "New Form Selection",
@@ -5062,7 +5071,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "Document ID",
-            "noFormAvailable": "No form available."
+            "noFormAvailable": "No form available.",
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         }
     },
     "suitabilityDataEntry": {

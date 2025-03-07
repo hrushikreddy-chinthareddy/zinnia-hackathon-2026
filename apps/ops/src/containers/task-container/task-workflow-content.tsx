@@ -5,12 +5,13 @@ import GlobalValuesNbBar from '@deps/components/global-values/global-values-bar/
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
 
-import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
-import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { TaskDataContext } from './task-context';
 import GlobalTaskSideSheet from '../case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
-import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
+import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
+import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+
 
 type TaskPageProps = {
     steps: Step[];

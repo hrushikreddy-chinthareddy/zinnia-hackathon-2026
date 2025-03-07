@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -82,7 +82,7 @@ const TabGroupContent = ({
             <div>
                 {hideGlobalValueBar ? null : (
                     <GlobalValuesBar
-                        carrierId={policy.carrierId}
+                        carrierId={policy?.carrierId}
                         marketingName={marketingName}
                         owner={policyOwner}
                         jointOwner={jointOwner}

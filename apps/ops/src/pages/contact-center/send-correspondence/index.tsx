@@ -178,7 +178,7 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
         // Create a permissions object to pass to the page, strongly typed using the enum.
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadOtpRenewals);
+        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
         const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
         const shouldShowSendDocumentPage = featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT];
         const shouldShowCaseButton = featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT_SHOW_CASE_BUTTON];

@@ -8,8 +8,8 @@ import { ActiveWithdrawalCase, DigitalFormWithdrawal } from '@deps/models/case/w
 import { baseAppUrl, se2ApiServerUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const baseTasksUrl = `${baseAppUrl}/api/case/v1/tasks`;

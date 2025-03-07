@@ -7,11 +7,11 @@ import WorkflowCard from "@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { isEmptyObject } from '@deps/helpers/objects.helper';
 import { FormValidationErrors, NigoMessages } from '@deps/models/case/withdrawal/case';
 
 import { NigoDetails } from './nigo-details';
 import { useNigoEntry } from '../../nigo-entry-provider';
-import { isEmptyObject } from '@deps/helpers/objects.helper';
 
 interface NigoDetailsStepProps {
     nigoExceptions: any;

@@ -59,20 +59,20 @@ const WelcomePage = () => {
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ locale = DEFAULT_LOCALE, req, res }) => {
+export const getServerSideProps: GetServerSideProps = async context => {
+    const { locale = DEFAULT_LOCALE, req, res } = context;
     setNextLocaleCookie(locale, req, res);
     const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON]);
 
     const auth = await getSession(req, res);
     const user = auth?.user as UserProfile;
-    const accessToken = auth?.accessToken;
 
     if (user) {
         // Create a permissions object, strongly typed using the enum.
         const permissions = {
-            [UserPermission.AllowReadCaseManagement]: await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadCaseManagement),
-            [UserPermission.AllowReadPolicyAdmin]: await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadPolicyAdmin),
-            [UserPermission.AllowReadOtpRenewals]: await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadOtpRenewals),
+            [UserPermission.AllowReadCaseManagement]: await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement),
+            [UserPermission.AllowReadPolicyAdmin]: await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin),
+            [UserPermission.AllowReadOtpRenewals]: await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals),
         };
 
         let returnTo = locale + '/cases';

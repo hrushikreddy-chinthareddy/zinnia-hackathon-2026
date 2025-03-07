@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { createContext, FC, PropsWithChildren, useState } from 'react';
+import { createContext, FC, PropsWithChildren, useEffect, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { combineElectronicAndDigital, submissionTypeQuery } from '@deps/components/dashboard/sections/submission-type/utils';
@@ -49,10 +49,10 @@ export const SubmissionTypeContext = createContext<SubmissionTypeContextTypes>(d
 
 export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
-    const [submissionVs, setSubmissionVs] = useState<GroupByOptions>(GroupByOptions.Carrier);
+
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
     const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
-
+    const [submissionVs, setSubmissionVs] = useState<GroupByOptions>(GroupByOptions.Carrier);
     const graphGroupBy = [submissionVs, GroupByOptions.ApplicationType];
 
     const filter: DashboardSearchFilter = {
@@ -102,6 +102,14 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
             };
         },
     });
+
+    useEffect(() => {
+        if (Object.keys(selectedCarriers).length === 1) {
+            setSubmissionVs(GroupByOptions.ProductName);
+        } else {
+            setSubmissionVs(GroupByOptions.Carrier);
+        }
+    }, [selectedCarriers]);
 
     return (
         <SubmissionTypeContext.Provider

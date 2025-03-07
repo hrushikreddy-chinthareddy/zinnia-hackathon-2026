@@ -83,7 +83,7 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
                 matchingResult = MatchingCase.MATCH_FOUND;
             }
 
-            let attachment = task.data?.attachments?.slice(-1) ?? [];
+            const attachment = task.data?.attachments?.slice(-1) ?? [];
             let matchedDocumentData = task.data?.matchedDocumentData ?? {};
             if (matchedDocumentData && attachment.length > 0) {
                 matchedDocumentData = {
