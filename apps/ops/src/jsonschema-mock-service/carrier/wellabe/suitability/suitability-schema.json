@@ -2102,6 +2102,7 @@
         "tabSchemas": [
             {
                 "title": "Input Suitability Data",
+                "description": "Manually enter all suitability data. Note that canceling at any point will erase all the entered data.",
                 "formSchema": {
                     "type": "object",
                     "$schema": "http://json-schema.org/draft-07/schema#",
