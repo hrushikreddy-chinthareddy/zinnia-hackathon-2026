@@ -2,7 +2,7 @@ import { FieldTemplateProps, getUiOptions } from '@rjsf/utils';
 import { Divider, Label, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-import styles from '@deps/utils/styles';
+import styles from './field-template.module.css';
 
 export function FieldTemplate(props: FieldTemplateProps) {
     const { id, label, required, description, errors, children, readonly, formData, classNames, uiSchema } = props;
@@ -41,7 +41,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                     )}
                     <div className={styles.children}>
                         {displayLabel && (
-                            <div className="mb-5">
+                            <div className="mb-2">
                                 <Label labelFor={id} interactiveElements={[helpInformation]}>
                                     <span className="text-md font-medium">{fieldLabel}</span>
                                 </Label>
