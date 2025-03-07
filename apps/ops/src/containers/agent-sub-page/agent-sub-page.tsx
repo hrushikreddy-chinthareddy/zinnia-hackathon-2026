@@ -37,7 +37,7 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
     }, [partyRoles, selectedPolicyParty?.partyId]);
 
     const agentId = selectedPolicyParty?.agentExternalId;
-    const clientCode = policy.carrierId;
+    const clientCode = policy.parentCompanyId ? policy.parentCompanyId : policy.carrierId;
 
     const fetchPolicies = useCallback(async () => {
         try {

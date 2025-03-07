@@ -4956,6 +4956,8 @@ export interface BasePolicy {
     /** Months elapsed since the start of policy */
     monthOfYear?: number;
     nonForfeitureOption?: string;
+    // The parent of carrierId
+    parentCompanyId?: string;
     policyDates?: PolicyDates;
     policyFeatures?: PolicyFeature[];
     /** The number assigned to the Contract */
