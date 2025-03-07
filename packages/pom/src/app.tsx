@@ -3,6 +3,7 @@ import { HashRouter, Route, Routes } from 'react-router';
 import './styles/globals.css';
 import Producer from './views/producer/Producer';
 import { Search } from './views/search/Search';
+import { CreateProducerForm } from './views/create-producer/CreateProducerForm';
 
 export const Pom = ({
   translations,
@@ -27,6 +28,7 @@ export const Pom = ({
           />
         </Route>
         <Route path="/search" element={<Search />}></Route>
+        <Route path="/form" element={<CreateProducerForm />}></Route>
       </Routes>
     </HashRouter>
   );

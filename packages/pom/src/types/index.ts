@@ -7,6 +7,20 @@ export enum ProducerType {
   CORPORATION = 'corporation',
 }
 
+export enum CorporationType {
+  GENERAL_AGENCY = 'GeneralAgency',
+  BROKER_DEALER = 'BrokerDealer',
+  INDEPENDENT_MARKETING_ORGANIZATION = 'IndependentMarketingOrganization',
+  THIRD_PARTY_MARKETER = 'ThirdPartyMarketer',
+  REGISTERED_INVESTMENT_ADVISOR = 'RegisteredInvestmentAdvisor',
+}
+
+export enum Channel {
+  INDEPENDENT_PLANNERS = 'IndependentPlanners',
+  INDEPENDENT_MARKETING_ORGANIZATION = 'IndependentMarketingOrganization',
+  REGISTERED_INVESTMENT_ADVISOR = 'RegisteredInvestmentAdvisor',
+}
+
 export enum AppointmentStatus {
   APPROVED = 'Approved',
   PENDING = 'Pending',
