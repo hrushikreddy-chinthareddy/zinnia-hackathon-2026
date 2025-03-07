@@ -105,6 +105,8 @@ export enum Statuses {
     New = 'NEW',
     Overridden = 'OVERRIDDEN',
     Withdrawn = 'WITHDRAWN',
+    Inprogress = 'INPROGRESS',
+    Pending = 'IMPEDED',
 }
 
 export interface StatCount {
