@@ -74,8 +74,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         }
 
         const result = await checkTuple(partyId, relation, tupleObject);
-        addTupleToCookie(relation, tupleObject, result);
-        return result;
+        // only store the tuple if the request was successful
+        if (!result.error) {
+            addTupleToCookie(relation, tupleObject, !!result.data);
+        }
+        return !!result.data;
     };
 
     // restrict bulk checks to tuples that don't already exist in the cookie
@@ -86,8 +89,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         const neededTuples = checkedTuples.filter(tuple => tuple.allowed === undefined);
         if (neededTuples.length) {
             const result = await bulkCheckResponseClient({ tuples: neededTuples });
-            result?.tuples?.forEach(tuple => {
-                addTupleToCookie(tuple.relation, tuple.object, tuple.allowed);
+            result?.data?.tuples?.forEach(tuple => {
+                // only store the tuple if the request was successful
+                if (!result.error) {
+                    addTupleToCookie(tuple.relation, tuple.object, tuple.allowed);
+                }
                 const index = checkedTuples.findIndex(t => t.relation === tuple.relation && t.object === tuple.object);
                 if (index !== -1) {
                     checkedTuples[index].allowed = tuple.allowed;
@@ -105,8 +111,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         }
         const result = await getCarrierList(partyId, relation as UserPermission);
 
-        addCarrierListToCookie(relation, result);
-        return result || [];
+        // only add to cookie if the request was successful
+        if (!result.error) {
+            addCarrierListToCookie(relation, result.data ?? []);
+        }
+        return result.data ?? [];
     };
 
     useEffect(() => {
@@ -114,10 +123,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             try {
                 if (!partyId) return;
                 const tuples = await bulkCheckPermissions(createBulkCheckBodyRequest(partyId));
-                tuples.forEach(tuple => {
-                    addTupleToCookie(tuple.relation, tuple.object, tuple.allowed);
-                });
-
                 setFgaRoles(tuples);
                 const superAdmin = checkIfUserIsSuperAdmin(tuples);
                 const hasDashboard = checkIfUserHasDashboardAccess(tuples);
