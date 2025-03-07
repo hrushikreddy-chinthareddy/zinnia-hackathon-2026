@@ -41,7 +41,7 @@ export const TaskMetadataHelper = (task: any, tasksMetadata: any[]) => {
 const generatePotentialMatchesOptions = (potentialMatches: PotentialMatches[]): any[] => {
     return (
         potentialMatches
-            ?.filter(item => item.correlationid && item.correlationid !== '')
+            ?.filter(item => item.correlationid && item.correlationid !== '' && item.zlCaseId !== '')
             ?.map((item: PotentialMatches) => {
                 const id = uuidv4();
                 const subElement = {
