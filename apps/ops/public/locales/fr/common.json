@@ -307,7 +307,10 @@
             }
         },
         "caseId": "Numéro du cas: ",
-        "documentNumber": "Document: "
+        "documentNumber": "Document: ",
+        "noDocumentFound": "Aucun document trouvé",
+        "documentSelectError": "Document déjà sélectionné",
+        "fetchingDocuments": "Récupération des documents..."
     },
     "beneChange": {
         "tabs": {
