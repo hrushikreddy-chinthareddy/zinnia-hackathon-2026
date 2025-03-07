@@ -3,7 +3,6 @@
     "process": "New Business",
     "carrier": "WELB",
     "taskType": "SUITABILITY_REVIEW",
-    "title": "",
     "formSchema": {
         "type": "object"
     },
@@ -56,7 +55,7 @@
                         }
                     },
                     "properties": {
-                        "suitabilityRules": {
+                        "rules": {
                             "type": "array",
                             "title": "",
                             "items": {
@@ -151,7 +150,7 @@
                             }
                         }
                     },
-                    "suitabilityRules": {
+                    "rules": {
                         "ui:options": {
                             "label": false,
                             "ArrayFieldTemplate": "ArrayFieldTableTemplate"
@@ -247,7 +246,7 @@
                             "showFiles": true
                         },
                         "ui:props": {
-                            "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                            "apiUrl": "case/v1/form/metadata?process=Suitability&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
                             "apiMethod": "get"
                         }
                     }

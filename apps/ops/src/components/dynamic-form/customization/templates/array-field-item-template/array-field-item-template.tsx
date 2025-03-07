@@ -1,4 +1,4 @@
-import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { ArrayFieldTemplateItemType, FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { CSSProperties } from 'react';
 
 export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -21,6 +21,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
         uiSchema,
     } = props;
     const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+    const uiOptions = getUiOptions(uiSchema);
     const btnStyle: CSSProperties = {
         flex: 1,
         paddingLeft: 6,
@@ -31,65 +32,73 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
     let nobackground = uiSchema?.['ui:options']?.nobackground ?? false;
 
     return (
-        <div>
-            <div
-                className={
-                    nobackground ? 'flex mb-2 pt-2' : 'flex rounded border-2 border-dashed border-gray-100 bg-gray-50 mb-2 pt-2 px-3'
-                }
-            >
-                <div className="flex w-full">{children}</div>
-                <div className="ml-auto my-3">
-                    {hasToolbar && (
-                        <div className="d-flex flex-row">
-                            {(hasMoveUp || hasMoveDown) && (
-                                <div className="m-0 p-0">
-                                    <MoveUpButton
-                                        className="array-item-move-up"
-                                        style={btnStyle}
-                                        disabled={disabled || readonly || !hasMoveUp}
-                                        onClick={onReorderClick(index, index - 1)}
-                                        uiSchema={uiSchema}
-                                        registry={registry}
-                                    />
-                                </div>
-                            )}
-                            {(hasMoveUp || hasMoveDown) && (
-                                <div className="m-0 p-0">
-                                    <MoveDownButton
-                                        style={btnStyle}
-                                        disabled={disabled || readonly || !hasMoveDown}
-                                        onClick={onReorderClick(index, index + 1)}
-                                        uiSchema={uiSchema}
-                                        registry={registry}
-                                    />
-                                </div>
-                            )}
-                            {hasCopy && (
-                                <div className="m-0 p-0">
-                                    <CopyButton
-                                        style={btnStyle}
-                                        disabled={disabled || readonly}
-                                        onClick={onCopyIndexClick(index)}
-                                        uiSchema={uiSchema}
-                                        registry={registry}
-                                    />
-                                </div>
-                            )}
-                            {hasRemove && !readonly && props.totalItems > (props.uiSchema?.['ui:options']?.minItems as number) && (
-                                <div className="px-4 my-2">
-                                    <RemoveButton
-                                        style={btnStyle}
-                                        disabled={disabled || readonly}
-                                        onClick={onDropIndexClick(index)}
-                                        uiSchema={uiSchema}
-                                        registry={registry}
-                                    />
+        <>
+            {uiOptions?.templateType === 'table' ? (
+                children
+            ) : (
+                <div>
+                    <div
+                        className={
+                            nobackground
+                                ? 'flex mb-2 pt-2'
+                                : 'flex rounded border-2 border-dashed border-gray-100 bg-gray-50 mb-2 pt-2 px-3'
+                        }
+                    >
+                        <div className="flex w-full">{children}</div>
+                        <div className="ml-auto my-3">
+                            {hasToolbar && (
+                                <div className="d-flex flex-row">
+                                    {(hasMoveUp || hasMoveDown) && (
+                                        <div className="m-0 p-0">
+                                            <MoveUpButton
+                                                className="array-item-move-up"
+                                                style={btnStyle}
+                                                disabled={disabled || readonly || !hasMoveUp}
+                                                onClick={onReorderClick(index, index - 1)}
+                                                uiSchema={uiSchema}
+                                                registry={registry}
+                                            />
+                                        </div>
+                                    )}
+                                    {(hasMoveUp || hasMoveDown) && (
+                                        <div className="m-0 p-0">
+                                            <MoveDownButton
+                                                style={btnStyle}
+                                                disabled={disabled || readonly || !hasMoveDown}
+                                                onClick={onReorderClick(index, index + 1)}
+                                                uiSchema={uiSchema}
+                                                registry={registry}
+                                            />
+                                        </div>
+                                    )}
+                                    {hasCopy && (
+                                        <div className="m-0 p-0">
+                                            <CopyButton
+                                                style={btnStyle}
+                                                disabled={disabled || readonly}
+                                                onClick={onCopyIndexClick(index)}
+                                                uiSchema={uiSchema}
+                                                registry={registry}
+                                            />
+                                        </div>
+                                    )}
+                                    {hasRemove && !readonly && props.totalItems > (props.uiSchema?.['ui:options']?.minItems as number) && (
+                                        <div className="px-4 my-2">
+                                            <RemoveButton
+                                                style={btnStyle}
+                                                disabled={disabled || readonly}
+                                                onClick={onDropIndexClick(index)}
+                                                uiSchema={uiSchema}
+                                                registry={registry}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
-                    )}
+                    </div>
                 </div>
-            </div>
-        </div>
+            )}
+        </>
     );
 }

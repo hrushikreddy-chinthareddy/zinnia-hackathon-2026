@@ -175,7 +175,9 @@
                         },
                         "items": {
                             "ui:options": {
-                                "canAdd": false
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
                             },
                             "detailedReason": {
                                 "ui-widget": "ValueWidget",
