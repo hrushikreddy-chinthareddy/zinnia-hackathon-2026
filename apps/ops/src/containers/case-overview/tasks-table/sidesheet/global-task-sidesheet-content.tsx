@@ -19,7 +19,7 @@ import { createAction } from '@deps/containers/subpages/documents-sub-page/docum
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { toSentenceCase, formatDateTime } from '@deps/helpers/string.helper';
 import { TaskSource } from '@deps/models/case/task';
-import { ManagementTask, TaskStatus, TaskLabel, DocumentData } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskStatus, TaskLabel, DocumentData, TaskSideSheetProps } from '@deps/models/case/task-instance';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { claimTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
@@ -46,7 +46,7 @@ export interface DocumentItemProps {
     taskCarrier: string;
 }
 
-export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescription, taskName}: { taskId: string; type?: string, taskDescription?: string, taskName?: string }) {
+export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescription, taskName }: TaskSideSheetProps) {
     const { t } = useTranslation();
 
     const [loading, setLoading] = useState(true);
@@ -219,7 +219,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
     const formattedCreated = formatDateTime(task.createdAt);
     const formattedUpdated = formatDateTime(task.updatedAt);
-    const formattedPending = formatDateTime (task.impededTillDate);
+    const formattedPending = formatDateTime(task.impededTillDate);
 
     const userExists =
         user?.email?.toLowerCase() !== '' &&
@@ -330,7 +330,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             label: 'Pending',
             icon: <Pause width={16} height={16} />,
             onSelect: () => {
-                openSideSheet()
+                openSideSheet();
             },
         },
     ];
@@ -343,43 +343,45 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     {t('sideSheet.task.status.label')}{' '}
                 </div>
                 <div className="col-span-2 mt-2 align-self">
-                    {
-                        task?.status === TaskStatus.InProgress && task.assignee === user?.email ? (
-                            <Dropdown
-                                triggerIcon={<div className='pb-1'><Progress width={16} height={16} /></div>}
-                                triggerLabel="In Progress"
-                                options={statuses}
+                    {task?.status === TaskStatus.InProgress && task.assignee === user?.email ? (
+                        <Dropdown
+                            triggerIcon={
+                                <div className="pb-1">
+                                    <Progress width={16} height={16} />
+                                </div>
+                            }
+                            triggerLabel="In Progress"
+                            options={statuses}
+                        />
+                    ) : (
+                        <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6">
+                            <Badge
+                                icon={badgeIcon}
+                                variant={badgeVariant}
+                                label={badgeLabel}
+                                rounded={true}
+                                className="flex gap-1 items-center"
                             />
-                        ) : (
-                            <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6">
-                                <Badge
-                                    icon={badgeIcon}
-                                    variant={badgeVariant}
-                                    label={badgeLabel}
-                                    rounded={true}
-                                    className="flex gap-1 items-center"
-                                />
-                            </Typography>
-                        )
-                    }
+                        </Typography>
+                    )}
                 </div>
 
                 {((task.status === TaskStatus.Pending && task.impededReason) ||
                     (task.status === TaskStatus.Canceled && task.cancellationReason)) && (
-                        <>
-                            <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
-                            <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                                <Content
-                                    truncate
-                                    details={statusReason}
-                                    variant={ContentVariant.BodySm}
-                                    popoverBody={statusReason}
-                                    popoverClassName="background-white w-full "
-                                    pii={true}
-                                />
-                            </Typography>
-                        </>
-                    )}
+                    <>
+                        <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
+                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                            <Content
+                                truncate
+                                details={statusReason}
+                                variant={ContentVariant.BodySm}
+                                popoverBody={statusReason}
+                                popoverClassName="background-white w-full "
+                                pii={true}
+                            />
+                        </Typography>
+                    </>
+                )}
                 {(task.status === TaskStatus.Pending || task.status === TaskStatus.Canceled || task.status === TaskStatus.Completed) && (
                     <>
                         <div className="col-span-1 text-[--color-base-text-text-secondary]">
@@ -512,7 +514,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     <DocumentsListComponent documentsList={additionalDocuments} task={task} t={t} documentsListType={'additional'} />
                 ) : null}
             </div>
-
         </div>
     );
 

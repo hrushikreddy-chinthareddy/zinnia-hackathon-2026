@@ -123,3 +123,19 @@ export type DocumentData = {
     documentID?: string;
     sourceFileName?: string;
 };
+
+export interface TaskSideSheetProps {
+    taskId: string;
+    type?: string;
+    taskDescription?: string;
+    taskName?: string;
+}
+
+export interface TaskQueueDrawerProps {
+    onClose: () => void;
+    getTasks?: () => void;
+    taskStatus: TaskStatus;
+    taskId: string;
+    taskDescription?: string;
+    taskName?: string;
+}

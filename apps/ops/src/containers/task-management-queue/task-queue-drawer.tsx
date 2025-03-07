@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import SelectSimple from '@deps/components/select/select';
 import { TaskStatus } from "@deps/models/case/task-instance";
+import { TaskQueueDrawerProps } from "@deps/models/case/task-instance";
 import { getTaskInstance, updateTask } from "@deps/queries/api/v2/task";
 import { browserLogError, browserLogInfo } from "@deps/utils/browser-logging";
 import { useRouter } from "next/router";
@@ -19,7 +20,7 @@ import { useSideSheetContext } from "@deps/contexts/SideSheetContext";
 import GlobalTaskSideSheet from "../case-overview/tasks-table/sidesheet/global-task-sidesheet-content";
 import { NUMERIC_DATE_FORMAT } from "@deps/types/constants";
 
-function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription, taskName }: { onClose: () => void, getTasks?: () => void, taskStatus: TaskStatus, taskId: string, taskDescription?: string, taskName?: string }) {
+function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription, taskName }: TaskQueueDrawerProps) {
   const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
   const [date, setDate] = useState(tomorrow)
   const [timer] = useState(performance.now());
