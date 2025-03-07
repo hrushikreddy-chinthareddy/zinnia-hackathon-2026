@@ -1,15 +1,17 @@
 'use client';
 
 import { AddressChange } from '@zinnia/api-types/types/bpm';
-import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
+import { SideSheet, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   postAddAddress,
   putUpdateAddress,
   putEndDateAddress,
 } from '@/actions/bpm/address-actions';
+import { Button } from '@/components/button/Button';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { FormSteps } from '@/types/transactions';
 import { zipCodeInParts } from '@/utils/address';
@@ -52,6 +54,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   );
 
   const handleRemoveClick = () => setStep(FormSteps.CONFIRM);
+  const correlationId = uuidv4();
 
   const removeCallback = async () => {
     setStep(FormSteps.LOADING);
@@ -128,12 +131,14 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
             partyId,
             addressId,
             addressChangeRequest,
+            correlationId,
           })
         : postAddAddress({
             planCode: params.planCode,
             policyNumber: params.policyNumber,
             partyId,
             addressChangeRequest,
+            correlationId,
           });
 
     // TODO: Create a generic request method. It still takes in the same things, with the addition of a type.
@@ -217,7 +222,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
             actionType === FormActionType.EDIT ? 'Edit or remove address' : ''
           }
         >
-          <Icon small={actionType === FormActionType.ADD} type={triggerIcon} />
+          <Icon small type={triggerIcon} />
           {triggerText}
         </Button>
       }
@@ -230,6 +235,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           actionType={actionType}
           removeCallback={handleRemoveClick}
           disableEditingPreferredAddress={disableEditingPreferredAddress}
+          correlationId={correlationId}
         />
       )}
       {step === FormSteps.CONFIRM && (
@@ -237,6 +243,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           confirmTitle="Remove address?"
           confirmButtonText="Remove Address"
           confirmCallback={removeCallback}
+          correlationId={correlationId}
           denyCallback={() => setStep(undefined)}
         />
       )}

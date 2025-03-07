@@ -35,8 +35,13 @@ export const postAddBankAccount = async (
   options: BankRequest
 ): Promise<ApiResponse<BPMResponse>> => {
   try {
-    const { planCode, policyNumber, partyId, bankAccountChangeRequest } =
-      options;
+    const {
+      planCode,
+      policyNumber,
+      partyId,
+      correlationId,
+      bankAccountChangeRequest,
+    } = options;
     const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/parties/${partyId}/bankaccount`;
 
     // We have to get the check that this bank hasn't already been added previously.
@@ -71,7 +76,7 @@ export const postAddBankAccount = async (
       url,
       JSON.stringify({
         ...bankAccountChangeRequest,
-        correlationId: uuidv4(),
+        correlationId: correlationId || uuidv4(),
         effectiveDate: dayjs().format('YYYY-MM-DD'),
       }),
       {

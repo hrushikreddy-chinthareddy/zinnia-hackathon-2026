@@ -3,7 +3,6 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
-  Button,
   IconType,
 } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
@@ -31,6 +30,7 @@ import { CancelDialogLink } from '../CancelDialogLink';
 import { FormStepWrapper } from '../FormStepWrapper';
 import premiumStyles from '../OneTimePremiumPayment.module.css';
 import { getStepInfo, Steps } from '../steps';
+import { Button } from '@/components/button/Button';
 
 export const SelectBank = ({
   planCode,

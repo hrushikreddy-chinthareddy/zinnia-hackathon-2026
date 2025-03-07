@@ -1,7 +1,7 @@
 'use client';
 
 import { AccountStatus } from '@zinnia/api-types/types/sor';
-import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
+import { SideSheet, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
@@ -18,6 +18,7 @@ import { Loading } from './form-steps/loading/Loading';
 import { RemoveBankConfirm } from './form-steps/remove-bank-confirm/RemoveBankConfirm';
 import { Success } from './form-steps/success/Success';
 import { VerifyIdentity } from '../transaction-steps/verify-identity/VerifyIdentity';
+import { Button } from '@/components/button/Button';
 
 export interface RemoveBankProps {
   partyId: string;
