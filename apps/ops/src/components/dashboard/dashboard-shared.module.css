@@ -33,3 +33,28 @@
     padding-top: var(--measure-dimension-padding-4xl);
     padding-right: var(--measure-dimension-padding-lg);
 }
+
+.timeFilterContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.tableContainer,
+.paginationContainer,
+.searchContainer,
+.insightContainer {
+    margin-top: var(--measure-dimension-gap-lg);
+}
+
+.sortIcon {
+    margin-left: var(--measure-dimension-gap-md);
+}
+
+.searchContainer {
+    width: 259px;
+}
+
+.aiInsightsTabContainer {
+    min-height: 450px;
+}

@@ -2,23 +2,24 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
+import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
+import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import SystematicWithdrawalProgram from '@deps/components/otp-withdrawal-form/ssw-program/ssw-program';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
+import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
-import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import getRslnConfig from './rsln-ssw-form.helper';
-import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
-import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
-import { isAllowedState } from '@deps/utils/renderStateW4';
-import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
+
 
 export function RslnSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

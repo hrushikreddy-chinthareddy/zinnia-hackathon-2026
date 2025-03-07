@@ -8,7 +8,7 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { UserPermission } from '@deps/models/user-profile';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
@@ -44,11 +44,9 @@ export default function CreateCaseErrorPage() {
 
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, req, res } = context;
-        let accessToken;
         try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
+            (await getAccessToken(req, res)).accessToken;
         } catch (e) {
             logWarn('create-case/error:: Access token expired', {
                 ...parseErrorInformation(e),
@@ -57,7 +55,7 @@ export const getServerSideProps = withPageAuthRequired({
             });
             return serverSidePropsLogout();
         }
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadOtpRenewals);
+        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
         if (!doesUserHasPagePermissions) {
             return {
                 redirect: {

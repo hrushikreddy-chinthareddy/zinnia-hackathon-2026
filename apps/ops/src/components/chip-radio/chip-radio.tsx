@@ -13,9 +13,10 @@ export interface ChipRadioProps {
     defaultValue: string;
     onValueChange: (value: string) => void;
     id: string;
+    value?: string;
 }
 
-export const ChipRadio: FC<ChipRadioProps> = ({ options, defaultValue, onValueChange, id }) => {
+export const ChipRadio: FC<ChipRadioProps> = ({ options, defaultValue, onValueChange, id, value }) => {
     return (
         <Radio
             id={id}
@@ -26,6 +27,7 @@ export const ChipRadio: FC<ChipRadioProps> = ({ options, defaultValue, onValueCh
             radioGroupClasses={styles.chipRadioGroup}
             radioItemClasses={styles.chipRadioItem}
             onValueChange={onValueChange}
+            value={value}
         />
     );
 };

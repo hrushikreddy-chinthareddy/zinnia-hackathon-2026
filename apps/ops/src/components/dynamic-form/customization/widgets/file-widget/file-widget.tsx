@@ -29,6 +29,7 @@ const baseUrl = baseAppUrl + '/api/';
 
 import FileAttachmentComponent from './file-attachment.component';
 import style from './file-widget.module.css';
+
 import { Loader } from '@zinnia/bloom/components';
 
 function addNameToDataURL(dataURL: string, name: string) {

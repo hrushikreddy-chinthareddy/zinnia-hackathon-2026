@@ -17,7 +17,7 @@ import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/
 export const PolicyNumber = ({ policyNumber, highlight }: Partial<GlobalValues>) => {
     const value = highlight ? <Highlighter text={policyNumber?.toString() || ''} highlights={[highlight]} /> : policyNumber;
 
-    return <PiiWrapper className="mr-4 mt-[-1px] font-primary text-[22px] leading-6 text-gray-900">{value}</PiiWrapper>;
+    return value && <PiiWrapper className="mr-4 mt-[-1px] font-primary text-[22px] leading-6 text-gray-900">{value}</PiiWrapper>;
 };
 
 export const PolicyBadgeStatus = ({

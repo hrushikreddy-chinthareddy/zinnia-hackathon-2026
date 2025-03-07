@@ -5,7 +5,7 @@ import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
+import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { createBaseQuery, formatProcessFilter } from '@deps/components/dashboard/utils';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -71,7 +71,7 @@ const ActiveAging = () => {
     });
     const [subProcessToColorMap, setSubProcessToColorMap] = useState<{ [key: string]: string }>({});
     const [activeAgingPieChartDataToColorMap, setActiveAgingPieChartDataToColorMap] = useState<{ [key: string]: string }>({});
-    const [selectedProcess, setSelectedProcess] = useState<Processes | undefined>(Processes.NewBusiness);
+    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
 
     const shouldShowCaseInsights = useCaseInsightsPermission();

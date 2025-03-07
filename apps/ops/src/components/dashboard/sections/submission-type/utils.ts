@@ -42,7 +42,7 @@ export const generateSeries = (transformedData: TransformedData): SeriesOptionsT
     const applicationTypeCategories = Object.keys(transformedData); // e.g., ["MASS", "ANOTHER"]
     const applicationTypeColors: Record<string, string> = {
         Digital: '#00628B',
-        Electronic: '#85BCD3',
+        ['Electronic (E-App)']: '#85BCD3',
         Paper: '#021936',
     };
     // Find all unique application types (e.g., "Electronic", "Digital", "Paper")
@@ -65,4 +65,28 @@ export const generateSeries = (transformedData: TransformedData): SeriesOptionsT
     });
 
     return series;
+};
+
+// The API returns digital and electronic. We need to combien the data set to make them both just say "Electronic (E-App)"
+export const combineElectronicAndDigital = (data: DashboardStatsElementResponse[]): DashboardStatsElementResponse[] => {
+    const combinedData: Record<string, DashboardStatsElementResponse> = {};
+
+    data.forEach(item => {
+        if (item.name === 'Electronic' || item.name === 'Digital') {
+            const combinedName = 'Electronic (E-App)';
+            if (!combinedData[combinedName]) {
+                combinedData[combinedName] = { ...item, name: combinedName, count: 0 };
+            }
+            combinedData[combinedName].count += item.count;
+        } else {
+            combinedData[item.name] = item;
+        }
+
+        // Recursively process nested values
+        if (item.values && item.values.length > 0) {
+            combinedData[item.name].values = combineElectronicAndDigital(item.values);
+        }
+    });
+
+    return Object.values(combinedData);
 };

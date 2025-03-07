@@ -6,7 +6,7 @@ import React, { ForwardedRef, useCallback, useContext, useEffect, useMemo, useSt
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
-import { updateTask } from '@deps/containers/task-container/task.healpers';
+import { updateTask } from '@deps/containers/task-container/task.helper';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { EntityTypes, MatchingCase } from '@deps/models/case/task/doc-matching-payment';
 import { getCaseDetails } from '@deps/queries/api/cases';
@@ -72,7 +72,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         data: {
                             ...previousTask.data,
                             transactionOptions: paymentCards,
-                            caseId: matchedCase.id,
+                            zlCaseId: matchedCase.id,
+                            policyNumber: matchedCase?.additionalData?.policyNumber || '',
                             matchingResult: matchedCase.correlationId,
                             isDuplicate: MatchingCase.MATCH_FOUND,
                         },
@@ -118,8 +119,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
      */
 
     const cleanForm = (formData: any) => {
-        let finalFormData = formData;
-        let iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
+        const finalFormData = formData;
+        const iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
         iterableProperties.forEach(property => {
             if (taskMetadata.uiSchema?.[property]?.['ui:options']?.omitValue) {
                 delete finalFormData.data[property];

@@ -7,7 +7,7 @@ import { FC, useMemo, useState } from 'react';
 import { Carousel } from '@deps/components/carousel/carousel';
 import { AiInsightSummary } from '@deps/components/dashboard/ai-insight-summary/ai-insight-summary';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
+import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
@@ -30,7 +30,7 @@ import { formatProcessFilter, generateCarouselDataLengths, startDates, Timeframe
 
 export const CaseToCloseTimeChart: FC = () => {
     const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
-    const [selectedProcess, setSelectedProcess] = useState<Processes | undefined>(Processes.NewBusiness);
+    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
 
     const filter: DashboardSearchFilter = {

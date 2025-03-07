@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { useTranslation } from 'next-i18next';
+import * as React from 'react';
 
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';

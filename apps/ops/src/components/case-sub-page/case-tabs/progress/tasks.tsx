@@ -63,7 +63,9 @@ export function Task({ task }: { task: TaskView }) {
         sideSheet.handleOpen(true);
     };
 
-    const dateString = [Statuses.New, Statuses.InProgress, 'OPEN', Statuses.NotStarted].includes(task.status)
+    const dateString = [Statuses.New, Statuses.InProgress, 'OPEN', Statuses.NotStarted, Statuses.Inprogress, Statuses.Pending].includes(
+        task.status
+    )
         ? t('caseOverview.tabs.openSince', { date: convertKebabedDateString(task.createdAt) })
         : t('caseOverview.tabs.closedOn', { date: convertKebabedDateString(task.updatedAt) });
 

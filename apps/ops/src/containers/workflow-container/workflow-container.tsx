@@ -47,7 +47,7 @@ const WorkflowContent = ({ policy, steps }: WorkflowContainerProps) => {
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
             <GlobalValuesBar
-                carrierId={policy.carrierId}
+                carrierId={policy?.carrierId}
                 marketingName={marketingName}
                 openSideSheet={openProductDetailsSideSheet}
                 owner={policyOwner}

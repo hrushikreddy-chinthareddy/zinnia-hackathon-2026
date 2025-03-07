@@ -1,5 +1,6 @@
 import { ArrayFieldTemplateProps } from '@rjsf/utils';
 import clsx from 'clsx';
+
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 function FileInfoTemplate(props: ArrayFieldTemplateProps) {
     let { items, formData, uiSchema } = props;

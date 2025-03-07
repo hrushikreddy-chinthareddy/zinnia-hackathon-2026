@@ -1,6 +1,7 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
-import CardInfo from './card-info/card-info';
 import { useTranslation } from 'next-i18next';
+
+import CardInfo from './card-info/card-info';
 
 export default function UnauthorizedCard() {
     const { t } = useTranslation();

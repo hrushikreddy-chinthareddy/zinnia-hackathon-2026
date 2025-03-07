@@ -272,7 +272,7 @@
         "taskTitle": "Mes Tâches",
         "noTasksFoundTitle": "Votre liste de tâches est actuellement vide.",
         "noTasksMessage": "Cliquez sur « Réclamer une tâche » pour commencer.",
-        "claimTaskError": "Erreur de tâche de réclamation :",
+        "claimTaskError": "Vous n'avez pas les autorisations nécessaires pour accéder à cette fonctionnalité. Veuillez contacter l'administrateur pour obtenir de l'aide.",
         "unassignTask": "Annuler l'attribution d'une tâche",
         "unassignTaskError": "Erreur de désattribution de tâche :",
         "startTask": "Démarrer la tâche",
@@ -1708,7 +1708,8 @@
                     "interestEarningDividendsGains": "Interset/Gains/Dividendes/Gains",
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Option de revenu viager conjoint",
-                    "singleLifetimeIncomeOption": "Option de revenu viager unique"
+                    "singleLifetimeIncomeOption": "Option de revenu viager unique",
+                    "interestEarned": "Intérêt gagné"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Veuillez spécifier le fonds pour configurer SSW avec le pourcentage d'A.V.",
@@ -1731,6 +1732,9 @@
                         "level": "Niveau",
                         "increasing": "Croissant"
                     }
+                },
+                "singleLifeTimeIncome": {
+                    "title": "Nom de Income Life converti au-dessus de la ligne en français"
                 }
             },
             "rmdMethod": {
@@ -3232,7 +3236,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Dernière mise à jour",
-                "caseId": "ID du cas"
+                "caseId": "ID du cas",
+                "noCasesAvailable": "No related cases available."
             },
             "addressHistoryTab": {
                 "defaultAddress": "Adresse par défaut",
@@ -3240,7 +3245,8 @@
                 "mailingAddress": "Adresse postale",
                 "viewFullDeatils": "Voir les détails",
                 "preferredAddress": "Adresse choisie",
-                "agentAddress": "Adresse de l'agent"
+                "agentAddress": "Adresse de l'agent",
+                "noAddressesAvailable": "No addresses available."
             }
         },
         "correspondence": "Correspondence ({{count}})",
@@ -4871,7 +4877,8 @@
             "documents": "Documents",
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible.",
-            "taskTitle": "Détails de la tâche"
+            "taskTitle": "Détails de la tâche",
+             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -4890,7 +4897,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Dernière mise à jour",
-                "caseId": "ID du cas"
+                "caseId": "ID du cas",
+                "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {
@@ -4943,7 +4951,8 @@
                     "noDocTypeToReindex": "Veuillez indiquer le type de document pour la réindexation",
                     "noNotes": "Veuillez saisir des notes"
                 }
-            }
+            },
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "formSelection": {
             "title": "Sélection de nouveau formulaire",
@@ -5066,7 +5075,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "ID du document",
-            "noFormAvailable": "Aucun formulaire disponible."
+            "noFormAvailable": "Aucun formulaire disponible.",
+             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         }
     },
     "suitabilityReview": {
