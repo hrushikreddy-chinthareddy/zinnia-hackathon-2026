@@ -56,7 +56,7 @@ export const checkPermissionsCookieForTuple = (relation: string, tupleObject: st
 
         const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res });
         if (!permissionsCookie) {
-            return false;
+            return undefined;
         }
 
         const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
