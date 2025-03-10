@@ -31,13 +31,14 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
 
     const [documents, setDocuments] = useState<MetadataSearchResponse[]>([]);
     const [filteredDocuments, setFilteredDocuments] = useState<MetadataSearchResponse[]>([]);
-    const [inputValue, setInputValue] = useState<string>();
+    const [inputValue, setInputValue] = useState<string>('');
     const inputRef = useRef<HTMLDivElement>(null);
     const [fetchingDocuments, setFetchingDocuments] = useState<boolean | null>(null);
     const [error, setError] = useState<boolean>(false);
     const { t } = useTranslation(undefined, { keyPrefix: 'taskManagementQueue' });
 
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        event.preventDefault();
         const value = event.target.value;
         filterDocuments(value);
         setInputValue(value);
@@ -146,6 +147,11 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
                     onFocus={onFocusHandler}
                     value={inputValue}
                     disabled={disabled}
+                    onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                        }
+                    }}
                 />
                 {rawErrors &&
                     rawErrors.map(error => (
