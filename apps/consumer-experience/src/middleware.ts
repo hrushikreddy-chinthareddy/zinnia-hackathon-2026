@@ -118,7 +118,12 @@ export async function middleware(req: NextRequest) {
     }
 
     const returnUrl = await getReturnUrlCookie();
-    const redirectObj = routeMap[returnUrl?.pathname || ''];
+    const routeKey = returnUrl?.pathname
+    let redirectObj
+
+    if (routeKey?.length && routeKey in routeMap) {
+      redirectObj = routeMap[routeKey as RouteKey]
+    }
 
     // if we have a return url and the route isn't a "friendly" path, for example /riders
     // it means we should redirect to the fully qualified path
@@ -154,7 +159,7 @@ export async function middleware(req: NextRequest) {
     }
 
     // If the url is not the index page AND has a friendly url object
-    const redirect = pathname !== RouteKey.COVERAGE && routeMap[pathname];
+    const redirect = pathname !== RouteKey.COVERAGE && routeMap[pathname as RouteKey];
 
     // if we get here and we have a redirect we need to determine how many policies a user has
     // if they have multiple policies or some unknown error occurs we send them to the policies index page
@@ -368,7 +373,7 @@ export async function middleware(req: NextRequest) {
   if (
     pathname !== '/.well-known/vercel/flags' && // If the url is not the index page AND has a friendly url object
     pathname !== RouteKey.COVERAGE &&
-    routeMap[pathname]
+    routeMap[pathname as RouteKey]
   ) {
     //if a route gets here that means the user is not authenticated and we need to store where they wanted to go
     // after login we will send them to this page

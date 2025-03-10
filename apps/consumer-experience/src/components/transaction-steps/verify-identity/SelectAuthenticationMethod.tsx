@@ -41,6 +41,7 @@ export const SelectAuthenticationMethod = ({
     queryFn: () => getUserAuthenticationMethods(),
     select: response => {
       const phone = response.data?.find(method => method.type === 'phone');
+
       return {
         phoneNumber: phone?.phone_number,
         authenticationMethods: phone?.authentication_methods.map(method => ({
