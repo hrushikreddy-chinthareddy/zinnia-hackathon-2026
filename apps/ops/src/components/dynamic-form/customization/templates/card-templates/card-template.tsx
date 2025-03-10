@@ -186,8 +186,7 @@ const DocumentActions = ({ document, t }: any) => {
         document.displayName || docId
     );
 
-    const handleClick = (event: React.MouseEvent) => {
-        event.preventDefault();
+    const handleClick = () => {
         download();
     };
 
@@ -206,7 +205,10 @@ const DocumentActions = ({ document, t }: any) => {
             </div>
             <div className="px-2">
                 <NavElement
-                    onClick={handleClick}
+                    onClick={(e: any) => {
+                        e.preventDefault();
+                        handleClick;
+                    }}
                     size={NavElementSize.Small}
                     title={`${t('general.download')} ${document?.displayName}`}
                     type={NavElementType.Button}
