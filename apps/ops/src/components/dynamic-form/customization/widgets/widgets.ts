@@ -10,12 +10,14 @@ import RadioWidget from './radio-widget/radio-widget';
 import SelectWidget from './select-widget/select-widget';
 import TextWidget from './text-widget/text-widget';
 import ValueWidget from './text-widget/value-widget';
+import TextareaWidget from './textarea-widget /textarea-widget';
 
 export function generateWidgets(): RegistryWidgetsType {
     return {
         CheckboxWidget,
         CheckboxesWidget,
         TextWidget,
+        TextareaWidget,
         SelectWidget,
         DateWidget,
         RadioWidget,
