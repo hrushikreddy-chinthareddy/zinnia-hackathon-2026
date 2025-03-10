@@ -60,17 +60,17 @@ export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
                     </div>
                 </div>
             ) : (
-                <div className={'flex my-2'}>
-                    <div className={style.container}>
-                        {props.title && (
-                            <div className={'flex'}>
+                <>
+                    {props.title && (
+                        <div className={'flex my-1'}>
+                            <div className={style.container}>
                                 <div className={style.text}>{props.title} </div>
                                 {helpInformation}
                             </div>
-                        )}
-                        {content}
-                    </div>
-                </div>
+                        </div>
+                    )}
+                    {content}
+                </>
             )}
         </>
     );
