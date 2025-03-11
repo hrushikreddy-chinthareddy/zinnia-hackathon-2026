@@ -46,10 +46,16 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
         const errors = {} as FormValidationErrors;
 
         if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
                 errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
             }
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
                 errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
             }
         }
@@ -83,17 +89,7 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                     fieldName: BankingFields.Bank,
                     component: DisbursementFields.SelectBank,
                 },
-                {
-                    fieldName: BankingFields.IsVoidCheckAttached,
-                    fieldLabel: t('distributionMethod.isVoidCheckAttached'),
-                    component: DisbursementFields.BankBooleanButtonGroup,
-                    classNames: 'col-start-1',
-                },
-                {
-                    fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
-                    component: DisbursementFields.BankBooleanButtonGroup,
-                },
+
                 {
                     fieldName: BankingFields.AccountType,
                     fieldLabel: t('distributionMethod.accountType'),
@@ -144,15 +140,13 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                     classNames: 'col-start-1',
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({ paymentMethod, bank }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
-                    isVoidCheckAttached: voidCheck,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
                     accountType: selectedBank.accountType?.text ?? AccountType.Checking,
