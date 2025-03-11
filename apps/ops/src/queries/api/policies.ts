@@ -23,6 +23,7 @@ import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/s
 
 import { apiServerBaseUrl, baseAppUrl, policyApiBaseUrl } from '../api-config';
 import { serverApi } from '../api-utils/serverApiClient';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 
 export interface GetPolicyResponse {
     data: Policy;
@@ -123,30 +124,49 @@ export const fetchPolicy = async (id?: string, planCode?: string): Promise<Polic
     }
 
     if (!id) {
-        console.error('No policyNumber to fetch policy');
-
+        browserLogInfo('fetchPolicy::No policyNumber to fetch policy', {
+            poicyNumber: id,
+            planCode: planCode,
+            file: 'policies::fetchPolicy'
+        });
         return null;
     }
 
     if (!planCode) {
-        console.error('No planCode to fetch policy');
-
+        browserLogInfo('fetchPolicy::No planCode to fetch policy', {
+            poicyNumber: id,
+            planCode: planCode,
+            file: 'policies::fetchPolicy'
+        });
         return null;
     }
-
     try {
         const { data } = await client.get<any, AxiosResponse<GetPolicyResponse>>(
             `${baseAppUrl}/api/policies/${planCode}/${id}?viewDetails=true`
         );
 
         if (!data.data) {
+            browserLogInfo('fetchPolicy::Policy data not', {
+                poicyNumber: id,
+                planCode: planCode,
+                file: 'policies::fetchPolicy'
+            });
             throw new Error('fetchPolicy::Invalid response from API');
         }
 
+        browserLogInfo('fetchPolicy::Successfully retrieved policy', {
+            poicyNumber: id,
+            planCode: planCode,
+            file: 'policies::fetchPolicy'
+        });
         return data.data;
     } catch (e) {
-        console.error('Error fetching policy', e);
-
+        browserLogError('fetchPolicy::Error fetchin policy', {
+            ...parseErrorInformation(e),
+            poicyNumber: id,
+            planCode: planCode,
+            file: 'policies::fetchPolicy'
+        });
         return null;
     }
 };
