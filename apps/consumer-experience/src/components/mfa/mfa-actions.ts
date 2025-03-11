@@ -1,12 +1,15 @@
 'use server';
+import * as jose from 'jose';
 
 import { FieldValues } from 'react-hook-form';
 
 import { ServerApi } from '@/services';
 import {
   Auth0ErrorResponse,
+  MfaResponse,
   MfaSendChallengeInputs,
   OauthToken,
+  UserClaims,
 } from '@/types/auth';
 import {
   getMfaCookie,
@@ -112,7 +115,7 @@ export async function verifyMfaChallenge(
     code: string;
     isEnrollment: boolean;
   }
-): Promise<Auth0ErrorResponse | never> {
+): Promise<MfaResponse | never> {
   const loggingContext = {
     file: 'login-actions.ts',
     function: 'verifyMfaChallenge',
@@ -184,6 +187,11 @@ export async function verifyMfaChallenge(
   // TODO: This function could use a different name, but reusing it to ensure
   // mfa cookies are deleted and access token reset with new stepUp time
   await setLoginCookies(tokenData);
+  // We decode this here so that we can pass the stepUpTime back with the
+  // success response. We need to set the value on the client side
+  // so that client side components are getting the up to date value
+  // since the session cookie is stored, decrypted, and retrieved on the server side
+  const decodedToken = jose.decodeJwt(tokenData.access_token) as UserClaims;
 
   logTrace('successful-response::verifyMfaChallenge', {
     ...loggingContext,
@@ -191,7 +199,6 @@ export async function verifyMfaChallenge(
 
   return {
     success: true,
-    error: '',
-    error_description: '',
+    stepUpTime: decodedToken.stepUpTime,
   };
 }
