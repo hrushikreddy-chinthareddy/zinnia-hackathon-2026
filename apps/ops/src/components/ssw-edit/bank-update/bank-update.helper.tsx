@@ -61,19 +61,29 @@ export const accountTypeOptions = (t: TFunction) => [
 ];
 
 const isVoidCheckFieldApplicable = (clientCode: string) => {
-    if (clientCode === Carrier.DLIC) return false;
-    if (clientCode === Carrier.GLCO) return false;
-    if (clientCode === Carrier.ULPC) return false;
-
-    return true;
+    switch (clientCode) {
+        case Carrier.DLIC:
+            return false;
+        case Carrier.GLCO:
+            return false;
+        case Carrier.ULPC:
+            return false;
+        default:
+            return true;
+    }
 };
 
 const isSecurityRequirementsFieldApplicable = (clientCode: string) => {
-    if (clientCode === Carrier.DLIC) return false;
-    if (clientCode === Carrier.GLCO) return false;
-    if (clientCode === Carrier.ULPC) return false;
-
-    return true;
+    switch (clientCode) {
+        case Carrier.DLIC:
+            return false;
+        case Carrier.GLCO:
+            return false;
+        case Carrier.ULPC:
+            return false;
+        default:
+            return true;
+    }
 };
 
 export const BankUpdateFieldConfigs = (t: TFunction, clientCode: string) => {
