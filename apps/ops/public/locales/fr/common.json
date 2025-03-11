@@ -1407,7 +1407,7 @@
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
-                "source of premium": "Source de prétium: {{label}}",
+                "source of premium": "Source Premium: {{label}}",
                 "transfer of assets": "Transfert d'actifs: {{label}}",
                 "ceding carrier": "Transporteur cédant: {{label}}",
                 "premium source": "Source Premium: {{label}}",
@@ -4882,7 +4882,7 @@
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible.",
             "taskTitle": "Détails de la tâche",
-             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -5080,7 +5080,7 @@
             "documents": "Documents",
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible.",
-             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         }
     },
     "suitabilityReview": {
