@@ -1412,7 +1412,7 @@
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
-                "source of premium": "Source of Premium: {{label}}",
+                "source of premium": "Premium Source: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}",
                 "ceding carrier": "Ceding Carrier: {{label}}",
                 "premium source": "Premium Source: {{label}}",
@@ -4929,7 +4929,7 @@
             "relatedTab": {
                 "lastUpdated": "Last updated",
                 "caseId": "Case ID ",
-                 "noCasesAvailable": "No related cases available."
+                "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {
