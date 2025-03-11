@@ -10,6 +10,7 @@ import RadioWidget from './radio-widget/radio-widget';
 import SelectWidget from './select-widget/select-widget';
 import TextWidget from './text-widget/text-widget';
 import ValueWidget from './text-widget/value-widget';
+import NotesWidget from './notes-widget';
 
 export function generateWidgets(): RegistryWidgetsType {
     return {
@@ -23,6 +24,7 @@ export function generateWidgets(): RegistryWidgetsType {
         FileWidget,
         HyperLinkWidget,
         AutoCompleteWidget,
+        NotesWidget,
     };
 }
 
