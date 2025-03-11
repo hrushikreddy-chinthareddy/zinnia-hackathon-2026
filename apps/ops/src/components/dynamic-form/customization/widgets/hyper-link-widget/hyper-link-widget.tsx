@@ -2,8 +2,8 @@ import { getUiOptions, UiSchema, WidgetProps } from '@rjsf/utils';
 import router from 'next/router';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/actions/external-link.svg';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/actions/external-link.svg';
 
 const HyperLinkWidget = (props: WidgetProps) => {
     const { value, disabled, label, uiSchema, formContext } = props;
@@ -38,7 +38,7 @@ export const HyperLink = ({ title, label, value, type, disabled, className }: Hy
 
             {type === 'link' ? (
                 <NavElement
-                    className="text-left underline underline-offset-2"
+                    className="text-left font-semibold"
                     size={NavElementSize.Small}
                     title={label}
                     type={NavElementType.Link}
@@ -47,16 +47,14 @@ export const HyperLink = ({ title, label, value, type, disabled, className }: Hy
                     isNewPage={true}
                     target="_blank"
                     disabled={disabled}
+                    startIcon={<TrashDocumentIcon width={20} height={20} />}
                 >
-                    <div className="flex gap-2">
-                        {label}
-                        <TrashDocumentIcon width={20} height={20} />
-                    </div>
+                    {label}
                 </NavElement>
             ) : (
                 <div className="">
                     <NavElement
-                        className="text-left underline underline-offset-2"
+                        className="text-left font-semibold underline underline-offset-2"
                         size={NavElementSize.Small}
                         title={label}
                         type={NavElementType.Link}

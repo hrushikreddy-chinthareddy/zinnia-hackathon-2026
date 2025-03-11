@@ -16,6 +16,7 @@ import {
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { statesAndTerritories } from '@deps/helpers/states.helper';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     PartyRoles,
@@ -39,7 +40,6 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import { statesAndTerritories } from '@deps/helpers/states.helper';
 
 const spousalSignatureStateCodes = [
     statesAndTerritories.ARIZONA,

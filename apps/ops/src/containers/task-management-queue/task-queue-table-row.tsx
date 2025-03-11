@@ -177,7 +177,15 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
     };
     const sideSheet = useSideSheetContext();
     const openSideSheet = () => {
-        const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} getTasks={getTasks} />;
+        const content = (
+            <TaskQueueDrawer
+                onClose={sideSheet.onClose}
+                taskId={task.id}
+                taskStatus={task.status}
+                taskName={task.taskName}
+                getTasks={getTasks}
+            />
+        );
         sideSheet.changeSideSheetContent(t('updateTaskStatusDrawer.updateTaskStatus'), content);
         sideSheet.handleOpen(true);
     };

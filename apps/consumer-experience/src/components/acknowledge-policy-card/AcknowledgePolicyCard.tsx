@@ -8,8 +8,6 @@ import {
   Icon,
   IconType,
   Link,
-  LoaderVariant,
-  SpinnerButton,
 } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import { useRouter } from 'next/navigation';
@@ -30,6 +28,7 @@ import { acknowledgePolicyAction } from './acknowledge-policy-action';
 import styles from './AcknowledgePolicyCard.module.css';
 import { ClickableCardContainer } from '../clickable-card-container/ClickableCardContainer';
 import { FullName } from '../pii/FullName';
+import { Button } from '@/components/button/Button';
 
 export interface AckowledgeInputs {
   policyAcknowledged: boolean;
@@ -157,16 +156,15 @@ export const AcknowledgePolicyCard = ({
         )}
 
         <div className={styles.policyAcknowledgmentActions}>
-          <SpinnerButton
+          <Button
             expand
             type="submit"
             disabled={isSubmitting}
-            variant={LoaderVariant.CTA}
-            hide={!isSubmitting}
+            loading={isSubmitting}
             className={styles.submit}
           >
             <span>Go to policy</span>
-          </SpinnerButton>
+          </Button>
           <span className={styles.viewPolicyDocument}>
             <Link
               href={`/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/documents/policy-acknowledgement?clientCode=${carrierId}`}

@@ -3,12 +3,12 @@ import { IconType } from '@zinnia/bloom/components';
 import { useMemo } from 'react';
 
 import Radio, { RadioItem } from '@deps/components/radio/radio';
+import { csrApiHelper } from '@deps/helpers/csr-api-helper';
 import { ApiProps, ApiResponseTypes, CardTypes } from '@deps/models/case/task';
 import { baseAppUrl } from '@deps/queries/api-config';
 
 import { SingleCard } from '../../templates/card-templates/card-template';
 import { HyperLink } from '../hyper-link-widget/hyper-link-widget';
-import { csrApiHelper } from '@deps/helpers/csr-api-helper';
 const baseUrl = baseAppUrl + '/api/';
 
 const renderSubElement = (option: any, properties: any, cardType: any, icon: any, sectionTitle: string) => {

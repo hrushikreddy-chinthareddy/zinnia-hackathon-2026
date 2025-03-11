@@ -1,35 +1,50 @@
 'use client';
 import { useState } from 'react';
 
-import { BankFormFields } from '@/types/bank';
+import { MfaChallenge } from '@/components/mfa/mfa-challenge/MfaChallenge';
 import { FormSteps } from '@/types/transactions';
 
 import { SelectAuthenticationMethod } from './SelectAuthenticationMethod';
 
 interface VerifyIdentityProps {
   closeCallback: () => void;
-  onSuccess: (requestValues: BankFormFields) => Promise<void>;
+  onSuccess: () => void;
+  onFailure: () => void;
   transactionDescription: string;
 }
 
 export const VerifyIdentity = ({
   closeCallback,
   transactionDescription,
+  onSuccess,
+  onFailure,
 }: VerifyIdentityProps) => {
   const [verifyStep, setVerifyStep] = useState(FormSteps.VERIFY_IDENTITY);
+  const [selectedMethodId, setSelectedMethodId] = useState<string>();
+
+  const moveToCodeStep = (selectedMethodId: string) => {
+    setSelectedMethodId(selectedMethodId);
+    setVerifyStep(FormSteps.VERIFY_IDENTITY_CODE);
+  };
 
   if (verifyStep === FormSteps.VERIFY_IDENTITY) {
     return (
       <SelectAuthenticationMethod
         transactionDescription={transactionDescription}
-        moveToNextStep={() => setVerifyStep(FormSteps.VERIFY_IDENTITY_CODE)}
+        moveToNextStep={moveToCodeStep}
         closeCallback={closeCallback}
       />
     );
   }
 
   if (verifyStep === FormSteps.VERIFY_IDENTITY_CODE) {
-    // return <MfaChallenge enrollment="false" id={mfaToken}/>;
-    return <div>ENTER IN CODE</div>;
+    return (
+      <MfaChallenge
+        onChallengeSuccess={onSuccess}
+        onChallengeFailure={onFailure}
+        onCancel={closeCallback}
+        selectedVerificationId={selectedMethodId}
+      />
+    );
   }
 };

@@ -328,7 +328,10 @@ const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
                     tooltipTitle={t('colDefs:policySummary.lapseEffectiveDate')}
                     tooltipBody={t('colDefs:policySummary.lapseEffectiveDateTooltip')}
                 />
-                <Content details={dayjs(pendingLapse?.endDate).format(DEFAULT_EXTENDED_DATE_FORMAT)} variant={ContentVariant.BodySm} />
+                <Content
+                    details={pendingLapse?.effectiveDate ? dayjs(pendingLapse?.effectiveDate).format(DEFAULT_EXTENDED_DATE_FORMAT) : '--'}
+                    variant={ContentVariant.BodySm}
+                />
             </div>
             <div>
                 <Label

@@ -523,6 +523,7 @@ interface PolicyTransactionQuery {
     limit?: number;
     offset?: number;
     planCode?: string;
+    sortField?: 'EFFECTIVEDATE' | 'PROCESSDATE' | 'REVERSALDATE';
     sortOrder?: 'ASC' | 'DESC';
     status?: TransactionStatus | TransactionStatus[];
     transactionTypes?: string[];
@@ -536,6 +537,7 @@ export const getPolicyTransactions = async ({
     limit,
     offset,
     planCode,
+    sortField = 'EFFECTIVEDATE',
     sortOrder = 'ASC',
     status,
     transactionTypes,
@@ -549,6 +551,7 @@ export const getPolicyTransactions = async ({
             limit,
             offset,
             reverseInitiatorOnly,
+            sortField,
             sortOrder,
             status,
             transactionTypes,

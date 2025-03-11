@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserPermission } from '@deps/models/user-profile';
@@ -62,11 +62,10 @@ const FormViewer = ({ formId, user }: FormViewerProps) => {
 
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, params, res, req } = context;
-        let accessToken;
+
         try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
+            (await getAccessToken(req, res)).accessToken;
         } catch (e) {
             logWarn('documents:: Access token expired', {
                 ...parseErrorInformation(e),
@@ -76,11 +75,7 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
 
-        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
-            accessToken,
-            user,
-            UserPermission.AllowReadCaseManagement
-        );
+        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
         if (!hasPermissionToReadCaseManagement) {
             return {
                 redirect: {

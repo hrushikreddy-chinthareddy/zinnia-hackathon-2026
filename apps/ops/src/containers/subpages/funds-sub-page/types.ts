@@ -48,6 +48,10 @@ export interface FundViewModel {
     // funds[i].totalFundValue
     fundValue?: string;
 
+    // Years that interest is guaranteed
+    // funds[0].interestGuaranateedPeriod
+    interestGuaranteedPeriod?: number;
+
     // Interest rate for FIXED funds only
     // funds[0].fixedFund.interestRate
     interestRate?: string;

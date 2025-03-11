@@ -19,7 +19,8 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardResponseData, fetchAgentsSSR } from '@deps/queries/api/dashboard';
-import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
+import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { FgaRelation } from '@deps/types/fga';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
@@ -95,12 +96,7 @@ export const getServerSideProps = withPageAuthRequired({
         }
 
         const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
-        const doesUserHavePagePermission = await checkTupleSsr(
-            `${accessToken}`,
-            user.partyId,
-            FgaRelation.UiAccess,
-            FgaRoles.CASE_STATS_DASHBOARD_ENTITY
-        );
+        const doesUserHavePagePermission = await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.CASE_STATS_DASHBOARD_ENTITY);
         if (!doesUserHavePagePermission || !featureFlagDecisions['case-management-case_stats_dashboard']) {
             return {
                 redirect: {
@@ -122,7 +118,7 @@ export const getServerSideProps = withPageAuthRequired({
             brokerDealer => brokerDealer.name !== 'NOT_APPLICABLE' && brokerDealer.name !== ''
         );
 
-        const authorizedCarriers = await getCarrierListServerSSR(accessToken || '', user.partyId, UserPermission.AllowReadCaseManagement);
+        const authorizedCarriers = await listCarriersPage(context, UserPermission.AllowReadCaseManagement);
 
         return {
             props: {

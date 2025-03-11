@@ -175,7 +175,15 @@ const QuickLinks = ({ links, planCode, policyNumber, policy, sessionId, userPart
                         >
                             <MenuContextualLabel label={name}>
                                 {subLinks.map(subLink => {
-                                    return <MenuContextualItem content={subLink.name} href={subLink.href} key={subLink.name} />;
+                                    return (
+                                        <MenuContextualItem
+                                            content={subLink.name}
+                                            href={subLink.href}
+                                            key={subLink.name}
+                                            onClick={() =>
+                                                trackClick(SegmentTrackedEventName.PolicyClicked, subLink.name, subLink.href, policyNumber, sessionId, userPartyId)
+                                            } />
+                                    );
                                 })}
                             </MenuContextualLabel>
                         </MenuContextual>

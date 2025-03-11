@@ -2,6 +2,7 @@ import { getUiOptions, WidgetProps } from '@rjsf/utils';
 
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+
 import { formatValueByDataType } from '../../templates/card-templates/card-template';
 
 export const TextWidget = function (props: WidgetProps) {

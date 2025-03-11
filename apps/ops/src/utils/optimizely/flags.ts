@@ -15,6 +15,7 @@ export enum FEATURE_FLAGS {
     SSW_SBGC = 'case-management-otp_feature_sbgc_ssw',
     SSW_NASU = 'case-management-otp_feature_nasu_ssw',
     SSW_FLIC = 'case-management-otp_feature_flic_ssw',
+    SSW_DLIC = 'case-management-otp_feature_dlic_ssw',
     SSW_GLCO = 'case-management-otp_feature_glco_ssw',
     SSW_ULPC = 'case-management-otp_feature_ulpc_ssw',
     SSW_RSLN = 'case-management-otp_feature_rsln_ssw',
@@ -93,6 +94,7 @@ export enum FEATURE_FLAGS {
     NIGO_ENTRY_PRDN_SSW = 'nigo-entry_prdn_ssw',
     NIGO_ENTRY_GDMN_SSW = 'nigo-entry_gdmn_ssw',
     NIGO_ENTRY_USAA_SSW = 'nigo-entry_usaa_ssw',
+    NIGO_ENTRY_DLIC_SSW = 'nigo-entry_dlic_ssw',
     NIGO_ENTRY_SBGC_RMD = 'nigo-entry_sbgc_rmd',
     NIGO_ENTRY_FLIC_RMD = 'nigo-entry_flic_rmd',
     NIGO_ENTRY_MASS_RMD = 'nigo-entry_mass_rmd',
@@ -143,4 +145,5 @@ export enum FEATURE_FLAGS {
     CASE_ADVISORS_EXCEL_ADDITIONAL_CARRIER_SUPPORT = 'case_advisors_excel_additional_carrier_support',
     DASHBOARD_CASE_TIMING_CHART = 'dashboard_case_timing_chart',
     LOAN_PAYMENT_TRANSACTION = 'loan_payment_transaction',
+    DASHBOARD_SECTION_TAB_VIEW = 'dashboard_section_tab_view',
 }

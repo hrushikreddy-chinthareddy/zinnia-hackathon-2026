@@ -1,24 +1,24 @@
 'use client';
 
 import { AccountStatus } from '@zinnia/api-types/types/sor';
-import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
+import { SideSheet, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
 import { putEndDateBankAccount } from '@/actions/bpm/bank-actions';
-import { useFeatureFlags } from '@/hooks/use-feature-flags';
+import { useNeedsVerificationCode } from '@/hooks/use-needs-verification-code';
 import { useUser } from '@/hooks/use-user';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { Error } from './form-steps/error/Error';
 import { Loading } from './form-steps/loading/Loading';
 import { RemoveBankConfirm } from './form-steps/remove-bank-confirm/RemoveBankConfirm';
 import { Success } from './form-steps/success/Success';
 import { VerifyIdentity } from '../transaction-steps/verify-identity/VerifyIdentity';
+import { Button } from '@/components/button/Button';
 
 export interface RemoveBankProps {
   partyId: string;
@@ -35,9 +35,8 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   autopayEnabled,
   numberOfAccounts,
 }) => {
-  const { data: featureFlagData } = useFeatureFlags();
-  const checkIdentityCode =
-    featureFlagData?.[FEATURE_FLAGS.TRANSACTION_LEVEL_CODE_ADD_BANK];
+  const requiresIdentityCode = useNeedsVerificationCode();
+
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
     planCode: string;
@@ -46,22 +45,26 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   const [open, setOpen] = useState(false);
   const { user } = useUser();
   const [step, setStep] = useState<FormSteps>();
-  const [, setErrorTitle] = useState('An error occurred');
-  const [, setErrorMessage] = useState<ReactNode>(
-    'Some generic messaging that will get updated based on the api response'
+  const [errorTitle, setErrorTitle] = useState('An error occurred');
+  const [errorMessage, setErrorMessage] = useState<ReactNode>(
+    'Something went wrong. Please try again.'
   );
   const [isServerError, setIsServerError] = useState(false);
   const [successTitle, setSuccessTitle] = useState('Success!');
   const [successMessage, setSuccessMessage] = useState(
-    'Some generic messaging that will get updated based on the api response'
+    'Something went wrong. Please try again.'
   );
 
-  const handleRemove = async () => {
-    if (checkIdentityCode) {
+  const checkVerificationAndRemove = async () => {
+    if (requiresIdentityCode) {
       setStep(FormSteps.VERIFY_IDENTITY);
       return;
     }
 
+    handleRemove();
+  };
+
+  const handleRemove = async () => {
     setStep(FormSteps.LOADING);
     const { data, error } = await putEndDateBankAccount({
       planCode: params.planCode,
@@ -100,6 +103,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
 
   const onClose = () => {
     setOpen(false);
+    setStep(undefined);
   };
 
   const sidesheetInner = () => {
@@ -151,7 +155,19 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
         <VerifyIdentity
           closeCallback={onClose}
           onSuccess={handleRemove}
+          onFailure={() => setStep(FormSteps.ERROR)}
           transactionDescription="managing your bank account."
+        />
+      );
+    }
+
+    if (step === FormSteps.ERROR) {
+      return (
+        <Error
+          errorTitle={errorTitle}
+          isServerError={true}
+          errorMessage={errorMessage}
+          closeCallback={onClose}
         />
       );
     }
@@ -161,7 +177,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
         accountNumber={values?.accountNumber}
         bankNickname={values?.branchName}
         cancelCallback={onClose}
-        confirmCallback={handleRemove}
+        confirmCallback={checkVerificationAndRemove}
       />
     );
   };

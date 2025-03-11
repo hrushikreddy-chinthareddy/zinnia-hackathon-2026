@@ -6,6 +6,7 @@ import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { PolicyDocument } from '@deps/models/case/document';
 import { Policy } from '@deps/models/policy/sor-policy';
 
@@ -17,18 +18,19 @@ export enum TabOptions {
 }
 
 type DocumentViewProps = {
-    policy: Policy;
+    policy?: Policy;
     documentNumber: string;
     docType: string;
+    policyNumber: string;
+    clientCode: string
 };
 
-const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewProps) => {
+const DocumentPortalPanel = ({ policy, documentNumber, docType, policyNumber, clientCode }: DocumentViewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.documentPanel' });
     const [activeTab, setActiveTab] = useState(TabOptions.Working);
-    const clientCode =   policy?.carrierId || '';
     const [loading, getPolicyDocs, workingDocument, relatedDocument] = useGetPolicyTypeDocs(
-        policy?.policyNumber || '',
-        policy?.carrierId || '',
+        policyNumber,
+        clientCode,
         docType,
         documentNumber
     );
@@ -60,10 +62,25 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
         );
     };
 
+    const displayNoFormAvailable = () => {
+       return (
+            <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
+                <div className="text-sm font-bold">
+                    <AssistiveText
+                        text={t('noFormAvailable')}
+                        variant={AssistiveTextVariant.Default}
+                        iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
+                    />
+                </div>
+            </div>
+       );
+    };
+
     const renderTabContent = (
         <>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Working}>
                 {workingDocument && renderDocumentSection(workingDocument, workingDocument?.displayName || '', clientCode)}
+                {isNullEmptyOrUndefined(workingDocument) && displayNoFormAvailable()}
             </TabContent>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
                 {relatedDocument?.length !== 0 && (
@@ -73,17 +90,7 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType }: DocumentViewPr
                         ))}
                     </>
                 )}
-                {relatedDocument?.length === 0 && (
-                    <div className="border-box w-full lg:px-[30px] mt-2">
-                        <div className="w-full rounded border-2 border border-gray-100 bg-gray-50 p-8">
-                            <AssistiveText
-                                text={t('noFormAvailable')}
-                                variant={AssistiveTextVariant.Default}
-                                iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
-                            />
-                        </div>
-                    </div>
-                )}
+                {relatedDocument?.length === 0 && displayNoFormAvailable()}
             </TabContent>
         </>
     );

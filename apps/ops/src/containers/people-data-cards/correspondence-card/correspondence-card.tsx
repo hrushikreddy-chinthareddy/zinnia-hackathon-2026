@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 import AdditionalRecipient from '@deps/components/otp-send-document/components/additional-recipient';
 import ContactCenterAddress from '@deps/components/otp-send-document/components/contact-address';
 import FaxNumber from '@deps/components/otp-send-document/components/fax-field';
+import { validateEmail } from '@deps/components/otp-send-document/correspondence';
 import Radio, { RadioItem } from '@deps/components/radio/radio';
 import { Correspondence } from '@deps/models/case/correspondence';
 import { CommunicationTypes } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { PartyRole, PartyType, Policy } from '@deps/models/policy/sor-policy';
-import { validateEmail } from '@deps/components/otp-send-document/correspondence';
 
 const getPrimaryEmail = (policy: Policy) => {
     const eDeliveryRoleId = policy.partyRoles?.find(party => party.partyRole === PartyRole.EDELIVERY)?.partyId;
@@ -40,7 +40,7 @@ const CorrespondenceCard = ({
     const selectedCommunicationType = correspondenceData?.type;
     const recipients = correspondenceData?.recipients || [];
 
-    let emailId = getPrimaryEmail(policy);
+    const emailId = getPrimaryEmail(policy);
 
     const [communicationType, setCommunicationType] = useState(selectedCommunicationType || '');
     const [emails, setEmails] = useState(

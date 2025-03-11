@@ -1,4 +1,3 @@
-import FormViewer from '@deps/pages/contact-center/document/tax-forms/[formId]/index';
 
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
@@ -8,6 +7,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import FormViewer from '@deps/pages/contact-center/document/tax-forms/[formId]/index';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 

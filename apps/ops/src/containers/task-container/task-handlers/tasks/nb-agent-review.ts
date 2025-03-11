@@ -1,4 +1,5 @@
 import { NigoSearch } from '@deps/queries/api/nigo-search';
+
 import { TaskHandler } from '../types';
 
 // Define expected payload and response types

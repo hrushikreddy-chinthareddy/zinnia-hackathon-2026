@@ -87,7 +87,7 @@ const CreateCaseForm = ({
                             className="md:min-w-[250px]"
                             label={t('caseRenewal.caseCreate.client') as string}
                             options={clientIds.map(cId => {
-                                return { label: `${getCarrierNameByClientId(cId) || cId}`, value: cId.toLowerCase() };
+                                return { label: `${getCarrierNameByClientId(cId, true) || cId?.toUpperCase()}`, value: cId.toLowerCase() };
                             })}
                             placeholder={t('caseRenewal.caseCreate.selectAClient') as string}
                             size={FieldSize.Small}

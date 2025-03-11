@@ -2,6 +2,7 @@
 @import '~@zinnia/bloom/themes/bloom';
 @import '~@zinnia/bloom/themes/everly';
 @import '~@zinnia/bloom/themes/wellabe';
+@import './fonts.css';
 @import './spacing.css';
 @import './borders.css';
 

@@ -1,0 +1,145 @@
+{
+    "formId": "4debf6b0-3766-4dcf-ad40-a676e3cf0699",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_APP_DATA_ENTRY",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "New Business Data Entry",
+                "formSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions"
+                        },
+                        "details": {
+                            "type": "object",
+                            "properties": {
+                                "annuitantDetails": {
+                                    "type": "object",
+                                    "title": "Supporting information",
+                                    "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "Title",
+                                            "ui:field": "title"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Title",
+                                            "ui:field": "title"
+                                        },
+                                        "ssn": {
+                                            "type": "string",
+                                            "title": "SSN",
+                                            "dataType": "ssn",
+                                            "ui:field": "subTitle"
+                                        }
+                                    }
+                                },
+                                "documentDetails": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle"
+                                            },
+                                            "docType": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "dataEntryForm": {
+                            "type": "string",
+                            "title": "Open Form for Data Entry",
+                            "default": "{{customData.baseUrl}}?caseId={{customData.caseId}}&correlationId={{customData.correlationId}}"
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "props": {
+                            "description": "Review supporting information and determine if the document can be matched to an existing case. Search all cases and review any suggested potential matches. Confirm the matching Case ID, if possible. If there's no existing case to match the document to, mark the task as pending and wait for the application to arrive."
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "annuitantDetails": {
+                            "ui:options": {
+                                "title": "Title",
+                                "cardType": "Detailed",
+                                "icon": "CIRCLE_USER",
+                                "label": true,
+                                "ObjectFieldTemplate": "CardTemplate"
+                            }
+                        },
+                        "documentDetails": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": false,
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                }
+                            }
+                        }
+                    },
+                    "dataEntryForm": {
+                        "ui:options": {
+                            "label": false,
+                            "type": "link",
+                            "omitValue": true
+                        },
+                        "ui:widget": "HyperLinkWidget"
+                    }
+                }
+            }
+        ]
+    }
+}

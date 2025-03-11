@@ -20,7 +20,9 @@
                         "caseTypeEnum": {},
                         "caseSubTypeEnum": {}
                     },
-                    "required": ["matchingResult"],
+                    "required": [
+                        "matchingResult"
+                    ],
                     "properties": {
                         "sectionHeader": {
                             "type": "object",
@@ -35,13 +37,9 @@
                                     "items": {
                                         "type": "object",
                                         "properties": {
-                                            "documentName": {
-                                                "type": "string",
-                                                "ui:field": "title"
-                                            },
                                             "documentId": {
                                                 "type": "string",
-                                                "ui:field": "subTitle"
+                                                "ui:field": "title"
                                             },
                                             "docType": {
                                                 "type": "string",
@@ -104,7 +102,9 @@
                                             "$ref": "#/definitions/caseSubTypeEnum"
                                         }
                                     },
-                                    "required": ["caseType"]
+                                    "required": [
+                                        "caseType"
+                                    ]
                                 },
                                 "else": {
                                     "if": {
@@ -121,7 +121,9 @@
                                                 "title": "Case Id"
                                             }
                                         },
-                                        "required": ["caseId"]
+                                        "required": [
+                                            "caseId"
+                                        ]
                                     }
                                 }
                             }
@@ -217,9 +219,15 @@
                         "ui:props": {
                             "apiUrl": "case/v1/refdata",
                             "apiPayload": {
-                                "carrier": ["{{carrier}}"],
-                                "keys": ["requestSubType"],
-                                "process": ["{{value}}"]
+                                "carrier": [
+                                    "{{carrier}}"
+                                ],
+                                "keys": [
+                                    "requestSubType"
+                                ],
+                                "process": [
+                                    "{{value}}"
+                                ]
                             },
                             "apiMethod": "post",
                             "dataKey": "caseSubTypeEnum",
@@ -245,7 +253,9 @@
                 "formSchema": {
                     "$schema": "http://json-schema.org/draft-07/schema#",
                     "type": "object",
-                    "required": ["matchedDocumentData"],
+                    "required": [
+                        "matchedDocumentData"
+                    ],
                     "properties": {
                         "details": {
                             "type": "object",
@@ -257,13 +267,9 @@
                                     "items": {
                                         "type": "object",
                                         "properties": {
-                                            "documentName": {
-                                                "type": "string",
-                                                "ui:field": "title"
-                                            },
                                             "documentId": {
                                                 "type": "string",
-                                                "ui:field": "subTitle"
+                                                "ui:field": "title"
                                             },
                                             "docType": {
                                                 "type": "string",
@@ -297,7 +303,11 @@
                             "properties": {
                                 "matchType": {
                                     "type": "string",
-                                    "enum": ["NEW", "EXISTING", "DUPLICATE"],
+                                    "enum": [
+                                        "NEW",
+                                        "EXISTING",
+                                        "DUPLICATE"
+                                    ],
                                     "enumNames": [
                                         "Add as a new document",
                                         "Replace the existing document with this version",
@@ -306,13 +316,18 @@
                                     "title": ""
                                 }
                             },
-                            "required": ["matchType"],
+                            "required": [
+                                "matchType"
+                            ],
                             "allOf": [
                                 {
                                     "if": {
                                         "properties": {
                                             "matchType": {
-                                                "enum": ["", "NEW"]
+                                                "enum": [
+                                                    "",
+                                                    "NEW"
+                                                ]
                                             }
                                         }
                                     },
@@ -323,7 +338,10 @@
                                         "if": {
                                             "properties": {
                                                 "matchType": {
-                                                    "enum": ["EXISTING", "DUPLICATE"]
+                                                    "enum": [
+                                                        "EXISTING",
+                                                        "DUPLICATE"
+                                                    ]
                                                 }
                                             }
                                         },
@@ -419,7 +437,8 @@
                                 "ui:options": {
                                     "label": false,
                                     "icon": "Search",
-                                    "placeholder": "Find existing documents..."
+                                    "placeholder": "Find existing documents...",
+                                    "singleDocument": true
                                 }
                             },
                             "attachment": {
