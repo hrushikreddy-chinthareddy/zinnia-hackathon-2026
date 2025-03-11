@@ -43,12 +43,12 @@
                                     "properties": {
                                         "firstName": {
                                             "type": "string",
-                                            "title": "Title",
+                                            "title": "First name",
                                             "ui:field": "title"
                                         },
                                         "lastName": {
                                             "type": "string",
-                                            "title": "Title",
+                                            "title": "Last name",
                                             "ui:field": "title"
                                         },
                                         "taxId": {
@@ -270,12 +270,12 @@
                                     "properties": {
                                         "firstName": {
                                             "type": "string",
-                                            "title": "Title",
+                                            "title": "First name",
                                             "ui:field": "title"
                                         },
                                         "lastName": {
                                             "type": "string",
-                                            "title": "Title",
+                                            "title": "Last name",
                                             "ui:field": "title"
                                         },
                                         "taxId": {
@@ -409,7 +409,8 @@
                                 "address": {
                                     "type": "string",
                                     "title": "Address",
-                                    "default": "{{entity.payment.exchangeReplace.address}}"
+                                    "default": "{{entity.payment.exchangeReplace.address}}",
+                                    "dataType": "dirtyAddress"
                                 }
                             }
                         }
