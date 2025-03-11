@@ -63,6 +63,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         value: transaction.entity.paymentRecordId,
                         subElement: {
                             ...transaction,
+                            firstName: task?.data?.details?.payerDetails?.firstName || '',
+                            lastName: task?.data?.details?.payerDetails?.lastName || '',
                             title: transaction?.entity?.payment?.companyName,
                         },
                     }));
@@ -88,12 +90,13 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     const response = await getTransactionsByCorrelationId(correlationId, {
                         entityType: EntityTypes.NB_PAYMENT_RECORD,
                     });
-
                     const paymentCards = response?.map((transaction: any) => ({
                         label: transaction.correlationId,
                         value: transaction.entity.paymentRecordId,
                         subElement: {
                             ...transaction,
+                            firstName: task?.data?.details?.payerDetails?.firstName || '',
+                            lastName: task?.data?.details?.payerDetails?.lastName || '',
                             title: transaction?.entity?.payment?.companyName,
                         },
                     }));

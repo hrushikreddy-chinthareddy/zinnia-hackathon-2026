@@ -380,7 +380,7 @@
                             "properties": {
                                 "companyName": {
                                     "type": "string",
-                                    "title": "Company name",
+                                    "title": "Surrendering carrier name",
                                     "default": "{{entity.payment.exchangeReplace.companyName}}",
                                     "ui:field": "title"
                                 },
@@ -391,15 +391,25 @@
                                     "ui:field": "subTitle",
                                     "dataType": "amount"
                                 },
-                                "paymentRecordId": {
-                                    "type": "string",
-                                    "title": "Payment Record Id",
-                                    "default": "{{entity.paymentRecordId}}"
-                                },
                                 "sourcePolicyNumber": {
                                     "type": "string",
-                                    "title": "Surrendering Carrier Contract Number",
+                                    "title": "Surrendering carrier contract number",
                                     "default": "{{entity.payment.exchangeReplace.sourcePolicyNumber}}"
+                                },
+                                "firstName": {
+                                    "type": "string",
+                                    "title": "First name",
+                                    "default": "{{entity.firstName}}"
+                                },
+                                "lastName": {
+                                    "type": "string",
+                                    "title": "Last name",
+                                    "default": "{{entity.lastName}}"
+                                },
+                                "address": {
+                                    "type": "string",
+                                    "title": "Address",
+                                    "default": "{{entity.payment.exchangeReplace.address}}"
                                 }
                             }
                         }
