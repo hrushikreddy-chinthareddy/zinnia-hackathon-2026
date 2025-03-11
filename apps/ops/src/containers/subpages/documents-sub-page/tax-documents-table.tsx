@@ -1,3 +1,4 @@
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import {
     Icon,
     IconType,
@@ -12,14 +13,13 @@ import {
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 
+import TaxFormPreviewer from '@deps/components/document-viewer/tax-form-previewer';
 import { NavElementVariant } from '@deps/components/nav-element/nav-element';
 import Popover from '@deps/components/popover/popover';
 import { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import TaxFormPreviewer from '@deps/components/document-viewer/tax-form-previewer';
 
 import styles from './documents-results-table.module.css';
-import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 
 type TaxDocumentsTableProps = {
     carrierCode: string;

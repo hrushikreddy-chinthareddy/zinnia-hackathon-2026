@@ -272,7 +272,7 @@
         "taskTitle": "Mes Tâches",
         "noTasksFoundTitle": "Votre liste de tâches est actuellement vide.",
         "noTasksMessage": "Cliquez sur « Réclamer une tâche » pour commencer.",
-        "claimTaskError": "Erreur de tâche de réclamation :",
+        "claimTaskError": "Vous n'avez pas les autorisations nécessaires pour accéder à cette fonctionnalité. Veuillez contacter l'administrateur pour obtenir de l'aide.",
         "unassignTask": "Annuler l'attribution d'une tâche",
         "unassignTaskError": "Erreur de désattribution de tâche :",
         "startTask": "Démarrer la tâche",
@@ -307,7 +307,10 @@
             }
         },
         "caseId": "Numéro du cas: ",
-        "documentNumber": "Document: "
+        "documentNumber": "Document: ",
+        "noDocumentFound": "Aucun document trouvé",
+        "documentSelectError": "Document déjà sélectionné",
+        "fetchingDocuments": "Récupération des documents..."
     },
     "beneChange": {
         "tabs": {
@@ -770,7 +773,9 @@
         "view": "Afficher",
         "with": "avec",
         "approved": "Approuvé",
-        "unapproved": "Désapprouvé"
+        "unapproved": "Désapprouvé",
+        "submit": "Soumettre",
+        "uploadDocument": "Uploader un document"
     },
     "dashboard": {
         "h1": "Recherche de politique",
@@ -1405,7 +1410,8 @@
                 "source of premium": "Source de prétium: {{label}}",
                 "transfer of assets": "Transfert d'actifs: {{label}}",
                 "ceding carrier": "Transporteur cédant: {{label}}",
-                "premium source": "Source Premium: {{label}}"
+                "premium source": "Source Premium: {{label}}",
+                "re-illustration": "Nouvelle illustration: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
             "suitabilityReview": "suitability",
@@ -1416,7 +1422,16 @@
             "suitabilityReviewIssues": "Revoir Suitability Problèmes",
             "purchaseDocumentMatchingIssues": "Document de correspondance",
             "agentNigo": "Réviser les problèmes d'agent",
-            "applicationNigo":"Réviser les problèmes d'agent"
+            "attachmentNigo": "Réviser les problèmes d'application",
+            "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements",
+            "applicationNigo": "Réviser les problèmes d'agent",
+            "agentReview": "Valider l'agent",
+            "reviewOfac": "Réviser les problèmes d'OFAC",
+            "agentOnboardingNigo": "Réviser les problèmes d'onboarding",
+            "standardDocumentMatching": "Document de correspondance",
+            "toaNigo": "Examiner les problèmes de transfert",
+            "appDataEntry": "Résoudre les problèmes de saisie des données de l'application",
+            "agentOnboardingReview": "Valider les problèmes d'onboarding"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -1697,7 +1712,8 @@
                     "interestEarningDividendsGains": "Interset/Gains/Dividendes/Gains",
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Option de revenu viager conjoint",
-                    "singleLifetimeIncomeOption": "Option de revenu viager unique"
+                    "singleLifetimeIncomeOption": "Option de revenu viager unique",
+                    "interestEarned": "Intérêt gagné"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Veuillez spécifier le fonds pour configurer SSW avec le pourcentage d'A.V.",
@@ -1720,6 +1736,9 @@
                         "level": "Niveau",
                         "increasing": "Croissant"
                     }
+                },
+                "singleLifeTimeIncome": {
+                    "title": "Nom de Income Life converti au-dessus de la ligne en français"
                 }
             },
             "rmdMethod": {
@@ -2761,7 +2780,8 @@
                 "nextSweepDate": "Prochaine date de balayage",
                 "nextSweepDateTooltip": "À cette date, tout l'argent du fonds de réserve sera \"balayé\" ou transféré dans les différents fonds de la police, selon les allocations de fonds sélectionnées par le propriétaire. Dans la plupart des cas, la date de balayage se produit le même jour chaque mois.",
                 "noFunds": "Rien à afficher.",
-                "type": "Type"
+                "type": "Type",
+                "years": "$t(temporal.years, {{count}})"
             },
             "segmentsTable": {
                 "segmentID": "ID de segment.",
@@ -2977,9 +2997,10 @@
                 "checkingEndingIn": "Compte courant se terminant par {{accountNumber}}",
                 "COSTOFINSURANCE": "Coût de l'assurance",
                 "EXPENSECHARGE": "Frais de gestion",
-                "UNITEXPENSECHARGE": "Frais d'unité",
+                "MARKETVALUEADJUSTMENT": "Ajustement de la valeur marchande",
                 "RIDERCHARGE": "Frais de garantie supplémentaire",
                 "SURRENDERCHARGE": "Frais de rachat",
+                "UNITEXPENSECHARGE": "Frais d'unité",
                 "WITHDRAWALCHARGE": "Frais de retrait",
                 "proRata": "Pro rata",
                 "disbursementType": "Distribution {{disbursementType}}"
@@ -3158,7 +3179,9 @@
         "timeago_other": "Il y a {{count}} $t(temporal.{{unit}}) {{formattedDate}}",
         "nYears": "{{n}} ans",
         "oneYear": "1 an",
-        "timeLeft": "Il reste {{timespan}}"
+        "timeLeft": "Il reste {{timespan}}",
+        "years_one": "{{count}} an",
+        "years_other": "{{count}} ans"
     },
     "sideSheet": {
         "posted": "Publié",
@@ -3217,7 +3240,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Dernière mise à jour",
-                "caseId": "ID du cas"
+                "caseId": "ID du cas",
+                "noCasesAvailable": "No related cases available."
             },
             "addressHistoryTab": {
                 "defaultAddress": "Adresse par défaut",
@@ -3225,7 +3249,8 @@
                 "mailingAddress": "Adresse postale",
                 "viewFullDeatils": "Voir les détails",
                 "preferredAddress": "Adresse choisie",
-                "agentAddress": "Adresse de l'agent"
+                "agentAddress": "Adresse de l'agent",
+                "noAddressesAvailable": "No addresses available."
             }
         },
         "correspondence": "Correspondence ({{count}})",
@@ -4246,7 +4271,7 @@
         "eligible": "Éligible",
         "eligibleForWithdrawal": "Éligible au retrait",
         "eligibleForWithdrawalTooltip": "Les retraits de la valeur du compte sont autorisés actuellement. Les retraits peuvent réduire le bénéfice décès.",
-        "freeWithdrawalAmount": "Montant de retrait gratuit",
+        "freeWithdrawalAmount": "Montant de retrait gratuit: {{ amount }}",
         "ineligible": "Non éligible",
         "maximumWithdrawal": "Montant maximal de retrait",
         "netSurrenderValue": "Valeur de rachat nette",
@@ -4324,7 +4349,7 @@
             },
             "title": "Compris!"
         }
-    },    
+    },
     "loanPayment": {
         "amount": {
             "label": "Montant",
@@ -4540,6 +4565,10 @@
         },
         "payment": {
             "label": "Paiement"
+        },
+        "pendingBanner": {
+            "caseLinkText": "aller au dossier",
+            "text": "Une mise à jour des détails de paiement automatique de cette police est en attente. Pour plus d'informations, "
         },
         "summary": {
             "amount": "Montant",
@@ -4856,7 +4885,8 @@
             "documents": "Documents",
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible.",
-            "taskTitle": "Détails de la tâche"
+            "taskTitle": "Détails de la tâche",
+             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -4875,7 +4905,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Dernière mise à jour",
-                "caseId": "ID du cas"
+                "caseId": "ID du cas",
+                "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {
@@ -4928,7 +4959,8 @@
                     "noDocTypeToReindex": "Veuillez indiquer le type de document pour la réindexation",
                     "noNotes": "Veuillez saisir des notes"
                 }
-            }
+            },
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "formSelection": {
             "title": "Sélection de nouveau formulaire",
@@ -5051,7 +5083,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "ID du document",
-            "noFormAvailable": "Aucun formulaire disponible."
+            "noFormAvailable": "Aucun formulaire disponible.",
+             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         }
     },
     "suitabilityReview": {
@@ -5079,7 +5112,7 @@
             "submit": "Soumettre",
             "cancel": "Annuler",
             "confirm": "Confirmer",
-            "continue": "Continue",
+            "continue": "Continuer",
             "tabs": {
                 "start": "Démarrer",
                 "nigoDetails": "Informations manquantes",
@@ -5093,7 +5126,8 @@
             "title": "Compris!",
             "subTitle": "Tâche: Appariement de Document a été soumise.",
             "cta": "Aller à la Qualification",
-            "secondaryCta": "Retour à l'accueil"
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
         },
         "formErrors": {
             "caseNotFound": "Dossier non trouvé",
@@ -5106,13 +5140,82 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
             "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "nbAttachmentNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes d'application a été soumise.",
+            "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbPaymentProcessingNigo": {
+        "confirmStep": {
+            "title": "Compris !",
+            "subTitle": "Tâche : Examen de la prime initiale soumis.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
         }
     },
     "nbApplicationNigo": {
         "confirmStep": {
             "title": "Compris!",
-            "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
+            "subTitle": "Tâche : Révision des problèmes d'application a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "standardDocumentMatching": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche: Document de correspondance a été soumise.",
+            "cta": "Aller à la Qualification",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "nbAgentReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Valider que l'agent a été soumis.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "ofacReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes d'OFAC a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "agentOnboardingNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes d'onboarding a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbToaNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Le transfert de révision a été soumis",
+            "cta": "Aller au transfert entrant ",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "agentOnboardingReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Valider des problèmes d'onboarding a été soumise.",
             "cta": "Aller au transfert entrant",
             "secondaryCta": "Retour à l'accueil"
         }
@@ -5120,5 +5223,14 @@
     "unauthorized": {
         "title": "Non autorisé",
         "message": "Vous n'avez pas accès à cette information."
+    },
+    "nbAppDataEntry": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Valider que l'agent a été soumis.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }

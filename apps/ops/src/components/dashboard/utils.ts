@@ -7,6 +7,7 @@ import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
 import { SimpleOption } from '../autocomplete/autocomplete.types';
+import { ExtendedProcesses } from './filters/case-type-filter';
 
 export enum TimeframeFilterOptions {
     Trailing12Months = '12M',
@@ -95,8 +96,8 @@ export const createBaseQuery = async (baseInsightQueryFilter: DashboardSearchFil
 
 /**
  *
- * Takes in a process and returns it in an array. If undefined, it returns an empty array
+ * Takes in a process and returns it in an array. If extendedprocess.ALL, it returns an empty array
  */
-export const formatProcessFilter = (process: Processes | undefined) => {
-    return process ? [process] : [];
+export const formatProcessFilter = (process: Processes | ExtendedProcesses) => {
+    return process === ExtendedProcesses.ALL ? [] : [process];
 };

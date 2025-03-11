@@ -2,8 +2,10 @@ export const replacePlaceholders = (template: any, data: Record<string, any>): a
     if (typeof template === 'string') {
         return template.replace(/{{(.*?)}}/g, (match, p1) => {
             // Split by dot (.) and handle array indices (numbers inside [])
-            const keys = p1.split(/\.|\[|\]/).filter(Boolean);
-
+            let keys = p1.split(/\.|\[|\]/).filter(Boolean);
+            if (keys[0] === "data") {
+                keys = keys.slice(1);
+            }
             return (
                 keys.reduce((obj: any, key: string, index: number) => {
                     if (obj === undefined || obj === null) return undefined;
@@ -13,10 +15,10 @@ export const replacePlaceholders = (template: any, data: Record<string, any>): a
                     if (!isNaN(numericKey)) {
                         return obj[numericKey];
                     }
-
                     return obj[key];
                 }, data) || match
-            ); // Return the match if nothing is found
+
+            );
         });
     } else if (Array.isArray(template)) {
         return template.map(item => replacePlaceholders(item, data));

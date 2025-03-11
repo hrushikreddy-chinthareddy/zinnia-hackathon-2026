@@ -29,6 +29,7 @@ interface GetTransactionsProps {
     policy: Policy;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
     setTransactions: Dispatch<SetStateAction<Transaction[]>>;
+    sortField?: 'PROCESSDATE' | 'EFFECTIVEDATE' | 'REVERSALDATE';
     sortOrder?: 'ASC' | 'DESC';
 }
 
@@ -102,6 +103,7 @@ export const getTransactions = async ({
     policy,
     setIsLoading,
     setTransactions,
+    sortField = 'EFFECTIVEDATE',
     sortOrder = 'DESC',
 }: GetTransactionsProps) => {
     setIsLoading(true);
@@ -112,6 +114,7 @@ export const getTransactions = async ({
         transactionTypes: transactionTypes,
         id: policy.policyNumber,
         planCode: policy.product?.planCode,
+        sortField,
         sortOrder,
         status: statusFilter,
         ...(hasFilter(yearFilter) && { year: yearFilter }),

@@ -1,4 +1,4 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { deleteCookie, getCookies } from 'cookies-next';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -7,11 +7,13 @@ import { useEffect, useState } from 'react';
 import PageLoader from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { downloadTaxFormById } from '@deps/queries/api/tax-forms';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface FormViewerProps extends SegmentTrackedPageProps {
@@ -80,6 +82,16 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear 
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
         const { locale = DEFAULT_LOCALE, params, res, req } = context;
+        try {
+            (await getAccessToken(req, res)).accessToken;
+        } catch (e) {
+            logWarn('documents:: Access token expired', {
+                ...parseErrorInformation(e),
+                file: 'documents',
+                function: 'getServerSideProps',
+            });
+            return serverSidePropsLogout();
+        }
 
         const formId = (params?.formId as string) || '';
 

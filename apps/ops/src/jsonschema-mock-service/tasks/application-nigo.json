@@ -66,6 +66,10 @@
                                         "documentSource": {
                                             "type": "string",
                                             "ui:field": "title"
+                                        },
+                                        "carrier": {
+                                            "type": "string",
+                                            "default": "{{carrier}}"
                                         }
                                     }
                                 }
@@ -82,18 +86,16 @@
                                     }
                                 }
                             },
-                            "default": [{ "reason": "Online updates unavailable. Resubmission required" }]
+                            "default": [
+                                {
+                                    "reason": "Online updates unavailable. Resubmission required"
+                                }
+                            ]
                         },
                         "issueResolved": {
                             "type": "boolean",
-                            "enumNames": [
-                                "Yes",
-                                "No"
-                            ],
-                            "enum": [
-                                true,
-                                false
-                            ]
+                            "enumNames": ["Yes", "No"],
+                            "enum": [true, false]
                         }
                     },
                     "dependencies": {
@@ -102,27 +104,21 @@
                                 {
                                     "properties": {
                                         "issueResolved": {
-                                            "enum": [
-                                                true
-                                            ]
+                                            "enum": [true]
                                         }
                                     }
                                 },
                                 {
                                     "properties": {
                                         "issueResolved": {
-                                            "enum": [
-                                                false
-                                            ]
+                                            "enum": [false]
                                         },
                                         "communicationSent": {
                                             "type": "boolean",
                                             "title": "The required communication has been sent"
                                         }
                                     },
-                                    "required": [
-                                        "issueResolved"
-                                    ]
+                                    "required": ["issueResolved"]
                                 }
                             ]
                         }

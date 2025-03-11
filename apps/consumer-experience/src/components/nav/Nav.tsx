@@ -41,7 +41,6 @@ export async function Nav({
       return (
         <EverlyLogoImage
           alt="Everly Logo"
-          width="200px"
           height="32px"
           className={styles.logoEverly}
         />
@@ -50,7 +49,7 @@ export async function Nav({
     if (themeCookie === CompanyName.WELLABE) {
       return (
         <WellabeLogoImage
-          alt="Everly Logo"
+          alt="Wellabe Logo"
           height="32px"
           color="var(--color-primary-color-primary)"
           fill="var(--color-primary-color-primary)"
@@ -62,7 +61,7 @@ export async function Nav({
   };
 
   return (
-    <nav className={styles.container}>
+    <nav className={styles.nav}>
       <div className={styles.logoContainer}>
         <DevMenu />
 

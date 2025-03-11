@@ -8,6 +8,7 @@ import { ErrorMessagePart } from "@deps/components/error/Error";
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
 import PaginationControls from "@deps/components/pagination/pagination";
 import { TranslationFiles } from "@deps/config/translations";
+import EmptyCard from "@deps/containers/people-data-cards/empty-card/empty-card";
 import { CaseTableData } from "@deps/contexts/CaseManagementFilters";
 import { DEFAULT_EXTENDED_DATE_FORMAT } from "@deps/types/constants";
 
@@ -28,15 +29,13 @@ function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relat
     window.scrollTo(0, 0);
   };
 
-
-
   useEffect(() => {
-    setError(null)
-  }, [])
+    setError(null);
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-4 md:px-6 lg:px-8 gap-4">
-      {caseTableData.cases.map((caseData) => {
+      {caseTableData?.cases?.map((caseData) => {
         const formattedApplicationDate = dayjs(caseData.updatedAt).format(DEFAULT_EXTENDED_DATE_FORMAT);
         const url = `/cases/${caseData.id}`;
         return (
@@ -49,7 +48,6 @@ function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relat
             </div>
             <div className="col-span-1">
               <div className="font-secondary text-md font-bold text-gray-800"> {t('relatedTab.caseId')}</div>
-
               <NavElement
                 className={'whitespace-normal break-words'}
                 href={url}
@@ -70,11 +68,10 @@ function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relat
 
             </div>
           </div>
-        );
+        )
       })}
-
-
-      <PaginationControls total={caseTableData.total} limit={limit} offset={offset} goToPage={goToPage} />;
+      {(caseTableData?.cases.length === 0) &&  ( <EmptyCard text={t('relatedTab.noCasesAvailable')} />)}
+      {(caseTableData?.cases.length > 0) && <PaginationControls total={caseTableData.total} limit={limit} offset={offset} goToPage={goToPage} /> }
     </div>
   )
 }

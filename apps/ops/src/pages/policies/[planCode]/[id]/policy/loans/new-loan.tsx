@@ -17,7 +17,7 @@ const NewLoan = ({ policy }: NewLoanProps) => {
     useEffect(() => {
         const checkEligibility = async () => {
             const eligibilityCheck = await checkEligibilityNewLoan(policy.product?.planCode, policy.policyNumber, policy.loanValues?.maximumLoanAmount);
-            
+
             if (eligibilityCheck.status === TransactionResponseStatus.Failure) {
                 router.push(`/403`);
 

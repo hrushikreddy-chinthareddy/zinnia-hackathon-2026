@@ -1,9 +1,9 @@
-import { Button } from '@zinnia/bloom/components';
 import { saveAs } from 'file-saver';
 
 import { Footer } from '@/components/footer/Footer';
 
 import styles from './PdfPreviewer.module.css';
+import { Button } from '@/components/button/Button';
 
 export default function PreviewUnsupported({
   fileName,

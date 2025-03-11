@@ -2,7 +2,7 @@ import { Button } from '@zinnia/bloom/components';
 import { useTranslation, TFunction } from 'next-i18next';
 
 import { formatTimestamp, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
-import { ExceptionView, TaskView } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
+import { ExceptionView, TaskView, GroupedExceptions } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import TaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/task-sidesheet-content';
@@ -13,6 +13,7 @@ import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
+
 const getStepStatusText = (step: TransformedStep, t: TFunction): { icon: React.ReactNode; text: string } => {
     switch (step.status) {
         case Statuses.Completed:
@@ -65,15 +66,33 @@ function SideSheetException({ exception }: { exception: ExceptionView }) {
                 variant={ContentVariant.BodySm}
                 details={exception.description}
             />
-            {exception?.tasks?.map(task => (
-                <SideSheetTask task={task} key={task.id} />
-            ))}
         </div>
     );
 }
+
+function Exceptions({ exceptions, groupedExceptions }: { exceptions: ExceptionView[]; groupedExceptions: GroupedExceptions }) {
+    if (!exceptions?.length) {
+        return null;
+    }
+
+    return (
+        <ul>
+            {Object.entries(groupedExceptions).map(([taskId, group]) => (
+                <li className="flex w-full flex-col" key={taskId}>
+                    {group.exceptions.map(exception => (
+                        <div key={exception.id}>{SideSheetException({ exception })}</div>
+                    ))}
+                    {group.tasks.length > 0 && <SideSheetTask task={group.tasks[0]} key={group.tasks[0].id} />}
+                </li>
+            ))}
+        </ul>
+    );
+}
+
 function SideSheetStep({ step }: { step: TransformedStep }) {
     const { t } = useTranslation();
     const { icon, text } = getStepStatusText(step, t);
+
     return (
         <div className="flex flex-row gap-2">
             <div className="flex h-6 w-6 shrink-0 items-center justify-center">{icon}</div>
@@ -82,9 +101,7 @@ function SideSheetStep({ step }: { step: TransformedStep }) {
                 {step?.tasks?.map(task => (
                     <SideSheetTask task={task} key={task.id} />
                 ))}
-                {step?.exceptions?.map(exception => (
-                    <SideSheetException exception={exception} key={exception.id} />
-                ))}
+                <Exceptions exceptions={step.exceptions} groupedExceptions={step.exceptionsGroupedByTask} />
                 <Content className="text-gray-600" variant={ContentVariant.BodySm} details={text} />
             </div>
         </div>

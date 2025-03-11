@@ -5,87 +5,44 @@ export interface RouteMap {
   destination: string;
   title: string;
 }
+
 export enum RouteKey {
-  RIDERS = '/riders',
-  PREMIUM = '/premium',
-  PROFILE = '/profile',
-  DOCUMENTS = '/documents',
-  MY_COVERAGE = '/my-coverage',
   ACCOUNT = '/account',
-  PREMIUM_HISTORY = '/premium-history',
-  HISTORY = '/history',
-  PREMIUM_DETAILS = '/premium-details',
-  DETAILS = '/details',
+  ALLOCATIONS = '/allocations',
   BENEFICIARIES = '/beneficiaries',
   BENEFICIARY = '/beneficiary',
-  WITHDRAWALS = '/withdrawals',
-  SURRENDER = '/surrender',
-  LOANS = '/loans',
-  ALLOCATIONS = '/allocations',
   COVERAGE = '/coverage',
+  DETAILS = '/details',
+  DOCUMENTS = '/documents',
+  HISTORY = '/history',
+  LOANS = '/loans',
+  MY_COVERAGE = '/my-coverage',
+  NOTIFICATIONS = '/notifications',
+  PREMIUM = '/premium',
+  PREMIUM_DETAILS = '/premium-details',
+  PREMIUM_HISTORY = '/premium-history',
+  PROFILE = '/profile',
+  RIDERS = '/riders',
+  SURRENDER = '/surrender',
+  WITHDRAWALS = '/withdrawals',
 }
 
-const annuityPageTitles: Index<string> = {
+const annuityPageTitles: Partial<Record<RouteKey, string>> = {
   [RouteKey.RIDERS]: 'Riders and Extras',
   [RouteKey.SURRENDER]: 'Surrender Contract',
 };
 
-export const routeMap: Index<RouteMap> = {
-  [RouteKey.RIDERS]: {
-    destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/riders',
-    source: '/riders',
-    title: 'Riders',
-  },
-  [RouteKey.PREMIUM]: {
-    destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium',
-    source: '/premium',
-    title: 'Premium payments',
-  },
-  [RouteKey.PROFILE]: {
-    destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/profile',
-    source: '/profile',
-    title: 'Owner Profile',
-  },
-  [RouteKey.DOCUMENTS]: {
-    destination:
-      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/documents',
-    source: '/documents',
-    title: 'Documents',
-  },
-  [RouteKey.MY_COVERAGE]: {
-    destination:
-      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/my-coverage',
-    source: '/my-coverage',
-    title: 'Coverage',
-  },
+export const routeMap: Record<RouteKey, RouteMap> = {
   [RouteKey.ACCOUNT]: {
     destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account',
     source: '/account',
     title: 'Account Value',
   },
-  [RouteKey.PREMIUM_HISTORY]: {
+  [RouteKey.ALLOCATIONS]: {
     destination:
-      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/history',
-    source: '/history',
-    title: 'Premium History',
-  },
-  [RouteKey.HISTORY]: {
-    destination:
-      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/history',
-    source: '/premium/history',
-    title: 'Premium History',
-  },
-  [RouteKey.PREMIUM_DETAILS]: {
-    destination:
-      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/details',
-    source: '/premium-details',
-    title: 'Payment Details',
-  },
-  [RouteKey.DETAILS]: {
-    destination:
-      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/details',
-    source: '/premium/details',
-    title: 'Payment Details',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account/allocations',
+    source: '/allocations',
+    title: 'Allocations',
   },
   [RouteKey.BENEFICIARIES]: {
     destination:
@@ -99,17 +56,28 @@ export const routeMap: Index<RouteMap> = {
     source: '/beneficiary',
     title: 'Beneficiary',
   },
-  [RouteKey.WITHDRAWALS]: {
-    destination:
-      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account/withdrawals',
-    source: '/withdrawals',
-    title: 'Withdrawals',
+  [RouteKey.COVERAGE]: {
+    destination: ROOT_URL_PATH,
+    source: ROOT_URL_PATH,
+    title: 'My Coverage',
   },
-  [RouteKey.SURRENDER]: {
+  [RouteKey.DETAILS]: {
     destination:
-      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account/surrender',
-    source: '/surrender',
-    title: 'Surrender Policy',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/details',
+    source: '/premium/details',
+    title: 'Payment Details',
+  },
+  [RouteKey.DOCUMENTS]: {
+    destination:
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/documents',
+    source: '/documents',
+    title: 'Documents',
+  },
+  [RouteKey.HISTORY]: {
+    destination:
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/history',
+    source: '/premium/history',
+    title: 'Premium History',
   },
   [RouteKey.LOANS]: {
     destination:
@@ -117,16 +85,56 @@ export const routeMap: Index<RouteMap> = {
     source: '/loans',
     title: 'Loans',
   },
-  [RouteKey.ALLOCATIONS]: {
+  [RouteKey.MY_COVERAGE]: {
     destination:
-      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account/allocations',
-    source: '/allocations',
-    title: 'Allocations',
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/my-coverage',
+    source: '/my-coverage',
+    title: 'Coverage',
   },
-  [RouteKey.COVERAGE]: {
-    destination: ROOT_URL_PATH,
-    source: ROOT_URL_PATH,
-    title: 'My Coverage',
+  [RouteKey.NOTIFICATIONS]: {
+    destination:
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/notifications',
+    source: '/notifications',
+    title: 'Notifications',
+  },
+  [RouteKey.PREMIUM]: {
+    destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium',
+    source: '/premium',
+    title: 'Premium payments',
+  },
+  [RouteKey.PREMIUM_DETAILS]: {
+    destination:
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/details',
+    source: '/premium-details',
+    title: 'Payment Details',
+  },
+  [RouteKey.PREMIUM_HISTORY]: {
+    destination:
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium/history',
+    source: '/history',
+    title: 'Premium History',
+  },
+  [RouteKey.PROFILE]: {
+    destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/profile',
+    source: '/profile',
+    title: 'Owner Profile',
+  },
+  [RouteKey.RIDERS]: {
+    destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/riders',
+    source: '/riders',
+    title: 'Riders',
+  },
+  [RouteKey.SURRENDER]: {
+    destination:
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account/surrender',
+    source: '/surrender',
+    title: 'Surrender Policy',
+  },
+  [RouteKey.WITHDRAWALS]: {
+    destination:
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account/withdrawals',
+    source: '/withdrawals',
+    title: 'Withdrawals',
   },
 };
 

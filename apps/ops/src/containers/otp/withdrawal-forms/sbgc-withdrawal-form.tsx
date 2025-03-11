@@ -33,7 +33,8 @@ export default function SbgcWithdrawalForm() {
         unforeseeableEmergencyOptions,
         hardshipOptions,
         reasonOptions,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
+        programTypes
     } = getSbgcConfig(t);
     const { formParty, formTpaAuthorization, setFormValidator, formData, setFormData, initialForm, isFormStateReadOnly, contractIssueState } =
         useContext(FormDataContext);
@@ -67,15 +68,13 @@ export default function SbgcWithdrawalForm() {
                 unforeseenOptions={unforeseeableEmergencyOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
             />
-            <AmountDetails isFormStateReadOnly={isFormStateReadOnly} />
-
+            <AmountDetails isFormStateReadOnly={isFormStateReadOnly} programTypes={programTypes}/>
             <FormDistribution
                 moneyTypeOptions={moneyTypeOptions}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.distributionInstruction') as string}
                 isFormStateReadOnly={isFormStateReadOnly}
             />
-
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}

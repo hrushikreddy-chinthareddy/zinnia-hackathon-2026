@@ -4,6 +4,7 @@
     flex-direction: column;
     flex-wrap: wrap;
     gap: var(--measure-dimension-gap-lg);
+
     @media (min-width: 768px) {
         flex-direction: row;
         column-gap: var(--measure-dimension-gap-md);
@@ -15,6 +16,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+
     @media (min-width: 768px) {
         align-items: flex-start;
         flex-direction: row;
@@ -24,12 +26,12 @@
 
 .dropdownTrigger {
     align-items: center;
-    border: var(--measure-border-width-stroke-sm) solid var(--color-base-border-border-subtle);
-    border-radius: var(--measure-border-radius-radius-md) var(--measure-border-radius-radius-md) 0 0;
+    border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-subtle);
+    border-radius: var(--measure-dimension-radius-md) var(--measure-dimension-radius-md) 0 0;
     background: var(--color-grayscale-color-white);
     display: flex;
     justify-content: space-between;
-    padding: var(--measure-spacing-padding-lg) var(--measure-spacing-padding-2xl);
+    padding: var(--measure-dimension-padding-lg) var(--measure-dimension-padding-2xl);
     width: 100%;
 
     &:focus-visible,
@@ -37,34 +39,35 @@
     &:active {
         border-color: var(--color-base-border-border-subtle);
         outline-color: var(--color-semantics-color-semantic-focus);
-        outline-offset: var(--measure-border-width-stroke-sm);
+        outline-offset: var(--measure-dimension-stroke-sm);
         position: relative;
         z-index: 1;
     }
+
     &:hover {
         border-color: var(--color-states-hover-border-hover-border);
         outline: none;
     }
 
     @media (min-width: 768px) {
-        border-radius: var(--measure-border-radius-radius-md) 0px 0px var(--measure-border-radius-radius-md);
+        border-radius: var(--measure-dimension-radius-md) 0px 0px var(--measure-dimension-radius-md);
         width: 180px;
     }
 }
 
 .dropdownMenu {
     background: var(--color-grayscale-color-white);
-    border-radius: var(--measure-border-radius-radius-md);
+    border-radius: var(--measure-dimension-radius-md);
     box-shadow: 0px 1.2px 3.6px 0px rgba(0, 0, 0, 0.11), 0px 6.4px 14.4px 0px rgba(0, 0, 0, 0.13);
-    margin-top: var(--measure-spacing-gap-sm);
+    margin-top: var(--measure-dimension-gap-sm);
     width: 180px;
     z-index: 2;
 }
 
 .dropdownItem {
-    padding: var(--measure-spacing-padding-md) var(--measure-spacing-padding-2xl);
+    padding: var(--measure-dimension-padding-md) var(--measure-dimension-padding-2xl);
     cursor: pointer;
-    border: var(--measure-border-width-stroke-sm) solid transparent;
+    border: var(--measure-dimension-stroke-sm) solid transparent;
 
     &:hover {
         border-color: var(--color-states-hover-border-hover-border);

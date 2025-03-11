@@ -5,12 +5,13 @@ import GlobalValuesNbBar from '@deps/components/global-values/global-values-bar/
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
 
-import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
-import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { TaskDataContext } from './task-context';
 import GlobalTaskSideSheet from '../case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
-import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
+import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
+import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+
 
 type TaskPageProps = {
     steps: Step[];
@@ -25,7 +26,7 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
     const sideSheet = useSideSheetContext();
 
     const handleProgressBarClick = (step: Step) => {
-        if (step.isDisabled || currentStepIndex === step.index) return;
+        if (step.isDisabled || step.isCompleted ||  currentStepIndex === step.index) return;
         setCurrentStepIndex(step.index);
     };
 
@@ -65,7 +66,7 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
                 steps={filteredSteps}
             />
             <div className="flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">
-                {filteredSteps[currentStepIndex].component}
+                {filteredSteps[currentStepIndex]?.component}
             </div>
         </div>
     );

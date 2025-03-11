@@ -729,7 +729,9 @@
         "view": "View",
         "with": "with",
         "approved": "Approved",
-        "unapproved": "Unapproved"
+        "unapproved": "Unapproved",
+        "submit": "Submit",
+        "uploadDocument": "Upload Document"
     },
     "dashboard": {
         "h1": "Policy Search",
@@ -854,7 +856,10 @@
             }
         },
         "caseId": "Case ID: ",
-        "documentNumber": "Document: "
+        "documentNumber": "Document: ",
+        "noDocumentFound": "No documents found",
+        "documentSelectError": "Document already selected",
+        "fetchingDocuments": "Fetching Documents..."
     },
     "caseManagementDashboard": {
         "h1": "Case Management",
@@ -1410,7 +1415,8 @@
                 "source of premium": "Source of Premium: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}",
                 "ceding carrier": "Ceding Carrier: {{label}}",
-                "premium source": "Premium Source: {{label}}"
+                "premium source": "Premium Source: {{label}}",
+                "re-illustration": "Re-Illustration: {{label}}"
             },
             "reviewIssues": "Review {{taskType}}",
             "suitabilityReview": "suitability",
@@ -1418,7 +1424,16 @@
             "suitabilityReviewIssues": "Review Suitability",
             "purchaseDocumentMatchingIssues": "Match Document",
             "agentNigo": "Review Agent Issues",
-            "applicationNigo":"Review Application Issues"
+            "attachmentNigo": "Review Application Issues",
+            "PaymentProcessingNigo": "Review Premium Issues",
+            "applicationNigo": "Review Application Issues",
+            "agentReview": "Validate Agent",
+            "reviewOfac": "Review OFAC issues",
+            "agentOnboardingNigo": "Review Onboarding Issues",
+            "standardDocumentMatching": "Match Document",
+            "toaNigo": "Review Transfer Issues",
+            "appDataEntry": "New Business Data Entry",
+            "agentOnboardingReview": "Validate Onboarding Issues"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -1704,7 +1719,8 @@
                     "interestEarningDividendsGains": "Interest/Earnings/Dividends/Gains",
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Joint Lifetime Income Option",
-                    "singleLifetimeIncomeOption": "Single Lifetime Income Option"
+                    "singleLifetimeIncomeOption": "Single Lifetime Income Option",
+                    "interestEarned": "Interest earned"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Please specify the fund to setup SSW with Percent of A.V",
@@ -1727,6 +1743,9 @@
                         "level": "Level",
                         "increasing": "Increasing"
                     }
+                },
+                "singleLifeTimeIncome": {
+                    "title": "Name of Income Life"
                 }
             },
             "rmdMethod": {
@@ -2782,7 +2801,8 @@
                 "nextSweepDate": "Next sweep date",
                 "nextSweepDateTooltip": "On this date, all money in the holding fund will be \"swept\" or moved into the policy's various funds, according to the owner's selected fund allocations. In most cases, the sweep date happens on the same date every month.",
                 "noFunds": "Nothing to show.",
-                "type": "Type"
+                "type": "Type",
+                "years": "$t(temporal.years, {{count}})"
             },
             "segmentsTable": {
                 "segmentID": "Segment ID",
@@ -2999,9 +3019,10 @@
                 "checkingEndingIn": "Checking ending in {{ accountNumber }}",
                 "COSTOFINSURANCE": "Cost of insurance",
                 "EXPENSECHARGE": "Expense charge",
-                "UNITEXPENSECHARGE": "UNITEXPENSE charge",
+                "MARKETVALUEADJUSTMENT": "Market value adjustment",
                 "RIDERCHARGE": "Rider charge",
                 "SURRENDERCHARGE": "Surrender charge",
+                "UNITEXPENSECHARGE": "UNITEXPENSE charge",
                 "WITHDRAWALCHARGE": "Withdrawal charge",
                 "proRata": "Pro rata",
                 "disbursementType": "{{disbursementType}} disbursement"
@@ -3178,7 +3199,9 @@
         "timeago_other": "{{count}} $t(temporal.{{unit}})s ago {{formattedDate}}",
         "nYears": "{{n}} years",
         "oneYear": "1 year",
-        "timeLeft": "{{timespan}} left"
+        "timeLeft": "{{timespan}} left",
+        "years_one": "{{count}} year",
+        "years_other": "{{count}} years"
     },
     "sideSheet": {
         "posted": "Posted",
@@ -3239,7 +3262,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Last updated",
-                "caseId": "Case ID "
+                "caseId": "Case ID ",
+                "noCasesAvailable": "No related cases available."
             },
             "addressHistoryTab": {
                 "defaultAddress": "Default Address",
@@ -3247,7 +3271,8 @@
                 "mailingAddress": "Mailing Address",
                 "viewFullDeatils": "View full details",
                 "preferredAddress": "Preferred Address",
-                "agentAddress": "Agent Address"
+                "agentAddress": "Agent Address",
+                "noAddressesAvailable": "No addresses available."
             }
         },
         "correspondence": "Correspondence ({{count}})",
@@ -3281,7 +3306,7 @@
             "noAssignee": "Only the assignee can start this task",
             "startTask": "Start task",
             "claimTask": "Claim task",
-            "claimTaskError": "The system has encountered a temporary error. Please try again.",
+            "claimTaskError": "You don’t have the necessary permissions to access this feature. Please reach out to the administrator for assistance.",
             "taskHeading": "Task",
             "taskDetails": {
                 "purchaseDocumentMatching": "As part of the document matching process for the purchase document, one or more documents require review and confirmation to ensure proper alignment before proceeding with contract issuance",
@@ -4272,7 +4297,7 @@
         "eligible": "Eligible",
         "eligibleForWithdrawal": "Eligible for withdrawal",
         "eligibleForWithdrawalTooltip": "Withdrawals from the account value are allowed right now. Withdrawals may reduce the death benefit.",
-        "freeWithdrawalAmount": "{{ amount }}: Free withdrawal amount",
+        "freeWithdrawalAmount": "Free withdrawal amount: {{ amount }}",
         "ineligible": "Ineligible",
         "maximumWithdrawalAmount": "Maximum withdrawal amount",
         "netSurrenderValue": "Net surrender value",
@@ -4566,6 +4591,10 @@
         },
         "payment": {
             "label": "Payment Method"
+        },
+        "pendingBanner": {
+            "caseLinkText": "go to the case",
+            "text": "An update to this policy's autopay details is pending. For more information, "
         },
         "summary": {
             "amount": "Amount",
@@ -4883,7 +4912,8 @@
             "documents": "Documents",
             "documentId": "Document ID",
             "noFormAvailable": "No form available.",
-            "taskTitle": "Task details"
+            "taskTitle": "Task details",
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -4902,7 +4932,8 @@
             },
             "relatedTab": {
                 "lastUpdated": "Last updated",
-                "caseId": "Case ID "
+                "caseId": "Case ID ",
+                 "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {
@@ -4956,7 +4987,8 @@
                     "noDocTypeToReindex": "Please document type for re-indexing",
                     "noNotes": "Please enter notes"
                 }
-            }
+            },
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "formSelection": {
             "title": "New Form Selection",
@@ -5043,7 +5075,8 @@
             "documentTitle": "Document",
             "documents": "Documents",
             "documentId": "Document ID",
-            "noFormAvailable": "No form available."
+            "noFormAvailable": "No form available.",
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         }
     },
     "suitabilityDataEntry": {
@@ -5105,7 +5138,7 @@
     "taskManagement": {
         "taskForm": {
             "title": "Task Management",
-            "submit": "Continue",
+            "submit": "Submit",
             "cancel": "Cancel",
             "confirm": "Confirm",
             "continue": "Continue",
@@ -5113,7 +5146,8 @@
                 "start": "Start",
                 "nigoDetails": "Missing Information",
                 "suitabilityForm": "Suitability form",
-                "summary": "Summary"
+                "summary": "Summary",
+                "matchDocument": "Match Document"
             }
         },
         "formErrors": {
@@ -5127,7 +5161,8 @@
             "title": "Got It!",
             "subTitle": "Task: Match Document was submitted.",
             "cta": "Go to Qualification ",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     },
     "nbAgentNigo": {
@@ -5135,13 +5170,82 @@
             "title": "Got It!",
             "subTitle": "Task: Review Agent Issues was submitted.",
             "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "nbAttachmentNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Application Issues was submitted.",
+            "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
+        }
+    },
+    "nbPaymentProcessingNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review initial premium was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     },
     "nbApplicationNigo": {
         "confirmStep": {
             "title": "Got It!",
-            "subTitle": "Task: Review Agent Issues was submitted.",
+            "subTitle": "Task: Review Application Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "standardDocumentMatching": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Match Document was submitted.",
+            "cta": "Go to qualification",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "nbAgentReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Validate Agent was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "ofacReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review OFAC Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "agentOnboardingNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Onboarding Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "nbToaNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Transfer was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
+    "agentOnboardingReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Validate Onboarding Issues was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
         }
@@ -5149,5 +5253,14 @@
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."
+    },
+    "nbAppDataEntry": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: New Business Data Entry was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     }
 }

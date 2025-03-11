@@ -3,8 +3,12 @@
     "process": "Qualification",
     "carrier": "WELB",
     "taskType": "PURCHASE_DOCUMENT_MATCHING",
-    "formSchema": { "type": "object" },
-    "uiSchema": { "type": "object" },
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
     "schemaContent": {
         "tabSchemas": [
             {
@@ -37,7 +41,12 @@
                                     "type": "object",
                                     "title": "Supporting information",
                                     "properties": {
-                                        "payorName": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "Title",
+                                            "ui:field": "title"
+                                        },
+                                        "lastName": {
                                             "type": "string",
                                             "title": "Title",
                                             "ui:field": "title"
@@ -153,7 +162,7 @@
                             "ui:options": {
                                 "label": false,
                                 "inline": true,
-                                "prefix": "$"
+                                "dataType": "amount"
                             }
                         },
                         "payerDetails": {
@@ -193,7 +202,12 @@
                             "customOptions": [
                                 {
                                     "label": "Enter a case ID",
-                                    "value": "ENTERED"
+                                    "value": "ENTERED",
+                                    "subElement": {
+                                        "label": "Enter a case ID",
+                                        "value": "",
+                                        "url": ""
+                                    }
                                 }
                             ]
                         }
@@ -254,7 +268,12 @@
                                     "type": "object",
                                     "title": "Supporting information",
                                     "properties": {
-                                        "payorName": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "Title",
+                                            "ui:field": "title"
+                                        },
+                                        "lastName": {
                                             "type": "string",
                                             "title": "Title",
                                             "ui:field": "title"
@@ -326,7 +345,7 @@
                             "ui:options": {
                                 "label": false,
                                 "inline": true,
-                                "prefix": "$"
+                                "dataType": "amount"
                             }
                         },
                         "payerDetails": {
@@ -368,13 +387,19 @@
                                 "transferAmount": {
                                     "type": "string",
                                     "title": "Expected transfer amount",
-                                    "default": "${{entity.payment.exchangeReplace.amountRequested}}",
-                                    "ui:field": "subTitle"
+                                    "default": "{{entity.payment.exchangeReplace.amountRequested}}",
+                                    "ui:field": "subTitle",
+                                    "dataType": "amount"
                                 },
                                 "paymentRecordId": {
                                     "type": "string",
                                     "title": "Payment Record Id",
                                     "default": "{{entity.paymentRecordId}}"
+                                },
+                                "sourcePolicyNumber": {
+                                    "type": "string",
+                                    "title": "Surrendering Carrier Contract Number",
+                                    "default": "{{entity.payment.exchangeReplace.sourcePolicyNumber}}"
                                 }
                             }
                         }

@@ -1,31 +1,21 @@
-.container {
-  display: flex;
-  justify-content: center;
-  /* This is to prevent the layout shift when a scrollbar is present */
-  /* when the scrollbar isn't present 100vw and 100% are equal, so calculate when it is present*/
-  padding-left: calc(100vw - 100%);
-}
-
-.content {
-  margin: var(--measure-dimension-gap-lg, 1rem)
-    var(--measure-dimension-gap-md, 0.5rem);
-  min-width: 344px;
-  width: 100%;
+.mainContent {
   background-color: white;
+  /* // TODO: make this a consumer variable */
   padding: var(--measure-dimension-padding-2xl);
   box-shadow: var(--shadow-elevation-elevation-light-sm);
   border-radius: var(--measure-dimension-radius-sm);
+  margin: var(--measure-dimension-margin-sm) 0;
 }
 
-@media (min-width: 768px) {
-  .content {
-    margin: var(--measure-dimension-margin-md, 2rem);
-    padding: var(--measure-dimension-padding-4xl);
+@media (width >= 500px) {
+  .mainContent {
+    margin: var(--measure-dimension-margin-md) 0;
   }
 }
 
-@media (min-width: 500px) {
-  .content {
-    width: 744px;
+@media (width >= 768px) {
+  .mainContent {
+    padding: var(--measure-dimension-padding-4xl);
+    margin: var(--measure-dimension-margin-lg) 0;
   }
 }

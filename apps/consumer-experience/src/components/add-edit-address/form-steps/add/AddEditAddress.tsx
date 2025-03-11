@@ -3,7 +3,6 @@ import { AddressChange } from '@zinnia/api-types/types/bpm';
 import {
   Radio,
   Label,
-  Button,
   Checkbox,
   Icon,
   IconType,
@@ -22,9 +21,10 @@ import { isNumberOrHyphen } from '@/utils/regex';
 import { states } from '@/utils/states';
 
 import styles from './AddEditAddress.module.css';
-import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
-import { FieldStatus } from '../../../field/types';
+import { FieldDataActive } from '@/components/field/data-active/FieldDataActive';
+import { FieldStatus } from '@/components/field/types';
 import { FormActionType } from '../../types';
+import { Button } from '@/components/button/Button';
 
 export interface AddressObj {
   addressVal: string;
@@ -42,6 +42,7 @@ export interface AddEditAddressProps {
   values?: AddressFormFields;
   actionType?: FormActionType;
   cancelCallback?: () => void;
+  correlationId?: string;
   submitCallback?: (
     val: AddressFormFields,
     dirtyFields: AddressFormFields
@@ -59,6 +60,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
   removeCallback,
   actionType,
   disableEditingPreferredAddress,
+  correlationId,
 }) => {
   const {
     control,
@@ -283,7 +285,9 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
       </div>
 
       <div className={styles.buttonContainer}>
-        <Button type="submit">{buttonText}</Button>
+        <Button type="submit" correlationId={correlationId}>
+          {buttonText}
+        </Button>
         {actionType === FormActionType.EDIT && (
           <Button
             onClick={removeCallback}
@@ -293,7 +297,12 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             Remove address
           </Button>
         )}
-        <Button onClick={handleCancel} className={styles.cancel} mode="link">
+        <Button
+          onClick={handleCancel}
+          className={styles.cancel}
+          mode="link"
+          additionalContext="add edit address"
+        >
           Cancel
         </Button>
       </div>

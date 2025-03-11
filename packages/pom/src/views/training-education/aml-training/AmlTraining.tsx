@@ -1,7 +1,9 @@
-import { Button } from '@zinnia/bloom/components';
 import { generateAmlTraining, generateTableRows } from '../__mocks';
 import type { AmlTrainingItem } from '../../../types/training-education.types';
 import PomTable from '../../../components/pom-table/PomTable';
+import { AmlTrainingSidesheet } from './AmlTrainingSidesheet';
+import { default as PomStyles } from '../../../styles/pom.module.css';
+import clsx from 'clsx';
 const amlTrainingData = generateAmlTraining(1);
 
 const tableHeaders = {
@@ -14,11 +16,14 @@ const tableHeaders = {
 };
 
 const tableRows = (data: AmlTrainingItem[]) =>
-  generateTableRows(data, (training) => ({
+  generateTableRows(data, training => ({
     carrier: (
-      <Button size="small" mode="link">
-        {training.carrier}
-      </Button>
+      <AmlTrainingSidesheet
+        trigger={
+          <span className={clsx(PomStyles.cta)}>{training.carrier}</span>
+        }
+        amlTraining={training}
+      />
     ),
     vendor: training.vendor,
     courseNumber: training.courseNumber,
