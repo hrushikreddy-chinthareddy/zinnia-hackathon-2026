@@ -32,18 +32,10 @@ export function GlcoSSWForm({ planCode }: GlcoSSWFormProps) {
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
         w4pSignaturesConfig,
-        jointCoveredPlanCodes
+        jointCoveredPlanCodes,
     } = getGlcoConfig(t);
-    const {
-        formParty,
-        formTpaAuthorization,
-        setFormValidator,
-        formData,
-        setFormData,
-        initialForm,
-        isFormStateReadOnly,
-        contractIssueState,
-    } = useContext(FormDataContext);
+    const { formTpaAuthorization, setFormValidator, formData, setFormData, initialForm, isFormStateReadOnly, contractIssueState } =
+        useContext(FormDataContext);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
