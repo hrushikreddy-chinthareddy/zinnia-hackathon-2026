@@ -121,6 +121,7 @@ export const PremiumsSubPage = () => {
                         paymentType: t('paymentType.premium'),
                     }) || undefined
                 }
+                requestSubTypes={["Systematic Program Setup", "Systematic Program Update"]}
             />
 
             {!isTerm && !isAnnuity && (

@@ -85,6 +85,7 @@ export interface CaseSearchBody {
     caseIds?: string[];
     caseResultDetail?: string;
     caseResult?: string;
+    requestSubType?: string[];
 }
 
 export interface GeneralSearchResponse {

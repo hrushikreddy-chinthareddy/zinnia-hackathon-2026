@@ -37,4 +37,5 @@ export type UpcomingPaymentCardProps = {
     oneTimePaymentText?: string;
     startLoanText?: string;
     footerLinks: FooterContent[];
+    requestSubTypes?: string[];
 } & ClassNameProps;

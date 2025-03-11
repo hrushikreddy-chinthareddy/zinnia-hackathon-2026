@@ -4566,6 +4566,10 @@
         "payment": {
             "label": "Paiement"
         },
+        "pendingBanner": {
+            "caseLinkText": "aller au dossier",
+            "text": "Une mise à jour des détails de paiement automatique de cette police est en attente. Pour plus d'informations, "
+        },
         "summary": {
             "amount": "Montant",
             "current": "Actuel",
