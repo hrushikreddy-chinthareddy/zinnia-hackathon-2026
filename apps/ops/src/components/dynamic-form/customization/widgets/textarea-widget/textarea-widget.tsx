@@ -1,5 +1,4 @@
 import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { Label } from '@zinnia/bloom/components';
 
 import { csrApiHelper } from '@deps/helpers/csr-api-helper';
 import { ApiProps, ApiResponseTypes } from '@deps/models/case/task';
@@ -11,7 +10,7 @@ export type TextareaWidgetProps<T, S extends StrictRJSFSchema = RJSFSchema, F ex
 function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     props: TextareaWidgetProps<T, S, F>
 ) {
-    const { id, value, label, disabled, onChange, uiSchema, formContext, placeholder } = props;
+    const { id, value, disabled, onChange, uiSchema, formContext, placeholder } = props;
     const { props: uiProps } = getUiOptions<T, S, F>(uiSchema);
     const apiProps = typeof uiProps === 'object' ? (uiProps as ApiProps) : ({} as ApiProps);
 
@@ -29,11 +28,7 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 
     return (
         <div className={styles.container}>
-            {label && (
-                <div className="mb-2">
-                    <Label labelFor={id}>{label}</Label>
-                </div>
-            )}
+
             <textarea
                 id={id}
                 className={styles.textarea}
