@@ -5,7 +5,6 @@ import { CarrierPicker } from '@/components/carrier-picker/CarrierPicker';
 import { CarrierPickerCookieOnly } from '@/components/carrier-picker/CarrierPickerCookieOnly';
 import { CoverageCard } from '@/components/coverage-card/CoverageCard';
 import { Footer } from '@/components/footer/Footer';
-import { HeaderBreadcrumb } from '@/components/header-breadcrumb/HeaderBreadcrumb';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
@@ -42,7 +41,7 @@ export default async function Page({
   if (error || policyReferenceData?.length === 0) {
     return (
       <>
-        <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
+        <h1 className="typography-desktop-headline-1d">Coverage</h1>
         <div className="card-container">
           <MockMessage />
           <NoDataAvailable
@@ -57,7 +56,7 @@ export default async function Page({
   if (showPicker && policyReferenceData) {
     return (
       <div className="container">
-        <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
+        <h1 className="typography-desktop-headline-1d">Coverage</h1>
         <div className="card-container">
           <p className="typography-content-body-sm">
             Select a policy below to get started.
@@ -78,7 +77,7 @@ export default async function Page({
 
   return (
     <div className="container">
-      <HeaderBreadcrumb title={pageTitle} preventReturnToPrevious />
+      <h1 className="typography-desktop-headline-1d">Coverage</h1>
       <div className="card-container" style={{ paddingLeft: 0 }}>
         {policyReferenceData?.map(p => {
           return <CoverageCard key={p.policyNumber} policy={p} />;

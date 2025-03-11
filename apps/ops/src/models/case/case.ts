@@ -52,6 +52,8 @@ export type Case = {
     tasks: TaskInstance[];
     templateId: string;
     updatedAt: string;
+    caseResult?: string;
+    caseResultDetail?: string;
 };
 
 // Case Type and a Case's Process are the same
@@ -103,6 +105,8 @@ export enum Statuses {
     New = 'NEW',
     Overridden = 'OVERRIDDEN',
     Withdrawn = 'WITHDRAWN',
+    Inprogress = 'INPROGRESS',
+    Pending = 'IMPEDED',
 }
 
 export interface StatCount {

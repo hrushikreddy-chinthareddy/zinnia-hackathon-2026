@@ -45,7 +45,6 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                 <StartStep
                     parentPage={ParentPage.Loans}
                     policy={policy}
-                    // TODO MG: ticket says should be SSW but confirm
                     processType={Processes.SSW}
                     setState={setLoanPayment as StartStepSetState}
                     state={loanPayment}
@@ -81,7 +80,6 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                     policy={policy}
                     setState={setLoanPayment as PaymentStepSetState}
                     state={loanPayment}
-                    subtitle={t('payment.title') as string}
                     validateTransaction={validateCall}
                 />
             ),

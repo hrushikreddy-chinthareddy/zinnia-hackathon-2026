@@ -3608,6 +3608,7 @@ export interface Fund {
     fundSegments?: FundSegment[];
     /** This is a carrier assigned General Ledger code used for accounting purpose */
     generalLedgerFundCode?: string;
+    interestGuaranteedPeriod?: number;
     /** TBD */
     totalFundValue?: number;
 }

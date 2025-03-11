@@ -17,7 +17,7 @@ type DynamicFormProps = {
     taskMetadata: FormMetadata;
     readonly?: boolean;
     formButtons?: any;
-    formContext?: { customData: any; setCustomData: (data: any) => void };
+    formContext?: { customData: any; setCustomData: (data: any) => void; onCancel?: () => void; updateSchema?: (data: any) => void };
 };
 
 const DynamicForm = React.forwardRef(function DynamicFormComponent(

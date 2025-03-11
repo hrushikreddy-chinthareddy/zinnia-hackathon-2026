@@ -1,1 +1,1 @@
-export * from './Pom';
+export * from './app';

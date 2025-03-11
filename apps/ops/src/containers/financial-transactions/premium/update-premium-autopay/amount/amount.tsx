@@ -1,3 +1,4 @@
+import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
@@ -28,7 +29,12 @@ export type AmountType = {
 
 type Errors = {
     effectiveDate?: string;
+    frequency?: string;
     paymentAmount?: string;
+};
+
+export type ReverseInitiatorType = {
+    reverseInitiator: boolean;
 };
 
 const Amount = ({ policy }: AmountProps) => {
@@ -71,13 +77,17 @@ const Amount = ({ policy }: AmountProps) => {
         setErrors(remainingErrors);
     };
 
-    const validateFields = (effectiveDate: string, paymentAmount: string) => {
+    const validateFields = (effectiveDate: string, frequency: Frequency, paymentAmount: string) => {
         let errors: Errors = {};
 
         if (isNullEmptyOrUndefined(effectiveDate)) {
             errors = { ...errors, effectiveDate: `${t('missingDateError')}` };
         } else if (!dayjs(effectiveDate, NUMERIC_DATE_FORMAT).isValid()) {
             errors = { ...errors, effectiveDate: `${t('invalidDateError')}` };
+        }
+
+        if (!frequency) {
+            errors = { ...errors, frequency: `${t('missingFrequencyError')}` };
         }
 
         if (isNullEmptyOrUndefined(paymentAmount)) {
@@ -93,7 +103,7 @@ const Amount = ({ policy }: AmountProps) => {
 
     // TODO MG: why is this async?
     const handleContinue = async () => {
-        if (validateFields(autopay.effectiveDate, String(autopay.paymentAmount))) {
+        if (validateFields(autopay.effectiveDate, autopay.frequency, String(autopay.paymentAmount))) {
             goToNext();
         } else return;
     };
@@ -144,10 +154,10 @@ const Amount = ({ policy }: AmountProps) => {
                 <Radio
                     label={`${t('paymentFrequency')}`}
                     items={items}
-                    required={false}
                     value={String(autopay.frequency)}
                     onChange={handleFrequencyChange}
                 />
+                {errors.frequency && <AssistiveText text={errors.frequency} variant={AssistiveTextVariant.Error} />}
 
                 <FieldDateSelect
                     data-testid={t('nextPaymentDate') as string}

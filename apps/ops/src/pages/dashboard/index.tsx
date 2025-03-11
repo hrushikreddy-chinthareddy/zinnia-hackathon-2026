@@ -3,28 +3,30 @@ import { TabContent } from '@zinnia/bloom/components';
 import { FgaRoles } from '@zinnia/utils';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 import { DashboardTabNav, DashboardTabs } from '@deps/components/dashboard/dashboard-nav-links';
-import FiltersHeader from '@deps/components/dashboard/filters-header/filters-header';
+import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { ActiveApplications } from '@deps/containers/dashboard/active-applications/active-applications';
+import { ClosedTransactions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
-import { IssuedBusiness } from '@deps/containers/dashboard/issued-business/issued-business';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardResponseData, fetchAgentsSSR } from '@deps/queries/api/dashboard';
-import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
+import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { FgaRelation } from '@deps/types/fga';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
+import styles from './Dashboard.module.css';
 export interface CarrierListItem {
     [key: string]: string;
 }
@@ -43,10 +45,8 @@ const DashboardPage = ({
         entry: carrierHeaderEntry,
     } = useIntersectionObserver({
         threshold: 0,
-        rootMargin: `${-64}px 0px -100% 0px`,
+        rootMargin: `${0}px 0px -100% 0px`,
     });
-
-    const [loading, setLoading] = useState<boolean>(false);
 
     return (
         <>
@@ -59,15 +59,14 @@ const DashboardPage = ({
                         authorizedCarriers={authorizedCarriers}
                         brokerDealersSSR={brokerDealersSSR}
                         ref={carrierHeaderRef}
-                        loading={loading}
                     />
                     <DashboardTabNav>
-                        <div ref={tabContentRef}>
+                        <div ref={tabContentRef} className={styles.tabContent}>
                             <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
-                                <ActiveApplications carrierHeaderRef={carrierHeaderRef} authorizedCarriers={authorizedCarriers} />
+                                <ActiveApplications />
                             </TabContent>
-                            <TabContent value={DashboardTabs.ISSUED_BUSINESS}>
-                                <IssuedBusiness authorizedCarriers={authorizedCarriers} />
+                            <TabContent value={DashboardTabs.CLOSED_TRANSACTIONS}>
+                                <ClosedTransactions />
                             </TabContent>
                         </div>
                     </DashboardTabNav>
@@ -97,12 +96,7 @@ export const getServerSideProps = withPageAuthRequired({
         }
 
         const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
-        const doesUserHavePagePermission = await checkTupleSsr(
-            `${accessToken}`,
-            user.partyId,
-            FgaRelation.UiAccess,
-            FgaRoles.CASE_STATS_DASHBOARD_ENTITY
-        );
+        const doesUserHavePagePermission = await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.CASE_STATS_DASHBOARD_ENTITY);
         if (!doesUserHavePagePermission || !featureFlagDecisions['case-management-case_stats_dashboard']) {
             return {
                 redirect: {
@@ -124,7 +118,7 @@ export const getServerSideProps = withPageAuthRequired({
             brokerDealer => brokerDealer.name !== 'NOT_APPLICABLE' && brokerDealer.name !== ''
         );
 
-        const authorizedCarriers = await getCarrierListServerSSR(accessToken || '', user.partyId, UserPermission.AllowReadCaseManagement);
+        const authorizedCarriers = await listCarriersPage(context, UserPermission.AllowReadCaseManagement);
 
         return {
             props: {

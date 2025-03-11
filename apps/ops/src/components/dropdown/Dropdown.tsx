@@ -1,6 +1,7 @@
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Icon, IconType } from '@zinnia/bloom/components';
+
 import styles from './Dropdown.module.css';
 interface DropdownOption {
   label: string;

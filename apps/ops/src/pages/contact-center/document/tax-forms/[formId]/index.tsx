@@ -4,10 +4,11 @@ import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
+import PageLoader from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserPermission } from '@deps/models/user-profile';
@@ -16,7 +17,6 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-import PageLoader from '@deps/components/page-loader/page-loader';
 
 interface FormViewerProps extends SegmentTrackedPageProps {
     formId: number;
@@ -26,6 +26,7 @@ interface FormViewerProps extends SegmentTrackedPageProps {
     taxYear: string;
 }
 
+// NOTE!  This FormViewer is now shared between Policy Management and Contact Center.  If substantial changes are made to this page, they should be made to both places
 const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear }: FormViewerProps) => {
     const [pdf, setPdf] = useState<string | null>(null);
     const [pdfError, setPdfError] = useState<boolean>(false);
@@ -44,6 +45,7 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear 
                     { contractNumber, clientCode: carrierCode, fChar, taxYear },
                     featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]
                 );
+
                 if (response?.binaryData) {
                     setPdf(response?.binaryData);
                 } else {
@@ -70,8 +72,8 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear 
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    width: '100%',
-                    height: '100%',
+                    width: '100vw',
+                    height: '100vh',
                     border: 'none',
                 }}
             />
@@ -81,11 +83,9 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear 
 
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, params, res, req } = context;
-        let accessToken;
         try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
+            (await getAccessToken(req, res)).accessToken;
         } catch (e) {
             logWarn('documents:: Access token expired', {
                 ...parseErrorInformation(e),
@@ -95,11 +95,7 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
 
-        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
-            accessToken,
-            user,
-            UserPermission.AllowReadCaseManagement
-        );
+        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
         if (!hasPermissionToReadCaseManagement) {
             return {
                 redirect: {

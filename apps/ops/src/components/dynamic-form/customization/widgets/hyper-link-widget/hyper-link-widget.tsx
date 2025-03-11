@@ -2,14 +2,18 @@ import { getUiOptions, UiSchema, WidgetProps } from '@rjsf/utils';
 import router from 'next/router';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/actions/external-link.svg';
 
 const HyperLinkWidget = (props: WidgetProps) => {
-    const { value, disabled, label, uiSchema } = props;
+    const { value, disabled, label, uiSchema, formContext } = props;
+
+    const defaultValue = replacePlaceholders(value, { ...formContext }) || value;
+    const defaultLabel = replacePlaceholders(label, { ...formContext }) || label;
 
     const uiOptions = getUiOptions(uiSchema as UiSchema);
 
-    return <HyperLink type={uiOptions.type} label={label} value={value} disabled={disabled} />;
+    return <HyperLink type={uiOptions.type} label={defaultLabel} value={defaultValue} disabled={disabled} />;
 };
 
 export default HyperLinkWidget;
@@ -34,7 +38,7 @@ export const HyperLink = ({ title, label, value, type, disabled, className }: Hy
 
             {type === 'link' ? (
                 <NavElement
-                    className="text-left underline underline-offset-2"
+                    className="text-left font-semibold"
                     size={NavElementSize.Small}
                     title={label}
                     type={NavElementType.Link}
@@ -43,16 +47,14 @@ export const HyperLink = ({ title, label, value, type, disabled, className }: Hy
                     isNewPage={true}
                     target="_blank"
                     disabled={disabled}
+                    startIcon={<TrashDocumentIcon width={20} height={20} />}
                 >
-                    <div className="flex gap-2">
-                        {label}
-                        <TrashDocumentIcon width={20} height={20} />
-                    </div>
+                    {label}
                 </NavElement>
             ) : (
                 <div className="">
                     <NavElement
-                        className="text-left underline underline-offset-2"
+                        className="text-left font-semibold underline underline-offset-2"
                         size={NavElementSize.Small}
                         title={label}
                         type={NavElementType.Link}

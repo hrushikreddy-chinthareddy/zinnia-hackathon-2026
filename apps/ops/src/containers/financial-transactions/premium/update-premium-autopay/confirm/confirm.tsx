@@ -57,7 +57,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         const response = await submitSystematicProgramUpdate(product?.planCode, policyNumber, arrangementId, {
             caseId: caseId || '',
             correlationId: uuidV4(),
-            effectiveDate: dayjs(new Date()).format(ZAHARA_API_DATE_FORMAT),
+            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
             reverseInitiator: reverseInitiator,
             systematicProgram: {
                 amount: Number(paymentAmount),
@@ -66,7 +66,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 amountType: AmountType.AMOUNT,
                 frequency,
                 startDate: effectiveDateFormatted,
-                endDate: systematicProgram?.endDate,
+                endDate: systematicProgram?.endDate || dayjs().add(25, 'year').format(ZAHARA_API_DATE_FORMAT),
                 previousProgramDate: systematicProgram?.previousProgramDate,
                 nextProgramDate: effectiveDateFormatted,
                 party: {

@@ -27,8 +27,8 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
-import { checkTupleSsr } from '@deps/queries/api/fga';
 import { searchPolicy } from '@deps/queries/api/policies';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { isResetQueryParam } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { FgaRelation } from '@deps/types/fga';
@@ -37,8 +37,6 @@ import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, Segment
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-
-import styles from './index.module.css';
 
 const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
     {
@@ -129,9 +127,13 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
 
                 const disableAnnuities = !featureFlags[FEATURE_FLAGS.POLICY_MANAGEMENT_ANNUITIES_ENABLED];
 
+                const transformedValue = Object.fromEntries(
+                    Object.entries(value).map(([key, val]) => (key === 'ssn' ? [key, val?.replaceAll('-', '')] : [key, val]))
+                );
+
                 const response = await searchPolicy(
                     {
-                        ...value,
+                        ...transformedValue,
                         ...(disableAnnuities ? { lineOfBusiness: 'LIFE' } : {}),
                     },
                     { limit, offset }
@@ -200,7 +202,8 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
             }
         });
 
-        const hasSearchValue = value && !!Object.keys(value).length;
+        const hasSearchValue = value && !!Object.keys(value).length && !(value.ssn && !/\d/.test(value.ssn));
+
         // Show the field error message if the search button is clicked and nothing have been entered into the field
         if (!hasSearchValue) {
             setShowFieldErrorMessage(true);
@@ -219,7 +222,10 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         // initial value of polichSearchFilters.searchValue is `{}`
         // if any keys are present then this will return true
         // we then know we are returning from a search
-        const searchValueIsSet = !!Object.keys(policySearchFilters.searchValue).length;
+
+        const searchValueIsSet =
+            !!Object.keys(policySearchFilters.searchValue).length &&
+            !(policySearchFilters.searchValue.ssn && !/\d/.test(policySearchFilters.searchValue.ssn));
 
         // don't fetch search results on initial page load. Wait until the Search button is clicked
         // unless
@@ -268,7 +274,6 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                             setIsIdle(true);
                             clearPolicySearchFilters();
                         }}
-                        className={styles.searchBar}
                     />
                 </div>
 
@@ -303,9 +308,8 @@ export const getServerSideProps = withPageAuthRequired({
         // Get the user object from the Auth0 Session
         const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, res, req } = context;
-        let accessToken;
         try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
+            (await getAccessToken(req, res)).accessToken;
         } catch (e) {
             logWarn('policies/index:: Access token expired', {
                 ...parseErrorInformation(e),
@@ -315,8 +319,8 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
         // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadPolicyAdmin);
-        const isAdvisorsExcel = await checkTupleSsr(accessToken as string, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
+        const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE);
 
         if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
             return {

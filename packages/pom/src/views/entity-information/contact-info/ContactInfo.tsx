@@ -2,7 +2,7 @@ import { Address, Label } from '@zinnia/bloom/components';
 import { clsx } from 'clsx';
 
 import { default as styles } from './ContactInfo.module.css';
-import { ProducerType } from '../../../types/types';
+import { ProducerType } from '../../../types';
 
 export const ContactInfo = ({
   producerType,

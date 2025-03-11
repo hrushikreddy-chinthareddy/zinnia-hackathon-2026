@@ -3,7 +3,7 @@ import { TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, DigitalFormData, DigitalFormWithdrawal } from '@deps/models/case/withdrawal/case';
 import { getDigitalFormSSR } from '@deps/queries/api/integration';
 import { createTaskSSR, getCaseTaskByIdSSR, searchTaskSSR } from '@deps/queries/api/v2/task';
-import { logError, logInfo, logTrace, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { mapTaskToActiveWithdrawalCaseTask } from './helpers';
 
@@ -49,7 +49,7 @@ export const initializeWithdrawalTaskSSR = async ({
         if (taskId) {
             activeForm = await getCaseTaskByIdSSR(taskId, accessToken);
             if (activeForm) {
-                logTrace('initializeTaskV2::getCaseTaskByIdSSR task active form found', loggingContext);
+                logInfo('initializeTaskV2::getCaseTaskByIdSSR task active form found', loggingContext);
                 if (action === 'readonly' || activeForm.status === TaskStatus.New) {
                     return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                 }
@@ -63,13 +63,13 @@ export const initializeWithdrawalTaskSSR = async ({
             if (task) {
                 activeForm = await getCaseTaskByIdSSR(task.id, accessToken);
                 if (activeForm) {
-                    logTrace('initializeTaskV2::active form found', loggingContext);
+                    logInfo('initializeTaskV2::active form found', loggingContext);
                     return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                 }
             }
         }
 
-        logTrace('initializeTaskV2::no active form', loggingContext);
+        logInfo('initializeTaskV2::no active form', loggingContext);
         const digitalForm: DigitalFormWithdrawal | null = await getDigitalFormSSR(accessToken, {
             contractNumber,
             clientCode: clientId.toUpperCase(),
@@ -78,13 +78,13 @@ export const initializeWithdrawalTaskSSR = async ({
         });
 
         if (!digitalForm) {
-            logWarn('initializeTaskV2::no digital form', loggingContext);
+            logInfo('initializeTaskV2::no digital form', loggingContext);
             throw new Error(`initializeTaskV2::Unsuccessful digital form creation for task type ${taskType}`);
         }
         digitalForm.data.documentNumber = documentNumber;
         digitalForm.data.onbaseCaseId = caseId;
 
-        logTrace('initializeTaskV2::postCaseTasksSSR', loggingContext);
+        logInfo('initializeTaskV2::postCaseTasksSSR', loggingContext);
         const body: CreateTaskBody<TaskStatus, DigitalFormData>  = {
             source: TaskSource.ZinniaTaskManagement,
             taskType,
@@ -94,7 +94,7 @@ export const initializeWithdrawalTaskSSR = async ({
 
         const caseForm = await createTaskSSR<DigitalFormData>(caseId, accessToken, body);
         if (!caseForm) {
-            logWarn('initializeTaskV2::no case form', loggingContext);
+            logInfo('initializeTaskV2::no case form', loggingContext);
             throw new Error(`initializeTaskV2::Unsuccessful postCaseTasksSSR response for ${taskType}`);
         }
         return mapTaskToActiveWithdrawalCaseTask(caseForm, { ...caseForm?.data, userId });
@@ -133,7 +133,7 @@ export const initializeOTPTaskSSR = async ({
         contractNumber,
         documentNumber,
         file: 'queries/api/cases',
-        function: 'initializeTaskV2',
+        function: 'initializeOTPTaskSSR',
         taskType,
         taskId,
         action,
@@ -148,8 +148,9 @@ export const initializeOTPTaskSSR = async ({
         if (taskId) {
             activeForm = await getCaseTaskByIdSSR(taskId, accessToken);
             if (activeForm) {
-                logTrace('initializeTaskV2::getCaseTaskByIdSSR task active form found', loggingContext);
+                logInfo('initializeTaskV2::getCaseTaskByIdSSR task active form found', loggingContext);
                 if (action === 'readonly' || (activeForm.status === TaskStatus.New || activeForm.status === TaskStatus.InProgress)) {
+                    logInfo('initializeTaskV2::getCaseTaskByIdSSR returining task', { ...loggingContext, taskStatus: activeForm?.status } );
                     return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                 }
             }
@@ -164,18 +165,18 @@ export const initializeOTPTaskSSR = async ({
                 activeForm = await getCaseTaskByIdSSR(task.id, accessToken);
                 if (activeForm) {
                     if (activeForm.status === TaskStatus.New || activeForm.status === TaskStatus.InProgress) {
-                        logTrace('initializeTaskV2::active form found', loggingContext);
+                        logInfo('initializeTaskV2::active form found', { ...loggingContext, taskId: task.id, taskStatus: activeForm?.status });
                         return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                     }
                     if (activeForm.status === TaskStatus.Completed && getLastSaved) {
-                        logTrace('initializeTaskV2::completed form found', loggingContext);
+                        logInfo('initializeTaskV2::completed form found', { ...loggingContext, taskId: task.id, taskStatus: activeForm?.status });
                         completedForm = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                     }
                 }
             }
         }
 
-        logTrace('initializeTaskV2::no active form', loggingContext);
+        logInfo('initializeTaskV2::Active task not present', loggingContext);
         const digitalForm: DigitalFormWithdrawal | null = await getDigitalFormSSR(accessToken, {
             contractNumber,
             clientCode: clientId.toUpperCase(),
@@ -184,16 +185,17 @@ export const initializeOTPTaskSSR = async ({
         });
 
         if (!digitalForm) {
-            logWarn('initializeTaskV2::no digital form', loggingContext);
+            logInfo('initializeTaskV2::Digital form not found', loggingContext);
             throw new Error(`initializeTaskV2::Unsuccessful digital form creation for task type ${taskType}`);
         }
+        logInfo('initializeTaskV2::Digital form data found', { ...loggingContext, documentNumber, caseId });
         digitalForm.data.documentNumber = documentNumber;
         digitalForm.data.onbaseCaseId = caseId;
         if (getLastSaved && completedForm) {
-            logTrace('initializeTaskV2::completed form populated under new task', {getLastSaved});
+            logInfo('initializeTaskV2::completed form populated under new task', {...loggingContext, getLastSaved, documentNumber, caseId });
             digitalForm.data.formRequest = { ...completedForm.data.formRequest};
         }
-        logTrace('initializeTaskV2::postCaseTasksSSR', loggingContext);
+        logInfo('initializeTaskV2::creating a task', loggingContext);
         const body: CreateTaskBody<TaskStatus, DigitalFormData>  = {
             source: TaskSource.ZinniaTaskManagement,
             taskType,
@@ -202,12 +204,13 @@ export const initializeOTPTaskSSR = async ({
         };
         const caseForm = await createTaskSSR<DigitalFormData>(caseId, accessToken, body);
         if (!caseForm) {
-            logWarn('initializeTaskV2::no case form', loggingContext);
+            logInfo('initializeTaskV2::Failed to create a task', loggingContext);
             throw new Error(`initializeTaskV2::Unsuccessful postCaseTasksSSR response for ${taskType}`);
         }
+        logInfo('initializeTaskV2::Created task successfully', loggingContext);
         return mapTaskToActiveWithdrawalCaseTask(caseForm, { ...caseForm?.data, userId });
     } catch (e) {
-        logError('initializeTaskV2', { ...parseErrorInformation(e), ...loggingContext });
+        logError('initializeTaskV2::error', { ...parseErrorInformation(e), ...loggingContext });
         return null;
     }
 };

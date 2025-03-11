@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { UserPermission } from '@deps/models/user-profile';
 import Error from '@deps/pages/404s';
@@ -18,12 +18,9 @@ const CatchAllPage = () => {
 
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async context => {
-        // Get the user object from the Auth0 Session
-        const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, req, res } = context;
-        let accessToken;
         try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
+            (await getAccessToken(req, res)).accessToken;
         } catch (e) {
             logWarn('pages/[...lng]:: Access token expired', {
                 ...parseErrorInformation(e),
@@ -42,8 +39,11 @@ export const getServerSideProps = withPageAuthRequired({
         };
 
         // We can use the enum to access the permissions object.
-        permissions[UserPermission.AllowReadCaseManagement] = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadCaseManagement);
-        permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadPolicyAdmin);
+        permissions[UserPermission.AllowReadCaseManagement] = await doesUserHavePagePermissions(
+            context,
+            UserPermission.AllowReadCaseManagement
+        );
+        permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
 
         const translations = await serverSideTranslations(
             locale,

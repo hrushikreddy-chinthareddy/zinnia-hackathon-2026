@@ -26,6 +26,7 @@ export enum TaskLabel {
 }
 
 export type TaskInstance = {
+    taskName?: string;
     additionalData: AdditionalDataInstance;
     assignee: string;
     createdAt: string;
@@ -111,3 +112,30 @@ export type AssignedTask<T = TaskStatus> = {
     updatedAt: string;
     identifiers: IdentifierInstance[];
 };
+
+export type DocumentData = {
+    documentId?: string;
+    displayName?: string;
+    documentSource?: string;
+    fileType?: string;
+    documentName?: string;
+    documentNumber?: string;
+    documentID?: string;
+    sourceFileName?: string;
+};
+
+export interface TaskSideSheetProps {
+    taskId: string;
+    type?: string;
+    taskDescription?: string;
+    taskName?: string;
+}
+
+export interface TaskQueueDrawerProps {
+    onClose: () => void;
+    getTasks?: () => void;
+    taskStatus: TaskStatus;
+    taskId: string;
+    taskDescription?: string;
+    taskName?: string;
+}

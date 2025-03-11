@@ -11,24 +11,22 @@ import { checkEligibilityLoanRepaymentOneTime, TransactionResponseStatus } from 
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 
-export interface PolicyLoanPaymentProps {
+export interface LoanPaymentOneTimeProps {
     policy: Policy;
 }
 
-const LoanPayment = ({ policy }: PolicyLoanPaymentProps) => {
+const LoanPaymentOneTime = ({ policy }: LoanPaymentOneTimeProps) => {
     const { featureFlags } = useOptimizely();
     const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
 
     useEffect(() => {
         const checkEligibility = async () => {
-
             if (!loanPaymentEnabled) {
                 router.push(`/403`);
 
                 return;
             }
-
-            const eligibilityCheck = await checkEligibilityLoanRepaymentOneTime(policy.product?.planCode, policy.policyNumber);
+            const eligibilityCheck = await checkEligibilityLoanRepaymentOneTime(policy.product?.planCode, policy.policyNumber, policy.loanValues?.totalLoanBalance);
 
             if (eligibilityCheck.status === TransactionResponseStatus.Failure) {
                 router.push(`/403`);
@@ -37,7 +35,7 @@ const LoanPayment = ({ policy }: PolicyLoanPaymentProps) => {
             }
         };
         checkEligibility();
-    }, [loanPaymentEnabled, policy.policyNumber, policy.product?.planCode]);
+    }, [loanPaymentEnabled, policy.loanValues?.totalLoanBalance, policy.policyNumber, policy.product?.planCode]);
 
     return (
         <LoanPaymentProvider>
@@ -53,4 +51,4 @@ export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: getServerSidePropsPolicyDetailsPage,
 });
 
-export default LoanPayment;
+export default LoanPaymentOneTime;

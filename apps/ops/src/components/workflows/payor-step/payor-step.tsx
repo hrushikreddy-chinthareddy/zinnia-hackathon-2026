@@ -107,7 +107,7 @@ const PayorStep = ({ parentPage, policy, setState, state }: PayorStepProps) => {
         >
             <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-4">
-                    <Label label={t('workflows.payorStep.subLabel')} sentenceCase={false} variant={LabelVariant.FieldLabel} />
+                    <Label label={t('workflows.payorStep.subLabel')} sentenceCase={false} variant={LabelVariant.LabelLg} />
                     <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3">
                         {eligiblePayors?.map(eligiblePayor => {
                             const payorFullName = buildFullNameFromParty(eligiblePayor);

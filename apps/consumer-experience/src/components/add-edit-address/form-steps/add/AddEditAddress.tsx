@@ -3,11 +3,9 @@ import { AddressChange } from '@zinnia/api-types/types/bpm';
 import {
   Radio,
   Label,
-  Button,
   Checkbox,
   Icon,
   IconType,
-  Select,
 } from '@zinnia/bloom/components';
 import { FC } from 'react';
 import {
@@ -17,14 +15,16 @@ import {
   useForm,
 } from 'react-hook-form';
 
+import { SelectResponsive } from '@/components/select-responsive/SelectResponsive';
 import { getDirtyValues } from '@/utils/forms';
 import { isNumberOrHyphen } from '@/utils/regex';
 import { states } from '@/utils/states';
 
 import styles from './AddEditAddress.module.css';
-import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
-import { FieldStatus } from '../../../field/types';
+import { FieldDataActive } from '@/components/field/data-active/FieldDataActive';
+import { FieldStatus } from '@/components/field/types';
 import { FormActionType } from '../../types';
+import { Button } from '@/components/button/Button';
 
 export interface AddressObj {
   addressVal: string;
@@ -42,6 +42,7 @@ export interface AddEditAddressProps {
   values?: AddressFormFields;
   actionType?: FormActionType;
   cancelCallback?: () => void;
+  correlationId?: string;
   submitCallback?: (
     val: AddressFormFields,
     dirtyFields: AddressFormFields
@@ -59,6 +60,7 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
   removeCallback,
   actionType,
   disableEditingPreferredAddress,
+  correlationId,
 }) => {
   const {
     control,
@@ -209,17 +211,13 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
               <div className={styles.state}>
                 {/* TODO: Remove label and add to prop when bloom updates */}
                 <Label labelFor="select-state">State</Label>
-                <Select
+                <SelectResponsive
                   id="select-state"
-                  onValueChange={field.onChange}
+                  onChange={field.onChange}
                   options={states}
                   defaultValue={defaultValues?.state}
                   errorMessage={errors.state?.message}
-                  contentClassName={styles.selectContent}
                   fieldSize="small"
-                  fieldStatus={
-                    errors.state ? FieldStatus.ERROR : FieldStatus.DEFAULT
-                  }
                 />
               </div>
             )}
@@ -287,7 +285,9 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
       </div>
 
       <div className={styles.buttonContainer}>
-        <Button type="submit">{buttonText}</Button>
+        <Button type="submit" correlationId={correlationId}>
+          {buttonText}
+        </Button>
         {actionType === FormActionType.EDIT && (
           <Button
             onClick={removeCallback}
@@ -297,7 +297,12 @@ export const AddEditAddress: FC<AddEditAddressProps> = ({
             Remove address
           </Button>
         )}
-        <Button onClick={handleCancel} className={styles.cancel} mode="link">
+        <Button
+          onClick={handleCancel}
+          className={styles.cancel}
+          mode="link"
+          additionalContext="add edit address"
+        >
           Cancel
         </Button>
       </div>

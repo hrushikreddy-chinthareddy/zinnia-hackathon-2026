@@ -1,6 +1,7 @@
 import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
+import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
     BankingFields,
     DisbursementFields,
@@ -81,8 +82,8 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
             value: FormDisbursementSelections.EFT,
             fields: [
                 {
-                    fieldLabel: t('distributionMethod.chooseTheBank'),
                     fieldName: BankingFields.Bank,
+                    fieldLabel: t('distributionMethod.chooseTheBank'),
                     component: DisbursementFields.SelectBank,
                 },
                 {
@@ -126,8 +127,8 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                     fieldLabel: t('distributionMethod.bankRoutingNumber'),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
-                    classNames: 'col-start-1',
                     maskOnBlur: true,
+                    classNames: 'col-start-1',
                     disableCopyPaste: true,
                 },
                 {
@@ -142,8 +143,13 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                     fieldName: BankingFields.BankName,
                     fieldLabel: t('distributionMethod.bankName'),
                     component: DisbursementFields.BankTextField,
-                    isBankingField: true,
                     classNames: 'col-start-1',
+                    isBankingField: true,
+                },
+                {
+                    fieldName: BankingFields.AccountHolder,
+                    fieldLabel: t('rmdMethod.banking.accountHolder'),
+                    component: DisbursementFields.BankTextField,
                 },
             ],
             getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
@@ -171,7 +177,7 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                 isVoidCheckAttached,
                 doesCheckMeetSecurityRequirements,
                 reEnterAccountNumber,
-                reEnterBankRoutingNumber,
+                reEnterBankRoutingNumber
             }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -188,7 +194,7 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                             nameOnBankAccount: accountHolder ?? '',
                             routingNumber: bankRoutingNumber,
                             reEnterAccountNumber,
-                            reEnterBankRoutingNumber,
+                            reEnterBankRoutingNumber
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
@@ -199,15 +205,48 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
         {
             label: t('distributionMethod.sendCheck'),
             value: FormDisbursementSelections.Check,
-            fields: null,
-            getDefaultPayload() {
+            fields: [
+                {
+                    fieldName: BankingFields.SelectIfPayeeIsDifferent,
+                    fieldLabel: t('distributionMethod.selectIfDifferentPayee'),
+                    component: DisbursementFields.BankCheckboxField,
+                    classNames: 'col-start-1 col-span-3',
+                },
+                {
+                    fieldName: BankingFields.PayeeName,
+                    fieldLabel: t('distributionMethod.payeeName'),
+                    classNames: 'col-start-1 col-span-2 max-w-lg',
+                    component: DisbursementFields.BankTextField,
+                },
+                {
+                    fieldName: BankingFields.Address,
+                    fieldLabel: '',
+                    classNames: 'col-span-3',
+                    component: DisbursementFields.BankAddress,
+                },
+            ],
+            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
+                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+                    return {
+                        ...DEFAULT_DISBURSEMENT_UPDATE,
+                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
+                        address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
+                        payeeName: payee?.name?.text ?? '',
+                    };
+                }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: () => {
+            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
+                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
+                    payee: {
+                        name: { text: payeeName || null },
+                        addresses: [address || DEFAULT_ADDRESS],
+                        contractNumber: { text: null },
+                    },
                 };
             },
         },
@@ -389,23 +428,26 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
         checkboxLabel: t('rmdMethod.jointLifeExpectancy.label.flic'),
         fields: [
             {
-                fieldName: PartyFields.FirstName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.firstName'),
-            },
-            {
-                fieldName: PartyFields.MiddleName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.middleName'),
-            },
-            {
-                fieldName: PartyFields.LastName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.lastName'),
-            },
-            {
                 fieldName: PartyFields.Dob,
                 fieldLabel: t('rmdMethod.jointLifeExpectancy.dob.flic'),
             },
         ],
     };
+
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+    ];
 
     return {
         disbursementOptions,
@@ -415,5 +457,6 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
         irsSignatureConfig,
         jointLifeExpectancyConfigs,
         signaturesConfig,
+        w4pSignaturesConfig
     };
 }

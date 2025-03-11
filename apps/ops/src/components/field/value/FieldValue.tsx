@@ -1,6 +1,6 @@
 import { AssistiveText, AssistiveTextVariant, Label } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import React, { useState, ChangeEvent, cloneElement } from 'react';
+import React, { ChangeEvent, cloneElement } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import fieldStyles from '../Field.module.css';
@@ -18,6 +18,8 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
             fieldSize,
             currencySymbol,
             onChange,
+            type,
+            value,
             placeholder = 'Replace this text',
             ...props
         },
@@ -31,14 +33,10 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
             fieldStatus = FieldStatus.INACTIVE;
         }
 
-        const [inputValue, setInputValue] = useState('');
-
         const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
             const value = event.target.value;
 
             if (decimalRegex.test(value)) {
-                setInputValue(value);
-
                 if (onChange) {
                     onChange(event);
                 }
@@ -62,7 +60,7 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
                         <span className={clsx(fieldStyles[fieldStatus])}>{currencySymbol || '$'}</span>
                     </div>
                     <input
-                        type="text"
+                        type={type ?? 'text'}
                         className={clsx(
                             fieldStyles.input,
                             fieldSize && fieldStyles[fieldSize],
@@ -70,7 +68,7 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
                             'typography-content-body'
                         )}
                         id={inputId}
-                        value={inputValue}
+                        value={value ?? ''}
                         onChange={handleInputChange}
                         placeholder={placeholder}
                         ref={forwardRef}

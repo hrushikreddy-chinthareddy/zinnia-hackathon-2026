@@ -32,7 +32,6 @@ const changeTypeKey = {
     [PeopleChangeType.Update]: 'xUpdate',
 };
 
-// TODO MG: move to payments helper?
 export const getPaymentMethods = (policy: Policy, payors: Transaction['payors']): BankAccount[] => {
     if (!policy?.parties?.length || !payors?.length) return [];
     const accounts: BankAccount[] = [];
@@ -56,7 +55,6 @@ export const getBankAccount = ({ policy, payorsOrPayees }: GetBankAccount) => {
     return payorOrPayeeBank;
 };
 
-// TODO MG: move to non financial helper file
 // uses the transaction to determine the type of change that occured
 export const getPeopleChangeType = (transaction: Transaction): PeopleChangeType | null => {
     const { partyPolicyChangeReferenceId, partyPolicyNewReferenceId } = transaction;
@@ -170,7 +168,6 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
         }
 
         case TransactionType.FullSurrender: {
-            // TODO MG: can we use paymentMethod or do we have to pass in payeeOrBeneficiaries for withdrawals?
             // try to cache this so isnt being called so many times
             const bankAccount = getBankAccount({ policy, payorsOrPayees: payeeOrBeneficiaries });
             const eventBankingBody = t('historyEventCard.toBanking', {

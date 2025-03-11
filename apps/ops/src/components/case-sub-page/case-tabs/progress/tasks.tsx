@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
+import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
 import TaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/task-sidesheet-content';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
@@ -10,13 +11,23 @@ import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
 import { TaskView } from './progress-tab-types';
-import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
 
-const SupportedTaskMap = [
+export const SupportedTaskMap = [
     TaskType.SuitabilityReview,
     TaskType.SuitabilityDataEntry,
     TaskType.PURCHASE_DOCUMENT_MATCHING,
     TaskType.Agent_Nigo,
+    TaskType.Attachment_Nigo,
+    TaskType.Application_Nigo,
+    TaskType.PremiumNigo,
+    TaskType.Review_Ofac,
+    TaskType.Agent_Onboarding_Nigo,
+    TaskType.TOA_Nigo,
+    TaskType.Agent_Review,
+    TaskType.Standard_Document_Matching,
+    TaskType.AppDataEntry,
+    TaskType.Prenote_Nigo,
+    TaskType.Agent_Onboarding_Review,
 ];
 
 export function Task({ task }: { task: TaskView }) {
@@ -26,6 +37,14 @@ export function Task({ task }: { task: TaskView }) {
         [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReviewIssues'),
         [TaskType.PURCHASE_DOCUMENT_MATCHING]: t('caseOverview.tabs.purchaseDocumentMatchingIssues'),
         [TaskType.Agent_Nigo]: t('caseOverview.tabs.agentNigo'),
+        [TaskType.Attachment_Nigo]: t('caseOverview.tabs.attachmentNigo'),
+        [TaskType.PremiumNigo]: t('caseOverview.tabs.PaymentProcessingNigo'),
+        [TaskType.Application_Nigo]: t('caseOverview.tabs.applicationNigo'),
+        [TaskType.Agent_Review]: t('caseOverview.tabs.agentReview'),
+        [TaskType.Review_Ofac]: t('caseOverview.tabs.reviewOfac'),
+        [TaskType.Agent_Onboarding_Nigo]: t('caseOverview.tabs.agentOnboardingNigo'),
+        [TaskType.AppDataEntry]: t('caseOverview.tabs.appDataEntry'),
+        [TaskType.Agent_Onboarding_Review]: t('caseOverview.tabs.agentOnboardingReview'),
     };
 
     const TaskTypeMap: Record<string, string> = {
@@ -34,7 +53,7 @@ export function Task({ task }: { task: TaskView }) {
 
     const handleClick = (task: TaskView) => {
         sideSheet.changeSideSheetContent(
-            `${t('sideSheet.task.taskHeading')}: ${TaskTitle[task.description]}`,
+            `${task.taskName ? `${t('sideSheet.task.taskHeading')}: ${task.taskName}` : t('sideSheet.task.taskHeading')}`,
             SupportedTaskMap.includes(task.description as TaskType) ? (
                 <GlobalTaskSideSheet taskId={task.id} taskDescription={task.description} />
             ) : (
@@ -44,7 +63,9 @@ export function Task({ task }: { task: TaskView }) {
         sideSheet.handleOpen(true);
     };
 
-    const dateString = [Statuses.New, Statuses.InProgress, 'OPEN', Statuses.NotStarted].includes(task.status)
+    const dateString = [Statuses.New, Statuses.InProgress, 'OPEN', Statuses.NotStarted, Statuses.Inprogress, Statuses.Pending].includes(
+        task.status
+    )
         ? t('caseOverview.tabs.openSince', { date: convertKebabedDateString(task.createdAt) })
         : t('caseOverview.tabs.closedOn', { date: convertKebabedDateString(task.updatedAt) });
 
@@ -52,8 +73,9 @@ export function Task({ task }: { task: TaskView }) {
 
     // if the task is part of an exception, add a dot before the task and change the color depending on the status
     if (task.hasParentException) {
-        beforeClasses = `before:text-[32px] before:content-["·"] ${task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
-            }`;
+        beforeClasses = `before:text-[32px] before:content-["·"] ${
+            task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
+        }`;
     }
 
     return (

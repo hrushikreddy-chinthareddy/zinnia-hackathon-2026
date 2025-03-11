@@ -2,7 +2,6 @@
 
 import * as ReactPopover from '@radix-ui/react-popover';
 import {
-  Label,
   AssistiveText,
   AssistiveTextVariant,
   DatePicker,
@@ -47,9 +46,6 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
     },
     ref
   ) => {
-    if ((label.type as React.JSXElementConstructor<any>)?.name !== Label.name) {
-      throw new Error('Required field: label is not of type Label');
-    }
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [inputWidth, setInputWidth] = useState(0);
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(
@@ -84,10 +80,12 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
 
     const inputId = uuidv4();
     const status = props.disabled ? FieldStatus.INACTIVE : fieldStatus;
-    const clonedLabel = cloneElement(label, {
-      labelFor: inputId,
-      status,
-    });
+    const clonedLabel = label
+      ? cloneElement(label, {
+          labelFor: inputId,
+          status,
+        })
+      : null;
 
     const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
       if (!e.target.value) {

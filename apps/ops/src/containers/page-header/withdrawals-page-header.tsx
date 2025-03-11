@@ -138,13 +138,9 @@ const WithdrawalsPageHeaderContainer = ({
                                     />
                                     <Content
                                         className="text-gray-600"
-                                        details={
-                                            freeWithdrawalAmount
-                                                ? `${t('withdrawals.freeWithdrawalAmount', {
-                                                      amount: numberFormatify(freeWithdrawalAmount as number),
-                                                  })}`
-                                                : DEFAULT_ERROR_STRING
-                                        }
+                                        details={`${t('withdrawals.freeWithdrawalAmount', {
+                                            amount: numberFormatify(freeWithdrawalAmount as number),
+                                        })}`}
                                         variant={ContentVariant.Caption}
                                     />
                                 </>
@@ -224,7 +220,9 @@ const WithdrawalsPageHeaderContainer = ({
                     type={NavElementType.Link}
                     data-testid="withdrawal-start-link"
                 >
-                    {policyDetails.isAnnuity ? t('site.navLinks.transactions.withdrawalOneTime.text') : t('site.navLinks.transactions.withdrawalStart.text')}
+                    {policyDetails.isAnnuity
+                        ? t('site.navLinks.transactions.withdrawalOneTime.text')
+                        : t('site.navLinks.transactions.withdrawalStart.text')}
                 </NavElement>
                 <NavElement
                     href={t('site.navLinks.transactions.withdrawalStart.href', { id: policyNumber, planCode }) || ''}

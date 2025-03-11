@@ -10,6 +10,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import HtmlPreview from '@deps/containers/documents-page/html-preview';
 import ImagePreview from '@deps/containers/documents-page/image-preview';
 import PdfPreview from '@deps/containers/documents-page/pdf-preview';
+import TxtPreview from '@deps/containers/documents-page/txt-preview';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { supportedExtensions, supportedImgExtensions } from '@deps/models/case/document';
 import { getDocumentPreviewV2 } from '@deps/queries/api/client/documents/v2/preview';
@@ -104,6 +105,10 @@ const DocumentViewer = (props: DocumentViewerProps) => {
 
     if (fileExtension === 'pdf' && documentBinary) {
         return <PdfPreview documentBinary={documentBinary} />;
+    }
+
+    if (['txt', 'text/plain'].includes(fileExtension || '') && documentBinary) {
+        return <TxtPreview documentBinary={documentBinary} />;
     }
 
     return (

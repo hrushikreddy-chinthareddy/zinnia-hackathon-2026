@@ -48,6 +48,18 @@ To use the dev menu add the query string `..show_dev_menu..=true`. From there yo
 - Components that require more client side interaction (e.g. one time premium payment flow and add/remove bank and address -- essentially any transactions) use TanStack, routehandlers and zustand. Though there are more steps to retrieve the data on the client side, both server and client side components will ultimately use the same transformers.
 - We have a queries folder for Tanstack query functions to keep them in one place and make them easily reusable
 
+#### Adding an API call: server-side, router handler vs server actions
+
+1. server methods -> server rendered pages and components
+2. route handlers -> reusable client side api
+3. server actions -> need client side to call server methods, but not something the client-side will need to reuse often
+   > NOTE: Sometimes something might start as a server action but need to become a route handler
+
+**Put into analogy terms**
+
+Server actions are like components and the route handler is like the page
+because the route handler "exposes" the server action at a specific location, but server actions can be reused in multiple places
+
 ### Styling
 
 We use [Bloom components](https://zinnia-design-system.supernova-docs.io/latest) wherever possible. For everything else, there's a mix of global, css modules and utility classes in the project. We decided to add utility classes for things like [spacing](src/app/styles/spacing.css) and [borders](src/app/styles/borders.css) so that devs wouldn't have to make an additional style file for simple components.

@@ -19,6 +19,7 @@ import { DEFAULT_PAGE_TITLE } from '@deps/constants/page-title';
 import { ApplicationDataProvider } from '@deps/contexts/ApplicationContext';
 import { NODE_ENV_PRODUCTION } from '@deps/types/constants';
 import { initializeBrowserLogging } from '@deps/utils/browser-logs';
+import { isProd } from '@deps/utils/environment.helper';
 
 const poppins = Poppins({
     subsets: ['latin'],
@@ -73,7 +74,8 @@ const AppHead = () => {
         <Head>
             <title>{DEFAULT_PAGE_TITLE}</title>
             <meta name="description" content="Creating a modern experience today" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />(
+            {!isProd() && <meta name="robots" content="noindex, nofollow" />})
             <link rel="icon" href="/favicon.ico" />
             <link rel="alternate" hrefLang="x-default" href="/" />
             <link rel="alternate" hrefLang="en" href="/en/" />

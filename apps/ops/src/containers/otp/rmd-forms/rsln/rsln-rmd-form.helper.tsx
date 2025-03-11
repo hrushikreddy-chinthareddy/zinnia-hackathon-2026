@@ -1,6 +1,11 @@
 import { TFunction } from 'next-i18next';
 
-import { BankingFields, DisbursementFields, getDefaultFormDisbursementValues } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
+import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
+import {
+    BankingFields,
+    DisbursementFields,
+    getDefaultFormDisbursementValues,
+} from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
@@ -8,20 +13,23 @@ import { JointLifeExpectancyConfig } from '@deps/components/otp-withdrawal-form/
 import {
     SignatureBonusFields,
     SignatureFieldNames,
-    SignatureFields
+    SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { statesAndTerritories } from '@deps/helpers/states.helper';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     PartyRoles,
     AddressTypes,
-    PhoneTypes, PaymentMailType,
-    PaymentMethod, FormDisbursement,
+    PhoneTypes,
+    PaymentMailType,
+    PaymentMethod,
+    FormDisbursement,
     AccountType,
     FundWithdrawnMethod,
     FormParts,
     FormValidationErrors,
-    LifeCadPartyRoles
+    LifeCadPartyRoles,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -32,7 +40,19 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
+
+const spousalSignatureStateCodes = [
+    statesAndTerritories.ARIZONA,
+    statesAndTerritories.CALIFORNIA,
+    statesAndTerritories.IDAHO,
+    statesAndTerritories.LOUISIANA,
+    statesAndTerritories['NEW MEXICO'],
+    statesAndTerritories.NEVADA,
+    statesAndTerritories.TEXAS,
+    statesAndTerritories.WASHINGTON,
+    statesAndTerritories.WISCONSIN,
+    statesAndTerritories.MINNESOTA,
+];
 
 export default function getRslnRmdConfig(t: TFunction) {
     const signaturesConfig = [
@@ -136,10 +156,16 @@ export default function getRslnRmdConfig(t: TFunction) {
         const errors = {} as FormValidationErrors;
 
         if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
                 errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
             }
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
                 errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
             }
         }
@@ -164,97 +190,85 @@ export default function getRslnRmdConfig(t: TFunction) {
     };
 
     const formPartyConfigs: PartyConfig[] = [
-      {
-          partyRoleType: PartyRoles.OWNER,
-          title: t('personalDetails.title'),
-          fields: [
-              {
-                  fieldName: PartyFields.FirstName,
-                  fieldLabel: t('personalDetails.firstName'),
-              },
-              {
-                  fieldName: PartyFields.MiddleName,
-                  fieldLabel: t('personalDetails.middleName'),
-              },
-              {
-                  fieldName: PartyFields.LastName,
-                  fieldLabel: t('personalDetails.lastName'),
-              },
-              {
-                  fieldName: PartyFields.TaxId,
-                  fieldLabel: t('personalDetails.ssn'),
-              },
-          ],
-          phones: [
-              {
-                  phoneType: PhoneTypes.Owner_Phone_Day,
-                  fields: [
-                      {
-                          fieldName: PhoneFields.phoneNumber,
-                          fieldLabel: t('phoneDetails.daytimePhone'),
-                      },
-                  ],
-              },
-              {
-                  phoneType: PhoneTypes.Owner_Phone_Home,
-                  fields: [
-                      {
-                          fieldName: PhoneFields.phoneNumber,
-                          fieldLabel: t('phoneDetails.homePhone'),
-                      },
-                  ],
-              },
-          ],
-          addressFields: [
-              {
-                  addressType: AddressTypes.DEFAULT,
-                  title: t('addressDetails.title'),
-              },
-          ],
-      },
-      {
-          partyRoleType: PartyRoles.ANNUITANT,
-          title: t('Annuitant.title'),
-          fields: [
-              {
-                  fieldName: PartyFields.FirstName,
-                  fieldLabel: t('personalDetails.firstName'),
-              },
-              {
-                  fieldName: PartyFields.MiddleName,
-                  fieldLabel: t('personalDetails.middleName'),
-              },
-              {
-                  fieldName: PartyFields.LastName,
-                  fieldLabel: t('personalDetails.lastName'),
-              },
-              {
-                  fieldName: PartyFields.TaxId,
-                  fieldLabel: t('personalDetails.ssn'),
-              },
-              {
-                  fieldName: PartyFields.Dob,
-                  fieldLabel: t('personalDetails.dob'),
-              },
-          ],
-      },
-  ];
+        {
+            partyRoleType: PartyRoles.OWNER,
+            title: t('personalDetails.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+                {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+            ],
+            phones: [
+                {
+                    phoneType: PhoneTypes.Owner_Phone_Day,
+                    fields: [
+                        {
+                            fieldName: PhoneFields.phoneNumber,
+                            fieldLabel: t('phoneDetails.daytimePhone'),
+                        },
+                    ],
+                },
+                {
+                    phoneType: PhoneTypes.Owner_Phone_Home,
+                    fields: [
+                        {
+                            fieldName: PhoneFields.phoneNumber,
+                            fieldLabel: t('phoneDetails.homePhone'),
+                        },
+                    ],
+                },
+            ],
+            addressFields: [
+                {
+                    addressType: AddressTypes.DEFAULT,
+                    title: t('addressDetails.title'),
+                },
+            ],
+        },
+        {
+            partyRoleType: PartyRoles.ANNUITANT,
+            title: t('Annuitant.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+                {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+                {
+                    fieldName: PartyFields.Dob,
+                    fieldLabel: t('personalDetails.dob'),
+                },
+            ],
+        },
+    ];
 
     const jointLifeExpectancyConfigs: JointLifeExpectancyConfig = {
         checkboxLabel: t('rmdMethod.jointLifeExpectancy.label.flic'),
         fields: [
-            {
-                fieldName: PartyFields.FirstName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.firstName'),
-            },
-            {
-                fieldName: PartyFields.MiddleName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.middleName'),
-            },
-            {
-                fieldName: PartyFields.LastName,
-                fieldLabel: t('rmdMethod.jointLifeExpectancy.lastName'),
-            },
             {
                 fieldName: PartyFields.Dob,
                 fieldLabel: t('rmdMethod.jointLifeExpectancy.dob.flic'),
@@ -384,7 +398,7 @@ export default function getRslnRmdConfig(t: TFunction) {
                 isVoidCheckAttached,
                 doesCheckMeetSecurityRequirements,
                 reEnterAccountNumber,
-                reEnterBankRoutingNumber
+                reEnterBankRoutingNumber,
             }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -401,7 +415,7 @@ export default function getRslnRmdConfig(t: TFunction) {
                             nameOnBankAccount: accountHolder ?? '',
                             routingNumber: bankRoutingNumber,
                             reEnterAccountNumber,
-                            reEnterBankRoutingNumber
+                            reEnterBankRoutingNumber,
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
@@ -412,15 +426,48 @@ export default function getRslnRmdConfig(t: TFunction) {
         {
             label: t('distributionMethod.sendCheck'),
             value: FormDisbursementSelections.Check,
-            fields: null,
-            getDefaultPayload() {
+            fields: [
+                {
+                    fieldName: BankingFields.SelectIfPayeeIsDifferent,
+                    fieldLabel: t('distributionMethod.selectIfDifferentPayee'),
+                    component: DisbursementFields.BankCheckboxField,
+                    classNames: 'col-start-1 col-span-3',
+                },
+                {
+                    fieldName: BankingFields.PayeeName,
+                    fieldLabel: t('distributionMethod.payeeName'),
+                    classNames: 'col-start-1 col-span-2 max-w-lg',
+                    component: DisbursementFields.BankTextField,
+                },
+                {
+                    fieldName: BankingFields.Address,
+                    fieldLabel: '',
+                    classNames: 'col-span-3',
+                    component: DisbursementFields.BankAddress,
+                },
+            ],
+            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
+                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+                    return {
+                        ...DEFAULT_DISBURSEMENT_UPDATE,
+                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
+                        address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
+                        payeeName: payee?.name?.text ?? '',
+                    };
+                }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: () => {
+            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
+                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
+                    payee: {
+                        name: { text: payeeName || null },
+                        addresses: [address || DEFAULT_ADDRESS],
+                        contractNumber: { text: null },
+                    },
                 };
             },
         },
@@ -445,6 +492,6 @@ export default function getRslnRmdConfig(t: TFunction) {
         w4pSignaturesConfig,
         disbursementOptions,
         signaturesConfig,
-        formValidation: rmdFormValidation
+        formValidation: rmdFormValidation,
     };
 }

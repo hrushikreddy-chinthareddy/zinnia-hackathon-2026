@@ -25,7 +25,7 @@ import TransactionDocumentSelection from './transaction-document-selection';
 import { useNigoEntry } from '../../nigo-entry-provider';
 
 type FormSelectionProps = {
-    policy: Policy;
+    policy?: Policy;
     availableFormsTransactions: AvailableFormsTransaction[];
     ctiCallNumber?: string;
     documentData: DocumentData;

@@ -1,11 +1,12 @@
 'use client';
 
 import { AccountStatus } from '@zinnia/api-types/types/sor';
-import { SideSheet, Button, Icon, IconType } from '@zinnia/bloom/components';
+import { SideSheet, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
 import { putEndDateBankAccount } from '@/actions/bpm/bank-actions';
+import { useNeedsVerificationCode } from '@/hooks/use-needs-verification-code';
 import { useUser } from '@/hooks/use-user';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
@@ -16,6 +17,8 @@ import { Error } from './form-steps/error/Error';
 import { Loading } from './form-steps/loading/Loading';
 import { RemoveBankConfirm } from './form-steps/remove-bank-confirm/RemoveBankConfirm';
 import { Success } from './form-steps/success/Success';
+import { VerifyIdentity } from '../transaction-steps/verify-identity/VerifyIdentity';
+import { Button } from '@/components/button/Button';
 
 export interface RemoveBankProps {
   partyId: string;
@@ -32,6 +35,8 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   autopayEnabled,
   numberOfAccounts,
 }) => {
+  const requiresIdentityCode = useNeedsVerificationCode();
+
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
     planCode: string;
@@ -40,15 +45,24 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   const [open, setOpen] = useState(false);
   const { user } = useUser();
   const [step, setStep] = useState<FormSteps>();
-  const [, setErrorTitle] = useState('An error occurred');
-  const [, setErrorMessage] = useState<ReactNode>(
-    'Some generic messaging that will get updated based on the api response'
+  const [errorTitle, setErrorTitle] = useState('An error occurred');
+  const [errorMessage, setErrorMessage] = useState<ReactNode>(
+    'Something went wrong. Please try again.'
   );
   const [isServerError, setIsServerError] = useState(false);
   const [successTitle, setSuccessTitle] = useState('Success!');
   const [successMessage, setSuccessMessage] = useState(
-    'Some generic messaging that will get updated based on the api response'
+    'Something went wrong. Please try again.'
   );
+
+  const checkVerificationAndRemove = async () => {
+    if (requiresIdentityCode) {
+      setStep(FormSteps.VERIFY_IDENTITY);
+      return;
+    }
+
+    handleRemove();
+  };
 
   const handleRemove = async () => {
     setStep(FormSteps.LOADING);
@@ -87,6 +101,11 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
     }
   };
 
+  const onClose = () => {
+    setOpen(false);
+    setStep(undefined);
+  };
+
   const sidesheetInner = () => {
     if (numberOfAccounts === 1) {
       return (
@@ -94,7 +113,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
           errorTitle="This is the only account saved."
           isServerError={isServerError}
           errorMessage="You must have at least one banking account saved. To remove this one, first add another bank account."
-          closeCallback={() => setOpen(false)}
+          closeCallback={onClose}
         />
       );
     }
@@ -112,7 +131,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
               </a>
             </span>
           }
-          closeCallback={() => setOpen(false)}
+          closeCallback={onClose}
         />
       );
     }
@@ -126,7 +145,29 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
         <Success
           successTitle={successTitle}
           successMessage={successMessage}
-          closeCallback={() => setOpen(false)}
+          closeCallback={onClose}
+        />
+      );
+    }
+
+    if (step === FormSteps.VERIFY_IDENTITY) {
+      return (
+        <VerifyIdentity
+          closeCallback={onClose}
+          onSuccess={handleRemove}
+          onFailure={() => setStep(FormSteps.ERROR)}
+          transactionDescription="managing your bank account."
+        />
+      );
+    }
+
+    if (step === FormSteps.ERROR) {
+      return (
+        <Error
+          errorTitle={errorTitle}
+          isServerError={true}
+          errorMessage={errorMessage}
+          closeCallback={onClose}
         />
       );
     }
@@ -135,8 +176,8 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
       <RemoveBankConfirm
         accountNumber={values?.accountNumber}
         bankNickname={values?.branchName}
-        cancelCallback={() => setOpen(false)}
-        confirmCallback={handleRemove}
+        cancelCallback={onClose}
+        confirmCallback={checkVerificationAndRemove}
       />
     );
   };

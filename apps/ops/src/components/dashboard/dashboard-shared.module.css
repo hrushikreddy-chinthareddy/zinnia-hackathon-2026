@@ -1,0 +1,60 @@
+.chartContainer {
+    padding: 0 0 0 var(--measure-dimension-padding-4xl);
+    border-left: 1px solid var(--color-base-border-border-light);
+    flex: 1 auto;
+}
+
+.dashboardCard {
+    position: relative;
+    border-radius: var(--radius-sm, 4px);
+    box-shadow: 0px 0.3px 0.9px 0px rgba(0, 0, 0, 0.07), 0px 1.6px 3.6px 0px rgba(0, 0, 0, 0.11);
+    overflow: hidden;
+    margin-top: 24px;
+}
+
+.dashboardCardFirst {
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.selectDropdowns {
+    max-width: 150px;
+}
+
+.filterContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: var(--measure-dimension-gap-lg);
+}
+
+.aiInsightsContainer {
+    padding-top: var(--measure-dimension-padding-4xl);
+    padding-right: var(--measure-dimension-padding-lg);
+}
+
+.timeFilterContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.tableContainer,
+.paginationContainer,
+.searchContainer,
+.insightContainer {
+    margin-top: var(--measure-dimension-gap-lg);
+}
+
+.sortIcon {
+    margin-left: var(--measure-dimension-gap-md);
+}
+
+.searchContainer {
+    width: 259px;
+}
+
+.aiInsightsTabContainer {
+    min-height: 450px;
+}

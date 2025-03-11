@@ -1,4 +1,5 @@
 import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { convertToCamelCase } from '@zinnia/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
@@ -16,12 +17,15 @@ import { ManagementTask } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
-import { getCaseDetailsSSR, getReferenceDataSSR } from '@deps/queries/api/cases';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { getCaseDetailsSSR } from '@deps/queries/api/cases';
+import { isProd } from '@deps/utils/environment.helper';
+import { optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
+
+import { applyDynamicOptions } from '../../../containers/task-container/task-handlers/handle-task';
 
 type TaskPageProps = {
     task: ManagementTask;
@@ -61,8 +65,8 @@ export const getServerSideProps = withPageAuthRequired({
         const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
         const taskId = (query.taskId as string) || '';
-
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+        const taskTypeOverride = (query.taskTypeOverride as string) || '';
+        const taskUserOverride = Boolean(query.taskUserOverride) || false;
 
         let accessToken;
         try {
@@ -76,11 +80,7 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
 
-        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
-            accessToken,
-            user,
-            UserPermission.AllowReadCaseManagement
-        );
+        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
         if (!hasPermissionToReadCaseManagement) {
             return {
                 redirect: {
@@ -91,10 +91,8 @@ export const getServerSideProps = withPageAuthRequired({
         }
 
         try {
-            const [translations, task] = await Promise.all([
-                await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
-                await getCaseTaskById(taskId, accessToken),
-            ]);
+            const mockedTaskType = taskTypeOverride && !isProd() && taskTypeOverride;
+            const task = await getCaseTaskById(taskId, accessToken, mockedTaskType as TaskType);
 
             if (!task) {
                 logError('Task::Error getting task by id', {
@@ -111,11 +109,9 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
             const { taskType, carrier, caseId, process } = task;
-            const caseDetails = await getCaseDetailsSSR(caseId, accessToken as string);
-            const correlationId = caseDetails?.correlationId; // Access the property using optional chaining
 
-            if (!isFormFeatureEnabled(taskType as TaskType, carrier, featureFlagDecisions)) {
-                logWarn('task/:id::feature flag not enabled', { carrier });
+            if (!taskType || !carrier || !caseId || !process) {
+                logWarn('task/details not found', { taskType, carrier, caseId, process });
                 return {
                     redirect: {
                         destination: '/403',
@@ -123,7 +119,54 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-            const taskMetadata = await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken);
+            if (!(!isProd() && (taskUserOverride || taskTypeOverride))) {
+                if (
+                    !(
+                        user.email &&
+                        ((task.assignee && task.assignee.toLowerCase() == user.email.toLowerCase()) ||
+                            (!task.assignee && task.prefferedAssignee && task.prefferedAssignee.toLowerCase() == user.email.toLowerCase()))
+                    )
+                ) {
+                    logWarn('task/:id::task is not assigned to user', { assignee: task.assignee, user: user.email });
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
+                const isTaskEnabled = await optimizelyService.getFeatureFlagVariables(
+                    FEATURE_FLAG_VARIABLES.TASK_MANAGEMENT,
+                    carrier?.toLowerCase(),
+                    user.sub
+                );
+                const flag = convertToCamelCase(taskType);
+                const enabledTask = Object.keys(isTaskEnabled).includes(flag);
+                if (!enabledTask) {
+                    logWarn('task/:id::feature flag not enabled', { carrier });
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
+            }
+
+            const nigoFilters = {
+                categoryIds: ['Form', 'Signature', 'Account Information'],
+                carrier: carrier?.toUpperCase(),
+                process: taskType,
+            };
+
+            const [translations, caseDetails, nigoExceptionResponse, taskMetadata] = await Promise.all([
+                await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
+                await getCaseDetailsSSR(caseId, accessToken as string),
+                await getNigoExceptions(nigoFilters, accessToken),
+                await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken),
+            ]);
+
+            const correlationId = caseDetails?.correlationId;
 
             const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
 
@@ -136,29 +179,12 @@ export const getServerSideProps = withPageAuthRequired({
                 currentTaskMetadata.push(fallbackMetadata ?? {});
             }
 
-            const nigoFilters = {
-                categoryIds: ['Form', 'Signature', 'Account Information'],
-                carrier: carrier?.toUpperCase(),
-                process: taskType,
-            };
-
-            const nigoExceptionResponse = await getNigoExceptions(nigoFilters, accessToken);
             const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
+
             const taskInfoLink = buildCaseLink(caseId);
-            if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
-                const filters = {
-                    carrier: [task.carrier],
-                    keys: ['processList'] as ('processList' | 'requestSubType' | 'productName')[],
-                };
 
-                const caseTypeOptions = await getReferenceDataSSR(filters, accessToken);
-
-                if (currentTaskMetadata[0]?.formSchema?.definitions) {
-                    currentTaskMetadata[0].formSchema.definitions.caseTypeEnum = {
-                        enum: caseTypeOptions?.referenceData.processList || ['Case Type Not Found'],
-                    };
-                }
-            }
+            //transform schema options with api
+            await applyDynamicOptions(task, accessToken, currentTaskMetadata);
 
             return {
                 props: {

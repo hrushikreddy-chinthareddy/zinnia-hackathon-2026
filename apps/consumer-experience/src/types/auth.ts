@@ -19,6 +19,7 @@ export interface Auth0ErrorResponse {
   error: string;
   error_description: string;
   mfa_token?: string;
+  success?: boolean;
 }
 
 export interface PasswordlessCodeMfaResponse {
@@ -137,6 +138,10 @@ export interface Permissions {
 export interface UserClaims {
   'https://dev.api.zinnia.io/permissions': Permissions;
   partyId: string;
+  /**
+   * Unix timestamp
+   */
+  stepUpTime: number;
   app_metadata: object;
   nickname: string;
   name: string;
@@ -219,4 +224,25 @@ export interface TermsAndConditionApiResponse {
   agreedToTermsAndConditions: boolean;
   dateCreated: string;
   id: string;
+}
+
+export enum MfaVerificationType {
+  SMS = 'sms',
+  CALL = 'voice',
+}
+
+interface AuthenticationMethod {
+  id: string;
+  type: MfaVerificationType;
+}
+
+export interface UserAuthenticationMethod {
+  id: string;
+  type: string;
+  confirmed: boolean;
+  phone_number: string;
+  created_at: string;
+  last_auth_at: string;
+  preferred_authentication_method: MfaVerificationType;
+  authentication_methods: AuthenticationMethod[];
 }

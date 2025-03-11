@@ -1,6 +1,6 @@
 'use client';
 import { AccountType } from '@zinnia/api-types/types/sor';
-import { Radio, Label, Button } from '@zinnia/bloom/components';
+import { Radio, Label } from '@zinnia/bloom/components';
 import { FC } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
@@ -10,18 +10,18 @@ import { isNumber } from '@/utils/regex';
 import styles from './AddBank.module.css';
 import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
 import { FieldStatus } from '../../../field/types';
+import { Button } from '@/components/button/Button';
 
 export interface AddBankProps {
-  values?: BankFormFields;
   cancelCallback?: () => void;
   submitCallback?: (val: BankFormFields) => void;
-  removeCallback?: () => void;
+  correlationId?: string;
 }
 
 export const AddBank: FC<AddBankProps> = ({
-  values,
   cancelCallback,
   submitCallback,
+  correlationId,
 }) => {
   const {
     control,
@@ -30,12 +30,10 @@ export const AddBank: FC<AddBankProps> = ({
     formState: { errors, defaultValues },
   } = useForm<BankFormFields>({
     defaultValues: {
-      accountType: values?.accountType || AccountType.CHECKING,
-      branchName: values?.branchName || '',
-      routingNumber: values?.routingNumber || '',
-      accountNumber: values?.accountNumber
-        ? `**********${values?.accountNumber}`
-        : '',
+      accountType: AccountType.CHECKING,
+      branchName: '',
+      routingNumber: '',
+      accountNumber: '',
     },
   });
 
@@ -166,8 +164,15 @@ export const AddBank: FC<AddBankProps> = ({
       </div>
 
       <div className={styles.buttonContainer}>
-        <Button type="submit">Save account</Button>
-        <Button onClick={handleCancel} className={styles.cancel} mode="link">
+        <Button type="submit" correlationId={correlationId}>
+          Save account
+        </Button>
+        <Button
+          onClick={handleCancel}
+          className={styles.cancel}
+          mode="link"
+          additionalContext="add bank"
+        >
           Cancel
         </Button>
       </div>

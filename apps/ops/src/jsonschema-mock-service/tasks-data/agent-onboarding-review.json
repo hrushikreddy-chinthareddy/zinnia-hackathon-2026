@@ -1,0 +1,54 @@
+{
+    "id": "TA000000020313",
+    "caseId": "CA0000396509",
+    "source": "BPM.AgentOnboarding",
+    "templateId": "056ce933-2d4f-48c0-9da5-b6680747d468",
+    "process": "Agent Onboarding",
+    "carrier": "WELB",
+    "taskType": "AGENT_ONBOARDING_REVIEW",
+    "taskName": "Agent Onboarding Review",
+    "status": "NEW",
+    "data": {
+        "details": {
+            "agentDetails": {
+                "agentNPN": "21439251",
+                "agentTaxId": "506550957",
+                "firstName": "Justin ",
+                "lastName": "Colvin"
+            }
+        },
+        "issuesList": [
+            {
+                "id": "f4e1eeac-ccc8-403f-9399-d72a61ad3ded",
+                "nmid": "AO.EM.042",
+                "type": "Note",
+                "category": "Agent onboarding",
+                "reason": "",
+                "detailedReason": "",
+                "processingInstruction": "Validate all required information and signatures has been received on all forms.  If the paperwork is in IGO please create the agent's profile in MCS and then proceed to next step.  Else, log appropriate NIGO(s) below.",
+                "processingReason": "",
+                "processingResolution": ""
+            }
+        ]
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-03-03T06:49:35Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-03-03T06:49:35Z",
+    "identifiers": [
+        {
+            "identifier": "agentTaxId",
+            "value": "506550957"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000396509"
+        }
+    ],
+    "externalId": "083a096f-c851-4fe3-a346-adedba394e41"
+}

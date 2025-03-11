@@ -108,34 +108,36 @@ export default async function Withdrawals({
           />
           <div className="column-card">
             {/* AVAILABLE TO WITHDRAW */}
-            <FieldData
-              caption={
-                <span>{`As of ${standardDateMonthDayYear(data.effectiveDate)}`}</span>
-              }
-              Label={
-                <Label
-                  interactiveElements={[
-                    <LabelPopover
-                      key={AVAILBLE_TO_WITHDRAW}
-                      title={AVAILBLE_TO_WITHDRAW}
-                    >
-                      <div>
-                        <p>
-                          If eligible, this is the maximum amount available for
-                          withdrawal.
-                        </p>
-                      </div>
-                    </LabelPopover>,
-                  ]}
-                >
-                  {AVAILBLE_TO_WITHDRAW}
-                </Label>
-              }
-            >
-              <p className="typography-content-value">
-                {formatUSDollars(data.maximumWithdrawalAmount)}
-              </p>
-            </FieldData>
+            {withdrawalEligibilityData && (
+              <FieldData
+                caption={
+                  <span>{`As of ${standardDateMonthDayYear(data.effectiveDate)}`}</span>
+                }
+                Label={
+                  <Label
+                    interactiveElements={[
+                      <LabelPopover
+                        key={AVAILBLE_TO_WITHDRAW}
+                        title={AVAILBLE_TO_WITHDRAW}
+                      >
+                        <div>
+                          <p>
+                            If eligible, this is the maximum amount available
+                            for withdrawal.
+                          </p>
+                        </div>
+                      </LabelPopover>,
+                    ]}
+                  >
+                    {AVAILBLE_TO_WITHDRAW}
+                  </Label>
+                }
+              >
+                <p className="typography-content-value">
+                  {formatUSDollars(data.maximumWithdrawalAmount)}
+                </p>
+              </FieldData>
+            )}
 
             {/* ALL TIME WITHDRAWALS */}
             <FieldData
@@ -171,71 +173,76 @@ export default async function Withdrawals({
               </p>
             </FieldData>
 
-            {/* COVERAGE PRESERAVTION LIMIT */}
-            <FieldData
-              Label={
-                <Label
-                  interactiveElements={[
-                    <LabelPopover
-                      key={COVERAGE_PRESERVATION_LIMIT}
-                      title={COVERAGE_PRESERVATION_LIMIT}
+            {withdrawalEligibilityData && (
+              <>
+                {/* COVERAGE PRESERAVTION LIMIT */}
+                <FieldData
+                  Label={
+                    <Label
+                      interactiveElements={[
+                        <LabelPopover
+                          key={COVERAGE_PRESERVATION_LIMIT}
+                          title={COVERAGE_PRESERVATION_LIMIT}
+                        >
+                          <p>
+                            You can withdraw this amount without reducing your
+                            coverage amount.
+                          </p>
+                        </LabelPopover>,
+                      ]}
                     >
-                      <p>
-                        You can withdraw this amount without reducing your
-                        coverage amount.
-                      </p>
-                    </LabelPopover>,
-                  ]}
+                      {COVERAGE_PRESERVATION_LIMIT}
+                    </Label>
+                  }
                 >
-                  {COVERAGE_PRESERVATION_LIMIT}
-                </Label>
-              }
-            >
-              <p className="typography-content-value">
-                {formatUSDollars(data.annualWithdrawalLimitNoCoverageDecrease)}
-              </p>
-            </FieldData>
-
-            {/* ANNUAL WITHDRAWALS REMAINING */}
-            <FieldData
-              caption={
-                !isNullEmptyOrUndefined(data.annualWithdrawalsTaken) ? (
-                  <span>{`${data.annualWithdrawalsTaken} taken`}</span>
-                ) : (
-                  ''
-                )
-              }
-              Label={
-                <Label
-                  interactiveElements={[
-                    <LabelPopover
-                      key={ANNUAL_WITHDRAWALS_REMAINING}
-                      title={ANNUAL_WITHDRAWALS_REMAINING}
-                    >
-                      <div>
-                        <p className="mb-lg">
-                          {`At this time, you could withdraw ${isNullEmptyOrUndefined(data.annualWithdrawalsRemaining) ? DEFAULT_ERROR_STRING : data.annualWithdrawalsRemaining} more time(s) during the policy year. Your policy year ends on ${standardDateMonthDayYear(data.nextAnniversaryDate)}.`}
-                        </p>
-                        <p>
-                          {`During the vesting period (the first ${data.vestingDetails.vestingPeriod} years of your
+                  <p className="typography-content-value">
+                    {formatUSDollars(
+                      data.annualWithdrawalLimitNoCoverageDecrease
+                    )}
+                  </p>
+                </FieldData>
+                {/* ANNUAL WITHDRAWALS REMAINING */}
+                <FieldData
+                  caption={
+                    !isNullEmptyOrUndefined(data.annualWithdrawalsTaken) ? (
+                      <span>{`${data.annualWithdrawalsTaken} taken`}</span>
+                    ) : (
+                      ''
+                    )
+                  }
+                  Label={
+                    <Label
+                      interactiveElements={[
+                        <LabelPopover
+                          key={ANNUAL_WITHDRAWALS_REMAINING}
+                          title={ANNUAL_WITHDRAWALS_REMAINING}
+                        >
+                          <div>
+                            <p className="mb-lg">
+                              {`At this time, you could withdraw ${isNullEmptyOrUndefined(data.annualWithdrawalsRemaining) ? DEFAULT_ERROR_STRING : data.annualWithdrawalsRemaining} more time(s) during the policy year. Your policy year ends on ${standardDateMonthDayYear(data.nextAnniversaryDate)}.`}
+                            </p>
+                            <p>
+                              {`During the vesting period (the first ${data.vestingDetails.vestingPeriod} years of your
                           policy which end${data.vestingDetails.policyHasVested ? 'ed' : 's'} on ${standardDateMonthDayYear(data.vestingDetails.matchVestingDate)}), you can only withdraw ${data.vestingDetails.maximumWithdrawalRequestDuringVestingPeriod} time during each
                           policy year. After that, you may withdraw up to ${data.vestingDetails.maximumWithdrawalRequestAfterVestingPeriod}
                           times in a policy year.`}
-                        </p>
-                      </div>
-                    </LabelPopover>,
-                  ]}
+                            </p>
+                          </div>
+                        </LabelPopover>,
+                      ]}
+                    >
+                      {ANNUAL_WITHDRAWALS_REMAINING}
+                    </Label>
+                  }
                 >
-                  {ANNUAL_WITHDRAWALS_REMAINING}
-                </Label>
-              }
-            >
-              <p className="typography-content-value">
-                {!isNullEmptyOrUndefined(data.annualWithdrawalsRemaining)
-                  ? `${data.annualWithdrawalsRemaining} left`
-                  : DEFAULT_ERROR_STRING}
-              </p>
-            </FieldData>
+                  <p className="typography-content-value">
+                    {!isNullEmptyOrUndefined(data.annualWithdrawalsRemaining)
+                      ? `${data.annualWithdrawalsRemaining} left`
+                      : DEFAULT_ERROR_STRING}
+                  </p>
+                </FieldData>
+              </>
+            )}
           </div>
         </div>
       </>
@@ -247,11 +254,11 @@ export default async function Withdrawals({
       {withdrawalsData()}
       <CallForAssistance
         callToAction={
-          isFreelook
-            ? `You can't take a withdrawal until your free look period ends. Questions?`
-            : 'Taking a withdrawal is coming soon. For now, '
+          withdrawalEligibilityData
+            ? 'Taking a withdrawal is coming soon. For now, '
+            : 'For questions about withdrawals, please '
         }
-        contactPrompt={isFreelook ? undefined : 'call'}
+        contactPrompt="call"
         customInstruction="."
       />
     </div>

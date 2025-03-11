@@ -1,12 +1,14 @@
-import { Button, Icon, IconType } from '@zinnia/bloom/components';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
 import styles from './Confirm.module.css';
+import { Button } from '@/components/button/Button';
 interface ConfirmProps {
   confirmTitle: string;
   confirmMessage?: string;
   confirmButtonText: string;
   confirmCallback: () => void;
+  correlationId?: string;
   denyCallback: () => void;
 }
 export const Confirm: FC<ConfirmProps> = ({
@@ -14,6 +16,7 @@ export const Confirm: FC<ConfirmProps> = ({
   confirmMessage,
   confirmButtonText,
   confirmCallback,
+  correlationId,
   denyCallback,
 }) => {
   return (
@@ -32,6 +35,7 @@ export const Confirm: FC<ConfirmProps> = ({
         onClick={confirmCallback}
         className={styles.confirmButton}
         mode="error"
+        correlationId={correlationId}
       >
         {confirmButtonText}
       </Button>

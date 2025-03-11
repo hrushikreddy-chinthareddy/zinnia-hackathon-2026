@@ -1,0 +1,35 @@
+{
+    "id": "TA000000020345",
+    "caseId": "CA0000396667",
+    "source": "BPM.AppProcessing",
+    "templateId": "cd73deec-d937-465e-b4cc-cb4993e4ee82",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_APP_DATA_ENTRY",
+    "taskName": "Paper App Data Entry",
+    "status": "NEW",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-02-18T08:07:06Z",
+    "updatedAt": "2025-02-18T08:07:06Z",
+    "data": {
+        "details": {
+            "annuitantDetails": {
+                "ssn": "202512425",
+                "percent": 0
+            },
+            "documentDetails": [
+                {
+                    "documentId": "e9ab5272-10a7-4e0a-8d12-073861dea25f",
+                    "docType": "NB Application"
+                },
+                {
+                    "documentId": "e9ab5272-10a7-4e0a-8d12-073861dea25g",
+                    "docType": "NB Supporting Document"
+                }
+            ]
+        },
+        "baseUrl": "http://wellabeqa.orion/#/newbusiness",
+        "correlationId": "180b021b-7d2c-44ca-8ae4-efa66651f26e"
+    }
+}

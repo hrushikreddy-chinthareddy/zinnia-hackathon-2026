@@ -16,12 +16,14 @@ export interface BankRequest extends NonFinancialTransactionParameters {
   bankId?: string;
   bankAccountChangeRequest: BankAccountChangeRequest;
   deleteRequest?: boolean;
+  correlationId?: string;
 }
 
 export interface AddressRequest extends NonFinancialTransactionParameters {
   addressId?: string;
   addressChangeRequest: AddressChangeRequest;
   deleteRequest?: boolean;
+  correlationId?: string;
 }
 
 export enum FormSteps {
@@ -29,6 +31,8 @@ export enum FormSteps {
   ERROR = 'ERROR',
   SUCCESS = 'SUCCESS',
   CONFIRM = 'CONFIRM',
+  VERIFY_IDENTITY = 'VERIFY_IDENTITY',
+  VERIFY_IDENTITY_CODE = 'VERIFY_IDENTITY_CODE',
 }
 
 export interface BPMResponse {

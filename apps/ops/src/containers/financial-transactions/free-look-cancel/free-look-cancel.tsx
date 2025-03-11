@@ -36,7 +36,6 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     setState={setWithdrawal as StartStepSetState}
                     state={withdrawal}
                     title={t('cancelFreeLook.start.title') as string}
-                    subtitle={''}
                 />
             ),
             screenReaderLabel: startLabel,

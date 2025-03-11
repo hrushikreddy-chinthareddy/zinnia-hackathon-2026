@@ -177,7 +177,7 @@ export default function RMDMethod({ isFormStateReadOnly }: RMDMethodProps) {
                     disabled={isFormStateReadOnly}
                 />
             </div>
-            <ExistingPrograms terminated={terminated} onDataChange={setTerminated} />
+            <ExistingPrograms terminated={terminated} onDataChange={setTerminated} disableAllPrograms={true}  />
             {rmdType === RMDType.CalculateRMD && <RMDCalculator />}
             <div className="p-2">
                 <Typography variant={TypographyVariant.BodyBold} className="my-2">
@@ -200,6 +200,7 @@ export default function RMDMethod({ isFormStateReadOnly }: RMDMethodProps) {
                                 className="ml-5 mt-6"
                                 onClick={event => handleRMDOptionDelete(event, index)}
                                 aria-label={t('removeThisRmdProgram') as string}
+                                disabled={isFormStateReadOnly}
                             >
                                 <RemoveIcon height={25} width={25} />
                             </IconButton>

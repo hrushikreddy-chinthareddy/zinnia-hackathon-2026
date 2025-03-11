@@ -156,6 +156,19 @@ export type EDSDocumentRequest = {
     stockNumber: string;
 };
 
+export type EDSDocumentRequestBody = {
+    sourceFileName: string;
+    docAccessLevel: string;
+    documentDate: string;
+    docCategory: string;
+    fileType: string;
+    parentCarrierCode: string;
+    documentType: string;
+    docClassification: string;
+    zinniaLiveCaseId: string;
+    correlationId: string;
+};
+
 export type EDSDocumentResponse = {
     documentId: string;
     correlationId: string;
@@ -207,4 +220,4 @@ export interface PolicyDocumentApiRequest {
 
 // tif and tiff are supported via a conversion to png at the nextjs server level.
 export const supportedImgExtensions = ['png', 'jpg', 'jpeg', 'jfif'];
-export const supportedExtensions = ['pdf', 'adobe portable document', 'htm', 'html', ...supportedImgExtensions];
+export const supportedExtensions = ['pdf', 'adobe portable document', 'htm', 'html', 'txt', 'text/plain', ...supportedImgExtensions];

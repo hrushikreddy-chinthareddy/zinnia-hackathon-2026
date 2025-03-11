@@ -438,7 +438,7 @@ const RangeDays = ({
                         <div
                             key={index}
                             className={`${containerClasses} ${getSelectedRangeClasses(month + 1, dayItem)} ${getDisabledClasses(
-                                month,
+                                month + 1,
                                 dayItem
                             )} flex items-center justify-center`}
                             onClick={() => handleDateSelect(year, month + 1, dayItem)}
@@ -462,7 +462,6 @@ export default function DatePicker({
     datePickerType,
     handleCustomSelection,
     showMonths = true,
-
 }: DatePickerProps) {
     const isRange = date && 'start' in date && 'end' in date;
     const [currentDate] = useState(() => {

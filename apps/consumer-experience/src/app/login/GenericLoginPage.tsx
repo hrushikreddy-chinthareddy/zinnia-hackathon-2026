@@ -15,16 +15,18 @@ interface Props {
 
 export const GenericLoginPage = ({ title, description, action }: Props) => {
   return (
-    <div className={globalStyles.container}>
-      <div className={globalStyles.content}>
-        <div className={styles.formContainer}>
-          <div>
-            <h1 className="mb-xl typography-mobile-headline-1-m">{title}</h1>
-            <p className="typography-content-body-sm my-lg">{description}</p>
-            <div>{action}</div>
+    <div className="layout-wrapper">
+      <div className="layout-wrapper-inner">
+        <div className={globalStyles.mainContent}>
+          <div className={styles.formContainer}>
+            <div>
+              <h1 className="mb-xl typography-mobile-headline-1-m">{title}</h1>
+              <p className="typography-content-body-sm my-lg">{description}</p>
+              <div>{action}</div>
+            </div>
+            <MyPolicyViewLogo className={styles.policyViewLogo} />
+            <Footer className={`${styles.footer} py-2xl`} />
           </div>
-          <MyPolicyViewLogo className={styles.policyViewLogo} />
-          <Footer className={`${styles.footer} py-2xl`} />
         </div>
       </div>
     </div>

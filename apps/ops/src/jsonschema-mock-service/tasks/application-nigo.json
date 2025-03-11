@@ -1,0 +1,200 @@
+{
+    "formId": "bf4a42d8-696f-4407-ac96-3010a2b72097",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_APPLICATION_NIGO",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Review Application Issues",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions"
+                        },
+                        "issuesList": {
+                            "type": "array",
+                            "title": "Issues",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "reason": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting Information",
+                            "properties": {
+                                "onwerDetails": {
+                                    "type": "object",
+                                    "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "First Name",
+                                            "ui:field": "title"
+                                        },
+                                        "ssn": {
+                                            "type": "string",
+                                            "title": "SSN",
+                                            "ui:field": "subTitle"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Last Name",
+                                            "ui:field": "title"
+                                        }
+                                    }
+                                },
+                                "documentDetails": {
+                                    "type": "object",
+                                    "properties": {
+                                        "documentId": {
+                                            "type": "string",
+                                            "ui:field": "subTitle"
+                                        },
+                                        "documentSource": {
+                                            "type": "string",
+                                            "ui:field": "title"
+                                        },
+                                        "carrier": {
+                                            "type": "string",
+                                            "default": "{{carrier}}"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "yesDisabled": {
+                            "type": "array",
+                            "title": "Can you resolve the issues?",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "reason": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "default": [
+                                {
+                                    "reason": "Online updates unavailable. Resubmission required"
+                                }
+                            ]
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enumNames": ["Yes", "No"],
+                            "enum": [true, false]
+                        }
+                    },
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "enum": [true]
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "enum": [false]
+                                        },
+                                        "communicationSent": {
+                                            "type": "boolean",
+                                            "title": "The required communication has been sent"
+                                        }
+                                    },
+                                    "required": ["issueResolved"]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "props": {
+                            "description": "Application form may be missing or mismatched for the signed state. Review the application and confirm that we can resolve the issue."
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "issuesList": {
+                        "ui:options": {
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "keyName": "processingInstruction"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "onwerDetails": {
+                            "ui:options": {
+                                "cardtype": "Detailed",
+                                "icon": "CIRCLE_USER",
+                                "label": false,
+                                "ObjectFieldTemplate": "CardTemplate",
+                                "key": "onwerDetails"
+                            }
+                        },
+                        "documentDetails": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": false,
+                                "cardType": "Document",
+                                "icon": "DOCUMENT_TEXT",
+                                "ObjectFieldTemplate": "CardTemplate"
+                            }
+                        }
+                    },
+                    "yesDisabled": {
+                        "ui:options": {
+                            "label": true,
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "keyName": "reason",
+                            "type": "info"
+                        }
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": false,
+                            "inline": true,
+                            "enumDisabled": [true]
+                        }
+                    },
+                    "communicationSent": {
+                        "ui:options": {
+                            "label": true
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

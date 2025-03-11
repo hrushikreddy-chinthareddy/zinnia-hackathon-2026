@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-md);
+    padding-top: var(--measure-dimension-gap-md);
+    position: relative;
+    margin-bottom: 1px;
+    padding-bottom: var(--measure-dimension-gap-md);
+    padding-top: var(--measure-dimension-padding-3xl);
+    border-bottom: 1px solid var(--color-base-border-border-light);
+}
+.processSelect {
+    margin-top: var(--measure-dimension-gap-lg);
+}
+
+.legend {
+    margin-bottom: var(--measure-dimension-gap-md);
+    display: flex;
+    justify-content: center;
+}
+
+.insightsContainer {
+    padding-top: var(--measure-dimension-padding-4xl);
+    padding-right: var(--measure-dimension-padding-lg);
+}

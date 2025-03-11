@@ -1,0 +1,213 @@
+{
+    "formId": "3fbd2003-d32e-46b7-800a-12ce72676e12",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_AGENT_REVIEW",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "formId": "004c97a1-d97c-4faa-9b7f-8ff9105b4c29",
+                "process": "New Business",
+                "carrier": "WELB",
+                "taskType": "NB_AGENT_REVIEW",
+                "title": "Validate Agent",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions"
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "",
+                            "properties": {
+                                "agentDetails": {
+                                    "title": "Supporting Information",
+                                    "type": "object",
+                                    "properties": {
+                                        "firstName": {
+                                            "title": "First name",
+                                            "type": "string",
+                                            "ui:field": "title"
+                                        },
+                                        "lastName": {
+                                            "title": "Last name",
+                                            "type": "string",
+                                            "ui:field": "title"
+                                        },
+                                        "externalId": {
+                                            "title": "External Id",
+                                            "type": "string"
+                                        },
+                                        "taxId": {
+                                            "title": "Tax Id",
+                                            "type": "string",
+                                            "dataType": "ssn",
+                                            "ui:field": "subTitle"
+                                        }
+                                    }
+                                },
+                                "agentDocument": {
+                                    "type": "object",
+                                    "title": "",
+                                    "properties": {
+                                        "documentId": {
+                                            "type": "string"
+                                        },
+                                        "documentName": {
+                                            "type": "string"
+                                        },
+                                        "documentSource": {
+                                            "type": "string"
+                                        },
+                                        "createdDate": {
+                                            "type": "string"
+                                        },
+                                        "carrier": {
+                                            "type": "string",
+                                            "default": "{{carrier}}"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enum": [true, false],
+                            "enumNames": ["Yes, I can proceed to the next step.", "No, there are one or more issues to be logged."],
+                            "title": "Can you proceed ?"
+                        }
+                    },
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": true
+                                        },
+                                        "agentExternalId": {
+                                            "type": "string",
+                                            "title": "External ID"
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": false
+                                        },
+                                        "declineReason": {
+                                            "title": "",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "$ref": "#/definitions/declineReason"
+                                            }
+                                        },
+                                        "reviewFailureReasonDisplay": {
+                                            "type": "array",
+                                            "title": "These issues will be created for the case:",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "definitions": {
+                        "declineReason": {
+                            "enum": ["DEFAULT"]
+                        }
+                    },
+                    "required": ["issueResolved"]
+                },
+                "uiSchema": {
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "props": {
+                            "description": "Review the supporting information and provide an external ID for the Agent."
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "agentDetails": {
+                            "ui:options": {
+                                "label": true,
+                                "cardType": "Detailed",
+                                "icon": "CIRCLE_USER",
+                                "ObjectFieldTemplate": "CardTemplate"
+                            }
+                        },
+                        "agentDocument": {
+                            "props": {
+                                "readonly": true
+                            },
+                            "ui:options": {
+                                "cardType": "Document",
+                                "icon": "DOCUMENT_TEXT",
+                                "ObjectFieldTemplate": "CardTemplate"
+                            }
+                        }
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "inline": true
+                        }
+                    },
+                    "agentExternalId": {
+                        "ui:widget": "text"
+                    },
+                    "declineReason": {
+                        "ui:widget": "select",
+                        "ui:options": {
+                            "label": false,
+                            "enumOptions": [
+                                {
+                                    "label": "Default",
+                                    "value": "DEFAULT"
+                                }
+                            ]
+                        },
+                        "items": {
+                            "ui:options": {
+                                "label": "false"
+                            }
+                        },
+                        "ui:placeholder": "Select Issues"
+                    },
+                    "reviewFailureReasonDisplay": {
+                        "ui:options": {
+                            "label": true,
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "hasBg": true,
+                            "formContext": {
+                                "keyName": "customData",
+                                "listName": "declineReason"
+                            },
+                            "omitValue": true
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

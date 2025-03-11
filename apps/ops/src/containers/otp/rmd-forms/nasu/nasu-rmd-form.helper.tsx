@@ -88,7 +88,33 @@ export default function getNasuRmdConfig(t: TFunction) {
                     title: t('addressDetails.mailingAddressTitle'),
                 },
             ],
-        }
+        },
+        {
+            partyRoleType: PartyRoles.ANNUITANT,
+            title: t('Annuitant.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+                {
+                    fieldName: PartyFields.Dob,
+                    fieldLabel: t('personalDetails.dob'),
+                },
+                {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+            ],
+        },
     ];
 
     const disbursementOptions: PaymentMethodOption[] = [

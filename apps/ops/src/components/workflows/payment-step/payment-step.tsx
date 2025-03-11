@@ -128,11 +128,11 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
         >
             <div className="flex flex-col gap-2">
                 <div className="flex flex-col">
-                    <Typography className="mb-4" variant={TypographyVariant.LabelLg}>
+                    <Typography variant={TypographyVariant.LabelLg}>
                         {subtitle}
                     </Typography>
-                    <div className="flex flex-col gap-2">
-                        <Typography variant={TypographyVariant.Label}>{t('workflows.paymentStep.label')}</Typography>
+                    <div className="flex flex-col gap-4">
+                        <Typography variant={TypographyVariant.LabelLg}>{t('workflows.paymentStep.label')}</Typography>
                         <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3" data-testid="payment-methods">
                             {bankDetails?.map(details => (
                                 <BankDataCard
