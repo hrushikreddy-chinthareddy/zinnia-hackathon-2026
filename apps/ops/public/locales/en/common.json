@@ -2988,8 +2988,8 @@
                 "surrenderAmountTooltip": "",
                 "requestedWithdrawalAmount": "Requested withdrawal amount",
                 "requestedWithdrawalAmountTooltip": "This is how much the owner is requesting to withdraw from the account value. This number can differ from the actual total payment or the actual withdrawal amount depending on the disbursement type (gross or net) selected and the policy’s rules around withdrawal fees.",
-                "totalPayment": "Total payment",
-                "totalPaymentTooltip": "This is how much will actually be paid from this withdrawal. It's the requested amount minus any applicable transaction fees.",
+                "totalCharges": "Total charges",
+                "totalChargesTooltip": "This is how much will be charged from this withdrawal.",
                 "actualWithdrawalAmount": "Actual withdrawal amount",
                 "actualWithdrawalAmountTooltip": "This is how much will actually be withdrawn from the account value. If the owner selected net disbursement, we will withdraw any transaction fees (if applicable) in addition to the requested withdrawal amount. If gross was selected, the actual and requested withdrawal amounts will match.",
                 "actualTransactionAmount": "Actual {{transactionType}} amount",
@@ -4933,7 +4933,7 @@
             "relatedTab": {
                 "lastUpdated": "Last updated",
                 "caseId": "Case ID ",
-                 "noCasesAvailable": "No related cases available."
+                "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {
