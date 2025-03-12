@@ -37,7 +37,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
             {uiOptions?.templateType === 'table' ? (
                 children
             ) : (
-                <div className={nobackground ? 'flex mb-2 pt-2' : containerClasses}>
+                <div className={nobackground ? 'flex' : containerClasses}>
                     <div className="flex w-full">{children}</div>
                     <div className="ml-auto my-3">
                         {hasToolbar && (

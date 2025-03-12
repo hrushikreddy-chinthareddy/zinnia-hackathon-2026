@@ -1457,6 +1457,7 @@
             "additionalData": "Détails",
             "multiInstance": "Étapes",
             "documentId": "ID du document: {{documentId}}",
+            "documentType": "Document Type: {{documentType}}",
             "documents": "Documents",
             "view": "Voir",
             "viewTask": "Voir la tâche"
@@ -4882,7 +4883,7 @@
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible.",
             "taskTitle": "Détails de la tâche",
-             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -5080,7 +5081,7 @@
             "documents": "Documents",
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible.",
-             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         }
     },
     "suitabilityReview": {

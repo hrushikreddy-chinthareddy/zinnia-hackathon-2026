@@ -1459,6 +1459,7 @@
             "additionalData": "Details",
             "multiInstance": "Steps",
             "documentId": "Document ID: {{documentId}}",
+            "documentType": "Document Type: {{documentType}}",
             "documents": "Documents",
             "view": "View",
             "viewTask": "View task"
@@ -4929,7 +4930,7 @@
             "relatedTab": {
                 "lastUpdated": "Last updated",
                 "caseId": "Case ID ",
-                 "noCasesAvailable": "No related cases available."
+                "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {
