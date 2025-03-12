@@ -46,7 +46,7 @@ const BankUpdateContainer = ({ clientCode, policy, document }: BankUpdateContain
             </div>
 
             <div className="my-2 flex w-full grow flex-col rounded bg-white shadow-elevation-light-04 p-4">
-                <BankUpdateForm document={document} />
+                <BankUpdateForm document={document} carrierId={clientCode} />
             </div>
         </div>
     );
