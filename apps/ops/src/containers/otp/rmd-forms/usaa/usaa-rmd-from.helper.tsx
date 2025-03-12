@@ -94,7 +94,7 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                     fieldName: BankingFields.AccountType,
                     fieldLabel: t('distributionMethod.accountType'),
                     component: DisbursementFields.AccountTypes,
-                    classNames: 'col-span-2 w-full',
+                    classNames: 'col-start-1 col-span-2 w-full',
                     isBankingField: true,
                 },
                 {
