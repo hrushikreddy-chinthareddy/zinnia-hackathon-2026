@@ -45,7 +45,8 @@ export const useDocumentDownload = (
     documentId: string,
     documentType: DocumentTypeView,
     carrierCode: string,
-    documentName: string
+    documentName: string,
+    fileType: string
 ): [boolean, () => void] => {
     const { featureFlags } = useOptimizely();
     const [blob, setBlob] = useState<Blob | null>(null);
@@ -77,6 +78,13 @@ export const useDocumentDownload = (
                 doc = await downloadDocumentV2(documentId, documentType, carrierCode);
             }
             if (doc?.binaryData && doc?.fileExtension) {
+                // this is only necessary until documents v3 is fully live.
+                // forces the browser to render emails as .eml instead of .pdf, doc v2 doesn't yet support .eml
+                if (fileType == 'email') {
+                    doc.fileExtension = 'eml';
+                    doc.mimeType = 'application/eml';
+                }
+
                 const docBlob = b64ToBlob(doc.binaryData, doc.mimeType);
                 if (!docBlob) {
                     console.error('DocumentDownload::download::no-blob');
