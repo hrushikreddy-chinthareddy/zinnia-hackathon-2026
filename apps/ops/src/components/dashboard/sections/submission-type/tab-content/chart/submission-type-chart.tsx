@@ -6,24 +6,19 @@ import { FC, useContext } from 'react';
 import { Carousel } from '@deps/components/carousel/carousel';
 import { getPieChartData } from '@deps/components/dashboard/charts/distribution-charts/distribution-pie-chart-small-api-based';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
-import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
+import { Legend } from '@deps/components/dashboard/legend/legend';
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
-import { Legend } from '@deps/components/dashboard/sections/submission-type/legend';
 import { SubmissionMethodTooltip } from '@deps/components/dashboard/sections/submission-type/submission-type';
+import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
 import { transformData, generateSeries } from '@deps/components/dashboard/sections/submission-type/utils';
 import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
-import { TimeframeFilterOptions, generateCarouselDataLengths } from '@deps/components/dashboard/utils';
-import { FieldSize } from '@deps/components/fields/field';
+import { generateCarouselDataLengths } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import PageLoader from '@deps/components/page-loader/page-loader';
-import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
 
@@ -33,13 +28,6 @@ export const SubmissionTypeChart: FC = () => {
     const {
         graphStats,
         pieChartStats,
-        timeframe,
-        submissionVs,
-        filter,
-        setTimeframe,
-        selectedProcess,
-        setSubmissionVs,
-        setSelectedProcess,
         graphStatsLoading,
         graphStatsFetching,
         pieChartStatsLoading,
@@ -90,12 +78,6 @@ export const SubmissionTypeChart: FC = () => {
         };
     });
     const pieChartSeriesData: Highcharts.SeriesOptionsType[] = [{ data: pieChartDataColors, name: 'cases', type: 'pie' }];
-
-    const submissionVsOptions = [
-        { label: 'Carrier', value: GroupByOptions.Carrier, disabled: filter.carrier?.length === 1 },
-        { label: 'Product', value: GroupByOptions.ProductName },
-        { label: 'Distribution Partner', value: GroupByOptions.BrokerDealerName },
-    ];
 
     const chunkedResponseLengths = chunkedResponse.map(chunk => chunk.length);
 
@@ -168,33 +150,7 @@ export const SubmissionTypeChart: FC = () => {
                         showInsights={false}
                     />
                     <div className={clsx('w-3/4', sharedStyles.chartContainer)}>
-                        <div className={sharedStyles.timeFilterContainer}>
-                            <div className="w-1/2 flex gap-2">
-                                <Select
-                                    maxContentWidth
-                                    label="Group by"
-                                    className={sharedStyles.selectDropdowns}
-                                    options={submissionVsOptions}
-                                    value={submissionVs}
-                                    size={FieldSize.XS}
-                                    onChange={val => setSubmissionVs(val as GroupByOptions)}
-                                />
-
-                                <CaseTypeFilter
-                                    onValueChange={setSelectedProcess}
-                                    caseStatus={[Statuses.InProgress, Statuses.Exception, Statuses.NotStarted]}
-                                    defaultProcess={Processes.NewBusiness}
-                                    value={selectedProcess}
-                                />
-                            </div>
-                            <div className="w-1/2">
-                                <TimeFilter
-                                    defaultValue={timeframe}
-                                    onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
-                                    controlledTimeValue={timeframe}
-                                />
-                            </div>
-                        </div>
+                        <SubmissionTypeFilters />
                         {graphStatsLoading || pieChartStatsLoading ? (
                             <div className="grid place-content-center h-full w-full min-h-[400px]">
                                 <PageLoader />
