@@ -167,7 +167,8 @@ export const getCaseTasksByIdSSR = async (caseId: string, taskId: string, access
 
 export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
     try {
-        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/assigned`);
+        const { data } = await client.post(`${baseAppUrl}/api/case/v1/tasks/assignments`);
+        console.log("??`${baseAppUrl}/api/case/v1/tasks/assigned`", `${baseAppUrl}/api/case/v1/tasks/assignments`)
         return data ?? [];
     } catch (error) {
         logError('getAssignedTasks::Failed to retrieve unassigned tasks', {
