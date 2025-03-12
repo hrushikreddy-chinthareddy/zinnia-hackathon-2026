@@ -48,7 +48,6 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
 
     const loanCarryingBalance = !!loanValues?.totalLoanBalance && loanValues?.totalLoanBalance > 0;
     const upcomingPayment = useMemo(() => systematicPrograms.find(({ reason }) => reason === Reason.LOANREPAYMENT), [systematicPrograms]);
-
     const payorParty = getParty(parties, upcomingPayment);
     const payorBankDetails = getBankDetails(payorParty, upcomingPayment);
 
@@ -96,6 +95,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                             tooltip: !isLoanRepaymentEligible ? loanRepaymentIneligibilityMessage : undefined,
                         },
                     ]}
+                    requestSubTypes={["Setup Loan Repayment", "Update Loan Repayment"]}
                 />
             )}
             <LoanRulesCard currency={currency} loanValues={loanValues} />

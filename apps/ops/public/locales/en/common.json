@@ -4606,6 +4606,10 @@
         "payment": {
             "label": "Payment Method"
         },
+        "pendingBanner": {
+            "caseLinkText": "go to the case",
+            "text": "An update to this policy's autopay details is pending. For more information, "
+        },
         "summary": {
             "amount": "Amount",
             "current": "Current",
