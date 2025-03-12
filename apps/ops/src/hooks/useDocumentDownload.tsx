@@ -46,7 +46,7 @@ export const useDocumentDownload = (
     documentType: DocumentTypeView,
     carrierCode: string,
     documentName: string,
-    fileType: string
+    fileType: string | undefined
 ): [boolean, () => void] => {
     const { featureFlags } = useOptimizely();
     const [blob, setBlob] = useState<Blob | null>(null);
