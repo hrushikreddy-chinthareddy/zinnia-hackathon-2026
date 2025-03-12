@@ -1407,7 +1407,7 @@
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
-                "source of premium": "Source Premium: {{label}}",
+                "source of premium": "Source de Financement: {{label}}",
                 "transfer of assets": "Transfert d'actifs: {{label}}",
                 "ceding carrier": "Transporteur cédant: {{label}}",
                 "premium source": "Source Premium: {{label}}",

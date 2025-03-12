@@ -1412,7 +1412,7 @@
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
-                "source of premium": "Premium Source: {{label}}",
+                "source of premium": "Funding Source: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}",
                 "ceding carrier": "Ceding Carrier: {{label}}",
                 "premium source": "Premium Source: {{label}}",
