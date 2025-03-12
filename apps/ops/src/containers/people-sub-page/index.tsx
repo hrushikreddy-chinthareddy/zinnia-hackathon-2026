@@ -94,7 +94,7 @@ export const PeopleSubPage: React.FC = () => {
             }),
         [nameTags]
     );
-    const clientCode = policy.parentCompanyId ? policy.parentCompanyId : policy.carrierId;
+    const clientCode = policy?.carrierId;
 
     const fetchAgentData = useCallback(async () => {
         if (agentParties && agentParties.length > 0) {

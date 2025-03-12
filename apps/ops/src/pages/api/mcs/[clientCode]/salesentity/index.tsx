@@ -14,7 +14,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>, loggingContext: object) => {
         const session = await getSession(req, res);
-        const { clientCode, idType, id, parentIdType, parentId, skip, take, policyNumber, planCode } = req.query;
+        const { clientCode, idType, id, parentIdType, parentId, skip, take, policyNumber, planCode, IsClientChild } = req.query;
 
         const url = `${apiServerBaseUrl}/api/${clientCode}/salesentity`;
         const queryParams = new URLSearchParams();
@@ -24,6 +24,7 @@ export default withAuthAndLogging(
         if (parentId) queryParams.append('parentId', parentId as string);
         if (skip) queryParams.append('skip', skip as string);
         if (take) queryParams.append('take', take as string);
+        if (IsClientChild) queryParams.append('IsClientChild', IsClientChild as string);
         const proxyUrl = `${url}?${queryParams.toString()}`;
 
         // BPB - Using policyNumber and planCode to determine pii masking capabilities since we don't have any other way to determine this yet.
