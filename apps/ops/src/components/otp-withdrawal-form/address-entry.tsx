@@ -19,7 +19,6 @@ type AddressProps = {
     isOL4753?: boolean;
     combinedAddress?: string;
     className?: string;
-    isW4pTaxAddress?: boolean;
 };
 
 export const DEFAULT_ADDRESS = {
@@ -48,7 +47,6 @@ export default function AddressEntry({
     isOL4753 = false,
     combinedAddress = '',
     className = '',
-    isW4pTaxAddress = false,
 }: AddressProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.addressDetails' });
 
@@ -165,22 +163,6 @@ export default function AddressEntry({
                         maxLength={4}
                         disabled={isFormStateReadOnly}
                         data-testid="zipPlusFour"
-                    />
-                )}
-
-                {isW4pTaxAddress && (
-                    <Field
-                        // label={t(`ssn`) as string}
-                        label="SSN"
-                        message={errors.ssn}
-                        onChange={e => setSsn(xss(e.target.value))}
-                        size={FieldSize.Small}
-                        type={FieldType.BaseActive}
-                        value={ssn}
-                        variant={selectVarientByConfig({ value: ssn, isFormStateReadOnly, error: errors.ssn })}
-                        maxLength={4}
-                        disabled={isFormStateReadOnly}
-                        data-testid="ssn"
                     />
                 )}
             </div>

@@ -84,7 +84,6 @@ const W4pTaxForm = ({ isFormStateReadOnly, w4pSignaturesConfig }: W4pTaxFormProp
                         initialAddress={formPeriodicPension?.address || DEFAULT_ADDRESS}
                         className="col-span-4 max-w-lg"
                         isFormStateReadOnly={isFormStateReadOnly}
-                        isW4pTaxAddress={false}
                     />
                     <div className="grid grid-cols-4 gap-2">
                         <Field
