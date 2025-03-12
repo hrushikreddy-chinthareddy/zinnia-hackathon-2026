@@ -33,12 +33,12 @@ export abstract class ServerApiClient {
         const headers: any = {
             'x-correlation-id': uuidV4(),
             ...axiosConfig?.headers,
-            Authorization: axiosConfig?.authorization || axiosConfig?.headers?.authorization,
+            Authorization: axiosConfig?.authorization,
         };
 
         return {
             ...axiosConfig,
-            withCredentials: headers?.Authorization ? true : false,
+            withCredentials: false,
             httpsAgent: agent,
             headers,
         };
@@ -118,7 +118,7 @@ export abstract class ServerApiClient {
             correlationId,
         };
         logTrace('serverApiClient::put', loggingContext);
-        logInfo('serverApiClient::put::authorization', { authorization: configWithToken?.headers?.Authorization ? true : false });
+        logInfo('serverApiClient::put::authorization', {authorization : configWithToken?.headers?.Authorization ? true : false });
         try {
             const result = await this.instance.put<T, R>(url, data, configWithToken);
             logTrace('serverApiClient::put::success', {
