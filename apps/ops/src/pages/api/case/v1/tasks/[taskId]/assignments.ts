@@ -23,8 +23,8 @@ export default withAuthAndLogging(
         logTrace(`assignments::${method}::start`, loggingContext);
 
         const config = {
+            authorization: `Bearer ${accessToken}`,
             headers: {
-                authorization: `Bearer ${accessToken}`,
                 'Content-type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
             },

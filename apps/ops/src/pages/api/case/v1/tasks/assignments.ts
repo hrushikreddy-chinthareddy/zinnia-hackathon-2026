@@ -1,21 +1,20 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
-
-const baseUrl = `${apiServerBaseUrl}/case/v1/tasks/assignments`;
+import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<any | null>, logCtx) => {
+    async (req: NextApiRequest, res: NextApiResponse<ClaimNextTask | null>, logCtx) => {
         const now = performance.now();
-        const { clientCode } = req.query;
+        const baseUrl = `${apiServerBaseUrl}/case/v1/tasks/assignments`;
         const accessToken = (await getAccessToken(req, res)).accessToken;
+        const loggingContext = { ...logCtx, baseUrl };
 
-        const loggingContext = { ...logCtx, clientCode, baseUrl };
         logTrace('TaskAssignments::start', loggingContext);
 
         const formData = {};
@@ -28,11 +27,15 @@ export default withAuthAndLogging(
         };
 
         try {
-            const  data  = await serverApi.post<any, AxiosResponse>(baseUrl, formData, config, loggingContext);
+            const data = await serverApi.post<any, AxiosResponse>(baseUrl, formData, config, loggingContext);
             logTrace('TaskAssignments::success', { ...loggingContext, duration: performance.now() - now });
-            res.json(data);
+            return res.status(200).json(data.data);
         } catch (error) {
-            logWarn('TaskAssignments::transactions::error', { ...parseErrorInformation(error), ...loggingContext, duration: performance.now() - now });
+            logWarn('TaskAssignments::transactions::error', {
+                ...parseErrorInformation(error),
+                ...loggingContext,
+                duration: performance.now() - now,
+            });
             res.status(500).json(null);
         }
     },
