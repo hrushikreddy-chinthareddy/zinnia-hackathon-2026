@@ -1,6 +1,6 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Radio } from '@zinnia/bloom/components';
+import { Radio } from '@zinnia/bloom/components';
 import {
   Controller,
   FieldValues,
@@ -17,6 +17,7 @@ import { getUserAuthenticationMethods } from '@/queries/user-queries';
 import { MfaVerificationType } from '@/types/auth';
 
 import styles from './VerifyIdentity.module.css';
+import { Button } from '@/components/button/Button';
 
 export const SelectAuthenticationMethod = ({
   transactionDescription,
@@ -40,6 +41,7 @@ export const SelectAuthenticationMethod = ({
     queryFn: () => getUserAuthenticationMethods(),
     select: response => {
       const phone = response.data?.find(method => method.type === 'phone');
+
       return {
         phoneNumber: phone?.phone_number,
         authenticationMethods: phone?.authentication_methods.map(method => ({
@@ -47,7 +49,6 @@ export const SelectAuthenticationMethod = ({
             method.type === MfaVerificationType.SMS ? 'Text' : 'Phone call',
           value: method.id,
           ariaLabel: method.type,
-          type: method.type,
         })),
         defaultAuthentication: phone?.authentication_methods.find(
           m => m.type === MfaVerificationType.SMS
@@ -120,7 +121,11 @@ export const SelectAuthenticationMethod = ({
       </p>
       <div className={styles.buttonContainer}>
         <Button type="submit">Send code</Button>
-        <Button onClick={onCancel} mode="link">
+        <Button
+          onClick={onCancel}
+          mode="link"
+          additionalContext="select mfa method"
+        >
           Cancel
         </Button>
       </div>

@@ -9,7 +9,7 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
         const formContextOptions: any = uiSchema?.['ui:options']?.formContext;
         if (formContextOptions && props.formContext[formContextOptions?.keyName][formContextOptions?.listName]) {
             const data = props.formContext[formContextOptions?.keyName][formContextOptions?.listName];
-            formData = data.slice(-1);
+            formData = data;
         }
     }
 
@@ -17,12 +17,12 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
         <div className={clsx('flex ')}>
             <ul className="file-info">
                 {formData.map((fileInfo: any, index: number) => {
-                    const { documentId } = fileInfo;
+                    const { documentId, documentName } = fileInfo;
                     return (
                         <li key={index} className="p-2 border-1 border-gray-100 my-4 max-w-sm">
                             <div className="typography-content-body-sm-bold flex gap-2">
                                 <UploadIcon height={25} width={25} />
-                                <div>{documentId ?? ''}</div>
+                                <div>{documentName || documentId || ''}</div>
                             </div>
                         </li>
                     );

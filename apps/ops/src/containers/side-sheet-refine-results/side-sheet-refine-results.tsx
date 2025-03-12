@@ -18,6 +18,7 @@ import DateRangeFields from './date-range-fields';
 import MultiselectField from './multiselect-field';
 
 const REFINE_RESULTS_BASE_KEY = 'caseManagementDashboard.refineResultsOptions.';
+const REFINE_RESULTS_ERROR_BASE_KEY = 'caseManagementDashboard.refineResultsErrors.';
 
 type Errors = {
     createdDateStart?: string;
@@ -300,16 +301,16 @@ export default function SideSheetRefineResults({
         const validateForm = () => {
             let errors: Errors = {};
             if (additionalFilters.createdDateStart && dayjs(additionalFilters.createdDateStart, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-                errors = { ...errors, createdDateStart: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
+                errors = { ...errors, createdDateStart: t(`${REFINE_RESULTS_ERROR_BASE_KEY}date`) as string };
             }
             if (additionalFilters.createdDateEnd && dayjs(additionalFilters.createdDateEnd, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-                errors = { ...errors, createdDateEnd: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
+                errors = { ...errors, createdDateEnd: t(`${REFINE_RESULTS_ERROR_BASE_KEY}date`) as string };
             }
             if (additionalFilters.updatedDateStart && dayjs(additionalFilters.updatedDateStart, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-                errors = { ...errors, updatedDateStart: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
+                errors = { ...errors, updatedDateStart: t(`${REFINE_RESULTS_ERROR_BASE_KEY}date`) as string };
             }
             if (additionalFilters.updatedDateEnd && dayjs(additionalFilters.updatedDateEnd, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-                errors = { ...errors, updatedDateEnd: t(`${REFINE_RESULTS_BASE_KEY}date`) as string };
+                errors = { ...errors, updatedDateEnd: t(`${REFINE_RESULTS_ERROR_BASE_KEY}date`) as string };
             }
             setErrors(errors);
             return Object.keys(errors).length === 0;

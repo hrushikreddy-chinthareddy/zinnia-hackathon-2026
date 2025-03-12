@@ -1,4 +1,4 @@
-import { pad, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { pad, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, getUiOptions } from '@rjsf/utils';
 
 import { FieldDate } from '@deps/components/field/date/FieldDate';
 
@@ -17,7 +17,10 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     value,
     onChange,
     disabled,
+    uiSchema
 }: WidgetProps<T, S, F>) {
+    const { futureDateEnabled } = getUiOptions(uiSchema);
+    const disableAfterDate = futureDateEnabled ? undefined : new Date();
     const _onSelectDate = (date: Date | null | undefined) => {
         if (date) {
             const formatted = formatDate(date);
@@ -29,7 +32,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         <div>{value}</div>
     ) : (
         <div className="max-w-sm flex w-full flex-col">
-            <FieldDate name={id} id={id} onDateSelect={_onSelectDate} defaultDate={value} disableAfterDate={new Date()} />
+            <FieldDate name={id} id={id} onDateSelect={_onSelectDate} defaultDate={value} disableAfterDate={disableAfterDate} />
         </div>
     );
 }

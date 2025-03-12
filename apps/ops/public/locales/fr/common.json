@@ -307,7 +307,15 @@
             }
         },
         "caseId": "Numéro du cas: ",
-        "documentNumber": "Document: "
+        "documentNumber": "Document: ",
+        "noDocumentFound": "Aucun document trouvé",
+        "documentSelectError": "Document déjà sélectionné",
+        "fetchingDocuments": "Récupération des documents...",
+        "noteTitle": "Remarques",
+        "notePlaceholder": "Ajouter une note.",
+        "addNote": "Ajouter une note",
+        "errorSavingNote": "Une erreur s'est produite lors de l'enregistrement de la note. Veuillez réessayer.",
+        "notePostDate": "Publié le {{date}} par"
     },
     "beneChange": {
         "tabs": {
@@ -1407,7 +1415,8 @@
                 "source of premium": "Source de prétium: {{label}}",
                 "transfer of assets": "Transfert d'actifs: {{label}}",
                 "ceding carrier": "Transporteur cédant: {{label}}",
-                "premium source": "Source Premium: {{label}}"
+                "premium source": "Source Premium: {{label}}",
+                "re-illustration": "Nouvelle illustration: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
             "suitabilityReview": "suitability",
@@ -4878,7 +4887,7 @@
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible.",
             "taskTitle": "Détails de la tâche",
-             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -5076,7 +5085,7 @@
             "documents": "Documents",
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible.",
-             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         }
     },
     "suitabilityReview": {

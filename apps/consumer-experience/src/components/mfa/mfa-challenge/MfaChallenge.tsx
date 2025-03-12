@@ -1,10 +1,5 @@
 'use client';
-import {
-  Button,
-  FieldStatus,
-  LoaderVariant,
-  SpinnerButton,
-} from '@zinnia/bloom/components';
+import { FieldStatus } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
@@ -20,6 +15,7 @@ import {
 import { MfaPhoneNumber } from '@/components/mfa/phone-number/MfaPhoneNumber';
 import { MfaAuthenticator } from '@/types/auth';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+import { Button } from '@/components/button/Button';
 
 // TODO: move this into utils, however this is currently a clientside version
 // need to either un-serverside the utils file or pass cookies or something
@@ -222,7 +218,7 @@ export const MfaChallenge = ({
       </div>
       <p className={styles.resend}>
         {getDisclaimerText(authenticator?.oob_channel || '')}{' '}
-        <SpinnerButton
+        <Button
           onClick={handleResendCode}
           className={clsx(
             'text-link-primary',
@@ -231,24 +227,22 @@ export const MfaChallenge = ({
           )}
           size="small"
           mode="link"
-          variant={LoaderVariant.CTA}
-          hide={!resendCode}
+          loading={resendCode}
           disabled={resendCode}
         >
           <span>Re-send verification code.</span>
-        </SpinnerButton>
+        </Button>
       </p>
       <div className="stacked-items">
-        <SpinnerButton
+        <Button
           expand
           type="submit"
           disabled={isSubmitting}
-          variant={LoaderVariant.CTA}
-          hide={!isSubmitting}
+          loading={isSubmitting}
           className={clsx('mt-3xl', styles.submit)}
         >
           <span>Continue</span>
-        </SpinnerButton>
+        </Button>
         {onCancel && (
           <Button
             mode="link"

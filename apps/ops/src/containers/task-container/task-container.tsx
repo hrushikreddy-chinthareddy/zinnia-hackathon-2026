@@ -19,14 +19,12 @@ type TaskContainerProps = {
 
 const TaskContainer = ({ taskInfoLink, nigoExceptions, nigoSubExceptions, taskMetadata }: TaskContainerProps) => {
     const { task, isReadyForDataEntry } = useContext(TaskDataContext);
-
-
     const { carrier, caseId, id, taskType } = task;
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagement.taskForm' });
 
-    // if (task.status === TaskStatus.Completed) {
-    //     return <CompleteCard leaveRoute={taskInfoLink} />;
-    // }
+    if (task.status === TaskStatus.Completed) {
+        return <CompleteCard leaveRoute={taskInfoLink} />;
+    }
 
     const steps = stepsProvider.getSteps(taskType as TaskType, {
         carrierId: carrier,

@@ -5,7 +5,7 @@ import wellabeSuitabilityReviewData from '@deps/jsonschema-mock-service/carrier/
 import agentNigoData from '@deps/jsonschema-mock-service/tasks-data/agent-nigo.json';
 import agentOnboardingNigoData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-nigo.json';
 import agentOnboardingReviewData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-review.json';
-import appDataEnteyData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-review.json';
+import appDataEnteyData from '@deps/jsonschema-mock-service/tasks-data/app-data-entry.json';
 import agentReviewData from '@deps/jsonschema-mock-service/tasks-data/agent-review.json';
 import applicationNigoData from '@deps/jsonschema-mock-service/tasks-data/application-nigo.json';
 import attachmentNigoData from '@deps/jsonschema-mock-service/tasks-data/attachment-nigo.json';

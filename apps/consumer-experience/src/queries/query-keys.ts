@@ -1,4 +1,5 @@
 export enum QueryKeys {
+  NOTIFICATIONS = 'notifications',
   POLICY = 'policy',
   POLICY_PROFILE = 'policyProfile',
   POLICY_FUNDS = 'policyFunds',

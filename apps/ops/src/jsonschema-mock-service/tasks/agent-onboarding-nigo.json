@@ -175,25 +175,27 @@
                         },
                         "items": {
                             "ui:options": {
-                                "canAdd": false
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
                             },
                             "detailedReason": {
                                 "ui-widget": "ValueWidget",
                                 "ui:options": {
-                                    "label": true,
+                                    "label": false,
                                     "inline": true
                                 }
                             },
                             "processingInstruction": {
                                 "ui-widget": "ValueWidget",
                                 "ui:options": {
-                                    "label": true,
+                                    "label": false,
                                     "inline": true
                                 }
                             },
                             "resolved": {
                                 "ui:options": {
-                                    "label": true
+                                    "label": false
                                 }
                             }
                         }

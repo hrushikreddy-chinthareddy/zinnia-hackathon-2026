@@ -856,7 +856,15 @@
             }
         },
         "caseId": "Case ID: ",
-        "documentNumber": "Document: "
+        "documentNumber": "Document: ",
+        "noDocumentFound": "No documents found",
+        "documentSelectError": "Document already selected",
+        "fetchingDocuments": "Fetching Documents...",
+        "noteTitle": "Notes",
+        "notePlaceholder": "Add a note.",
+        "addNote": "Add note",
+        "errorSavingNote": "Error occurred while saving note. Please try again",
+        "notePostDate": "Posted on {{date}} by"
     },
     "caseManagementDashboard": {
         "h1": "Case Management",
@@ -1412,7 +1420,8 @@
                 "source of premium": "Source of Premium: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}",
                 "ceding carrier": "Ceding Carrier: {{label}}",
-                "premium source": "Premium Source: {{label}}"
+                "premium source": "Premium Source: {{label}}",
+                "re-illustration": "Re-Illustration: {{label}}"
             },
             "reviewIssues": "Review {{taskType}}",
             "suitabilityReview": "suitability",
@@ -4925,7 +4934,7 @@
             "relatedTab": {
                 "lastUpdated": "Last updated",
                 "caseId": "Case ID ",
-                 "noCasesAvailable": "No related cases available."
+                "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {

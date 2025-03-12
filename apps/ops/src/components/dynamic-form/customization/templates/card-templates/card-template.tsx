@@ -125,7 +125,7 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
 
     return (
         <>
-            <div className={`flex w-[436px] rounded border border-gray-100 p-[12px] ${className}`}>
+            <div className={`flex w-[455px] rounded border border-gray-100 p-[12px] ${className}`}>
                 <div className="px-2">
                     <Icon width={25} height={25} type={IconType[icon as string as keyof typeof IconType] || IconType.CIRCLE_USER} />{' '}
                 </div>
@@ -193,7 +193,7 @@ const DocumentActions = ({ document, t }: any) => {
 
     return (
         <>
-            <div className="px-4 pt-1">
+            <div className="px-4">
                 <DocumentPreviewer
                     className="flex max-w-[234px] gap-1"
                     activeDocType={DocumentTypeView.Case}

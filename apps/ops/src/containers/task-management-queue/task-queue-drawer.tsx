@@ -12,7 +12,7 @@ import { TranslationFiles } from "@deps/config/translations";
 import { useSideSheetContext } from "@deps/contexts/SideSheetContext";
 import { PendingReasonOptions } from "@deps/models/case/enums";
 import { TaskSource, TaskType } from "@deps/models/case/task";
-import { TaskStatus } from "@deps/models/case/task-instance";
+import { TaskQueueDrawerProps, TaskStatus } from "@deps/models/case/task-instance";
 import { ERROR_CODES } from "@deps/pages/create-case/error";
 import { getTaskInstance, updateTask } from "@deps/queries/api/v2/task";
 import { NUMERIC_DATE_FORMAT } from "@deps/types/constants";
@@ -22,7 +22,7 @@ import { removeFromCache } from "@deps/utils/cache";
 import GlobalTaskSideSheet from "../case-overview/tasks-table/sidesheet/global-task-sidesheet-content";
 
 
-function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription }: { onClose: () => void, getTasks?: () => void, taskStatus: TaskStatus, taskId: string, taskDescription?: string }) {
+function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription, taskName }: TaskQueueDrawerProps) {
   const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
   const [date, setDate] = useState(tomorrow)
   const [timer] = useState(performance.now());
@@ -49,10 +49,9 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
   ];
 
 
-
   const openGlobalSideSheet = () => {
     const content = <GlobalTaskSideSheet taskId={taskId} taskDescription={taskDescription as TaskType} />;
-    sideSheet.changeSideSheetContent(`${t('sideSheet.task.taskHeading')}: ${TaskTitle[taskDescription as TaskType]}`, content);
+    sideSheet.changeSideSheetContent(`${taskName ? `${t('sideSheet.task.taskHeading')}: ${taskName}` : t('sideSheet.task.taskHeading')}`, content);
     sideSheet.handleOpen(true);
   };
   const updateTaskStatus = async () => {

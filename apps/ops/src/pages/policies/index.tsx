@@ -38,8 +38,6 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-import styles from './index.module.css';
-
 const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
     {
         label: t('dashboard.search.buttons.policyNumber'),
@@ -276,7 +274,6 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                             setIsIdle(true);
                             clearPolicySearchFilters();
                         }}
-                        className={styles.searchBar}
                     />
                 </div>
 
