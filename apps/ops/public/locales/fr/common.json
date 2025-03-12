@@ -2064,6 +2064,20 @@
                 "signatureValidation": "Validation des signatures",
                 "Type": "type"
             },
+            "w4pPeriodicPayment": {
+                "maritalStatusAllowanceItems": {
+                    "single": "Célibataire",
+                    "married": "Marié",
+                    "headOfHousehold": "Chef de famille"
+                },
+                "title": "W4-P pour paiements périodiques",
+                "ssn": "NSS",
+                "signatureValidation": "Validation de la signature",
+                "nonJobIncome": "Revenu d'un emploi/pension/rente",
+                "claimsAndCredits": "Réclamer des personnes à charge et d'autres crédits",
+                "otherIncomeAndPensions": "Autres revenus",
+                "otherDeductions": "Déductions"
+            },
             "OL4753Data": {
                 "isOL4753Attached": "Le formulaire OL4753 est-il joint",
                 "dob": "Date de naissance"
@@ -4882,7 +4896,7 @@
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible.",
             "taskTitle": "Détails de la tâche",
-             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "CaseDetailsContent": {
             "tabs": {
@@ -5080,7 +5094,7 @@
             "documents": "Documents",
             "documentId": "ID du document",
             "noFormAvailable": "Aucun formulaire disponible.",
-             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
+            "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         }
     },
     "suitabilityReview": {

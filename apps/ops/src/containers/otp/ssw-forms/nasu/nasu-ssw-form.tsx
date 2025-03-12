@@ -79,7 +79,7 @@ export function NassauSSWForm() {
                 defaultValue={defaultValues.disbursementOption}
             />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <W4pTaxForm isFormStateReadOnly={isFormStateReadOnly} />
+            <W4pTaxForm isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
             {(ownerStateOfResidence || contractIssueState) &&
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />

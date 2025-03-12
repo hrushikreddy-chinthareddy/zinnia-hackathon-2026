@@ -2077,6 +2077,20 @@
                 "signatureValidation": "Signature validation",
                 "Type": "type"
             },
+            "w4pPeriodicPayment": {
+                "maritalStatusAllowanceItems": {
+                    "single": "Single",
+                    "married": "Married",
+                    "headOfHousehold": "Head of household"
+                },
+                "title": "W4-P for Periodic Payments",
+                "ssn": "SSN",
+                "signatureValidation": "Signature Validation",
+                "nonJobIncome": "Income from a Job/Pension/Annuity",
+                "claimsAndCredits": "Claim Dependent and and other Credits",
+                "otherIncomeAndPensions": "Other Income",
+                "otherDeductions": "Deduction"
+            },
             "OL4753Data": {
                 "isOL4753Attached": "Is OL4753 form attached",
                 "dob": "Date of Birth"
@@ -4929,7 +4943,7 @@
             "relatedTab": {
                 "lastUpdated": "Last updated",
                 "caseId": "Case ID ",
-                 "noCasesAvailable": "No related cases available."
+                "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {
