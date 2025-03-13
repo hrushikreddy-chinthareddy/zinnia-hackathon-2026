@@ -43,9 +43,10 @@ const getPayeePaymentDetails = (
 
     const partyIds: string[] = payeeOrBeneficiaries?.map(item => item.partyId).filter((id): id is string => id !== undefined) || [];
     const bankIds: string[] = payeeOrBeneficiaries?.map(item => item.bankId).filter((id): id is string => id !== undefined) || [];
-    co;
+
     partyIds.forEach(partyId => {
         const party = policy.parties?.find(party => party.partyId === partyId);
+        const payeeOrBeneficiary = payeeOrBeneficiaries?.find(party => party.partyId === partyId);
 
         if (party) {
             const address = party.addresses?.find(address => address.addressType === AddressType.RESIDENCE);
@@ -59,10 +60,8 @@ const getPayeePaymentDetails = (
                     nameOnAccount: bankDetails?.nameOnAccount as string,
                     accountNumber: bankDetails?.accountNumber as string,
                 },
-                // Hardcoded total payment amount since we're only supporting one payee at this time
-                disbursementAmount: Math.abs(totalPayment || 0),
-                // Hardcoded for now since we're only showing one payee
-                allocationPercentage: 100,
+                disbursementAmount: Math.abs(payeeOrBeneficiary?.disbursementAmount || 0),
+                allocationPercentage: payeeOrBeneficiary?.allocationPercentage,
             });
         }
     });
