@@ -1410,7 +1410,7 @@
                 "source of premium": "Source de Financement: {{label}}",
                 "transfer of assets": "Transfert d'actifs: {{label}}",
                 "ceding carrier": "Transporteur cédant: {{label}}",
-                "premium source": "Source Premium: {{label}}",
+                "premium source": "Source de Financement: {{label}}",
                 "re-illustration": "Nouvelle illustration: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",

@@ -1415,7 +1415,7 @@
                 "source of premium": "Funding Source: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}",
                 "ceding carrier": "Ceding Carrier: {{label}}",
-                "premium source": "Premium Source: {{label}}",
+                "premium source": "Funding Source: {{label}}",
                 "re-illustration": "Re-Illustration: {{label}}"
             },
             "reviewIssues": "Review {{taskType}}",
