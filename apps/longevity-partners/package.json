@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "echo \"Warning: no dev specified, skipping dev step\" && exit 0",
     "build": "echo \"Warning: no build specified, skipping build step\" && exit 0",
-    "test": "echo \"Warning: no test specified, skipping test step\" && exit 0"
+    "test": "echo \"Warning: no test specified, skipping test step\" && exit 0",
+    "pre-push": "echo \"Warning: no pre-push specified, skipping pre-push step\" && exit 0"
   },
   "keywords": [],
   "author": "",
