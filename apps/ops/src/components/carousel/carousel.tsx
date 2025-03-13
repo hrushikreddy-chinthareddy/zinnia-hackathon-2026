@@ -45,7 +45,7 @@ export const Carousel: FC<CarouselProps> = ({
     slides,
     slideStyle,
     emblaOptions = defaultOptions,
-    containerHeight = '400px',
+    containerHeight = '350px',
     controls = defaultControlsOptions,
     slideItemsCount = [],
     bottomContent,
