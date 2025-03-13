@@ -18,7 +18,7 @@
     "link-package": "node ./scripts/link-package.mjs",
     "unlink-package": "node ./scripts/unlink-packages.mjs",
     "pre-commit": "turbo run pre-commit --filter=\"[HEAD^1]\"",
-    "pre-push": "turbo run pre-push --filter=apps/{$(git diff --name-only HEAD~1..HEAD -- apps/*)}",
+    "pre-push": "changed=$(git diff --name-only HEAD~1..HEAD -- apps/*); if [ -n \"$changed\" ]; then turbo run pre-push --filter=apps/{$changed}; fi",
     "prepare": "husky install"
   },
   "devDependencies": {
