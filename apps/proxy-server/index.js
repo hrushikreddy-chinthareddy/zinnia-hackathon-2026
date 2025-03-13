@@ -122,6 +122,6 @@ app.get('/api/health', function (_, res) {
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
-  console.log(`Proxy server listening on port: ${port}`);
+  console.log(`Proxy server listening on port ${port}`);
   console.log(`Serving static files from: ${distPath}`);
 });
