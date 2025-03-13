@@ -296,7 +296,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
     const DocumentItem = ({ document, taskCarrier }: DocumentItemProps) => {
         return (
-            <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px] gap-2" key={document.documentId}>
+            <div className="my-3 flex w-[436px] rounded border border-gray-100 p-[12px] gap-2" key={document.documentId}>
                 <div>
                     <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />
                 </div>
@@ -308,7 +308,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                         <PiiWrapper>{t('nigoEntry.documentPanel.documentId') + ': ' + document.documentId}</PiiWrapper>
                     </div>
                 </div>
-                {createAction(document as V3DocumentWithSource, taskCarrier.toUpperCase(), t, 'View')}
+                <div className="ml-auto">{createAction(document as V3DocumentWithSource, taskCarrier.toUpperCase(), t, 'View')}</div>
             </div>
         );
     };
