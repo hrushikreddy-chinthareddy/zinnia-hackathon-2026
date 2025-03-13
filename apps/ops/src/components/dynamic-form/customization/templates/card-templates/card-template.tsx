@@ -183,7 +183,8 @@ const DocumentActions = ({ document, t }: any) => {
         docId,
         (document as DocumentWithSource).documentSource || (document as MetadataSearchResponse).documentClassification,
         document.carrier,
-        document.displayName || docId
+        document.displayName || docId,
+        document.fileType
     );
 
     const handleClick = (event: React.MouseEvent) => {
