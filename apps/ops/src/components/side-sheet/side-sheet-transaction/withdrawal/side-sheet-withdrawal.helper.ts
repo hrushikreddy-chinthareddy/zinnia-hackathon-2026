@@ -368,7 +368,7 @@ export const getWithdrawalSideSheetValues = (policy: Policy, transaction: Transa
         taxWithholdings: getTaxWithholdings(policy, transaction, t),
         withdrawalDetails: getWithdrawalDetails(detailsValues, t),
         withdrawalCharges: getWithdrawalCharges(policy, transaction, t),
-        payeePaymentDetails: getPayeePaymentDetails(policy, t, transaction, payeeOrBeneficiaries),
+        payeePaymentDetails: getPayeePaymentDetails(policy, t, payeeOrBeneficiaries),
         transactionType,
         getAsyncSideSheetValues: async () => {
             if (status !== TransactionStatus.Pending) {
@@ -380,7 +380,7 @@ export const getWithdrawalSideSheetValues = (policy: Policy, transaction: Transa
 
             return {
                 actualWithdrawalAmount: detailsValues.actualWithdrawalAmount,
-                payeePaymentDetails: getPayeePaymentDetails(policy, t, transaction, payeeOrBeneficiaries),
+                payeePaymentDetails: getPayeePaymentDetails(policy, t, payeeOrBeneficiaries),
                 withdrawalCharges: getWithdrawalCharges(policy, transaction, t, quote),
                 withdrawalDetails: getWithdrawalDetails(detailsValues, t),
             };
