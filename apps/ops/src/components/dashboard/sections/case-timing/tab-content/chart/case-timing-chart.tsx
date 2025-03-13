@@ -1,13 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { FC, useMemo, useState } from 'react';
+import { FC, useContext, useMemo } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
 import { AiInsightSummary } from '@deps/components/dashboard/ai-insight-summary/ai-insight-summary';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
+import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
@@ -18,41 +17,17 @@ import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-hel
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { CaseTimingData } from '@deps/queries/api/cases';
-import { DashboardSearchFilter } from '@deps/queries/cases';
-import { getCaseDashboardTimingQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
-import { useDashboardStore } from '@deps/store/store';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
 
-import styles from './case-to-close-time-chart.module.css';
-import { generateLabel, generateSeries, generateTooltip, getDaysFromSeconds } from './utils';
-import { formatProcessFilter, generateCarouselDataLengths, startDates, TimeframeFilterOptions } from '../../utils';
+import styles from './case-timing-chart.module.css';
+import { generateCarouselDataLengths, TimeframeFilterOptions } from '../../../../utils';
+import { CaseTimingContext } from '../../context/case-timing-context';
+import { generateLabel, generateSeries, generateTooltip, getDaysFromSeconds } from '../../utils';
 
-export const CaseToCloseTimeChart: FC = () => {
-    const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
-    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
-    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
-
-    const filter: DashboardSearchFilter = {
-        createdDateStart: startDates[timeframe],
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
-        process: formatProcessFilter(selectedProcess),
-    };
-
-    // get timing data by subprocess
-    const {
-        data: caseTimingData,
-
-        isFetching: caseTimingDataFetching,
-        error: caseTimingDataError,
-    } = useQuery({
-        queryKey: ['caseTimingChart', filter],
-        queryFn: () => getCaseDashboardTimingQuery(filter, [GroupByOptions.ProcessSubType]),
-        select: data => data.data?.sort((a, b) => a.secondMedian - b.secondMedian) || data,
-        placeholderData: previousData => previousData,
-        enabled: Object.keys(filter).length > 0,
-    });
+export const CaseTimingChart: FC = () => {
+    const { caseTimingData, caseTimingDataFetching, caseTimingDataError, selectedProcess, timeframe, setSelectedProcess, setTimeframe } =
+        useContext(CaseTimingContext);
 
     // get 5 items for each slide
     const chunkedResponse: CaseTimingData[][] = chunkArray(caseTimingData || [], 5);

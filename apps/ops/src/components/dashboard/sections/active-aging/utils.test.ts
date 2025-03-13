@@ -203,7 +203,11 @@ describe('Active Aging Utils', () => {
 
     describe('getFormattedDateRange', () => {
         it('should format date ranges', () => {
-            expect(getFormattedDateRange(ActiveAgingTimeRange.ZERO_TO_SIX)).toBe('Mar 6, 2025 - Mar 12, 2025');
+            const today = dayjs();
+            const date = today.subtract(6, 'day');
+            expect(getFormattedDateRange(ActiveAgingTimeRange.ZERO_TO_SIX)).toBe(
+                `${date.format(friendlyDateFormat)} - ${today.format(friendlyDateFormat)}`
+            );
         });
     });
 
