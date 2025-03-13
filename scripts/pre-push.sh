@@ -1,6 +1,6 @@
 #!/bin/bash
 
-changed=$(git diff --name-only HEAD~1..HEAD -- apps/*)
+changed=$(git diff --name-only @{u}..HEAD -- apps/*)
 
 if [ -n "$changed" ]; then
   processed_apps=()
