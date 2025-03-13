@@ -36,7 +36,6 @@ import { PayeePaymentDetails } from '../types';
 const getPayeePaymentDetails = (
     policy: Policy,
     t: TFunction,
-    transaction: Transaction,
     payeeOrBeneficiaries?: TransactionPayeeOrBeneficiariesItem[]
 ): PayeePaymentDetails[] => {
     const results: PayeePaymentDetails[] = [];
@@ -425,12 +424,7 @@ export const getFreeLookCancellationSideSheetValues = (
                 value: status === TransactionStatus.Completed ? processDate : DEFAULT_ERROR_STRING,
             },
         ],
-        payeePaymentDetails: getPayeePaymentDetails(
-            policy,
-            t,
-            transaction.transactionAmounts?.appliedAmount,
-            transaction.payeeOrBeneficiaries
-        ),
+        payeePaymentDetails: getPayeePaymentDetails(policy, t, transaction.payeeOrBeneficiaries),
     };
 };
 
