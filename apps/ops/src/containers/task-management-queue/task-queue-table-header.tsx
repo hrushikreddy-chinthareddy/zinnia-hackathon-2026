@@ -10,30 +10,29 @@ const TaskQueueTableHeader = () => {
     return (
         <TableHeader>
             <TableRow>
+                {/* This header cell is needed so the link can come first in the Table Row, without it the table body will shift right one column too far */}
+                <TableHeaderCell className="sr-only">{''}</TableHeaderCell>
                 <TableHeaderCell>
                     <Content details={t('task') as string} variant={ContentVariant.BodySmBold} />
-                </TableHeaderCell>
-                <TableHeaderCell>
-                    <Content details={t('client') as string} variant={ContentVariant.BodySmBold} />
-                </TableHeaderCell>
-                <TableHeaderCell>
-                    <Content details={t('process') as string} variant={ContentVariant.BodySmBold} />
                 </TableHeaderCell>
                 <TableHeaderCell>
                     <Content details={t('status') as string} variant={ContentVariant.BodySmBold} />
                 </TableHeaderCell>
                 <TableHeaderCell>
+                    <Content details={t('carrierPolicy') as string} variant={ContentVariant.BodySmBold} />
+                </TableHeaderCell>
+                <TableHeaderCell>
+                    <Content details={t('assignee') as string} variant={ContentVariant.BodySmBold} />
+                </TableHeaderCell>
+                <TableHeaderCell>
                     <Content details={t('createdAt') as string} variant={ContentVariant.BodySmBold} />
                 </TableHeaderCell>
-                <TableHeaderCell>
-                    <Content details={''} variant={ContentVariant.BodySmBold} />
-                </TableHeaderCell>
-                <TableHeaderCell>
+                <TableHeaderCell colSpan={2}>
                     <Content details={''} variant={ContentVariant.BodySmBold} />
                 </TableHeaderCell>
             </TableRow>
         </TableHeader>
     );
-}
+};
 
 export default TaskQueueTableHeader;

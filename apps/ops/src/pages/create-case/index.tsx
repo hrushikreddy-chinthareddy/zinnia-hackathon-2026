@@ -328,7 +328,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const renderTabContent = (
         <>
             <TabContent className="flex w-full flex-col" value={TabOptions.myTasks}>
-                <TaskManagementQueueContainer featureFlagDecisions={featureFlagDecisions} />
+                <TaskManagementQueueContainer featureFlagDecisions={featureFlagDecisions} showClaimTask={true} additionalData={{ user }} />
             </TabContent>
             <TabContent className="flex w-full flex-col" value={TabOptions.search}>
                 <div className="my-5">

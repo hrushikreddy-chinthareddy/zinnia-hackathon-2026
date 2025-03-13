@@ -1,0 +1,35 @@
+.bg-primary {
+    background-color: var(--color-primary-color-primary);
+}
+
+.avatar-small {
+    width: var(--measure-dimension-padding-md);
+    height: var(--measure-dimension-padding-md);
+    padding: calc(2 * var(--measure-dimension-padding-md));
+    font-size: calc(1.5 * var(--measure-dimension-padding-md));
+}
+
+.avatar-medium {
+    width: var(--measure-dimension-padding-lg);
+    height: var(--measure-dimension-padding-lg);
+    padding: calc(2 * var(--measure-dimension-padding-lg));
+    font-size: calc(1.5 * var(--measure-dimension-padding-md));
+}
+
+.avatar-large {
+    width: var(--measure-dimension-padding-xl);
+    height: var(--measure-dimension-padding-xl);
+    padding: calc(2 * var(--measure-dimension-padding-xl));
+    font-size: calc(1.5 * var(--measure-dimension-padding-md));
+}
+
+.avatar-base {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    line-height: 24px;
+    font-weight: 500;
+    color: #fff;
+    margin-right: 8px;
+}

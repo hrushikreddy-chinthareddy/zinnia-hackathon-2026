@@ -7,6 +7,7 @@ import { NavBarLinkProps } from '@deps/navigation/nav-bar-link/nav-bar-link';
 import { ReactComponent as CollectionIcon } from '@deps/styles/elements/icons/icons_outlined/collection.svg';
 import { ReactComponent as DashboardIcon } from '@deps/styles/elements/icons/icons_outlined/dashboard.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-duplicate.svg';
+import { ReactComponent as HomeIcon } from '@deps/styles/elements/icons/icons_outlined/house.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
@@ -17,6 +18,8 @@ export const getMainNavItems = async (
 ): Promise<NavBarLinkProps[]> => {
     const { hasDashboardPermission, isAdvisorsExcel } = permissionContext;
 
+    const homeLinkText = t('site.navLinks.home.text');
+    const homeLinkHref = t('site.navLinks.home.link');
     const caseLinkText = t('site.navLinks.caseManagement.text');
     const caseLinkHref = t('site.navLinks.caseManagement.link') || '';
     const policySearchText = t('site.navLinks.policySearch.text');
@@ -27,6 +30,7 @@ export const getMainNavItems = async (
     const shouldShowNewExperience = featureFlags?.[FEATURE_FLAGS.NEW_EXP];
     const shouldShowCaseStatsDashboard = featureFlags?.[FEATURE_FLAGS.CASE_STATS_DASHBOARD];
     const enableAdditionalAdvisorsExcelCarriers = featureFlags?.[FEATURE_FLAGS.CASE_ADVISORS_EXCEL_ADDITIONAL_CARRIER_SUPPORT];
+    const showHomeNavBtn = featureFlags?.[FEATURE_FLAGS.SHOW_HOME_NAV_BTN];
     const navItems: NavBarLinkProps[] = [];
 
     const getNavItems = async () => {
@@ -34,6 +38,10 @@ export const getMainNavItems = async (
             isAdvisorsExcel || (await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadCaseManagement));
         const isAllowReadPolicyAdmin = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadPolicyAdmin);
         const isAllowReadOtpRenewals = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadOtpRenewals);
+
+        if (isAllowReadOtpRenewals && shouldShowNewExperience && showHomeNavBtn) {
+            navItems.push({ label: homeLinkText, link: homeLinkHref, icon: <HomeIcon width={20} height={20} /> });
+        }
 
         if (isAllowReadCaseManagement) {
             navItems.push({ label: caseLinkText, link: caseLinkHref, icon: <DocumentIcon width={20} height={20} /> });

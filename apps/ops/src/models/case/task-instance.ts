@@ -139,3 +139,16 @@ export interface TaskQueueDrawerProps {
     taskDescription?: string;
     taskName?: string;
 }
+
+export type UnassignedTask<T = TaskStatus> = {
+    id: string;
+    caseId: string;
+    process: string;
+    carrier: string;
+    taskType: string;
+    taskName: string;
+    status: T;
+    assignee?: string;
+    createdAt: string;
+    identifiers: IdentifierInstance[];
+};
