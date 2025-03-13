@@ -57,10 +57,16 @@ export default function useFlicSSWConfig(t: TFunction) {
             );
 
             if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-                if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
+                if (
+                    formDisbursement?.bank[0].bankName === '' &&
+                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                ) {
                     errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
                 }
-                if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
+                if (
+                    formDisbursement?.bank[0].bankName === '' &&
+                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                ) {
                     errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
                 }
             }
@@ -72,7 +78,10 @@ export default function useFlicSSWConfig(t: TFunction) {
                 );
             }
 
-            if (formDisbursement?.bank[0].accountType?.text === '' && [PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+            if (
+                formDisbursement?.bank[0].accountType?.text === '' &&
+                [PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
+            ) {
                 errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
             }
             return errors;
@@ -85,7 +94,7 @@ export default function useFlicSSWConfig(t: TFunction) {
         formSignature,
         formProgram,
         formDistribution,
-        formDisbursement
+        formDisbursement,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
         const sswType = formProgram?.programSubType?.text || '';
@@ -235,6 +244,16 @@ export default function useFlicSSWConfig(t: TFunction) {
             value: SSWType.InterestEarningDividendsGains,
             generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.InterestEarningDividendsGains),
         },
+        {
+            label: t('sswProgram.sswOptions.singleLifetimeIncomeOption'),
+            value: SSWType.SingleLifetimeIncomeOption,
+            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.SingleLifetimeIncomeOption),
+        },
+        {
+            label: t('sswProgram.sswOptions.jointLifetimeIncomeOption'),
+            value: SSWType.JointLifetimeIncomeOption,
+            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
+        },
     ];
 
     const fundWithdrawnMethodOptions = (sswType: string) => [
@@ -270,7 +289,6 @@ export default function useFlicSSWConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-
     ];
 
     const checkQualType = (qualType: string) => {
