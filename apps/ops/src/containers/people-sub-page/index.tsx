@@ -59,7 +59,8 @@ export const PeopleSubPage: React.FC = () => {
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
     const router = useRouter();
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
-    const extractedPartyRoles = useMemo(() => policy?.partyRoles || [], [policy]);
+    // if there's an enddate, that role is no longer valid
+    const extractedPartyRoles = useMemo(() => policy?.partyRoles?.filter(role => !role.endDate) || [], [policy]);
     const countedRoles = useMemo(() => countPartyRoles(extractedPartyRoles, t), [extractedPartyRoles, t]);
     const nameTags = useMemo(
         () => combineNameAndRoles(extractedParties, extractedPartyRoles, t),
