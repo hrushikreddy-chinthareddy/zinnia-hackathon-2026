@@ -8,7 +8,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
 import { BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { DEFAULT_DISBURSEMENT_UPDATE } from '@deps/models/case/withdrawal/disbursement-types';
+import { DEFAULT_DISBURSEMENT_UPDATE, DisbursementConfig } from '@deps/models/case/withdrawal/disbursement-types';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
@@ -25,8 +25,9 @@ import { getDocumentSource, sswEditFormValidator } from '../ssw-edit-helper';
 
 type BankUpdateFormProps = {
     document: DocumentData;
+    carrierId: string;
 };
-const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
+const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const [bankUpdateDetails, setBankUpdateDetails] = useState(DEFAULT_DISBURSEMENT_UPDATE);
     const [isLoading, setIsLoading] = useState(false);
@@ -98,6 +99,8 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
         );
     }
 
+    const bankingFieldsConfig = BankUpdateFieldConfigs(t, carrierId) as DisbursementConfig[];
+
     return (
         <>
             {!formSubmitted && (
@@ -146,7 +149,7 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                         </div>
                         <div>
                             <FormDisbursementSection
-                                fields={BankUpdateFieldConfigs(t)[0]?.fields}
+                                fields={bankingFieldsConfig}
                                 disbursementInformation={bankUpdateDetails}
                                 onDataChange={setBankUpdateDetails}
                                 isFormStateReadOnly={false}

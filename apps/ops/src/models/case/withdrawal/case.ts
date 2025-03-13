@@ -117,6 +117,32 @@ export interface FormParts {
     formComment?: FormComment;
     irsFormType?: IrsFormType;
     formBeneInfo?: FormBeneInfo | null;
+    periodicPensionForm?: PeriodicPensionFormType | null;
+}
+
+export interface PeriodicPensionFormType {
+    maritalStatus: {
+        text: string;
+    };
+    otherIncomeAndPensions: {
+        text: string;
+        amountType: AmountType;
+    };
+    claimsAndCredits: {
+        text: string;
+        amountType: AmountType;
+    };
+    nonJobIncome: {
+        text: string;
+        amountType: AmountType;
+    };
+    otherDeductions: {
+        text: string;
+        amountType: AmountType;
+    };
+    address: Address;
+    signature: SignatureWithdrawal;
+    ssn: string;
 }
 
 export interface FormIrsData {
@@ -444,6 +470,7 @@ export interface Address {
     state: string;
     zip: string;
     zipPlusFour?: string | null;
+    ssn?: string;
 }
 
 export interface BankDetails {
