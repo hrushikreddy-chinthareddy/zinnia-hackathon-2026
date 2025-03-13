@@ -1,36 +1,37 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { AxiosResponse } from 'axios';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<ClaimNextTask | null>, logCtx) => {
         const now = performance.now();
+        const baseUrl = `${apiServerBaseUrl}/case/v1/tasks/assignments`;
         const accessToken = (await getAccessToken(req, res)).accessToken;
-
-        const baseUrl = `${apiServerBaseUrl}/case/v1/tasks/claimNextTask`;
-
         const loggingContext = { ...logCtx, baseUrl };
-        logTrace('claimNextTask::start', loggingContext);
 
+        logTrace('TaskAssignments::start', loggingContext);
+
+        const formData = {};
         const config = {
+            authorization: `Bearer ${accessToken}`,
             headers: {
-                authorization: `Bearer ${accessToken}`,
                 'Content-type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
             },
         };
 
         try {
-            const data = await serverApi.patch(baseUrl, config);
-            logTrace('claimNextTask::patch::success::task claimed successful', { ...loggingContext, duration: performance.now() - now });
-            return res.status(200).send(await data.json());
+            const data = await serverApi.post<any, AxiosResponse>(baseUrl, formData, config, loggingContext);
+            logTrace('TaskAssignments::success', { ...loggingContext, duration: performance.now() - now });
+            return res.status(200).json(data.data);
         } catch (error) {
-            logWarn('claimNextTask::patch::error::something went wrong while claiming task', {
+            logWarn('TaskAssignments::transactions::error', {
                 ...parseErrorInformation(error),
                 ...loggingContext,
                 duration: performance.now() - now,
@@ -38,5 +39,5 @@ export default withAuthAndLogging(
             res.status(500).json(null);
         }
     },
-    { file: 'case/v1/tasks/claimNextTask', function: 'routeHandler' }
+    { file: 'case/v1/tasks/assignments', function: 'routeHandler' }
 );

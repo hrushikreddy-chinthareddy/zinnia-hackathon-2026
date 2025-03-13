@@ -122,7 +122,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
         if (task) {
             setClaimTaskLoader(true);
             try {
-                const response = await claimTask(task.caseId, task.id);
+                const response = await claimTask(task.id);
                 if (response.id == task.id && user?.email) {
                     setTask({
                         ...task,

@@ -25,8 +25,8 @@ export type ClaimNextTask = {
 
 export const claimNextTask = async () => {
     try {
-        const url = `${baseAppUrl}/api/case/v1/tasks/claimNextTask`;
-        const data = await client.patch(url);
+        const url = `${baseAppUrl}/api/case/v1/tasks/assignments`;
+        const data = await client.post(url);
         logInfo('claimNextTask::Task is claimed successfully', { file: 'queries/api/v1/claimTask', function: 'claimNextTask', url });
         return data;
     } catch (error: any) {
