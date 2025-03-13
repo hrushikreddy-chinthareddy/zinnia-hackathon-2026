@@ -248,12 +248,11 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
         }
 
         case TransactionType.Disbursement: {
-            let totalAppliedAmount = 0;
             // The applied amount for disbursements is tied to each beneficiary, so we have to loop through.
             // this is almost always only 1 (it may always only be 1, but let's be careful).
-            payeeOrBeneficiaries?.forEach(payeeOrBeneficiary => {
-                totalAppliedAmount += payeeOrBeneficiary.disbursementAmount ? payeeOrBeneficiary.disbursementAmount : 0;
-            });
+            const totalAppliedAmount = payeeOrBeneficiaries?.reduce((acc, payeeOrBeneficiary) => {
+                return acc + (payeeOrBeneficiary.disbursementAmount || 0);
+            }, 0);
             amount = totalAppliedAmount;
             break;
         }
