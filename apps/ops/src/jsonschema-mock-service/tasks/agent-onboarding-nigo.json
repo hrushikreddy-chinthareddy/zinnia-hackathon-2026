@@ -25,11 +25,11 @@
                                 "properties": {
                                     "detailedReason": {
                                         "type": "string",
-                                        "title": "Issue"
+                                        "title": "Issues"
                                     },
                                     "processingInstruction": {
                                         "type": "string",
-                                        "title": "Rule"
+                                        "title": "Processing Instructions"
                                     },
                                     "resolved": {
                                         "type": "boolean",

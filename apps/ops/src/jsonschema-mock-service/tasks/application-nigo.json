@@ -16,18 +16,24 @@
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "sectionHeader": {
-                            "type": "object",
-                            "title": "Processing Instructions"
-                        },
                         "issuesList": {
                             "type": "array",
-                            "title": "Issues",
+                            "title": "",
                             "items": {
                                 "type": "object",
+                                "title": "",
                                 "properties": {
-                                    "reason": {
-                                        "type": "string"
+                                    "processingReason": {
+                                        "type": "string",
+                                        "title": "Issues"
+                                    },
+                                    "processingInstruction": {
+                                        "type": "string",
+                                        "title": "Processing Instructions"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
                                     }
                                 }
                             }
@@ -96,6 +102,41 @@
                             "type": "boolean",
                             "enumNames": ["Yes", "No"],
                             "enum": [true, false]
+                        },
+                        "uploadDocuments": {
+                            "type": "object",
+                            "title": "Link or upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "upload",
+                                    "items": {
+                                        "title": "upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
                         }
                     },
                     "dependencies": {
@@ -125,6 +166,15 @@
                     }
                 },
                 "uiSchema": {
+                    "ui:order": [
+                        "issuesList",
+                        "details",
+                        "yesDisabled",
+                        "issueResolved",
+                        "communicationSent",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
                         "orderable": false,
@@ -134,19 +184,36 @@
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "sectionHeader": {
-                        "props": {
-                            "description": "Application form may be missing or mismatched for the signed state. Review the application and confirm that we can resolve the issue."
-                        },
-                        "ui:options": {
-                            "label": true,
-                            "ObjectFieldTemplate": "InstructionsTemplate"
-                        }
-                    },
                     "issuesList": {
+                        "ui:readonly": true,
                         "ui:options": {
-                            "ArrayFieldTemplate": "TextListTemplate",
-                            "keyName": "processingInstruction"
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                            },
+                            "processingReason": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "processingInstruction": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "resolved": {
+                                "ui:options": {
+                                    "label": false
+                                }
+                            }
                         }
                     },
                     "details": {
@@ -191,6 +258,45 @@
                     "communicationSent": {
                         "ui:options": {
                             "label": true
+                        }
+                    },
+                    "uploadDocuments": {
+                        "inline": true,
+                        "ui:options": {
+                            "label": true,
+                            "omitValue": true
+                        },
+                        "upload": {
+                            "ui:widget": "AutoCompleteWidget",
+                            "ui:placeholder": "Find existing documents...",
+                            "ui:options": {
+                                "label": false,
+                                "icon": "Search"
+                            }
+                        },
+                        "or": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "attachment": {
+                            "ui:options": {
+                                "label": false,
+                                "showFiles": false
+                            },
+                            "ui:props": {
+                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiMethod": "get"
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
                         }
                     }
                 }

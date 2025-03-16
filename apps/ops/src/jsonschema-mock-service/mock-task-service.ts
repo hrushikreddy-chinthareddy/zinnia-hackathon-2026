@@ -13,6 +13,7 @@ import premiumNigoData from '@deps/jsonschema-mock-service/tasks-data/premium-ni
 import purchaseDocumentMatchingData from '@deps/jsonschema-mock-service/tasks-data/purchase-document-matching.json';
 import standardDocumentMatchingData from '@deps/jsonschema-mock-service/tasks-data/standard-document-matching.json';
 import toaNigoData from '@deps/jsonschema-mock-service/tasks-data/toa-nigo.json';
+import ofacReviewData from '@deps/jsonschema-mock-service/tasks-data/ofac-review.json';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 
@@ -55,6 +56,8 @@ export const getCaseTaskByIdSSRMock = async (taskType: TaskType): Promise<Manage
             return appDataEnteyData as ManagementTask<TaskStatus>;
         case TaskType.Agent_Onboarding_Review:
             return agentOnboardingReviewData as ManagementTask<TaskStatus>;
+        case TaskType.Review_Ofac:
+            return ofacReviewData as ManagementTask<TaskStatus>;
         default:
             return null;
     }

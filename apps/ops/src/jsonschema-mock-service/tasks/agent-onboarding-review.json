@@ -16,9 +16,23 @@
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "sectionHeader": {
-                            "type": "object",
-                            "title": "Processing Instructions"
+                        "issuesList": {
+                            "type": "array",
+                            "title": "",
+                            "items": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "processingInstruction": {
+                                        "type": "string",
+                                        "title": "Processing Instructions"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
+                                    }
+                                }
+                            }
                         },
                         "details": {
                             "type": "object",
@@ -49,14 +63,43 @@
                         "issuesResolved": {
                             "type": "boolean",
                             "title": "Can you resolve the issues?",
-                            "enumNames": [
-                                "Yes, I can proceed to the next step",
-                                "No, there are one or more issues that need to be logged"
-                            ],
-                            "enum": [
-                                true,
-                                false
-                            ]
+                            "enumNames": ["Yes, I can proceed to the next step", "No, there are one or more issues that need to be logged"],
+                            "enum": [true, false]
+                        },
+                        "uploadDocuments": {
+                            "type": "object",
+                            "title": "Link or upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "upload",
+                                    "items": {
+                                        "title": "upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
                         }
                     },
                     "dependencies": {
@@ -65,18 +108,14 @@
                                 {
                                     "properties": {
                                         "issuesResolved": {
-                                            "enum": [
-                                                true
-                                            ]
+                                            "enum": [true]
                                         }
                                     }
                                 },
                                 {
                                     "properties": {
                                         "issuesResolved": {
-                                            "enum": [
-                                                false
-                                            ]
+                                            "enum": [false]
                                         },
                                         "declineReason": {
                                             "title": "",
@@ -94,7 +133,6 @@
                                             "title": "These issues will be created for the case:"
                                         }
                                     }
-
                                 }
                             ]
                         }
@@ -104,11 +142,18 @@
                             "enum": ["DEFAULT"]
                         }
                     },
-                    "required": [
-                        "issuesResolved"
-                    ]
+                    "required": ["issuesResolved"]
                 },
                 "uiSchema": {
+                    "ui:order": [
+                        "issuesList",
+                        "details",
+                        "issuesResolved",
+                        "declineReason",
+                        "reviewFailureReasonDisplay",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
                         "orderable": false,
@@ -118,15 +163,73 @@
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "sectionHeader": {
-                        "props": {
-                            "description": "Complete onboarding validation manually and enter agent information in MCS. Use selection to confirm agent in is good order. Else, log appropriate NIGO's."
-                        },
+                    "issuesList": {
+                        "ui:readonly": true,
                         "ui:options": {
-                            "label": true,
-                            "ObjectFieldTemplate": "InstructionsTemplate"
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                            },
+
+                            "processingInstruction": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "resolved": {
+                                "ui:options": {
+                                    "label": false
+                                }
+                            }
                         }
                     },
+
+                    "uploadDocuments": {
+                        "inline": true,
+                        "ui:options": {
+                            "label": true,
+                            "omitValue": true
+                        },
+                        "upload": {
+                            "ui:widget": "AutoCompleteWidget",
+                            "ui:placeholder": "Find existing documents...",
+                            "ui:options": {
+                                "label": false,
+                                "icon": "Search"
+                            }
+                        },
+                        "or": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "attachment": {
+                            "ui:options": {
+                                "label": false,
+                                "showFiles": false
+                            },
+                            "ui:props": {
+                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiMethod": "get"
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
+                        }
+                    },
+
                     "details": {
                         "ui:options": {
                             "label": true

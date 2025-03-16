@@ -20,7 +20,6 @@
                             "type": "object",
                             "title": "Processing Instructions"
                         },
-
                         "rules": {
                             "type": "array",
                             "title": "",
@@ -30,11 +29,11 @@
                                 "properties": {
                                     "issue": {
                                         "type": "string",
-                                        "title": "Issue"
+                                        "title": "Issues"
                                     },
                                     "rule": {
                                         "type": "string",
-                                        "title": "Rule"
+                                        "title": "Processing Instructions"
                                     },
                                     "applicationInformation": {
                                         "type": "string",
@@ -86,6 +85,41 @@
                             "title": "OFAC Decision",
                             "enumNames": ["Accept", "Decline"],
                             "enum": [true, false]
+                        },
+                        "uploadDocuments": {
+                            "type": "object",
+                            "title": "Link or upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "upload",
+                                    "items": {
+                                        "title": "upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
                         }
                     },
                     "dependencies": {
@@ -103,48 +137,12 @@
                                         "issueResolved": {
                                             "enum": [false]
                                         },
-
                                         "declineReason": {
                                             "title": "Reason for decline",
                                             "type": "array",
                                             "items": {
                                                 "type": "string",
                                                 "$ref": "#/definitions/declineReason"
-                                            }
-                                        },
-                                        "uploadDocuments": {
-                                            "type": "object",
-                                            "title": "Link or upload document",
-                                            "properties": {
-                                                "upload": {
-                                                    "type": "string"
-                                                },
-                                                "or": {
-                                                    "type": "string",
-                                                    "title": "or"
-                                                },
-                                                "attachment": {
-                                                    "type": "array",
-                                                    "title": "upload",
-                                                    "items": {
-                                                        "title": "upload",
-                                                        "type": "string",
-                                                        "format": "data-url"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "attachments": {
-                                            "type": "array",
-                                            "items": {
-                                                "documentName": {
-                                                    "title": "Name",
-                                                    "type": "string"
-                                                },
-                                                "documentId": {
-                                                    "title": "Document Id",
-                                                    "type": "string"
-                                                }
                                             }
                                         }
                                     }
@@ -160,6 +158,7 @@
                     "required": ["issueResolved"]
                 },
                 "uiSchema": {
+                    "ui:order": ["sectionHeader", "rules", "details", "issueResolved", "declineReason", "uploadDocuments", "attachments"],
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
                         "orderable": false,
@@ -194,7 +193,8 @@
                                 "ui:options": {
                                     "ObjectFieldTemplate": "CardTemplate",
                                     "cardType": "Document",
-                                    "icon": "DOCUMENT_TEXT"
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
                                 },
                                 "documentId": {
                                     "ui:widget": "text"
@@ -208,7 +208,6 @@
                             }
                         }
                     },
-
                     "rules": {
                         "ui:options": {
                             "label": false,
@@ -282,7 +281,7 @@
                                 "showFiles": false
                             },
                             "ui:props": {
-                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiUrl": "case/v1/form/metadata?process=Suitability&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
                                 "apiMethod": "get"
                             }
                         }
