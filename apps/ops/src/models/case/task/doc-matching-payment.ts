@@ -30,12 +30,7 @@ export type TransactionData = {
     updatedTs: string;
     createdBy: string;
     updatedBy: string;
-    identifiers: [
-        {
-            identifier: string;
-            value: string;
-        }
-    ];
+    identifiers?: TransactionIdentifier[];
 };
 
 export enum MatchingCase {
@@ -88,6 +83,11 @@ type Entity = {
         };
     };
     paymentRecordStatus: 'COMPLETED';
+};
+
+type TransactionIdentifier = {
+    identifier: string;
+    value: string;
 };
 
 export enum EntityTypes {
