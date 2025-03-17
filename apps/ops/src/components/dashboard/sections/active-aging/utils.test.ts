@@ -88,41 +88,106 @@ describe('Active Aging Utils', () => {
                         { name: today.subtract(18, 'day').toString(), count: 90, key: '106' },
                     ],
                 },
+                {
+                    name: 'Test 2',
+                    key: 'test2',
+                    count: 150,
+                    values: [
+                        { name: today.toString(), count: 10, key: 'test-2-123' },
+                        { name: today.subtract(1, 'day').toString(), count: 20, key: 'test-2-456' },
+                        { name: today.subtract(2, 'day').toString(), count: 30, key: 'test-2-789' },
+                        { name: today.subtract(3, 'day').toString(), count: 40, key: 'test-2-101' },
+                        { name: today.subtract(7, 'day').toString(), count: 50, key: 'test-2-102' },
+                        { name: today.subtract(8, 'day').toString(), count: 60, key: 'test-2-103' },
+                        { name: today.subtract(15, 'day').toString(), count: 70, key: 'test-2-104' },
+                        { name: today.subtract(14, 'day').toString(), count: 80, key: 'test-2-105' },
+                        { name: today.subtract(18, 'day').toString(), count: 90, key: 'test-2-106' },
+                    ],
+                },
             ];
 
             const result = organizeAndMergeDataByTimeRange(data);
             expect(result).toEqual({
                 [ActiveAgingTimeRange.ZERO_TO_SIX]: {
+                    countByDay: {},
                     data: [
                         {
+                            countByDay: {
+                                [today.toString()]: 10,
+                                [today.subtract(1, 'day').toString()]: 20,
+                                [today.subtract(2, 'day').toString()]: 30,
+                                [today.subtract(3, 'day').toString()]: 40,
+                            },
                             name: 'Test',
                             count: [10, 20, 30, 40],
-                            createdAt: today.toString(),
+                            total: 100,
+                        },
+                        {
+                            countByDay: {
+                                [today.toString()]: 10,
+                                [today.subtract(1, 'day').toString()]: 20,
+                                [today.subtract(2, 'day').toString()]: 30,
+                                [today.subtract(3, 'day').toString()]: 40,
+                            },
+                            name: 'Test 2',
+                            count: [10, 20, 30, 40],
+                            total: 100,
                         },
                     ],
-                    total: 100,
+                    total: 200,
                 },
                 [ActiveAgingTimeRange.SEVEN_TO_THIRTEEN]: {
+                    countByDay: {},
                     data: [
                         {
+                            countByDay: {
+                                [today.subtract(7, 'day').toString()]: 50,
+                                [today.subtract(8, 'day').toString()]: 60,
+                            },
                             name: 'Test',
                             count: [50, 60],
-                            createdAt: today.subtract(7, 'day').toString(),
+                            total: 110,
+                        },
+                        {
+                            countByDay: {
+                                [today.subtract(7, 'day').toString()]: 50,
+                                [today.subtract(8, 'day').toString()]: 60,
+                            },
+                            name: 'Test 2',
+                            count: [50, 60],
+                            total: 110,
                         },
                     ],
-                    total: 110,
+                    total: 220,
                 },
                 [ActiveAgingTimeRange.FOURTEEN_TO_TWENTYSEVEN]: {
+                    countByDay: {},
                     data: [
                         {
+                            countByDay: {
+                                [today.subtract(15, 'day').toString()]: 70,
+                                [today.subtract(14, 'day').toString()]: 80,
+                                [today.subtract(18, 'day').toString()]: 90,
+                            },
                             name: 'Test',
                             count: [70, 80, 90],
-                            createdAt: today.subtract(15, 'day').toString(),
+                            total: 240,
+                        },
+                        {
+                            countByDay: {
+                                [today.subtract(15, 'day').toString()]: 70,
+                                [today.subtract(14, 'day').toString()]: 80,
+                                [today.subtract(18, 'day').toString()]: 90,
+                            },
+                            name: 'Test 2',
+                            count: [70, 80, 90],
+                            total: 240,
                         },
                     ],
-                    total: 240,
+                    total: 480,
                 },
                 [ActiveAgingTimeRange.TWENTY_EIGHT_PLUS]: {
+                    countByDay: {},
                     data: [],
                     total: 0,
                 },
@@ -181,6 +246,8 @@ describe('Active Aging Utils', () => {
                     name: 'Test',
                     count: [10, 20, 30],
                     createdAt: '2023-07-06',
+                    countByDay: { '2023-07-06': 10, '2023-07-07': 20, '2023-07-08': 30 },
+                    total: 60,
                 },
             ];
 
@@ -203,10 +270,8 @@ describe('Active Aging Utils', () => {
 
     describe('getFormattedDateRange', () => {
         it('should format date ranges', () => {
-            const today = dayjs();
-            const date = today.subtract(6, 'day');
             expect(getFormattedDateRange(ActiveAgingTimeRange.ZERO_TO_SIX)).toBe(
-                `${date.format(friendlyDateFormat)} - ${today.format(friendlyDateFormat)}`
+                `${dayjs().subtract(6, 'day').format(friendlyDateFormat)} - ${dayjs().format(friendlyDateFormat)}`
             );
         });
     });

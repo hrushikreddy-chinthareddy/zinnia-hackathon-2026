@@ -75,7 +75,7 @@ const defaultState = {
 
 const filterNullData = (response: CaseDashboardStatsResponse) => {
     if (response?.data?.length) {
-        response.data = response?.data?.filter(item => Boolean(item.name) && item.name !== 'null');
+        response.data = response?.data?.filter(item => item.name !== null && item.name !== 'null');
     }
     return response;
 };
@@ -113,6 +113,7 @@ export const ActiveAgingProvider: FC<PropsWithChildren> = ({ children }) => {
     });
 
     const timeRangeData = useMemo(() => organizeAndMergeDataByTimeRange(activeAgingData?.data || []), [activeAgingData]);
+
     const chartSeries = useMemo(() => generateActiveAgingSeries(timeframe, timeRangeData), [timeframe, timeRangeData]);
     const totalCaseCount = useMemo(() => timeRangeData[timeframe]?.total || 0, [timeframe, timeRangeData]);
     const pieSeries = useMemo(

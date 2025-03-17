@@ -10,101 +10,76 @@ import {
     TableHeaderCell,
     TableRow,
 } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
-import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
-import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
-import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
-import { startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
 import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
-import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
-import { SubmissionMethodTooltip } from '../../submission-type';
-import { friendlyGroupByName } from '../../utils';
-
-// Define the type for the flattened structure
-interface FlattenedDashboardStatsElement {
-    name: string;
-    submissionMethod: string;
-    count: number;
-}
-
-// We render out the table view of these stats a bit differently than the chart.
-// Since we're returning arrays of carriers with nested data for the submission method,
-// we need to flatten the list of submission methods out and associate them with the carrier
-// Carrier | Method | Count
-const flattenDashboardStats = (data: DashboardStatsElementResponse[], parentName: string): FlattenedDashboardStatsElement[] => {
-    return data.flatMap(item => {
-        if (item.values && item.values.length > 0) {
-            return flattenDashboardStats(item.values, item.name);
-        } else {
-            return [
-                {
-                    name: parentName,
-                    submissionMethod: item.name,
-                    count: item.count,
-                },
-            ];
-        }
-    });
-};
+import { friendlyGroupByName } from '../../../submission-type/utils';
+import { ActiveAgingContext } from '../../context/active-aging-context';
+import { calculateEndDate, startDates } from '../../utils';
+import { ActiveAgingFilters } from '../shared/active-aging-filters';
+import { ActiveAgingHeader } from '../shared/active-aging-header';
 
 enum SortByOptions {
     NAME = 'name',
-    SUBMISSION_METHOD = 'submissionMethod',
-    COUNT = 'count',
+    TOTAL = 'total',
 }
 
 const generateCaseLink = (
-    process: Processes | ExtendedProcesses | undefined,
-    name: string,
-    submissionMethod: string,
-    timeframe: TimeframeFilterOptions,
-    groupBy: GroupByOptions
+    process: Processes | ExtendedProcesses | undefined, // case type
+    name: string, // request sub type
+    createdStartDate: string,
+    createdEndDate: string,
+    groupBy: GroupByOptions,
+    caseStatus: Statuses[] = []
 ) => {
-    const method = submissionMethod === 'Electronic (E-App)' ? 'electronic' : 'paper';
     const carrierOrProduct =
-        groupBy === GroupByOptions.ProductName ? 'productName' : groupBy === GroupByOptions.Carrier ? 'carrier' : 'brokerDealerName';
-    const createdStartDate = startDates[timeframe];
+        groupBy === GroupByOptions.ProcessSubType ? 'requestSubType' : groupBy === GroupByOptions.Carrier ? 'carrier' : 'brokerDealerName';
 
     return `/cases?process=${
         process === 'all' ? '' : process
-    }&${carrierOrProduct}=${name}&applicationType=${method}&createdDateStart=${createdStartDate}&caseStatus=${[
-        Statuses.InProgress,
-        Statuses.Exception,
-        Statuses.NotStarted,
-    ].join('&caseStatus=')}`;
+    }&${carrierOrProduct}=${name}&createdDateStart=${createdStartDate}&createdDateEnd=${createdEndDate}&caseStatus=${caseStatus.join(
+        '&caseStatus='
+    )}`;
 };
 
-export const SubmissionTypeTable = () => {
+export const ActiveAgingTable = () => {
     const [offset, setOffset] = useState(0);
     const [searchText, setSearchText] = useState('');
     const limit = 10;
 
-    const { graphStats, timeframe, submissionVs, selectedProcess, graphStatsLoading, graphStatsFetching, graphStatsError } =
-        useContext(SubmissionTypeContext);
+    const {
+        timeframe,
+        activeAgingDataFetching,
+        activeAgingDataLoading,
+        activeAgingDataError,
+        groupBy,
+        timeRangeData,
+        selectedProcess,
+        filter,
+    } = useContext(ActiveAgingContext);
 
-    // Transform the data by flattening it
-    const flattenedData = useMemo(() => {
-        if (!graphStats?.data) return [];
-        return flattenDashboardStats(graphStats.data, '');
-    }, [graphStats?.data]);
+    const dataByTimeframe = useMemo(() => {
+        return timeRangeData?.[timeframe].data || [];
+    }, [timeRangeData, timeframe]);
 
     // Filter by search
     const searchedData = useMemo(() => {
-        return flattenedData.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
-    }, [flattenedData, searchText]);
+        return dataByTimeframe.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+    }, [dataByTimeframe, searchText]);
 
     const { handleSort, sortedData } = useTableOptions({
-        sortByDefault: SortByOptions.COUNT,
+        sortByDefault: SortByOptions.TOTAL,
         dataToSort: searchedData,
     });
 
@@ -128,35 +103,49 @@ export const SubmissionTypeTable = () => {
         }
     }, [sortedData, goToPage, offset]);
 
-    const totalCaseCount = graphStats?.data?.map(stat => stat.count).reduce((a, b) => a + b, 0);
-
-    const totalCases = graphStatsFetching ? (
-        <div className="blur">
-            <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
-        </div>
-    ) : (
-        <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+    const generateExpandableContent = useCallback(
+        (name: string, countByDay: { [key: string]: number }) => {
+            return Object.keys(countByDay)
+                .reverse()
+                .map(key => {
+                    const startDate = dayjs(key);
+                    const daysActive = dayjs().diff(startDate, 'day');
+                    return (
+                        <TableRow key={key}>
+                            <TableCell>{name}</TableCell>
+                            <TableCell>{countByDay[key]}</TableCell>
+                            <TableCell>{daysActive} Days</TableCell>
+                            <TableCell>
+                                <NavElement
+                                    type={NavElementType.Link}
+                                    target="_blank"
+                                    href={generateCaseLink(selectedProcess, name, key, key, groupBy, filter.caseStatus)}
+                                    rel="noreferrer"
+                                >
+                                    View cases
+                                </NavElement>
+                            </TableCell>
+                        </TableRow>
+                    );
+                });
+        },
+        [filter.caseStatus, groupBy, selectedProcess]
     );
 
     return (
         <CardContainer>
-            <ChartHeader
-                title="Submission Method"
-                subtitle={totalCases}
-                titleToolTip={SubmissionMethodTooltip}
-                description="The distribution of incoming case requests by submission method, comparing Electronic (E-App) and Paper submissions."
-            />
+            <ActiveAgingHeader />
             <div className={sharedStyles.searchContainer}>
                 <FieldDataActive
                     fieldSize="small"
-                    placeholder={`Search by ${friendlyGroupByName[submissionVs]?.toLocaleLowerCase()} name`}
+                    placeholder={`Search by ${friendlyGroupByName[groupBy]?.toLocaleLowerCase()} name`}
                     onChange={e => setSearchText(e.target.value)}
                 />
             </div>
-            <SubmissionTypeFilters />
+            <ActiveAgingFilters />
             <div className={sharedStyles.tableContainer}>
-                <BlurOverlayLoader loading={graphStatsFetching || graphStatsLoading}>
-                    {graphStatsError ? (
+                <BlurOverlayLoader loading={activeAgingDataFetching || activeAgingDataLoading}>
+                    {activeAgingDataError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
@@ -175,7 +164,7 @@ export const SubmissionTypeTable = () => {
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
-                                        {friendlyGroupByName[submissionVs]} Name
+                                        {friendlyGroupByName[groupBy]}
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -184,8 +173,8 @@ export const SubmissionTypeTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.SUBMISSION_METHOD)} sortable>
-                                        Submission Method
+                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.TOTAL)} sortable>
+                                        Total submissions
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -194,26 +183,25 @@ export const SubmissionTypeTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.COUNT)} sortable>
-                                        Total Submissions
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
+                                    <TableHeaderCell>Days active</TableHeaderCell>
                                     <TableHeaderCell>Actions</TableHeaderCell>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {paginatedData.map(item => {
+                                    const startDate = startDates[timeframe];
+                                    const endDate = calculateEndDate(timeframe);
+
                                     return (
-                                        <TableRow key={`${item.name}-${item.submissionMethod}`}>
+                                        <TableRow
+                                            key={`${item.name}-${item.count}`}
+                                            isExpandable
+                                            showChevron
+                                            expandedContent={generateExpandableContent(item.name, item.countByDay)}
+                                        >
                                             <TableCell>{item.name}</TableCell>
-                                            <TableCell>{item.submissionMethod}</TableCell>
-                                            <TableCell>{item.count}</TableCell>
+                                            <TableCell>{item.total}</TableCell>
+                                            <TableCell>{timeframe}</TableCell>
                                             <TableCell>
                                                 <NavElement
                                                     type={NavElementType.Link}
@@ -221,9 +209,10 @@ export const SubmissionTypeTable = () => {
                                                     href={generateCaseLink(
                                                         selectedProcess,
                                                         item.name,
-                                                        item.submissionMethod,
-                                                        timeframe,
-                                                        submissionVs
+                                                        startDate,
+                                                        endDate,
+                                                        groupBy,
+                                                        filter.caseStatus
                                                     )}
                                                     rel="noreferrer"
                                                 >
@@ -236,7 +225,7 @@ export const SubmissionTypeTable = () => {
                             </TableBody>
                         </Table>
                     )}
-                    {!graphStatsError && searchedData?.length > 0 && searchedData.length > limit && (
+                    {!activeAgingDataError && searchedData?.length > 0 && (
                         <div className={sharedStyles.paginationContainer}>
                             <Pagination limit={limit} offset={offset} total={searchedData?.length || 0} goToPage={goToPage} />
                         </div>
