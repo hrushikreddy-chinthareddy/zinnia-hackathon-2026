@@ -132,7 +132,7 @@
         "availableIncreaseTooltip": "Le propriétaire peut augmenter son capital décès de ce montant.",
         "issueDate": "Date d'émission",
         "policyAge": "Âge de la police",
-        "eligibleForIncreaseUntil": "Éligible pour une augmentation jusqu'à*"
+        "eligibleForIncreaseUntil": "Éligible pour une augmentation jusqu'à"
     },
     "document": {
         "title": "Document"
