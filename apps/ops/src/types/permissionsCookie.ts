@@ -1,4 +1,4 @@
-export const PERMISSIONS_COOKIE_NAME = 'fga-permissions';
+export const PERMISSIONS_COOKIE_NAME = '__Host-fga-permissions';
 
 export const DEFAULT_PERMISSIONS_COOKIE = '{"tuples":{},"carriers":{}}';
 
