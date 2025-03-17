@@ -2,10 +2,17 @@ import { handleAuth, handleLogin } from '@auth0/nextjs-auth0';
 import { setCookie } from 'cookies-next';
 
 import { DEFAULT_PERMISSIONS_COOKIE, PERMISSIONS_COOKIE_NAME } from '@deps/types/permissionsCookie';
+import { isHttpsEnvironment } from '@deps/utils/environment.helper';
 
 export default handleAuth({
     async login(req, res) {
-        setCookie(PERMISSIONS_COOKIE_NAME, DEFAULT_PERMISSIONS_COOKIE, { req, res });
+        setCookie(PERMISSIONS_COOKIE_NAME, DEFAULT_PERMISSIONS_COOKIE, {
+            req,
+            res,
+            maxAge: 60 * 60 * 24,
+            path: '/',
+            secure: isHttpsEnvironment(),
+        });
         // After login, redirect back to the welcome page and it will determine where the user should land based on the user's permissions.
         await handleLogin(req, res, {
             returnTo: '/',
