@@ -9,8 +9,9 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { ACH, useLoanAutopay } from '@deps/contexts/transactions/LoanAutopayContext';
-import { AmountType, ArrangementType, Policy, Reason } from '@deps/models/policy/sor-policy';
+import { ACH, useAutopay } from '@deps/contexts/transactions/AutopayContext';
+import { Statuses } from '@deps/models/case/case';
+import { AmountType, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitSystematicProgramUpdate } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -20,15 +21,9 @@ interface ConfirmProps {
 }
 
 const Confirm = ({ policy }: ConfirmProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'loanAutopay.confirm' });
-    const { t: defaultT } = useTranslation();
-
-    const router = useRouter();
-    const { autopay } = useLoanAutopay();
-    const [submitFailed, setSubmitFailed] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-
+    const { autopay } = useAutopay();
     const {
+        arrangementType, systematicProgramReason, parentPage, translationKeyPrefix,
         paymentAmount,
         caseId,
         frequency,
@@ -38,18 +33,28 @@ const Confirm = ({ policy }: ConfirmProps) => {
         validationResponse,
         reverseInitiator,
     } = autopay;
+
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.confirm` });
+    const { t: defaultT } = useTranslation();
+
+    const router = useRouter();
+    const [submitFailed, setSubmitFailed] = useState(false);
+    const [submitNigo, setSubmitNigo] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
     const { policyNumber, product } = policy;
     const [newCaseId, setNewCaseId] = useState<string | undefined>(caseId);
 
-    const effectiveDateFormatted = dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
     const systematicProgram = useMemo(
-        () => policy.systematicPrograms?.find(sp => sp.reason === Reason.LOANREPAYMENT),
-        [policy.systematicPrograms]
+        () => policy.systematicPrograms?.find(sp => sp.reason === systematicProgramReason),
+        [policy.systematicPrograms, systematicProgramReason]
     );
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
+
     const submit = useCallback(async () => {
         setIsLoading(true);
 
+        const effectiveDateFormatted = dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
         const arrangementId = systematicProgram?.arrangementId || '';
         const response = await submitSystematicProgramUpdate(product?.planCode, policyNumber, arrangementId, {
             caseId: caseId || '',
@@ -58,7 +63,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
             reverseInitiator: reverseInitiator,
             systematicProgram: {
                 amount: Number(paymentAmount),
-                arrangementType: ArrangementType.LOANREPAYMENT,
+                arrangementType: arrangementType,
                 paymentForm: ACH,
                 amountType: AmountType.AMOUNT,
                 frequency,
@@ -76,11 +81,14 @@ const Confirm = ({ policy }: ConfirmProps) => {
         if (response.status !== StatusCode.Accepted) {
             setSubmitFailed(true);
         } else {
+            if (response?.data?.caseStatus === Statuses.Exception) {
+                setSubmitNigo(true);
+            }
             setNewCaseId(response?.data?.caseId);
         }
 
         setIsLoading(false);
-    }, [systematicProgram?.arrangementId, systematicProgram?.startDate, systematicProgram?.endDate, systematicProgram?.previousProgramDate, product?.planCode, policyNumber, caseId, reverseInitiator, paymentAmount, frequency, effectiveDateFormatted, paymentBankId, payorPartyId]);
+    }, [effectiveDate, systematicProgram?.arrangementId, systematicProgram?.startDate, systematicProgram?.endDate, systematicProgram?.previousProgramDate, product?.planCode, policyNumber, caseId, reverseInitiator, paymentAmount, arrangementType, frequency, paymentBankId, payorPartyId]);
 
     useEffect(() => {
         submit();
@@ -97,7 +105,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
     if (submitFailed) {
         return (
             <ApiErrorCard
-                leaveRoute={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans`}
+                leaveRoute={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/${parentPage}`}
                 submit={{
                     action: submit,
                     text: defaultT('workflows.apiErrorCard.submitPayment'),
@@ -109,7 +117,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
     return (
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             <>
-                {validationSucceeded ? (
+                {validationSucceeded && !submitNigo ? (
                     <CardInfo
                         cta={newCaseId ? {
                             action: () => {
@@ -120,7 +128,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
                         secondaryCta={
                             <NavElement
                                 aria-label={t('secondaryCta') as string}
-                                onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans`)}
+                                onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/${parentPage}`)}
                                 size={NavElementSize.Small}
                                 type={NavElementType.Button}
                                 variant={NavElementVariant.Default}
@@ -150,7 +158,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
                         secondaryCta={
                             <NavElement
                                 aria-label={t('secondaryCta') as string}
-                                onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans`)}
+                                onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/${parentPage}`)}
                                 size={NavElementSize.Small}
                                 type={NavElementType.Button}
                                 variant={NavElementVariant.Default}

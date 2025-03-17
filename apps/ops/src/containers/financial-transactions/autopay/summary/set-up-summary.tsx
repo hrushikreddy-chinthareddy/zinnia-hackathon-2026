@@ -12,7 +12,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
-import { ACH, useLoanAutopay } from '@deps/contexts/transactions/LoanAutopayContext';
+import { ACH, useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { getFrequency } from '@deps/helpers/systematic-program.helper';
@@ -26,10 +26,12 @@ interface SummaryProps {
 }
 
 const SetUpSummary = ({ policy }: SummaryProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'loanAutopay.summary' });
+    const { autopay } = useAutopay();
+    const { parentPage, translationKeyPrefix } = autopay;
+
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.summary` });
     const { t: defaultT } = useTranslation();
     const { policyNumber, product } = policy;
-    const { autopay } = useLoanAutopay();
 
     const [showSelectionError, setShowSelectionError] = useState<boolean>(false);
     const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -60,7 +62,7 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                     <div className="flex flex-col gap-1">
                         <Label
                             variant={LabelVariant.FieldLabel}
-                            label={t('loanAutopayAmount')}
+                            label={t('autopayAmount')}
                         />
                         <Typography variant={TypographyVariant.Value}>{numberFormatify(paymentAmount)}</Typography>
                     </div>
@@ -135,7 +137,7 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                     className="mt-10"
                     handleContinue={handleContinue}
                     isSubmit={true}
-                    parentPage={ParentPage.Loans}
+                    parentPage={parentPage as ParentPage}
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     submitLabel={t('submit') as string}

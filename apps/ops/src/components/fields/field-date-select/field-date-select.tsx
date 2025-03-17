@@ -18,6 +18,7 @@ export type FieldDateSelectProps = {
     label?: string;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
     isFutureDateDisabled?: boolean;
+    isPastDateDisabled?: boolean;
     disableFormat?: boolean;
     datePickerType?: DatePickerTypes;
     isDateAllowed?: (dayjsDate: Dayjs) => boolean;
@@ -30,6 +31,7 @@ export default function FieldDateSelect({
     label,
     onChange,
     isFutureDateDisabled = true,
+    isPastDateDisabled = false,
     isDateAllowed,
     disableFormat,
     datePickerType,
@@ -97,6 +99,7 @@ export default function FieldDateSelect({
                 <DatePicker
                     isDateAllowed={isDateAllowed}
                     isFutureDateDisabled={isFutureDateDisabled}
+                    isPastDateDisabled={isPastDateDisabled}
                     open={open}
                     date={date}
                     handleDateSelect={handleDateSelect}

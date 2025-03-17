@@ -9,12 +9,12 @@ import ComparisonTable from '@deps/components/comparison-table/comparison-table'
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { ACH, useLoanAutopay } from '@deps/contexts/transactions/LoanAutopayContext';
+import { ACH, useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { buildFullNameFromParty, toTitleCase } from '@deps/helpers/string.helper';
 import { getFrequency } from '@deps/helpers/systematic-program.helper';
-import { Frequency, Policy, Reason } from '@deps/models/policy/sor-policy';
+import { Frequency, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, ValidationResult } from '@deps/queries/api/bpm';
 import { DEFAULT_EXTENDED_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
@@ -23,17 +23,20 @@ interface SummaryProps {
 }
 
 const ManageSummary = ({ policy }: SummaryProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'loanAutopay.summary' });
+    const { autopay } = useAutopay();
+    const { parentPage, systematicProgramReason, translationKeyPrefix, paymentAmount, frequency, effectiveDate, paymentAccountNumber, paymentBranchName, payorFullName, validationResponse } = autopay;
+
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.summary` });
     const { t: defaultT } = useTranslation();
-    const { autopay } = useLoanAutopay();
+
     const [showSelectionError, setShowSelectionError] = useState<boolean>(false);
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const { goToNext } = useWorkflow();
 
     const { policyNumber, product } = policy;
-    const { paymentAmount, frequency, effectiveDate, paymentAccountNumber, paymentBranchName, payorFullName, validationResponse } = autopay;
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
-    const systematicProgram = policy.systematicPrograms?.find(sp => sp.reason === Reason.LOANREPAYMENT);
+
+    const systematicProgram = policy.systematicPrograms?.find(sp => sp.reason === systematicProgramReason);
     const currentPayor = (systematicProgram?.party || [])[0];
     const currentPayorParty = policy?.parties?.find(party => party.partyId === currentPayor?.partyId);
     const currentPayorBank = currentPayorParty?.bankDetails?.find(bank => bank.bankId === currentPayor?.bankId);
@@ -64,6 +67,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
             current: buildFullNameFromParty(currentPayorParty),
         },
         {
+            // TODO MG: fix the comparison table so this can be translated
             header: 'Banking details',
             new: {
                 paymentType: ACH,
@@ -126,7 +130,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                     className='mt-10'
                     handleContinue={handleContinue}
                     isSubmit={true}
-                    parentPage={ParentPage.Loans}
+                    parentPage={parentPage as ParentPage}
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     submitLabel={

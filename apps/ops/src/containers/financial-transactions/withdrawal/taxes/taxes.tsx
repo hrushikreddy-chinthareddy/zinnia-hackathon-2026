@@ -73,7 +73,6 @@ const Taxes = ({ policy }: TaxesProps) => {
             title={t('label')}
             footerContent={
                 <TransactionNavigationButtons
-                    className="mt-4"
                     handleContinue={handleContinue}
                     planCode={product?.planCode}
                     policyNumber={policyNumber}

@@ -9,11 +9,11 @@ import Radio, { RadioItem } from '@deps/components/radio/radio';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { useLoanAutopay } from '@deps/contexts/transactions/LoanAutopayContext';
+import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { Policy, Frequency, Reason } from '@deps/models/policy/sor-policy';
+import { Policy, Frequency } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 interface AmountProps {
@@ -28,6 +28,10 @@ export type AmountType = {
     paymentAmount: string;
 };
 
+export type ReverseInitiatorType = {
+    reverseInitiator: boolean;
+};
+
 type Errors = {
     effectiveDate?: string;
     frequency?: string;
@@ -35,12 +39,14 @@ type Errors = {
 };
 
 const Amount = ({ policy, isSetUp = false }: AmountProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'loanAutopay.amount' });
-    const { autopay, setAutopay } = useLoanAutopay();
+    const { autopay, setAutopay } = useAutopay();
+    const { systematicProgramReason, parentPage, translationKeyPrefix } = autopay;
+
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.amount` });
     const [errors, setErrors] = useState<Errors>({});
     const { systematicPrograms, policyDates, policyNumber, product } = policy;
 
-    const systematicProgramData = useMemo(() => systematicPrograms?.find(sp => sp.reason === Reason.LOANREPAYMENT), [systematicPrograms]);
+    const systematicProgramData = useMemo(() => systematicPrograms?.find(sp => sp.reason === systematicProgramReason), [systematicProgramReason, systematicPrograms]);
     const { goToNext } = useWorkflow();
     const dateLabel = useMemo(() => isSetUp ? t('paymentStartDate') : t('nextPaymentDate'), [isSetUp, t])
 
@@ -48,7 +54,8 @@ const Amount = ({ policy, isSetUp = false }: AmountProps) => {
         if (autopay.initValues) {
             return;
         }
-        const effectiveDate = systematicProgramData?.nextProgramDate || policyDates?.nextMonthiversaryDate;
+        // TODO MG: only for everly
+        const effectiveDate = policyDates?.nextMonthiversaryDate;
 
         setAutopay(() => ({
             ...autopay,
@@ -131,7 +138,7 @@ const Amount = ({ policy, isSetUp = false }: AmountProps) => {
                     handleContinue={handleContinue}
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
-                    parentPage={ParentPage.Loans}
+                    parentPage={parentPage as ParentPage}
                 />
             }
         >
