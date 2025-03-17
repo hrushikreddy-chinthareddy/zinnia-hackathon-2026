@@ -1,4 +1,7 @@
-export const PERMISSIONS_COOKIE_NAME = '__Host-fga-permissions';
+import { isHttpsEnvironment } from '@deps/utils/environment.helper';
+
+// The __Host- prepend requires an https environmenet
+export const PERMISSIONS_COOKIE_NAME = `${isHttpsEnvironment() ? '__Host-' : ''}fga-permissions`;
 
 export const DEFAULT_PERMISSIONS_COOKIE = '{"tuples":{},"carriers":{}}';
 
