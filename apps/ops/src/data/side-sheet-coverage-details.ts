@@ -26,32 +26,35 @@ export const toSideSheetCoverageDto = (policy: Policy): SideSheetCoverageColDto 
 
     const baseDeathBenefit = coverage?.coverageLayers?.[0]?.currentAmount ?? 0;
 
-    const coverageChangeUnit = coverage?.coverageLayers?.[0]?.valuePerUnitOfCoverage;
-
     const changesAllowedInPolicyYear = String(coverage?.maximumAnnualCoverageChangeAllowedPerPolicy);
 
-    const minCoverageAmount = coverage?.coverageLayers?.[0]?.minimumCoverageAmount ?? 0;
+    const coverageChangeUnit = coverage?.minimumCoverageDecreaseAmount;
 
-    const maxCoverageAmount = coverage?.coverageLayers?.[0]?.maximumCoverageAmount ?? 0;
+    const maxCoverageAmount = coverage?.maximumCoverageAmount ?? 0;
 
-    const availableDecrease = baseDeathBenefit - minCoverageAmount;
+    const minCoverageAmount = coverage?.minimumCoverageAmount ?? 0;
 
-    const availableIncrease = maxCoverageAmount - baseDeathBenefit;
+    const availableDecrease = coverage?.maximumCoverageDecreaseAmount ?? 0
+
+    const availableIncrease = coverage?.maximumCoverageIncreaseAmount ?? 0
 
     const policyAge = policyYear ?? 0 < 1 ? '1 year' : policyYear === 1 ? '1 year' : `${policyYear} years`;
 
+    const issueDate = policy.policyDates?.issueDate;
+
+    const eligibleForIncreaseUntil = String(coverage?.maximumAgeNumberCoverageAmountIncrease);
+
     return {
-        baseDeathBenefit: baseDeathBenefit,
-        coverageChangeUnit: coverageChangeUnit,
-        changesAllowedInPolicyYear: changesAllowedInPolicyYear,
-        minCoverageAmount: minCoverageAmount,
-        maxCoverageAmount: maxCoverageAmount,
-        availableDecrease: availableDecrease,
-        availableIncrease: availableIncrease,
-        issueDate: policy.policyDates?.issueDate,
-        policyAge: policyAge,
-        //field not yet available as mentioned in DEPU-812
-        eligibleForIncreaseUntil: '51 years old',
+        baseDeathBenefit,
+        coverageChangeUnit,
+        changesAllowedInPolicyYear,
+        minCoverageAmount,
+        maxCoverageAmount,
+        availableDecrease,
+        availableIncrease,
+        issueDate,
+        policyAge,
+        eligibleForIncreaseUntil,
     };
 };
 
