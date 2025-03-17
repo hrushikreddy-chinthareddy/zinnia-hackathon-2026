@@ -341,6 +341,17 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     handleSort={handleCreatedBySort}
                     sortDirection={caseManagementFilters.sortDirection}
                 />
+
+                <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
+                    <Typography variant={TypographyVariant.BodySm} className={`mb-6 lg:mb-0 ${caseTableData.total < 1 ? 'hidden' : ''}`}>
+                        {t('policy.documents.xToYOfZ', {
+                            x: caseManagementFilters.offset + 1,
+                            y: Math.min(caseManagementFilters.offset + limit, caseTableData.total),
+                            z: `${caseTableData.total.toLocaleString()}${caseTableData.total === 10000 ? '+' : ''}`,
+                        })}
+                    </Typography>
+                    {paginationControls}
+                </div>
             </>
         );
     }, [caseTableData, caseManagementFilters.searchValue, caseManagementFilters.sortDirection, handleCreatedBySort]);
@@ -438,16 +449,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         />
                     </div>
                     {tableContent}
-                    <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
-                        <Typography variant={TypographyVariant.BodySm} className="mb-6 lg:mb-0">
-                            {t('policy.documents.xToYOfZ', {
-                                x: caseManagementFilters.offset + 1,
-                                y: Math.min(caseManagementFilters.offset + limit, caseTableData.total),
-                                z: `${caseTableData.total.toLocaleString()}${caseTableData.total === 10000 ? '+' : ''}`,
-                            })}
-                        </Typography>
-                        {paginationControls}
-                    </div>
                 </div>
             </NoNavLayout>
         </CaseManagementFiltersContext.Provider>
