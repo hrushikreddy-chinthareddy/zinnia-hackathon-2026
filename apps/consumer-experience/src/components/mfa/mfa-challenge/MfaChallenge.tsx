@@ -7,15 +7,16 @@ import { Controller, useForm } from 'react-hook-form';
 
 import Loading from '@/app/loading';
 import styles from '@/app/login/Login.module.css';
+import { Button } from '@/components/button/Button';
 import { FieldDataActive } from '@/components/field/data-active/FieldDataActive';
 import {
   sendMfaChallenge,
   verifyMfaChallenge,
 } from '@/components/mfa/mfa-actions';
 import { MfaPhoneNumber } from '@/components/mfa/phone-number/MfaPhoneNumber';
-import { MfaAuthenticator } from '@/types/auth';
+import { useUser } from '@/hooks/use-user';
+import { MfaAuthenticator, User } from '@/types/auth';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
-import { Button } from '@/components/button/Button';
 
 // TODO: move this into utils, however this is currently a clientside version
 // need to either un-serverside the utils file or pass cookies or something
@@ -52,6 +53,7 @@ export const MfaChallenge = ({
 }) => {
   const [resendCode, setResendCode] = useState(false);
   const [authenticator, setAuthenticators] = useState<MfaAuthenticator>();
+  const { user, setUser } = useUser();
 
   const {
     control,
@@ -132,6 +134,15 @@ export const MfaChallenge = ({
 
     if (response && !response.error) {
       onChallengeSuccess?.();
+      // If there is an onCancel function passed in, we assume that this component
+      // is being used post login, in which case we need to set the user context
+      // so that any client side components that retrieve the user context via
+      // the useUser hook, will be getting the up to date stepUpTime reset during
+      // mfa verification. If we don't do this the client side components will be retriving
+      // the user info set on initial render via the UserProvider in layout
+      if (onCancel) {
+        setUser({ ...user, stepUpTime: response.stepUpTime } as User);
+      }
     } else if (response.error === 'invalid_grant') {
       setError('code', {
         type: 'custom',

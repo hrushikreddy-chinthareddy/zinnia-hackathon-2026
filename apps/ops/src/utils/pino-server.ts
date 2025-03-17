@@ -45,7 +45,7 @@ const logger = pino({
         compliance: 99, // compliance logs should be shipped if logging is enabled.
     },
     // level of logs to display. trace|debug|info|warn|error|fatal
-    level: isNonProductionEnvironment() ? process.env.PINO_LOG_LEVEL || 'trace' : 'info',
+    level: isNonProductionEnvironment() ? process.env.PINO_LOG_LEVEL || 'trace' : 'trace',
 }).child({
     service: 'zinnia-live-xd',
     env: process.env.NEXT_PUBLIC_DATADOG_ENV || '',

@@ -167,7 +167,7 @@ export const getCaseTasksByIdSSR = async (caseId: string, taskId: string, access
 
 export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
     try {
-        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/assigned`);
+        const { data } = await client.post(`${baseAppUrl}/api/case/v1/tasks/assigned`);
         return data ?? [];
     } catch (error) {
         logError('getAssignedTasks::Failed to retrieve unassigned tasks', {
@@ -213,16 +213,15 @@ export const getTaskFormMetadataSSR = async (
         return null;
     }
 };
-export const unassignTask = async (caseId: string, taskId: string, entryDuration?: number): Promise<any> => {
+export const unassignTask = async (taskId: string, entryDuration?: number): Promise<any> => {
     try {
         const logTime = entryDuration ? performance.now() - entryDuration : 0;
         const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
-        const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/unclaim`;
-        const { data } = await client.put<AxiosResponse>(url);
+        const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/assignments`;
+        const { data } = await client.delete<AxiosResponse>(url);
 
         browserLogInfo('unassignTask::Successfully unassigned task', {
             timeElapsedSinceLoad: timeInSeconds,
-            caseId,
             taskId,
             url,
             function: 'tasks.unassignTask',
@@ -232,7 +231,6 @@ export const unassignTask = async (caseId: string, taskId: string, entryDuration
         browserLogError('unassignTask::::Failed to unassign task', {
             ...parseErrorInformation(error),
             error,
-            caseId,
             taskId,
             function: 'tasks.unassignTask',
         });
@@ -240,14 +238,12 @@ export const unassignTask = async (caseId: string, taskId: string, entryDuration
     }
 };
 
-export const claimTask = async (caseId: string, taskId: string): Promise<any> => {
-
+export const claimTask = async (taskId: string): Promise<any> => {
     try {
-        const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/claim`;
+        const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/assignments`;
         const { data } = await client.put<AxiosResponse>(url);
 
         browserLogInfo('Form entry time', {
-            caseId,
             taskId,
             url,
             function: 'tasks.claimTask',
@@ -257,10 +253,9 @@ export const claimTask = async (caseId: string, taskId: string): Promise<any> =>
         browserLogError('An error occurred during update task using v1', {
             ...parseErrorInformation(error),
             error,
-            caseId,
             taskId,
             function: 'tasks.claimTask',
         });
         return null;
     }
-}
+};

@@ -1,32 +1,32 @@
-import { getCookie, setCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 
-import { DEFAULT_PERMISSIONS_COOKIE, PERMISSIONS_COOKIE_NAME, PermissionsCookie } from '@deps/types/permissionsCookie';
-
-import { logWarn } from '../server-logging';
+import { PERMISSIONS_COOKIE_NAME, PermissionsCookie } from '@deps/types/permissionsCookie';
 
 export const addTupleToCookie = (relation: string, tupleObject: string, result: boolean, req?: any, res?: any) => {
-    try {
-        const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res }) ?? DEFAULT_PERMISSIONS_COOKIE;
-        const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
-        if (!permissions.tuples?.[relation]) {
-            permissions.tuples[relation] = {};
-        }
-        permissions.tuples[relation][tupleObject] = result;
-        setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), { req, res });
-    } catch (error) {
-        logWarn('addTupleToCookie::An error occurred while adding tuple to cookie', error);
-    }
+    return;
+    // try {
+    //     const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res }) ?? DEFAULT_PERMISSIONS_COOKIE;
+    //     const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
+    //     if (!permissions.tuples?.[relation]) {
+    //         permissions.tuples[relation] = {};
+    //     }
+    //     permissions.tuples[relation][tupleObject] = result;
+    //     setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), { req, res });
+    // } catch (error) {
+    //     logWarn('addTupleToCookie::An error occurred while adding tuple to cookie', error);
+    // }
 };
 
 export const addCarrierListToCookie = (relation: string, carrierList: string[], req?: any, res?: any) => {
-    try {
-        const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res }) ?? DEFAULT_PERMISSIONS_COOKIE;
-        const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
-        permissions.carriers[relation] = carrierList;
-        setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), { req, res });
-    } catch (error) {
-        logWarn('addCarrierListToCookie::An error occurred while adding carrier list to cookie', error);
-    }
+    return;
+    // try {
+    //     const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res }) ?? DEFAULT_PERMISSIONS_COOKIE;
+    //     const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
+    //     permissions.carriers[relation] = carrierList;
+    //     setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), { req, res });
+    // } catch (error) {
+    //     logWarn('addCarrierListToCookie::An error occurred while adding carrier list to cookie', error);
+    // }
 };
 
 export const doesPermissionsHaveCarrierRelation = (relation: string, carrier: string, req?: any, res?: any): boolean => {
@@ -56,7 +56,7 @@ export const checkPermissionsCookieForTuple = (relation: string, tupleObject: st
 
         const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res });
         if (!permissionsCookie) {
-            return false;
+            return undefined;
         }
 
         const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;

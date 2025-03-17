@@ -11,6 +11,14 @@ import UpcomingPaymentCard from './card-upcoming-payment';
 import { UpcomingPaymentCardTest, UpcomingPaymentCardProps } from './card-upcoming-payment.types';
 import { CardTransactionsTest } from '../card-transactions/card-transactions';
 
+jest.mock('@deps/queries/api/cases', () => {
+    return {
+        getCases: jest.fn(() => {
+            return Promise.resolve({});
+        }),
+    };
+});
+
 describe('UpcomingPaymentCard', () => {
     let props: UpcomingPaymentCardProps;
     let element: HTMLElement;

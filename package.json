@@ -9,6 +9,7 @@
     "test:ops": "turbo run test --filter ops",
     "cypress:ops": "npm --prefix apps/ops run cypress:local",
     "dev:consumer-experience": "pnpm run dev --filter consumer-experience",
+    "dev:cui": "pnpm run dev --filter consumer-experience",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && find . -name 'dist' -type d -prune -exec rm -rf '{}' + && find . -name '.turbo' -type d -prune -exec rm -rf '{}' +",
@@ -17,7 +18,7 @@
     "link-package": "node ./scripts/link-package.mjs",
     "unlink-package": "node ./scripts/unlink-packages.mjs",
     "pre-commit": "turbo run pre-commit --filter=\"[HEAD^1]\"",
-    "pre-push": "turbo run pre-push --filter=\"[HEAD^1]\"",
+    "pre-push": "sh ./scripts/pre-push.sh",
     "prepare": "husky install"
   },
   "devDependencies": {

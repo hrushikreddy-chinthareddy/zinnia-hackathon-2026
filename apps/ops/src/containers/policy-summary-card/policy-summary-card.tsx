@@ -299,6 +299,7 @@ const PendingLapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
     );
 };
 
+// TODO MG: move these components to their own file
 const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
 

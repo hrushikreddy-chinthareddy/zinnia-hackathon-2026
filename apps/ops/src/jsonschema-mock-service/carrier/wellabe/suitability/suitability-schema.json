@@ -518,6 +518,10 @@
                                 "type": "string",
                                 "title": "Coverage expense consideration",
                                 "$ref": "#/definitions/coverageExpenseConsiderationEnum"
+                            },
+                            "annuityPurchaseConsideration": {
+                                "type": "string",
+                                "title": "Please share any additional information and/or changes in circumstances that you have considered in making the decision to purchase this annuity contract:"
                             }
                         },
                         "required": ["soldPoliciesToApplicant"]
@@ -1606,6 +1610,9 @@
                         "inline": true,
                         "enumNames": ["Yes", "No"]
                     }
+                },
+                "annuityPurchaseConsideration": {
+                    "ui:widget": "textarea"
                 }
             }
         },
@@ -2636,6 +2643,10 @@
                                             "type": "string",
                                             "title": "Coverage expense consideration",
                                             "$ref": "#/definitions/coverageExpenseConsiderationEnum"
+                                        },
+                                        "annuityPurchaseConsideration": {
+                                            "type": "string",
+                                            "title": "Please share any additional information and/or changes in circumstances that you have considered in making the decision to purchase this annuity contract:"
                                         }
                                     },
                                     "required": ["soldPoliciesToApplicant"]
@@ -3730,6 +3741,9 @@
                                     "inline": true,
                                     "enumNames": ["Yes", "No"]
                                 }
+                            },
+                            "annuityPurchaseConsideration": {
+                                "ui:widget": "textarea"
                             }
                         }
                     },

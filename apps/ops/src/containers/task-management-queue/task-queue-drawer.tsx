@@ -2,6 +2,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import utc from 'dayjs/plugin/utc';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import { FieldSize, FieldType } from "@deps/components/fields/field";
@@ -20,6 +21,8 @@ import { browserLogError, browserLogInfo } from "@deps/utils/browser-logging";
 import { removeFromCache } from "@deps/utils/cache";
 
 import GlobalTaskSideSheet from "../case-overview/tasks-table/sidesheet/global-task-sidesheet-content";
+
+dayjs.extend(utc);
 
 
 function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription, taskName }: TaskQueueDrawerProps) {
@@ -72,7 +75,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
       router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
       return;
     }
-    const formattedDate = dayjs(date, NUMERIC_DATE_FORMAT).toISOString();
+    const formattedDate = dayjs.utc(date, NUMERIC_DATE_FORMAT).toISOString();
 
     try {
       const body = {
