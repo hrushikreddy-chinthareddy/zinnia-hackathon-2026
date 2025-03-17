@@ -8,18 +8,32 @@ import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helper';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
-import { EntityTypes, MatchingCase } from '@deps/models/case/task/doc-matching-payment';
+import { EntityTypes, MatchingCase, TransactionData } from '@deps/models/case/task/doc-matching-payment';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
 import { buildTaskPayload } from '@deps/utils/tasks/task-payload-helper';
+import { ManagementTask } from '@deps/models/case/task-instance';
 
 type TaskFormProps = {
     readonly: boolean;
     onSubmit: (error: string) => void;
     isSubmit?: boolean;
     taskMetadata: FormMetadata;
+};
+
+const getPaymentCards = (transactions: TransactionData[], task: ManagementTask) => {
+    return transactions?.map(transaction => ({
+        label: transaction.correlationId,
+        value: transaction.entity.paymentRecordId,
+        subElement: {
+            ...transaction,
+            firstName: task?.data?.details?.payerDetails?.firstName || '',
+            lastName: task?.data?.details?.payerDetails?.lastName || '',
+            title: transaction?.entity?.payment?.companyName,
+        },
+    }));
 };
 
 export const TaskForm = React.forwardRef(function TaskFormComponent(
@@ -58,16 +72,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         return;
                     }
 
-                    const paymentCards = transactionResponse?.map((transaction: any) => ({
-                        label: transaction.correlationId,
-                        value: transaction.entity.paymentRecordId,
-                        subElement: {
-                            ...transaction,
-                            firstName: task?.data?.details?.payerDetails?.firstName || '',
-                            lastName: task?.data?.details?.payerDetails?.lastName || '',
-                            title: transaction?.entity?.payment?.companyName,
-                        },
-                    }));
+                    const paymentCards = getPaymentCards(transactionResponse, task);
 
                     setTask(previousTask => ({
                         ...previousTask,
@@ -90,16 +95,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     const response = await getTransactionsByCorrelationId(correlationId, {
                         entityType: EntityTypes.NB_PAYMENT_RECORD,
                     });
-                    const paymentCards = response?.map((transaction: any) => ({
-                        label: transaction.correlationId,
-                        value: transaction.entity.paymentRecordId,
-                        subElement: {
-                            ...transaction,
-                            firstName: task?.data?.details?.payerDetails?.firstName || '',
-                            lastName: task?.data?.details?.payerDetails?.lastName || '',
-                            title: transaction?.entity?.payment?.companyName,
-                        },
-                    }));
+
+                    const paymentCards = getPaymentCards(response || [], task);
 
                     setTask(previousTask => {
                         return {
