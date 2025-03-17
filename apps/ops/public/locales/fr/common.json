@@ -1739,7 +1739,9 @@
                 },
                 "singleLifeTimeIncome": {
                     "title": "Nom de Income Life converti au-dessus de la ligne en français"
-                }
+                },
+                "COVERED_PERSON_1": "Nom de la personne couverte 1",
+                "COVERED_PERSON_2": "Nom de la personne couverte 2"
             },
             "rmdMethod": {
                 "title": "RMD Méthode",

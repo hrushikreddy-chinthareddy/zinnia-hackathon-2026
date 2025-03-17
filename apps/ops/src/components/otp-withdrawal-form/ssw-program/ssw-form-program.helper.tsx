@@ -1,4 +1,4 @@
-import { AmountType, ProgramType } from '@deps/models/case/withdrawal/case';
+import { AmountType, PartyRoles, ProgramType } from '@deps/models/case/withdrawal/case';
 
 import { EditableFormProgramFields } from '../form-program/form-program.helper';
 
@@ -16,3 +16,30 @@ export const getDefaultSSWFormProgramValues = (): SSWFormProgramFields => {
         programType: { text: ProgramType.SSW },
     };
 };
+
+const createCoveredLifeInitialValue = (partyRoleType: PartyRoles) => ({
+    partyRoleType,
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    suffix: null,
+    fullName: '',
+    taxId: '',
+    maritalStatus: {},
+    email: '',
+    employer: null,
+    relationshipToOwnerAnnutant: null,
+    withdrawalPayoutOption: null,
+    addresses: null,
+    phones: [],
+    dob: {
+        value: '',
+        text: '',
+        isValid: true,
+    },
+});
+
+export const getCoveredLifeInitialValues = () => [
+    createCoveredLifeInitialValue(PartyRoles.GLWB_FIRST_COVERED_PERSON),
+    createCoveredLifeInitialValue(PartyRoles.GLWB_SEC_COVERED_PERSON),
+];

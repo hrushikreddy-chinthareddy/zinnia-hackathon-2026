@@ -1746,7 +1746,9 @@
                 },
                 "singleLifeTimeIncome": {
                     "title": "Name of Income Life"
-                }
+                },
+                "COVERED_PERSON_1": "Name of Covered Life 1",
+                "COVERED_PERSON_2": "Name of Covered Life 2"
             },
             "rmdMethod": {
                 "title": "RMD Method",
