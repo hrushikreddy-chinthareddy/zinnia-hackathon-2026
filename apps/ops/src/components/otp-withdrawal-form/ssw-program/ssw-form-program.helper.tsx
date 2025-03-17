@@ -28,8 +28,8 @@ const createCoveredLifeInitialValue = (partyRoleType: PartyRoles) => ({
     maritalStatus: {},
     email: '',
     employer: null,
-    relationshipToOwnerAnnutant: '',
-    withdrawalPayoutOption: '',
+    relationshipToOwnerAnnutant: null,
+    withdrawalPayoutOption: null,
     addresses: null,
     phones: [],
     dob: {
