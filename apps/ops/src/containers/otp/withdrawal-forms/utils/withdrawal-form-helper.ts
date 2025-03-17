@@ -65,7 +65,7 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
             formReindexingData,
             formComment,
             formBeneInfo,
-            formPeriodicPension,
+            periodicPensionForm: formPeriodicPension,
         },
     };
 };
