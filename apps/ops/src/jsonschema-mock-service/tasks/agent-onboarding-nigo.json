@@ -95,6 +95,41 @@
                             "title": "Can you resolve the issues?",
                             "enumNames": ["Yes", "No"],
                             "enum": [true, false]
+                        },
+                        "uploadDocuments": {
+                            "type": "object",
+                            "title": "Link or upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "upload",
+                                    "items": {
+                                        "title": "upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
                         }
                     },
                     "dependencies": {
@@ -104,41 +139,6 @@
                                     "properties": {
                                         "issuesResolved": {
                                             "enum": [true]
-                                        },
-                                        "uploadDocuments": {
-                                            "type": "object",
-                                            "title": "Link or upload document",
-                                            "properties": {
-                                                "upload": {
-                                                    "type": "string"
-                                                },
-                                                "or": {
-                                                    "type": "string",
-                                                    "title": "or"
-                                                },
-                                                "attachment": {
-                                                    "type": "array",
-                                                    "title": "upload",
-                                                    "items": {
-                                                        "title": "upload",
-                                                        "type": "string",
-                                                        "format": "data-url"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "attachments": {
-                                            "type": "array",
-                                            "items": {
-                                                "documentName": {
-                                                    "title": "Name",
-                                                    "type": "string"
-                                                },
-                                                "documentId": {
-                                                    "title": "Document Id",
-                                                    "type": "string"
-                                                }
-                                            }
                                         }
                                     }
                                 },
@@ -159,6 +159,15 @@
                     "required": ["issuesResolved"]
                 },
                 "uiSchema": {
+                    "ui:order": [
+                        "issuesList",
+                        "details",
+                        "issuesResolved",
+                        "declineReason",
+                        "issueReason",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
                         "orderable": false,
