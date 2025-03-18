@@ -13,7 +13,7 @@ import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helper';
 import { reverseNameOrder } from '@deps/helpers/string.helper';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { DEFAULT_Timestamp_Format } from '@deps/types/constants';
+import { DEFAULT_TIMESTAMP_FORMAT } from '@deps/types/constants';
 import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -31,7 +31,7 @@ export default function NotesWidget(props: WidgetProps) {
 
     const addNote = async () => {
         setError(false);
-        const timestamp = dayjs().utc().format(DEFAULT_Timestamp_Format);
+        const timestamp = dayjs().utc().format(DEFAULT_TIMESTAMP_FORMAT);
         const newNote = {
             note: currentNote.trim(),
             createdAt: timestamp,
