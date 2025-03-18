@@ -181,12 +181,23 @@
             "financialObjectives_purchaseReasonEnum": {
                 "enum": ["INCOME", "TAX_DEFERRAL", "GURANTEES", "GROWTH", "PRINCIPAL_PROTECTION", "OTHERS"]
             },
-
+            "liquidityOptions_fundsAccessExplanationEnum": {
+                "enum": ["YES", "NO"]
+            },
             "liquidityOptions_distributionOptionEnum": {
                 "enum": ["PENALTY-FREE-WITHDRWAWAL", "ANNUITIZE", "LUMP_SUM", "REQUIRED_MINIMUM_DISTRIBUTION", "NO_PLANS_TO_ACCESS"]
             },
+            "liquidityOptions_surrenderChargeConsentUnderAgeEnum": {
+                "enum": ["YES", "NO"]
+            },
+            "liquidityOptions_possibleReductionInValueEnum": {
+                "enum": ["YES", "NO"]
+            },
             "liquidityOptions_planToHoldAnnuityEnum": {
                 "enum": ["1", "2", "3", "4"]
+            },
+            "liquidityOptions_explainedOtherChargesEnum": {
+                "enum": ["YES", "NO"]
             },
             "financialObjectives_annuityMeetsFinancialNeedsEnum": {
                 "enum": ["YES", "NO"]
@@ -980,28 +991,42 @@
                 "properties": {
                     "fundsAccessExplanation": {
                         "type": "string",
-                        "title": "Funds access explanation"
+                        "title": "Funds access explanation",
+                        "$ref": "#/definitions/liquidityOptions_fundsAccessExplanationEnum"
                     },
-                    "distributionMethods": {
+                    "futureDistributionMethods": {
                         "type": "array",
-                        "title": "Distribution methods",
+                        "title": "Future distribution methods",
                         "items": {
-                            "type": "string",
-                            "$ref": "#/definitions/liquidityOptions_distributionOptionEnum"
-                        },
-                        "uniqueItems": true
+                            "type": "object",
+                            "properties": {
+                                "distributionMethods": {
+                                    "type": "array",
+                                    "title": "Distribution methods",
+                                    "items": {
+                                        "type": "string",
+                                        "$ref": "#/definitions/liquidityOptions_distributionOptionEnum"
+                                    },
+                                    "uniqueItems": true
+                                },
+                                "optedYears": {
+                                    "type": "string",
+                                    "title": "Opted years"
+                                }
+                            },
+                            "required": ["distributionMethods", "optedYears"]
+                        }
                     },
-                    "firstPayoutOption": {
-                        "type": "string",
-                        "title": "First payout option"
-                    },
+
                     "surrenderChargeConsentUnderAge": {
                         "type": "string",
-                        "title": "Surrender charge consent Under Age"
+                        "title": "Surrender charge consent Under Age",
+                        "$ref": "#/definitions/liquidityOptions_surrenderChargeConsentUnderAgeEnum"
                     },
                     "possibleReductionInValue": {
                         "type": "string",
-                        "title": "Possible reduction in value"
+                        "title": "Possible reduction in value",
+                        "$ref": "#/definitions/liquidityOptions_possibleReductionInValueEnum"
                     },
                     "planToHoldAnnuity": {
                         "type": "string",
@@ -1011,7 +1036,8 @@
                     },
                     "explainedOtherCharges": {
                         "type": "string",
-                        "title": "Explained other charges"
+                        "title": "Explained other charges",
+                        "$ref": "#/definitions/liquidityOptions_explainedOtherChargesEnum"
                     },
                     "benefitAnnuityQuestions": {
                         "type": "object",
@@ -1036,7 +1062,7 @@
                     }
                 },
                 "required": [
-                    "distributionMethods",
+                    "futureDistributionMethods",
                     "surrenderChargeConsentUnderAge",
                     "planToHoldAnnuity",
                     "explainedOtherCharges",
@@ -1127,7 +1153,7 @@
                                 "properties": {
                                     "byAgent": {
                                         "type": "array",
-                                        "title": "Purchase reason",
+                                        "title": "Purchase reason by agent",
                                         "items": {
                                             "type": "string",
                                             "$ref": "#/definitions/productConsDiscussed_byAgentEnum"
@@ -1137,7 +1163,7 @@
 
                                     "byApplicant": {
                                         "type": "array",
-                                        "title": "Purchase reason",
+                                        "title": "Purchase reason by applicant",
                                         "items": {
                                             "type": "string",
                                             "$ref": "#/definitions/productConsDiscussed_byApplicantEnum"
@@ -1905,29 +1931,63 @@
             "ui:options": {
                 "classNames": "divider"
             },
-            "fundsAccessExplanation": {},
-            "distributionMethods": {
+            "fundsAccessExplanation": {
                 "ui:options": {
-                    "enumNames": [
-                        "Penalty-Free Withdrawal",
-                        "Annuitization",
-                        "Lump Sum",
-                        "Required Minimum Distribution",
-                        "No Current Plans to Access"
-                    ],
-                    "label": true
+                    "label": "true",
+                    "enumNames": ["Yes", "No"]
                 }
             },
-            "firstPayoutOption": {},
-            "surrenderChargeConsentUnderAge": {},
-            "possibleReductionInValue": {},
+            "futureDistributionMethods": {
+                "items": {
+                    "ui:options": {
+                        "title": "Future distribution methods",
+                        "minItems": 1,
+                        "label": false
+                    },
+                    "distributionMethods": {
+                        "ui:options": {
+                            "enumNames": [
+                                "Penalty-Free Withdrawal",
+                                "Annuitization",
+                                "Lump Sum",
+                                "Required Minimum Distribution",
+                                "No Current Plans to Access"
+                            ],
+                            "label": true
+                        }
+                    },
+                    "optedYears": {
+                        "ui:options": {
+                            "label": true
+                        }
+                    }
+                }
+            },
+
+            "surrenderChargeConsentUnderAge": {
+                "ui:options": {
+                    "label": "true",
+                    "enumNames": ["Yes", "No"]
+                }
+            },
+            "possibleReductionInValue": {
+                "ui:options": {
+                    "label": "true",
+                    "enumNames": ["Yes", "No"]
+                }
+            },
             "planToHoldAnnuity": {
                 "ui:options": {
                     "enumNames": ["0-2 Years", "3-4 Years", "5-6 Years", "7+ Years"],
                     "label": true
                 }
             },
-            "explainedOtherCharges": {},
+            "explainedOtherCharges": {
+                "ui:options": {
+                    "label": "true",
+                    "enumNames": ["Yes", "No"]
+                }
+            },
             "benefitAnnuityQuestions": {
                 "understandIncomeAdjustmentFactor": {},
                 "consideredFinancialNeedsAfter10Years": {},
@@ -1991,39 +2051,37 @@
             "compensationEstimate": {},
             "conflictsOfInterest": {},
             "productConsDiscussed": {
-                "type": "object",
-                "properties": {
-                    "byAgent": {
-                        "ui:options": {
-                            "label": "true",
-                            "widget": "checkboxes",
-                            "enumNames": [
-                                "The surrender charge (including any market value adjustment) and surrender charge period",
-                                "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
-                                "Investment advisory fees Potential charges for and features of riders or other options of the annuity",
-                                "Limitations on interest returns",
-                                "Potential changes in non - guaranteed elements of the annuity",
-                                "Insurance and investment components and market risk",
-                                "Others"
-                            ]
-                        }
-                    },
+                "byAgent": {
+                    "ui:options": {
+                        "label": "true",
+                        "widget": "checkboxes",
+                        "enumNames": [
+                            "The surrender charge (including any market value adjustment) and surrender charge period",
+                            "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
+                            "Investment advisory fees",
+                            "Potential charges for and features of riders or other options of the annuity",
+                            "Limitations on interest returns",
+                            "Potential changes in non - guaranteed elements of the annuity",
+                            "Insurance and investment components and market risk",
+                            "Others"
+                        ]
+                    }
+                },
 
-                    "byApplicant": {
-                        "ui:options": {
-                            "label": "true",
-                            "widget": "checkboxes",
-                            "enumNames": [
-                                "The surrender charge(including any market value adjustment) and surrender charge period",
-                                "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
-                                "Investment advisory fees",
-                                "Potential charges for and features of riders or other options of the annuity",
-                                "Limitations on interest returns",
-                                "Potential changes in non - guaranteed elements of the annuity",
-                                "Insurance and investment components and market risk",
-                                "Others"
-                            ]
-                        }
+                "byApplicant": {
+                    "ui:options": {
+                        "label": "true",
+                        "widget": "checkboxes",
+                        "enumNames": [
+                            "The surrender charge(including any market value adjustment) and surrender charge period",
+                            "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
+                            "Investment advisory fees",
+                            "Potential charges for and features of riders or other options of the annuity",
+                            "Limitations on interest returns",
+                            "Potential changes in non - guaranteed elements of the annuity",
+                            "Insurance and investment components and market risk",
+                            "Others"
+                        ]
                     }
                 }
             }
@@ -2331,6 +2389,9 @@
                         "financialObjectives_purchaseReasonEnum": {
                             "enum": ["INCOME", "TAX_DEFERRAL", "GURANTEES", "GROWTH", "PRINCIPAL_PROTECTION", "OTHERS"]
                         },
+                        "liquidityOptions_fundsAccessExplanationEnum": {
+                            "enum": ["YES", "NO"]
+                        },
 
                         "liquidityOptions_distributionOptionEnum": {
                             "enum": [
@@ -2341,8 +2402,17 @@
                                 "NO_PLANS_TO_ACCESS"
                             ]
                         },
+                        "liquidityOptions_surrenderChargeConsentUnderAgeEnum": {
+                            "enum": ["YES", "NO"]
+                        },
+                        "liquidityOptions_possibleReductionInValueEnum": {
+                            "enum": ["YES", "NO"]
+                        },
                         "liquidityOptions_planToHoldAnnuityEnum": {
                             "enum": ["1", "2", "3", "4"]
+                        },
+                        "liquidityOptions_explainedOtherChargesEnum": {
+                            "enum": ["YES", "NO"]
                         },
                         "financialObjectives_annuityMeetsFinancialNeedsEnum": {
                             "enum": ["YES", "NO"]
@@ -3139,28 +3209,43 @@
                             "properties": {
                                 "fundsAccessExplanation": {
                                     "type": "string",
-                                    "title": "Funds access explanation"
+                                    "title": "Funds access explanation",
+                                    "$ref": "#/definitions/liquidityOptions_fundsAccessExplanationEnum"
                                 },
-                                "distributionMethods": {
+                                "futureDistributionMethods": {
                                     "type": "array",
-                                    "title": "Distribution methods",
+                                    "title": "Future distribution methods",
                                     "items": {
-                                        "type": "string",
-                                        "$ref": "#/definitions/liquidityOptions_distributionOptionEnum"
-                                    },
-                                    "uniqueItems": true
+                                        "type": "object",
+                                        "properties": {
+                                            "distributionMethods": {
+                                                "type": "array",
+                                                "title": "Distribution methods",
+                                                "items": {
+                                                    "type": "string",
+                                                    "$ref": "#/definitions/liquidityOptions_distributionOptionEnum"
+                                                },
+                                                "uniqueItems": true
+                                            },
+                                            "optedYears": {
+                                                "type": "string",
+                                                "title": "Opted years"
+                                            }
+                                        },
+
+                                        "required": ["distributionMethods", "optedYears"]
+                                    }
                                 },
-                                "firstPayoutOption": {
-                                    "type": "string",
-                                    "title": "First payout option"
-                                },
+
                                 "surrenderChargeConsentUnderAge": {
                                     "type": "string",
-                                    "title": "Surrender charge consent Under Age"
+                                    "title": "Surrender charge consent Under Age",
+                                    "$ref": "#/definitions/liquidityOptions_surrenderChargeConsentUnderAgeEnum"
                                 },
                                 "possibleReductionInValue": {
                                     "type": "string",
-                                    "title": "Possible reduction in value"
+                                    "title": "Possible reduction in value",
+                                    "$ref": "#/definitions/liquidityOptions_possibleReductionInValueEnum"
                                 },
                                 "planToHoldAnnuity": {
                                     "type": "string",
@@ -3170,7 +3255,8 @@
                                 },
                                 "explainedOtherCharges": {
                                     "type": "string",
-                                    "title": "Explained other charges"
+                                    "title": "Explained other charges",
+                                    "$ref": "#/definitions/liquidityOptions_explainedOtherChargesEnum"
                                 },
                                 "benefitAnnuityQuestions": {
                                     "type": "object",
@@ -3286,7 +3372,7 @@
                                             "properties": {
                                                 "byAgent": {
                                                     "type": "array",
-                                                    "title": "Purchase reason",
+                                                    "title": "Purchase reason by agent",
                                                     "items": {
                                                         "type": "string",
                                                         "$ref": "#/definitions/productConsDiscussed_byAgentEnum"
@@ -3296,7 +3382,7 @@
 
                                                 "byApplicant": {
                                                     "type": "array",
-                                                    "title": "Purchase reason",
+                                                    "title": "Purchase reason by applicant",
                                                     "items": {
                                                         "type": "string",
                                                         "$ref": "#/definitions/productConsDiscussed_byApplicantEnum"
@@ -4066,29 +4152,59 @@
                         "ui:options": {
                             "classNames": "divider"
                         },
-                        "fundsAccessExplanation": {},
-                        "distributionMethods": {
+                        "fundsAccessExplanation": {
                             "ui:options": {
-                                "enumNames": [
-                                    "Penalty-Free Withdrawal",
-                                    "Annuitization",
-                                    "Lump Sum",
-                                    "Required Minimum Distribution",
-                                    "No Current Plans to Access"
-                                ],
-                                "label": true
+                                "label": "true",
+                                "enumNames": ["Yes", "No"]
                             }
                         },
-                        "firstPayoutOption": {},
-                        "surrenderChargeConsentUnderAge": {},
-                        "possibleReductionInValue": {},
+                        "futureDistributionMethods": {
+                            "items": {
+                                "ui:options": {
+                                    "title": "Future distribution methods",
+                                    "minItems": 1,
+                                    "label": false
+                                },
+                                "distributionMethods": {
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Penalty-Free Withdrawal",
+                                            "Annuitization",
+                                            "Lump Sum",
+                                            "Required Minimum Distribution",
+                                            "No Current Plans to Access"
+                                        ],
+                                        "label": true
+                                    }
+                                },
+                                "optedYears": {}
+                            }
+                        },
+
+                        "surrenderChargeConsentUnderAge": {
+                            "ui:options": {
+                                "label": "true",
+                                "enumNames": ["Yes", "No"]
+                            }
+                        },
+                        "possibleReductionInValue": {
+                            "ui:options": {
+                                "label": "true",
+                                "enumNames": ["Yes", "No"]
+                            }
+                        },
                         "planToHoldAnnuity": {
                             "ui:options": {
                                 "enumNames": ["0-2 Years", "3-4 Years", "5-6 Years", "7+ Years"],
                                 "label": true
                             }
                         },
-                        "explainedOtherCharges": {},
+                        "explainedOtherCharges": {
+                            "ui:options": {
+                                "label": "true",
+                                "enumNames": ["Yes", "No"]
+                            }
+                        },
                         "benefitAnnuityQuestions": {
                             "understandIncomeAdjustmentFactor": {},
                             "consideredFinancialNeedsAfter10Years": {},
