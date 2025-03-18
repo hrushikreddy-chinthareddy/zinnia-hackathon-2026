@@ -860,7 +860,12 @@
         "documentNumber": "Document: ",
         "noDocumentFound": "No documents found",
         "documentSelectError": "Document already selected",
-        "fetchingDocuments": "Fetching Documents..."
+        "fetchingDocuments": "Fetching Documents...",
+        "noteTitle": "Notes",
+        "notePlaceholder": "Add a note.",
+        "addNote": "Add note",
+        "errorSavingNote": "Error occurred while saving note. Please try again",
+        "notePostDate": "Posted on {{date}} by"
     },
     "caseManagementDashboard": {
         "h1": "Case Management",

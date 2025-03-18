@@ -1,7 +1,7 @@
 {
-    "formId": "004c97a1-d97c-4faa-9b7f-8ff9105b4c29",
+    "formId": "004c97a1-d97c-4faa-9b7f-8ff9105b4c30",
     "process": "New Business",
-    "carrier": "WELB",
+    "carrier": "SBGC",
     "taskType": "SUITABILITY_REVIEW",
     "formSchema": {
         "type": "object"
@@ -96,6 +96,25 @@
                                 "type": "string",
                                 "format": "data-url"
                             }
+                        },
+                        "notes": {
+                            "type": "array",
+                            "title": "Notes",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "note": {
+                                        "type": "string"
+                                    },
+                                    "createdAt": {
+                                        "type": "string",
+                                        "format": "string"
+                                    },
+                                    "user": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
                         }
                     },
                     "required": ["issueResolved"],
@@ -129,7 +148,7 @@
                     ]
                 },
                 "uiSchema": {
-                    "ui:order": ["rules", "issueResolved", "declineReason", "attachment"],
+                    "ui:order": ["rules", "issueResolved", "declineReason", "attachment", "notes"],
                     "$schema": "http: //json-schema.org/draft-07/schema#",
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
@@ -187,7 +206,6 @@
                             }
                         }
                     },
-
                     "issueResolved": {
                         "ui:widget": "radio",
                         "ui:options": {
@@ -233,7 +251,6 @@
                             ]
                         }
                     },
-
                     "attachment": {
                         "ui:options": {
                             "label": false,
@@ -244,6 +261,12 @@
                             "apiUrl": "case/v1/form/metadata?process=Suitability&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
                             "apiMethod": "get"
                         }
+                    },
+                    "notes": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "ui:widget": "NotesWidget"
                     }
                 }
             }

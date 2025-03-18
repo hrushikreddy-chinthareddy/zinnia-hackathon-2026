@@ -311,7 +311,12 @@
         "documentNumber": "Document: ",
         "noDocumentFound": "Aucun document trouvé",
         "documentSelectError": "Document déjà sélectionné",
-        "fetchingDocuments": "Récupération des documents..."
+        "fetchingDocuments": "Récupération des documents...",
+        "noteTitle": "Remarques",
+        "notePlaceholder": "Ajouter une note.",
+        "addNote": "Ajouter une note",
+        "errorSavingNote": "Une erreur s'est produite lors de l'enregistrement de la note. Veuillez réessayer.",
+        "notePostDate": "Publié le {{date}} par"
     },
     "beneChange": {
         "tabs": {
