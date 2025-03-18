@@ -12,6 +12,7 @@ import {
     PaymentMailType,
     PaymentMethod,
     FormDisbursement as FormDisbursementType,
+    QualTypes,
 } from '@deps/models/case/withdrawal/case';
 import { PaymentMethodOption } from '@deps/models/case/withdrawal/disbursement-types';
 
@@ -34,7 +35,7 @@ describe('Form Disbursment Updated Component', () => {
     describe('FLIC Form', () => {
         const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
 
-        const flicCOnfiguration = getFlicConfig(t);
+        const flicCOnfiguration = getFlicConfig(t, QualTypes.CustInhIRA);
         const generateEFTPayload = jest.fn(() => {
             return {} as FormDisbursementType;
         });

@@ -18,6 +18,12 @@ import {
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    getAnnuitantStateOfResidence,
+    getOwnerStateOfResidence,
+    spousalSignatureOnAnnuitantStateCodes,
+    validQualTypesForSpousalSignature,
+} from '@deps/helpers/otp-withdrawal.helper';
 import { statesAndTerritories } from '@deps/helpers/states.helper';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
@@ -72,7 +78,7 @@ export const spousalSignatureStateCodes = [
     statesAndTerritories.WISCONSIN,
 ];
 
-export default function getFlicConfig(t: TFunction) {
+export default function getFlicConfig(t: TFunction, qualType = '') {
     const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
         const programTypeText = formProgram?.programType?.text || '';
         if (programTypeText === ProgramType.TotalFreeAmt) {
@@ -89,6 +95,19 @@ export default function getFlicConfig(t: TFunction) {
             };
         }
         return { selectedOption: null, amount: '' };
+    };
+
+    function isValidQualType(qualType: string): boolean {
+        return validQualTypesForSpousalSignature.includes(qualType);
+    }
+
+    const shouldCheckSpouseSignatureOnAnnuitantState = isValidQualType(qualType);
+
+    const isSpousalSignatureRequired = (ownerState: string | null, annuitantState: string | null): boolean => {
+        if (shouldCheckSpouseSignatureOnAnnuitantState) {
+            return !!annuitantState && spousalSignatureOnAnnuitantStateCodes.includes(annuitantState);
+        }
+        return !!ownerState && spousalSignatureStateCodes.includes(ownerState?.toUpperCase());
     };
 
     const partialWithdrawalOptions: PartialWithdrawalOption[] = [
@@ -195,7 +214,9 @@ export default function getFlicConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                const ownerState = getOwnerStateOfResidence(formParty);
+                const annuitantState = getAnnuitantStateOfResidence(formParty);
+                return isSpousalSignatureRequired(ownerState, annuitantState);
             },
         },
         {
@@ -255,7 +276,6 @@ export default function getFlicConfig(t: TFunction) {
         },
     ];
     const w4pSignaturesConfig = [
-
         {
             component: SignatureFields.SignatureType,
             key: 'owner-type',
@@ -269,7 +289,7 @@ export default function getFlicConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'owner-date',
         },
-    ]
+    ];
 
     const cslnCheckStates = ['AZ', 'CA', 'CO', 'LA', 'MT', 'NV', 'NM', 'OH', 'TX', 'WA', 'ND', 'RI'];
     const formPartyConfigs: PartyConfig[] = [

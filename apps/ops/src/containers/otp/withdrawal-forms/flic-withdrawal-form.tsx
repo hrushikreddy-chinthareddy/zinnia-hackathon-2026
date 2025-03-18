@@ -20,7 +20,7 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getFlicConfig, { FormSubtype } from './flic-withdrawal-form.helper';
 
-export default function FlicWithdrawalForm() {
+export default function FlicWithdrawalForm({ qualType }: { qualType: string }) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
         cslnCheckStates,
@@ -36,7 +36,7 @@ export default function FlicWithdrawalForm() {
         formPartyConfigs,
         selectOneOptions,
         fullWithdrawalOptions,
-    } = getFlicConfig(t);
+    } = getFlicConfig(t, qualType);
 
     const {
         formSubtype,
@@ -74,7 +74,7 @@ export default function FlicWithdrawalForm() {
         }
     }, [formParty]);
 
-    const shouldStateW4pRender = isAllowedState(contractIssueState)
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
