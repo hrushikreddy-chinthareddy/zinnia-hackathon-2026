@@ -1,5 +1,5 @@
 {
-    "formId": "d30857ef-cf3f-46dc-b461-694c5b0e0c19",
+    "formId": "27ee24f0-bb0c-4e36-86c2-90d10c98887b",
     "process": "New Business",
     "carrier": "WELB",
     "taskType": "NB_TOA_NIGO",
@@ -41,7 +41,6 @@
                                 }
                             }
                         },
-
                         "details": {
                             "type": "object",
                             "title": "Details"
@@ -307,7 +306,6 @@
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-
                     "issuesList": {
                         "ui:readonly": true,
                         "ui:options": {
