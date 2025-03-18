@@ -891,32 +891,50 @@
             "investmentRiskInfo": {
                 "type": "object",
                 "title": "Investment Risk Information",
+
                 "properties": {
                     "riskTolerance": {
                         "type": "string",
                         "title": "Risk tolerance",
                         "$ref": "#/definitions/investProduct_riskToleranceEnum"
-                    },
-                    "riskToleranceDesc": {
-                        "type": "string",
-                        "title": "Risk tolerance description"
-                    },
-                    "annuityFitsRiskTolerance": {
-                        "type": "string",
-                        "title": "Annuity fits risk tolerance",
-                        "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
                     }
                 },
                 "required": ["riskTolerance"],
-                "if": {
-                    "properties": {
-                        "riskTolerance": {
-                            "const": "AGGRESSIVE"
+                "dependencies": {
+                    "riskTolerance": {
+                        "if": {
+                            "properties": {
+                                "riskTolerance": {
+                                    "const": "AGGRESSIVE"
+                                }
+                            },
+                            "required": ["riskTolerance"]
+                        },
+                        "then": {
+                            "properties": {
+                                "riskToleranceDesc": {
+                                    "type": "string",
+                                    "title": "Risk tolerance description"
+                                },
+                                "annuityFitsRiskTolerance": {
+                                    "type": "string",
+                                    "title": "Annuity fits risk tolerance",
+                                    "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
+                                }
+                            },
+                            "required": ["riskToleranceDesc", "annuityFitsRiskTolerance"]
+                        },
+                        "else": {
+                            "properties": {
+                                "annuityFitsRiskTolerance": {
+                                    "type": "string",
+                                    "title": "Annuity fits risk tolerance",
+                                    "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
+                                }
+                            },
+                            "required": ["annuityFitsRiskTolerance"]
                         }
                     }
-                },
-                "then": {
-                    "required": ["riskToleranceDesc"]
                 }
             },
             "financialObjectives": {
@@ -3038,18 +3056,45 @@
                                     "type": "string",
                                     "title": "Risk tolerance",
                                     "$ref": "#/definitions/investProduct_riskToleranceEnum"
-                                },
-                                "riskToleranceDesc": {
-                                    "type": "string",
-                                    "title": "Risk tolerance description"
-                                },
-                                "annuityFitsRiskTolerance": {
-                                    "type": "string",
-                                    "title": "Annuity fits risk tolerance",
-                                    "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
                                 }
                             },
-                            "required": ["riskTolerance", "riskToleranceDesc"]
+                            "dependencies": {
+                                "riskTolerance": {
+                                    "if": {
+                                        "properties": {
+                                            "riskTolerance": {
+                                                "const": "AGGRESSIVE"
+                                            }
+                                        },
+                                        "required": ["riskTolerance"]
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "riskToleranceDesc": {
+                                                "type": "string",
+                                                "title": "Risk tolerance description"
+                                            },
+                                            "annuityFitsRiskTolerance": {
+                                                "type": "string",
+                                                "title": "Annuity fits risk tolerance",
+                                                "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
+                                            }
+                                        },
+                                        "required": ["riskToleranceDesc", "annuityFitsRiskTolerance"]
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "annuityFitsRiskTolerance": {
+                                                "type": "string",
+                                                "title": "Annuity fits risk tolerance",
+                                                "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
+                                            }
+                                        },
+                                        "required": ["annuityFitsRiskTolerance"]
+                                    }
+                                }
+                            },
+                            "required": ["riskTolerance"]
                         },
                         "financialObjectives": {
                             "type": "object",
