@@ -4,13 +4,18 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import { FooterContent } from '@deps/components/card/card-section/card-section';
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helper';
+import SideSheetCancelAutopay from '@deps/components/side-sheet/side-sheet-transaction/cancel-autopay/side-sheet-cancel-autopay';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
 import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
-import { PolicyFeatureFeatureType, ProductType, Reason } from '@deps/models/policy/sor-policy';
+import { ArrangementType, PolicyFeatureFeatureType, ProductType, Reason } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, checkEligibilityOneTimePremium, checkEligibilitySystematicPrograms } from '@deps/queries/api/bpm';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import PremiumsPageHeaderContainer from '../page-header/premiums-page-header';
 import PolicyTestsCard from './cards/policy-tests-card/policy-tests-card';
@@ -20,6 +25,10 @@ export const PremiumsSubPage = () => {
     const { policy, policyDetails } = useContext(PolicyData);
     const { t: tRoot } = useTranslation(TranslationFiles.COMMON);
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'premium.upcoming' });
+    const sideSheet = useSideSheetContext();
+    const { featureFlags } = useOptimizely();
+    const premiumSetOrCancelAutopayEnabled = featureFlags[FEATURE_FLAGS.PREMIUM_SET_OR_CANCEL_AUTOPAY];
+
     const [isEligibleManageAutopay, setIsEligibleManageAutopay] = useState(false);
     const [ineligibleManageAutopayReason, setIneligibleManageAutopayReason] = useState('');
 
@@ -55,6 +64,13 @@ export const PremiumsSubPage = () => {
     useEffect(() => {
         const checkManageAutopayEligibility = async () => {
             const arrangementId = upcomingPayment?.arrangementId || '';
+
+            if (!arrangementId) {
+                setIsEligibleManageAutopay(true);
+
+                return;
+            }
+
             const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId);
 
             if (manageAutopayEligibility?.status === TransactionResponseStatus.Success) {
@@ -78,12 +94,39 @@ export const PremiumsSubPage = () => {
         checkOneTimeEligibility();
     }, [planCode, policyNumber, upcomingPayment]);
 
+    const openCancelSideSheet = () => {
+        sideSheet.changeSideSheetContent(
+            <Typography variant={TypographyVariant.H2}>
+                {t('cancelPremiumAutopayTitle')}
+            </Typography>,
+            <SideSheetCancelAutopay
+                arrangementType={ArrangementType.PAYMENT}
+                onCancel={() => sideSheet.handleOpen(false)}
+                policy={policy}
+                systematicProgramReason={Reason.PREMIUM}
+            />
+            
+        );
+        sideSheet.handleOpen(true);
+    };
+
     const footerContent = [
+        {
+            text: t('startAutopay'),
+            href: `/policies/${planCode}/${policyNumber}/policy/premiums/add-premium-autopay`,
+            isDisabled: !premiumSetOrCancelAutopayEnabled || !isEligibleManageAutopay || upcomingPayment?.nextProgramDate,
+        },
         {
             text: t('manageAutopay'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay`,
-            isDisabled: !isEligibleManageAutopay,
+            isDisabled: !isEligibleManageAutopay || !upcomingPayment?.nextProgramDate,
             tooltip: ineligibleManageAutopayReason,
+        },
+        {
+            href: '#',
+            isDisabled: !isEligibleManageAutopay || !premiumSetOrCancelAutopayEnabled || !upcomingPayment?.nextProgramDate,
+            text: t('cancelAutopay'),
+            onClick: openCancelSideSheet
         },
         {
             text: t('oneTimePaymentText'),

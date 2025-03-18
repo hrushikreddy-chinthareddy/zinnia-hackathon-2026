@@ -3,10 +3,6 @@
   padding-top: var(--measure-dimension-padding-4xl);
 }
 
-.container {
-  padding: var(--measure-dimension-padding-4xl);
-}
-
 .individualNameFormFields {
   display: flex;
   flex-direction: row;

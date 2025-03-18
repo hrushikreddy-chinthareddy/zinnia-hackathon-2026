@@ -314,3 +314,7 @@ export const deStringifyTrueFalseNull = (val: string | null): string | boolean |
 export const getSlug = (val: string): string => {
     return val.replace(/ /g, '_').toLowerCase();
 };
+
+export const reverseNameOrder = (name:string) =>{
+    return name.split(', ').reverse().join(' ');
+}

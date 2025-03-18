@@ -26,7 +26,7 @@ export interface OneTimePremiumRequestQuery extends OneTimePremiumRequest {
     caseId: string;
 }
 
-interface SystematicProgramUpdateRequestQuery extends SystematicProgramUpdateRequest {
+export interface SystematicProgramUpdateRequestQuery extends SystematicProgramUpdateRequest {
     caseId: string;
 }
 
@@ -83,6 +83,7 @@ export interface TransactionResponse {
     status: string | number;
     quoteResponse?: FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse;
     validationResult?: ValidationResult[];
+    data?: any;
 }
 
 export interface TransactionRequest {
@@ -320,15 +321,16 @@ export const validateSystematicProgramUpdate = async (
     query: SystematicProgramUpdateRequestQuery
 ): Promise<TransactionResponse> => {
     try {
-        const { data } = await client.post<SystematicProgramUpdateRequestQuery, AxiosResponse>(
+        const response = await client.post<SystematicProgramUpdateRequestQuery, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}/validation`,
             query
         );
-        return data;
+
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('validateSystematicProgramUpdate::an error occurred during validation', error);
 
-        return error?.data;
+        return { status: error?.status, data: error?.data };
     }
 };
 

@@ -28,6 +28,7 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import { SubmissionMethodTooltip } from '../../submission-type';
+import { friendlyGroupByName } from '../../utils';
 
 // Define the type for the flattened structure
 interface FlattenedDashboardStatsElement {
@@ -112,18 +113,6 @@ export const SubmissionTypeTable = () => {
         return sortedData.slice(offset, offset + limit);
     }, [offset, limit, sortedData]);
 
-    const friendlySubmissionTypeName = useMemo(() => {
-        switch (submissionVs) {
-            case GroupByOptions.Carrier:
-                return 'Carrier';
-            case GroupByOptions.ProductName:
-                return 'Product';
-            case GroupByOptions.BrokerDealerName:
-                return 'Distribution Partner';
-            default:
-        }
-    }, [submissionVs]);
-
     //Pagination stuff
     const goToPage = useCallback(
         (pageNumber: number) => {
@@ -160,7 +149,7 @@ export const SubmissionTypeTable = () => {
             <div className={sharedStyles.searchContainer}>
                 <FieldDataActive
                     fieldSize="small"
-                    placeholder={`Search by ${friendlySubmissionTypeName?.toLocaleLowerCase()} name`}
+                    placeholder={`Search by ${friendlyGroupByName[submissionVs]?.toLocaleLowerCase()} name`}
                     onChange={e => setSearchText(e.target.value)}
                 />
             </div>
@@ -186,7 +175,7 @@ export const SubmissionTypeTable = () => {
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
-                                        {friendlySubmissionTypeName} Name
+                                        {friendlyGroupByName[submissionVs]} Name
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}

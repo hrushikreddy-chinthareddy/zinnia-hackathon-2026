@@ -10,4 +10,5 @@ export type ProducerFormData = {
   email?: string;
   corporationType?: string;
   channel?: string;
+  carrier?: string;
 };

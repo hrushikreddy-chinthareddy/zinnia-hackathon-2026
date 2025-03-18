@@ -63,6 +63,7 @@
             "documents": "Documents",
             "newPremium": "Nouveau Prime",
             "cancelFreeLook": "Annuler Free Look",
+            "addPremiumAutopay": "Ajouter le prélèvement automatique de la prime",
             "updatePremium": "Gérer Paiement Automatique",
             "newWithdrawal": "Nouveau Retrait",
             "formData": "Données du formulaire",
@@ -310,7 +311,12 @@
         "documentNumber": "Document: ",
         "noDocumentFound": "Aucun document trouvé",
         "documentSelectError": "Document déjà sélectionné",
-        "fetchingDocuments": "Récupération des documents..."
+        "fetchingDocuments": "Récupération des documents...",
+        "noteTitle": "Remarques",
+        "notePlaceholder": "Ajouter une note.",
+        "addNote": "Ajouter une note",
+        "errorSavingNote": "Une erreur s'est produite lors de l'enregistrement de la note. Veuillez réessayer.",
+        "notePostDate": "Publié le {{date}} par"
     },
     "beneChange": {
         "tabs": {
@@ -1407,10 +1413,10 @@
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
-                "source of premium": "Source de prétium: {{label}}",
+                "source of premium": "Source de Financement: {{label}}",
                 "transfer of assets": "Transfert d'actifs: {{label}}",
                 "ceding carrier": "Transporteur cédant: {{label}}",
-                "premium source": "Source Premium: {{label}}",
+                "premium source": "Source de Financement: {{label}}",
                 "re-illustration": "Nouvelle illustration: {{label}}"
             },
             "reviewIssues": "Revoir {{taskType}} problèmes",
@@ -3107,6 +3113,48 @@
         }
     },
     "transactions": {
+        "states": {
+            "success": {
+                "cta": "Aller au dossier",
+                "subtitle": {
+                    "1": " la demande a été reçue.",
+                    "2": " Elle devrait être complétée pendant la nuit.",
+                    "3": " Vous pouvez suivre la progression en consultant le dossier.",
+                    "nigo": "Nous avons soumis cette demande pour un traitement NIGO."
+                },
+                "title": "Reçu!"
+            },
+            "apiError": {
+                "cta": "Soumettre",
+                "title": "Désolé, cela n'a pas fonctionné.",
+                "secondaryCta": "Annuler et fermer",
+                "subtitle": {
+                    "1": "Les services sont en panne, nous n'avons donc pas pu soumettre cette transaction.",
+                    "2": "Vous pouvez essayer de soumettre à nouveau. Si cela ne fonctionne toujours pas ",
+                    "3": "soumettez un billet de service."
+                }
+            },
+            "bpmError": {
+                "cta": "Soumettre",
+                "edit": "Modifier",
+                "nigo": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée fasse un suivi.",
+                "nigoAssistive": "Veuillez reconnaître NIGO",
+                "secondaryCta": "Annuler",
+                "subtitle": "Passez en revue les erreurs ci-dessous.",
+                "title": "Hmm, nous avons trouvé un problème."
+            }
+        },
+        "cancelAutopay": {
+            "cancel": "Annuler",
+            "cancelAutopay": "Annuler le prélèvement automatique",
+            "confirmCancelError": "Confirmez avant d'annuler le prélèvement automatique.",
+            "effectiveDate": "Date d'effet",
+            "invalidEffectiveDate": "Entrez une date d'effet valide.",
+            "loanAutopayCancellation": "Annulation du prélèvement automatique de prêt",
+            "missingCaseDocument": "Sélectionnez un document (ou continuez sans) pour continuer.",
+            "premiumAutopayCancellation": "Annulation du paiement automatique de la prime",
+            "proceedCancel": "Procédez à l'annulation du prélèvement automatique {{frequency}} de {{amount}}"
+        },
         "bpm": {
             "500Error": "Erreur 500 BPM"
         },
@@ -3924,6 +3972,7 @@
     },
     "premium": {
         "upcoming": {
+            "startAutopay": "Configurer le prélèvement automatique",
             "upcomingAutopay": "Autopaiement à venir",
             "paymentMode": {
                 "monthly": "Mensuel"
@@ -3945,6 +3994,9 @@
             "manageAutopay": "Gérer paiement automatique",
             "setUpAutopay": "Configurer paiement automatique",
             "oneTimePaymentText": "Effectuer un paiement ponctuel",
+            "cancelAutopay": "Annuler le prélèvement automatique",
+            "cancelLoanAutopayTitle": "Annuler le paiement automatique du prêt",
+            "cancelPremiumAutopayTitle": "Annuler le paiement automatique premium",
             "noAdditionalCharges": "Aucun",
             "flatCharges": {
                 "text": "Charge fixe",
@@ -4334,6 +4386,7 @@
         },
         "summary": {
             "amount": "Montant",
+            "bpm500Error": "Erreur BPM 500",
             "current": "Actuel",
             "frequency": "Fréquence",
             "paymentFrequency": "Fréquence des paiements",
@@ -4464,8 +4517,8 @@
             "label": "Méthode de paiement",
             "title": "Où devons-nous envoyer le paiement?"
         },
-        "payor": {
-            "label": "Payeur"
+        "payee": {
+            "label": "Bénéficiaire"
         },
         "start": {
             "label": "Démarrer",
@@ -4477,7 +4530,7 @@
             "fundAllocationTooltip": "La valeur du compte est investie dans un ou plusieurs fonds d'investissement. Lorsque nous retirons l'argent, nous devons savoir comment prendre le montant de chaque fonds d'investissement. Pro rata signifie prendre un montant égal de chaque fonds d'investissement. Personnalisé permet au propriétaire de choisir un certain montant de chaque fonds d'investissement.",
             "funds": "Fonds",
             "label": "Résumé",
-            "payor": "Payeur",
+            "payee": "Bénéficiaire",
             "proRata": "Pro rata",
             "submitLoan": "Soumettre le prêt",
             "status200subtitle": "Cela semble bien! Assurez-vous de réviser vos entrées avant de soumettre.",
@@ -4485,7 +4538,7 @@
             "loanAmount": "Montant du prêt",
             "effectiveDate": "Date d'entrée en vigueur",
             "effectiveDateTooltip": "Il s'agit de la date utilisée pour calculer toutes les valeurs de compte disponibles pour ce prêt. Puisque les fonds de la valeur du compte sont investis, la valeur du compte peut changer d'un jour à l'autre. Le traitement peut se produire à tout moment, nous devons donc savoir à quel moment retirer effectivement les fonds, même si nous traitons la transaction quelques jours avant ou après.",
-            "payorTitle": "Payeur",
+            "payeeTitle": "Bénéficiaire",
             "validationStatusLabel": "État de validation",
             "internal500Error": "Les services sont en panne, nous ne pouvons donc pas continuer. Vous pouvez soumettre un ticket d'assistance. Veuillez quitter cette transaction et réessayer plus tard.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
@@ -4554,33 +4607,37 @@
             "title": "Soumis !"
         }
     },
-    "autopay": {
+    "premiumAutopay": {
         "start": {
-            "label": "Commencer",
-            "title": "Mettre à jour le paiement automatique de prime",
-            "subtitle": "Apportez des modifications à l'horaire, au montant ou à la méthode de paiement pour le prélèvement automatique de prime de cette police. Tout d'abord, assurons-nous que nous puissions suivre cette transaction dans OnBase."
+            "label": "Démarrer",
+            "subtitleManage": "Apportez des modifications à l'horaire, au montant ou à la méthode de paiement pour le prélèvement automatique de prime de cette police. Tout d'abord, assurons-nous que nous puissions suivre cette transaction dans OnBase.",
+            "titleStart": "Configurer le prélèvement automatique de la prime",
+            "titleManage": "Gérer le prélèvement automatique de la prime"
         },
         "amount": {
             "label": "Montant",
-            "paymentAmount": "Montant du prélèvement automatique de prime",
+            "paymentAmount": "Montant du prélèvement automatique de la prime",
             "paymentFrequency": "Fréquence de paiement",
+            "paymentStartDate": "Date de début de paiement",
             "nextPaymentDate": "Prochaine date de paiement",
-            "casesLabel": "Sélectionnez un cas",
-            "missingDateError": "La date du prochain paiement est manquante.",
-            "invalidDateError": "Saisissez une prochaine date de paiement valide.",
-            "missingAmountError": "Le montant du prélèvement automatique de prime est manquant.",
-            "invalidAmountError": "Le montant du prélèvement automatique de prime doit être supérieur à 1,00 $",
+            "casesLabel": "Sélectionnez un dossier",
             "missingFrequencyError": "La fréquence de paiement est manquante.",
+            "missingNextPaymentDateError": "La prochaine date de paiement est manquante.",
+            "invalidNextPaymentDateError": "Entrez une date de prochain paiement valide.",
+            "missingStartDateError": "La date de début de paiement est manquante.",
+            "invalidStartDateError": "Entrez une date de début de paiement valide.",
+            "missingAmountError": "Le montant du prélèvement automatique de la prime est manquant.",
+            "invalidAmountError": "Le montant du prélèvement automatique de la prime doit être supérieur à 1,00 $",
             "annually": "Annuellement",
-            "biAnnually": "Bi-Annuellement",
-            "monthly": "Mensuel",
-            "quarterly": "Trimestriel"
+            "biAnnually": "Semestriellement",
+            "monthly": "Mensuellement",
+            "quarterly": "Trimestriellement"
         },
         "payor": {
             "label": "Payeur"
         },
         "payment": {
-            "label": "Paiement"
+            "label": "Méthode de paiement"
         },
         "pendingBanner": {
             "caseLinkText": "aller au dossier",
@@ -4588,33 +4645,37 @@
         },
         "summary": {
             "amount": "Montant",
+            "bpm500Error": "Erreur BPM 500",
             "current": "Actuel",
             "frequency": "Fréquence",
+            "paymentFrequency": "Fréquence de paiement",
             "label": "Résumé",
-            "newAutopayDetails": "Nouveaux détails du prélèvement automatique de prime",
-            "nextPaymentDate": "Date du prochain paiement",
+            "autopayAmount": "Montant du prélèvement automatique de la prime",
+            "newAutopayDetails": "Nouveaux détails du prélèvement automatique de la prime",
+            "nextPaymentDate": "Prochaine date de paiement",
+            "paymentStartDate": "Date de début de paiement",
             "payor": "Payeur",
-            "submit": "Soumettre",
-            "status200subtitle": "Ça a l'air bien ! Assurez-vous de vérifier vos entrées avant de soumettre.",
-            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette politique. Veuillez examiner l'erreur ci-dessous.",
-            "updateAutopay": "Mettre à jour le paiement automatique",
+            "submit": "Soumettre le paiement",
+            "status200subtitle": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre.",
+            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette police. Consultez l'erreur ci-dessous.",
+            "updateAutopay": "Mettre à jour le prélèvement automatique de la prime",
             "validationStatusLabel": "État de validation",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée assure le suivi.",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée fasse un suivi.",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO."
         },
         "confirm": {
-            "cta": "Accéder à l'historique des transactions",
+            "cta": "Aller au dossier",
             "label": "Confirmer",
             "secondaryCta": "Fermer",
             "subtitle": {
-                "0": "Les détails du paiement automatique ont été mis à jour.",
-                "1": " est le prochain",
-                "2": "paiement de",
-                "3": "sera soumis le",
-                "NIGO": " la mise à jour du paiement automatique a été soumise pour ",
-                "NIGO1": "traitement NIGO."
+                "0": "Une",
+                "1": " demande de prélèvement automatique de remboursement de prime",
+                "2": " a été reçue.",
+                "2NIGO": " a été reçue et un problème NIGO a été créé.",
+                "3": " Elle devrait être complétée pendant la nuit.",
+                "4": " Vous pouvez suivre la progression en consultant le dossier."
             },
-            "title": "Soumis !"
+            "title": "C'est noté !"
         }
     },
     "footnote": {
@@ -4834,7 +4895,8 @@
             "bankDataCard": {
                 "accountNumber": "Numéro de compte",
                 "endingIn": "Se terminant par "
-            }
+            },
+            "fieldLabel": "Coordonnées bancaires"
         },
         "payeesStep": {
             "add": "Ajouter une nouvelle personne ou entité",

@@ -1,0 +1,21 @@
+.successContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-3xl);
+}
+
+.successButtons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+}
+
+.successMessage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-sm);
+}

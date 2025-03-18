@@ -3,7 +3,6 @@ import { FC } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { ActiveAging } from '@deps/components/dashboard/sections/active-aging/active-aging';
-import { ActiveAgingProvider } from '@deps/components/dashboard/sections/active-aging/context/active-aging-context';
 import { NigoOpenTransactions } from '@deps/components/dashboard/sections/nigo-open-transactions/nigo-open-transactions';
 import SankeyChart from '@deps/components/dashboard/sections/sankey-chart/sankey-chart';
 import { SubmissionTypeProvider } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
@@ -47,9 +46,7 @@ export const ActiveApplications: FC = () => {
             </div>
             <div className={styles.container}>
                 <div className={sharedStyles.dashboardCard}>
-                    <ActiveAgingProvider>
-                        <ActiveAging />
-                    </ActiveAgingProvider>
+                    <ActiveAging />
                 </div>
                 <div className={sharedStyles.dashboardCard}>
                     {showTabView ? (

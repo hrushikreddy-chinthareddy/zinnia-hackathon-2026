@@ -1,6 +1,5 @@
 import { AccountStatus, AccountType, AddressType, AllocationOption, AmountType, ArrangementType, BasePolicyBanding, ClaimStatus, Country, CoverageBand, Currency, DeathBenefitOptionType, DefinitionOfLifeInsurance, DistributionType, EmailType, FilingStatus, Frequency, FundAccountType, Gender, HoldingForm, IdentificationType, IndicatorCode, InvestmentType, IssueType, LineOfBusiness, LoanInterestMethod, LoanRepaymentType, PartyRole, PartyType, PaymentForm, PhoneType, Policy, PolicyFeatureFeatureType, PolicyStatus, PreferredCommunicationType, ProductType, QualificationType, Reason, RelationshipToInsured, RiskClass, State, Status, SubStandardRating, TaxRateToUse, TaxWithholdingType } from "@deps/models/policy/sor-policy";
 
-  
   export const mockPolicy: Policy = {
     coverage: {
         totalCoverageAmount: 500000,

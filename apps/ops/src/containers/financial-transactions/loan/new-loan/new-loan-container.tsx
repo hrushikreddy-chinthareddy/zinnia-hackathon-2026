@@ -27,7 +27,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
 
     const startLabel = t('start.label');
     const amountLabel = t('amount.label');
-    const payorLabel = t('payor.label');
+    const payeeLabel = t('payee.label');
     const paymentLabel = t('payment.label');
     const summaryLabel = t('summary.label');
     const confirmLabel = t('confirm.label');
@@ -64,7 +64,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
             text: amountLabel,
         },
         {
-            ariaLabel: payorLabel,
+            ariaLabel: payeeLabel,
             component: (
                 <PayeesStep
                     parentPage={ParentPage.Loans}
@@ -73,9 +73,9 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
                     state={newLoan}
                 />
             ),
-            screenReaderLabel: payorLabel,
+            screenReaderLabel: payeeLabel,
             index: 2,
-            text: payorLabel,
+            text: payeeLabel,
         },
         {
             ariaLabel: paymentLabel,

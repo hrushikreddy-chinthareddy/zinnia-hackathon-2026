@@ -14,6 +14,8 @@ import { ProducerType } from '../../types';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import PomTable from '../../components/pom-table/PomTable';
+import { default as PomStyles } from '../../styles/pom.module.css';
+import { useNavigate } from 'react-router';
 
 interface SearchFormValues {
   npn: string;
@@ -22,6 +24,7 @@ interface SearchFormValues {
 export const Search = () => {
   const { handleSubmit, control, formState, register } =
     useForm<SearchFormValues>();
+  const navigate = useNavigate();
   const tableHeaders = {
     name: 'Name',
     npn: 'NPN',
@@ -43,13 +46,22 @@ export const Search = () => {
           ? `${searchResult.firstName} ${searchResult.lastName}`
           : searchResult.producerName;
 
+      const handleClick = () => {
+        const path =
+          searchResult.producerType === ProducerType.INDIVIDUAL
+            ? `/agents/${searchResult.nationalProducerNumber}`
+            : `/agencies/${searchResult.nationalProducerNumber}`;
+        navigate(path);
+      };
+
       return {
         name: (
           <div className={clsx(styles.name)}>
-            <div>
-              <Icon type={iconType} width={16} height={16} />
-            </div>
-            <span>{name}</span>
+            <Icon type={iconType} width={16} height={16} />
+
+            <span className={clsx(PomStyles.cta)} onClick={handleClick}>
+              {name}
+            </span>
           </div>
         ),
         npn: searchResult.nationalProducerNumber,
@@ -60,12 +72,14 @@ export const Search = () => {
     });
 
   const onSubmit = ({ npn }: SearchFormValues) => {
-    console.log(npn);
     setSearchResults(generateSearchResults(npn));
   };
 
   return (
-    <div className={clsx(styles.container)}>
+    <div
+      className={clsx(styles.container)}
+      id={PomStyles['producer-onboarding-maintenance']}
+    >
       <h1 className={clsx(styles.title)}>Find a producer</h1>
       <div className={clsx(styles.cardContainer)}>
         <form className={clsx(styles.form)} onSubmit={handleSubmit(onSubmit)}>
