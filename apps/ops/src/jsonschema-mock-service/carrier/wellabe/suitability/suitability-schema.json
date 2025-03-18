@@ -90,7 +90,7 @@
                 "enum": ["RESIDENCE", "MAILING", "BUSINESS", "PRIMARY_ADDRESS", "VACATION", "BILLING_MAILING"]
             },
             "employmentStatusEnum": {
-                "enum": ["ACTIVE", "RETIRED", "DISABLED", "TERMINATED", "OTHERS"]
+                "enum": ["YES", "RETIRED", "NO"]
             },
             "lineOfBusinessEnum": {
                 "enum": ["ANNUITY", "LIFE"]
@@ -183,7 +183,7 @@
                 "enum": ["PENALTY-FREE-WITHDRWAWAL", "ANNUITIZE", "LUMP_SUM", "REQUIRED_MINIMUM_DISTRIBUTION", "NO_PLANS_TO_ACCESS"]
             },
             "liquidityOptions_planToHoldAnnuityEnum": {
-                "enum": ["1", "2", "3", "4", "5"]
+                "enum": ["1", "2", "3", "4"]
             },
             "financialObjectives_annuityMeetsFinancialNeedsEnum": {
                 "enum": ["YES", "NO"]
@@ -315,144 +315,233 @@
                         "fullName": {
                             "type": ["string", "null"],
                             "title": "Full name"
-                        },
-                        "person": {
-                            "type": "object",
-                            "title": "Person Information",
-                            "properties": {
-                                "firstName": {
-                                    "type": "string",
-                                    "title": "First Name",
-                                    "minLength": 1
-                                },
-                                "middleName": {
-                                    "type": "string",
-                                    "title": "Middle name"
-                                },
-                                "lastName": {
-                                    "type": "string",
-                                    "title": "Last name"
-                                },
-                                "gender": {
-                                    "type": "string",
-                                    "title": "Gender",
-                                    "$ref": "#/definitions/genderEnum"
-                                },
-                                "age": {
-                                    "type": "string",
-                                    "title": "Age"
-                                },
-                                "birthDate": {
-                                    "type": "string",
-                                    "format": "date",
-                                    "title": "Birth date"
-                                },
-                                "martialStatus": {
-                                    "type": "string",
-                                    "title": "Marital status",
-                                    "$ref": "#/definitions/martialStatusEnum"
-                                }
-                            },
-                            "required": ["firstName", "gender", "age", "martialStatus"]
-                        },
-                        "govtIdInfo": {
-                            "type": "array",
-                            "title": "Government Id Information",
-                            "items": {
-                                "title": "Government id",
-                                "type": "object",
+                        }
+                    },
+                    "dependencies": {
+                        "roleType": {
+                            "if": {
                                 "properties": {
-                                    "govtId": {
-                                        "type": "string",
-                                        "title": "Government id"
-                                    },
-                                    "govtIdType": {
-                                        "type": "string",
-                                        "title": "Government id type",
-                                        "$ref": "#/definitions/govtIdTypeEnum"
-                                    },
-                                    "govtIdExpDate": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "title": "Government id expiry date"
+                                    "roleType": {
+                                        "const": "AGENT"
                                     }
-                                }
-                            }
-                        },
-                        "addresses": {
-                            "type": "array",
-                            "title": "Addresses",
-                            "items": {
-                                "type": "object",
-                                "title": "Address",
-                                "properties": {
-                                    "addressType": {
-                                        "type": "string",
-                                        "title": "Address type",
-                                        "$ref": "#/definitions/addressTypeEnum",
-                                        "uniqueItems": true
-                                    },
-                                    "line1": {
-                                        "type": "string",
-                                        "title": "Address line 1"
-                                    },
-                                    "line2": {
-                                        "type": "string",
-                                        "title": "Address line 2"
-                                    },
-                                    "city": {
-                                        "type": "string",
-                                        "title": "City"
-                                    },
-                                    "state": {
-                                        "uniqueItems": true,
-                                        "type": "string",
-                                        "title": "State",
-                                        "$ref": "#/definitions/stateEnum"
-                                    },
-                                    "country": {
-                                        "type": "string",
-                                        "title": "Country"
-                                    },
-                                    "zip": {
-                                        "type": "string",
-                                        "title": "Zip code"
-                                    }
-                                }
-                            }
-                        },
-                        "employment": {
-                            "type": "object",
-                            "title": "Employment Information",
-                            "required": ["employmentStatus"],
-                            "properties": {
-                                "employmentStatus": {
-                                    "type": "string",
-                                    "title": "Employment status",
-                                    "$ref": "#/definitions/employmentStatusEnum",
-                                    "uniqueItems": true
                                 },
-                                "occupation": {
-                                    "type": "string",
-                                    "title": "Occupation"
-                                }
+                                "required": ["roleType"]
                             },
-                            "dependencies": {
-                                "employmentStatus": {
-                                    "if": {
+                            "then": {
+                                "properties": {
+                                    "person": {
+                                        "type": "object",
+                                        "title": "Person Information",
                                         "properties": {
-                                            "employmentStatus": { "const": "DISABLED" }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "disabilityExplanation": {
+                                            "firstName": {
                                                 "type": "string",
-                                                "title": "If disabled is marked, please explain",
+                                                "title": "First Name",
                                                 "minLength": 1
+                                            },
+                                            "middleName": {
+                                                "type": "string",
+                                                "title": "Middle name"
+                                            },
+                                            "lastName": {
+                                                "type": "string",
+                                                "title": "Last name"
+                                            },
+
+                                            "birthDate": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "title": "Birth date"
                                             }
                                         },
-                                        "required": ["disabilityExplanation"]
+                                        "required": ["firstName"]
+                                    },
+                                    "govtIdInfo": {
+                                        "type": "array",
+                                        "title": "Government Id Information",
+                                        "items": {
+                                            "title": "Government id",
+                                            "type": "object",
+                                            "properties": {
+                                                "govtId": {
+                                                    "type": "string",
+                                                    "title": "Government id"
+                                                },
+                                                "govtIdType": {
+                                                    "type": "string",
+                                                    "title": "Government id type",
+                                                    "$ref": "#/definitions/govtIdTypeEnum"
+                                                },
+                                                "govtIdExpDate": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "title": "Government id expiry date"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "addresses": {
+                                        "type": "array",
+                                        "title": "Addresses",
+                                        "items": {
+                                            "type": "object",
+                                            "title": "Address",
+                                            "properties": {
+                                                "addressType": {
+                                                    "type": "string",
+                                                    "title": "Address type",
+                                                    "$ref": "#/definitions/addressTypeEnum",
+                                                    "uniqueItems": true
+                                                },
+                                                "line1": {
+                                                    "type": "string",
+                                                    "title": "Address line 1"
+                                                },
+                                                "line2": {
+                                                    "type": "string",
+                                                    "title": "Address line 2"
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "title": "City"
+                                                },
+                                                "state": {
+                                                    "uniqueItems": true,
+                                                    "type": "string",
+                                                    "title": "State",
+                                                    "$ref": "#/definitions/stateEnum"
+                                                },
+                                                "country": {
+                                                    "type": "string",
+                                                    "title": "Country"
+                                                },
+                                                "zip": {
+                                                    "type": "string",
+                                                    "title": "Zip code"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "else": {
+                                "properties": {
+                                    "person": {
+                                        "type": "object",
+                                        "title": "Person Information",
+                                        "properties": {
+                                            "firstName": {
+                                                "type": "string",
+                                                "title": "First Name",
+                                                "minLength": 1
+                                            },
+                                            "middleName": {
+                                                "type": "string",
+                                                "title": "Middle name"
+                                            },
+                                            "lastName": {
+                                                "type": "string",
+                                                "title": "Last name"
+                                            },
+                                            "gender": {
+                                                "type": "string",
+                                                "title": "Gender",
+                                                "$ref": "#/definitions/genderEnum"
+                                            },
+                                            "age": {
+                                                "type": "string",
+                                                "title": "Age"
+                                            },
+                                            "birthDate": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "title": "Birth date"
+                                            },
+                                            "martialStatus": {
+                                                "type": "string",
+                                                "title": "Marital status",
+                                                "$ref": "#/definitions/martialStatusEnum"
+                                            }
+                                        },
+                                        "required": ["firstName", "gender", "age", "martialStatus"]
+                                    },
+                                    "govtIdInfo": {
+                                        "type": "array",
+                                        "title": "Government Id Information",
+                                        "items": {
+                                            "title": "Government id",
+                                            "type": "object",
+                                            "properties": {
+                                                "govtId": {
+                                                    "type": "string",
+                                                    "title": "Government id"
+                                                },
+                                                "govtIdType": {
+                                                    "type": "string",
+                                                    "title": "Government id type",
+                                                    "$ref": "#/definitions/govtIdTypeEnum"
+                                                },
+                                                "govtIdExpDate": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "title": "Government id expiry date"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "addresses": {
+                                        "type": "array",
+                                        "title": "Addresses",
+                                        "items": {
+                                            "type": "object",
+                                            "title": "Address",
+                                            "properties": {
+                                                "addressType": {
+                                                    "type": "string",
+                                                    "title": "Address type",
+                                                    "$ref": "#/definitions/addressTypeEnum",
+                                                    "uniqueItems": true
+                                                },
+                                                "line1": {
+                                                    "type": "string",
+                                                    "title": "Address line 1"
+                                                },
+                                                "line2": {
+                                                    "type": "string",
+                                                    "title": "Address line 2"
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "title": "City"
+                                                },
+                                                "state": {
+                                                    "uniqueItems": true,
+                                                    "type": "string",
+                                                    "title": "State",
+                                                    "$ref": "#/definitions/stateEnum"
+                                                },
+                                                "country": {
+                                                    "type": "string",
+                                                    "title": "Country"
+                                                },
+                                                "zip": {
+                                                    "type": "string",
+                                                    "title": "Zip code"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "employment": {
+                                        "type": "object",
+                                        "title": "Employment Information",
+                                        "required": ["employmentStatus"],
+                                        "properties": {
+                                            "employmentStatus": {
+                                                "type": "string",
+                                                "title": "Employment status",
+                                                "$ref": "#/definitions/employmentStatusEnum",
+                                                "uniqueItems": true
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -1533,7 +1622,7 @@
                     "employmentStatus": {
                         "ui:options": {
                             "label": true,
-                            "enumNames": ["Active", "Retired", "Disabled", "Terminated", "Others"]
+                            "enumNames": ["Active", "Disabled", "Terminated"]
                         }
                     },
                     "occupation": {
@@ -1888,7 +1977,7 @@
             "possibleReductionInValue": {},
             "planToHoldAnnuity": {
                 "ui:options": {
-                    "enumNames": ["0-2 Years", "3-4 Years", "4-5 Years", "5-6 Years", "7+ Years"],
+                    "enumNames": ["0-2 Years", "3-4 Years", "5-6 Years", "7+ Years"],
                     "label": true
                 }
             },
@@ -2197,7 +2286,7 @@
                             "enum": ["RESIDENCE", "MAILING", "BUSINESS", "PRIMARY_ADDRESS", "VACATION", "BILLING_MAILING"]
                         },
                         "employmentStatusEnum": {
-                            "enum": ["ACTIVE", "RETIRED", "DISABLED", "TERMINATED", "OTHERS"]
+                            "enum": ["YES", "RETIRED", "NO"]
                         },
                         "lineOfBusinessEnum": {
                             "enum": ["ANNUITY", "LIFE"]
@@ -2304,7 +2393,7 @@
                             ]
                         },
                         "liquidityOptions_planToHoldAnnuityEnum": {
-                            "enum": ["1", "2", "3", "4", "5"]
+                            "enum": ["1", "2", "3", "4"]
                         },
                         "financialObjectives_annuityMeetsFinancialNeedsEnum": {
                             "enum": ["YES", "NO"]
@@ -2420,6 +2509,7 @@
                             "items": {
                                 "type": "object",
                                 "title": "PARTY",
+
                                 "properties": {
                                     "partyType": {
                                         "type": "string",
@@ -2436,145 +2526,233 @@
                                     "fullName": {
                                         "type": ["string", "null"],
                                         "title": "Full name"
-                                    },
-                                    "person": {
-                                        "type": "object",
-                                        "title": "Person Information",
-                                        "properties": {
-                                            "firstName": {
-                                                "type": "string",
-                                                "title": "First Name",
-                                                "minLength": 1
-                                            },
-                                            "middleName": {
-                                                "type": "string",
-                                                "title": "Middle name"
-                                            },
-                                            "lastName": {
-                                                "type": "string",
-                                                "title": "Last name"
-                                            },
-                                            "gender": {
-                                                "type": "string",
-                                                "title": "Gender",
-                                                "$ref": "#/definitions/genderEnum"
-                                            },
-                                            "age": {
-                                                "type": "string",
-                                                "title": "Age"
-                                            },
-                                            "birthDate": {
-                                                "type": "string",
-                                                "format": "date",
-                                                "title": "Birth date"
-                                            },
-                                            "martialStatus": {
-                                                "type": "string",
-                                                "title": "Marital status",
-                                                "$ref": "#/definitions/martialStatusEnum"
-                                            }
-                                        },
-                                        "required": ["firstName", "gender", "age", "martialStatus"]
-                                    },
-                                    "govtIdInfo": {
-                                        "type": "array",
-                                        "title": "Government Id Information",
-                                        "items": {
-                                            "title": "Government id",
-                                            "type": "object",
+                                    }
+                                },
+                                "dependencies": {
+                                    "roleType": {
+                                        "if": {
                                             "properties": {
-                                                "govtId": {
-                                                    "type": "string",
-                                                    "title": "Government id"
-                                                },
-                                                "govtIdType": {
-                                                    "type": "string",
-                                                    "title": "Government id type",
-                                                    "$ref": "#/definitions/govtIdTypeEnum"
-                                                },
-                                                "govtIdExpDate": {
-                                                    "type": "string",
-                                                    "format": "date",
-                                                    "title": "Government id expiry date"
+                                                "roleType": {
+                                                    "const": "AGENT"
                                                 }
-                                            }
-                                        }
-                                    },
-                                    "addresses": {
-                                        "type": "array",
-                                        "title": "Addresses",
-                                        "items": {
-                                            "type": "object",
-                                            "title": "Address",
-                                            "properties": {
-                                                "addressType": {
-                                                    "type": "string",
-                                                    "title": "Address type",
-                                                    "$ref": "#/definitions/addressTypeEnum",
-                                                    "uniqueItems": true
-                                                },
-                                                "line1": {
-                                                    "type": "string",
-                                                    "title": "Address line 1"
-                                                },
-                                                "line2": {
-                                                    "type": "string",
-                                                    "title": "Address line 2"
-                                                },
-                                                "city": {
-                                                    "type": "string",
-                                                    "title": "City"
-                                                },
-                                                "state": {
-                                                    "uniqueItems": true,
-                                                    "type": "string",
-                                                    "title": "State",
-                                                    "$ref": "#/definitions/stateEnum",
-                                                    "default": ""
-                                                },
-                                                "country": {
-                                                    "type": "string",
-                                                    "title": "Country"
-                                                },
-                                                "zip": {
-                                                    "type": "string",
-                                                    "title": "Zip code"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "employment": {
-                                        "type": "object",
-                                        "title": "Employment Information",
-                                        "required": ["employmentStatus"],
-                                        "properties": {
-                                            "employmentStatus": {
-                                                "type": "string",
-                                                "title": "Employment status",
-                                                "$ref": "#/definitions/employmentStatusEnum",
-                                                "uniqueItems": true
                                             },
-                                            "occupation": {
-                                                "type": "string",
-                                                "title": "Occupation"
-                                            }
+                                            "required": ["roleType"]
                                         },
-                                        "dependencies": {
-                                            "employmentStatus": {
-                                                "if": {
+                                        "then": {
+                                            "properties": {
+                                                "person": {
+                                                    "type": "object",
+                                                    "title": "Person Information",
                                                     "properties": {
-                                                        "employmentStatus": { "const": "DISABLED" }
-                                                    }
-                                                },
-                                                "then": {
-                                                    "properties": {
-                                                        "disabilityExplanation": {
+                                                        "firstName": {
                                                             "type": "string",
-                                                            "title": "If disabled is marked, please explain",
+                                                            "title": "First Name",
                                                             "minLength": 1
+                                                        },
+                                                        "middleName": {
+                                                            "type": "string",
+                                                            "title": "Middle name"
+                                                        },
+                                                        "lastName": {
+                                                            "type": "string",
+                                                            "title": "Last name"
+                                                        },
+
+                                                        "birthDate": {
+                                                            "type": "string",
+                                                            "format": "date",
+                                                            "title": "Birth date"
                                                         }
                                                     },
-                                                    "required": ["disabilityExplanation"]
+                                                    "required": ["firstName"]
+                                                },
+                                                "govtIdInfo": {
+                                                    "type": "array",
+                                                    "title": "Government Id Information",
+                                                    "items": {
+                                                        "title": "Government id",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "govtId": {
+                                                                "type": "string",
+                                                                "title": "Government id"
+                                                            },
+                                                            "govtIdType": {
+                                                                "type": "string",
+                                                                "title": "Government id type",
+                                                                "$ref": "#/definitions/govtIdTypeEnum"
+                                                            },
+                                                            "govtIdExpDate": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "title": "Government id expiry date"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "addresses": {
+                                                    "type": "array",
+                                                    "title": "Addresses",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "title": "Address",
+                                                        "properties": {
+                                                            "addressType": {
+                                                                "type": "string",
+                                                                "title": "Address type",
+                                                                "$ref": "#/definitions/addressTypeEnum",
+                                                                "uniqueItems": true
+                                                            },
+                                                            "line1": {
+                                                                "type": "string",
+                                                                "title": "Address line 1"
+                                                            },
+                                                            "line2": {
+                                                                "type": "string",
+                                                                "title": "Address line 2"
+                                                            },
+                                                            "city": {
+                                                                "type": "string",
+                                                                "title": "City"
+                                                            },
+                                                            "state": {
+                                                                "uniqueItems": true,
+                                                                "type": "string",
+                                                                "title": "State",
+                                                                "$ref": "#/definitions/stateEnum"
+                                                            },
+                                                            "country": {
+                                                                "type": "string",
+                                                                "title": "Country"
+                                                            },
+                                                            "zip": {
+                                                                "type": "string",
+                                                                "title": "Zip code"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "else": {
+                                            "properties": {
+                                                "person": {
+                                                    "type": "object",
+                                                    "title": "Person Information",
+                                                    "properties": {
+                                                        "firstName": {
+                                                            "type": "string",
+                                                            "title": "First Name",
+                                                            "minLength": 1
+                                                        },
+                                                        "middleName": {
+                                                            "type": "string",
+                                                            "title": "Middle name"
+                                                        },
+                                                        "lastName": {
+                                                            "type": "string",
+                                                            "title": "Last name"
+                                                        },
+                                                        "gender": {
+                                                            "type": "string",
+                                                            "title": "Gender",
+                                                            "$ref": "#/definitions/genderEnum"
+                                                        },
+                                                        "age": {
+                                                            "type": "string",
+                                                            "title": "Age"
+                                                        },
+                                                        "birthDate": {
+                                                            "type": "string",
+                                                            "format": "date",
+                                                            "title": "Birth date"
+                                                        },
+                                                        "martialStatus": {
+                                                            "type": "string",
+                                                            "title": "Marital status",
+                                                            "$ref": "#/definitions/martialStatusEnum"
+                                                        }
+                                                    },
+                                                    "required": ["firstName", "gender", "age", "martialStatus"]
+                                                },
+                                                "govtIdInfo": {
+                                                    "type": "array",
+                                                    "title": "Government Id Information",
+                                                    "items": {
+                                                        "title": "Government id",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "govtId": {
+                                                                "type": "string",
+                                                                "title": "Government id"
+                                                            },
+                                                            "govtIdType": {
+                                                                "type": "string",
+                                                                "title": "Government id type",
+                                                                "$ref": "#/definitions/govtIdTypeEnum"
+                                                            },
+                                                            "govtIdExpDate": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "title": "Government id expiry date"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "addresses": {
+                                                    "type": "array",
+                                                    "title": "Addresses",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "title": "Address",
+                                                        "properties": {
+                                                            "addressType": {
+                                                                "type": "string",
+                                                                "title": "Address type",
+                                                                "$ref": "#/definitions/addressTypeEnum",
+                                                                "uniqueItems": true
+                                                            },
+                                                            "line1": {
+                                                                "type": "string",
+                                                                "title": "Address line 1"
+                                                            },
+                                                            "line2": {
+                                                                "type": "string",
+                                                                "title": "Address line 2"
+                                                            },
+                                                            "city": {
+                                                                "type": "string",
+                                                                "title": "City"
+                                                            },
+                                                            "state": {
+                                                                "uniqueItems": true,
+                                                                "type": "string",
+                                                                "title": "State",
+                                                                "$ref": "#/definitions/stateEnum"
+                                                            },
+                                                            "country": {
+                                                                "type": "string",
+                                                                "title": "Country"
+                                                            },
+                                                            "zip": {
+                                                                "type": "string",
+                                                                "title": "Zip code"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "employment": {
+                                                    "type": "object",
+                                                    "title": "Employment Information",
+                                                    "required": ["employmentStatus"],
+                                                    "properties": {
+                                                        "employmentStatus": {
+                                                            "type": "string",
+                                                            "title": "Employment status",
+                                                            "$ref": "#/definitions/employmentStatusEnum",
+                                                            "uniqueItems": true
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -3664,7 +3842,7 @@
                                 "employmentStatus": {
                                     "ui:options": {
                                         "label": true,
-                                        "enumNames": ["Active", "Retired", "Disabled", "Terminated", "Others"]
+                                        "enumNames": ["Active", "Retired", "Terminated"]
                                     }
                                 },
                                 "occupation": {
@@ -4009,7 +4187,7 @@
                         "possibleReductionInValue": {},
                         "planToHoldAnnuity": {
                             "ui:options": {
-                                "enumNames": ["0-2 Years", "3-4 Years", "4-5 Years", "5-6 Years", "7+ Years"],
+                                "enumNames": ["0-2 Years", "3-4 Years", "5-6 Years", "7+ Years"],
                                 "label": true
                             }
                         },
