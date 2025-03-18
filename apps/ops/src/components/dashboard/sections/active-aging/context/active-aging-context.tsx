@@ -15,12 +15,12 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { useDashboardStore } from '@deps/store/store';
 
-type CaseStatusType = { [key: string]: Statuses };
+export type CaseStatusType = { [key: string]: string };
 
 const defaultCaseStatus: CaseStatusType = {
-    [Statuses.InProgress]: Statuses.InProgress,
-    [Statuses.Exception]: Statuses.Exception,
-    [Statuses.NotStarted]: Statuses.NotStarted,
+    [Statuses.InProgress]: 'In Progress',
+    [Statuses.Exception]: 'Exception',
+    [Statuses.NotStarted]: 'Not Started',
 };
 
 interface ActiveAgingContextTypes {
@@ -75,7 +75,7 @@ const defaultState = {
 
 const filterNullData = (response: CaseDashboardStatsResponse) => {
     if (response?.data?.length) {
-        response.data = response?.data?.filter(item => item.name !== null && item.name !== 'null');
+        response.data = response?.data?.filter(item => item.name !== null && item.name !== 'null' && item.name !== '');
     }
     return response;
 };

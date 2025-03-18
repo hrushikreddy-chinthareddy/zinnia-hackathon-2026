@@ -4,6 +4,7 @@ import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css
 import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { ActiveAgingContext } from '@deps/components/dashboard/sections/active-aging/context/active-aging-context';
+import { caseStatusMap } from '@deps/components/dashboard/utils';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { Statuses, Processes } from '@deps/models/case/case';
@@ -48,10 +49,11 @@ export const ActiveAgingFilters: FC = () => {
             }
             delete newStatus[status];
         } else {
-            newStatus[status] = status;
+            newStatus[status] = caseStatusMap[status];
         }
         setCaseStatus(newStatus);
     };
+
     return (
         <div className={sharedStyles.filterContainer}>
             <div className="w-1/2 flex gap-2">

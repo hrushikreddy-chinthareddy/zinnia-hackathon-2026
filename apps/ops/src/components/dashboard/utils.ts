@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
-import { DashboardStatsElementResponse, Processes } from '@deps/models/case/case';
+import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
@@ -16,6 +16,19 @@ export enum TimeframeFilterOptions {
     Last1Month = '1M',
     LastWeek = '1W',
 }
+
+export const caseStatusMap = {
+    [Statuses.InProgress]: 'In Progress',
+    [Statuses.Exception]: 'Exception',
+    [Statuses.NotStarted]: 'Not Started',
+    [Statuses.Completed]: 'Completed',
+    [Statuses.Canceled]: 'Canceled',
+    [Statuses.New]: 'New',
+    [Statuses.Overridden]: 'Overridden',
+    [Statuses.Withdrawn]: 'Withdrawn',
+    [Statuses.Inprogress]: 'Inprogress',
+    [Statuses.Pending]: 'Pending',
+};
 
 export const defaultDateFormat = 'YYYY-MM-DD';
 
