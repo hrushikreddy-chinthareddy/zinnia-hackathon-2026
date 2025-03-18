@@ -220,6 +220,7 @@ const SideSheetAddress = ({
                     onCancel={onCancel}
                     transaction={NonFinancialTransactions.Address}
                     type={addressTypeTranslation}
+                    caseId={caseId}
                 />
             );
         case ViewState.Default:

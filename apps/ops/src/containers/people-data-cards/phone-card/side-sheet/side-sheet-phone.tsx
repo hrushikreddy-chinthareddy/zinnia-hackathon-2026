@@ -208,6 +208,7 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
                     onCancel={onCancel}
                     transaction={NonFinancialTransactions.Number}
                     type={phoneTypeTranslationLowercase}
+                    caseId={caseId}
                 />
             );
         case ViewState.Default:

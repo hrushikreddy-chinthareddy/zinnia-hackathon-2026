@@ -149,6 +149,7 @@ const SideSheetBank = ({ party, planCode, policyNumber, onCancel, setCurrentBank
                     name={bankAccount.branchName ?? ''}
                     onCancel={onCancel}
                     transaction={NonFinancialTransactions.BankAccount}
+                    caseId={caseId}
                 />
             );
         case ViewState.Default:
