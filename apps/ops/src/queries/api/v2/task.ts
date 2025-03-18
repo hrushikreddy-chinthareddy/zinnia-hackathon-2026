@@ -11,29 +11,38 @@ import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { CaseSearchErrorResponse, CaseTaskSearchResponse } from '@deps/types/search';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
-import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, LoggingContext, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
 const baseCasesV2Url = `${baseAppUrl}/api/case/v2/cases`;
 const tasksV2Url = `${baseAppUrl}/api/case/v2/tasks`;
 const ssrCasesUrlV2 = `${se2ApiServerUrlV2}`;
 
-export const getCaseTaskByIdSSR = async (taskId: string, accessToken: string | undefined): Promise<ManagementTask<TaskStatus> | null> => {
+export const getCaseTaskByIdSSR = async (
+    taskId: string,
+    accessToken: string | undefined,
+    loggingContext: LoggingContext
+): Promise<ManagementTask<TaskStatus> | null> => {
+    const url = `${ssrCasesUrlV2}/tasks/${taskId}`;
+    const logCtx = { ...loggingContext, file: 'queries/api/v2/task', function: 'getCaseTaskByIdSSR', inputs: { taskId }, url };
     try {
-        const url = `${ssrCasesUrlV2}/tasks/${taskId}`;
-        logInfo('getCaseTaskByIdSSR::Fetching task by id', {  url, taskId, file: 'queries/api/v2/task', function: 'getCaseTaskByIdSSR' });
-        const { data } = await serverApi.get<any>(url, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
-                'Access-Control-Allow-Origin': '*',
+        logInfo('getCaseTaskByIdSSR::Fetching task by id', logCtx);
+        const { data } = await serverApi.get<any>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
             },
-        });
-        logInfo('getCaseTaskByIdSSR::Successfully retrived task by id', {  url, taskId, file: 'queries/api/v2/task', function: 'getCaseTaskByIdSSR' });
+            logCtx
+        );
+        logInfo('getCaseTaskByIdSSR::Successfully retrived task by id', logCtx);
         return data;
     } catch (error: any) {
-        logError('getCaseTaskByIdSSR::Failed to retrieve task by id', { ...parseErrorInformation(error), taskId, file: 'queries/api/v2/task', function: 'getCaseTaskByIdSSR' });
+        logError('getCaseTaskByIdSSR::Failed to retrieve task by id', { ...parseErrorInformation(error), ...logCtx });
         return null;
     }
 };
@@ -111,7 +120,12 @@ export const searchTaskSSR = async (
         logInfo('searchTaskSSR::Performed case tasks search', { caseId, url, file: 'queries/api/v2/task', function: 'searchTaskSSR' });
         return data;
     } catch (error: any) {
-        logError('searchTaskSSR::Failed to perform case tasks search', { ...parseErrorInformation(error), caseId, file: 'queries/api/v2/task', function: 'searchTaskSSR' });
+        logError('searchTaskSSR::Failed to perform case tasks search', {
+            ...parseErrorInformation(error),
+            caseId,
+            file: 'queries/api/v2/task',
+            function: 'searchTaskSSR',
+        });
         return error.response;
     }
 };

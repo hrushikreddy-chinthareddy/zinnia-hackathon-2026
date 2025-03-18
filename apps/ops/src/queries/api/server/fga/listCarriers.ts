@@ -8,12 +8,16 @@ import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { ApiResponse } from '@deps/types/api-response';
 import { GetCarrierListQuery } from '@deps/types/fga';
 import { addCarrierListToCookie, checkPermissionsCookieForCarrierList } from '@deps/utils/permissionsCookie';
-import { logWarn } from '@deps/utils/server-logging';
+import { LoggingContext, logWarn } from '@deps/utils/server-logging';
 
 const listCarrierUrlSsr = `${apiServerBaseUrl}/fga/v1/list-carriers`;
 
 // handles getting the auth token and checking the permissions cookie for listCarriers requests from a nextjs page
-export const listCarriersPage = async (ctx: GetServerSidePropsContext, relation: string): Promise<string[]> => {
+export const listCarriersPage = async (
+    ctx: GetServerSidePropsContext,
+    relation: string,
+    loggingContext: LoggingContext
+): Promise<string[]> => {
     try {
         const val = checkPermissionsCookieForCarrierList(relation, ctx.req, ctx.res);
 
@@ -33,9 +37,10 @@ export const listCarriersPage = async (ctx: GetServerSidePropsContext, relation:
         return result.data ?? [];
     } catch (e) {
         logWarn('listCarriersPage::An error occurred while getting the carrier list', {
+            ...loggingContext,
             file: 'queries/api/fga',
             function: 'listCarriersPage',
-            relation,
+            inputs: { relation },
         });
         return [];
     }

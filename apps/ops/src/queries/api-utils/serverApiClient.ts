@@ -44,7 +44,7 @@ export abstract class ServerApiClient {
         };
     }
 
-    async get<T = any, R = AxiosResponse<T>>(url: string, config: AxiosAuthRequestConfig, logCtx?: any): Promise<R> {
+    async get<T = any, R = AxiosResponse<T>>(url: string, config: AxiosAuthRequestConfig, logCtx: any): Promise<R> {
         const now = performance.now();
         const configWithToken = await this.addToken(config);
         const correlationId = configWithToken.headers?.['x-correlation-id'];
@@ -118,7 +118,7 @@ export abstract class ServerApiClient {
             correlationId,
         };
         logTrace('serverApiClient::put', loggingContext);
-        logInfo('serverApiClient::put::authorization', {authorization : configWithToken?.headers?.Authorization ? true : false });
+        logInfo('serverApiClient::put::authorization', { authorization: configWithToken?.headers?.Authorization ? true : false });
         try {
             const result = await this.instance.put<T, R>(url, data, configWithToken);
             logTrace('serverApiClient::put::success', {

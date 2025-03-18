@@ -1,6 +1,5 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import clsx from 'clsx';
-import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useMemo, useState } from 'react';
@@ -31,7 +30,7 @@ import { SegmentPageName } from '@deps/types/segment-analytics';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 import { ERROR_CODES } from '../../error';
 
@@ -155,8 +154,8 @@ export default function Reg60({ document, form, transactionsHistory, user }: Cre
     );
 }
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
+export const getServerSideProps = withPageAuthAndLogging({
+    getServerSideProps: async (context, loggingContext) => {
         const user = await getUserData(context);
         const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
         const shouldShowReg60Page = featureFlagDecisions?.[FEATURE_FLAGS.REG_60];
@@ -168,8 +167,7 @@ export const getServerSideProps = withPageAuthRequired({
         } catch (e) {
             logWarn('create-case/nb_reg_60/:id:: Access token expired', {
                 ...parseErrorInformation(e),
-                file: 'create-case/nb_reg_60/:id/index',
-                function: 'getServerSideProps',
+                ...loggingContext,
             });
             return serverSidePropsLogout();
         }
@@ -195,8 +193,7 @@ export const getServerSideProps = withPageAuthRequired({
 
         if (!document?.caseId) {
             logError('create-case/nb_reg_60/id::Error getting document', {
-                documentNumber,
-                clientId,
+                ...loggingContext,
                 onbaseCaseId: document?.caseId,
                 contractNum: document?.contract,
             });
@@ -209,8 +206,7 @@ export const getServerSideProps = withPageAuthRequired({
         }
 
         logInfo('create-case/nb_reg_60/id::Success getting document', {
-            documentNumber,
-            clientId,
+            ...loggingContext,
             onbaseCaseId: document?.caseId,
             contractNum: document?.contract,
         });

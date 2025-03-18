@@ -1,5 +1,4 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { GetServerSidePropsContext } from 'next';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -12,7 +11,7 @@ import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { UserPermission } from '@deps/models/user-profile';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 export const ERROR_CODES = {
@@ -95,30 +94,32 @@ export default function CreateCaseErrorPage() {
     );
 }
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const { locale = DEFAULT_LOCALE, req, res } = context;
-        try {
-            (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('create-case/error:: Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'create-case/error',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
-        if (!doesUserHasPagePermissions) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const { locale = DEFAULT_LOCALE, req, res } = context;
+            try {
+                (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('create-case/error:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            if (!doesUserHasPagePermissions) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
 
-        const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON], nextI18nextConfig, ALL_LOCALES);
-        return { props: { locale, ...translations } };
+            const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON], nextI18nextConfig, ALL_LOCALES);
+            return { props: { locale, ...translations } };
+        },
     },
-});
+    { file: 'create-case/error', function: 'getServerSideProps', page: 'create-case/error' }
+);

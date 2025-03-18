@@ -1,4 +1,3 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { Reason } from '@zinnia/api-types/types/sor';
 import router from 'next/router';
 import { useEffect, useMemo } from 'react';
@@ -9,13 +8,17 @@ import { LoanAutopayProvider } from '@deps/contexts/transactions/LoanAutopayCont
 import { Policy } from '@deps/models/policy/sor-policy';
 import { checkEligibilitySystematicPrograms, TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
+import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 export interface ManageLoanPaymentProps {
     policy: Policy;
 }
 
 const ManageLoanPayment = ({ policy }: ManageLoanPaymentProps) => {
-    const systematicProgram = useMemo(() => policy.systematicPrograms?.find(sp => sp.reason === Reason.LOANREPAYMENT), [policy.systematicPrograms]);
+    const systematicProgram = useMemo(
+        () => policy.systematicPrograms?.find(sp => sp.reason === Reason.LOANREPAYMENT),
+        [policy.systematicPrograms]
+    );
     const arrangementId = systematicProgram?.arrangementId || '';
 
     useEffect(() => {
@@ -40,8 +43,15 @@ const ManageLoanPayment = ({ policy }: ManageLoanPaymentProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: getServerSidePropsPolicyDetailsPage,
-});
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: getServerSidePropsPolicyDetailsPage,
+    },
+    {
+        file: 'policies/[planCode]/[id]/policy/loans/manage-loan-payment',
+        function: 'getServerSideProps',
+        page: 'policies/:planCode/:id/policy/loans/manage-loan-payment',
+    }
+);
 
 export default ManageLoanPayment;

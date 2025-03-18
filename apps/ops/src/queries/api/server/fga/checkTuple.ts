@@ -8,7 +8,7 @@ import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { ApiResponse } from '@deps/types/api-response';
 import { CheckTupleResponse, Tuple } from '@deps/types/fga';
 import { addTupleToCookie, checkPermissionsCookieForTuple } from '@deps/utils/permissionsCookie';
-import { logWarn } from '@deps/utils/server-logging';
+import { LoggingContext, logWarn } from '@deps/utils/server-logging';
 
 const checkTupleUrlSsr = `${apiServerBaseUrl}/fga/v1/check`;
 
@@ -59,7 +59,12 @@ const checkTuple = async (accessToken: string, partyId: string, relation: string
 };
 
 // handles getting the auth token and checking the permissions cookie for page requests
-export const checkTuplePage = async (ctx: GetServerSidePropsContext, relation: string, tupleObject: string): Promise<boolean> => {
+export const checkTuplePage = async (
+    ctx: GetServerSidePropsContext,
+    relation: string,
+    tupleObject: string,
+    loggingContext: LoggingContext
+): Promise<boolean> => {
     try {
         const val = checkPermissionsCookieForTuple(relation, tupleObject, ctx.req, ctx.res);
         if (val !== undefined) {
@@ -76,10 +81,13 @@ export const checkTuplePage = async (ctx: GetServerSidePropsContext, relation: s
         return !!result.data;
     } catch (e) {
         logWarn('checkTuplePage::An error occurred while checking tuple', {
+            ...loggingContext,
             file: 'queries/api/fga',
             function: 'checkTuplePage',
-            relation,
-            tupleObject,
+            inputs: {
+                relation,
+                tupleObject,
+            },
         });
         return false;
     }

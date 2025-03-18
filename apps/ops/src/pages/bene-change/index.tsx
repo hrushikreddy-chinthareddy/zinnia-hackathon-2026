@@ -1,5 +1,4 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { GetServerSidePropsContext } from 'next';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { TranslationFiles } from '@deps/config/translations';
@@ -15,7 +14,7 @@ import { UserPermission } from '@deps/models/user-profile';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-import { getUserInfoFromUser, logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { getUserInfoFromUser, logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../create-case/error';
@@ -37,39 +36,39 @@ const BeneChange = ({ policy, document, planCode }: AddressChangeProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, query, req, res } = context;
-        const policyNumber = (query?.policyNumber as string) || '';
-        const documentNumber = (query.doc as string) || '';
-        const clientId = (query.clientId as string) || '';
-        // const featureFlagDecisions: FeatureFlags = await getFeatureFlagDecisions(user.sub);
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, logCtx) => {
+            const user = await getUserData(context);
+            const { locale = DEFAULT_LOCALE, query, req, res } = context;
+            const policyNumber = (query?.policyNumber as string) || '';
+            const documentNumber = (query.doc as string) || '';
+            const clientId = (query.clientId as string) || '';
+            // const featureFlagDecisions: FeatureFlags = await getFeatureFlagDecisions(user.sub);
 
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('getServerSidePropsAddressChangePage::Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'utils/page',
-                function: 'getServerSidePropsAddressChangePage',
-            });
-            return serverSidePropsLogout();
-        }
-        // Create a permissions object to pass to the page, strongly typed using the enum.
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
-        if (!doesUserHasPagePermissions) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('getServerSidePropsAddressChangePage::Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...logCtx,
+                });
+                return serverSidePropsLogout();
+            }
+            // Create a permissions object to pass to the page, strongly typed using the enum.
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            if (!doesUserHasPagePermissions) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
 
-        // If feature flag is not enabled, redirect to error page
-        /*if (!isFormFeatureEnabled(ProcessType.ADDRESS_CHANGE, clientId, featureFlagDecisions)) {
+            // If feature flag is not enabled, redirect to error page
+            /*if (!isFormFeatureEnabled(ProcessType.ADDRESS_CHANGE, clientId, featureFlagDecisions)) {
             logWarn('address-change/:id::feature flag not enabled', { documentNumber, policyNumber, clientId });
             return {
                 redirect: {
@@ -79,58 +78,60 @@ export const getServerSideProps = withPageAuthRequired({
             };
         }*/
 
-        try {
-            const translations = await serverSideTranslations(
-                locale,
-                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-                nextI18nextConfig,
-                ALL_LOCALES
-            );
+            try {
+                const translations = await serverSideTranslations(
+                    locale,
+                    [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                    nextI18nextConfig,
+                    ALL_LOCALES
+                );
 
-            const userInfoForLogging = getUserInfoFromUser(user);
-            const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
-            const planCode = response ? response[0]?.planCode : null;
-            if (!planCode) {
-                logInfo('address_change/:id::Plan code not found', { documentNumber, policyNumber, clientId });
+                const userInfoForLogging = getUserInfoFromUser(user);
+                const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
+                const planCode = response ? response[0]?.planCode : null;
+                if (!planCode) {
+                    logInfo('address_change/:id::Plan code not found', logCtx);
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                            permanent: false,
+                        },
+                    };
+                } else {
+                    logInfo('address_change/:id::Plan code found', logCtx);
+                }
+
+                const document = documentNumber
+                    ? await getDocumentV2SSR(documentNumber, DocumentType.AddressChange, clientId.toUpperCase(), accessToken as string)
+                    : null;
+                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
+
+                if (!policy) {
+                    return {
+                        redirect: {
+                            destination: '/404',
+                            permanent: false,
+                        },
+                    };
+                }
+
                 return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
-                        permanent: false,
+                    props: {
+                        ...translations,
+                        policy,
+                        document,
+                        planCode,
                     },
                 };
-            } else {
-                logInfo('address_change/:id::Plan code found', { documentNumber, clientId, planCode });
-            }
-
-            const document = documentNumber
-                ? await getDocumentV2SSR(documentNumber, DocumentType.AddressChange, clientId.toUpperCase(), accessToken as string)
-                : null;
-            const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
-
-            if (!policy) {
+            } catch (error) {
+                logError('getServerSidePropsAddressChangePage', { ...parseErrorInformation(error), ...logCtx });
                 return {
-                    redirect: {
-                        destination: '/404',
-                        permanent: false,
-                    },
+                    props: {},
                 };
             }
-
-            return {
-                props: {
-                    ...translations,
-                    policy,
-                    document,
-                    planCode,
-                },
-            };
-        } catch (error) {
-            logError('getServerSidePropsAddressChangePage', { ...parseErrorInformation(error) });
-            return {
-                props: {},
-            };
-        }
+        },
     },
-});
+    { file: 'bene-change/index', function: 'getServerSideProps', page: 'bene-change' }
+);
 
 export default BeneChange;

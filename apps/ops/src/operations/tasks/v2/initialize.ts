@@ -7,103 +7,6 @@ import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-log
 
 import { mapTaskToActiveWithdrawalCaseTask } from './helpers';
 
-export const initializeWithdrawalTaskSSR = async ({
-    accessToken,
-    caseId,
-    clientId,
-    contractNumber,
-    documentNumber,
-    taskType,
-    userId,
-    taskId,
-    action,
-}: {
-    caseId: string;
-    accessToken: string | undefined;
-    clientId: string;
-    contractNumber: string;
-    documentNumber: string;
-    taskType: TaskType;
-    userId: string;
-    taskId?: string;
-    action?: string;
-}): Promise<ActiveWithdrawalCase | null> => {
-    const loggingContext = {
-        caseId,
-        clientId,
-        contractNumber,
-        documentNumber,
-        file: 'queries/api/cases',
-        function: 'initializeTaskV2',
-        taskType,
-        taskId,
-        action,
-    };
-    try {
-        logInfo('initializeTaskV2::start', loggingContext);
-        if (!caseId || !documentNumber || !clientId || !accessToken) {
-            throw new Error('initializeTaskV2::Invalid arguments to initialize a withdrawal task');
-        }
-
-        let activeForm;
-        if (taskId) {
-            activeForm = await getCaseTaskByIdSSR(taskId, accessToken);
-            if (activeForm) {
-                logInfo('initializeTaskV2::getCaseTaskByIdSSR task active form found', loggingContext);
-                if (action === 'readonly' || activeForm.status === TaskStatus.New) {
-                    return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
-                }
-            }
-        }
-
-        const searchResponse = await searchTaskSSR(caseId, accessToken);
-        if (Array.isArray(searchResponse.data)) {
-            const tasks = searchResponse.data;
-            const task = tasks.find(task => task.taskType === taskType && task.status === TaskStatus.New);
-            if (task) {
-                activeForm = await getCaseTaskByIdSSR(task.id, accessToken);
-                if (activeForm) {
-                    logInfo('initializeTaskV2::active form found', loggingContext);
-                    return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
-                }
-            }
-        }
-
-        logInfo('initializeTaskV2::no active form', loggingContext);
-        const digitalForm: DigitalFormWithdrawal | null = await getDigitalFormSSR(accessToken, {
-            contractNumber,
-            clientCode: clientId.toUpperCase(),
-            source: 'DigitalPortal',
-            taskType,
-        });
-
-        if (!digitalForm) {
-            logInfo('initializeTaskV2::no digital form', loggingContext);
-            throw new Error(`initializeTaskV2::Unsuccessful digital form creation for task type ${taskType}`);
-        }
-        digitalForm.data.documentNumber = documentNumber;
-        digitalForm.data.onbaseCaseId = caseId;
-
-        logInfo('initializeTaskV2::postCaseTasksSSR', loggingContext);
-        const body: CreateTaskBody<TaskStatus, DigitalFormData>  = {
-            source: TaskSource.ZinniaTaskManagement,
-            taskType,
-            status: TaskStatus.New,
-            data: digitalForm.data,
-        };
-
-        const caseForm = await createTaskSSR<DigitalFormData>(caseId, accessToken, body);
-        if (!caseForm) {
-            logInfo('initializeTaskV2::no case form', loggingContext);
-            throw new Error(`initializeTaskV2::Unsuccessful postCaseTasksSSR response for ${taskType}`);
-        }
-        return mapTaskToActiveWithdrawalCaseTask(caseForm, { ...caseForm?.data, userId });
-    } catch (e) {
-        logError('initializeTaskV2', { ...parseErrorInformation(e), ...loggingContext });
-        return null;
-    }
-};
-
 export const initializeOTPTaskSSR = async ({
     accessToken,
     caseId,
@@ -149,8 +52,8 @@ export const initializeOTPTaskSSR = async ({
             activeForm = await getCaseTaskByIdSSR(taskId, accessToken);
             if (activeForm) {
                 logInfo('initializeTaskV2::getCaseTaskByIdSSR task active form found', loggingContext);
-                if (action === 'readonly' || (activeForm.status === TaskStatus.New || activeForm.status === TaskStatus.InProgress)) {
-                    logInfo('initializeTaskV2::getCaseTaskByIdSSR returining task', { ...loggingContext, taskStatus: activeForm?.status } );
+                if (action === 'readonly' || activeForm.status === TaskStatus.New || activeForm.status === TaskStatus.InProgress) {
+                    logInfo('initializeTaskV2::getCaseTaskByIdSSR returining task', { ...loggingContext, taskStatus: activeForm?.status });
                     return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                 }
             }
@@ -165,11 +68,19 @@ export const initializeOTPTaskSSR = async ({
                 activeForm = await getCaseTaskByIdSSR(task.id, accessToken);
                 if (activeForm) {
                     if (activeForm.status === TaskStatus.New || activeForm.status === TaskStatus.InProgress) {
-                        logInfo('initializeTaskV2::active form found', { ...loggingContext, taskId: task.id, taskStatus: activeForm?.status });
+                        logInfo('initializeTaskV2::active form found', {
+                            ...loggingContext,
+                            taskId: task.id,
+                            taskStatus: activeForm?.status,
+                        });
                         return mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                     }
                     if (activeForm.status === TaskStatus.Completed && getLastSaved) {
-                        logInfo('initializeTaskV2::completed form found', { ...loggingContext, taskId: task.id, taskStatus: activeForm?.status });
+                        logInfo('initializeTaskV2::completed form found', {
+                            ...loggingContext,
+                            taskId: task.id,
+                            taskStatus: activeForm?.status,
+                        });
                         completedForm = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId });
                     }
                 }
@@ -192,11 +103,16 @@ export const initializeOTPTaskSSR = async ({
         digitalForm.data.documentNumber = documentNumber;
         digitalForm.data.onbaseCaseId = caseId;
         if (getLastSaved && completedForm) {
-            logInfo('initializeTaskV2::completed form populated under new task', {...loggingContext, getLastSaved, documentNumber, caseId });
-            digitalForm.data.formRequest = { ...completedForm.data.formRequest};
+            logInfo('initializeTaskV2::completed form populated under new task', {
+                ...loggingContext,
+                getLastSaved,
+                documentNumber,
+                caseId,
+            });
+            digitalForm.data.formRequest = { ...completedForm.data.formRequest };
         }
         logInfo('initializeTaskV2::creating a task', loggingContext);
-        const body: CreateTaskBody<TaskStatus, DigitalFormData>  = {
+        const body: CreateTaskBody<TaskStatus, DigitalFormData> = {
             source: TaskSource.ZinniaTaskManagement,
             taskType,
             status: TaskStatus.New,

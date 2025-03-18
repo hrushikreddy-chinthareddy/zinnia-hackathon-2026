@@ -1,4 +1,4 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
@@ -10,7 +10,7 @@ import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { UserPermission } from '@deps/models/user-profile';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 const Custom403Page = () => {
@@ -29,16 +29,15 @@ const Custom403Page = () => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async context => {
-        const { locale = DEFAULT_LOCALE, res, req } = context;
+export const getServerSideProps = withPageAuthAndLogging({
+    getServerSideProps: async (context, loggingContext) => {
+        const { locale = DEFAULT_LOCALE, res, req, query } = context;
         try {
             (await getAccessToken(req, res)).accessToken;
         } catch (e) {
             logWarn('pages/403:: Access token expired', {
                 ...parseErrorInformation(e),
-                file: 'pages/403',
-                function: 'getServerSideProps',
+                ...loggingContext,
             });
             return serverSidePropsLogout();
         }

@@ -1,8 +1,7 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import { GetServerSidePropsContext } from 'next';
 import router from 'next/router';
 import { TFunction, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -35,7 +34,7 @@ import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
@@ -303,49 +302,51 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        // Get the user object from the Auth0 Session
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, res, req } = context;
-        try {
-            (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('policies/index:: Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'policies/index',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
-        // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
-        const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE);
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            // Get the user object from the Auth0 Session
+            const user = await getUserData(context);
+            const { locale = DEFAULT_LOCALE, res, req } = context;
+            try {
+                (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('policies/index:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
+            // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
+            const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
 
-        if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
+            if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
+
+            const translations = await serverSideTranslations(
+                locale,
+                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
+
             return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
+                props: {
+                    locale,
+                    user,
+                    ...translations,
                 },
             };
-        }
-
-        const translations = await serverSideTranslations(
-            locale,
-            [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-            nextI18nextConfig,
-            ALL_LOCALES
-        );
-
-        return {
-            props: {
-                locale,
-                user,
-                ...translations,
-            },
-        };
+        },
     },
-});
+    { file: 'policies/index', function: 'getServerSideProps', page: 'policies' }
+);
 
 export default PolicyManagementDashboard;

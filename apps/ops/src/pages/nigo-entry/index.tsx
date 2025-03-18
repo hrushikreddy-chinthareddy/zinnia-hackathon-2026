@@ -1,5 +1,4 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { GetServerSidePropsContext } from 'next';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
@@ -29,7 +28,7 @@ import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS, FeatureKeyIdentifier } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
+import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../create-case/error';
@@ -120,146 +119,29 @@ const NigoEntry = ({
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
-        const userInfoForLogging = getUserInfoFromUser(user);
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const userInfoForLogging = getUserInfoFromUser(user);
 
-        const { locale = DEFAULT_LOCALE, query, req, res } = context;
-        const taskId = (query.taskId as string) || '';
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('getServerSidePropsNigoEntryPage::Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'pages/nigo-entry',
-                function: 'getServerSideProps',
-                user: userInfoForLogging.email,
-            });
-            return serverSidePropsLogout();
-        }
-        // Create a permissions object to pass to the page, strongly typed using the enum.
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
-
-        if (!doesUserHasPagePermissions) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
-
-        try {
-            const [translations, activeForm] = await Promise.all([
-                await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
-                await getCaseTaskByIdSSR(taskId, accessToken),
-            ]);
-
-            if (!activeForm) {
-                logError('nigo-entry::Error getting task by id', {
-                    taskId,
-                    file: 'pages/nigo-entry',
-                    function: 'getServerSideProps',
-                    user: userInfoForLogging.email,
+            const { locale = DEFAULT_LOCALE, query, req, res } = context;
+            const taskId = (query.taskId as string) || '';
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('getServerSidePropsNigoEntryPage::Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
                 });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.TASK_INITIALIZATION}`,
-                        permanent: false,
-                    },
-                };
+                return serverSidePropsLogout();
             }
+            // Create a permissions object to pass to the page, strongly typed using the enum.
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
 
-            const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
-
-            logInfo('nigo-entry::getCaseTaskByIdSSR task active form found', {
-                taskId,
-                documentNumber,
-                contractNum,
-                clientCode,
-                file: 'pages/nigo-entry',
-                function: 'getServerSideProps',
-                user: userInfoForLogging.email,
-            });
-
-            const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name });
-            const caseType = ProcessesToCaseTypeMap[activeForm.process as Processes];
-            const docType = caseType ? docTypes[caseType] : null;
-
-            if (!caseType) {
-                logWarn('nigo-entry::Error getting case type', {
-                    taskId,
-                    caseType,
-                    documentType: docType,
-                    documentNumber,
-                    contractNum,
-                    clientCode,
-                    file: 'pages/nigo-entry',
-                    function: 'getServerSideProps',
-                    user: userInfoForLogging.email,
-                });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR}`,
-                        permanent: false,
-                    },
-                };
-            }
-
-            if (!docType) {
-                logWarn('nigo-entry::Error getting doc type', {
-                    taskId,
-                    clientCode,
-                    documentType: docType,
-                    documentNumber,
-                    contractNum,
-                    file: 'pages/nigo-entry',
-                    function: 'getServerSideProps',
-                    user: userInfoForLogging.email,
-                });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.DOC_TYPE_RETRIEVAL_ERROR}`,
-                        permanent: false,
-                    },
-                };
-            }
-
-            if (!clientCode) {
-                logError('nigo-entry::Error getting client code', {
-                    taskId,
-                    clientCode,
-                    documentType: docType,
-                    documentNumber,
-                    contractNum,
-                    file: 'pages/nigo-entry',
-                    function: 'getServerSideProps',
-                    user: userInfoForLogging.email,
-                });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.CLIENT_CODE_RETRIEVAL_ERROR}`,
-                        permanent: false,
-                    },
-                };
-            }
-
-            const shouldShowNigoEntry = isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions);
-            // If feature flag is not enabled, redirect to error page
-            if (!shouldShowNigoEntry) {
-                logWarn('nigo_entry::feature flag not enabled', {
-                    taskId,
-                    clientCode,
-                    documentType: docType,
-                    documentNumber,
-                    contractNum,
-                    file: 'pages/nigo-entry',
-                    function: 'getServerSideProps',
-                    user: userInfoForLogging.email,
-                });
+            if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
                         destination: '/403',
@@ -268,102 +150,199 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            const taskInfoLink = buildTaskLink(taskId, form.caseId, caseType, documentNumber, clientCode);
-            const filters = {
-                policyNumber: contractNum,
-                limit: 25,
-                offset: 0,
-                sortDirection: 'desc',
-                sortBy: 'createdAt',
-                carrier: [clientCode?.toUpperCase()],
-                process: [Processes.Correspondence as string],
-            };
+            try {
+                const [translations, activeForm] = await Promise.all([
+                    await serverSideTranslations(
+                        locale,
+                        [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                        nextI18nextConfig,
+                        ALL_LOCALES
+                    ),
+                    await getCaseTaskByIdSSR(taskId, accessToken, loggingContext),
+                ]);
 
-            const nigoFilters = {
-                categoryIds: ['Form', 'Signature', 'Account Information', 'Data Entry'],
-                carrier: clientCode?.toUpperCase(),
-                process: activeForm?.process,
-            };
+                if (!activeForm) {
+                    logError('nigo-entry::Error getting task by id', loggingContext);
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.TASK_INITIALIZATION}`,
+                            permanent: false,
+                        },
+                    };
+                }
 
-            const [parties, document, searchCasesResponse, policies, nigoExceptionResponse] = await Promise.all([
-                await getPolicyPartiesSSR(contractNum, clientCode, accessToken as string),
-                await getDocumentV2SSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken),
-                await searchCasesSSR(filters, accessToken),
-                await searchPolicySSR(contractNum, [clientCode?.toUpperCase()], accessToken, 1, 0),
-                await getNigoExceptions(nigoFilters, accessToken),
-            ]);
+                const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
 
-            const planCode = policies?.[0]?.planCode || null;
-            const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
-            logInfo('nigo-entry::Retrieved parties, document, planCode, nigoExceptions and correspondence case search result', {
-                taskId,
-                documentNumber,
-                documentType: docType,
-                clientCode,
-                contractNum,
-                planCode,
-                file: 'pages/nigo-entry',
-                function: 'getServerSideProps',
-                user: userInfoForLogging.email,
-            });
+                logInfo('nigo-entry::getCaseTaskByIdSSR task active form found', loggingContext);
 
-            if (!document) {
-                logWarn('nigoEntry::Error getting document', {
+                const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name });
+                const caseType = ProcessesToCaseTypeMap[activeForm.process as Processes];
+                const docType = caseType ? docTypes[caseType] : null;
+
+                if (!caseType) {
+                    logWarn('nigo-entry::Error getting case type', {
+                        caseType,
+                        documentType: docType,
+                        documentNumber,
+                        contractNum,
+                        clientCode,
+                        ...loggingContext,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR}`,
+                            permanent: false,
+                        },
+                    };
+                }
+
+                if (!docType) {
+                    logWarn('nigo-entry::Error getting doc type', {
+                        taskId,
+                        clientCode,
+                        documentType: docType,
+                        documentNumber,
+                        contractNum,
+                        ...loggingContext,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.DOC_TYPE_RETRIEVAL_ERROR}`,
+                            permanent: false,
+                        },
+                    };
+                }
+
+                if (!clientCode) {
+                    logError('nigo-entry::Error getting client code', {
+                        taskId,
+                        clientCode,
+                        documentType: docType,
+                        documentNumber,
+                        contractNum,
+                        ...loggingContext,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.CLIENT_CODE_RETRIEVAL_ERROR}`,
+                            permanent: false,
+                        },
+                    };
+                }
+
+                const shouldShowNigoEntry = isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions);
+                // If feature flag is not enabled, redirect to error page
+                if (!shouldShowNigoEntry) {
+                    logWarn('nigo_entry::feature flag not enabled', {
+                        taskId,
+                        clientCode,
+                        documentType: docType,
+                        documentNumber,
+                        contractNum,
+                        ...loggingContext,
+                    });
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
+
+                const taskInfoLink = buildTaskLink(taskId, form.caseId, caseType, documentNumber, clientCode);
+                const filters = {
+                    policyNumber: contractNum,
+                    limit: 25,
+                    offset: 0,
+                    sortDirection: 'desc',
+                    sortBy: 'createdAt',
+                    carrier: [clientCode?.toUpperCase()],
+                    process: [Processes.Correspondence as string],
+                };
+
+                const nigoFilters = {
+                    categoryIds: ['Form', 'Signature', 'Account Information', 'Data Entry'],
+                    carrier: clientCode?.toUpperCase(),
+                    process: activeForm?.process,
+                };
+
+                const [parties, document, searchCasesResponse, policies, nigoExceptionResponse] = await Promise.all([
+                    await getPolicyPartiesSSR(contractNum, clientCode, accessToken as string),
+                    await getDocumentV2SSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken),
+                    await searchCasesSSR(filters, accessToken),
+                    await searchPolicySSR(contractNum, [clientCode?.toUpperCase()], accessToken, 1, 0),
+                    await getNigoExceptions(nigoFilters, accessToken),
+                ]);
+
+                const planCode = policies?.[0]?.planCode || null;
+                const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
+                logInfo('nigo-entry::Retrieved parties, document, planCode, nigoExceptions and correspondence case search result', {
                     taskId,
                     documentNumber,
                     documentType: docType,
                     clientCode,
                     contractNum,
-                    user: userInfoForLogging.email,
+                    planCode,
+                    ...loggingContext,
                 });
+
+                if (!document) {
+                    logWarn('nigoEntry::Error getting document', {
+                        taskId,
+                        documentNumber,
+                        documentType: docType,
+                        clientCode,
+                        contractNum,
+                        ...loggingContext,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
+                            permanent: false,
+                        },
+                    };
+                }
+                logInfo('nigo-entry::Retrieved document', {
+                    taskId,
+                    documentNumber,
+                    documentType: docType,
+                    clientCode,
+                    contractNum,
+                    ...loggingContext,
+                });
+
+                const latestForm =
+                    !isNullEmptyOrUndefined(docType) &&
+                    searchCasesResponse?.data?.find(item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase());
                 return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
-                        permanent: false,
+                    props: {
+                        ...translations,
+                        form,
+                        parties,
+                        documentNumber,
+                        clientCode,
+                        docType: docType,
+                        planCode,
+                        policyNumber: contractNum,
+                        nigoExceptions,
+                        nigoSubExceptions,
+                        user,
+                        featureFlagDecisions,
+                        document,
+                        taskInfoLink,
+                        prevTransactionDetails: latestForm ? latestForm?.additionalData || null : null,
+                        isNigoCase: false,
                     },
                 };
+            } catch (error) {
+                logError('nigoEnty::Error', { ...parseErrorInformation(error), ...loggingContext });
+                return {
+                    props: {},
+                };
             }
-            logInfo('nigo-entry::Retrieved document', {
-                taskId,
-                documentNumber,
-                documentType: docType,
-                clientCode,
-                contractNum,
-                file: 'pages/nigo-entry',
-                function: 'getServerSideProps',
-                user: userInfoForLogging.email,
-            });
-
-            const latestForm =
-                !isNullEmptyOrUndefined(docType) &&
-                searchCasesResponse?.data?.find(item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase());
-            return {
-                props: {
-                    ...translations,
-                    form,
-                    parties,
-                    documentNumber,
-                    clientCode,
-                    docType: docType,
-                    planCode,
-                    policyNumber: contractNum,
-                    nigoExceptions,
-                    nigoSubExceptions,
-                    user,
-                    featureFlagDecisions,
-                    document,
-                    taskInfoLink,
-                    prevTransactionDetails: latestForm ? latestForm?.additionalData || null : null,
-                    isNigoCase: false,
-                },
-            };
-        } catch (error) {
-            logError('nigoEnty::Error', { ...parseErrorInformation(error), taskId, user: userInfoForLogging.email, error });
-            return {
-                props: {},
-            };
-        }
+        },
     },
-});
+    { file: 'nigo-entry/index', function: 'getServerSideProps', page: 'nigo-entry' }
+);
 
 export default NigoEntry;

@@ -1,8 +1,7 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import localData from 'dayjs/plugin/localeData';
-import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -33,7 +32,7 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../../error';
@@ -159,8 +158,8 @@ const RenewalCaseDetails = ({
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
+export const getServerSideProps = withPageAuthAndLogging({
+    getServerSideProps: async (context, loggingContext) => {
         const user = await getUserData(context);
         const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
         const { locale = DEFAULT_LOCALE, query, params, req, res } = context;
@@ -170,8 +169,7 @@ export const getServerSideProps = withPageAuthRequired({
         } catch (e) {
             logWarn('create-case/renewal/:id::Access token expired', {
                 ...parseErrorInformation(e),
-                file: 'create-case/renewal/:id/index',
-                function: 'getServerSideProps',
+                ...loggingContext,
             });
             return serverSidePropsLogout();
         }
@@ -201,13 +199,7 @@ export const getServerSideProps = withPageAuthRequired({
         const caseDocument = await getDocumentV2SSR(documentNumber, 'Exchange', clientId, accessToken as string);
 
         if (!caseDocument?.contract) {
-            logError('create-case/exchange/:id::Error getting document', {
-                documentNumber,
-                clientId,
-                id,
-                file: 'create-case/exchange/:id/index',
-                function: 'getServerSideProps',
-            });
+            logError('create-case/exchange/:id::Error getting document', loggingContext);
             return {
                 redirect: {
                     destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
@@ -218,12 +210,11 @@ export const getServerSideProps = withPageAuthRequired({
 
         const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
         if (shouldShowNewExperience && action !== 'readonly') {
-            logInfo('create-case/renewal/:id:Checking NIGO', { taskId, action, documentNumber, id, clientId });
+            logInfo('create-case/renewal/:id:Checking NIGO', loggingContext);
             const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), caseDocument.caseId, accessToken);
             if (isNigoCase) {
                 logInfo('create-case/renewal/:id::Nigo exists for case', {
-                    documentNumber,
-                    clientId,
+                    ...loggingContext,
                     caseId: caseDocument.caseId,
                     lob: caseDocument?.lob,
                 });
@@ -235,7 +226,7 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
         } else {
-            logInfo('create-case/renewal/:id:Skipping NIGO check', { taskId, action, documentNumber, id, clientId });
+            logInfo('create-case/renewal/:id:Skipping NIGO check', loggingContext);
         }
 
         let planCode = '';
@@ -252,11 +243,8 @@ export const getServerSideProps = withPageAuthRequired({
             const acctInfoResponse = await getPolicyAccountInfoSSR(caseDocument.contract, caseDocument.processCompanyCode, accessToken);
             if (!acctInfoResponse?.PlanCode) {
                 logInfo('create-case/renewal/:id::Plan code not found', {
-                    documentNumber,
-                    clientId,
-                    caseId: id,
+                    ...loggingContext,
                     lob: caseDocument?.lob,
-                    planCode,
                 });
                 return {
                     redirect: {
@@ -267,9 +255,7 @@ export const getServerSideProps = withPageAuthRequired({
             } else {
                 planCode = acctInfoResponse?.PlanCode;
                 logInfo('create-case/renewal/:id::Plan code found', {
-                    documentNumber,
-                    clientId,
-                    caseId: id,
+                    ...loggingContext,
                     lob: caseDocument?.lob,
                     planCode,
                 });

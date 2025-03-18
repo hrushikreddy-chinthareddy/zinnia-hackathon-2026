@@ -1,4 +1,3 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import router from 'next/router';
 import { useEffect } from 'react';
 
@@ -10,6 +9,7 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { checkEligibilityLoanRepaymentOneTime, TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
+import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 export interface LoanPaymentOneTimeProps {
     policy: Policy;
@@ -26,7 +26,11 @@ const LoanPaymentOneTime = ({ policy }: LoanPaymentOneTimeProps) => {
 
                 return;
             }
-            const eligibilityCheck = await checkEligibilityLoanRepaymentOneTime(policy.product?.planCode, policy.policyNumber, policy.loanValues?.totalLoanBalance);
+            const eligibilityCheck = await checkEligibilityLoanRepaymentOneTime(
+                policy.product?.planCode,
+                policy.policyNumber,
+                policy.loanValues?.totalLoanBalance
+            );
 
             if (eligibilityCheck.status === TransactionResponseStatus.Failure) {
                 router.push(`/403`);
@@ -47,8 +51,15 @@ const LoanPaymentOneTime = ({ policy }: LoanPaymentOneTimeProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: getServerSidePropsPolicyDetailsPage,
-});
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: getServerSidePropsPolicyDetailsPage,
+    },
+    {
+        file: 'policies/[planCode]/[id]/policy/loans/loan-payment',
+        function: 'getServerSideProps',
+        page: 'policies/:planCode/:id/policy/loans/loan-payment',
+    }
+);
 
 export default LoanPaymentOneTime;

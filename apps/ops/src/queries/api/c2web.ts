@@ -13,7 +13,7 @@ import {
 import { StatementTypes, StatementTypesResponse } from '@deps/models/case/send-statement';
 import { client } from '@deps/queries/api-utils/client';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, LoggingContext, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { baseAppUrl, contactCenterBaseUrlV2 } from '../api-config';
 import { serverApi } from '../api-utils/serverApiClient';
@@ -63,9 +63,9 @@ export const getTransactionSubTypes = async (transactionType: string): Promise<T
 export const getSearchTransactionsSSR = async (
     requestBody: SearchTransactionRequestBody,
     accessToken: string | undefined,
-    userInfo: object = {}
+    logCtx: LoggingContext
 ): Promise<SearchTransactionResponseBody | null> => {
-    const loggingContext = { file: 'queries/api/c2web', function: 'getSearchTransactionsSSR', ...userInfo };
+    const loggingContext = { ...logCtx, file: 'queries/api/c2web', function: 'getSearchTransactionsSSR' };
 
     if (!accessToken) {
         logWarn('getSearchTransactionsSSR::No accessToken to fetch transaction types', loggingContext);
@@ -208,7 +208,7 @@ export const getSearchTransactions = async (requestBody: SearchTransactionReques
     try {
         const { data } = await client.post<SearchTransactionRequestBody, AxiosResponse<SearchTransactionResponseBody>>(
             `${baseUrl}/referencedata/transactions/search`,
-            requestBody,
+            requestBody
         );
         browserLogInfo('getSearchTransactions::Fetched transactions', {
             payload: requestBody,

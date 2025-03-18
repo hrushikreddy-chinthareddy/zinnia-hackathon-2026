@@ -1,11 +1,9 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import React from 'react';
-
 import { PageHead } from '@deps/components/page-title';
 import UpdatePremiumAutopayContainer from '@deps/containers/financial-transactions/premium/update-premium-autopay/update-premium-autopay-container';
 import { UpdatePremiumAutopayProvider } from '@deps/contexts/transactions/UpdatePremiumAutopayContext';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
+import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 interface UpdateAutopayProps {
     policy: Policy;
@@ -22,8 +20,15 @@ const UpdateAutopay = ({ policy }: UpdateAutopayProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: getServerSidePropsPolicyDetailsPage,
-});
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: getServerSidePropsPolicyDetailsPage,
+    },
+    {
+        file: 'policies/[planCode]/[id]/policy/premiums/update-premium-autopay',
+        function: 'getServerSideProps',
+        page: 'policies/:planCode/:id/policy/premiums/update-premium-autopay',
+    }
+);
 
 export default UpdateAutopay;

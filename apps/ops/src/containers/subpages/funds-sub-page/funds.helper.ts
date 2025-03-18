@@ -11,7 +11,6 @@ import { getCurrentInterestRate } from '@deps/queries/api/product-rate';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { FundInformationByFundId, FundInformationByFundIdResponse, FundInformationByPlanCode, Funds } from '@deps/types/fund-information';
-import { logError } from '@deps/utils/server-logging';
 
 import { FundDetailsViewModel, FundViewModel, MatchViewModel, SegmentViewModel } from './types';
 
@@ -183,7 +182,7 @@ const getFundType = (fundType?: FundAccountType): string => {
 
 const getSweepDate = (sweepDay?: number | null): string => {
     if (!sweepDay) {
-        logError('getSweepDate::missing sweepDay', { sweepDay });
+        console.error('getSweepDate::missing sweepDay', { sweepDay });
 
         return DEFAULT_ERROR_STRING;
     }
@@ -236,7 +235,7 @@ const getHoldingFundsViewModel = async ({
             holdingFunds.push(holdingFund);
         });
     } catch (error) {
-        logError('buildHoldingFunds::missing carrierId or fundId', { error, fundId: lastFundId });
+        console.error('buildHoldingFunds::missing carrierId or fundId', { error, fundId: lastFundId });
 
         return holdingFunds;
     }
@@ -276,7 +275,7 @@ const getProductFundsInfo = async (carrierId?: string, productFunds?: FundInform
 
         return fundsInfoResponses.map(response => response?.data);
     } catch (error) {
-        logError('getProductFundsInfo::error getting fund info', { carrierId, error, fundIds });
+        console.error('getProductFundsInfo::error getting fund info', { carrierId, error, fundIds });
 
         return [];
     }
@@ -296,7 +295,7 @@ const getFundsInfo = async (carrierId?: string, fundIds?: string[]): Promise<Fun
             })
         );
     } catch (error) {
-        logError('getFundsInfo::error getting fund info', { carrierId, error, fundIds });
+        console.error('getFundsInfo::error getting fund info', { carrierId, error, fundIds });
 
         return [
             {

@@ -1,5 +1,4 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { GetServerSidePropsContext } from 'next';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { TranslationFiles } from '@deps/config/translations';
@@ -12,10 +11,17 @@ import { UserPermission } from '@deps/models/user-profile';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { FgaRelation } from '@deps/types/fga';
-import { logWarn, logError, getUserInfoFromUser, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    logWarn,
+    logError,
+    getUserInfoFromUser,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+    GetServerSidePropsWithLoggingContext,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-export const getServerSidePropsPolicyDetailsPage = async (context: GetServerSidePropsContext) => {
+export const getServerSidePropsPolicyDetailsPage: GetServerSidePropsWithLoggingContext = async (context, loggingContext) => {
     // Get the user object from the Auth0 Session
     const user = await getUserData(context);
     const { locale = DEFAULT_LOCALE, params, req, res } = context;
@@ -25,8 +31,7 @@ export const getServerSidePropsPolicyDetailsPage = async (context: GetServerSide
     } catch (e) {
         logWarn('getServerSidePropsPolicyDetailsPage::Access token expired', {
             ...parseErrorInformation(e),
-            file: 'utils/page',
-            function: 'getServerSidePropsPolicyDetailsPage',
+            ...loggingContext,
         });
         return serverSidePropsLogout();
     }
@@ -38,7 +43,7 @@ export const getServerSidePropsPolicyDetailsPage = async (context: GetServerSide
 
     // We can use the enum to access the permissions object.
     permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
-    const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE);
+    const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
 
     // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
     if (!isAdvisorsExcel && !permissions[UserPermission.AllowReadPolicyAdmin]) {
@@ -84,13 +89,16 @@ export const getServerSidePropsPolicyDetailsPage = async (context: GetServerSide
             },
         };
     } catch (error) {
-        logError('getServerSidePropsPolicyDetailsPage', { ...parseErrorInformation(error) });
+        logError('getServerSidePropsPolicyDetailsPage', { ...parseErrorInformation(error), ...loggingContext });
         return {
             props: {},
         };
     }
 };
 
-export const getServerSideSubPageProps = withPageAuthRequired({
-    getServerSideProps: getServerSidePropsPolicyDetailsPage,
-});
+export const getServerSideSubPageProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: getServerSidePropsPolicyDetailsPage,
+    },
+    { file: 'getServerSideSubPageProps', function: 'getServerSideProps', page: 'getServerSideSubPageProps' }
+);

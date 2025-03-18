@@ -1,6 +1,5 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import clsx from 'clsx';
-import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -49,7 +48,7 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 import { ERROR_CODES } from '../../error';
 
@@ -236,122 +235,115 @@ export default function RmdCase({ document, form, featureFlagDecisions, parties,
     );
 }
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
-        const { locale = DEFAULT_LOCALE, params, query, res, req } = context;
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('create-case/rmd/:id:: Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'create-case/rmd/:id/index',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
-
-        const doesUserHasPagePermissions = doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
-        if (!doesUserHasPagePermissions) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
-
-        const id = (params?.id as string) || '';
-        const documentNumber = (query.doc as string) || '';
-        const clientId = (query.clientId as string) || '';
-        const taskId = (query.taskId as string) || '';
-        const action = (query.action as string) || '';
-        const getLastSaved = (query?.getLastSaved as string) || '';
-
-        const [translations, document] = await Promise.all([
-            serverSideTranslations(locale, [TranslationFiles.COMMON]),
-            getDocumentV2SSR(documentNumber, DocumentType.Rmd, clientId.toUpperCase(), accessToken),
-        ]);
-
-        if (!document?.contract) {
-            logError('create-case/rmd/:id::Error getting document', {
-                documentNumber,
-                clientId,
-                file: 'rmd/:id/index',
-                function: 'getServerSideProps',
-            });
-            return {
-                redirect: {
-                    destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
-                    permanent: false,
-                },
-            };
-        }
-
-        const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-        const isUsedLastSaved = shouldShowNewExperience && deStringifyTrueFalseNull(getLastSaved.toLowerCase());
-        if (shouldShowNewExperience && action !== 'readonly') {
-            logInfo('create-case/rmd/:id:Checking NIGO', { taskId, action, documentNumber, id, clientId });
-            const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken);
-            if (isNigoCase && !isUsedLastSaved) {
-                logInfo('create-case/rmd/:id::Nigo exists for case', {
-                    documentNumber,
-                    clientId,
-                    caseId: document.caseId,
-                    lob: document?.lob,
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const { locale = DEFAULT_LOCALE, params, query, res, req } = context;
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('create-case/rmd/:id:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
                 });
+                return serverSidePropsLogout();
+            }
+
+            const doesUserHasPagePermissions = doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
+                        destination: '/403',
                         permanent: false,
                     },
                 };
             }
-        } else {
-            logInfo('create-case/rmd/:id:Skipping NIGO check', { taskId, action, documentNumber, id, clientId });
-        }
 
-        const form = await initializeOTPTaskSSR({
-            accessToken,
-            caseId: id,
-            clientId,
-            contractNumber: document.contract,
-            documentNumber,
-            taskType: TaskType.RMD,
-            userId: user.name,
-            getLastSaved,
-            taskId: taskId,
-            action: action,
-        });
-        const parties = document?.contract ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string) : [];
+            const id = (params?.id as string) || '';
+            const documentNumber = (query.doc as string) || '';
+            const clientId = (query.clientId as string) || '';
+            const taskId = (query.taskId as string) || '';
+            const action = (query.action as string) || '';
+            const getLastSaved = (query?.getLastSaved as string) || '';
 
-        if (!form) {
-            logError('create-case/rmd/id::Error initializing task rmd form', {
-                documentNumber,
+            const [translations, document] = await Promise.all([
+                serverSideTranslations(locale, [TranslationFiles.COMMON]),
+                getDocumentV2SSR(documentNumber, DocumentType.Rmd, clientId.toUpperCase(), accessToken),
+            ]);
+
+            if (!document?.contract) {
+                logError('create-case/rmd/:id::Error getting document', loggingContext);
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
+                        permanent: false,
+                    },
+                };
+            }
+
+            const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+            const isUsedLastSaved = shouldShowNewExperience && deStringifyTrueFalseNull(getLastSaved.toLowerCase());
+            if (shouldShowNewExperience && action !== 'readonly') {
+                logInfo('create-case/rmd/:id:Checking NIGO', loggingContext);
+                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken);
+                if (isNigoCase && !isUsedLastSaved) {
+                    logInfo('create-case/rmd/:id::Nigo exists for case', {
+                        ...loggingContext,
+                        caseId: document.caseId,
+                        lob: document?.lob,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
+                            permanent: false,
+                        },
+                    };
+                }
+            } else {
+                logInfo('create-case/rmd/:id:Skipping NIGO check', loggingContext);
+            }
+
+            const form = await initializeOTPTaskSSR({
+                accessToken,
+                caseId: id,
                 clientId,
-                contract: document?.contract,
-                file: 'rmd/:id/index',
-                function: 'getServerSideProps',
+                contractNumber: document.contract,
+                documentNumber,
+                taskType: TaskType.RMD,
+                userId: user.name,
+                getLastSaved,
+                taskId: taskId,
+                action: action,
             });
+            const parties = document?.contract ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string) : [];
+
+            if (!form) {
+                logError('create-case/rmd/id::Error initializing task rmd form', {
+                    ...loggingContext,
+                    contract: document?.contract,
+                });
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.RMD_TASK_INITIALIZATION}`,
+                        permanent: false,
+                    },
+                };
+            }
             return {
-                redirect: {
-                    destination: `/create-case/error?errorCode=${ERROR_CODES.RMD_TASK_INITIALIZATION}`,
-                    permanent: false,
+                props: {
+                    ...translations,
+                    document,
+                    form,
+                    locale,
+                    featureFlagDecisions,
+                    parties: Array.isArray(parties) ? parties : [],
+                    user,
                 },
             };
-        }
-        return {
-            props: {
-                ...translations,
-                document,
-                form,
-                locale,
-                featureFlagDecisions,
-                parties: Array.isArray(parties) ? parties : [],
-                user,
-            },
-        };
+        },
     },
-});
+    { file: 'create-case/rmd/[id]/index', function: 'getServerSideProps', page: 'create-case/rmd/:id' }
+);

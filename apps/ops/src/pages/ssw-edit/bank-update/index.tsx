@@ -1,5 +1,4 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { GetServerSidePropsContext } from 'next';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import BankUpdateContainer from '@deps/components/ssw-edit/bank-update/bank-update-container';
@@ -17,7 +16,7 @@ import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { getUserInfoFromUser, logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { getUserInfoFromUser, logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 type BankUpdateProps = {
@@ -42,8 +41,8 @@ const BankUpdate = (props: BankUpdateProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
+export const getServerSideProps = withPageAuthAndLogging({
+    getServerSideProps: async (context, loggingContext) => {
         const user = await getUserData(context);
         const { locale = DEFAULT_LOCALE, query, req, res } = context;
 
@@ -56,8 +55,7 @@ export const getServerSideProps = withPageAuthRequired({
         } catch (e) {
             logWarn('getServerSidePropsBankUpdatePage::Access token expired', {
                 ...parseErrorInformation(e),
-                file: 'utils/page',
-                function: 'getServerSidePropsBankUpdatePage',
+                ...loggingContext,
             });
             return serverSidePropsLogout();
         }
@@ -65,15 +63,11 @@ export const getServerSideProps = withPageAuthRequired({
         try {
             const [translations, activeForm] = await Promise.all([
                 await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
-                await getCaseTaskByIdSSR(taskId, accessToken),
+                await getCaseTaskByIdSSR(taskId, accessToken, loggingContext),
             ]);
 
             if (!activeForm) {
-                logError('bank-update::Error getting task by id', {
-                    taskId,
-                    file: 'pages/bank-update',
-                    function: 'getServerSideProps',
-                });
+                logError('bank-update::Error getting task by id', loggingContext);
                 return {
                     redirect: {
                         destination: `/ssw-edit/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
@@ -82,11 +76,7 @@ export const getServerSideProps = withPageAuthRequired({
                 };
             }
 
-            logInfo('bank-update::getCaseTaskByIdSSR task active form found', {
-                taskId,
-                file: 'pages/bank-update',
-                function: 'getServerSideProps',
-            });
+            logInfo('bank-update::getCaseTaskByIdSSR task active form found', loggingContext);
 
             const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId: user?.name });
 
@@ -102,8 +92,7 @@ export const getServerSideProps = withPageAuthRequired({
                     documentNumber,
                     clientCode,
                     contractNum,
-                    file: 'pages/bank-update',
-                    function: 'getServerSideProps',
+                    ...loggingContext,
                 });
                 return {
                     redirect: {
@@ -120,8 +109,7 @@ export const getServerSideProps = withPageAuthRequired({
                     documentNumber,
                     clientCode,
                     contractNum,
-                    file: 'pages/bank-update',
-                    function: 'getServerSideProps',
+                    ...loggingContext,
                 });
                 return {
                     redirect: {
@@ -147,7 +135,7 @@ export const getServerSideProps = withPageAuthRequired({
                 },
             };
         } catch (error) {
-            logError('getServerSidePropsBankUpdatePage', { ...parseErrorInformation(error) });
+            logError('getServerSidePropsBankUpdatePage', { ...parseErrorInformation(error), ...loggingContext });
             return {
                 props: {},
             };

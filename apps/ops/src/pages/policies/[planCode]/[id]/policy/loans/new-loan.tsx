@@ -1,4 +1,3 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import router from 'next/router';
 import { useEffect } from 'react';
 
@@ -8,6 +7,7 @@ import { NewLoanProvider } from '@deps/contexts/transactions/NewLoanContext';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { checkEligibilityNewLoan, TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
+import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 export interface NewLoanProps {
     policy: Policy;
@@ -16,7 +16,11 @@ export interface NewLoanProps {
 const NewLoan = ({ policy }: NewLoanProps) => {
     useEffect(() => {
         const checkEligibility = async () => {
-            const eligibilityCheck = await checkEligibilityNewLoan(policy.product?.planCode, policy.policyNumber, policy.loanValues?.maximumLoanAmount);
+            const eligibilityCheck = await checkEligibilityNewLoan(
+                policy.product?.planCode,
+                policy.policyNumber,
+                policy.loanValues?.maximumLoanAmount
+            );
 
             if (eligibilityCheck.status === TransactionResponseStatus.Failure) {
                 router.push(`/403`);
@@ -37,8 +41,15 @@ const NewLoan = ({ policy }: NewLoanProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: getServerSidePropsPolicyDetailsPage,
-});
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: getServerSidePropsPolicyDetailsPage,
+    },
+    {
+        file: 'policies/[planCode]/[id]/policy/loans/new-loan',
+        function: 'getServerSideProps',
+        page: 'policies/:planCode/:id/policy/loans/new-loan',
+    }
+);
 
 export default NewLoan;

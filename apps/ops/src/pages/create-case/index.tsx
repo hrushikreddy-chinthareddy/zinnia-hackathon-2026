@@ -1,9 +1,8 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { TabGroup, TabList, TabTrigger, TabContent, Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { getCookie, setCookie } from 'cookies-next';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import { GetServerSidePropsContext } from 'next';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -41,7 +40,7 @@ import { browserLogInfo } from '@deps/utils/browser-logging';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface CaseCreatePageProps extends SegmentTrackedPageProps {
@@ -491,40 +490,42 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, res, req } = context;
-        try {
-            (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('create-case/index:: Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'create-case/index',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
-        if (!doesUserHasPagePermissions) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const { locale = DEFAULT_LOCALE, res, req } = context;
+            try {
+                (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('create-case/index:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            if (!doesUserHasPagePermissions) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
 
-        const featureFlagDecisions = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions = await optimizelyService.getFeatureFlagDecisions(user.sub);
 
-        const translations = await serverSideTranslations(
-            locale,
-            [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-            nextI18nextConfig,
-            ALL_LOCALES
-        );
-        return { props: { featureFlagDecisions, locale, ...translations, user } };
+            const translations = await serverSideTranslations(
+                locale,
+                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
+            return { props: { featureFlagDecisions, locale, ...translations, user } };
+        },
     },
-});
+    { file: 'create-case/index', function: 'getServerSideProps', page: 'create-case/index' }
+);
 
 export default CaseCreate;

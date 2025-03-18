@@ -1,4 +1,3 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import router from 'next/router';
 import { useEffect } from 'react';
 
@@ -7,6 +6,7 @@ import LoanAutopayContainer from '@deps/containers/financial-transactions/loan/l
 import { LoanAutopayProvider } from '@deps/contexts/transactions/LoanAutopayContext';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
+import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 export interface StartLoanPaymentProps {
     policy: Policy;
@@ -31,8 +31,15 @@ const StartLoanPayment = ({ policy }: StartLoanPaymentProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: getServerSidePropsPolicyDetailsPage,
-});
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: getServerSidePropsPolicyDetailsPage,
+    },
+    {
+        file: 'policies/[planCode]/[id]/policy/loans/start-loan-payment',
+        function: 'getServerSideProps',
+        page: 'policies/:planCode/:id/policy/loans/start-loan-payment',
+    }
+);
 
 export default StartLoanPayment;
