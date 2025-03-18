@@ -144,6 +144,9 @@
                     "INHERITED_IRA"
                 ]
             },
+            "fedralIncomeTaxEnum": {
+                "enum": ["0", "10", "12", "22", "24", "32", "35", "37"]
+            },
             "financialProducts_assetsDistribution_productTypeEnum": {
                 "enum": [
                     "CHECKING_SAVING_ACCOUNT",
@@ -654,10 +657,6 @@
                         },
                         "then": {
                             "properties": {
-                                "materialChangeReason": {
-                                    "type": "string",
-                                    "title": "Material Purchase reason"
-                                },
                                 "annualIncome": {
                                     "type": "string",
                                     "title": "Annual income"
@@ -700,35 +699,16 @@
                                                 "title": "Change Type",
                                                 "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
                                             },
-                                            "isApplicable": {
-                                                "type": "boolean",
-                                                "title": "Is Applicable",
-                                                "$ref": "#/definitions/isApplicableEnum"
+                                            "numberOfYears": {
+                                                "type": "string",
+                                                "title": "Number of Years"
+                                            },
+                                            "amount": {
+                                                "type": "string",
+                                                "title": "Amount"
                                             }
                                         },
-                                        "required": ["changeType", "isApplicable"],
-                                        "dependencies": {
-                                            "isApplicable": {
-                                                "if": {
-                                                    "properties": {
-                                                        "isApplicable": { "const": "YES" }
-                                                    }
-                                                },
-                                                "then": {
-                                                    "properties": {
-                                                        "numberOfYears": {
-                                                            "type": "string",
-                                                            "title": "Number of Years"
-                                                        },
-                                                        "amount": {
-                                                            "type": "string",
-                                                            "title": "Amount"
-                                                        }
-                                                    },
-                                                    "required": ["numberOfYears", "amount"]
-                                                }
-                                            }
-                                        }
+                                        "required": ["changeType", "numberOfYears", "amount"]
                                     }
                                 },
                                 "totalAssets": {
@@ -754,11 +734,8 @@
                                 },
                                 "federalTaxBand": {
                                     "type": "string",
-                                    "title": "Federal tax band"
-                                },
-                                "otherTaxBand": {
-                                    "type": "string",
-                                    "title": "Other tax band"
+                                    "title": "Federal tax band",
+                                    "$ref": "#/definitions/fedralIncomeTaxEnum"
                                 }
                             },
 
@@ -796,48 +773,7 @@
                                     "title": "Material change expected",
                                     "$ref": "#/definitions/materialChangeExpEnum"
                                 },
-                                "materialChangeDetails": {
-                                    "type": "array",
-                                    "title": "Material Change Details",
-                                    "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "changeType": {
-                                                "type": "string",
-                                                "title": "Change Type",
-                                                "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
-                                            },
-                                            "isApplicable": {
-                                                "type": "boolean",
-                                                "title": "Is Applicable",
-                                                "$ref": "#/definitions/isApplicableEnum"
-                                            }
-                                        },
-                                        "required": ["changeType", "isApplicable"],
-                                        "dependencies": {
-                                            "isApplicable": {
-                                                "if": {
-                                                    "properties": {
-                                                        "isApplicable": { "const": "YES" }
-                                                    }
-                                                },
-                                                "then": {
-                                                    "properties": {
-                                                        "numberOfYears": {
-                                                            "type": "string",
-                                                            "title": "Number of Years"
-                                                        },
-                                                        "amount": {
-                                                            "type": "string",
-                                                            "title": "Amount"
-                                                        }
-                                                    },
-                                                    "required": ["numberOfYears", "amount"]
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
+
                                 "totalAssets": {
                                     "type": "string",
                                     "title": "Total assets"
@@ -861,11 +797,8 @@
                                 },
                                 "federalTaxBand": {
                                     "type": "string",
-                                    "title": "Federal tax band"
-                                },
-                                "otherTaxBand": {
-                                    "type": "string",
-                                    "title": "Other tax band"
+                                    "title": "Federal tax band",
+                                    "$ref": "#/definitions/fedralIncomeTaxEnum"
                                 }
                             }
                         }
@@ -1770,12 +1703,7 @@
                             "enumNames": ["Living expense increase", "Living expense decrease", "Living asset decrease"]
                         }
                     },
-                    "isApplicable": {
-                        "ui:widget": "select",
-                        "ui:options": {
-                            "enumNames": ["Yes", "No"]
-                        }
-                    },
+
                     "numberOfYears": {
                         "ui:options": {
                             "label": true
@@ -1826,8 +1754,14 @@
                     ]
                 }
             },
-            "federalTaxBand": {},
-            "otherTaxBand": {}
+            "federalTaxBand": {
+                "ui:options": {
+                    "label": true,
+                    "ui:options": {
+                        "enumNames": ["0", "10", "12", "22", "24", "32", "35", "37"]
+                    }
+                }
+            }
         },
         "financialExperience": {
             "ui:options": {
@@ -2341,6 +2275,9 @@
                                 "RETIREMENT_PLAN",
                                 "INHERITED_IRA"
                             ]
+                        },
+                        "fedralIncomeTaxEnum": {
+                            "enum": ["0", "10", "12", "22", "24", "32", "35", "37"]
                         },
                         "financialProducts_assetsDistribution_productTypeEnum": {
                             "enum": [
@@ -2862,10 +2799,6 @@
                                     },
                                     "then": {
                                         "properties": {
-                                            "materialChangeReason": {
-                                                "type": "string",
-                                                "title": "Material Purchase reason"
-                                            },
                                             "annualIncome": {
                                                 "type": "string",
                                                 "title": "Annual income"
@@ -2908,36 +2841,16 @@
                                                             "title": "Change Type",
                                                             "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
                                                         },
-                                                        "isApplicable": {
-                                                            "type": "boolean",
-                                                            "title": "Is Applicable",
-                                                            "$ref": "#/definitions/isApplicableEnum"
+                                                        "numberOfYears": {
+                                                            "type": "string",
+                                                            "title": "Number of Years"
+                                                        },
+                                                        "amount": {
+                                                            "type": "string",
+                                                            "title": "Amount"
                                                         }
                                                     },
-
-                                                    "required": ["changeType", "isApplicable"],
-                                                    "dependencies": {
-                                                        "isApplicable": {
-                                                            "if": {
-                                                                "properties": {
-                                                                    "isApplicable": { "const": "YES" }
-                                                                }
-                                                            },
-                                                            "then": {
-                                                                "properties": {
-                                                                    "numberOfYears": {
-                                                                        "type": "string",
-                                                                        "title": "Number of Years"
-                                                                    },
-                                                                    "amount": {
-                                                                        "type": "string",
-                                                                        "title": "Amount"
-                                                                    }
-                                                                },
-                                                                "required": ["numberOfYears", "amount"]
-                                                            }
-                                                        }
-                                                    }
+                                                    "required": ["changeType", "numberOfYears", "amount"]
                                                 }
                                             },
                                             "totalAssets": {
@@ -2963,11 +2876,8 @@
                                             },
                                             "federalTaxBand": {
                                                 "type": "string",
-                                                "title": "Federal tax band"
-                                            },
-                                            "otherTaxBand": {
-                                                "type": "string",
-                                                "title": "Other tax band"
+                                                "title": "Federal tax band",
+                                                "$ref": "#/definitions/fedralIncomeTaxEnum"
                                             }
                                         },
 
@@ -3006,48 +2916,6 @@
                                                 "$ref": "#/definitions/materialChangeExpEnum"
                                             },
 
-                                            "materialChangeDetails": {
-                                                "type": "array",
-                                                "title": "Material Change Details",
-                                                "items": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "changeType": {
-                                                            "type": "string",
-                                                            "title": "Change Type",
-                                                            "$ref": "#/definitions/materialChangeDetails_changeTypeEnum"
-                                                        },
-                                                        "isApplicable": {
-                                                            "type": "boolean",
-                                                            "title": "Is Applicable",
-                                                            "$ref": "#/definitions/isApplicableEnum"
-                                                        }
-                                                    },
-                                                    "required": ["changeType", "isApplicable"],
-                                                    "dependencies": {
-                                                        "isApplicable": {
-                                                            "if": {
-                                                                "properties": {
-                                                                    "isApplicable": { "const": "YES" }
-                                                                }
-                                                            },
-                                                            "then": {
-                                                                "properties": {
-                                                                    "numberOfYears": {
-                                                                        "type": "string",
-                                                                        "title": "Number of Years"
-                                                                    },
-                                                                    "amount": {
-                                                                        "type": "string",
-                                                                        "title": "Amount"
-                                                                    }
-                                                                },
-                                                                "required": ["numberOfYears", "amount"]
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
                                             "totalAssets": {
                                                 "type": "string",
                                                 "title": "Total assets"
@@ -3071,11 +2939,8 @@
                                             },
                                             "federalTaxBand": {
                                                 "type": "string",
-                                                "title": "Federal tax band"
-                                            },
-                                            "otherTaxBand": {
-                                                "type": "string",
-                                                "title": "Other tax band"
+                                                "title": "Federal tax band",
+                                                "$ref": "#/definitions/fedralIncomeTaxEnum"
                                             }
                                         }
                                     }
@@ -3974,12 +3839,7 @@
                                         "enumNames": ["Living expense increase", "Living expense decrease", "Living asset decrease"]
                                     }
                                 },
-                                "isApplicable": {
-                                    "ui:widget": "select",
-                                    "ui:options": {
-                                        "enumNames": ["Yes", "No"]
-                                    }
-                                },
+
                                 "numberOfYears": {
                                     "ui:options": {
                                         "label": true
@@ -4030,8 +3890,12 @@
                                 ]
                             }
                         },
-                        "federalTaxBand": {},
-                        "otherTaxBand": {}
+                        "federalTaxBand": {
+                            "label": true,
+                            "ui:options": {
+                                "enumNames": ["0", "10", "12", "22", "24", "32", "35", "37"]
+                            }
+                        }
                     },
                     "financialExperience": {
                         "ui:options": {
