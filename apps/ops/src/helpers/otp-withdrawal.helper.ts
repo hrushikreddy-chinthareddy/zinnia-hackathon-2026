@@ -14,6 +14,7 @@ export interface SignatureConfiguration {
 }
 
 const determinePrimaryAddress = (addresses: Address[] = []): Address | null => {
+    if (!addresses) return null;
     return addresses?.find(address => address.addressType === AddressTypes.DEFAULT) || addresses[0] || null;
 };
 
