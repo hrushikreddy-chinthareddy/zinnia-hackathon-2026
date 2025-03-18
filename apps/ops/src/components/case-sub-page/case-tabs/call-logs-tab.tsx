@@ -75,24 +75,20 @@ const CallLogCard = ({
                 </div>
             )}
             {notes && (
-                <div>
+                <>
                     <Typography variant={TypographyVariant.LabelLg}>{t('sideSheet.callLogNotes')}</Typography>
-                    <div>
-                        <Typography variant={TypographyVariant.BodySm} className="break-normal">
-                            <PiiWrapper>{notes}</PiiWrapper>
-                        </Typography>
-                    </div>
-                </div>
+                    <Typography variant={TypographyVariant.Body} className="break-normal">
+                        <PiiWrapper>{notes}</PiiWrapper>
+                    </Typography>
+                </>
             )}
             {summary && (
-                <div>
+                <>
                     <Typography variant={TypographyVariant.LabelLg}>{t('sideSheet.callLogSummary')}</Typography>
-                    <div>
-                        <Typography variant={TypographyVariant.BodySm} className="break-normal">
-                            <PiiWrapper>{summary}</PiiWrapper>
-                        </Typography>
-                    </div>
-                </div>
+                    <Typography variant={TypographyVariant.Body} className="break-normal">
+                        <PiiWrapper>{summary}</PiiWrapper>
+                    </Typography>
+                </>
             )}
             {!summary && !notes && <NoSummaryCard content={missingSummaryText} />}
         </div>
