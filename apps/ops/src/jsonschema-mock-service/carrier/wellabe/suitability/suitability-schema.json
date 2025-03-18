@@ -2037,55 +2037,58 @@
                         "issueDate": {}
                     }
                 }
-            }
-        },
-        "disclosureAcknowledgement": {
-            "ui:options": {
-                "classNames": "divider"
             },
-            "scopeAndTerms": {},
-            "typesOfProducts": {},
-            "authorizedInsurers": {},
-            "compensationDescription": {},
-            "rightToRequestInfo": {},
-            "compensationEstimate": {},
-            "conflictsOfInterest": {},
-            "productConsDiscussed": {
-                "byAgent": {
-                    "ui:options": {
-                        "label": "true",
-                        "widget": "checkboxes",
-                        "enumNames": [
-                            "The surrender charge (including any market value adjustment) and surrender charge period",
-                            "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
-                            "Investment advisory fees",
-                            "Potential charges for and features of riders or other options of the annuity",
-                            "Limitations on interest returns",
-                            "Potential changes in non - guaranteed elements of the annuity",
-                            "Insurance and investment components and market risk",
-                            "Others"
-                        ]
-                    }
-                },
+            "financialAcknowledgement": {},
 
-                "byApplicant": {
-                    "ui:options": {
-                        "label": "true",
-                        "widget": "checkboxes",
-                        "enumNames": [
-                            "The surrender charge(including any market value adjustment) and surrender charge period",
-                            "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
-                            "Investment advisory fees",
-                            "Potential charges for and features of riders or other options of the annuity",
-                            "Limitations on interest returns",
-                            "Potential changes in non - guaranteed elements of the annuity",
-                            "Insurance and investment components and market risk",
-                            "Others"
-                        ]
+            "disclosureAcknowledgement": {
+                "ui:options": {
+                    "classNames": "divider"
+                },
+                "scopeAndTerms": {},
+                "typesOfProducts": {},
+                "authorizedInsurers": {},
+                "compensationDescription": {},
+                "rightToRequestInfo": {},
+                "compensationEstimate": {},
+                "conflictsOfInterest": {},
+                "productConsDiscussed": {
+                    "byAgent": {
+                        "ui:options": {
+                            "label": "true",
+
+                            "enumNames": [
+                                "The surrender charge (including any market value adjustment) and surrender charge period",
+                                "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
+                                "Investment advisory fees",
+                                "Potential charges for and features of riders or other options of the annuity",
+                                "Limitations on interest returns",
+                                "Potential changes in non - guaranteed elements of the annuity",
+                                "Insurance and investment components and market risk",
+                                "Others"
+                            ]
+                        }
+                    },
+
+                    "byApplicant": {
+                        "ui:options": {
+                            "label": "true",
+
+                            "enumNames": [
+                                "The surrender charge(including any market value adjustment) and surrender charge period",
+                                "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
+                                "Investment advisory fees",
+                                "Potential charges for and features of riders or other options of the annuity",
+                                "Limitations on interest returns",
+                                "Potential changes in non - guaranteed elements of the annuity",
+                                "Insurance and investment components and market risk",
+                                "Others"
+                            ]
+                        }
                     }
                 }
             }
         },
+
         "additionalInfo": {
             "ui:options": {
                 "classNames": "divider"
@@ -4252,6 +4255,55 @@
                                     "companyName": {},
                                     "policyNumber": {},
                                     "issueDate": {}
+                                }
+                            }
+                        },
+                        "financialAcknowledgement": {},
+
+                        "disclosureAcknowledgement": {
+                            "ui:options": {
+                                "classNames": "divider"
+                            },
+                            "scopeAndTerms": {},
+                            "typesOfProducts": {},
+                            "authorizedInsurers": {},
+                            "compensationDescription": {},
+                            "rightToRequestInfo": {},
+                            "compensationEstimate": {},
+                            "conflictsOfInterest": {},
+                            "productConsDiscussed": {
+                                "byAgent": {
+                                    "ui:options": {
+                                        "label": "true",
+
+                                        "enumNames": [
+                                            "The surrender charge (including any market value adjustment) and surrender charge period",
+                                            "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
+                                            "Investment advisory fees",
+                                            "Potential charges for and features of riders or other options of the annuity",
+                                            "Limitations on interest returns",
+                                            "Potential changes in non - guaranteed elements of the annuity",
+                                            "Insurance and investment components and market risk",
+                                            "Others"
+                                        ]
+                                    }
+                                },
+
+                                "byApplicant": {
+                                    "ui:options": {
+                                        "label": "true",
+
+                                        "enumNames": [
+                                            "The surrender charge(including any market value adjustment) and surrender charge period",
+                                            "Potential tax penalty if I sell, exchange, surrender, or annuitize the annuity",
+                                            "Investment advisory fees",
+                                            "Potential charges for and features of riders or other options of the annuity",
+                                            "Limitations on interest returns",
+                                            "Potential changes in non - guaranteed elements of the annuity",
+                                            "Insurance and investment components and market risk",
+                                            "Others"
+                                        ]
+                                    }
                                 }
                             }
                         }
