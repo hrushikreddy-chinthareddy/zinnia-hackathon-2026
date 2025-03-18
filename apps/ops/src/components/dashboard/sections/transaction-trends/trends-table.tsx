@@ -5,20 +5,21 @@ import clsx from 'clsx';
 import { FC } from 'react';
 
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
-import { TimeframeFilterOptions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { LineAndVolumeCategoryAndSeries } from '@deps/helpers/dashboard/line-and-volume-category-chart.helper';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
 
+import { TransactionTrendsTimeframe } from './utils';
+
 interface TrendsTableProps {
-    data: LineAndVolumeCategoryAndSeries;
-    timeframe: TimeframeFilterOptions;
+    data: LineAndVolumeCategoryAndSeries | undefined;
+    timeframe: TransactionTrendsTimeframe;
     legendLabel: string;
     colors: string[];
     linkQueryFormat: string;
 }
 
 export const TransactionTrendsTable: FC<TrendsTableProps> = ({ data, timeframe, legendLabel, colors, linkQueryFormat }) => {
-    const monthlyArray = [...Object.values(data.monthlyByLevel1Grouping)];
+    const monthlyArray = [...Object.values(data?.monthlyByLevel1Grouping || {})];
 
     const tableHeaders = {
         name: legendLabel,
@@ -41,12 +42,12 @@ export const TransactionTrendsTable: FC<TrendsTableProps> = ({ data, timeframe, 
             </TableHeader>
             <TableBody>
                 {Array.from({ length: 5 }).map((_, index) => {
-                    const divisors: Record<TimeframeFilterOptions, number> = {
-                        [TimeframeFilterOptions.Trailing12Months]: 12,
-                        [TimeframeFilterOptions.Last6Months]: 6,
-                        [TimeframeFilterOptions.Last90Days]: 3,
-                        [TimeframeFilterOptions.Last60Days]: 2,
-                        [TimeframeFilterOptions.LastMonth]: 1,
+                    const divisors: Record<TransactionTrendsTimeframe, number> = {
+                        [TransactionTrendsTimeframe.Trailing12Months]: 12,
+                        [TransactionTrendsTimeframe.Last6Months]: 6,
+                        [TransactionTrendsTimeframe.Last90Days]: 3,
+                        [TransactionTrendsTimeframe.Last60Days]: 2,
+                        [TransactionTrendsTimeframe.LastMonth]: 1,
                     };
 
                     const stat = monthlyArray[index];
@@ -78,7 +79,7 @@ export const TransactionTrendsTable: FC<TrendsTableProps> = ({ data, timeframe, 
                             </TableCell>
                             <TableCell className={`typography-content-body-sm text-right`}>
                                 {stat?.total
-                                    ? wholeNumberFormatify(stat.total / divisors[timeframe || TimeframeFilterOptions.Trailing12Months])
+                                    ? wholeNumberFormatify(stat.total / divisors[timeframe || TransactionTrendsTimeframe.Trailing12Months])
                                     : NoDataCell}
                             </TableCell>
                             <TableCell className={`typography-content-body-sm text-right`}>

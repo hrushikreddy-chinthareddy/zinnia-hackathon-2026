@@ -17,7 +17,7 @@ export enum TimeframeFilterOptions {
     LastWeek = '1W',
 }
 
-const defaultDateFormat = 'YYYY-MM-DD';
+export const defaultDateFormat = 'YYYY-MM-DD';
 
 export const friendlyDateFormat = 'MMM D, YYYY';
 
