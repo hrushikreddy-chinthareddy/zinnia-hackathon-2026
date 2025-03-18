@@ -3221,6 +3221,8 @@
         "callID": "Call ID",
         "backToCallList": "Back to call listing",
         "noCallLogSummary": "No summary to display.",
+        "callLogNotes": "Notes",
+        "callLogSummary": "Summary",
         "allocation": {
             "allocation": "Allocation",
             "allocationsMustNotEqual0": "Allocations cannot equal 0.",
