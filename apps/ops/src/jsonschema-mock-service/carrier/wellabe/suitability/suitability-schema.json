@@ -345,12 +345,6 @@
                                             "lastName": {
                                                 "type": "string",
                                                 "title": "Last name"
-                                            },
-
-                                            "birthDate": {
-                                                "type": "string",
-                                                "format": "date",
-                                                "title": "Birth date"
                                             }
                                         },
                                         "required": ["firstName"]
@@ -2556,12 +2550,6 @@
                                                         "lastName": {
                                                             "type": "string",
                                                             "title": "Last name"
-                                                        },
-
-                                                        "birthDate": {
-                                                            "type": "string",
-                                                            "format": "date",
-                                                            "title": "Birth date"
                                                         }
                                                     },
                                                     "required": ["firstName"]
