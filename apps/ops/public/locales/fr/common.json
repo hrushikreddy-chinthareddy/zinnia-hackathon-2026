@@ -1745,7 +1745,9 @@
                 },
                 "singleLifeTimeIncome": {
                     "title": "Nom de Income Life converti au-dessus de la ligne en français"
-                }
+                },
+                "COVERED_PERSON_1": "Nom de la personne couverte 1",
+                "COVERED_PERSON_2": "Nom de la personne couverte 2"
             },
             "rmdMethod": {
                 "title": "RMD Méthode",
@@ -2069,6 +2071,20 @@
                 "numberofAllowance": "Nombre d'allocations",
                 "signatureValidation": "Validation des signatures",
                 "Type": "type"
+            },
+            "w4pPeriodicPayment": {
+                "maritalStatusAllowanceItems": {
+                    "single": "Célibataire",
+                    "married": "Marié",
+                    "headOfHousehold": "Chef de famille"
+                },
+                "title": "W4-P pour paiements périodiques",
+                "ssn": "NSS",
+                "signatureValidation": "Validation de la signature",
+                "nonJobIncome": "Revenu d'un emploi/pension/rente",
+                "claimsAndCredits": "Réclamer des personnes à charge et d'autres crédits",
+                "otherIncomeAndPensions": "Autres revenus",
+                "otherDeductions": "Déductions"
             },
             "OL4753Data": {
                 "isOL4753Attached": "Le formulaire OL4753 est-il joint",

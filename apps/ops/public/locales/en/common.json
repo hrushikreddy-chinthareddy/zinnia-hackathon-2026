@@ -1752,7 +1752,9 @@
                 },
                 "singleLifeTimeIncome": {
                     "title": "Name of Income Life"
-                }
+                },
+                "COVERED_PERSON_1": "Name of Covered Life 1",
+                "COVERED_PERSON_2": "Name of Covered Life 2"
             },
             "rmdMethod": {
                 "title": "RMD Method",
@@ -2082,6 +2084,20 @@
                 "numberofAllowance": "Number of allowances",
                 "signatureValidation": "Signature validation",
                 "Type": "type"
+            },
+            "w4pPeriodicPayment": {
+                "maritalStatusAllowanceItems": {
+                    "single": "Single",
+                    "married": "Married",
+                    "headOfHousehold": "Head of household"
+                },
+                "title": "W4-P for Periodic Payments",
+                "ssn": "SSN",
+                "signatureValidation": "Signature Validation",
+                "nonJobIncome": "Income from a Job/Pension/Annuity",
+                "claimsAndCredits": "Claim Dependent and and other Credits",
+                "otherIncomeAndPensions": "Other Income",
+                "otherDeductions": "Deduction"
             },
             "OL4753Data": {
                 "isOL4753Attached": "Is OL4753 form attached",
