@@ -1,0 +1,275 @@
+{
+  "formId": "004c97a1-d97c-4faa-9b7f-8ff9105b4c29",
+  "process": "New Business",
+  "carrier": "WELB",
+  "taskType": "SUITABILITY_REVIEW",
+  "formSchema": {
+      "type": "object"
+  },
+  "uiSchema": {
+      "type": "object"
+  },
+  "schemaContent": {
+      "tabSchemas": [
+          {
+              "title": "Review Suitability",
+              "formSchema": {
+                  "$schema": "http://json-schema.org/draft-07/schema#",
+                  "type": "object",
+                  "definitions": {
+                      "suitabilityStatusEnum": {
+                          "enum": [true, false]
+                      },
+                      "declineReason": {
+                          "enum": [
+                              "SPIF_DECLINED",
+                              "BENEFIT_LOSS",
+                              "LOW_INCOME",
+                              "LOW_ASSETS",
+                              "HIGH_DEBT",
+                              "HIGH_ANNUITY_RATIO",
+                              "LOW_NET_WORTH",
+                              "RECENT_REPLACEMENT",
+                              "MISSING_REQUIREMENTS",
+                              "SURRENDER_FEES",
+                              "TRUST_ISSUE",
+                              "NON_COMPLIANT_INHERITANCE",
+                              "INHERITED_SURRENDER",
+                              "SAME_AGENT_REPLACEMENT",
+                              "AGENT_NO_RESPONSE",
+                              "NON_RESIDENT_SALE",
+                              "TAX_ISSUE",
+                              "NEG_DISPOSABLE_INCOME",
+                              "NEG_NET_WORTH",
+                              "INCOME_GOAL",
+                              "REPLACEMENT_HISTORY",
+                              "UNEMPLOYED",
+                              "NY_RESIDENT",
+                              "ASSISTED_LIVING",
+                              "OVER_ISSUE_AGE",
+                              "OUTSTANDING_LOAN",
+                              "RECENT_ISSUED_REPLACEMENT",
+                              "CONFLICTING_GOALS",
+                              "REVERSE_MORTGAGE"
+                          ]
+                      }
+                  },
+                  "properties": {
+                      "rules": {
+                          "type": "array",
+                          "title": "",
+                          "items": {
+                              "type": "object",
+                              "title": "",
+                              "properties": {
+                                  "issue": {
+                                      "type": "string",
+                                      "title": "Issue"
+                                  },
+                                  "rule": {
+                                      "type": "string",
+                                      "title": "Rule"
+                                  },
+                                  "applicationValue": {
+                                      "type": "string",
+                                      "title": "Additional Info"
+                                  },
+                                  "nmid": {
+                                      "type": "string",
+                                      "title": "Additional Info"
+                                  },
+                                  "externalId": {
+                                      "type": "string",
+                                      "title": "Additional Info"
+                                  }
+                              }
+                          }
+                      },
+                      "issueResolved": {
+                          "title": "Suitability decision",
+                          "$ref": "#/definitions/suitabilityStatusEnum"
+                      },
+                      "attachment": {
+                          "type": "array",
+                          "title": "+ Add attachment",
+                          "items": {
+                              "type": "string",
+                              "format": "data-url"
+                          }
+                      },
+                      "notes": {
+                          "type": "array",
+                          "title": "Notes",
+                          "items": {
+                              "type": "object",
+                              "properties": {
+                                  "note": {
+                                      "type": "string"
+                                  },
+                                  "createdAt": {
+                                      "type": "string",
+                                      "format": "string"
+                                  },
+                                  "user": {
+                                      "type": "string"
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "required": ["issueResolved"],
+                  "allOf": [
+                      {
+                          "if": {
+                              "properties": {
+                                  "issueResolved": {
+                                      "const": true
+                                  }
+                              }
+                          },
+                          "then": {
+                              "properties": {}
+                          },
+                          "else": {
+                              "properties": {
+                                  "declineReason": {
+                                      "type": "array",
+                                      "title": "Reason for decline",
+                                      "items": {
+                                          "type": "string",
+                                          "$ref": "#/definitions/declineReason"
+                                      },
+                                      "uniqueItems": true
+                                  }
+                              },
+                              "required": ["declineReason"]
+                          }
+                      }
+                  ]
+              },
+              "uiSchema": {
+                  "ui:order": ["rules", "issueResolved", "declineReason", "attachment", "notes"],
+                  "$schema": "http: //json-schema.org/draft-07/schema#",
+                  "ui:globalOptions": {
+                      "duplicateKeySuffixSeparator": "_",
+                      "orderable": false,
+                      "copyable": false
+                  },
+                  "ui:submitButtonOptions": {
+                      "norender": true
+                  },
+                  "ui:options": {
+                      "semantic": {
+                          "errorOptions": {
+                              "size": "small",
+                              "pointing": "above"
+                          }
+                      }
+                  },
+                  "rules": {
+                      "ui:options": {
+                          "label": false,
+                          "ArrayFieldTemplate": "ArrayFieldTableTemplate"
+                      },
+                      "items": {
+                          "ui:options": {
+                              "canAdd": false
+                          },
+                          "issue": {
+                              "ui:placeholder": "Issue",
+                              "ui:helpText": "Issue",
+                              "ui:options": {
+                                  "label": false
+                              }
+                          },
+                          "rule": {
+                              "ui:options": {
+                                  "label": false
+                              }
+                          },
+                          "applicationValue": {
+                              "ui:options": {
+                                  "label": false
+                              }
+                          },
+                          "nmid": {
+                              "ui:options": {
+                                  "label": false,
+                                  "widget": "hidden"
+                              }
+                          },
+                          "externalId": {
+                              "ui:options": {
+                                  "label": false,
+                                  "widget": "hidden"
+                              }
+                          }
+                      }
+                  },
+                  "issueResolved": {
+                      "ui:widget": "radio",
+                      "ui:options": {
+                          "help": "Select suitability review decision",
+                          "enumNames": ["Accept", "Decline"]
+                      }
+                  },
+                  "declineReason": {
+                      "ui:options": {
+                          "label": false,
+                          "help": "Provide decline reason",
+                          "class": "mt-0",
+                          "enumNames": [
+                              "Declined SPIF on internal transfer",
+                              "Loss of benefit base",
+                              "Low Income",
+                              "Low liquid asset",
+                              "High Debt",
+                              "High % of net worth in annuities/life",
+                              "Low net worth",
+                              "Replacement less than 1 year",
+                              "Requirements not received",
+                              "Surrender Charges",
+                              "Trust structure not accepted",
+                              "Inherited distributions not compliant",
+                              "Inherited liquidated while in surrender",
+                              "Recently written replacement by same agent",
+                              "Lack of response from agent",
+                              "Non-resident sale not acceptable",
+                              "Tax qualification not acceptable",
+                              "Negative disposable income",
+                              "Negative net worth",
+                              "Goal is income",
+                              "Replacement history",
+                              "Unemployed",
+                              "New York resident",
+                              "Assisted living or nursing home",
+                              "Over max issue age",
+                              "Outstanding loan",
+                              "Recently issued replacement",
+                              "Goals conflicting or don't match explanation",
+                              "Reverse mortgage"
+                          ]
+                      }
+                  },
+                  "attachment": {
+                      "ui:options": {
+                          "label": false,
+                          "showFiles": true,
+                          "omitValue": true
+                      },
+                      "ui:props": {
+                          "apiUrl": "case/v1/form/metadata?process=Suitability&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                          "apiMethod": "get"
+                      }
+                  },
+                  "notes": {
+                      "ui:options": {
+                          "label": false
+                      },
+                      "ui:widget": "NotesWidget"
+                  }
+              }
+          }
+      ]
+  }
+}

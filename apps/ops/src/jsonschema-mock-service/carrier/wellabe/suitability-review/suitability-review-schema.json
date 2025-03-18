@@ -96,25 +96,6 @@
                                 "type": "string",
                                 "format": "data-url"
                             }
-                        },
-                        "notes": {
-                            "type": "array",
-                            "title": "Notes",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "note": {
-                                        "type": "string"
-                                    },
-                                    "createdAt": {
-                                        "type": "string",
-                                        "format": "string"
-                                    },
-                                    "user": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
                         }
                     },
                     "required": ["issueResolved"],
@@ -148,7 +129,7 @@
                     ]
                 },
                 "uiSchema": {
-                    "ui:order": ["rules", "issueResolved", "declineReason", "attachment", "notes"],
+                    "ui:order": ["rules", "issueResolved", "declineReason", "attachment"],
                     "$schema": "http: //json-schema.org/draft-07/schema#",
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
@@ -206,6 +187,7 @@
                             }
                         }
                     },
+
                     "issueResolved": {
                         "ui:widget": "radio",
                         "ui:options": {
@@ -251,6 +233,7 @@
                             ]
                         }
                     },
+
                     "attachment": {
                         "ui:options": {
                             "label": false,
@@ -261,12 +244,6 @@
                             "apiUrl": "case/v1/form/metadata?process=Suitability&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
                             "apiMethod": "get"
                         }
-                    },
-                    "notes": {
-                        "ui:options": {
-                            "label": false
-                        },
-                        "ui:widget": "NotesWidget"
                     }
                 }
             }
