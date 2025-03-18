@@ -51,6 +51,10 @@
                                             "title": "Last name",
                                             "ui:field": "title"
                                         },
+                                        "payorName": {
+                                            "type": "string",
+                                            "title": "Payer name"
+                                        },
                                         "taxId": {
                                             "type": "string",
                                             "title": "SSN",
@@ -277,6 +281,10 @@
                                             "type": "string",
                                             "title": "Last name",
                                             "ui:field": "title"
+                                        },
+                                        "payorName": {
+                                            "type": "string",
+                                            "title": "Payer name"
                                         },
                                         "taxId": {
                                             "type": "string",
