@@ -99,7 +99,7 @@ export const UpcomingPremium = async ({
       // updated (10/2024) and we can rely on the status to indicate if the upcoming payment is active, HOWEVER,
       // there are still some in the system that are "inactive" based on their date. We are not accounting for any with
       // 2044 dates here, but are checking if date is in the past.
-      dayjs(nextActivityDate).isAfter(dayjs());
+      dayjs(nextActivityDate).isAfter(dayjs(), 'day');
 
     return upcomingPaymentValid
       ? `Autopay on ${standardDateMonthDayYear(nextActivityDate)}`

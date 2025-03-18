@@ -17,9 +17,9 @@ export enum TimeframeFilterOptions {
     LastWeek = '1W',
 }
 
-const defaultDateFormat = 'YYYY-MM-DD';
+export const defaultDateFormat = 'YYYY-MM-DD';
 
-const friendlyDateFormat = 'MMM D, YYYY';
+export const friendlyDateFormat = 'MMM D, YYYY';
 
 export const startDates: Record<TimeframeFilterOptions, string> = {
     [TimeframeFilterOptions.Trailing12Months]: dayjs().subtract(12, 'month').format(defaultDateFormat),

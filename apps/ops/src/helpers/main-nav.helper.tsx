@@ -15,6 +15,8 @@ export const getMainNavItems = async (
     permissionContext: PermissionsContextProps,
     featureFlags: FeatureFlags
 ): Promise<NavBarLinkProps[]> => {
+    const { hasDashboardPermission, isAdvisorsExcel } = permissionContext;
+
     const caseLinkText = t('site.navLinks.caseManagement.text');
     const caseLinkHref = t('site.navLinks.caseManagement.link') || '';
     const policySearchText = t('site.navLinks.policySearch.text');
@@ -28,12 +30,10 @@ export const getMainNavItems = async (
     const navItems: NavBarLinkProps[] = [];
 
     const getNavItems = async () => {
-        const isAdvisorsExcel = await permissionContext.getIsAdvisorsExcel();
         const isAllowReadCaseManagement =
             isAdvisorsExcel || (await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadCaseManagement));
         const isAllowReadPolicyAdmin = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadPolicyAdmin);
         const isAllowReadOtpRenewals = await permissionContext.doesUserHavePagePermission(UserPermission.AllowReadOtpRenewals);
-        const hasDashboardPermission = await permissionContext.doesUserHaveDashboardPermission();
 
         if (isAllowReadCaseManagement) {
             navItems.push({ label: caseLinkText, link: caseLinkHref, icon: <DocumentIcon width={20} height={20} /> });
@@ -71,5 +71,6 @@ export const getMainNavItems = async (
         }
         return navItems;
     };
+
     return await getNavItems();
 };

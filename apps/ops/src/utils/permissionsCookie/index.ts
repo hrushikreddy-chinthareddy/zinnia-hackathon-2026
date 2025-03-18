@@ -11,7 +11,13 @@ export const addTupleToCookie = (relation: string, tupleObject: string, result: 
     //         permissions.tuples[relation] = {};
     //     }
     //     permissions.tuples[relation][tupleObject] = result;
-    //     setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), { req, res });
+    //     setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), {
+    //         req,
+    //         res,
+    //         maxAge: 60 * 60 * 24,
+    //         path: '/',
+    //         secure: isHttpsEnvironment(),
+    //     });
     // } catch (error) {
     //     logWarn('addTupleToCookie::An error occurred while adding tuple to cookie', error);
     // }
@@ -23,7 +29,13 @@ export const addCarrierListToCookie = (relation: string, carrierList: string[], 
     //     const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res }) ?? DEFAULT_PERMISSIONS_COOKIE;
     //     const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
     //     permissions.carriers[relation] = carrierList;
-    //     setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), { req, res });
+    //     setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), {
+    //         req,
+    //         res,
+    //         maxAge: 60 * 60 * 24,
+    //         path: '/',
+    //         secure: isHttpsEnvironment(),
+    //     });
     // } catch (error) {
     //     logWarn('addCarrierListToCookie::An error occurred while adding carrier list to cookie', error);
     // }

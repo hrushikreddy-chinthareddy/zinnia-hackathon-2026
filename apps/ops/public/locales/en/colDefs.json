@@ -150,7 +150,7 @@
         "availableIncreaseTooltip": "The owner may increase their death benefit by this amount.",
         "issueDate": "Issue date",
         "policyAge": "Policy age",
-        "eligibleForIncreaseUntil": "Eligible for increase until*"
+        "eligibleForIncreaseUntil": "Eligible for increase until"
     },
     "document": {
         "title": "Document"

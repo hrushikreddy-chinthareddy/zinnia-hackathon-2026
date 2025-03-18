@@ -9,6 +9,7 @@ export default defineConfig((options: Options) => ({
     'src/generated-types/documents-v3',
     'src/generated-types/bpm',
     'src/generated-types/funds',
+    'src/generated-types/case',
   ],
   clean: true,
   dts: true,

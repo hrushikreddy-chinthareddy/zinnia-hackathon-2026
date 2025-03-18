@@ -83,7 +83,6 @@ const Amount = ({ policy }: AmountProps) => {
             title={t('label')}
             footerContent={
                 <TransactionNavigationButtons
-                    className="mt-4"
                     handleContinue={handleContinue}
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
@@ -91,7 +90,7 @@ const Amount = ({ policy }: AmountProps) => {
                 />
             }
         >
-            <div className="flex flex-col gap-10">
+            <div className="flex flex-col gap-6">
                 <FieldDateSelect
                     formatOptions={{ format: '##/##/####' }}
                     className="flex max-w-[155px]"

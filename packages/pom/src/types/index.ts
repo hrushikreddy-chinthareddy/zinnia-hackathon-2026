@@ -3,8 +3,8 @@ import type { SearchResult } from './search.types';
 
 // @TODO: this is temporary, until we import api types
 export enum ProducerType {
-  INDIVIDUAL = 'individual',
-  CORPORATION = 'corporation',
+  INDIVIDUAL = 'Individual',
+  CORPORATION = 'Corporation',
 }
 
 export enum CorporationType {
@@ -13,6 +13,11 @@ export enum CorporationType {
   INDEPENDENT_MARKETING_ORGANIZATION = 'IndependentMarketingOrganization',
   THIRD_PARTY_MARKETER = 'ThirdPartyMarketer',
   REGISTERED_INVESTMENT_ADVISOR = 'RegisteredInvestmentAdvisor',
+}
+
+export enum Carrier {
+  ZINNIA = 'zinnia',
+  SBUL = 'SBUL',
 }
 
 export enum Channel {

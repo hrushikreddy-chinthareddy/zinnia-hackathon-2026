@@ -6,6 +6,7 @@ import DateWidget from './date-widget/date-widget';
 import AutoCompleteWidget from './file-widget/autocomplete-widget';
 import FileWidget from './file-widget/file-widget';
 import HyperLinkWidget from './hyper-link-widget/hyper-link-widget';
+import NotesWidget from './notes-widget';
 import RadioWidget from './radio-widget/radio-widget';
 import SelectWidget from './select-widget/select-widget';
 import TextWidget from './text-widget/text-widget';
@@ -26,6 +27,7 @@ export function generateWidgets(): RegistryWidgetsType {
         FileWidget,
         HyperLinkWidget,
         AutoCompleteWidget,
+        NotesWidget,
     };
 }
 

@@ -58,3 +58,13 @@
 .aiInsightsTabContainer {
     min-height: 450px;
 }
+
+.pieChartColumn {
+    border-radius: 1px 4px 4px 1px;
+    border-left: 2px solid var(--color-base-border-border-light, #ededed);
+    background: var(--color-base-surface-surface-secondary, #f8f8f8);
+}
+
+.chartColumn {
+    max-width: 940px;
+}
