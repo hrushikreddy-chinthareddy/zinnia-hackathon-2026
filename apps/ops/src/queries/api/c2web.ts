@@ -20,8 +20,11 @@ import { serverApi } from '../api-utils/serverApiClient';
 
 const baseUrl = baseAppUrl + '/api/c2web/v2/';
 
-export const getTransactionTypesSSR = async (accessToken: string | undefined, userInfo: object = {}): Promise<TransactionType[] | null> => {
-    const loggingContext = { file: 'queries/api/c2web', function: 'getTransactionTypes', ...userInfo };
+export const getTransactionTypesSSR = async (
+    accessToken: string | undefined,
+    logCtx: LoggingContext
+): Promise<TransactionType[] | null> => {
+    const loggingContext = { ...logCtx, file: 'queries/api/c2web', function: 'getTransactionTypes' };
 
     if (!accessToken) {
         logWarn('getPolicyDetailsSSR::No accessToken to fetch transaction types', loggingContext);
@@ -39,7 +42,7 @@ export const getTransactionTypesSSR = async (accessToken: string | undefined, us
             },
         };
 
-        const { data } = await serverApi.get<any, AxiosResponse<TransactionType[]>>(url, config);
+        const { data } = await serverApi.get<any, AxiosResponse<TransactionType[]>>(url, config, loggingContext);
         return data;
     } catch (error: any) {
         logError('c2web: getTransactionTypes', { ...parseErrorInformation(error), ...loggingContext });
@@ -173,15 +176,15 @@ export const sendCommunication = async (requestBody: SendCommunicationRequestBod
 export const getApplicableStatementsSSR = async (
     planCode: string,
     accessToken: string | undefined,
-    userInfo: object = {}
+    logCtx: LoggingContext
 ): Promise<StatementTypes[] | null> => {
-    const loggingContext = { file: 'queries/api/c2web', function: 'getActiveStatementsSSR', ...userInfo };
+    const loggingContext = { ...logCtx, file: 'queries/api/c2web', function: 'getActiveStatementsSSR', inputs: { planCode } };
     if (!accessToken) {
         logWarn('getApplicableStatementsSSR::No accessToken to fetch applicable statements', loggingContext);
         return null;
     }
     const url = `${contactCenterBaseUrlV2}/anniversary/statements/search`;
-    logInfo('c2web: getApplicableStatementsSSR', { planCode, ...loggingContext, url });
+    logInfo('c2web: getApplicableStatementsSSR', { ...loggingContext, url });
     try {
         const requestBody = {
             planCode,
@@ -196,7 +199,7 @@ export const getApplicableStatementsSSR = async (
 
         const {
             data: { applicableStatement },
-        } = await serverApi.post<any, AxiosResponse<StatementTypesResponse>>(url, requestBody, config);
+        } = await serverApi.post<any, AxiosResponse<StatementTypesResponse>>(url, requestBody, config, loggingContext);
         return applicableStatement;
     } catch (error: any) {
         logError('c2web: getApplicableStatementsSSR', { ...parseErrorInformation(error), ...loggingContext, url });

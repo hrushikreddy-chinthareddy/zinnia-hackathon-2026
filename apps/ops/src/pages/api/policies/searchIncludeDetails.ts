@@ -11,7 +11,7 @@ import { logTrace, logWarn, logError, withAuthAndLogging, parseErrorInformation 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<PolicySearchResponse | { message: string }>, loggingContext: object) => {
+    async (req: NextApiRequest, res: NextApiResponse<PolicySearchResponse | { message: string }>, loggingContext) => {
         try {
             const now = performance.now();
             const session = await getSession(req, res);
@@ -19,7 +19,7 @@ export default withAuthAndLogging(
 
             const { offset = 0, limit = 5 } = req.query;
             const searchUrl = `${policyApiBaseUrl}/search?offset=${offset}&limit=${limit}`;
-            logTrace('policySearch::start', { url: searchUrl, ...loggingContext });
+            logTrace('policySearch::start', { ...loggingContext, url: searchUrl });
             const { data: searchResponse } = await serverApi.post<PolicyReferenceSearchResponse>(
                 searchUrl,
                 req.body,
@@ -74,8 +74,7 @@ export default withAuthAndLogging(
         } catch (error) {
             logError('error', {
                 ...parseErrorInformation(error),
-                file: 'policies/searchIncludeDetails',
-                function: 'routeHandler',
+                ...loggingContext,
             });
             res.status(500).json({ message: 'Something went wrong searching for policies' });
         }

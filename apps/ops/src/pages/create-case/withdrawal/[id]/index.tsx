@@ -270,7 +270,7 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const [translations, document] = await Promise.all([
                 serverSideTranslations(locale, [TranslationFiles.COMMON]),
-                getDocumentV2SSR(documentNumber, DocumentType.Redemption, clientId.toUpperCase(), accessToken),
+                getDocumentV2SSR(documentNumber, DocumentType.Redemption, clientId.toUpperCase(), accessToken, loggingContext),
             ]);
             if (!document?.contract) {
                 logError('create-case/withdrawal/:id::Error getting document', loggingContext);

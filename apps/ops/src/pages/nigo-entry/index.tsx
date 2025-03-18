@@ -267,11 +267,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
 
                 const [parties, document, searchCasesResponse, policies, nigoExceptionResponse] = await Promise.all([
-                    await getPolicyPartiesSSR(contractNum, clientCode, accessToken as string),
-                    await getDocumentV2SSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken),
-                    await searchCasesSSR(filters, accessToken),
-                    await searchPolicySSR(contractNum, [clientCode?.toUpperCase()], accessToken, 1, 0),
-                    await getNigoExceptions(nigoFilters, accessToken),
+                    await getPolicyPartiesSSR(contractNum, clientCode, accessToken as string, loggingContext),
+                    await getDocumentV2SSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken, loggingContext),
+                    await searchCasesSSR(filters, accessToken, loggingContext),
+                    await searchPolicySSR(contractNum, [clientCode?.toUpperCase()], accessToken, 1, 0, loggingContext),
+                    await getNigoExceptions(nigoFilters, accessToken, loggingContext),
                 ]);
 
                 const planCode = policies?.[0]?.planCode || null;

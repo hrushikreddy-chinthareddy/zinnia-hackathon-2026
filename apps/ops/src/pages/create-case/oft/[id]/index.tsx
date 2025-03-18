@@ -269,7 +269,7 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const [translations, document] = await Promise.all([
                 serverSideTranslations(locale, [TranslationFiles.COMMON]),
-                getDocumentV2SSR(documentNumber, DocumentType.Oft, clientId.toUpperCase(), accessToken),
+                getDocumentV2SSR(documentNumber, DocumentType.Oft, clientId.toUpperCase(), accessToken, loggingContext),
             ]);
 
             if (!document?.contract) {

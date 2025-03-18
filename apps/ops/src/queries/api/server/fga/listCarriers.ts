@@ -18,6 +18,12 @@ export const listCarriersPage = async (
     relation: string,
     loggingContext: LoggingContext
 ): Promise<string[]> => {
+    const logCtx = {
+        ...loggingContext,
+        file: 'queries/api/fga/listCarriers',
+        function: 'listCarriersPage',
+        inputs: { relation },
+    };
     try {
         const val = checkPermissionsCookieForCarrierList(relation, ctx.req, ctx.res);
 
@@ -27,7 +33,7 @@ export const listCarriersPage = async (
 
         const user = await getUserData(ctx);
         const accessToken = (await getAccessToken(ctx.req, ctx.res)).accessToken;
-        const result = await getCarrierListSSR(accessToken as string, user.partyId, relation);
+        const result = await getCarrierListSSR(accessToken as string, user.partyId, relation, logCtx);
 
         // add the list to the cookie only if the request was successful
         if (!result.error) {
@@ -37,7 +43,7 @@ export const listCarriersPage = async (
         return result.data ?? [];
     } catch (e) {
         logWarn('listCarriersPage::An error occurred while getting the carrier list', {
-            ...loggingContext,
+            ...logCtx,
             file: 'queries/api/fga',
             function: 'listCarriersPage',
             inputs: { relation },
@@ -48,7 +54,21 @@ export const listCarriersPage = async (
 
 // THIS SHOULD NOT BE DIRECTLY USED!
 // We should always be checking the permissions storage before making a listCarriers request
-const getCarrierListSSR = async (accessToken: string, partyId: string, relation: string): Promise<ApiResponse<string[]>> => {
+const getCarrierListSSR = async (
+    accessToken: string,
+    partyId: string,
+    relation: string,
+    loggingContext: LoggingContext
+): Promise<ApiResponse<string[]>> => {
+    const logCtx = {
+        ...loggingContext,
+        file: 'queries/api/fga/listCarriers',
+        function: 'getCarrierListSSR',
+        inputs: {
+            partyId,
+            relation,
+        },
+    };
     try {
         const listCarrierCheck = await serverApi.post<GetCarrierListQuery, AxiosResponse>(
             listCarrierUrlSsr,
@@ -58,18 +78,22 @@ const getCarrierListSSR = async (accessToken: string, partyId: string, relation:
             },
             {
                 authorization: `Bearer ${accessToken}`,
-            }
+            },
+            logCtx
         );
 
         const reponse: ApiResponse<string[]> = { data: listCarrierCheck?.data?.carriers || [], error: null };
 
         if (listCarrierCheck.status !== 200) {
             logWarn('getCarrierListSSR::An error occurred while getting the carrier list', {
+                ...logCtx,
                 file: 'queries/api/fga',
                 function: 'getCarrierListSSR',
                 url: listCarrierUrlSsr,
-                partyId,
-                relation,
+                inputs: {
+                    partyId,
+                    relation,
+                },
             });
             reponse.error = { status: listCarrierCheck.status, message: listCarrierCheck.statusText, name: 'Error getting carrier list' };
         }
@@ -77,9 +101,14 @@ const getCarrierListSSR = async (accessToken: string, partyId: string, relation:
         return reponse;
     } catch (error: any) {
         logWarn('getCarrierListServerSSR::An error occurred while getting the carrier list', {
+            ...logCtx,
             file: 'queries/api/fga',
             function: 'getCarrierListServerSSR',
             url: listCarrierUrlSsr,
+            inputs: {
+                partyId,
+                relation,
+            },
         });
         return { data: [], error: { status: 500, message: error?.message, name: 'Error getting carrier list' } };
     }

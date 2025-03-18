@@ -10,7 +10,7 @@ import {
     EDSDocumentRequestBody,
 } from '@deps/models/case/document';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
-import { logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { LoggingContext, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
@@ -62,30 +62,37 @@ export const getDocumentV2SSR = async (
     documentNumber: string,
     docType: string,
     clientCode: string,
-    accessToken: string | undefined
+    accessToken: string | undefined,
+    logCtx: LoggingContext
 ): Promise<DocumentData | null> => {
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/documents',
+        function: 'getDocumentsSSR',
+        inputs: { documentNumber, docType, clientCode },
+    };
     try {
         const url = `${ssrBaseUrl}/${documentNumber}?docType=${docType}&clientCode=${clientCode.toUpperCase()}`;
-        logInfo('getDocumentSSR', { url, docType, clientCode, documentNumber, file: 'queries/api/documents', function: 'getDocumentsSSR' });
-        const { data } = await serverApi.get<DocumentData, AxiosResponse>(url, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
-                'Access-Control-Allow-Origin': '*',
+        logInfo('getDocumentSSR', loggingContext);
+        const { data } = await serverApi.get<DocumentData, AxiosResponse>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
             },
-        });
+            loggingContext
+        );
 
         return data;
     } catch (error: any) {
         logWarn('getDocumentSSR', {
             ...parseErrorInformation(error),
-            docType,
-            clientCode,
-            documentNumber,
-            file: 'queries/api/documents',
-            function: 'getDocumentsSSR',
+            ...loggingContext,
         });
 
         return error.response;

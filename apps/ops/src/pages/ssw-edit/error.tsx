@@ -41,29 +41,32 @@ export default function CreateCaseErrorPage() {
     );
 }
 
-export const getServerSideProps = withPageAuthAndLogging({
-    getServerSideProps: async (context, loggingContext) => {
-        const { locale = DEFAULT_LOCALE, req, res } = context;
-        try {
-            (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('create-case/error:: Access token expired', {
-                ...parseErrorInformation(e),
-                ...loggingContext,
-            });
-            return serverSidePropsLogout();
-        }
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
-        if (!doesUserHasPagePermissions) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const { locale = DEFAULT_LOCALE, req, res } = context;
+            try {
+                (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('create-case/error:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            if (!doesUserHasPagePermissions) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
 
-        const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON], nextI18nextConfig, ALL_LOCALES);
-        return { props: { locale, ...translations } };
+            const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON], nextI18nextConfig, ALL_LOCALES);
+            return { props: { locale, ...translations } };
+        },
     },
-});
+    { file: 'ssw-edit/error', function: 'getServerSideProps', page: 'ssw-edit/error' }
+);

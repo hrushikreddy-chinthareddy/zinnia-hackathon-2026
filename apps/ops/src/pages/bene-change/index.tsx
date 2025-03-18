@@ -14,7 +14,7 @@ import { UserPermission } from '@deps/models/user-profile';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-import { getUserInfoFromUser, logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../create-case/error';
@@ -38,7 +38,7 @@ const BeneChange = ({ policy, document, planCode }: AddressChangeProps) => {
 
 export const getServerSideProps = withPageAuthAndLogging(
     {
-        getServerSideProps: async (context, logCtx) => {
+        getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
             const { locale = DEFAULT_LOCALE, query, req, res } = context;
             const policyNumber = (query?.policyNumber as string) || '';
@@ -52,7 +52,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             } catch (e) {
                 logWarn('getServerSidePropsAddressChangePage::Access token expired', {
                     ...parseErrorInformation(e),
-                    ...logCtx,
+                    ...loggingContext,
                 });
                 return serverSidePropsLogout();
             }
@@ -86,11 +86,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ALL_LOCALES
                 );
 
-                const userInfoForLogging = getUserInfoFromUser(user);
                 const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
                 const planCode = response ? response[0]?.planCode : null;
                 if (!planCode) {
-                    logInfo('address_change/:id::Plan code not found', logCtx);
+                    logInfo('address_change/:id::Plan code not found', loggingContext);
                     return {
                         redirect: {
                             destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
@@ -98,13 +97,19 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 } else {
-                    logInfo('address_change/:id::Plan code found', logCtx);
+                    logInfo('address_change/:id::Plan code found', loggingContext);
                 }
 
                 const document = documentNumber
-                    ? await getDocumentV2SSR(documentNumber, DocumentType.AddressChange, clientId.toUpperCase(), accessToken as string)
+                    ? await getDocumentV2SSR(
+                          documentNumber,
+                          DocumentType.AddressChange,
+                          clientId.toUpperCase(),
+                          accessToken as string,
+                          loggingContext
+                      )
                     : null;
-                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
+                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
 
                 if (!policy) {
                     return {
@@ -124,7 +129,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             } catch (error) {
-                logError('getServerSidePropsAddressChangePage', { ...parseErrorInformation(error), ...logCtx });
+                logError('getServerSidePropsAddressChangePage', { ...parseErrorInformation(error), ...loggingContext });
                 return {
                     props: {},
                 };

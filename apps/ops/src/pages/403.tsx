@@ -29,40 +29,46 @@ const Custom403Page = () => {
     );
 };
 
-export const getServerSideProps = withPageAuthAndLogging({
-    getServerSideProps: async (context, loggingContext) => {
-        const { locale = DEFAULT_LOCALE, res, req, query } = context;
-        try {
-            (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('pages/403:: Access token expired', {
-                ...parseErrorInformation(e),
-                ...loggingContext,
-            });
-            return serverSidePropsLogout();
-        }
-        // Create a permissions object to pass to the page, strongly typed using the enum.
-        const permissions = {
-            [UserPermission.AllowReadCaseManagement]: false,
-            [UserPermission.AllowReadPolicyAdmin]: false,
-        };
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const { locale = DEFAULT_LOCALE, res, req, query } = context;
+            try {
+                (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('pages/403:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
+            // Create a permissions object to pass to the page, strongly typed using the enum.
+            const permissions = {
+                [UserPermission.AllowReadCaseManagement]: false,
+                [UserPermission.AllowReadPolicyAdmin]: false,
+            };
 
-        // We can use the enum to access the permissions object.
-        permissions[UserPermission.AllowReadCaseManagement] = await doesUserHavePagePermissions(
-            context,
-            UserPermission.AllowReadCaseManagement
-        );
-        permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
+            // We can use the enum to access the permissions object.
+            permissions[UserPermission.AllowReadCaseManagement] = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadCaseManagement
+            );
+            permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadPolicyAdmin
+            );
 
-        const translations = await serverSideTranslations(
-            locale,
-            [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-            nextI18nextConfig,
-            ALL_LOCALES
-        );
+            const translations = await serverSideTranslations(
+                locale,
+                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
 
-        return { props: { locale, ...translations, permissions } };
+            return { props: { locale, ...translations, permissions } };
+        },
     },
-});
+    { file: '403', function: 'getServerSideProps', page: '403' }
+);
 
 export default Custom403Page;

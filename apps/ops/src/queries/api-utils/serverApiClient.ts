@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import https from 'https';
 import { v4 as uuidV4 } from 'uuid';
 
-import { logInfo, logTrace, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { LoggingContext, logInfo, logTrace, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 export enum StatusCode {
     BadRequest = 400,
@@ -44,7 +44,7 @@ export abstract class ServerApiClient {
         };
     }
 
-    async get<T = any, R = AxiosResponse<T>>(url: string, config: AxiosAuthRequestConfig, logCtx: any): Promise<R> {
+    async get<T = any, R = AxiosResponse<T>>(url: string, config: AxiosAuthRequestConfig, logCtx: LoggingContext): Promise<R> {
         const now = performance.now();
         const configWithToken = await this.addToken(config);
         const correlationId = configWithToken.headers?.['x-correlation-id'];
@@ -75,7 +75,7 @@ export abstract class ServerApiClient {
         }
     }
 
-    async post<T = any, R = AxiosResponse<T>>(url: string, data: T, config: AxiosAuthRequestConfig, logCtx?: any): Promise<R> {
+    async post<T = any, R = AxiosResponse<T>>(url: string, data: T, config: AxiosAuthRequestConfig, logCtx: LoggingContext): Promise<R> {
         const now = performance.now();
         const configWithToken = await this.addToken(config);
         const correlationId = configWithToken.headers?.['x-correlation-id'];
@@ -105,7 +105,7 @@ export abstract class ServerApiClient {
         }
     }
 
-    async put<T = any, R = AxiosResponse<T>>(url: string, data: T, config: AxiosAuthRequestConfig, logCtx?: any): Promise<R> {
+    async put<T = any, R = AxiosResponse<T>>(url: string, data: T, config: AxiosAuthRequestConfig, logCtx: LoggingContext): Promise<R> {
         const now = performance.now();
         const configWithToken = await this.addToken(config);
         const correlationId = configWithToken.headers?.['x-correlation-id'];
@@ -118,7 +118,10 @@ export abstract class ServerApiClient {
             correlationId,
         };
         logTrace('serverApiClient::put', loggingContext);
-        logInfo('serverApiClient::put::authorization', { authorization: configWithToken?.headers?.Authorization ? true : false });
+        logInfo('serverApiClient::put::authorization', {
+            ...loggingContext,
+            authorization: configWithToken?.headers?.Authorization ? true : false,
+        });
         try {
             const result = await this.instance.put<T, R>(url, data, configWithToken);
             logTrace('serverApiClient::put::success', {

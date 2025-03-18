@@ -7,13 +7,13 @@ import { TupleResponse } from '@deps/types/fga';
 import { PromiseSettledStatus } from '@deps/types/promiseSettledStatus';
 import { PolicyReferenceSearchResponse } from '@deps/types/search';
 import { policyMasker, policySanitizer } from '@deps/utils/sanitizers';
-import { logTrace, logWarn, logError, parseErrorInformation } from '@deps/utils/server-logging';
+import { logTrace, logWarn, logError, parseErrorInformation, LoggingContext } from '@deps/utils/server-logging';
 
 const policySearch = async ({
     authToken,
     body,
     limit = 5,
-    loggingContext,
+    loggingContext: logCtx,
     offset = 0,
     partyId,
 }: {
@@ -21,14 +21,15 @@ const policySearch = async ({
     body: any;
     offset: number;
     limit: number;
-    loggingContext?: object;
+    loggingContext: LoggingContext;
     partyId?: string;
 }) => {
+    const loggingContext = { ...logCtx, file: 'queries/server/policy/policy-search', function: 'policySearch' };
     try {
         const now = performance.now();
 
         const searchUrl = `${policyApiBaseUrl}/search?offset=${offset}&limit=${limit}`;
-        logTrace('policySearch::start', { url: searchUrl, ...loggingContext });
+        logTrace('policySearch::start', { ...loggingContext, url: searchUrl });
         const { data: searchResponse } = await serverApi.post<PolicyReferenceSearchResponse>(
             searchUrl,
             body,
@@ -55,7 +56,8 @@ const policySearch = async ({
             },
             {
                 authorization: 'Bearer ' + authToken,
-            }
+            },
+            loggingContext
         );
 
         // ToDo: add to fga queries
@@ -112,8 +114,7 @@ const policySearch = async ({
     } catch (error) {
         logError('error', {
             ...parseErrorInformation(error),
-            file: 'policy-queries',
-            function: 'policySearch',
+            ...loggingContext,
         });
         return { error: { message: 'Something went wrong searching for policies' } };
     }

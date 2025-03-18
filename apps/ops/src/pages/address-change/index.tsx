@@ -104,9 +104,15 @@ export const getServerSideProps = withPageAuthAndLogging(
                 }
 
                 const document = documentNumber
-                    ? await getDocumentV2SSR(documentNumber, DocumentType.AddressChange, clientId.toUpperCase(), accessToken as string)
+                    ? await getDocumentV2SSR(
+                          documentNumber,
+                          DocumentType.AddressChange,
+                          clientId.toUpperCase(),
+                          accessToken as string,
+                          loggingContext
+                      )
                     : null;
-                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
+                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
 
                 if (!policy) {
                     logInfo('address-change::Policy not found', loggingContext);

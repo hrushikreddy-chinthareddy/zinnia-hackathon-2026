@@ -30,7 +30,7 @@ import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { logWarn, logError, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendCorrespondenceProps extends SegmentTrackedPageProps {
@@ -198,8 +198,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
             try {
-                const userInfoForLogging = getUserInfoFromUser(user);
-                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
+                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
                 const carrierId = policy?.carrierId || '';
                 if (!policy || !carrierId) {
                     logInfo('contact-center/send-statement/policy-not-found', loggingContext);
@@ -210,7 +209,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 }
-                const applicableStatements = (await getApplicableStatementsSSR(planCode, accessToken, userInfoForLogging)) || [];
+                const applicableStatements = (await getApplicableStatementsSSR(planCode, accessToken, loggingContext)) || [];
                 const shouldShowEmailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(carrierId, 'EMAIL')]];
                 const shouldShowFaxOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(carrierId, 'FAX')]];
                 const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(carrierId, 'MAIL')]];

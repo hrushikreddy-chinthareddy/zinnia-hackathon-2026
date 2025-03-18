@@ -158,127 +158,131 @@ const RenewalCaseDetails = ({
     );
 };
 
-export const getServerSideProps = withPageAuthAndLogging({
-    getServerSideProps: async (context, loggingContext) => {
-        const user = await getUserData(context);
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
-        const { locale = DEFAULT_LOCALE, query, params, req, res } = context;
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('create-case/renewal/:id::Access token expired', {
-                ...parseErrorInformation(e),
-                ...loggingContext,
-            });
-            return serverSidePropsLogout();
-        }
-
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
-        if (!doesUserHasPagePermissions) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
-
-        const translations = await serverSideTranslations(
-            locale,
-            [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-            nextI18nextConfig,
-            ALL_LOCALES
-        );
-        const id = (params?.id as string) || '';
-        const documentNumber = (query.doc as string) || '';
-        const clientId = (query.clientId as string) || '';
-        const taskId = (query.taskId as string) || '';
-        const action = (query.action as string) || '';
-
-        const caseDocument = await getDocumentV2SSR(documentNumber, 'Exchange', clientId, accessToken as string);
-
-        if (!caseDocument?.contract) {
-            logError('create-case/exchange/:id::Error getting document', loggingContext);
-            return {
-                redirect: {
-                    destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
-                    permanent: false,
-                },
-            };
-        }
-
-        const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-        if (shouldShowNewExperience && action !== 'readonly') {
-            logInfo('create-case/renewal/:id:Checking NIGO', loggingContext);
-            const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), caseDocument.caseId, accessToken);
-            if (isNigoCase) {
-                logInfo('create-case/renewal/:id::Nigo exists for case', {
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const { locale = DEFAULT_LOCALE, query, params, req, res } = context;
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('create-case/renewal/:id::Access token expired', {
+                    ...parseErrorInformation(e),
                     ...loggingContext,
-                    caseId: caseDocument.caseId,
-                    lob: caseDocument?.lob,
                 });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
-                        permanent: false,
-                    },
-                };
+                return serverSidePropsLogout();
             }
-        } else {
-            logInfo('create-case/renewal/:id:Skipping NIGO check', loggingContext);
-        }
 
-        let planCode = '';
-        if ([Carrier.DLIC, Carrier.SBGC, Carrier.MASS].includes(clientId.toUpperCase() as Carrier)) {
-            if (!caseDocument?.contract || !caseDocument?.processCompanyCode) {
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                        destination: '/403',
                         permanent: false,
                     },
                 };
             }
 
-            const acctInfoResponse = await getPolicyAccountInfoSSR(caseDocument.contract, caseDocument.processCompanyCode, accessToken);
-            if (!acctInfoResponse?.PlanCode) {
-                logInfo('create-case/renewal/:id::Plan code not found', {
-                    ...loggingContext,
-                    lob: caseDocument?.lob,
-                });
-                return {
-                    redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
-                        permanent: false,
-                    },
-                };
-            } else {
-                planCode = acctInfoResponse?.PlanCode;
-                logInfo('create-case/renewal/:id::Plan code found', {
-                    ...loggingContext,
-                    lob: caseDocument?.lob,
-                    planCode,
-                });
-            }
-        }
-
-        const parties = caseDocument?.contract ? await getPolicyPartiesSSR(caseDocument?.contract, clientId, accessToken as string) : [];
-
-        return {
-            props: {
+            const translations = await serverSideTranslations(
                 locale,
-                ...translations,
-                caseId: id,
-                caseDocument: caseDocument?.contract ? caseDocument : null,
-                parties: Array.isArray(parties) ? parties : [],
-                userId: user.email,
-                clientId: clientId.toUpperCase(),
-                featureFlagDecisions,
-                planCode,
-                user,
-            },
-        };
+                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
+            const id = (params?.id as string) || '';
+            const documentNumber = (query.doc as string) || '';
+            const clientId = (query.clientId as string) || '';
+            const action = (query.action as string) || '';
+
+            const caseDocument = await getDocumentV2SSR(documentNumber, 'Exchange', clientId, accessToken as string, loggingContext);
+
+            if (!caseDocument?.contract) {
+                logError('create-case/exchange/:id::Error getting document', loggingContext);
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
+                        permanent: false,
+                    },
+                };
+            }
+
+            const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+            if (shouldShowNewExperience && action !== 'readonly') {
+                logInfo('create-case/renewal/:id:Checking NIGO', loggingContext);
+                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), caseDocument.caseId, accessToken);
+                if (isNigoCase) {
+                    logInfo('create-case/renewal/:id::Nigo exists for case', {
+                        ...loggingContext,
+                        caseId: caseDocument.caseId,
+                        lob: caseDocument?.lob,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
+                            permanent: false,
+                        },
+                    };
+                }
+            } else {
+                logInfo('create-case/renewal/:id:Skipping NIGO check', loggingContext);
+            }
+
+            let planCode = '';
+            if ([Carrier.DLIC, Carrier.SBGC, Carrier.MASS].includes(clientId.toUpperCase() as Carrier)) {
+                if (!caseDocument?.contract || !caseDocument?.processCompanyCode) {
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                            permanent: false,
+                        },
+                    };
+                }
+
+                const acctInfoResponse = await getPolicyAccountInfoSSR(caseDocument.contract, caseDocument.processCompanyCode, accessToken);
+                if (!acctInfoResponse?.PlanCode) {
+                    logInfo('create-case/renewal/:id::Plan code not found', {
+                        ...loggingContext,
+                        lob: caseDocument?.lob,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                            permanent: false,
+                        },
+                    };
+                } else {
+                    planCode = acctInfoResponse?.PlanCode;
+                    logInfo('create-case/renewal/:id::Plan code found', {
+                        ...loggingContext,
+                        lob: caseDocument?.lob,
+                        planCode,
+                    });
+                }
+            }
+
+            const parties = caseDocument?.contract
+                ? await getPolicyPartiesSSR(caseDocument?.contract, clientId, accessToken as string)
+                : [];
+
+            return {
+                props: {
+                    locale,
+                    ...translations,
+                    caseId: id,
+                    caseDocument: caseDocument?.contract ? caseDocument : null,
+                    parties: Array.isArray(parties) ? parties : [],
+                    userId: user.email,
+                    clientId: clientId.toUpperCase(),
+                    featureFlagDecisions,
+                    planCode,
+                    user,
+                },
+            };
+        },
     },
-});
+    { file: 'create-case/renewal/[id]', function: 'getServerSideProps', page: 'create-case/renewal/:id' }
+);
 
 export default RenewalCaseDetails;

@@ -27,6 +27,7 @@ import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { SegmentPageName } from '@deps/types/segment-analytics';
+import { browserLogError } from '@deps/utils/browser-logging';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -62,7 +63,7 @@ export default function Reg60({ document, form, transactionsHistory, user }: Cre
 
     const formParts = determineFormToRender(clientForFormDetermination as string, document);
     if (!formParts) {
-        logError('NBReg60Case::No form parts', {
+        browserLogError('NBReg60Case::No form parts', {
             documentNumber: document?.documentNumber,
             clientId,
             contract: document?.contract,
@@ -154,83 +155,86 @@ export default function Reg60({ document, form, transactionsHistory, user }: Cre
     );
 }
 
-export const getServerSideProps = withPageAuthAndLogging({
-    getServerSideProps: async (context, loggingContext) => {
-        const user = await getUserData(context);
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
-        const shouldShowReg60Page = featureFlagDecisions?.[FEATURE_FLAGS.REG_60];
-        const { locale = DEFAULT_LOCALE, query, res, req } = context;
-        let accessToken;
-        let form;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('create-case/nb_reg_60/:id:: Access token expired', {
-                ...parseErrorInformation(e),
-                ...loggingContext,
-            });
-            return serverSidePropsLogout();
-        }
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const shouldShowReg60Page = featureFlagDecisions?.[FEATURE_FLAGS.REG_60];
+            const { locale = DEFAULT_LOCALE, query, res, req } = context;
+            let accessToken;
+            let form;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('create-case/nb_reg_60/:id:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
 
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
-        if (!doesUserHasPagePermissions || !shouldShowReg60Page) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            if (!doesUserHasPagePermissions || !shouldShowReg60Page) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
 
-        const documentNumber = (query.doc as string) || '';
-        const clientId = (query.clientId as string) || '';
-        const taskId = (query.taskId as string) || '';
+            const documentNumber = (query.doc as string) || '';
+            const clientId = (query.clientId as string) || '';
+            const taskId = (query.taskId as string) || '';
 
-        const [translations, document] = await Promise.all([
-            serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.REG60DEFS]),
-            getDocumentV2SSR(documentNumber, DocumentType.Reg60, clientId.toUpperCase(), accessToken),
-        ]);
+            const [translations, document] = await Promise.all([
+                serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.REG60DEFS]),
+                getDocumentV2SSR(documentNumber, DocumentType.Reg60, clientId.toUpperCase(), accessToken, loggingContext),
+            ]);
 
-        if (!document?.caseId) {
-            logError('create-case/nb_reg_60/id::Error getting document', {
+            if (!document?.caseId) {
+                logError('create-case/nb_reg_60/id::Error getting document', {
+                    ...loggingContext,
+                    onbaseCaseId: document?.caseId,
+                    contractNum: document?.contract,
+                });
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
+                        permanent: false,
+                    },
+                };
+            }
+
+            logInfo('create-case/nb_reg_60/id::Success getting document', {
                 ...loggingContext,
                 onbaseCaseId: document?.caseId,
                 contractNum: document?.contract,
             });
+
+            if (taskId) {
+                form = await getCaseTaskByIdSSR(taskId, accessToken, loggingContext);
+            } else {
+                form = {
+                    data: {
+                        userId: user?.email,
+                        clientId: clientId?.toUpperCase(),
+                    },
+                };
+            }
+
             return {
-                redirect: {
-                    destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
-                    permanent: false,
+                props: {
+                    ...translations,
+                    document,
+                    form,
+                    locale,
+                    transactionsHistory: null,
+                    user,
                 },
             };
-        }
-
-        logInfo('create-case/nb_reg_60/id::Success getting document', {
-            ...loggingContext,
-            onbaseCaseId: document?.caseId,
-            contractNum: document?.contract,
-        });
-
-        if (taskId) {
-            form = await getCaseTaskByIdSSR(taskId, accessToken);
-        } else {
-            form = {
-                data: {
-                    userId: user?.email,
-                    clientId: clientId?.toUpperCase(),
-                },
-            };
-        }
-
-        return {
-            props: {
-                ...translations,
-                document,
-                form,
-                locale,
-                transactionsHistory: null,
-                user,
-            },
-        };
+        },
     },
-});
+    { file: 'create-case/nb_reg_60/[id]', function: 'getServerSideProps', page: 'create-case/nb_reg_60/:id' }
+);

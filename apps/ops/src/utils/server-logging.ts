@@ -185,7 +185,7 @@ export const getUserInfoForLogging = async (req: NextApiRequest, res: NextApiRes
     }
 };
 
-const buildNextApiLoggingContext = async (
+export const buildNextApiLoggingContext = async (
     req: NextApiRequest,
     res: NextApiResponse
 ): Promise<Omit<LoggingContext, 'file' | 'function'>> => {

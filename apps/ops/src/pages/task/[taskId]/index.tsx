@@ -164,9 +164,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                         nextI18nextConfig,
                         ALL_LOCALES
                     ),
-                    await getCaseDetailsSSR(caseId, accessToken as string),
-                    await getNigoExceptions(nigoFilters, accessToken),
-                    await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken),
+                    await getCaseDetailsSSR(caseId, accessToken as string, loggingContext),
+                    await getNigoExceptions(nigoFilters, accessToken, loggingContext),
+                    await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken, loggingContext),
                 ]);
 
                 const correlationId = caseDetails?.correlationId;
