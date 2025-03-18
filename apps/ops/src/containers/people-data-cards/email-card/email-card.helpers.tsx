@@ -67,7 +67,12 @@ export const Emails = ({ editable, emails, onEditClick, showAdditional }: Emails
                                 </IconButton>
                             )}
                         </div>
-                        <Content pii={true} details={email.emailAddress} truncate={true} variant={ContentVariant.BodySm} />
+                        <Content
+                            pii={true}
+                            details={email.emailAddress?.toLocaleLowerCase()}
+                            truncate={true}
+                            variant={ContentVariant.BodySm}
+                        />
                     </div>
                 );
             })}
