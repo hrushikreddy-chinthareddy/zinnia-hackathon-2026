@@ -75,7 +75,6 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
     const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
     const [viewState, setViewState] = useState(ViewState.Default);
 
-    const { caseId } = body;
     const { emailAddress, emailType = EmailType.PERSONAL } = email;
     const { partyId } = party ?? {};
 
@@ -105,6 +104,7 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
     };
 
     const handleSubmit = async () => {
+        const caseId = body.caseId;
         const errors = getFormErrors({ email, caseId, isDelete, t: defaultT });
         setCurrentErrors(errors);
         if (Object.keys(errors).length > 0) return;
@@ -198,6 +198,7 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
                     onCancel={onCancel}
                     transaction={NonFinancialTransactions.Email}
                     type={emailTypeTranslation}
+                    caseId={body.caseId}
                 />
             );
         case ViewState.Default:
@@ -209,7 +210,7 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
         <div className="flex flex-col gap-6 p-10">
             <CaseDocumentSelect
                 caseDocumentOptions={caseDocumentOptions}
-                caseId={caseId}
+                caseId={body.caseId}
                 currentErrors={currentErrors}
                 policyNumber={policyNumber}
                 processType={Processes.PolicyUpdate}

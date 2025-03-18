@@ -3707,16 +3707,19 @@
                 "success": {
                     "title": {
                         "submitted": "Submitted!",
-                        "success": "Success!"
+                        "success": "Got it!"
                     },
                     "subtitle": {
                         "bank": " has been added.",
                         "default": {
-                            "1": "{{name}}'s {{type}} {{transaction}} ",
-                            "2": "was {{action}}."
+                            "1": "{{name}}'s ",
+                            "2": "request to",
+                            "3": " {{action}} {{type}} {{transaction}}",
+                            "4": " was received. It should be complete shortly unless there’s an issue. You can track the progress by viewing the case."
                         },
                         "nigo": "We submitted this request for NIGO processing."
-                    }
+                    },
+                    "cta": "Go to case"
                 },
                 "alert": {
                     "cta": "Cancel",
