@@ -13,22 +13,25 @@ import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helper';
 import { reverseNameOrder } from '@deps/helpers/string.helper';
 import { TaskStatus } from '@deps/models/case/task-instance';
+import { DEFAULT_Timestamp_Format } from '@deps/types/constants';
+import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 export default function NotesWidget(props: WidgetProps) {
     const { formContext } = props;
     const [notes, setNotes] = useState(formContext?.customData?.notes || []);
     const [currentNote, setCurrentNote] = useState('');
     const { user } = useUser();
-    const [isSavingNote, setIsSavingNote] = useState(false);
-    const [errorSavingNote, setErrorSavingNote] = useState(false);
+    const [loader, setLoader] = useState(false);
+    const [error, setError] = useState(false);
 
     const formState = useContext(TaskDataContext);
     const { task, setTask, correlationId, initialTask } = formState;
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
 
     const addNote = async () => {
-        setErrorSavingNote(false);
-        const timestamp = dayjs().utc().format('YYYY-MM-DDTHH:mm:ss[Z]');
+        setError(false);
+        const timestamp = dayjs().utc().format(DEFAULT_Timestamp_Format);
         const newNote = {
             note: currentNote.trim(),
             createdAt: timestamp,
@@ -43,7 +46,7 @@ export default function NotesWidget(props: WidgetProps) {
                 notes: updatedNotes,
             },
         };
-        setIsSavingNote(true);
+        setLoader(true);
         updateTask(noteTask, correlationId, TaskStatus.InProgress)
             .then(success => {
                 if (success) {
@@ -56,18 +59,22 @@ export default function NotesWidget(props: WidgetProps) {
                         },
                     });
                     setCurrentNote('');
-                    console.log('Task updated and notes set successfully');
                 } else {
-                    console.warn('Task update failed, not updating notes.');
-                    setErrorSavingNote(true);
+                    browserLogWarn('updateTask::Error updating task', {
+                        taskId: task.id,
+                    });
+                    setError(true);
                 }
             })
             .catch(error => {
-                console.error('Error updating task:', error);
-                setErrorSavingNote(true);
+                browserLogError('updateTask::Error updating task', {
+                    ...parseErrorInformation(error),
+                    taskId: task.id,
+                });
+                setError(true);
             })
             .finally(() => {
-                setIsSavingNote(false);
+                setLoader(false);
             });
     };
 
@@ -88,14 +95,14 @@ export default function NotesWidget(props: WidgetProps) {
                 mode="secondary"
                 className="w-fit mt-4 mb-6 px-xs py-2xl min-w-[100px]"
                 size="small"
-                disabled={currentNote.trim() === '' || isSavingNote ? true : false}
+                disabled={currentNote.trim() === '' || loader ? true : false}
                 onClick={() => {
                     addNote();
                 }}
             >
-                {isSavingNote ? <CustomLoader /> : t('addNote')}
+                {loader ? <CustomLoader /> : t('addNote')}
             </Button>
-            {errorSavingNote && <AssistiveText text={t('errorSavingNote')} variant={AssistiveTextVariant.Error} />}
+            {error && <AssistiveText text={t('errorSavingNote')} variant={AssistiveTextVariant.Error} />}
             {notes.map((note: any, index: number) => (
                 <div key={index} className="gap-lg mt-8">
                     <Content variant={ContentVariant.BodySm} className="!font-medium" details={note.note} />
