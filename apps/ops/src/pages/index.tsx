@@ -70,7 +70,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
     const loggingContext = await buildNextPageLoggingContext(context, '/', 'pages/index', 'getServerSideProps');
 
     if (user) {
-        // BPB - Todo: Figure this one out!
         // Create a permissions object, strongly typed using the enum.
         const permissions = {
             [UserPermission.AllowReadCaseManagement]: await doesUserHavePagePermissions(

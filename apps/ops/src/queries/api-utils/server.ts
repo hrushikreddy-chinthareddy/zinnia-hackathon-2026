@@ -30,9 +30,14 @@ const sendRequest = <T>(
 };
 
 const sendError = (res: NextApiResponse, ex: any, loggingContext: LoggingContext) => {
-    logWarn('server::sendError', { ...parseErrorInformation(ex), ...loggingContext, function: 'sendError' });
-    res.status(ex.response?.status || ex.status || 502).json({
-        err: ex.response?.statusText || ex.statusText,
+    logWarn('server::sendError', {
+        ...parseErrorInformation(ex),
+        ...loggingContext,
+        function: 'sendError',
+        status: ex.response?.status || ex.status || ex?.statusCode,
+    });
+    res.status(ex.response?.status || ex.status || ex?.statusCode || 502).json({
+        err: ex.response?.statusText || ex.statusText || ex.message,
         ...(typeof ex?.data === 'object' ? ex?.data : { data: ex.data }),
     } as unknown as ErrorResponse);
 };

@@ -139,7 +139,7 @@ export abstract class ServerApiClient {
         }
     }
 
-    async patch(url: string, config: AxiosAuthRequestConfig, logCtx?: any): Promise<any> {
+    async patch(url: string, config: AxiosAuthRequestConfig, logCtx: LoggingContext): Promise<any> {
         const now = performance.now();
         const configWithToken = await this.addToken(config);
         const correlationId = configWithToken.headers?.['x-correlation-id'];
@@ -150,7 +150,6 @@ export abstract class ServerApiClient {
             method: 'PATCH',
             url,
             correlationId,
-            ...config,
         };
         logTrace('serverApiClient::patch', loggingContext);
         try {
@@ -170,7 +169,7 @@ export abstract class ServerApiClient {
         }
     }
 
-    async delete<T = any, R = AxiosResponse<T>>(url: string, config: AxiosAuthRequestConfig, logCtx?: any): Promise<R> {
+    async delete<T = any, R = AxiosResponse<T>>(url: string, config: AxiosAuthRequestConfig, logCtx: LoggingContext): Promise<R> {
         const now = performance.now();
         const configWithToken = await this.addToken(config);
         const correlationId = configWithToken.headers?.['x-correlation-id'];

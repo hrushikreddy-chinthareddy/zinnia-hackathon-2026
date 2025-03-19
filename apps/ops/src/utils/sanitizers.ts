@@ -1,3 +1,5 @@
+import { ApiError } from 'next/dist/server/api-utils';
+
 import { formatAccountNumber, formatSSN, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { Case } from '@deps/models/case/case';
 import { DocumentInstance } from '@deps/models/case/document-instance';
@@ -53,7 +55,7 @@ export const caseSearchSanitizer = ({ data, ...rest }: CaseSearchResponse, optio
         return { data: data.map(d => caseSanitizer(d, options)), ...rest };
     } catch (e) {
         logErrorWithoutContext('Error sanitizing case search results', { ...parseErrorInformation(e) });
-        throw e;
+        throw new ApiError(500, `caseSearchSanitizer::error sanitizing case search results: ${(e as Error).message}`);
     }
 };
 
@@ -90,7 +92,7 @@ export const policySanitizer = ({ parties = [], ...rest }: Policy): Policy => {
         return { ...rest, parties: sanitizedParties };
     } catch (e) {
         logErrorWithoutContext('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
-        throw e;
+        throw new ApiError(500, `policySanitizer::error sanitizing policy: ${(e as Error).message}`);
     }
 };
 
@@ -103,7 +105,7 @@ export const policySanitizerWithoutSSN = ({ parties = [], ...rest }: Policy): Po
         return { ...rest, parties: sanitizedParties };
     } catch (e) {
         logErrorWithoutContext('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
-        throw e;
+        throw new ApiError(500, `policySanitizerWithoutSSN::error sanitizing policy: ${(e as Error).message}`);
     }
 };
 
@@ -118,7 +120,7 @@ export const policyResponseSanitizer = (policyResponse: GetPolicyResponse): GetP
         return { ...policyResponse, data: policy };
     } catch (e) {
         logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
-        throw e;
+        throw new ApiError(500, `policyResponseSanitizer::error sanitizing policyResponse: ${(e as Error).message}`);
     }
 };
 
@@ -129,7 +131,7 @@ export const lcPartyResponseSanitizer = (partyResponse: LifeCadParty[] = []): Li
         });
     } catch (e) {
         logErrorWithoutContext('sanitizers::lcPartyResponseSanitizer::error', { ...parseErrorInformation(e) });
-        throw e;
+        throw new ApiError(500, `lcPartyResponseSanitizer::error sanitizing lcPartyResponse: ${(e as Error).message}`);
     }
 };
 
@@ -298,7 +300,7 @@ export const fullyMaskPolicyResponse = (policyResponse: GetPolicyResponse): GetP
         return { ...policyResponse, data: policy };
     } catch (e) {
         logErrorWithoutContext('sanitizers::fullyMaskPolicyResponse::error', { ...parseErrorInformation(e) });
-        throw e;
+        throw new ApiError(500, `fullyMaskPolicyResponse::error masking policy response: ${(e as Error).message}`);
     }
 };
 
@@ -361,6 +363,6 @@ export const caseSearchFullMasker = ({ data, ...rest }: CaseSearchResponse): Cas
         return { data: data.map(d => fullyMaskCase(d)), ...rest };
     } catch (e) {
         logErrorWithoutContext('Error sanitizing case search results', { ...parseErrorInformation(e) });
-        throw e;
+        throw new ApiError(500, `caseSearchFullMasker::error sanitizing case search results: ${(e as Error).message}`);
     }
 };
