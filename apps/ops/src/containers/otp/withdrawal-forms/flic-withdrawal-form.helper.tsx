@@ -214,9 +214,7 @@ export default function getFlicConfig(t: TFunction, qualType = '') {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                const ownerState = getOwnerStateOfResidence(formParty);
-                const annuitantState = getAnnuitantStateOfResidence(formParty);
-                return isSpousalSignatureRequired(ownerState, annuitantState);
+                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
             },
         },
         {
@@ -258,8 +256,10 @@ export default function getFlicConfig(t: TFunction, qualType = '') {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
+                const ownerState = getOwnerStateOfResidence(formParty);
+                const annuitantState = getAnnuitantStateOfResidence(formParty);
+                return isSpousalSignatureRequired(ownerState, annuitantState);
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
