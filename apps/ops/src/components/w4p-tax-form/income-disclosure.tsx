@@ -16,7 +16,7 @@ const IncomeDisclosure = ({ isFormStateReadOnly, formPeriodicPension, onDataChan
 
     const { claimsAndCredits, nonJobIncome, otherDeductions, otherIncomeAndPensions } = formPeriodicPension;
     return (
-        <div className="my-4 grid grid-cols-4 gap-2">
+        <div className="my-4 grid grid-cols-2 gap-4">
             <Field
                 formatOptions={numberFormat}
                 label={t(`nonJobIncome`) as string}
