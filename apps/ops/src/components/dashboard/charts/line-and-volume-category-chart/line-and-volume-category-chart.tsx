@@ -3,8 +3,8 @@ import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useRef } from 'react';
 
+import { TransactionTrendsTimeframe } from '@deps/components/dashboard/sections/transaction-trends/utils';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { TimeframeFilterOptions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import {
     CHART_HEIGHT,
     getBottomChartConfig,
@@ -15,7 +15,7 @@ import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/ill
 
 export type LineAndVolumeCategoryChartProps = {
     chartData?: LineAndVolumeCategoryAndSeries;
-    timeframe: TimeframeFilterOptions;
+    timeframe: TransactionTrendsTimeframe;
     showVolumeColumns?: boolean;
 };
 

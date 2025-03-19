@@ -51,6 +51,10 @@
                                             "title": "Last name",
                                             "ui:field": "title"
                                         },
+                                        "payorName": {
+                                            "type": "string",
+                                            "title": "Payer name"
+                                        },
                                         "taxId": {
                                             "type": "string",
                                             "title": "SSN",
@@ -278,6 +282,10 @@
                                             "title": "Last name",
                                             "ui:field": "title"
                                         },
+                                        "payorName": {
+                                            "type": "string",
+                                            "title": "Payer name"
+                                        },
                                         "taxId": {
                                             "type": "string",
                                             "title": "SSN",
@@ -314,7 +322,8 @@
                             "type": "string",
                             "title": "Select exchange record"
                         }
-                    }
+                    },
+                    "required": ["transactions"]
                 },
                 "uiSchema": {
                     "ui:globalOptions": {

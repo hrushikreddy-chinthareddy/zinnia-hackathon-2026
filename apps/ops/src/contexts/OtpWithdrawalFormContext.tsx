@@ -30,6 +30,7 @@ import {
     FormNigos,
     FormReIndexingData,
     FormComment,
+    PeriodicPensionFormType,
 } from '@deps/models/case/withdrawal/case';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 export type WithdrawalTaskStatus = CaseStatus | TaskStatus;
@@ -68,6 +69,8 @@ export interface OtpWithdrawalFormState {
     ownerAcknowledgement?: OwnerAcknowledgement;
     formComment?: FormComment;
     formBeneInfo: FormBeneInfo | null;
+    formPeriodicPension: PeriodicPensionFormType | null;
+    setFormPeriodicPension: React.Dispatch<React.SetStateAction<PeriodicPensionFormType | null>>;
     setCurrentFormState: React.Dispatch<React.SetStateAction<WithdrawalTaskStatus>>;
     setFormSubtype?: React.Dispatch<React.SetStateAction<FormSubtype>>;
     setFormData: React.Dispatch<React.SetStateAction<FormData>>;
@@ -136,6 +139,8 @@ export const defaultFormDataContext = {
     currentFormState: CaseStatus.Draft,
     isFormStateReadOnly: false,
     formBeneInfo: {} as FormBeneInfo,
+    formPeriodicPension: {} as PeriodicPensionFormType,
+    setFormPeriodicPension: noop,
     setCurrentFormState: noop,
     setFormAdditionalWaivers: noop,
     setFormData: noop,

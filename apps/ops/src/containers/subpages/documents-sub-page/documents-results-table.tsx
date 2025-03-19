@@ -46,7 +46,8 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource | Metadata
         docId,
         (doc as DocumentWithSource).documentSource || (doc as MetadataSearchResponse).documentClassification,
         carrierCode,
-        doc.displayName || docId
+        doc.displayName || docId,
+        doc.fileType
     );
 
     return (

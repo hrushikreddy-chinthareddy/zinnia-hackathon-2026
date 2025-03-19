@@ -14,7 +14,10 @@ export enum ActiveAgingTimeRange {
 export interface TimeOrganizedData {
     name: string;
     count: number[];
-    createdAt: string;
+    countByDay: {
+        [key: string]: number;
+    };
+    total: number;
 }
 
 export type TimeRangeData = Record<ActiveAgingTimeRange, { data: TimeOrganizedData[]; total: number }>;
@@ -75,6 +78,12 @@ export const isBetweenTimeRange = (endDate: dayjs.Dayjs, createdDate: string, ti
  *     {
  *       "name": "Incoming Transfer",
  *       "count": [10, 25, 56], <-- this matches the x axis categories we have for each day between 0-6, for example. 10 is 0, 25 is 1, etc
+ *       "countByDay": {
+ *         "2023-07-06": 10,
+ *         "2023-07-07": 25,
+ *         "2023-07-08": 56
+ *       },
+ *       "total": 101
  *     }
  *     total: 101
  *   ],
@@ -87,13 +96,12 @@ export const organizeAndMergeDataByTimeRange = (data: DashboardStatsElementRespo
     const today = dayjs(); // Get the current date
 
     // Initialize the result object with empty arrays for each time range
-    const result: Record<ActiveAgingTimeRange, { data: TimeOrganizedData[]; total: number }> = {
-        [ActiveAgingTimeRange.ZERO_TO_SIX]: { data: [], total: 0 },
-        [ActiveAgingTimeRange.SEVEN_TO_THIRTEEN]: { data: [], total: 0 },
-        [ActiveAgingTimeRange.FOURTEEN_TO_TWENTYSEVEN]: { data: [], total: 0 },
-        [ActiveAgingTimeRange.TWENTY_EIGHT_PLUS]: { data: [], total: 0 },
+    const result: Record<ActiveAgingTimeRange, { data: TimeOrganizedData[]; total: number; countByDay: { [key: string]: number } }> = {
+        [ActiveAgingTimeRange.ZERO_TO_SIX]: { data: [], total: 0, countByDay: {} },
+        [ActiveAgingTimeRange.SEVEN_TO_THIRTEEN]: { data: [], total: 0, countByDay: {} },
+        [ActiveAgingTimeRange.FOURTEEN_TO_TWENTYSEVEN]: { data: [], total: 0, countByDay: {} },
+        [ActiveAgingTimeRange.TWENTY_EIGHT_PLUS]: { data: [], total: 0, countByDay: {} },
     };
-
     // Iterate over each item in the data array
     data.forEach(item => {
         // Inside each item, iterate over its values array
@@ -107,13 +115,18 @@ export const organizeAndMergeDataByTimeRange = (data: DashboardStatsElementRespo
                 if (existingItem) {
                     // If an item with the same name exists, append the count to its count array and update the total
                     existingItem.count.push(value.count);
+                    existingItem.countByDay[value.name] = value.count;
                     result[range].total += value.count;
+                    existingItem.total += value.count;
                 } else {
                     // If no item with the same name exists, create a new entry in the time range array and update the total
                     result[range].data.push({
                         name: item.name,
                         count: [value.count],
-                        createdAt: value.name,
+                        countByDay: {
+                            [value.name]: value.count,
+                        },
+                        total: value.count,
                     });
                     result[range].total += value.count;
                 }
@@ -137,6 +150,43 @@ export const generateActiveAgingCategories = (timeRange: ActiveAgingTimeRange) =
     }
 };
 
+/**
+ *
+ * This generates the active aging series we use with highcharts.
+ *
+ * it takes in data that we get from `organizeAndMergeDataByTimeRange` like this:
+ *
+ *
+ *
+ * ```
+  {
+    "14-27": {
+        data: [
+        {
+            "name": "Incoming Transfer",
+            "count": [10, 25, 56],
+            "countByDay": {
+                "2023-07-06": 10,
+                "2023-07-07": 25,
+                "2023-07-08": 56,
+                "2023-07-09": 30
+            },
+            "total": 101
+        }
+        total: 101
+    ],
+    etc
+ }
+```
+    and depending on the selected time range, groups count by sets of 2 or 9 and converts it to data like this
+    ```
+    {
+        name: "Incoming Transfer",
+        data: [35, 86] //<-- this maps to the columns in highcharts
+        type: "column"
+    }
+        ```
+ */
 export const generateActiveAgingSeries = (timeRange: ActiveAgingTimeRange, timeOrganizedData?: TimeRangeData) => {
     // If no time-organized data is provided, return an empty array.
     if (!timeOrganizedData) {

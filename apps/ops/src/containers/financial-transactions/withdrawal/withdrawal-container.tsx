@@ -95,7 +95,6 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
                     policy={policy}
                     setState={setWithdrawal as PaymentStepSetState}
                     state={withdrawal}
-                    subtitle={t('withdrawals.payment.title') as string}
                     validateTransaction={validateCall}
                 />
             ),

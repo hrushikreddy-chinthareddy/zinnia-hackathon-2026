@@ -54,7 +54,6 @@ if (process.env.NODE_ENV === NODE_ENV_PRODUCTION) {
 const AppHead = () => {
     // DEPU-1025 to clean up only required user fields once we start collecting data
     const { user } = useUser();
-
     useEffect(() => {
         const rumId = user && user.sub ? user.sub : null;
         const rumEmail = user?.email ? user?.email : null;
@@ -87,6 +86,7 @@ const AppHead = () => {
 const AppBody = ({ Component, pageProps }: AppProps) => {
     return (
         <ApplicationDataProvider pageProps={pageProps}>
+            <GaMouseflowTrackingScript />
             <Component {...pageProps} />
         </ApplicationDataProvider>
     );
@@ -119,7 +119,6 @@ const App = (props: AppProps) => {
                     <AppBody {...props} />
                     {process.env.NEXT_PUBLIC_GOOGLEANALYTICS_ENV === NODE_ENV_PRODUCTION && <GoogleAnalytics gaId="G-1NY7KTG7T3" />}
                 </UserProvider>
-                <GaMouseflowTrackingScript />
                 <SegmentAnalyticsScript />
             </main>
             <ReactQueryDevtools initialIsOpen={false} />

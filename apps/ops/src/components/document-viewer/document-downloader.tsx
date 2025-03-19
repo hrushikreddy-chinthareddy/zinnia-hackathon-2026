@@ -18,14 +18,15 @@ type DocumentDownloaderProps = {
 
 export default function DocumentDownloader({ carrierCode, document, downloadedFileName }: DocumentDownloaderProps) {
     const { t } = useTranslation();
-    const { documentId, documentType, displayName } = document;
+    const { documentId, documentType, displayName, fileType } = document;
     const documentName = downloadedFileName ?? displayName ?? documentId ?? ((document as DocumentWithSource).documentID as string);
 
     const [loading, download] = useDocumentDownload(
         documentId ?? ((document as DocumentWithSource).documentID as string),
         documentType as DocumentTypeView,
         carrierCode,
-        documentName
+        documentName,
+        fileType
     );
 
     return (
