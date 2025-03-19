@@ -11,20 +11,21 @@ import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getCaseDetailsSSR } from '@deps/queries/api/cases';
+import { isProd } from '@deps/utils/environment.helper';
 import { optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
-import { isProd } from '@deps/utils/environment.helper';
+
 import { applyDynamicOptions } from '../../../containers/task-container/task-handlers/handle-task';
-import { ProcessType } from '@deps/models/case/enums';
 
 type TaskPageProps = {
     task: ManagementTask;
@@ -79,11 +80,7 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
 
-        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
-            accessToken,
-            user,
-            UserPermission.AllowReadCaseManagement
-        );
+        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
         if (!hasPermissionToReadCaseManagement) {
             return {
                 redirect: {
@@ -122,7 +119,7 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-            if (!(taskUserOverride === true && !isProd())) {
+            if (!(!isProd() && (taskUserOverride || taskTypeOverride))) {
                 if (
                     !(
                         user.email &&

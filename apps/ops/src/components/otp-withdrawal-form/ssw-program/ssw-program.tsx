@@ -8,10 +8,12 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import JointCoveredPersonDetails from '@deps/containers/otp/ssw-forms/sbgc/joint-covered-person-details';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { AmountType, SSWType, Frequency } from '@deps/models/case/withdrawal/case';
+import { AmountType, SSWType, Frequency, PartyRoles, Party, FormParty } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import { SSWFormProgramFields } from './ssw-form-program.helper';
+import GuaranteedWithdrawalBenefits from './guaranteed-life-time-withdrawal-benefits';
+import SingleLifePersonDetails from './single-life-person-details';
+import { getCoveredLifeInitialValues, SSWFormProgramFields } from './ssw-form-program.helper';
 import SystematicWithdrawalRow, { SSWProgram } from './ssw-row';
 import ExistingPrograms from '../rmd-method/existing-programs';
 
@@ -22,6 +24,9 @@ type SystematicWithdrawalProgramProps = {
     planCode?: string;
     jointCoveredPlanCodes?: string[];
     onSswProgramFrequencyChange?: (val: Frequency) => void;
+    singleLifePersonApplicable?: boolean;
+    jointCoveredPersonApplicable?: boolean;
+    glwbApplicable?: boolean;
 };
 
 export interface SSWProgramOptions extends Omit<RadioItem, 'subelement'> {
@@ -34,11 +39,19 @@ const SystematicWithdrawalProgram = ({
     isReadOnly,
     onSswProgramFrequencyChange,
     planCode,
-    jointCoveredPlanCodes
+    jointCoveredPlanCodes,
+    singleLifePersonApplicable = false,
+    jointCoveredPersonApplicable = true,
+    glwbApplicable = false,
 }: SystematicWithdrawalProgramProps) => {
-    const { formErrors, formProgram, setFormProgram } = useContext(FormDataContext);
+    const { formErrors, formProgram, formParty, setFormProgram, setFormParty } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
     const today = dayjs().format(ZAHARA_API_DATE_FORMAT);
+
+    const jointOwnerDetails = formParty?.parties?.find(item => item.partyRoleType === PartyRoles.JOINT_OWNER);
+    const hasCoveredLifePerson = !!formParty?.parties?.find(
+        item => item.partyRoleType === PartyRoles.GLWB_FIRST_COVERED_PERSON || item.partyRoleType === PartyRoles.GLWB_SEC_COVERED_PERSON
+    );
 
     const [sswData, setSswData] = useState<SSWProgram>({
         startDate: { text: formProgram?.programFrequency?.beginDate.text || today },
@@ -50,8 +63,10 @@ const SystematicWithdrawalProgram = ({
         depleteFundYears: { text: formProgram?.programFrequency?.fixedPeriodYear?.text || null },
     });
 
+    const filteredSSWTypeOptions = options.filter(option => option !== null);
+
     useEffect(() => {
-        const selectedOption = options.find(val => val.value === sswData.programSubType.text);
+        const selectedOption = filteredSSWTypeOptions.find(val => val.value === sswData.programSubType.text);
 
         if (selectedOption?.generateSSWPayloadFromSelection) {
             setFormProgram(oldVal => {
@@ -61,6 +76,20 @@ const SystematicWithdrawalProgram = ({
                 };
             });
         }
+        if (
+            glwbApplicable &&
+            !hasCoveredLifePerson &&
+            (sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption ||
+                sswData.programSubType.text === SSWType.JointLifetimeIncomeOption)
+        ) {
+            setFormParty((prev: FormParty) => {
+                const coveredLifeInitialValues = getCoveredLifeInitialValues() as any;
+                return {
+                    parties: [...prev.parties, ...coveredLifeInitialValues],
+                };
+            });
+        }
+
         onSswProgramFrequencyChange && onSswProgramFrequencyChange(sswData.frequency.text);
     }, [sswData, setFormProgram]);
 
@@ -74,15 +103,40 @@ const SystematicWithdrawalProgram = ({
                 {t('newProgram')}
             </Typography>
             <div className="p-2">
-                <SystematicWithdrawalRow isReadOnly={isReadOnly} sswTypeOptions={options} onDataChange={setSswData} sswData={sswData} />
+                <SystematicWithdrawalRow
+                    isReadOnly={isReadOnly}
+                    sswTypeOptions={filteredSSWTypeOptions}
+                    onDataChange={setSswData}
+                    sswData={sswData}
+                />
             </div>
-            {sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
+            {!glwbApplicable && jointCoveredPersonApplicable && sswData.programSubType.text === SSWType.JointLifetimeIncomeOption && (
                 <JointCoveredPersonDetails
                     isReadOnly={isReadOnly || false}
                     planCode={planCode}
                     jointCoveredPlanCodes={jointCoveredPlanCodes}
                 />
             )}
+
+            {singleLifePersonApplicable && sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption && (
+                <SingleLifePersonDetails personDetails={jointOwnerDetails as Party} />
+            )}
+            {glwbApplicable &&
+                (sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption ||
+                    sswData.programSubType.text === SSWType.JointLifetimeIncomeOption) &&
+                formParty.parties.map(
+                    item =>
+                        (item.partyRoleType === PartyRoles.GLWB_FIRST_COVERED_PERSON ||
+                            item.partyRoleType === PartyRoles.GLWB_SEC_COVERED_PERSON) && (
+                            <GuaranteedWithdrawalBenefits
+                                glwbDetails={item}
+                                setFormParty={setFormParty}
+                                isFormStateReadOnly={false}
+                                key={item.partyRoleType}
+                            />
+                        )
+                )}
+
             {formErrors && (
                 <div className="flex flex-col">
                     {formErrors?.systematicStartDate && (

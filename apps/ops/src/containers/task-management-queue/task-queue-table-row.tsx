@@ -153,7 +153,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
         }
 
         try {
-            const response = await unassignTask(taskData.caseId, taskData.id);
+            const response = await unassignTask(taskData.id);
             if (response.status === TaskStatus.New) {
                 removeFromCache('getTaskInstance', { taskId });
                 browserLogInfo('task-queue:handleUnassignTask::Successfully un-assigned task', { taskId: taskId });
@@ -177,7 +177,15 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, getTasks, setErrorMessa
     };
     const sideSheet = useSideSheetContext();
     const openSideSheet = () => {
-        const content = <TaskQueueDrawer onClose={sideSheet.onClose} taskId={task.id} taskStatus={task.status} getTasks={getTasks} />;
+        const content = (
+            <TaskQueueDrawer
+                onClose={sideSheet.onClose}
+                taskId={task.id}
+                taskStatus={task.status}
+                taskName={task.taskName}
+                getTasks={getTasks}
+            />
+        );
         sideSheet.changeSideSheetContent(t('updateTaskStatusDrawer.updateTaskStatus'), content);
         sideSheet.handleOpen(true);
     };

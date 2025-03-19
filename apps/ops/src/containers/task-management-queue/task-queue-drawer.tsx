@@ -1,25 +1,31 @@
-import { FieldSize, FieldType } from "@deps/components/fields/field";
-import FieldDateSelect from "@deps/components/fields/field-date-select/field-date-select";
-import Typography, { TypographyVariant } from "@deps/components/typography/typography";
-import { TranslationFiles } from "@deps/config/translations";
 import dayjs, { Dayjs } from "dayjs";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
-import SelectSimple from '@deps/components/select/select';
-import { TaskStatus } from "@deps/models/case/task-instance";
-import { getTaskInstance, updateTask } from "@deps/queries/api/v2/task";
-import { browserLogError, browserLogInfo } from "@deps/utils/browser-logging";
-import { useRouter } from "next/router";
-import { TaskSource, TaskType } from "@deps/models/case/task";
-import { ERROR_CODES } from "@deps/pages/create-case/error";
-import { removeFromCache } from "@deps/utils/cache";
-import { PendingReasonOptions } from "@deps/models/case/enums";
-import { useSideSheetContext } from "@deps/contexts/SideSheetContext";
-import GlobalTaskSideSheet from "../case-overview/tasks-table/sidesheet/global-task-sidesheet-content";
-import { NUMERIC_DATE_FORMAT } from "@deps/types/constants";
+import utc from 'dayjs/plugin/utc';
 
-function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription }: { onClose: () => void, getTasks?: () => void, taskStatus: TaskStatus, taskId: string, taskDescription?: string }) {
+import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
+import { FieldSize, FieldType } from "@deps/components/fields/field";
+import FieldDateSelect from "@deps/components/fields/field-date-select/field-date-select";
+import SelectSimple from '@deps/components/select/select';
+import Typography, { TypographyVariant } from "@deps/components/typography/typography";
+import { TranslationFiles } from "@deps/config/translations";
+import { useSideSheetContext } from "@deps/contexts/SideSheetContext";
+import { PendingReasonOptions } from "@deps/models/case/enums";
+import { TaskSource, TaskType } from "@deps/models/case/task";
+import { TaskQueueDrawerProps, TaskStatus } from "@deps/models/case/task-instance";
+import { ERROR_CODES } from "@deps/pages/create-case/error";
+import { getTaskInstance, updateTask } from "@deps/queries/api/v2/task";
+import { NUMERIC_DATE_FORMAT } from "@deps/types/constants";
+import { browserLogError, browserLogInfo } from "@deps/utils/browser-logging";
+import { removeFromCache } from "@deps/utils/cache";
+
+import GlobalTaskSideSheet from "../case-overview/tasks-table/sidesheet/global-task-sidesheet-content";
+
+dayjs.extend(utc);
+
+
+function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription, taskName }: TaskQueueDrawerProps) {
   const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
   const [date, setDate] = useState(tomorrow)
   const [timer] = useState(performance.now());
@@ -46,10 +52,9 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
   ];
 
 
-
   const openGlobalSideSheet = () => {
     const content = <GlobalTaskSideSheet taskId={taskId} taskDescription={taskDescription as TaskType} />;
-    sideSheet.changeSideSheetContent(`${t('sideSheet.task.taskHeading')}: ${TaskTitle[taskDescription as TaskType]}`, content);
+    sideSheet.changeSideSheetContent(`${taskName ? `${t('sideSheet.task.taskHeading')}: ${taskName}` : t('sideSheet.task.taskHeading')}`, content);
     sideSheet.handleOpen(true);
   };
   const updateTaskStatus = async () => {
@@ -70,7 +75,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
       router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
       return;
     }
-    const formattedDate = dayjs(date, NUMERIC_DATE_FORMAT).toISOString();
+    const formattedDate = dayjs.utc(date, NUMERIC_DATE_FORMAT).toISOString();
 
     try {
       const body = {

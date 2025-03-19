@@ -1,5 +1,6 @@
-import { allowedTaskTypes } from './task-config';
 import { TaskType } from '@deps/models/case/task';
+
+import { allowedTaskTypes } from './task-config';
 
 export async function applyDynamicOptions(task: any, accessToken: string = '', currentTaskMetadata: any) {
     const { taskType } = task;

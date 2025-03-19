@@ -1,11 +1,12 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import { Button, Icon, IconType } from '@zinnia/bloom/components';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './ConfirmDialog.module.css';
+import { Button } from '../button/Button';
 
 export interface ConfirmDialogProps {
   cancelText?: string;
@@ -88,6 +89,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                 mode="secondary"
                 onClick={cancel}
                 aria-label={cancelDescription}
+                additionalContext={cancelDescription}
               >
                 {cancelText}
               </Button>

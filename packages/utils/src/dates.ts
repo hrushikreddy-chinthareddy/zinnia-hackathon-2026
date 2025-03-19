@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { DEFAULT_ERROR_STRING } from './strings';
 
 export const DEFAULT_DATE_FORMAT = 'M/D/YYYY';
+export const ENTERPRISE_DATE_FORMAT = 'YYYY-MM-DD';
 
 /**
  *
@@ -34,4 +35,12 @@ export const standardDateMonthDayYear = (
   }
 
   return dayjs(date).format(DEFAULT_DATE_FORMAT);
+};
+
+export const toEnterpriseDate = (date: string | Date | null | undefined) => {
+  if (!isValidDate(date)) {
+    return DEFAULT_ERROR_STRING;
+  }
+
+  return dayjs(date).format(ENTERPRISE_DATE_FORMAT);
 };

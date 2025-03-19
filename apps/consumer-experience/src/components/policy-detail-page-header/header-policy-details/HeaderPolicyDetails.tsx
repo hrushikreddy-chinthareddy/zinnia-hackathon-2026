@@ -62,6 +62,8 @@ export const HeaderPolicyDetails = ({
     <div
       className={clsx(
         { [className as string]: className },
+        // TODO: update this to use the font style variables
+        // on larger screen sizes this should be lg-alt
         'typography-labels-label-md-alt',
         styles.container
       )}

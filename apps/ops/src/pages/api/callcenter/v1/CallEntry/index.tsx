@@ -1,13 +1,13 @@
+import { getSession } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { requestHandler } from '@deps/queries/api-utils/server';
+import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 import { ErrorResponse } from '@deps/types/api';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from '@auth0/nextjs-auth0';
-import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 
 // Will proxy any request made to the next server directly to the gateway apis
 export default withAuthAndLogging(

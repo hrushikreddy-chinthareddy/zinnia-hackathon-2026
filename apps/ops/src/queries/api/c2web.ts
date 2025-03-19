@@ -12,11 +12,11 @@ import {
 } from '@deps/models/case/send-document';
 import { StatementTypes, StatementTypesResponse } from '@deps/models/case/send-statement';
 import { client } from '@deps/queries/api-utils/client';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { baseAppUrl, contactCenterBaseUrlV2 } from '../api-config';
 import { serverApi } from '../api-utils/serverApiClient';
-import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 
 const baseUrl = baseAppUrl + '/api/c2web/v2/';
 
@@ -200,6 +200,30 @@ export const getApplicableStatementsSSR = async (
         return applicableStatement;
     } catch (error: any) {
         logError('c2web: getApplicableStatementsSSR', { ...parseErrorInformation(error), ...loggingContext, url });
+        return null;
+    }
+};
+
+export const getSearchTransactions = async (requestBody: SearchTransactionRequestBody): Promise<SearchTransactionResponseBody | null> => {
+    try {
+        const { data } = await client.post<SearchTransactionRequestBody, AxiosResponse<SearchTransactionResponseBody>>(
+            `${baseUrl}/referencedata/transactions/search`,
+            requestBody,
+        );
+        browserLogInfo('getSearchTransactions::Fetched transactions', {
+            payload: requestBody,
+            url: `${baseUrl}/referencedata/transactions/search`,
+            function: 'c2web.getSearchTransactions',
+        });
+
+        return data;
+    } catch (error: any) {
+        browserLogError('getSearchTransactions:: Failed to fetch transactions', {
+            ...parseErrorInformation(error),
+            payload: requestBody,
+            url: `${baseUrl}/referencedata/transactions/search`,
+            function: 'c2web.getSearchTransactions',
+        });
         return null;
     }
 };

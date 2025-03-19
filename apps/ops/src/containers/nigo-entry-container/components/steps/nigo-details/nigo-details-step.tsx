@@ -7,11 +7,11 @@ import WorkflowCard from "@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { isEmptyObject } from '@deps/helpers/objects.helper';
 import { FormValidationErrors, NigoMessages } from '@deps/models/case/withdrawal/case';
 
 import { NigoDetails } from './nigo-details';
 import { useNigoEntry } from '../../nigo-entry-provider';
-
 
 interface NigoDetailsStepProps {
     nigoExceptions: any;
@@ -33,7 +33,7 @@ export const  NigoDetailsStep = ({nigoExceptions, nigoSubExceptions} : NigoDetai
 
         if (exceptions.length > 0) {
             exceptions.forEach((exception: string) => {
-                if ( messages[exception] === undefined) {
+                if ( messages[exception] === undefined || isEmptyObject(messages[exception])) {
                     errors['noCategoryDetailsSelected'] = t('formErrors.formValidation.noCategoryDetailsSelected');
                 }
             });

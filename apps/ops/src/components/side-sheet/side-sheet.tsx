@@ -119,11 +119,11 @@ export default function SideSheet({
                                                 headerElement
                                             ) : (
                                                 <PopoverOnTruncate title={`${header}${displayItemCount ? ' items.length' : ''}`}>
-                                                    <span>
-                                                        <Typography variant={TypographyVariant.H2} className="truncate text-gray-900">
+                                                    <div className="text-left">
+                                                        <Typography variant={TypographyVariant.H2} className="text-gray-900">
                                                             {`${header}${displayItemCount ? ' items.length' : ''}`}
                                                         </Typography>
-                                                    </span>
+                                                    </div>
                                                 </PopoverOnTruncate>
                                             )}
                                         </div>

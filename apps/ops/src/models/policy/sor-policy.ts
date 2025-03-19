@@ -3608,6 +3608,7 @@ export interface Fund {
     fundSegments?: FundSegment[];
     /** This is a carrier assigned General Ledger code used for accounting purpose */
     generalLedgerFundCode?: string;
+    interestGuaranteedPeriod?: number;
     /** TBD */
     totalFundValue?: number;
 }
@@ -4956,6 +4957,8 @@ export interface BasePolicy {
     /** Months elapsed since the start of policy */
     monthOfYear?: number;
     nonForfeitureOption?: string;
+    // The parent of carrierId
+    parentCompanyId?: string;
     policyDates?: PolicyDates;
     policyFeatures?: PolicyFeature[];
     /** The number assigned to the Contract */

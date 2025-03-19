@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
 
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
-import { DashboardStatsElementResponse, Processes } from '@deps/models/case/case';
+import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
 import { SimpleOption } from '../autocomplete/autocomplete.types';
+import { ExtendedProcesses } from './filters/case-type-filter';
 
 export enum TimeframeFilterOptions {
     Trailing12Months = '12M',
@@ -16,9 +17,22 @@ export enum TimeframeFilterOptions {
     LastWeek = '1W',
 }
 
-const defaultDateFormat = 'YYYY-MM-DD';
+export const caseStatusMap = {
+    [Statuses.InProgress]: 'In Progress',
+    [Statuses.Exception]: 'Exception',
+    [Statuses.NotStarted]: 'Not Started',
+    [Statuses.Completed]: 'Completed',
+    [Statuses.Canceled]: 'Canceled',
+    [Statuses.New]: 'New',
+    [Statuses.Overridden]: 'Overridden',
+    [Statuses.Withdrawn]: 'Withdrawn',
+    [Statuses.Inprogress]: 'Inprogress',
+    [Statuses.Pending]: 'Pending',
+};
 
-const friendlyDateFormat = 'MMM D, YYYY';
+export const defaultDateFormat = 'YYYY-MM-DD';
+
+export const friendlyDateFormat = 'MMM D, YYYY';
 
 export const startDates: Record<TimeframeFilterOptions, string> = {
     [TimeframeFilterOptions.Trailing12Months]: dayjs().subtract(12, 'month').format(defaultDateFormat),
@@ -95,8 +109,8 @@ export const createBaseQuery = async (baseInsightQueryFilter: DashboardSearchFil
 
 /**
  *
- * Takes in a process and returns it in an array. If undefined, it returns an empty array
+ * Takes in a process and returns it in an array. If extendedprocess.ALL, it returns an empty array
  */
-export const formatProcessFilter = (process: Processes | undefined) => {
-    return process ? [process] : [];
+export const formatProcessFilter = (process: Processes | ExtendedProcesses) => {
+    return process === ExtendedProcesses.ALL ? [] : [process];
 };

@@ -198,6 +198,24 @@ class ServerHttpRequest extends HttpRequest {
       body: formData.toString(),
     });
   };
+
+  refreshToken = async () => {
+    const session = await getSession();
+
+    return fetch(`${process.env.AUTH0_MANAGEMENT_API_AUDIENCE}/oauth/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+      body: JSON.stringify({
+        grant_type: 'refresh_token',
+        client_id: process.env.AUTH0_CLIENT_ID,
+        client_secret: process.env.AUTH0_CLIENT_SECRET,
+        refresh_token: session?.refreshToken,
+      }),
+    });
+  };
 }
 
 export const ServerApi = new ServerHttpRequest();

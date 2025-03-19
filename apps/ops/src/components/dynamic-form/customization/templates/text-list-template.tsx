@@ -1,6 +1,7 @@
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { ArrayFieldTemplateProps } from '@rjsf/utils';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
+
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 
 const variantMap: { [key: string]: AssistiveTextVariant } = {
     error: AssistiveTextVariant.Error,
@@ -18,14 +19,13 @@ export default function TextListTemplate(props: ArrayFieldTemplateProps): JSX.El
     const listType = (uiSchema?.['ui:options']?.type as string) || 'error';
     const hasBg = uiSchema?.['ui:options']?.hasBg;
     let list = [];
-    let { title } = props;
+    const { title } = props;
 
     if (typeof keyName === 'string') {
         list = formData.map((item: { [key: string]: any }) => item[keyName]) ?? [];
     }
-
-    if (list.length === 0) {
-        const formContextOptions: any = uiSchema?.['ui:options']?.formContext;
+    const formContextOptions: any = uiSchema?.['ui:options']?.formContext;
+    if (list.length === 0 && formContextOptions) {
         if (props.formContext[formContextOptions?.keyName][formContextOptions?.listName]) {
             const data = props.formContext[formContextOptions?.keyName][formContextOptions?.listName];
             list = data;

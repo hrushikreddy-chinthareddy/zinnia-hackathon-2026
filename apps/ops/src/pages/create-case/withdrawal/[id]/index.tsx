@@ -252,7 +252,7 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
 
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadOtpRenewals);
+        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
         if (!doesUserHasPagePermissions) {
             return {
                 redirect: {

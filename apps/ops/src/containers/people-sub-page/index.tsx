@@ -1,7 +1,7 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import { PopoverPlacement } from '@deps/components/popover/popover';
@@ -13,11 +13,13 @@ import { PeopleRolesFilterContext } from '@deps/contexts/PeopleRolesFilter';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
+import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { sortByAndThenBy } from '@deps/helpers/sort.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { PartyRole } from '@deps/models/policy/sor-policy';
+import { getAgentData } from '@deps/queries/api/agents';
 
 import {
     NameTag,
@@ -59,7 +61,8 @@ export const PeopleSubPage: React.FC = () => {
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
     const router = useRouter();
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
-    const extractedPartyRoles = useMemo(() => policy?.partyRoles || [], [policy]);
+    // if there's an enddate, that role is no longer valid
+    const extractedPartyRoles = useMemo(() => policy?.partyRoles?.filter(role => !role.endDate) || [], [policy]);
     const countedRoles = useMemo(() => countPartyRoles(extractedPartyRoles, t), [extractedPartyRoles, t]);
     const nameTags = useMemo(
         () => combineNameAndRoles(extractedParties, extractedPartyRoles, t),
@@ -81,19 +84,68 @@ export const PeopleSubPage: React.FC = () => {
         sideSheet.handleOpen(true);
     };
 
+    // Fetch data for agents if there are any
+    const [agentData, setAgentData] = useState<AgentParty[]>();
+    const agentParties = useMemo(
+        () =>
+            nameTags?.filter(party => {
+                return (
+                    party.partyRoles.includes(PartyRole.PRIMARYSERVICINGAGENT) || party.partyRoles.includes(PartyRole.PRIMARYWRITINGAGENT)
+                );
+            }),
+        [nameTags]
+    );
+    const clientCode = policy?.carrierId;
+
+    const fetchAgentData = useCallback(async () => {
+        if (agentParties && agentParties.length > 0) {
+            const agentData = [];
+            for (const agent of agentParties) {
+                try {
+                    const result = await getAgentData({
+                        clientCode,
+                        id: agent.agentExternalId,
+                        policyNumber: policy.policyNumber,
+                        planCode: policy.product?.planCode,
+                    });
+                    agentData.push(new AgentParty(result, agent));
+                } catch (error) {
+                    console.error('Unable to fetch agent details', error);
+                }
+            }
+            setAgentData(agentData);
+        }
+    }, [agentParties, clientCode, policy]);
+
+    useEffect(() => {
+        fetchAgentData();
+    }, [fetchAgentData]);
+
     useEffect(() => {
         const cardTags = combineNameAndRoles(extractedParties, extractedPartyRoles, t);
+        let filteredCardTags = cardTags;
+        if (agentData && agentData.length > 0) {
+            filteredCardTags = cardTags.map(tag => {
+                const isAgent = agentData.some(agent => agent.partyId === tag.partyId);
+                if (isAgent) {
+                    const agent = agentData.find(agent => agent.partyId === tag.partyId);
+                    return agent?.party as NameTag;
+                } else {
+                    return tag;
+                }
+            });
+        }
 
-        if (cardTags?.length > 0) {
+        if (filteredCardTags?.length > 0) {
             setPeopleState(prevState => ({
                 ...prevState,
                 cardActionData: {
                     ...prevState.cardActionData,
-                    filteredData: cardTags,
+                    filteredData: filteredCardTags,
                 },
             }));
         }
-    }, [extractedParties, extractedPartyRoles, t]);
+    }, [agentData, extractedParties, extractedPartyRoles, t]);
 
     useEffect(() => {
         // Set selected chip, tag list, and card action data on initial load

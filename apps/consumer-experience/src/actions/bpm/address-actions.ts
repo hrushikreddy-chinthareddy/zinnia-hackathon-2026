@@ -61,7 +61,13 @@ export const putEndDateAddress = async (
 export const postAddAddress = async (
   options: AddressRequest
 ): Promise<ApiResponse<BPMResponse>> => {
-  const { planCode, policyNumber, partyId, addressChangeRequest } = options;
+  const {
+    planCode,
+    policyNumber,
+    partyId,
+    addressChangeRequest,
+    correlationId,
+  } = options;
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/parties/${partyId}/address`;
 
   try {
@@ -69,7 +75,7 @@ export const postAddAddress = async (
       url,
       JSON.stringify({
         ...addressChangeRequest,
-        correlationId: uuidv4(),
+        correlationId: correlationId || uuidv4(),
         effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT),
       }),
       {
@@ -90,8 +96,14 @@ export const postAddAddress = async (
 export const putUpdateAddress = async (
   options: AddressRequest
 ): Promise<ApiResponse<BPMResponse>> => {
-  const { planCode, policyNumber, partyId, addressChangeRequest, addressId } =
-    options;
+  const {
+    planCode,
+    policyNumber,
+    partyId,
+    addressChangeRequest,
+    addressId,
+    correlationId,
+  } = options;
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/parties/${partyId}/address/${addressId}`;
 
   try {
@@ -99,7 +111,7 @@ export const putUpdateAddress = async (
       url,
       JSON.stringify({
         ...addressChangeRequest,
-        correlationId: uuidv4(),
+        correlationId: correlationId || uuidv4(),
         effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT),
         // TODO: this should be a variable, once delete is set up
         deleteRequest: false,

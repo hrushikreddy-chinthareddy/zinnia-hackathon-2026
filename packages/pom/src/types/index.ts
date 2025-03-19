@@ -1,9 +1,29 @@
 import type TrainingEducation from '../views/training-education/TrainingEducation';
+import type { SearchResult } from './search.types';
 
 // @TODO: this is temporary, until we import api types
 export enum ProducerType {
-  INDIVIDUAL = 'individual',
-  CORPORATION = 'corporation',
+  INDIVIDUAL = 'Individual',
+  CORPORATION = 'Corporation',
+}
+
+export enum CorporationType {
+  GENERAL_AGENCY = 'GeneralAgency',
+  BROKER_DEALER = 'BrokerDealer',
+  INDEPENDENT_MARKETING_ORGANIZATION = 'IndependentMarketingOrganization',
+  THIRD_PARTY_MARKETER = 'ThirdPartyMarketer',
+  REGISTERED_INVESTMENT_ADVISOR = 'RegisteredInvestmentAdvisor',
+}
+
+export enum Carrier {
+  ZINNIA = 'zinnia',
+  SBUL = 'SBUL',
+}
+
+export enum Channel {
+  INDEPENDENT_PLANNERS = 'IndependentPlanners',
+  INDEPENDENT_MARKETING_ORGANIZATION = 'IndependentMarketingOrganization',
+  REGISTERED_INVESTMENT_ADVISOR = 'RegisteredInvestmentAdvisor',
 }
 
 export enum AppointmentStatus {
@@ -75,3 +95,4 @@ export enum YesNo {
 }
 
 export { TrainingEducation };
+export { SearchResult };

@@ -2,13 +2,19 @@ import clsx from 'clsx';
 import { FC } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { OpenTransactions } from '@deps/components/dashboard/open-transactions/open-transactions';
-import SankeyChart from '@deps/components/dashboard/sankey-chart/sankey-chart';
+import { ActiveAging } from '@deps/components/dashboard/sections/active-aging/active-aging';
+import { NigoOpenTransactions } from '@deps/components/dashboard/sections/nigo-open-transactions/nigo-open-transactions';
+import SankeyChart from '@deps/components/dashboard/sections/sankey-chart/sankey-chart';
+import { SubmissionTypeProvider } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
+import { SubmissionType } from '@deps/components/dashboard/sections/submission-type/submission-type';
+import { SubmissionTypeChart } from '@deps/components/dashboard/sections/submission-type/tab-content/chart/submission-type-chart';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { Statuses } from '@deps/models/case/case';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { useDashboardStore } from '@deps/store/store';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 export const ActiveApplications: FC = () => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
@@ -24,6 +30,9 @@ export const ActiveApplications: FC = () => {
     if (selectedBrokerDealers && brokers.length) {
         baseFilter.brokerDealerName = brokers;
     }
+    const { featureFlags } = useOptimizely();
+
+    const showTabView = featureFlags[FEATURE_FLAGS.DASHBOARD_SECTION_TAB_VIEW];
 
     return (
         <>
@@ -35,8 +44,23 @@ export const ActiveApplications: FC = () => {
                     <SankeyChart key={JSON.stringify(baseFilter)} baseDashboardQueryFilter={baseFilter} />
                 </CardContainer>
             </div>
-
-            <OpenTransactions />
+            <div className={styles.container}>
+                <div className={sharedStyles.dashboardCard}>
+                    <ActiveAging />
+                </div>
+                <div className={sharedStyles.dashboardCard}>
+                    {showTabView ? (
+                        <SubmissionType />
+                    ) : (
+                        <SubmissionTypeProvider>
+                            <SubmissionTypeChart />
+                        </SubmissionTypeProvider>
+                    )}
+                </div>
+                <div className={sharedStyles.dashboardCard}>
+                    <NigoOpenTransactions />
+                </div>
+            </div>
         </>
     );
 };

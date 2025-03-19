@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import { TranslationFiles } from '@deps/config/translations';
+import { MessageType } from '@deps/models/case/task';
 import { AssignedTask } from '@deps/models/case/task-instance';
 import { claimNextTask } from '@deps/queries/api/v1/claim-task';
 import { getAssignedTasks } from '@deps/queries/api/v1/task';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-import { MessageType } from '@deps/models/case/task';
 
 import TaskQueueTable from './task-queue-table';
 
@@ -21,33 +21,37 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
     const [taskDetails, setTaskDetails] = useState<AssignedTask[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-   const [errorType, setErrorType] = useState(MessageType.Error);
+    const [errorType, setErrorType] = useState(MessageType.Error);
 
     const handleClaimTask = async () => {
         setErrorMessage('');
         setIsLoading(true);
-        const res = await claimNextTask();
+        try {
+            const res = await claimNextTask();
 
-        if (res.status === 200) {
-            const { data } = res;
-            if (data.statusCode) {
-                switch (data.statusCode) {
-                    case 400:
-                        setErrorMessage(data.message);
-                        break;
-                    case 404:
-                        setErrorMessage(data.message);
-                        setErrorType(MessageType.Info);
-                        break;
-                    default:
-                        setErrorMessage(data.message);
-                        break;
+            if (res.status === 200) {
+                const { data } = res;
+                if (data.statusCode) {
+                    switch (data.statusCode) {
+                        case 400:
+                            setErrorMessage(data.message);
+                            break;
+                        case 404:
+                            setErrorMessage(data.message);
+                            setErrorType(MessageType.Info);
+                            break;
+                        default:
+                            setErrorMessage(data.message);
+                            break;
+                    }
+                } else {
+                    getTasks();
                 }
-            } else {
-                getTasks();
             }
+        } catch (error) {
+            const errorMsg = t('claimTaskError');
+            setErrorMessage(errorMsg);
         }
-        setIsLoading(false);
     };
 
     const getTasks = async (handleLoader = true) => {
@@ -81,7 +85,6 @@ const TaskManagementQueue = ({ featureFlagDecisions }: TaskManagementQueueProps)
                         >
                             {t('claimTask')}
                         </Button>
-
                     </div>
                 </div>
 

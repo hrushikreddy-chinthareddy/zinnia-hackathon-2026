@@ -41,8 +41,12 @@ const PayeesStep = ({ parentPage, policy, setState, state }: PayeesStepProps) =>
     const { payeePartyId: currentPayeePartyId } = state;
 
     const eligiblePayees = useMemo(() => {
-        const eligibleRoles = partyRoles?.filter(role => role.partyRole === PartyRole.OWNER);
-
+        const ownerPayeeRoles = partyRoles?.filter(role => role.partyRole === PartyRole.OWNER || role.partyRole === PartyRole.PAYEE);
+        const eligibleRoles = ownerPayeeRoles?.filter((value, index, self) =>
+            index === self.findIndex((t) => (
+                t.partyId === value.partyId
+            ))
+        );
         return eligibleRoles?.map(eligibleRole => {
             const party = parties?.find(party => eligibleRole.partyId === party.partyId);
 

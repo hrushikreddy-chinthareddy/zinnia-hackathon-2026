@@ -43,13 +43,17 @@
                                     "properties": {
                                         "firstName": {
                                             "type": "string",
-                                            "title": "Title",
+                                            "title": "First name",
                                             "ui:field": "title"
                                         },
                                         "lastName": {
                                             "type": "string",
-                                            "title": "Title",
+                                            "title": "Last name",
                                             "ui:field": "title"
+                                        },
+                                        "payorName": {
+                                            "type": "string",
+                                            "title": "Payer name"
                                         },
                                         "taxId": {
                                             "type": "string",
@@ -268,10 +272,19 @@
                                     "type": "object",
                                     "title": "Supporting information",
                                     "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "First name",
+                                            "ui:field": "title"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Last name",
+                                            "ui:field": "title"
+                                        },
                                         "payorName": {
                                             "type": "string",
-                                            "title": "Title",
-                                            "ui:field": "title"
+                                            "title": "Payer name"
                                         },
                                         "taxId": {
                                             "type": "string",
@@ -309,7 +322,8 @@
                             "type": "string",
                             "title": "Select exchange record"
                         }
-                    }
+                    },
+                    "required": ["transactions"]
                 },
                 "uiSchema": {
                     "ui:globalOptions": {
@@ -340,7 +354,7 @@
                             "ui:options": {
                                 "label": false,
                                 "inline": true,
-                                "prefix": "$"
+                                "dataType": "amount"
                             }
                         },
                         "payerDetails": {
@@ -375,20 +389,37 @@
                             "properties": {
                                 "companyName": {
                                     "type": "string",
-                                    "title": "Company name",
+                                    "title": "Surrendering carrier name",
                                     "default": "{{entity.payment.exchangeReplace.companyName}}",
                                     "ui:field": "title"
                                 },
                                 "transferAmount": {
                                     "type": "string",
                                     "title": "Expected transfer amount",
-                                    "default": "${{entity.payment.exchangeReplace.amountRequested}}",
-                                    "ui:field": "subTitle"
+                                    "default": "{{entity.payment.exchangeReplace.amountRequested}}",
+                                    "ui:field": "subTitle",
+                                    "dataType": "amount"
                                 },
-                                "paymentRecordId": {
+                                "sourcePolicyNumber": {
                                     "type": "string",
-                                    "title": "Payment Record Id",
-                                    "default": "{{entity.paymentRecordId}}"
+                                    "title": "Surrendering carrier contract number",
+                                    "default": "{{entity.payment.exchangeReplace.sourcePolicyNumber}}"
+                                },
+                                "firstName": {
+                                    "type": "string",
+                                    "title": "First name",
+                                    "default": "{{entity.firstName}}"
+                                },
+                                "lastName": {
+                                    "type": "string",
+                                    "title": "Last name",
+                                    "default": "{{entity.lastName}}"
+                                },
+                                "address": {
+                                    "type": "string",
+                                    "title": "Address",
+                                    "default": "{{entity.payment.exchangeReplace.address}}",
+                                    "dataType": "dirtyAddress"
                                 }
                             }
                         }

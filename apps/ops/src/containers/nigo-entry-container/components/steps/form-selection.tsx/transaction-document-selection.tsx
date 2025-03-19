@@ -14,7 +14,7 @@ import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/c
 import { Policy } from '@deps/models/policy/sor-policy';
 import { searchForms } from '@deps/queries/api/c2web';
 type FormSelectionProps = {
-    policy: Policy;
+    policy?: Policy;
     ctiCallNumber: string;
     correlationId?: string;
     availableFormsTransactions: AvailableFormsTransaction[];
@@ -79,13 +79,13 @@ function TransactionDocumentSelection({
                 transactionSubType: { selected: transactionSubType, list: transactionSubTypeOptions },
             }));
 
-            if (transactionSubType !== '' && formDetails.transactionType.selected !== null) {
+            if (transactionSubType !== '' && formDetails.transactionType.selected !== null && policy) {
                 const formSearchRequestBody = {
                     contractNumber: policy.policyNumber ?? '',
                     planCode: policy.product?.planCode ?? '',
                     transactionType: formDetails?.transactionType?.selected,
                     transactionSubType: tranSubType,
-                    carrier: policy?.carrierId ?? '',
+                    carrier: policy.carrierId ?? '',
                     issueState: policy.issueState ?? '',
                     ctiCallNumber: ctiCallNumber ?? '',
                 };

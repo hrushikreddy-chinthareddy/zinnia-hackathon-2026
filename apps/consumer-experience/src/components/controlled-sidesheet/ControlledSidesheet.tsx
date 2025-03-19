@@ -1,13 +1,13 @@
 import {
   SideSheet,
   type SideSheetProps,
-  Button,
   Icon,
   IconType,
 } from '@zinnia/bloom/components';
 import { FC, PropsWithChildren, useState } from 'react';
 
 import styles from './ControlledSidesheet.module.css';
+import { Button } from '@/components/button/Button';
 
 type ControlledSidesheetProps = {
   closeBeforeContent?: string;

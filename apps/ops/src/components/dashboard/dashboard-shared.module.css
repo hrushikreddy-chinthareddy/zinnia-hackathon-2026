@@ -33,3 +33,38 @@
     padding-top: var(--measure-dimension-padding-4xl);
     padding-right: var(--measure-dimension-padding-lg);
 }
+
+.timeFilterContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.tableContainer,
+.paginationContainer,
+.searchContainer,
+.insightContainer {
+    margin-top: var(--measure-dimension-gap-lg);
+}
+
+.sortIcon {
+    margin-left: var(--measure-dimension-gap-md);
+}
+
+.searchContainer {
+    width: 259px;
+}
+
+.aiInsightsTabContainer {
+    min-height: 450px;
+}
+
+.pieChartColumn {
+    border-radius: 1px 4px 4px 1px;
+    border-left: 2px solid var(--color-base-border-border-light, #ededed);
+    background: var(--color-base-surface-surface-secondary, #f8f8f8);
+}
+
+.chartColumn {
+    max-width: 940px;
+}

@@ -49,6 +49,7 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
 
     const payPartyId = payeePartyId || payorPartyId;
     const party = policy?.parties?.find(party => party.partyId === payPartyId);
+    // TODO MG: confirm this should always be payment
     const paymentProgram = systematicPrograms?.find(program => program.arrangementType === ArrangementType.PAYMENT);
     const programBankId = paymentProgram?.party?.find(party => party.partyId === payPartyId);
     const bankDetails = useMemo(() => {
@@ -126,13 +127,16 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
             title={t('workflows.paymentStep.heading')}
             footerContent={<TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} stopLoading={stopLoading} />}
         >
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-4">
                 <div className="flex flex-col">
                     <Typography variant={TypographyVariant.LabelLg}>
                         {subtitle}
                     </Typography>
+
                     <div className="flex flex-col gap-4">
+                        {/* TODO MG: 'Select payment account' for money in and 'Where should we send the payment' for money out */}
                         <Typography variant={TypographyVariant.LabelLg}>{t('workflows.paymentStep.label')}</Typography>
+
                         <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3" data-testid="payment-methods">
                             {bankDetails?.map(details => (
                                 <BankDataCard
@@ -158,14 +162,14 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
                             </div>
                         </div>
                     </div>
-                    {formError && (
-                        <AssistiveText
-                            className="col-span-full pt-1"
-                            text={t('workflows.paymentStep.error')}
-                            variant={AssistiveTextVariant.Error}
-                        />
-                    )}
                 </div>
+                {formError && (
+                    <AssistiveText
+                        className="col-span-full"
+                        text={t('workflows.paymentStep.error')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                )}
             </div>
         </WorkflowCard>
     );

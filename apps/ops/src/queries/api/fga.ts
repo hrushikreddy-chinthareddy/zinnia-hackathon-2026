@@ -1,96 +1,43 @@
-import { checkIfUserIsSuperAdmin, createBulkCheckBodyRequest, checkIfUserHasDashboardAccess } from '@zinnia/utils';
 import { AxiosResponse } from 'axios';
 
 import { UserPermission } from '@deps/models/user-profile';
+import { ApiResponse } from '@deps/types/api-response';
 import { CheckTupleResponse, Tuple, GetCarrierListQuery, TupleRequest, TupleResponse } from '@deps/types/fga';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logError, logWarn } from '@deps/utils/server-logging';
 
-import { apiServerBaseUrl, baseAppUrl } from '../api-config';
+import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
-import { serverApi } from '../api-utils/serverApiClient';
 
-const checkTupleUrlSsr = `${apiServerBaseUrl}/fga/v1/check`;
-const listCarrierUrlSsr = `${apiServerBaseUrl}/fga/v1/list-carriers`;
 const baseUrl = baseAppUrl + '/api/fga/v1';
 const bulkCheckUrl = baseUrl + '/bulk-check';
 
-export const bulkCheckResponseClient = async (partyId: string) => {
+export const bulkCheckResponseClient = async (body?: TupleRequest): Promise<ApiResponse<TupleResponse>> => {
     try {
-        if (!partyId) {
-            return;
+        const bulkCheckRequest = await client.post<TupleRequest, AxiosResponse<TupleResponse>>(bulkCheckUrl, body);
+        const response: ApiResponse<TupleResponse> = {
+            data: bulkCheckRequest.data,
+            error: null,
+        };
+        if (bulkCheckRequest.status !== 200) {
+            response.error = {
+                status: bulkCheckRequest.status,
+                message: bulkCheckRequest.statusText,
+                name: 'Error checking tuples',
+            };
         }
-        const body = createBulkCheckBodyRequest(partyId);
-        const { data } = await client.post<TupleRequest, AxiosResponse<TupleResponse>>(bulkCheckUrl, body);
-        return data;
+        return response;
     } catch (e) {
         logError('bulkCheckResponse::An error occurred while calling bulk check endpoint', {
             file: 'queries/api/fga',
             function: 'bulkCheckResponse',
             url: bulkCheckUrl,
         });
+        return { data: null, error: { status: 500, message: (e as Error)?.message, name: 'Error checking tuples' } };
     }
 };
 
-export const checkIsSuperAdminClient = async ({ partyId }: { partyId: string }) => {
-    try {
-        const data = await bulkCheckResponseClient(partyId);
-        if (data === undefined) throw new Error('response is undefined');
-        return checkIfUserIsSuperAdmin(data.tuples);
-    } catch (e) {
-        logError('checkIsSuperAdmin::An error occurred while checking tuples', {
-            file: 'queries/api/fga',
-            function: 'bulkCheckResponse',
-            url: bulkCheckUrl,
-        });
-    }
-};
-export const checkDashboardAccessClient = async ({ partyId }: { partyId: string }) => {
-    try {
-        const data = await bulkCheckResponseClient(partyId);
-        if (data === undefined) throw new Error('response is undefined');
-        return checkIfUserHasDashboardAccess(data.tuples);
-    } catch (e) {
-        logError('checkDashboardAccessClient::An error occurred while checking tuples', {
-            file: 'queries/api/fga',
-            function: 'checkDashboardAccessClient',
-            url: bulkCheckUrl,
-        });
-    }
-};
-
-export const checkTupleSsr = async (accessToken: string, partyId: string, relation: string, tupleObject: string): Promise<boolean> => {
-    if (!accessToken || !partyId) {
-        return false;
-    }
-
-    try {
-        const tuple = {
-            user: `party:${partyId}`,
-            relation,
-            object: tupleObject,
-        };
-
-        const { data } = await serverApi.post<Tuple, AxiosResponse<CheckTupleResponse>>(checkTupleUrlSsr, tuple, {
-            authorization: `Bearer ${accessToken}`,
-        });
-
-        return data?.allowed || false;
-    } catch (error: any) {
-        logWarn('checkTupleSsr::An error occurred while checking tuple', {
-            file: 'queries/api/fga',
-            function: 'checkTupleSsr',
-            url: checkTupleUrlSsr,
-            partyId,
-            relation,
-            tupleObject,
-        });
-
-        return false;
-    }
-};
-
-export const checkTuple = async (partyId: string, relation: string, tupleObject: string): Promise<boolean> => {
+export const checkTuple = async (partyId: string, relation: string, tupleObject: string): Promise<ApiResponse<boolean>> => {
     const tuple = {
         user: `party:${partyId}`,
         relation,
@@ -100,36 +47,21 @@ export const checkTuple = async (partyId: string, relation: string, tupleObject:
 
     if (cachedResult) return cachedResult;
 
-    const { data } = await client.post<Tuple, AxiosResponse<CheckTupleResponse>>(`${baseUrl}/check`, tuple);
+    const fgaCheck = await client.post<Tuple, AxiosResponse<CheckTupleResponse>>(`${baseUrl}/check`, tuple);
+    const allowed = fgaCheck?.data?.allowed;
 
-    const result = data?.allowed || false;
+    const response: ApiResponse<boolean> = {
+        data: !!allowed,
+        error: null,
+    };
 
-    writeToCache('checkTuple', tuple, result);
-
-    return result;
-};
-
-export const getCarrierListServerSSR = async (accessToken: string, partyId: string, relation: UserPermission): Promise<string[]> => {
-    try {
-        const { data } = await serverApi.post<GetCarrierListQuery, AxiosResponse>(
-            listCarrierUrlSsr,
-            {
-                user: `party:${partyId}`,
-                relation,
-            },
-            {
-                authorization: `Bearer ${accessToken}`,
-            }
-        );
-        return data?.carriers || [];
-    } catch (error: any) {
-        logWarn('getCarrierListServerSSR::An error occurred while getting the carrier list', {
-            file: 'queries/api/fga',
-            function: 'getCarrierListServerSSR',
-            url: listCarrierUrlSsr,
-        });
-        return [];
+    if (fgaCheck.status === 200) {
+        writeToCache('checkTuple', tuple, response);
+    } else {
+        response.error = { status: fgaCheck.status, message: fgaCheck.statusText, name: 'Error checking tuple' };
     }
+
+    return response;
 };
 
 export const getCarrierList = async (
@@ -137,7 +69,7 @@ export const getCarrierList = async (
     relation: UserPermission,
     planCode?: string | string[] | undefined,
     policyNumber?: string | undefined
-): Promise<string[]> => {
+): Promise<ApiResponse<string[]>> => {
     const url = `${baseUrl}/list-carriers`;
 
     try {
@@ -155,18 +87,27 @@ export const getCarrierList = async (
         const cachedResult = pullFromCache('getCarrierList', query);
         if (cachedResult) return cachedResult;
 
-        const { data } = await client.post<GetCarrierListQuery, AxiosResponse>(url, query);
-        const result = data?.carriers || [];
+        const carrierListCheck = await client.post<GetCarrierListQuery, AxiosResponse>(url, query);
+        const response: ApiResponse<string[]> = { data: carrierListCheck?.data?.carriers || [], error: null };
 
-        writeToCache('getCarrierList', query, result, 10);
+        if (carrierListCheck.status === 200) {
+            writeToCache('getCarrierList', query, response, 10);
+        } else {
+            logWarn('getCarrierList::An error occurred while getting the carrier list', {
+                file: 'queries/api/fga',
+                function: 'getCarrierList',
+                url,
+            });
+            response.error = { status: carrierListCheck.status, message: carrierListCheck.statusText, name: 'Error getting carrier list' };
+        }
 
-        return result;
+        return response;
     } catch (error: any) {
         logWarn('getCarrierList::An error occurred while getting the carrier list', {
             file: 'queries/api/fga',
             function: 'getCarrierList',
             url,
         });
-        return [];
+        return { data: [], error: { status: 500, message: error.message, name: 'Error getting carrier list' } };
     }
 };

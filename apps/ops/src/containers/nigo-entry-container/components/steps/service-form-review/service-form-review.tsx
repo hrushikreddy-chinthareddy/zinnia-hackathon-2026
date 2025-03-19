@@ -22,7 +22,7 @@ interface SetFormReviewProps {
     clientCode: string;
     docType: string;
     documentNumber: string;
-}
+};
 
 export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentNumber }: SetFormReviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
@@ -72,6 +72,13 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                         </div>
                         <div className="flex items-center">
                             {createAction(workingDocument, clientCode?.toUpperCase(), t)}
+                        </div>
+                    </div>
+                )}
+                {!loading && !workingDocument && (
+                    <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
+                        <div className="text-sm font-bold">
+                            <PiiWrapper>{t('noDocumentAvailable')}</PiiWrapper>
                         </div>
                     </div>
                 )}

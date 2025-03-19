@@ -19,10 +19,11 @@ import { mockPolicy } from '@deps/services/mocks/sor-policy';
 import { CheckTupleResponse } from '@deps/types/fga';
 import { PolicySearchResponse, SearchViewQuery } from '@deps/types/search';
 import { fullyMaskPolicyResponse, lcPartyResponseSanitizer, policySanitizer, policySanitizerWithoutSSN } from '@deps/utils/sanitizers';
-import { logError, logInfo, logTrace, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl, policyApiBaseUrl } from '../api-config';
 import { serverApi } from '../api-utils/serverApiClient';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 
 export interface GetPolicyResponse {
     data: Policy;
@@ -123,30 +124,49 @@ export const fetchPolicy = async (id?: string, planCode?: string): Promise<Polic
     }
 
     if (!id) {
-        console.error('No policyNumber to fetch policy');
-
+        browserLogInfo('fetchPolicy::No policyNumber to fetch policy', {
+            poicyNumber: id,
+            planCode: planCode,
+            file: 'policies::fetchPolicy'
+        });
         return null;
     }
 
     if (!planCode) {
-        console.error('No planCode to fetch policy');
-
+        browserLogInfo('fetchPolicy::No planCode to fetch policy', {
+            poicyNumber: id,
+            planCode: planCode,
+            file: 'policies::fetchPolicy'
+        });
         return null;
     }
-
     try {
         const { data } = await client.get<any, AxiosResponse<GetPolicyResponse>>(
             `${baseAppUrl}/api/policies/${planCode}/${id}?viewDetails=true`
         );
 
         if (!data.data) {
+            browserLogInfo('fetchPolicy::Policy data not', {
+                poicyNumber: id,
+                planCode: planCode,
+                file: 'policies::fetchPolicy'
+            });
             throw new Error('fetchPolicy::Invalid response from API');
         }
 
+        browserLogInfo('fetchPolicy::Successfully retrieved policy', {
+            poicyNumber: id,
+            planCode: planCode,
+            file: 'policies::fetchPolicy'
+        });
         return data.data;
     } catch (e) {
-        console.error('Error fetching policy', e);
-
+        browserLogError('fetchPolicy::Error fetchin policy', {
+            ...parseErrorInformation(e),
+            poicyNumber: id,
+            planCode: planCode,
+            file: 'policies::fetchPolicy'
+        });
         return null;
     }
 };
@@ -523,6 +543,7 @@ interface PolicyTransactionQuery {
     limit?: number;
     offset?: number;
     planCode?: string;
+    sortField?: 'EFFECTIVEDATE' | 'PROCESSDATE' | 'REVERSALDATE';
     sortOrder?: 'ASC' | 'DESC';
     status?: TransactionStatus | TransactionStatus[];
     transactionTypes?: string[];
@@ -536,6 +557,7 @@ export const getPolicyTransactions = async ({
     limit,
     offset,
     planCode,
+    sortField = 'EFFECTIVEDATE',
     sortOrder = 'ASC',
     status,
     transactionTypes,
@@ -549,6 +571,7 @@ export const getPolicyTransactions = async ({
             limit,
             offset,
             reverseInitiatorOnly,
+            sortField,
             sortOrder,
             status,
             transactionTypes,
@@ -638,28 +661,27 @@ export const searchPolicySSR = async (
     limit: number,
     offset: number
 ): Promise<any | null> => {
+    limit = limit || 10;
+    offset = offset || 0;
+    const searchUrl = `${apiServerBaseUrl}/policy/v1/policies/reference/search?offset=${offset}&limit=${limit}`;
+    const formData = {
+        policyNumber,
+        carrierIds: carrierIds,
+    };
     try {
-        limit = limit || 10;
-        offset = offset || 0;
-        const searchUrl = `${apiServerBaseUrl}/policy/v1/policies/search?offset=${offset}&limit=${limit}`;
-        const formData = {
-            policyNumber,
-            carrierIds: carrierIds,
-        };
-
-        logTrace('searchPolicySSR::start', { url: searchUrl });
+        logInfo('searchPolicySSR::Started policy search', { url: searchUrl, payload: formData });
         const { data: searchResponse } = await serverApi.post<any>(searchUrl, formData, {
             authorization: 'Bearer ' + accessToken,
         });
 
         if (!searchResponse.results) {
-            console.error('Results array missing from search response');
+            logInfo('searchPolicySSR::Policy search result not found', { url: searchUrl, payload: formData });
             return null;
         }
-
+        logInfo('searchPolicySSR::Completed policy search', { url: searchUrl, payload: formData, records: searchResponse?.results?.length });
         return searchResponse.results;
     } catch (e) {
-        console.error('policies::searchPolicySSR::error', e);
+        logInfo('searchPolicySSR::Policy search failed', { url: searchUrl, payload: formData, ...parseErrorInformation(e) });
         return null;
     }
 };

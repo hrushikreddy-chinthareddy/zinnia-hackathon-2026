@@ -1,6 +1,6 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Radio } from '@zinnia/bloom/components';
+import { Radio } from '@zinnia/bloom/components';
 import {
   Controller,
   FieldValues,
@@ -10,13 +10,14 @@ import {
 
 import Loading from '@/app/loading';
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
+import { postLoginSendMfaChallenge } from '@/components/mfa/mfa-actions';
 import { MfaPhoneNumber } from '@/components/mfa/phone-number/MfaPhoneNumber';
 import { QueryKeys } from '@/queries/query-keys';
 import { getUserAuthenticationMethods } from '@/queries/user-queries';
 import { MfaVerificationType } from '@/types/auth';
 
-import { verifyTransactionMfa } from './transaction-mfa-actions';
 import styles from './VerifyIdentity.module.css';
+import { Button } from '@/components/button/Button';
 
 export const SelectAuthenticationMethod = ({
   transactionDescription,
@@ -24,13 +25,15 @@ export const SelectAuthenticationMethod = ({
   closeCallback,
 }: {
   transactionDescription?: string;
-  moveToNextStep: () => void;
+  moveToNextStep: (selectedMethodId: string) => void;
   closeCallback: () => void;
 }) => {
   const {
     control,
     handleSubmit,
+    getValues,
     formState: { isSubmitting },
+    reset,
   } = useForm();
 
   const { data: userAuthentication, isLoading } = useQuery({
@@ -38,6 +41,7 @@ export const SelectAuthenticationMethod = ({
     queryFn: () => getUserAuthenticationMethods(),
     select: response => {
       const phone = response.data?.find(method => method.type === 'phone');
+
       return {
         phoneNumber: phone?.phone_number,
         authenticationMethods: phone?.authentication_methods.map(method => ({
@@ -45,7 +49,6 @@ export const SelectAuthenticationMethod = ({
             method.type === MfaVerificationType.SMS ? 'Text' : 'Phone call',
           value: method.id,
           ariaLabel: method.type,
-          type: method.type,
         })),
         defaultAuthentication: phone?.authentication_methods.find(
           m => m.type === MfaVerificationType.SMS
@@ -55,12 +58,17 @@ export const SelectAuthenticationMethod = ({
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async data => {
-    await verifyTransactionMfa(data);
+    await postLoginSendMfaChallenge(data);
 
-    // TODO: when to set this?
-    // may not even need to wait for success from verifyTransaction?
-    // i guess unless apis are down, we could return an error
-    moveToNextStep();
+    // TODO: I think we just move to the next step here regardless of above?
+    // if sending mfa challenge fails...then it fails but user
+    // should still see the enter code step
+    moveToNextStep(getValues()?.verificationType);
+  };
+
+  const onCancel = () => {
+    reset();
+    closeCallback();
   };
 
   if (isLoading || isSubmitting) {
@@ -81,7 +89,6 @@ export const SelectAuthenticationMethod = ({
       </p>
       <div className="my-lg">
         <p className="typography-labels-field-label">Mobile phone</p>
-        {/* TODO: add real phone number */}
         <MfaPhoneNumber
           phoneNumber={
             // this is making the assumption that there is only one phone object
@@ -92,7 +99,6 @@ export const SelectAuthenticationMethod = ({
           }
         />
       </div>
-      {/* <MfaOptions className="mb-xl" /> */}
       <Controller
         name="verificationType"
         control={control}
@@ -115,7 +121,11 @@ export const SelectAuthenticationMethod = ({
       </p>
       <div className={styles.buttonContainer}>
         <Button type="submit">Send code</Button>
-        <Button onClick={closeCallback} mode="link">
+        <Button
+          onClick={onCancel}
+          mode="link"
+          additionalContext="select mfa method"
+        >
           Cancel
         </Button>
       </div>

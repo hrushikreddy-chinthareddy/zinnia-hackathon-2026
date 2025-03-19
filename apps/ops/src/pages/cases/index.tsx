@@ -1,4 +1,4 @@
-import { Session, getSession, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -38,7 +38,8 @@ import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Statuses } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseStats, getCases } from '@deps/queries/api/cases';
-import { checkTupleSsr, getCarrierListServerSSR } from '@deps/queries/api/fga';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
+import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
@@ -457,16 +458,11 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 export const getServerSideProps = withPageAuthRequired({
     getServerSideProps: async (context: GetServerSidePropsContext) => {
         const user = await getUserData(context);
-        const auth: Session = (await getSession(context.req, context.res)) as Session;
 
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-            auth?.accessToken,
-            user,
-            UserPermission.AllowReadCaseManagement
-        );
+        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
 
         // DEPU-2835
-        const isAdvisorsExcel = await checkTupleSsr(`${auth.accessToken}`, user.partyId, FgaRelation.Party, AE_FGA_ROLE);
+        const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE);
 
         if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
             return {
@@ -486,11 +482,7 @@ export const getServerSideProps = withPageAuthRequired({
             ALL_LOCALES
         );
 
-        const authorizedCarriers = await getCarrierListServerSSR(
-            `${auth?.accessToken}`,
-            user.partyId,
-            UserPermission.AllowReadCaseManagement
-        );
+        const authorizedCarriers = await listCarriersPage(context, UserPermission.AllowReadCaseManagement);
 
         return { props: { authorizedCarriers, isAdvisorsExcel, user, locale, ...translations } };
     },

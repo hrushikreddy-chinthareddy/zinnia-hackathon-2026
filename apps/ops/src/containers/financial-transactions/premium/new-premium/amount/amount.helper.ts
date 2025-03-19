@@ -9,6 +9,7 @@ export const isDateAllowed = (dayjsDate: Dayjs, startDate?: Dayjs, endDate?: Day
     const isEndDate = formattedDate.isSame(endDate, 'day');
     const isAfterStartDate = formattedDate.isAfter(startDate, 'day');
     const isBeforeEndDate = formattedDate.isBefore(endDate, 'day');
+
     return isStartDate || isEndDate || (isAfterStartDate && isBeforeEndDate);
 };
 
@@ -18,8 +19,10 @@ export const isPaymentAllowed = (payment: number | string, requiredPayment?: num
 
 export const getImportantDates = (policyFeatures?: PolicyFeature[]) => {
     const formatDate = (date?: string) => dayjs(date, ZAHARA_API_DATE_FORMAT);
+
     const lapseFeatures = policyFeatures?.find(pf => pf.featureType === ('LAPSEASSESSMENT' as PolicyFeatureFeatureType));
     const reinstatementFeatures = policyFeatures?.find(pf => pf.featureType === ('REINSTATEMENT' as PolicyFeatureFeatureType));
+
     const hasReinstatement = !!(
         reinstatementFeatures?.underwritingDecision &&
         reinstatementFeatures.startDate &&
@@ -27,9 +30,11 @@ export const getImportantDates = (policyFeatures?: PolicyFeature[]) => {
         reinstatementFeatures.paymentAmount
     );
     const hasLapse = !!(lapseFeatures?.status && lapseFeatures.startDate && lapseFeatures.endDate && lapseFeatures.paymentAmount);
+
     let startDate: Dayjs | undefined;
     let endDate: Dayjs | undefined;
     let requiredPayment: number | undefined;
+
     if (hasReinstatement) {
         startDate = formatDate(reinstatementFeatures.approvalDate);
         endDate = formatDate(reinstatementFeatures.endDate);

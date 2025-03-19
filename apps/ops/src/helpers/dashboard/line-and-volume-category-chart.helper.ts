@@ -2,7 +2,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import * as Highcharts from 'highcharts';
 
-import { TimeframeFilterOptions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
+import { TransactionTrendsTimeframe } from '@deps/components/dashboard/sections/transaction-trends/utils';
 import { DashboardStatsElementResponse } from '@deps/models/case/case';
 
 dayjs.extend(isBetween);
@@ -160,10 +160,10 @@ export const getTopChartConfig = (
         earliestDate: string;
         lastDate: string;
     }[],
-    timeframe: TimeframeFilterOptions
+    timeframe: TransactionTrendsTimeframe
 ): Highcharts.Options => {
     let interval = 'Weekly';
-    if ([TimeframeFilterOptions.Last60Days, TimeframeFilterOptions.LastMonth].includes(timeframe)) {
+    if ([TransactionTrendsTimeframe.Last60Days, TransactionTrendsTimeframe.LastMonth].includes(timeframe)) {
         interval = 'Daily';
     }
     const plotlines = Array.from({ length: weeklyCategories.length }, (_, i) => {
@@ -290,7 +290,7 @@ export const getTopChartConfig = (
                 const date = dayjs(earliestDate);
                 let dateStr = '';
 
-                if (timeframe === TimeframeFilterOptions.LastMonth || timeframe === TimeframeFilterOptions.Last60Days) {
+                if (timeframe === TransactionTrendsTimeframe.LastMonth || timeframe === TransactionTrendsTimeframe.Last60Days) {
                     dateStr = date.format('M/D/YY');
                 } else {
                     dateStr = `Week of ${date.format('M/D/YYYY')} - ${dayjs(lastDate).format('M/D/YYYY')}`;
@@ -306,10 +306,10 @@ export const getBottomChartConfig = (
     monthlyCategories: string[],
     monthlySeries: Highcharts.SeriesColumnOptions[],
     monthlyCategoriesLabels: { earliestDate: string; lastDate: string }[],
-    timeframe: TimeframeFilterOptions
+    timeframe: TransactionTrendsTimeframe
 ): Highcharts.Options => {
     const interval = 'Monthly';
-    const pointWidth = 20 * Math.max(Object.values(TimeframeFilterOptions).indexOf(timeframe) + 1, 1);
+    const pointWidth = 20 * Math.max(Object.values(TransactionTrendsTimeframe).indexOf(timeframe) + 1, 1);
 
     return {
         chart: {
@@ -398,7 +398,7 @@ export const getBottomChartConfig = (
 
 export function processGroupedData(
     input: DashboardStatsElementResponse[],
-    timeframe: TimeframeFilterOptions
+    timeframe: TransactionTrendsTimeframe
 ): LineAndVolumeCategoryAndSeries {
     const today = dayjs();
     let earliestDate = dayjs();
@@ -407,20 +407,20 @@ export function processGroupedData(
 
     // Determine the earliest date and chart interval based on the selected timeframe
     switch (timeframe) {
-        case TimeframeFilterOptions.Trailing12Months:
+        case TransactionTrendsTimeframe.Trailing12Months:
             earliestDate = today.subtract(12, 'month').startOf('month');
             break;
-        case TimeframeFilterOptions.Last6Months:
+        case TransactionTrendsTimeframe.Last6Months:
             earliestDate = today.subtract(6, 'month').startOf('month');
             break;
-        case TimeframeFilterOptions.Last90Days:
+        case TransactionTrendsTimeframe.Last90Days:
             earliestDate = today.subtract(90, 'day').startOf('month');
             break;
-        case TimeframeFilterOptions.Last60Days:
+        case TransactionTrendsTimeframe.Last60Days:
             earliestDate = today.subtract(60, 'day').startOf('month');
             chartInterval = 'day';
             break;
-        case TimeframeFilterOptions.LastMonth:
+        case TransactionTrendsTimeframe.LastMonth:
             earliestDate = today.subtract(1, 'month').startOf('month');
             chartInterval = 'day';
             break;

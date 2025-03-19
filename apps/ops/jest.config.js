@@ -13,6 +13,8 @@ module.exports = createJestConfig({
     moduleNameMapper: {
         '^.+\\.(svg)$': '<rootDir>/src/jest/transform/svgTransform.js',
         '^@deps(.*)$': '<rootDir>/src/$1',
+        '^jose': require.resolve('jose'),
+        '^@panva/hkdf$': require.resolve('@panva/hkdf'),
     },
     testRegex: '/.*(\\.test\\.tsx?$)',
     collectCoverage: true,

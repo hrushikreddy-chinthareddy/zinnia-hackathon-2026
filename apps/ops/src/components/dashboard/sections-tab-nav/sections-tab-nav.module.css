@@ -1,0 +1,13 @@
+.tabList {
+    display: flex;
+    flex-direction: column;
+    border-right: #ededed 2px solid;
+    padding: var(--measure-dimension-padding-2xl, 1rem);
+    gap: var(--measure-dimension-gap-md, 0.5rem);
+    margin-bottom: 0;
+    border-bottom: 0;
+    --indicator-width: 0;
+    --indicator-height: 0;
+    --indicator-z-index: 0;
+    --indicator-border-radius: 0;
+}

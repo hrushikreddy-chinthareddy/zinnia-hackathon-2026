@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useCallback, useState } from 'react';
 
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
@@ -44,6 +44,17 @@ const Amount = ({ policy }: AmountProps) => {
     const { effectiveDate, paymentAmount } = premium;
 
     const { startDate, endDate, requiredPayment, hasLapse, hasReinstatement } = getImportantDates(policyFeatures);
+
+    const handleIsDateAllowed = useCallback(
+        (date: dayjs.Dayjs, startDate: dayjs.Dayjs | undefined, endDate: dayjs.Dayjs | undefined) => {
+            if (!hasLapse && !hasReinstatement) {
+                return true;
+            }
+
+            return isDateAllowed(date, startDate, endDate);
+        },
+        [hasLapse, hasReinstatement]
+    );
 
     const handleDateChange = ({ target: { value: dateValue } }: ChangeEvent<HTMLInputElement>) => {
         const formattedDate = dayjs(dateValue, DATE_PICKER_FORMAT);
@@ -124,7 +135,6 @@ const Amount = ({ policy }: AmountProps) => {
             title={t('label')}
             footerContent={
                 <TransactionNavigationButtons
-                    className="mt-4"
                     handleContinue={handleContinue}
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
@@ -132,7 +142,7 @@ const Amount = ({ policy }: AmountProps) => {
                 />
             }
         >
-            <div className="flex flex-col gap-10">
+            <div className="flex flex-col gap-6">
                 <FieldDateSelect
                     formatOptions={{ format: '##/##/####' }}
                     className="flex max-w-[155px]"
@@ -141,7 +151,7 @@ const Amount = ({ policy }: AmountProps) => {
                     onChange={handleDateChange}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
-                    isDateAllowed={date => isDateAllowed(date, startDate, endDate)}
+                    isDateAllowed={date => handleIsDateAllowed(date, startDate, endDate)}
                     isFutureDateDisabled={false}
                     variant={errors.effectiveDate ? FieldVariant.Error : FieldVariant.Default}
                     message={errors.effectiveDate || ''}

@@ -223,9 +223,8 @@ export const getServerSideProps = withPageAuthRequired({
         const user = await getUserData(context);
         const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
         const { locale = DEFAULT_LOCALE, res, req } = context;
-        let accessToken;
         try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
+            (await getAccessToken(req, res)).accessToken;
         } catch (e) {
             logWarn('create-case/create/index:: Access token expired', {
                 ...parseErrorInformation(e),
@@ -235,7 +234,7 @@ export const getServerSideProps = withPageAuthRequired({
             return serverSidePropsLogout();
         }
 
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(accessToken, user, UserPermission.AllowReadOtpRenewals);
+        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
         if (!doesUserHasPagePermissions) {
             return {
                 redirect: {

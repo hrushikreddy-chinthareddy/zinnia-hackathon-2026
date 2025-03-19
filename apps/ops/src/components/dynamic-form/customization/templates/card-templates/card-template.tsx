@@ -53,26 +53,36 @@ export type SingleCardProps = {
     formData?: any;
 };
 
-const extractField = (properties: any, data: any, fieldName: string): { field: { [key: string]: any }; keys: string[]; value: string } => {
+const extractField = (
+    properties: Record<string, any>,
+    data: Record<string, any>,
+    fieldName: string
+): { field: Record<string, any>[]; keys: string[]; value: string } => {
     const field = Object.entries(properties)
         .filter(([_, value]) => (value as any)['ui:field'] === fieldName)
-        .map(([_, value]) => value);
+        .map(([_, value]) => value as Record<string, any>); // Explicitly type field as an array of objects
 
     const keys = Object.entries(properties)
         .filter(([_, value]) => (value as any)['ui:field'] === fieldName)
         .map(([key]) => key);
 
+    // Extract separator & placeholder once
+    const separator = field.length > 0 && typeof field[0]?.['ui:separator'] === 'string' ? field[0]['ui:separator'] : ' ';
+    const placeholder = field.length > 0 && typeof field[0]?.['ui:placeholder'] === 'string' ? field[0]['ui:placeholder'] + ' ' : '';
+
     const value = keys
         .reduce((result, key) => {
-            const defaultValue = replacePlaceholders(properties[key], data)?.default || '';
-            if (data?.[key] || defaultValue) {
-                result += ' ' + (data[key] !== undefined ? data[key] : defaultValue);
+            const fieldSchema = properties[key] || {};
+            const defaultValue = replacePlaceholders(fieldSchema, data)?.default || '';
+            const fieldValue = data?.[key] !== undefined ? data[key] : defaultValue;
+            if (fieldValue) {
+                result += (result ? separator : '') + fieldValue;
             }
             return result;
         }, '')
         ?.trim();
 
-    return { field, keys, value };
+    return { field, keys, value: value ? placeholder + value : '' };
 };
 
 export const formatValueByDataType = (dataType: string, value: any) => {
@@ -115,12 +125,12 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
 
     return (
         <>
-            <div className={`flex w-[436px] rounded border border-gray-100 p-[12px] ${className}`}>
+            <div className={`flex w-[455px] rounded border border-gray-100 p-[12px] ${className}`}>
                 <div className="px-2">
                     <Icon width={25} height={25} type={IconType[icon as string as keyof typeof IconType] || IconType.CIRCLE_USER} />{' '}
                 </div>
                 <div className="grow">
-                    <div className="text-sm font-bold">
+                    <div className="text-sm font-bold break-all">
                         {title?.field?.[0] && <PiiWrapper>{formatValueByDataType(title.field[0].dataType, title.value)}</PiiWrapper>}
                     </div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
@@ -173,7 +183,8 @@ const DocumentActions = ({ document, t }: any) => {
         docId,
         (document as DocumentWithSource).documentSource || (document as MetadataSearchResponse).documentClassification,
         document.carrier,
-        document.displayName || docId
+        document.displayName || docId,
+        document.fileType
     );
 
     const handleClick = (event: React.MouseEvent) => {
@@ -183,7 +194,7 @@ const DocumentActions = ({ document, t }: any) => {
 
     return (
         <>
-            <div className="px-4 pt-1">
+            <div className="px-4">
                 <DocumentPreviewer
                     className="flex max-w-[234px] gap-1"
                     activeDocType={DocumentTypeView.Case}

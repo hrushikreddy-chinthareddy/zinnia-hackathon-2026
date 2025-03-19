@@ -1,12 +1,12 @@
 import Form, { IChangeEvent } from '@rjsf/core';
-import { GenericObjectType, RJSFSchema } from '@rjsf/utils';
+import { GenericObjectType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { useTranslation } from 'next-i18next';
 import React, { ForwardedRef, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
-import { updateTask } from '@deps/containers/task-container/task.healpers';
+import { updateTask } from '@deps/containers/task-container/task.helper';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { EntityTypes, MatchingCase } from '@deps/models/case/task/doc-matching-payment';
 import { getCaseDetails } from '@deps/queries/api/cases';
@@ -33,7 +33,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const formContext = { carrier: task.carrier, caseId: task.caseId, taskType: task.taskType, correlationId: correlationId };
     const fetchData = async () => {
         const correlationId = task.data.matchingResult;
-        if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING) {
+
+        if (task.taskType === TaskType.PURCHASE_DOCUMENT_MATCHING || task.taskType === TaskType.Standard_Document_Matching) {
             if (correlationId === MatchingCase.ENTERED && task.data.caseId) {
                 try {
                     const matchedCase = await getCaseDetails(task.data.caseId);
@@ -42,6 +43,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         const error = !matchedCase ? 'caseNotFound' : 'correlationIdNotFount';
                         browserLogWarn(`task:: ${t(error)}`, task.data.caseId);
                         onSubmit(t(error));
+                        return;
+                    }
+
+                    if (task.taskType === TaskType.Standard_Document_Matching) {
                         return;
                     }
 
@@ -67,7 +72,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         data: {
                             ...previousTask.data,
                             transactionOptions: paymentCards,
-                            caseId: matchedCase.id,
+                            zlCaseId: matchedCase.id,
+                            policyNumber: matchedCase?.additionalData?.policyNumber || '',
                             matchingResult: matchedCase.correlationId,
                             isDuplicate: MatchingCase.MATCH_FOUND,
                         },
@@ -113,8 +119,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
      */
 
     const cleanForm = (formData: any) => {
-        let finalFormData = formData;
-        let iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
+        const finalFormData = formData;
+        const iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
         iterableProperties.forEach(property => {
             if (taskMetadata.uiSchema?.[property]?.['ui:options']?.omitValue) {
                 delete finalFormData.data[property];
@@ -141,15 +147,91 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
-            setTask(ogTask => ({
-                ...ogTask,
-                data: event.formData,
-            }));
-        },
+            const { formData } = event;
+            const { uiSchema } = formSchema;
+            const hasDataPathFields = Object.keys(uiSchema).some(field => uiSchema[field]?.['ui:dataPath']);
 
+            if (!hasDataPathFields) {
+                setTask(ogTask => ({
+                    ...ogTask,
+                    data: event.formData,
+                }));
+                return;
+            }
+
+            // Otherwise, apply the dataPath mapping logic
+            setTask(prevTask => {
+                const updatedTask = structuredClone(prevTask);
+
+                Object.keys(formData).forEach(field => {
+                    const dataPath = uiSchema[field]?.['ui:dataPath'];
+                    if (!dataPath) return;
+
+                    let ref = updatedTask.data;
+                    let refPrev = prevTask.data;
+                    const pathLength = dataPath.length;
+
+                    for (let i = 0; i < pathLength - 1; i++) {
+                        const key = dataPath[i];
+
+                        if (!ref[key] || typeof ref[key] !== 'object') {
+                            ref[key] = {};
+                        }
+                        ref = ref[key];
+
+                        if (!refPrev[key] || typeof refPrev[key] !== 'object') {
+                            refPrev[key] = {};
+                        }
+                        refPrev = refPrev[key];
+                    }
+
+                    const lastKey = dataPath[pathLength - 1];
+
+                    if (Array.isArray(refPrev[lastKey]) && Array.isArray(formData[field])) {
+                        if (JSON.stringify(refPrev[lastKey]) !== JSON.stringify(formData[field])) {
+                            ref[lastKey] = [...formData[field]];
+                        }
+                    } else if (JSON.stringify(refPrev[lastKey]) !== JSON.stringify(formData[field])) {
+                        ref[lastKey] = formData[field];
+                    }
+                });
+
+                return updatedTask;
+            });
+        },
         [setTask, task]
     );
 
+    const extractFormData = (data: any, uiSchema: UiSchema, schema: any) => {
+        const formData: any = {};
+        const requiredFields = new Set(schema?.required || []);
+
+        Object.keys(uiSchema).forEach(field => {
+            const dataPath = uiSchema[field]?.['ui:dataPath'];
+            if (!dataPath) return;
+
+            let ref = data;
+            for (let i = 0; i < dataPath.length; i++) {
+                if (ref === undefined || ref === null) {
+                    //replace browserLog
+                    console.warn(`Path broken at ${dataPath[i]}, skipping ${field}`);
+                    return;
+                }
+                ref = ref[dataPath[i]];
+            }
+
+            if (ref !== undefined) {
+                formData[field] = ref;
+            } else if (requiredFields.has(field)) {
+                //replace browserLog
+                console.warn(`Required field ${field} is missing!`);
+            }
+        });
+        if (Object.keys(formData).length === 0) {
+            return data;
+        }
+        return formData;
+    };
     const setFormContext = (dynamicData: any) => {
         setTask((ogTask: any) => ({
             ...ogTask,
@@ -178,7 +260,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     useEffect(() => {
         const caseSubTypes = task?.data?.caseSubTypeOptions;
-
         if (caseSubTypes) {
             setFormSchema(prevSchema => ({
                 ...prevSchema,
@@ -194,6 +275,20 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             }));
         }
     }, [task?.data?.caseSubTypeOptions]);
+
+    useEffect(() => {
+        if (TaskType.Standard_Document_Matching === task.taskType) {
+            const matchedCase = task?.data?.potentialMatches?.find((match: any) => match.correlationid === task?.data?.matchingResult);
+            setTask((ogTask: any) => ({
+                ...ogTask,
+                data: {
+                    ...ogTask.data,
+                    matchedCaseId:
+                        task?.data?.matchingResult === 'ENTERED' ? task?.data?.caseId : matchedCase ? matchedCase.zlCaseId : null,
+                },
+            }));
+        }
+    }, [task?.data?.matchingResult, task?.data?.caseId]);
 
     useEffect(() => {
         const transactionOptions = task?.data?.transactionOptions;
@@ -221,7 +316,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     return (
         <DynamicForm
             ref={forwardedRef}
-            formData={task.data}
+            formData={extractFormData(task.data, formSchema.uiSchema, formSchema.formSchema)}
             taskMetadata={memoizedSchema}
             onChange={handleChange}
             onSubmit={handleSubmit}

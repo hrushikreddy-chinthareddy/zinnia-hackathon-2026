@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
 import InputCheckBox from '@deps/components/checkbox-v2/input-checkbox';
 import Content, { ContentVariant } from '@deps/components/content/content';

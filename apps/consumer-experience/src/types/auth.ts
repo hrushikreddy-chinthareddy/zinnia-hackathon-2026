@@ -19,6 +19,11 @@ export interface Auth0ErrorResponse {
   error: string;
   error_description: string;
   mfa_token?: string;
+  success?: boolean;
+}
+
+export interface MfaResponse extends Partial<Auth0ErrorResponse> {
+  stepUpTime?: number;
 }
 
 export interface PasswordlessCodeMfaResponse {
@@ -137,6 +142,10 @@ export interface Permissions {
 export interface UserClaims {
   'https://dev.api.zinnia.io/permissions': Permissions;
   partyId: string;
+  /**
+   * Unix timestamp
+   */
+  stepUpTime: number;
   app_metadata: object;
   nickname: string;
   name: string;
@@ -212,6 +221,7 @@ export interface MfaResendChallangeResponse {
 
 export interface UserContext {
   user: User | undefined;
+  setUser: (user: User | undefined) => void;
 }
 
 export interface TermsAndConditionApiResponse {

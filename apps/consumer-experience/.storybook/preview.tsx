@@ -75,6 +75,14 @@ const preview: Preview = {
           name: 'standard',
           value: '#EDEDED',
         },
+        {
+          name: 'light',
+          value: '#ffffff',
+        },
+        {
+          name: 'subtle',
+          value: '#f8f8f8',
+        },
       ],
     },
   },
