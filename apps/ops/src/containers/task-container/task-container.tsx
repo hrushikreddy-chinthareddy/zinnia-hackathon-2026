@@ -1,23 +1,27 @@
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
-import CompleteCard from '@deps/components/workflows/complete-card/complete-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
-import { TaskStatus } from '@deps/models/case/task-instance';
 
 import { stepsProvider } from './steps-healper/steps-provider';
 import { TaskDataContext } from './task-context';
 import { TaskWorkflowContent } from './task-workflow-content';
+import { TaskStatus } from '@deps/models/case/task-instance';
+import CompleteCard from '@deps/components/workflows/complete-card/complete-card';
 type TaskContainerProps = {
     taskInfoLink: string;
     nigoExceptions: any;
     nigoSubExceptions: any;
     taskMetadata: FormMetadata[];
+    isSaveAsDraftEnabled: {
+        suitabilityDataEntry?: boolean;
+        [key: string]: boolean | undefined;
+    };
 };
 
-const TaskContainer = ({ taskInfoLink, nigoExceptions, nigoSubExceptions, taskMetadata }: TaskContainerProps) => {
+const TaskContainer = ({ taskInfoLink, nigoExceptions, nigoSubExceptions, taskMetadata, isSaveAsDraftEnabled }: TaskContainerProps) => {
     const { task, isReadyForDataEntry } = useContext(TaskDataContext);
     const { carrier, caseId, id, taskType } = task;
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagement.taskForm' });
@@ -38,6 +42,7 @@ const TaskContainer = ({ taskInfoLink, nigoExceptions, nigoSubExceptions, taskMe
         nigoSubExceptions,
         taskMetadata,
         task,
+        isSaveAsDraftEnabled,
     });
 
     return (

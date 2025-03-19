@@ -14,7 +14,6 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
-import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getCaseDetailsSSR } from '@deps/queries/api/cases';
@@ -26,6 +25,7 @@ import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
 
 import { applyDynamicOptions } from '../../../containers/task-container/task-handlers/handle-task';
+import { UserPermission } from '@deps/models/user-profile';
 
 type TaskPageProps = {
     task: ManagementTask;
@@ -34,6 +34,7 @@ type TaskPageProps = {
     taskInfoLink: string;
     nigoExceptions: any;
     nigoSubExceptions: any;
+    isSaveAsDraftEnabled: any;
 };
 
 export const TaskPage: React.FC<TaskPageProps> = ({
@@ -43,7 +44,9 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     nigoExceptions,
     nigoSubExceptions,
     taskMetadata,
+    isSaveAsDraftEnabled
 }: TaskPageProps) => {
+
     return (
         <div>
             <NoNavLayout fullHeight={true}>
@@ -53,6 +56,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
                         nigoExceptions={nigoExceptions}
                         nigoSubExceptions={nigoSubExceptions}
                         taskMetadata={taskMetadata}
+                        isSaveAsDraftEnabled={isSaveAsDraftEnabled}
                     />
                 </TaskProvider>
             </NoNavLayout>
@@ -140,6 +144,7 @@ export const getServerSideProps = withPageAuthRequired({
                     carrier?.toLowerCase(),
                     user.sub
                 );
+
                 const flag = convertToCamelCase(taskType);
                 const enabledTask = Object.keys(isTaskEnabled).includes(flag);
                 if (!enabledTask) {
@@ -153,6 +158,11 @@ export const getServerSideProps = withPageAuthRequired({
                 }
             }
 
+            const isSaveAsDraftEnabled = await optimizelyService.getFeatureFlagVariables(
+                FEATURE_FLAG_VARIABLES.TASK_SAVE_AS_DRAFT,
+                carrier?.toLowerCase(),
+                user.sub
+            );
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],
                 carrier: carrier?.toUpperCase(),
@@ -195,6 +205,7 @@ export const getServerSideProps = withPageAuthRequired({
                     taskInfoLink,
                     nigoExceptions,
                     nigoSubExceptions,
+                    isSaveAsDraftEnabled
                 },
             };
         } catch (error) {

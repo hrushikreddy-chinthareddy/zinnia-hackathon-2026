@@ -9,7 +9,7 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
-import { updateTask } from '@deps/containers/task-container/task.healpers';
+import { updateTask } from '@deps/containers/task-container/task.helper';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -23,9 +23,10 @@ type TaskFormStepProps = {
     taskInfoLink?: string;
     isSubmit?: boolean;
     taskMetadata: FormMetadata;
+    isSaveAsDraftEnabled?: boolean;
 };
 
-const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata }: TaskFormStepProps) => {
+const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, isSaveAsDraftEnabled = false }: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `taskManagement.taskForm` });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
     const formState = useContext(TaskDataContext);
@@ -79,9 +80,10 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata }
                     isSubmit={true}
                     handleContinue={handleStepContinue}
                     handleSaveAsDraft={handleSaveAsDraft}
-                    isDraft={true}
+                    isDraft={isSaveAsDraftEnabled}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
+
                 />
             }
         >
