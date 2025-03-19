@@ -120,6 +120,7 @@
                                             "type": "string",
                                             "$ref": "#/definitions/declineReason"
                                         },
+                                        "minItems": 1,
                                         "uniqueItems": true
                                     }
                                 },
@@ -187,7 +188,6 @@
                             }
                         }
                     },
-
                     "issueResolved": {
                         "ui:widget": "radio",
                         "ui:options": {
@@ -231,9 +231,9 @@
                                 "Goals conflicting or don't match explanation",
                                 "Reverse mortgage"
                             ]
-                        }
+                        },
+                        "ui:placeholder": "Select Issue"
                     },
-
                     "attachment": {
                         "ui:options": {
                             "label": false,

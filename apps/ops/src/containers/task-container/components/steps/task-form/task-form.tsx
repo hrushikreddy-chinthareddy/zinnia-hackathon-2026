@@ -146,7 +146,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     }, [correlationId, isSubmit, onSubmit, setSubmitFailed, task]);
 
     const handleChange = useCallback(
-        (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+        (event: IChangeEvent<any, RJSFSchema, GenericObjectType>, key?: string) => {
             const { formData } = event;
             const { uiSchema } = formSchema;
             const hasDataPathFields = Object.keys(uiSchema).some(field => uiSchema[field]?.['ui:dataPath']);
@@ -154,7 +154,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             if (!hasDataPathFields) {
                 setTask(ogTask => ({
                     ...ogTask,
-                    data: event.formData,
+                    data: {
+                        ...event.formData,
+                        ...(key == 'root_attachment' ? { attachments: ogTask.data?.attachments || [] } : {}),
+                    },
                 }));
                 return;
             }
@@ -196,6 +199,9 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     }
                 });
 
+                if (key === 'root_attachment') {
+                    updatedTask.data.attachments = prevTask.data?.attachments || [];
+                }
                 return updatedTask;
             });
         },
