@@ -77,7 +77,7 @@ const extractField = (
             const defaultValue = replacePlaceholders(fieldSchema, data)?.default || '';
             const fieldValue = data?.[key] !== undefined ? data[key] : defaultValue;
             if (fieldValue) {
-                result += (result ? separator : '') + toSentenceCase(fieldValue);
+                result += (result ? separator : '') + fieldValue;
             }
             return result;
         }, '')
@@ -96,7 +96,7 @@ export const formatValueByDataType = (dataType: string, value: any) => {
             return formatDirtyAddress(JSON.parse(value));
         }
         default:
-            return value;
+            return toSentenceCase(value);
     }
 };
 
@@ -142,7 +142,7 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                                 <PiiWrapper>
                                     <Content
                                         className="min-w-max  break-all"
-                                        variant={ContentVariant.BodySm}
+                                        variant={ContentVariant.BodySmBold}
                                         details={formatValueByDataType(title.field[0].dataType, title.value)}
                                     />
                                 </PiiWrapper>
