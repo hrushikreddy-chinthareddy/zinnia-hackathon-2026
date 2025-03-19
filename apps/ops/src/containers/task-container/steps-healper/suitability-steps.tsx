@@ -30,7 +30,7 @@ export const getSuitabilitySteps = ({
         {
             ariaLabel: t('tabs.suitabilityForm'),
             isVisible: () => isReadyForDataEntry,
-            component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={false} taskMetadata={taskMetadata[0]} isSaveAsDraftEnabled={isSaveAsDraftEnabled?.suitabilityDataEntry ?? false} ></TaskFormStep>,
+            component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={false} taskMetadata={taskMetadata[0]} isSaveAsDraftEnabled={isSaveAsDraftEnabled} ></TaskFormStep>,
             text: t('tabs.suitabilityForm'),
             index: 1,
             screenReaderLabel: t('tabs.suitabilityForm'),

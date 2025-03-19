@@ -15,6 +15,8 @@ import { FormMetadata } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 
 import { TaskForm } from './task-form';
+import { browserLogError } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 
 type TaskFormStepProps = {
@@ -63,7 +65,10 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, 
             setLoading(false)
 
         } catch (error) {
-            console.log(error)
+            browserLogError('updateTask::Error updating task', {
+                ...parseErrorInformation(error),
+                taskId: task.id,
+            });
             setLoading(false)
         }
 
@@ -94,10 +99,8 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, 
                     </div>
                 )}
                 <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-1">
-                        <TaskForm readonly={readonly} ref={formRef} onSubmit={handleSubmit} isSubmit={isSubmit} taskMetadata={taskMetadata} />
-                        {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
-                    </div>
+                    <TaskForm readonly={readonly} ref={formRef} onSubmit={handleSubmit} isSubmit={isSubmit} taskMetadata={taskMetadata} />
+                    {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
                 </div>
             </div>
 
