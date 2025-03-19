@@ -318,7 +318,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
             // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadPolicyAdmin,
+                loggingContext
+            );
             const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
 
             if (!isAdvisorsExcel && !doesUserHasPagePermissions) {

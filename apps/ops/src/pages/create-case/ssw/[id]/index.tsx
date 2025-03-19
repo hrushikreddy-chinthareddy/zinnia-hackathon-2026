@@ -232,7 +232,7 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
             const { locale = DEFAULT_LOCALE, params, query, res, req } = context;
             let accessToken;
             try {
@@ -242,7 +242,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -288,7 +292,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const isUsedLastSaved = shouldShowNewExperience && deStringifyTrueFalseNull(getLastSaved.toLowerCase());
             if (shouldShowNewExperience && action !== 'readonly') {
                 logInfo('create-case/ssw/:id:Checking NIGO', loggingContext);
-                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken);
+                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken, loggingContext);
                 if (isNigoCase && !isUsedLastSaved) {
                     logInfo('create-case/ssw/:id::Nigo exists for case', {
                         ...loggingContext,
@@ -307,7 +311,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
 
             const policyNumber = document?.contract ?? '';
-            const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
+            const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0, loggingContext);
             const planCode = response ? response[0]?.planCode : null;
             if (!planCode) {
                 logInfo('create-case/ssw/:id::Plan code not found', loggingContext);
@@ -332,6 +336,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 getLastSaved,
                 taskId: taskId,
                 action: action,
+                loggingContext,
             });
             if (!form) {
                 logError('create-case/ssw/:id::Error initializing task ssw form', {
@@ -346,7 +351,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            const parties = document?.contract ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string) : [];
+            const parties = document?.contract
+                ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
+                : [];
 
             return {
                 props: {

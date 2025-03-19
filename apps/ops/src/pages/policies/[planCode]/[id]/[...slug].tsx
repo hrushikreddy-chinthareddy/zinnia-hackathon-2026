@@ -304,7 +304,8 @@ export const getServerSideProps = withPageAuthAndLogging(
             // We can use the enum to access the permissions object.
             permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(
                 context,
-                UserPermission.AllowReadPolicyAdmin
+                UserPermission.AllowReadPolicyAdmin,
+                loggingContext
             );
 
             const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);

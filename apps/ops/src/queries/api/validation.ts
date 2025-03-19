@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios';
 
-import { isEmptyObject } from "@deps/helpers/objects.helper";
-import { Address } from "@deps/models/policy/sor-policy";
-import { logError, logInfo } from '@deps/utils/server-logging';
+import { isEmptyObject } from '@deps/helpers/objects.helper';
+import { Address } from '@deps/models/policy/sor-policy';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
@@ -18,24 +18,21 @@ export const validateAddress = async (clientCode: string, address: Address): Pro
             throw new Error('no address provided');
         }
         const url = `${baseUrl}/${clientCode.toLowerCase()}/addressvalidation`;
-        const { data } = await client.post<any, AxiosResponse>(
-            url,
-            address
-        );
+        const { data } = await client.post<any, AxiosResponse>(url, address);
         if (!data.AddressValidationResponse) {
             throw new Error('Address validation API error');
         }
-        logInfo('Successfully validated address', {
+        browserLogInfo('Successfully validated address', {
             file: 'queries/api/validateAddress',
-            function: 'validateAddress'
+            function: 'validateAddress',
         });
         return data.AddressValidationResponse;
     } catch (e) {
-        logError('An error occurred while validating address', {
+        browserLogError('An error occurred while validating address', {
             file: 'queries/api/validateAddress',
             function: 'validateAddress',
             clientCode,
-            address
+            address,
         });
         return null;
     }

@@ -21,7 +21,7 @@ import {
 import { GetPolicyResponse } from '@deps/queries/api/policies';
 import { CaseSearchResponse } from '@deps/types/search';
 
-import { logError, parseErrorInformation } from './server-logging';
+import { logErrorWithoutContext, parseErrorInformation } from './server-logging';
 
 interface SanitizeOptions {
     isDemoUser: boolean;
@@ -52,7 +52,7 @@ export const caseSearchSanitizer = ({ data, ...rest }: CaseSearchResponse, optio
     try {
         return { data: data.map(d => caseSanitizer(d, options)), ...rest };
     } catch (e) {
-        logError('Error sanitizing case search results', { ...parseErrorInformation(e) });
+        logErrorWithoutContext('Error sanitizing case search results', { ...parseErrorInformation(e) });
         throw e;
     }
 };
@@ -89,7 +89,7 @@ export const policySanitizer = ({ parties = [], ...rest }: Policy): Policy => {
         const sanitizedParties = parties.map(sanitizePolicyParty);
         return { ...rest, parties: sanitizedParties };
     } catch (e) {
-        logError('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
+        logErrorWithoutContext('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
         throw e;
     }
 };
@@ -102,7 +102,7 @@ export const policySanitizerWithoutSSN = ({ parties = [], ...rest }: Policy): Po
         const sanitizedParties = parties.map(sanitizePolicyPartyWithoutSSN);
         return { ...rest, parties: sanitizedParties };
     } catch (e) {
-        logError('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
+        logErrorWithoutContext('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
         throw e;
     }
 };
@@ -117,7 +117,7 @@ export const policyResponseSanitizer = (policyResponse: GetPolicyResponse): GetP
         const policy = policySanitizer(policyResponse.data);
         return { ...policyResponse, data: policy };
     } catch (e) {
-        logError('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
+        logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
         throw e;
     }
 };
@@ -128,7 +128,7 @@ export const lcPartyResponseSanitizer = (partyResponse: LifeCadParty[] = []): Li
             return { ...val, TaxID: formatSSN(`${val.TaxID}`) };
         });
     } catch (e) {
-        logError('sanitizers::lcPartyResponseSanitizer::error', { ...parseErrorInformation(e) });
+        logErrorWithoutContext('sanitizers::lcPartyResponseSanitizer::error', { ...parseErrorInformation(e) });
         throw e;
     }
 };
@@ -297,7 +297,7 @@ export const fullyMaskPolicyResponse = (policyResponse: GetPolicyResponse): GetP
         const policy = policyMasker(policyResponse.data);
         return { ...policyResponse, data: policy };
     } catch (e) {
-        logError('sanitizers::fullyMaskPolicyResponse::error', { ...parseErrorInformation(e) });
+        logErrorWithoutContext('sanitizers::fullyMaskPolicyResponse::error', { ...parseErrorInformation(e) });
         throw e;
     }
 };
@@ -360,7 +360,7 @@ export const caseSearchFullMasker = ({ data, ...rest }: CaseSearchResponse): Cas
     try {
         return { data: data.map(d => fullyMaskCase(d)), ...rest };
     } catch (e) {
-        logError('Error sanitizing case search results', { ...parseErrorInformation(e) });
+        logErrorWithoutContext('Error sanitizing case search results', { ...parseErrorInformation(e) });
         throw e;
     }
 };

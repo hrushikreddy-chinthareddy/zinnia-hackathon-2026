@@ -162,7 +162,7 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
             const { locale = DEFAULT_LOCALE, query, params, req, res } = context;
             let accessToken;
             try {
@@ -175,7 +175,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -211,7 +215,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
             if (shouldShowNewExperience && action !== 'readonly') {
                 logInfo('create-case/renewal/:id:Checking NIGO', loggingContext);
-                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), caseDocument.caseId, accessToken);
+                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), caseDocument.caseId, accessToken, loggingContext);
                 if (isNigoCase) {
                     logInfo('create-case/renewal/:id::Nigo exists for case', {
                         ...loggingContext,
@@ -240,7 +244,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
 
-                const acctInfoResponse = await getPolicyAccountInfoSSR(caseDocument.contract, caseDocument.processCompanyCode, accessToken);
+                const acctInfoResponse = await getPolicyAccountInfoSSR(
+                    caseDocument.contract,
+                    caseDocument.processCompanyCode,
+                    accessToken,
+                    loggingContext
+                );
                 if (!acctInfoResponse?.PlanCode) {
                     logInfo('create-case/renewal/:id::Plan code not found', {
                         ...loggingContext,
@@ -263,7 +272,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
 
             const parties = caseDocument?.contract
-                ? await getPolicyPartiesSSR(caseDocument?.contract, clientId, accessToken as string)
+                ? await getPolicyPartiesSSR(caseDocument?.contract, clientId, accessToken as string, loggingContext)
                 : [];
 
             return {

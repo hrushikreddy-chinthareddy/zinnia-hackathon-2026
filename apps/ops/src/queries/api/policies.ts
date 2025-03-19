@@ -435,7 +435,7 @@ export const getPolicyTransactionHistorySSR = async (
     clientCode: string,
     typeDesc: string,
     transactionType: string,
-    accessToken?: string,
+    accessToken: string | undefined,
     logCtx: LoggingContext
 ): Promise<TransactionHistory | null> => {
     const loggingContext = {
@@ -512,7 +512,7 @@ export const getPolicyTransactionHistory = async (
 export const getSpecialProgramsSSR = async (
     policyNumber: string,
     clientCode: string,
-    accessToken?: string,
+    accessToken: string | undefined,
     logCtx: LoggingContext
 ): Promise<SpecialProgram | null> => {
     const loggingContext = {
@@ -524,15 +524,19 @@ export const getSpecialProgramsSSR = async (
 
     try {
         const url = `${apiServerBaseUrl}/policy/v1/policies/specialprogramdetails?policyNumber=${policyNumber}&clientCode=${clientCode}`;
-        const { data } = await serverApi.get<SpecialProgram | null, AxiosResponse<SpecialProgram>>(url, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                Accept: 'application/json',
-                Authorization: `Bearer ${accessToken}`,
+        const { data } = await serverApi.get<SpecialProgram | null, AxiosResponse<SpecialProgram>>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
             },
-        });
+            loggingContext
+        );
         return data;
     } catch (error: any) {
         logWarn('getSpecialProgramsSSR', {

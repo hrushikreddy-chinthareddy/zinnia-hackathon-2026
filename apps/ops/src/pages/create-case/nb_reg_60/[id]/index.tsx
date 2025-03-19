@@ -159,7 +159,7 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
             const shouldShowReg60Page = featureFlagDecisions?.[FEATURE_FLAGS.REG_60];
             const { locale = DEFAULT_LOCALE, query, res, req } = context;
             let accessToken;
@@ -174,7 +174,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
             if (!doesUserHasPagePermissions || !shouldShowReg60Page) {
                 return {
                     redirect: {

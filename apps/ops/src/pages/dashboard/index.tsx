@@ -94,7 +94,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
             const doesUserHavePagePermission = await checkTuplePage(
                 context,
                 FgaRelation.UiAccess,
@@ -117,7 +117,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
 
-            const brokerDealersSSR = await fetchAgentsSSR(accessToken || '');
+            const brokerDealersSSR = await fetchAgentsSSR(accessToken || '', loggingContext);
             const filteredBrokerDealers = brokerDealersSSR.filter(
                 brokerDealer => brokerDealer.name !== 'NOT_APPLICABLE' && brokerDealer.name !== ''
             );

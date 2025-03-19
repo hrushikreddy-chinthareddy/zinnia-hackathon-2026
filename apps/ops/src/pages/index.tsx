@@ -9,6 +9,7 @@ import { DEFAULT_LOCALE, setNextLocaleCookie } from '@deps/helpers/routing.helpe
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { ReactComponent as ZinniaLogo } from '@deps/styles/elements/logos/zinnia-logo.svg';
 import { ReactComponent as ZinniaWelcomeArt } from '@deps/styles/elements/welcome-art/zinnia-welcome-art.svg';
+import { buildNextPageLoggingContext } from '@deps/utils/server-logging';
 
 import type { GetServerSideProps } from 'next';
 
@@ -66,13 +67,27 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
     const auth = await getSession(req, res);
     const user = auth?.user as UserProfile;
+    const loggingContext = await buildNextPageLoggingContext(context, '/', 'pages/index', 'getServerSideProps');
 
     if (user) {
+        // BPB - Todo: Figure this one out!
         // Create a permissions object, strongly typed using the enum.
         const permissions = {
-            [UserPermission.AllowReadCaseManagement]: await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement),
-            [UserPermission.AllowReadPolicyAdmin]: await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin),
-            [UserPermission.AllowReadOtpRenewals]: await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals),
+            [UserPermission.AllowReadCaseManagement]: await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadCaseManagement,
+                loggingContext
+            ),
+            [UserPermission.AllowReadPolicyAdmin]: await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadPolicyAdmin,
+                loggingContext
+            ),
+            [UserPermission.AllowReadOtpRenewals]: await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            ),
         };
 
         let returnTo = locale + '/cases';

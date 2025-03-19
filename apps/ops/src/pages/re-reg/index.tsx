@@ -71,7 +71,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const policyNumber = (query?.policyNumber as string) || '';
             const documentNumber = (query.doc as string) || '';
             const clientId = (query.clientId as string) || '';
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
             let accessToken;
             try {
@@ -84,7 +84,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
             // Create a permissions object to pass to the page, strongly typed using the enum.
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -114,7 +118,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
 
                 const userInfoForLogging = getUserInfoFromUser(user);
-                const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
+                const response = await searchPolicySSR(
+                    policyNumber,
+                    [clientId.toUpperCase() as Carrier],
+                    accessToken,
+                    1,
+                    0,
+                    loggingContext
+                );
                 const planCode = response ? response[0]?.planCode : null;
                 if (!planCode) {
                     logInfo('re-reg::Plan code not found', loggingContext);
@@ -129,9 +140,15 @@ export const getServerSideProps = withPageAuthAndLogging(
                 }
 
                 const document = documentNumber
-                    ? await getDocumentV2SSR(documentNumber, DocumentType.ReReg, clientId.toUpperCase(), accessToken as string)
+                    ? await getDocumentV2SSR(
+                          documentNumber,
+                          DocumentType.ReReg,
+                          clientId.toUpperCase(),
+                          accessToken as string,
+                          loggingContext
+                      )
                     : null;
-                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
+                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
 
                 if (!policy) {
                     logInfo('re-reg::Policy not found', { ...loggingContext, planCode });

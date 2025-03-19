@@ -31,7 +31,7 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES, FEATURE_VARIABLES_CORRESPONDENCE_KEYS } from '@deps/utils/optimizely/variables';
-import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { logWarn, logError, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendTaxFormsProps extends SegmentTrackedPageProps {
@@ -191,8 +191,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
             // Create a permissions object to pass to the page, strongly typed using the enum.
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
             //  const shouldShowSendTaxFormsPage = featureFlagDecisions?.[FEATURE_FLAGS.SEND_TAX_FORMS];
             const shouldShowCaseButton = featureFlagDecisions?.[FEATURE_FLAGS.SEND_TAX_FORMS_SHOW_CASE_BUTTON];
@@ -213,8 +217,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
             try {
-                const userInfoForLogging = getUserInfoFromUser(user);
-                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
+                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
                 const carrierId = policy?.carrierId?.toLowerCase() || '';
                 if (!policy || !carrierId) {
                     logInfo('contact-center/send-taxforms/policy-not-found', loggingContext);
@@ -229,17 +232,20 @@ export const getServerSideProps = withPageAuthAndLogging(
                 const mailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
                     FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
                     FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Mail,
-                    user.sub
+                    user.sub,
+                    loggingContext
                 );
                 const emailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
                     FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
                     FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Email,
-                    user.sub
+                    user.sub,
+                    loggingContext
                 );
                 const faxOptionEnabled = await optimizelyService.getFeatureFlagVariables(
                     FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
                     FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Fax,
-                    user.sub
+                    user.sub,
+                    loggingContext
                 );
                 const shouldShowMailOption = Object.keys(mailOptionEnabled).includes(carrierId);
                 const shouldShowEmailOption = Object.keys(emailOptionEnabled).includes(carrierId);

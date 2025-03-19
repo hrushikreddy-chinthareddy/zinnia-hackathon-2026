@@ -5,7 +5,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import BeneChangeContainer from '@deps/containers/bene-change/bene-change-container';
 import { BeneChangeProvider } from '@deps/containers/bene-change/bene-change-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';
@@ -39,7 +39,6 @@ const BeneChange = ({ policy, document, planCode }: AddressChangeProps) => {
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
-            const user = await getUserData(context);
             const { locale = DEFAULT_LOCALE, query, req, res } = context;
             const policyNumber = (query?.policyNumber as string) || '';
             const documentNumber = (query.doc as string) || '';
@@ -57,7 +56,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
             // Create a permissions object to pass to the page, strongly typed using the enum.
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -86,7 +89,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ALL_LOCALES
                 );
 
-                const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
+                const response = await searchPolicySSR(
+                    policyNumber,
+                    [clientId.toUpperCase() as Carrier],
+                    accessToken,
+                    1,
+                    0,
+                    loggingContext
+                );
                 const planCode = response ? response[0]?.planCode : null;
                 if (!planCode) {
                     logInfo('address_change/:id::Plan code not found', loggingContext);

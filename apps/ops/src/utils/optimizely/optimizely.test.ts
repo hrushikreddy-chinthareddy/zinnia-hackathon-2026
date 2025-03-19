@@ -2,6 +2,7 @@
 import { Client, createInstance } from '@optimizely/optimizely-sdk';
 
 import { OptimizelyService } from './optimizely';
+import { LoggingContext } from '../server-logging';
 
 jest.mock('@auth0/nextjs-auth0', () => ({
     withPageAuthRequired: jest.fn(() => 'mocked withPageAuthRequired'),
@@ -22,6 +23,7 @@ jest.mock('@optimizely/optimizely-sdk', () => ({
 
 describe('OptimizelyService', () => {
     let mockClient: jest.Mocked<Client>;
+    const logCtx = {} as LoggingContext;
 
     beforeEach(() => {
         mockClient = {
@@ -65,7 +67,7 @@ describe('OptimizelyService', () => {
     it('should get feature flag decisions', async () => {
         const service = new OptimizelyService('sdk_key', mockClient);
         const userId = 'user123';
-        const flags = await service.getFeatureFlagDecisions(userId);
+        const flags = await service.getFeatureFlagDecisions(userId, logCtx);
         expect(mockClient.createUserContext).toHaveBeenCalledWith(userId, { userId });
         expect(flags).toEqual({
             flag1: true,
@@ -76,8 +78,8 @@ describe('OptimizelyService', () => {
     it('should get feature flag decisions twice and call onready once', async () => {
         const service = new OptimizelyService('sdk_key', mockClient);
         const userId = 'user123';
-        await service.getFeatureFlagDecisions(userId);
-        await service.getFeatureFlagDecisions(userId);
+        await service.getFeatureFlagDecisions(userId, logCtx);
+        await service.getFeatureFlagDecisions(userId, logCtx);
         expect(mockClient.onReady).toHaveBeenCalledTimes(1);
     });
 
@@ -85,7 +87,7 @@ describe('OptimizelyService', () => {
         mockClient.createUserContext.mockReturnValueOnce(null);
         const service = new OptimizelyService('sdk_key', mockClient);
         const userId = 'user123';
-        const flags = await service.getFeatureFlagDecisions(userId);
+        const flags = await service.getFeatureFlagDecisions(userId, logCtx);
         expect(flags).toEqual({});
     });
 
@@ -93,7 +95,7 @@ describe('OptimizelyService', () => {
         mockClient.createUserContext.mockReturnValueOnce(null);
         const service = new OptimizelyService('', mockClient);
         const userId = 'user123';
-        const flags = await service.getFeatureFlagDecisions(userId);
+        const flags = await service.getFeatureFlagDecisions(userId, logCtx);
         expect(flags).toEqual({});
     });
 });

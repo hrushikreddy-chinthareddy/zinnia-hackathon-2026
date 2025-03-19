@@ -16,7 +16,7 @@ import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { getUserInfoFromUser, logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../create-case/error';
@@ -46,7 +46,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const policyNumber = (query?.policyNumber as string) || '';
             const documentNumber = (query.doc as string) || '';
             const clientId = (query.clientId as string) || '';
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
             let accessToken;
             try {
@@ -59,7 +59,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
             // Create a permissions object to pass to the page, strongly typed using the enum.
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -88,8 +92,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ALL_LOCALES
                 );
 
-                const userInfoForLogging = getUserInfoFromUser(user);
-                const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
+                const response = await searchPolicySSR(
+                    policyNumber,
+                    [clientId.toUpperCase() as Carrier],
+                    accessToken,
+                    1,
+                    0,
+                    loggingContext
+                );
                 const planCode = response ? response[0]?.planCode : null;
                 if (!planCode) {
                     logInfo('address-change::Plan code not found', loggingContext);

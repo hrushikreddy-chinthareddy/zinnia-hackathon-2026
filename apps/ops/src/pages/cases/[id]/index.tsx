@@ -58,7 +58,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
+            const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadCaseManagement,
+                loggingContext
+            );
             const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
 
             if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {

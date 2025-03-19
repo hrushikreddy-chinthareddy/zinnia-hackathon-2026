@@ -42,11 +42,13 @@ export const getServerSideProps = withPageAuthAndLogging(
             // We can use the enum to access the permissions object.
             permissions[UserPermission.AllowReadCaseManagement] = await doesUserHavePagePermissions(
                 context,
-                UserPermission.AllowReadCaseManagement
+                UserPermission.AllowReadCaseManagement,
+                loggingContext
             );
             permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(
                 context,
-                UserPermission.AllowReadPolicyAdmin
+                UserPermission.AllowReadPolicyAdmin,
+                loggingContext
             );
 
             const translations = await serverSideTranslations(

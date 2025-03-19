@@ -25,7 +25,7 @@ import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR, getSpecialProgramsSSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { getUserInfoFromUser, logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 type SswUpdateProps = {
@@ -147,7 +147,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const { locale = DEFAULT_LOCALE, query, req, res } = context;
 
             const taskId = (query.taskId as string) || '';
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
             let accessToken;
             try {
@@ -187,9 +187,14 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
 
-                const userInfoForLogging = getUserInfoFromUser(user);
-
-                const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
+                const response = await searchPolicySSR(
+                    contractNum,
+                    [clientCode?.toUpperCase() as Carrier],
+                    accessToken,
+                    1,
+                    0,
+                    loggingContext
+                );
                 const planCode = response ? response[0]?.planCode : null;
                 if (!planCode) {
                     logError('ssw-edit::Policy plan code not found', {
@@ -207,7 +212,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
 
-                const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging, true);
+                const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, loggingContext, true);
                 if (!policy) {
                     logError('ssw-edit::Policy not found', {
                         taskId,
@@ -225,7 +230,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                 }
 
                 const document = documentNumber
-                    ? await getDocumentV2SSR(documentNumber, DocumentType.SSW, clientCode?.toUpperCase(), accessToken as string)
+                    ? await getDocumentV2SSR(
+                          documentNumber,
+                          DocumentType.SSW,
+                          clientCode?.toUpperCase(),
+                          accessToken as string,
+                          loggingContext
+                      )
                     : null;
 
                 if (!document) {
@@ -244,7 +255,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
 
-                const specialProgramdetails = await getSpecialProgramsSSR(form.data.contractNum, form.carrier, accessToken);
+                const specialProgramdetails = await getSpecialProgramsSSR(form.data.contractNum, form.carrier, accessToken, loggingContext);
                 if (!specialProgramdetails) {
                     logError('ssw-edit::Special Program API responded - not found', {
                         taskId,

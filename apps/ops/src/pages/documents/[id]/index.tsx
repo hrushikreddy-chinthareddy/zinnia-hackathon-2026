@@ -53,7 +53,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
             let docDownload;
             if (featureFlagDecisions[FEATURE_FLAGS.DOCUMENTS_V3]) {

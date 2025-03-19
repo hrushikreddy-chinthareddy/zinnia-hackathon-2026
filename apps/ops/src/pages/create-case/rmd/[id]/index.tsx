@@ -239,7 +239,7 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
             const { locale = DEFAULT_LOCALE, params, query, res, req } = context;
             let accessToken;
             try {
@@ -252,7 +252,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const doesUserHasPagePermissions = doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            const doesUserHasPagePermissions = doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals, loggingContext);
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -288,7 +288,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const isUsedLastSaved = shouldShowNewExperience && deStringifyTrueFalseNull(getLastSaved.toLowerCase());
             if (shouldShowNewExperience && action !== 'readonly') {
                 logInfo('create-case/rmd/:id:Checking NIGO', loggingContext);
-                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken);
+                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken, loggingContext);
                 if (isNigoCase && !isUsedLastSaved) {
                     logInfo('create-case/rmd/:id::Nigo exists for case', {
                         ...loggingContext,
@@ -317,8 +317,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 getLastSaved,
                 taskId: taskId,
                 action: action,
+                loggingContext,
             });
-            const parties = document?.contract ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string) : [];
+            const parties = document?.contract
+                ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
+                : [];
 
             if (!form) {
                 logError('create-case/rmd/id::Error initializing task rmd form', {

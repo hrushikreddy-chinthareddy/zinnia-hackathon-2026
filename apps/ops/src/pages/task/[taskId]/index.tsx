@@ -80,7 +80,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
+            const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadCaseManagement,
+                loggingContext
+            );
             if (!hasPermissionToReadCaseManagement) {
                 return {
                     redirect: {
@@ -92,7 +96,7 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             try {
                 const mockedTaskType = taskTypeOverride && !isProd() && taskTypeOverride;
-                const task = await getCaseTaskById(taskId, accessToken, mockedTaskType as TaskType);
+                const task = await getCaseTaskById(taskId, accessToken, loggingContext, mockedTaskType as TaskType);
 
                 if (!task) {
                     logError('Task::Error getting task by id', loggingContext);
@@ -136,7 +140,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                     const isTaskEnabled = await optimizelyService.getFeatureFlagVariables(
                         FEATURE_FLAG_VARIABLES.TASK_MANAGEMENT,
                         carrier?.toLowerCase(),
-                        user.sub
+                        user.sub,
+                        loggingContext
                     );
                     const flag = convertToCamelCase(taskType);
                     const enabledTask = Object.keys(isTaskEnabled).includes(flag);

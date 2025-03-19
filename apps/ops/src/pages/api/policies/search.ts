@@ -23,7 +23,7 @@ export default withAuthAndLogging(
                 body: req.body,
                 offset: offset as number,
                 limit: limit as number,
-                logCtx: loggingContext,
+                loggingContext,
                 partyId: session?.user?.partyId,
             });
             if (!data) {

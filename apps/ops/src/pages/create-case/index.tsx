@@ -504,7 +504,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 });
                 return serverSidePropsLogout();
             }
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -514,7 +518,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            const featureFlagDecisions = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
             const translations = await serverSideTranslations(
                 locale,

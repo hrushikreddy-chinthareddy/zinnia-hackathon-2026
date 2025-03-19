@@ -18,17 +18,24 @@ export default withAuthAndLogging(
         logTrace('assignedTask::start', loggingContext);
 
         try {
-            const { data } = await serverApi.get<null, AxiosResponse>(url, {
-                authorization: `Bearer ${accessToken}`,
-                headers: {
-                    Accept: '*/*',
-                    'Accept-Encoding': 'gzip, deflate, br',
-                    Connection: 'keep-alive',
-                    'Access-Control-Allow-Origin': '*',
+            const { data } = await serverApi.get<null, AxiosResponse>(
+                url,
+                {
+                    authorization: `Bearer ${accessToken}`,
+                    headers: {
+                        Accept: '*/*',
+                        'Accept-Encoding': 'gzip, deflate, br',
+                        Connection: 'keep-alive',
+                        'Access-Control-Allow-Origin': '*',
+                    },
                 },
+                loggingContext
+            );
+            // const data = await serverApi.get(baseUrl, config);
+            logTrace('assignedTask::success::Successfully retrieved assigned tasks', {
+                ...loggingContext,
+                duration: performance.now() - now,
             });
-           // const data = await serverApi.get(baseUrl, config);
-            logTrace('assignedTask::success::Successfully retrieved assigned tasks', { ...loggingContext, duration: performance.now() - now });
             return res.json(data);
         } catch (error) {
             logWarn('assignedTask::error::something went wrong while retrieving assigned tasks', {

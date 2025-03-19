@@ -9,6 +9,7 @@ import { DocumentContext } from 'next/document';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { PRODUCTION_HOST_NAME } from '@deps/types/constants';
+import { LoggingContext } from '@deps/utils/server-logging';
 
 export const getInitialData = async (ctx: DocumentContext) => {
     const auth = await getSession(
@@ -43,9 +44,10 @@ export const getUserData = async (ctx: GetServerSidePropsContext) => {
 export const doesUserHavePagePermissions = async (
     context: GetServerSidePropsContext,
     permission: UserPermission,
+    loggingContext: LoggingContext,
     carrier: string | null = null
 ): Promise<boolean> => {
-    const carriers = await listCarriersPage(context, permission);
+    const carriers = await listCarriersPage(context, permission, loggingContext);
 
     if (carriers.length > 0 && carrier === null) {
         return true;

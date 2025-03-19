@@ -107,6 +107,11 @@ export const logTrace: LoggingFunction = (message, serializableValues) => {
     pino.trace(serializableValues || {}, message);
 };
 
+// TRY NOT TO USE THIS! Error without context are much less valuable than errors with context
+export const logErrorWithoutContext = (message: string, serializableValues?: any) => {
+    pino.error(serializableValues || {}, message);
+};
+
 export const parseFailedNetworkRequest = (error?: AxiosResponse): APIErrorInformation => {
     return {
         requestData: error?.data,
@@ -195,7 +200,7 @@ export const buildNextApiLoggingContext = async (
         user: userInfo,
     };
 };
-const buildNextPageLoggingContext = async (
+export const buildNextPageLoggingContext = async (
     context: GetServerSidePropsContext,
     page: string,
     file: string,

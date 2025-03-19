@@ -224,7 +224,7 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
             const { locale = DEFAULT_LOCALE, params, query, res, req } = context;
             let accessToken;
             try {
@@ -237,7 +237,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -286,7 +290,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const isUsedLastSaved = shouldShowNewExperience && deStringifyTrueFalseNull(getLastSaved.toLowerCase());
             if (shouldShowNewExperience && action !== 'readonly') {
                 logInfo('create-case/oft/:id:Checking NIGO', loggingContext);
-                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken);
+                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken, loggingContext);
                 if (isNigoCase && !isUsedLastSaved) {
                     logInfo('create-case/oft/:id::Nigo exists for case', {
                         ...loggingContext,
@@ -315,6 +319,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 getLastSaved,
                 taskId: taskId,
                 action: action,
+                loggingContext,
             });
 
             if (!form) {

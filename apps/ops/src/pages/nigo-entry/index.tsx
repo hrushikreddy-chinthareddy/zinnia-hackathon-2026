@@ -28,7 +28,7 @@ import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS, FeatureKeyIdentifier } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { logWarn, logError, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../create-case/error';
@@ -123,11 +123,10 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const userInfoForLogging = getUserInfoFromUser(user);
 
             const { locale = DEFAULT_LOCALE, query, req, res } = context;
             const taskId = (query.taskId as string) || '';
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
             let accessToken;
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
@@ -139,7 +138,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
             // Create a permissions object to pass to the page, strongly typed using the enum.
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
 
             if (!doesUserHasPagePermissions) {
                 return {

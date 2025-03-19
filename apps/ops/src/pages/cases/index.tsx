@@ -459,7 +459,11 @@ export const getServerSideProps = withPageAuthAndLogging(
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadCaseManagement,
+                loggingContext
+            );
 
             // DEPU-2835
             const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);

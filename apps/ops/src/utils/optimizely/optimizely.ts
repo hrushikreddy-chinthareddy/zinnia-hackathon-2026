@@ -1,7 +1,7 @@
 import { Client, createInstance, OptimizelyDecideOption } from '@optimizely/optimizely-sdk';
 
 import { FEATURE_FLAGS } from './flags';
-import { logError, parseErrorInformation } from '../server-logging';
+import { logError, LoggingContext, parseErrorInformation } from '../server-logging';
 
 export type FeatureFlags = Record<FEATURE_FLAGS, boolean> | Record<string, never>;
 
@@ -29,7 +29,7 @@ export class OptimizelyService {
         }
     }
 
-    public async getFeatureFlagDecisions(userId: string): Promise<FeatureFlags> {
+    public async getFeatureFlagDecisions(userId: string, loggingContext: LoggingContext): Promise<FeatureFlags> {
         try {
             if (!this.optimizelyClient) {
                 throw new Error('optimizely.ts::getFeatureFlagDecisions:: instance creation failed');
@@ -57,7 +57,8 @@ export class OptimizelyService {
             }, {});
         } catch (e) {
             logError('getFeatureFlagDecisions::Error initializing Optimizely instance', {
-                file: 'optimizely',
+                ...loggingContext,
+                file: 'utils/optimizely/optimizely',
                 function: 'getFeatureFlagDecisions',
                 ...parseErrorInformation(e),
             });
@@ -65,7 +66,12 @@ export class OptimizelyService {
         }
     }
 
-    public async getFeatureFlagVariables(featureKey: string, variableName: string, userId: string): Promise<Record<string, unknown>> {
+    public async getFeatureFlagVariables(
+        featureKey: string,
+        variableName: string,
+        userId: string,
+        loggingContext: LoggingContext
+    ): Promise<Record<string, unknown>> {
         try {
             if (!this.optimizelyClient) {
                 throw new Error('optimizely.ts::getFeatureFlagDecisions:: instance creation failed');
@@ -77,8 +83,9 @@ export class OptimizelyService {
             return this.optimizelyClient.getFeatureVariableJSON(featureKey, variableName, userId, attributes) as Record<string, unknown>;
         } catch (e) {
             logError('getFeatureFlagVariable::Error initializing Optimizely instance', {
-                file: 'optimizely',
-                function: 'getFeatureFlagVariable',
+                ...loggingContext,
+                file: 'utils/optimizely/optimizely',
+                function: 'getFeatureFlagVariables',
                 ...parseErrorInformation(e),
             });
             return {} as Record<string, unknown>;

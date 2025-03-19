@@ -9,6 +9,7 @@ import {
     EDSDocumentResponse,
     EDSDocumentRequestBody,
 } from '@deps/models/case/document';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { LoggingContext, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -48,7 +49,7 @@ export const uploadDocumentV2 = async (
         const { data } = await client.post<any, AxiosResponse>(url, fileData);
         return data;
     } catch (error: any) {
-        logWarn('An error occurred while uploading document', {
+        browserLogWarn('An error occurred while uploading document', {
             ...parseErrorInformation(error),
             file: 'queries/api/documents',
             function: 'uploadDocument',

@@ -6,29 +6,20 @@ import { DocumentDownloadV2, DocumentDownloadV2WithMime } from '@deps/models/cas
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
-import { getUserInfoForLogging, logCompliance, logError, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import { logCompliance, logError, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const baseUrl = `${apiServerBaseUrl}/document/v2`;
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadV2WithMime | any | null>) => {
+    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadV2WithMime | any | null>, loggingContext) => {
         const { documentNumber, clientCode, source } = req.query;
         const session = await getSession(req, res);
-        const userInfo = await getUserInfoForLogging(req, res);
 
         const url = `${baseUrl}/documents/${documentNumber}/download?clientCode=${clientCode}&source=${source}`;
         const canUnmask = await canUnmaskPii(session?.accessToken, session?.user?.partyId);
 
-        const loggingContext = {
-            clientCode,
-            documentNumber,
-            file: '/documents/:documentNumber/download',
-            function: 'routeHandler',
-            source,
-            ...userInfo,
-        };
         if (!canUnmask) {
             logCompliance('Document Download request denied due to missing unmask pii permission', loggingContext);
             return res.status(403).json({ error: 'Forbidden' });
@@ -49,9 +40,8 @@ export default withAuthAndLogging(
             res.json({ ...data, mimeType });
         } catch (error) {
             logError('documents/download:: error', {
-                file: 'documents/:documentNumber/download',
-                function: 'routeHandler',
                 ...parseErrorInformation(error),
+                ...loggingContext,
             });
             res.status(500).json(null);
         }

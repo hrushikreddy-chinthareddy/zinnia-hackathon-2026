@@ -3,7 +3,7 @@ import { TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, DigitalFormData, DigitalFormWithdrawal } from '@deps/models/case/withdrawal/case';
 import { getDigitalFormSSR } from '@deps/queries/api/integration';
 import { createTaskSSR, getCaseTaskByIdSSR, searchTaskSSR } from '@deps/queries/api/v2/task';
-import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, LoggingContext, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { mapTaskToActiveWithdrawalCaseTask } from './helpers';
 
@@ -18,6 +18,7 @@ export const initializeOTPTaskSSR = async ({
     getLastSaved,
     taskId,
     action,
+    loggingContext: logCtx,
 }: {
     caseId: string;
     accessToken: string | undefined;
@@ -29,17 +30,21 @@ export const initializeOTPTaskSSR = async ({
     getLastSaved: string;
     taskId?: string;
     action?: string;
+    loggingContext: LoggingContext;
 }): Promise<ActiveWithdrawalCase | null> => {
     const loggingContext = {
-        caseId,
-        clientId,
-        contractNumber,
-        documentNumber,
-        file: 'queries/api/cases',
+        ...logCtx,
+        inputs: {
+            caseId,
+            clientId,
+            contractNumber,
+            documentNumber,
+            taskType,
+            taskId,
+            action,
+        },
+        file: 'operations/tasks/v2/intialize',
         function: 'initializeOTPTaskSSR',
-        taskType,
-        taskId,
-        action,
     };
     try {
         logInfo('initializeTaskV2::start', loggingContext);
@@ -49,7 +54,7 @@ export const initializeOTPTaskSSR = async ({
 
         let activeForm;
         if (taskId) {
-            activeForm = await getCaseTaskByIdSSR(taskId, accessToken);
+            activeForm = await getCaseTaskByIdSSR(taskId, accessToken, loggingContext);
             if (activeForm) {
                 logInfo('initializeTaskV2::getCaseTaskByIdSSR task active form found', loggingContext);
                 if (action === 'readonly' || activeForm.status === TaskStatus.New || activeForm.status === TaskStatus.InProgress) {
@@ -59,13 +64,13 @@ export const initializeOTPTaskSSR = async ({
             }
         }
 
-        const searchResponse = await searchTaskSSR(caseId, accessToken);
+        const searchResponse = await searchTaskSSR(caseId, accessToken, loggingContext);
         let completedForm;
         if (Array.isArray(searchResponse.data)) {
             const tasks = searchResponse.data;
             const task = tasks.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0];
             if (task) {
-                activeForm = await getCaseTaskByIdSSR(task.id, accessToken);
+                activeForm = await getCaseTaskByIdSSR(task.id, accessToken, loggingContext);
                 if (activeForm) {
                     if (activeForm.status === TaskStatus.New || activeForm.status === TaskStatus.InProgress) {
                         logInfo('initializeTaskV2::active form found', {
@@ -88,12 +93,16 @@ export const initializeOTPTaskSSR = async ({
         }
 
         logInfo('initializeTaskV2::Active task not present', loggingContext);
-        const digitalForm: DigitalFormWithdrawal | null = await getDigitalFormSSR(accessToken, {
-            contractNumber,
-            clientCode: clientId.toUpperCase(),
-            source: 'DigitalPortal',
-            taskType,
-        });
+        const digitalForm: DigitalFormWithdrawal | null = await getDigitalFormSSR(
+            accessToken,
+            {
+                contractNumber,
+                clientCode: clientId.toUpperCase(),
+                source: 'DigitalPortal',
+                taskType,
+            },
+            loggingContext
+        );
 
         if (!digitalForm) {
             logInfo('initializeTaskV2::Digital form not found', loggingContext);
@@ -118,7 +127,7 @@ export const initializeOTPTaskSSR = async ({
             status: TaskStatus.New,
             data: digitalForm.data,
         };
-        const caseForm = await createTaskSSR<DigitalFormData>(caseId, accessToken, body);
+        const caseForm = await createTaskSSR<DigitalFormData>(caseId, accessToken, body, loggingContext);
         if (!caseForm) {
             logInfo('initializeTaskV2::Failed to create a task', loggingContext);
             throw new Error(`initializeTaskV2::Unsuccessful postCaseTasksSSR response for ${taskType}`);

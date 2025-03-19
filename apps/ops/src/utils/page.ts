@@ -5,7 +5,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getSelectedPolicyParty } from '@deps/helpers/party-info-helper';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { UserPermission } from '@deps/models/user-profile';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
@@ -14,7 +14,6 @@ import { FgaRelation } from '@deps/types/fga';
 import {
     logWarn,
     logError,
-    getUserInfoFromUser,
     parseErrorInformation,
     withPageAuthAndLogging,
     GetServerSidePropsWithLoggingContext,
@@ -22,8 +21,6 @@ import {
 import nextI18nextConfig from 'next-i18next.config';
 
 export const getServerSidePropsPolicyDetailsPage: GetServerSidePropsWithLoggingContext = async (context, loggingContext) => {
-    // Get the user object from the Auth0 Session
-    const user = await getUserData(context);
     const { locale = DEFAULT_LOCALE, params, req, res } = context;
     let accessToken;
     try {
@@ -42,7 +39,11 @@ export const getServerSidePropsPolicyDetailsPage: GetServerSidePropsWithLoggingC
     };
 
     // We can use the enum to access the permissions object.
-    permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
+    permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(
+        context,
+        UserPermission.AllowReadPolicyAdmin,
+        loggingContext
+    );
     const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
 
     // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
@@ -56,7 +57,11 @@ export const getServerSidePropsPolicyDetailsPage: GetServerSidePropsWithLoggingC
     }
 
     // We can use the enum to access the permissions object.
-    permissions[UserPermission.AllowEditPolicy] = await doesUserHavePagePermissions(context, UserPermission.AllowEditPolicy);
+    permissions[UserPermission.AllowEditPolicy] = await doesUserHavePagePermissions(
+        context,
+        UserPermission.AllowEditPolicy,
+        loggingContext
+    );
 
     try {
         const translations = await serverSideTranslations(
@@ -66,8 +71,7 @@ export const getServerSidePropsPolicyDetailsPage: GetServerSidePropsWithLoggingC
             ALL_LOCALES
         );
 
-        const userInfoForLogging = getUserInfoFromUser(user);
-        const policy = await getPolicyDetailsSsr(params?.id as string, params?.planCode as string, accessToken, userInfoForLogging);
+        const policy = await getPolicyDetailsSsr(params?.id as string, params?.planCode as string, accessToken, loggingContext);
 
         if (!policy) {
             return {
