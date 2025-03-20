@@ -373,7 +373,7 @@ export const mcsResponseSanitizer = (mcsResponse: AgentDataResponse): AgentDataR
         const response = agentSanitizer(mcsResponse.items[0]);
         return { ...mcsResponse, items: [response] };
     } catch (e) {
-        logError('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
+        logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
         throw e;
     }
 };
@@ -389,7 +389,7 @@ export const agentSanitizer = (agent: AgentData): AgentData => {
             individuals: [{ ...firstAgent, taxId: formatSSN(firstAgent.taxId || undefined) }],
         };
     } catch (e) {
-        logError('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
+        logErrorWithoutContext('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
         throw e;
     }
 };
@@ -412,7 +412,7 @@ export const fullyMaskMcsResponse = (mcsResponse: AgentDataResponse): AgentDataR
 
         return { ...mcsResponse, items: [response] };
     } catch (e) {
-        logError('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
+        logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
         throw e;
     }
 };

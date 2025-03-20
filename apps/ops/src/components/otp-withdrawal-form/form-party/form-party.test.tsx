@@ -737,7 +737,7 @@ describe('Formparty component', () => {
 
     describe('OFT FLIC Form', () => {
         it('Should not render Address controls for flic withdrawal', () => {
-            const { formPartyConfigs } = getFlicOftConfig(t);
+            const { formPartyConfigs } = getFlicOftConfig(t, QualTypes.CustInhIRA);
             let setMethodArgs;
             const mockformPartyData = CaseDetails.data.formRequest.formParty;
             const setMockData = jest.fn(cb => {

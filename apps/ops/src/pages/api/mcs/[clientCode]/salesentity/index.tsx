@@ -12,7 +12,7 @@ import { withAuthAndLogging } from '@deps/utils/server-logging';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>, loggingContext: object) => {
+    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>, loggingContext) => {
         const session = await getSession(req, res);
         const { clientCode, idType, id, parentIdType, parentId, skip, take, policyNumber, planCode, IsClientChild } = req.query;
 

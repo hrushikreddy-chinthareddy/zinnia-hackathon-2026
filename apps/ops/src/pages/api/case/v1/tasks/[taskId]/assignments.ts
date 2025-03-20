@@ -35,7 +35,7 @@ export default withAuthAndLogging(
             if (method === 'PUT') {
                 response = await serverApi.put(baseUrl, {}, config, loggingContext);
             } else if (method === 'DELETE') {
-                response = await serverApi.delete(baseUrl, config);
+                response = await serverApi.delete(baseUrl, config, loggingContext);
             } else {
                 return res.status(405).json({ error: `Method ${method} not allowed` });
             }
