@@ -24,7 +24,15 @@ const ContactCenterAddress = ({ policy, setAddress }: ContactCenterAddressProps)
     const [selectedAddress, setSelectedAddress] = useState<number>(-1);
     const sideSheet = useSideSheetContext();
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
-    const checkCustodialContract = policy?.parties?.find(party => party.partyType === PartyType.ORGANIZATION);
+
+    const checkCustodialContract = policy?.parties?.find((party, index) => {
+        if (party.partyType === 'ORGANIZATION') {
+            const correspondingRole = policy?.partyRoles?.[index];
+            return correspondingRole?.partyRole === PartyRole.OWNER;
+        }
+        return false;
+    });
+
     const roleTypes = useMemo(() => (checkCustodialContract ? [PartyRole.INSURED] : AllowedRoleTypes), [checkCustodialContract]);
 
     const extractedPartyRoles = useMemo(
