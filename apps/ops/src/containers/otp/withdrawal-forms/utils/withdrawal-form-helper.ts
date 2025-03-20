@@ -50,7 +50,7 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
                 return true;
             });
         }
-        formParty.parties = filteredParty as Party[];
+        formParty.parties = filteredParty ?? (formParty.parties as Party[]);
     }
 
     return {
