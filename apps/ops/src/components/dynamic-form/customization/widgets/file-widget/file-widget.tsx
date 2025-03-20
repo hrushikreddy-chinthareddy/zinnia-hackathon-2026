@@ -180,8 +180,6 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
         Promise.allSettled(uploadPromises).then(results => {
             if (formContext?.setCustomData) {
-                const values = value?.concat(uploadedFiles);
-                multiple ? onChange(values) : onChange(files[0]);
                 formContext.setCustomData({ attachments: attachments });
             }
             sideSheet.onClose();
@@ -228,8 +226,10 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 let values = '';
                 if (multiple) {
                     values = value?.concat(newValue);
+                    onChange(value?.concat(newValue));
                 } else {
                     values = newValue[0] || '';
+                    onChange(newValue[0]);
                     // For single file upload, just take the first element if newValue is an array
                 }
 

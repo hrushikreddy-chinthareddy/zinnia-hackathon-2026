@@ -97,6 +97,19 @@
                                 "format": "data-url"
                             }
                         },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
+                        },
                         "notes": {
                             "type": "array",
                             "title": "Notes",
@@ -149,7 +162,7 @@
                     ]
                 },
                 "uiSchema": {
-                    "ui:order": ["rules", "issueResolved", "declineReason", "attachment", "notes"],
+                    "ui:order": ["rules", "issueResolved", "declineReason", "attachment", "attachments", "notes"],
                     "$schema": "http: //json-schema.org/draft-07/schema#",
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
@@ -256,12 +269,20 @@
                     "attachment": {
                         "ui:options": {
                             "label": false,
-                            "showFiles": true,
+                            "showFiles": false,
                             "omitValue": true
                         },
                         "ui:props": {
                             "apiUrl": "case/v1/form/metadata?process=Suitability&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
                             "apiMethod": "get"
+                        }
+                    },
+                    "attachments": {
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
                         }
                     },
                     "notes": {
