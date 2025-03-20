@@ -1,4 +1,5 @@
 import { useTranslation } from 'next-i18next';
+import { v4 as uuidv4 } from 'uuid';
 
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import { maritalStatusType } from '@deps/models/case/withdrawal/case';
@@ -28,6 +29,7 @@ export default function FormProgramMaritalStatus({ isFormStateReadOnly, selected
             value={selected}
             variant={isFormStateReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
             className="!m-0"
+            name={'maritalStatus-' + uuidv4()}
         />
     );
 }

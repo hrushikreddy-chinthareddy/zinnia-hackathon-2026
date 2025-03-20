@@ -75,7 +75,7 @@ const DefaultSidebarContent = {
 };
 
 const getFormComponentMap = (qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
-    [Carrier.FLIC]: <FlicWithdrawalForm />,
+    [Carrier.FLIC]: <FlicWithdrawalForm qualType={qualType} />,
     [Carrier.SBGC]: <SbgcWithdrawalForm />,
     [Carrier.DLIC]: <DlicWithdrawalForm />,
     [Carrier.MASS]: <MassWithdrawalForm qualType={qualType} />,

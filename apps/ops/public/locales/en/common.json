@@ -2096,7 +2096,7 @@
                 "ssn": "SSN",
                 "signatureValidation": "Signature Validation",
                 "nonJobIncome": "Income from a Job/Pension/Annuity",
-                "claimsAndCredits": "Claim Dependent and and other Credits",
+                "claimsAndCredits": "Claim Dependent and other Credits",
                 "otherIncomeAndPensions": "Other Income",
                 "otherDeductions": "Deduction"
             },
