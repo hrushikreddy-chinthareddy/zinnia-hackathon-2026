@@ -61,11 +61,12 @@ const W4pTaxForm = ({ isFormStateReadOnly, w4pSignaturesConfig }: W4pTaxFormProp
         if (isW4pChecked && !formPeriodicPension) {
             setFormPeriodicPension(w4pPeriodicPaymentDefault);
         }
-
-        setFormPeriodicPension((prev: any) => ({
-            ...prev,
-            ssn: owner?.taxId,
-        }));
+        if (isW4pChecked) {
+            setFormPeriodicPension((prev: any) => ({
+                ...prev,
+                ssn: owner?.taxId,
+            }));
+        }
     }, [isW4pChecked]);
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100" classNames="w-full">
