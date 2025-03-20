@@ -62,16 +62,14 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, 
         try {
             setLoading(true)
             await updateTask(task, correlationId, TaskStatus.InProgress);
-            setLoading(false)
-
         } catch (error) {
             browserLogError('updateTask::Error updating task', {
                 ...parseErrorInformation(error),
                 taskId: task.id,
             });
+        } finally {
             setLoading(false)
         }
-
     }
     return (
         <WorkflowCard

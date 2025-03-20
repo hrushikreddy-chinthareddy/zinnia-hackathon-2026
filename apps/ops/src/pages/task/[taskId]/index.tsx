@@ -159,13 +159,13 @@ export const getServerSideProps = withPageAuthRequired({
             }
 
 
-            const taskTypeKey = convertToCamelCase(taskType);
+            const flag = convertToCamelCase(taskType);
             const featureFlags = await optimizelyService.getFeatureFlagVariables(
                 FEATURE_FLAG_VARIABLES.TASK_SAVE_AS_DRAFT,
                 carrier?.toLowerCase(),
                 user.sub
             );
-            const isSaveAsDraftEnabled = Boolean(featureFlags?.[taskTypeKey]);
+            const isSaveAsDraftEnabled = Boolean(featureFlags?.[flag]);
             const nigoFilters = {
                 categoryIds: ['Form', 'Signature', 'Account Information'],
                 carrier: carrier?.toUpperCase(),
