@@ -777,7 +777,8 @@
                                                 "title": "Federal tax band",
                                                 "$ref": "#/definitions/fedralIncomeTaxEnum"
                                             }
-                                        }
+                                        },
+                                        "required": ["materialChangeDetails"]
                                     },
                                     "else": {
                                         "properties": {
@@ -847,7 +848,6 @@
                                 "liquidNetWorth",
                                 "sourceOfIncome",
                                 "materialChangeExp",
-                                "materialChangeDetails",
                                 "totalAssets",
                                 "totalDebt",
                                 "annualExpenses",
