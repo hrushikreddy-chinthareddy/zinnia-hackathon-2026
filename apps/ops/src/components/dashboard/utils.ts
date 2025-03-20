@@ -114,3 +114,93 @@ export const createBaseQuery = async (baseInsightQueryFilter: DashboardSearchFil
 export const formatProcessFilter = (process: Processes | ExtendedProcesses) => {
     return process === ExtendedProcesses.ALL ? [] : [process];
 };
+
+export const groupByUrlMap: Record<GroupByOptions, string> = {
+    [GroupByOptions.Process]: 'process',
+    [GroupByOptions.ProcessSubType]: 'requestSubType',
+    [GroupByOptions.Carrier]: 'carrier',
+    [GroupByOptions.BrokerDealerName]: 'brokerDealerName',
+    [GroupByOptions.Default]: '',
+    [GroupByOptions.ProductName]: 'productName',
+    [GroupByOptions.CreatedAt]: 'createdDate',
+    [GroupByOptions.UpdatedAt]: 'updatedDate',
+    [GroupByOptions.AgingTimeRanges]: 'agingTimeRanges',
+    [GroupByOptions.AgingRange]: 'agingRange',
+    [GroupByOptions.OpenStages]: 'openStages',
+    [GroupByOptions.ExceptionCategory]: 'exceptionCategory',
+    [GroupByOptions.PolicyNumber]: 'policyNumber',
+    [GroupByOptions.ApplicationType]: 'applicationType',
+    [GroupByOptions.CaseStatus]: 'caseStatus',
+};
+
+interface generateLinkArgs {
+    process?: Processes | ExtendedProcesses | undefined;
+    carrierOrProductName?: string;
+    submissionMethod?: string;
+    startDate?: string;
+    endDate?: string;
+    groupBy?: GroupByOptions;
+    carrier?: string[] | string;
+    product?: string;
+    brokerDealer?: string[];
+    status?: Statuses[];
+}
+
+export const generateCaseLink = ({
+    process,
+    carrierOrProductName,
+    submissionMethod,
+    startDate,
+    endDate,
+    groupBy,
+    carrier,
+    product,
+    brokerDealer,
+    status,
+}: generateLinkArgs) => {
+    const statuses = status?.join('&caseStatus=') || '';
+    const carriers = Array.isArray(carrier) ? carrier?.join('&carrier=') : carrier;
+    const brokerDealers = brokerDealer?.join('&brokerDealerName=') || '';
+    const method = submissionMethod ? (submissionMethod === 'Electronic (E-App)' ? 'electronic' : 'paper') : '';
+
+    const queryParams = [];
+
+    if (process && process !== 'all') {
+        queryParams.push(`process=${process}`);
+    }
+
+    // Only add this if users aren't grouping by carrier
+    if (carriers && groupBy !== GroupByOptions.Carrier) {
+        queryParams.push(`carrier=${carriers}`);
+    }
+    if (product) {
+        queryParams.push(`requestSubType=${product}`);
+    }
+
+    // Only add this if users aren't grouping by broker dealer
+    if (brokerDealers && groupBy !== GroupByOptions.BrokerDealerName) {
+        queryParams.push(`brokerDealerName=${brokerDealers}`);
+    }
+    if (startDate) {
+        queryParams.push(`createdDateStart=${startDate}`);
+    }
+    if (endDate) {
+        queryParams.push(`createdDateEnd=${endDate}`);
+    }
+    if (statuses) {
+        queryParams.push(`caseStatus=${statuses}`);
+    }
+
+    // If we're grouping by something specific, we prefer that over global things like broker dealer or carrier
+    if (groupBy) {
+        const groupByParam = groupByUrlMap[groupBy];
+        if (carrierOrProductName) {
+            queryParams.push(`${groupByParam}=${carrierOrProductName}`);
+        }
+    }
+    if (method) {
+        queryParams.push(`applicationType=${method}`);
+    }
+
+    return `/cases?${queryParams.join('&')}`;
+};

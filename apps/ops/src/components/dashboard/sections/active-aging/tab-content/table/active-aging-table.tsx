@@ -14,14 +14,12 @@ import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
+import { generateCaseLink } from '@deps/components/dashboard/utils';
 import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
-import { Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import { friendlyGroupByName } from '../../../submission-type/utils';
@@ -34,24 +32,6 @@ enum SortByOptions {
     NAME = 'name',
     TOTAL = 'total',
 }
-
-const generateCaseLink = (
-    process: Processes | ExtendedProcesses | undefined, // case type
-    name: string, // request sub type
-    createdStartDate: string,
-    createdEndDate: string,
-    groupBy: GroupByOptions,
-    caseStatus: Statuses[] = []
-) => {
-    const carrierOrProduct =
-        groupBy === GroupByOptions.ProcessSubType ? 'requestSubType' : groupBy === GroupByOptions.Carrier ? 'carrier' : 'brokerDealerName';
-
-    return `/cases?process=${
-        process === 'all' ? '' : process
-    }&${carrierOrProduct}=${name}&createdDateStart=${createdStartDate}&createdDateEnd=${createdEndDate}&caseStatus=${caseStatus.join(
-        '&caseStatus='
-    )}`;
-};
 
 export const ActiveAgingTable = () => {
     const [offset, setOffset] = useState(0);
@@ -119,7 +99,14 @@ export const ActiveAgingTable = () => {
                                 <NavElement
                                     type={NavElementType.Link}
                                     target="_blank"
-                                    href={generateCaseLink(selectedProcess, name, key, key, groupBy, filter.caseStatus)}
+                                    href={generateCaseLink({
+                                        process: selectedProcess,
+                                        carrierOrProductName: name,
+                                        startDate: key,
+                                        endDate: key,
+                                        groupBy,
+                                        status: filter.caseStatus,
+                                    })}
                                     rel="noreferrer"
                                 >
                                     View cases
@@ -191,7 +178,16 @@ export const ActiveAgingTable = () => {
                                 {paginatedData.map(item => {
                                     const startDate = startDates[timeframe];
                                     const endDate = calculateEndDate(timeframe);
-
+                                    const link = generateCaseLink({
+                                        process: selectedProcess,
+                                        carrierOrProductName: item.name,
+                                        startDate,
+                                        endDate,
+                                        groupBy,
+                                        carrier: filter.carrier,
+                                        brokerDealer: filter.brokerDealerName,
+                                        status: filter.caseStatus,
+                                    });
                                     return (
                                         <TableRow
                                             key={`${item.name}-${item.count}`}
@@ -203,19 +199,7 @@ export const ActiveAgingTable = () => {
                                             <TableCell>{item.total}</TableCell>
                                             <TableCell>{timeframe}</TableCell>
                                             <TableCell>
-                                                <NavElement
-                                                    type={NavElementType.Link}
-                                                    target="_blank"
-                                                    href={generateCaseLink(
-                                                        selectedProcess,
-                                                        item.name,
-                                                        startDate,
-                                                        endDate,
-                                                        groupBy,
-                                                        filter.caseStatus
-                                                    )}
-                                                    rel="noreferrer"
-                                                >
+                                                <NavElement type={NavElementType.Link} target="_blank" href={link} rel="noreferrer">
                                                     View cases
                                                 </NavElement>
                                             </TableCell>

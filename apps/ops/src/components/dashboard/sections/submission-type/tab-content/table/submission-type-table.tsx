@@ -13,18 +13,16 @@ import {
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
 import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
-import { startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
+import { generateCaseLink, startDates } from '@deps/components/dashboard/utils';
 import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
-import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
+import { DashboardStatsElementResponse, Statuses } from '@deps/models/case/case';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import { SubmissionMethodTooltip } from '../../submission-type';
@@ -63,33 +61,12 @@ enum SortByOptions {
     COUNT = 'count',
 }
 
-const generateCaseLink = (
-    process: Processes | ExtendedProcesses | undefined,
-    name: string,
-    submissionMethod: string,
-    timeframe: TimeframeFilterOptions,
-    groupBy: GroupByOptions
-) => {
-    const method = submissionMethod === 'Electronic (E-App)' ? 'electronic' : 'paper';
-    const carrierOrProduct =
-        groupBy === GroupByOptions.ProductName ? 'productName' : groupBy === GroupByOptions.Carrier ? 'carrier' : 'brokerDealerName';
-    const createdStartDate = startDates[timeframe];
-
-    return `/cases?process=${
-        process === 'all' ? '' : process
-    }&${carrierOrProduct}=${name}&applicationType=${method}&createdDateStart=${createdStartDate}&caseStatus=${[
-        Statuses.InProgress,
-        Statuses.Exception,
-        Statuses.NotStarted,
-    ].join('&caseStatus=')}`;
-};
-
 export const SubmissionTypeTable = () => {
     const [offset, setOffset] = useState(0);
     const [searchText, setSearchText] = useState('');
     const limit = 10;
 
-    const { graphStats, timeframe, submissionVs, selectedProcess, graphStatsLoading, graphStatsFetching, graphStatsError } =
+    const { graphStats, timeframe, submissionVs, selectedProcess, graphStatsLoading, graphStatsFetching, graphStatsError, filter } =
         useContext(SubmissionTypeContext);
 
     // Transform the data by flattening it
@@ -209,24 +186,25 @@ export const SubmissionTypeTable = () => {
                             </TableHeader>
                             <TableBody>
                                 {paginatedData.map(item => {
+                                    const startDate = startDates[timeframe];
+
+                                    const link = generateCaseLink({
+                                        process: selectedProcess,
+                                        carrierOrProductName: item.name,
+                                        submissionMethod: item.submissionMethod,
+                                        startDate,
+                                        status: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+                                        groupBy: submissionVs,
+                                        carrier: filter.carrier,
+                                        brokerDealer: filter.brokerDealerName,
+                                    });
                                     return (
                                         <TableRow key={`${item.name}-${item.submissionMethod}`}>
                                             <TableCell>{item.name}</TableCell>
                                             <TableCell>{item.submissionMethod}</TableCell>
                                             <TableCell>{item.count}</TableCell>
                                             <TableCell>
-                                                <NavElement
-                                                    type={NavElementType.Link}
-                                                    target="_blank"
-                                                    href={generateCaseLink(
-                                                        selectedProcess,
-                                                        item.name,
-                                                        item.submissionMethod,
-                                                        timeframe,
-                                                        submissionVs
-                                                    )}
-                                                    rel="noreferrer"
-                                                >
+                                                <NavElement type={NavElementType.Link} target="_blank" href={link} rel="noreferrer">
                                                     View cases
                                                 </NavElement>
                                             </TableCell>
