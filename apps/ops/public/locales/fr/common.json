@@ -774,6 +774,7 @@
         "preview": "Aperçu",
         "rate": "taux",
         "submitPayment": "Soumettre le paiement",
+        "draft": "Sauvegarder en tant que brouillon",
         "successExclamation": "Succès!",
         "total": "Total",
         "view": "Afficher",
@@ -3265,6 +3266,8 @@
         "callID": "ID d'appel",
         "backToCallList": "Retour à l'historique d'appels",
         "noCallLogSummary": "Aucun résumé à afficher.",
+        "callLogNotes": "Notes",
+        "callLogSummary": "Résumé",
         "allocation": {
             "allocation": "Allocation",
             "allocationPercentageFor": "Pourcentage d'allocation pour",

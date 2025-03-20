@@ -7,12 +7,13 @@ import { numberFormat } from '@deps/containers/otp/reg60-forms/utils/reg60-const
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { Address, AmountType, maritalStatusType, SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
+import { PartyRole } from '@deps/models/policy/sor-policy';
 
 import IncomeDisclosure from './income-disclosure';
 import { maritalStatusOptions, w4pPeriodicPaymentDefault } from './w4p-tax-form.helper';
 import CheckboxText from '../checkbox/checkbox-text/checkbox-text';
 import Field, { FieldSize, FieldType, FieldVariant } from '../fields/field';
-import AddressEntry, { DEFAULT_ADDRESS } from '../otp-withdrawal-form/address-entry';
+import AddressEntry from '../otp-withdrawal-form/address-entry';
 import FormProgramMaritalStatus from '../otp-withdrawal-form/form-irsData/form-program-marital-status';
 import { MaritalStatusAllowances } from '../otp-withdrawal-form/maritial-status-allowance-withholdings';
 import SignatureValidation, { SignatureValidationField } from '../otp-withdrawal-form/signature-validation/signature-validation';
@@ -26,7 +27,9 @@ interface W4pTaxFormProps {
 
 const W4pTaxForm = ({ isFormStateReadOnly, w4pSignaturesConfig }: W4pTaxFormProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.w4pPeriodicPayment' });
-    const { formSignature, formErrors, formPeriodicPension, setFormPeriodicPension } = useContext(FormDataContext);
+    const { formParty, formSignature, formErrors, formPeriodicPension, setFormPeriodicPension } = useContext(FormDataContext);
+    const owner = formParty.parties.find(party => party.partyRoleType === PartyRole.OWNER);
+
     const [isW4pChecked, setIsW4pChecked] = useState<boolean>(false);
 
     const handleFormPeriodicPensionChange = (key: string, value: any) => {
@@ -58,6 +61,12 @@ const W4pTaxForm = ({ isFormStateReadOnly, w4pSignaturesConfig }: W4pTaxFormProp
         if (isW4pChecked && !formPeriodicPension) {
             setFormPeriodicPension(w4pPeriodicPaymentDefault);
         }
+        if (isW4pChecked) {
+            setFormPeriodicPension((prev: any) => ({
+                ...prev,
+                ssn: owner?.taxId,
+            }));
+        }
     }, [isW4pChecked]);
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100" classNames="w-full">
@@ -81,7 +90,7 @@ const W4pTaxForm = ({ isFormStateReadOnly, w4pSignaturesConfig }: W4pTaxFormProp
                             ssn: formErrors[`ssn${PartyRoles.OWNER}`],
                         }}
                         onDataChange={handleAddressChange}
-                        initialAddress={formPeriodicPension?.address || DEFAULT_ADDRESS}
+                        initialAddress={formPeriodicPension?.address || owner?.addresses[0]}
                         className="col-span-4 max-w-lg"
                         isFormStateReadOnly={isFormStateReadOnly}
                     />
@@ -97,7 +106,7 @@ const W4pTaxForm = ({ isFormStateReadOnly, w4pSignaturesConfig }: W4pTaxFormProp
                             }
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
-                            value={formPeriodicPension?.ssn as string}
+                            value={formPeriodicPension?.ssn || (owner?.taxId as string)}
                             name="ssn"
                             variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
                         />

@@ -27,7 +27,7 @@ export const getCaseCallLogs = async (query: CaseCallLogsQuery): Promise<{ data:
             `${baseAppUrl}/api/callcenter/v1/CallEntry${queryParams}`
         );
 
-        writeToCache('getCallLogs', query, data, 0.5); // These could change frequently, so only cache for 30 seconds for navigating between pages
+        writeToCache('getCallLogs', query, { data, status }, 0.5); // These could change frequently, so only cache for 30 seconds for navigating between pages
 
         return { data, status };
     } catch (error: any) {

@@ -8,6 +8,7 @@ export interface CallLog {
     contract: string;
     createdByUser: string;
     createdDate: string;
+    notes: string;
 }
 
 export interface CallLogResponse {

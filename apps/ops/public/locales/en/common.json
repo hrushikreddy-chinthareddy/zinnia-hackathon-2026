@@ -724,6 +724,7 @@
         "loadingThing": "Loading {{thing}}",
         "preview": "Preview",
         "rate": "rate",
+        "draft": "Save as Draft",
         "submitPayment": "Submit payment",
         "successExclamation": "Success!",
         "total": "Total",
@@ -2095,7 +2096,7 @@
                 "ssn": "SSN",
                 "signatureValidation": "Signature Validation",
                 "nonJobIncome": "Income from a Job/Pension/Annuity",
-                "claimsAndCredits": "Claim Dependent and and other Credits",
+                "claimsAndCredits": "Claim Dependent and other Credits",
                 "otherIncomeAndPensions": "Other Income",
                 "otherDeductions": "Deduction"
             },
@@ -3286,6 +3287,8 @@
         "callID": "Call ID",
         "backToCallList": "Back to call listing",
         "noCallLogSummary": "No summary to display.",
+        "callLogNotes": "Notes",
+        "callLogSummary": "Summary",
         "allocation": {
             "allocation": "Allocation",
             "allocationsMustNotEqual0": "Allocations cannot equal 0.",
