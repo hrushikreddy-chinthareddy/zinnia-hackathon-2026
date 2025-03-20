@@ -20,7 +20,6 @@ type UserInfo = {
     userName: string;
 };
 
-// type LoggingFunction = <T = LoggingContext>(message: string, serializableValues: T) => void;
 type LoggingFunction = (message: string, serializableValues?: LoggingContext) => void;
 
 type APIErrorInformation = {
