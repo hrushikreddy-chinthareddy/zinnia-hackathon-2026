@@ -1364,11 +1364,13 @@
                                                     "type": "array",
                                                     "contains": {
                                                         "type": "object",
+                                                        "required": ["state"],
                                                         "properties": {
                                                             "state": {
                                                                 "const": "CA"
                                                             }
-                                                        }
+                                                        },
+                                                        "minProperties": 1
                                                     }
                                                 }
                                             }
