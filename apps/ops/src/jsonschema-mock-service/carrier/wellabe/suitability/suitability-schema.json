@@ -777,8 +777,7 @@
                                                 "title": "Federal tax band",
                                                 "$ref": "#/definitions/fedralIncomeTaxEnum"
                                             }
-                                        },
-                                        "required": ["materialChangeReason"]
+                                        }
                                     },
                                     "else": {
                                         "properties": {
@@ -1027,13 +1026,10 @@
                                         "type": "object",
                                         "properties": {
                                             "distributionMethods": {
-                                                "type": "array",
+                                                "type": "string",
                                                 "title": "Distribution methods",
-                                                "items": {
-                                                    "type": "string",
-                                                    "$ref": "#/definitions/liquidityOptions_distributionOptionEnum"
-                                                },
-                                                "uniqueItems": true
+
+                                                "$ref": "#/definitions/liquidityOptions_distributionOptionEnum"
                                             },
                                             "optedYears": {
                                                 "type": "string",
@@ -1086,7 +1082,6 @@
                                 }
                             },
                             "required": [
-                                "distributionMethods",
                                 "surrenderChargeConsentUnderAge",
                                 "planToHoldAnnuity",
                                 "explainedOtherCharges",
@@ -1733,7 +1728,6 @@
                             }
                         },
                         "sourceOfIncome": {
-                            "ui:widget": "checkboxes",
                             "ui:options": {
                                 "label": true,
                                 "enumNames": [
@@ -1801,7 +1795,6 @@
                             }
                         },
                         "sourceOfFunds": {
-                            "ui:widget": "checkboxes",
                             "ui:options": {
                                 "label": true,
                                 "enumNames": [
@@ -1938,7 +1931,6 @@
                         "purchaseReason": {
                             "ui:options": {
                                 "label": "true",
-                                "widget": "checkboxes",
                                 "enumNames": ["Income", "Tax deferal", "Gurantees", "Growth", "Principal protection", "Others"]
                             }
                         },
