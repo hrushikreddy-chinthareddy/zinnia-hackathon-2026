@@ -860,7 +860,12 @@
         "documentNumber": "Document: ",
         "noDocumentFound": "No documents found",
         "documentSelectError": "Document already selected",
-        "fetchingDocuments": "Fetching Documents..."
+        "fetchingDocuments": "Fetching Documents...",
+        "noteTitle": "Notes",
+        "notePlaceholder": "Add a note.",
+        "addNote": "Add note",
+        "errorSavingNote": "Error occurred while saving note. Please try again",
+        "notePostDate": "Posted on {{date}} by"
     },
     "caseManagementDashboard": {
         "h1": "Case Management",
@@ -1747,7 +1752,9 @@
                 },
                 "singleLifeTimeIncome": {
                     "title": "Name of Income Life"
-                }
+                },
+                "COVERED_PERSON_1": "Name of Covered Life 1",
+                "COVERED_PERSON_2": "Name of Covered Life 2"
             },
             "rmdMethod": {
                 "title": "RMD Method",
@@ -2077,6 +2084,20 @@
                 "numberofAllowance": "Number of allowances",
                 "signatureValidation": "Signature validation",
                 "Type": "type"
+            },
+            "w4pPeriodicPayment": {
+                "maritalStatusAllowanceItems": {
+                    "single": "Single",
+                    "married": "Married",
+                    "headOfHousehold": "Head of household"
+                },
+                "title": "W4-P for Periodic Payments",
+                "ssn": "SSN",
+                "signatureValidation": "Signature Validation",
+                "nonJobIncome": "Income from a Job/Pension/Annuity",
+                "claimsAndCredits": "Claim Dependent and and other Credits",
+                "otherIncomeAndPensions": "Other Income",
+                "otherDeductions": "Deduction"
             },
             "OL4753Data": {
                 "isOL4753Attached": "Is OL4753 form attached",
@@ -3766,7 +3787,8 @@
                 "amount": "Amount",
                 "edit": "Edit",
                 "relationshipToInsured": "Relationship to insured",
-                "label": "Allocation"
+                "label": "Allocation",
+                "commissionAllocation": "Commission allocation"
             },
             "bank": {
                 "accountOptions": {
@@ -3807,6 +3829,13 @@
                     "showAdditional": "Show additional email addresses"
                 },
                 "label": "Email"
+            },
+            "firmInformation": {
+                "label": "Firm Information",
+                "name": "Name",
+                "business": "Business",
+                "address": "Address",
+                "empty": "No firm information."
             },
             "phone": {
                 "bestTimes": {
@@ -3873,7 +3902,9 @@
                     "trustDate": "Trust date",
                     "trustType": "Trust type",
                     "usCitizen": "United States citizen",
-                    "citizenCountry": "Citizenship country"
+                    "citizenCountry": "Citizenship country",
+                    "externalId": "External ID",
+                    "channel": "Channel"
                 }
             },
             "underwriting": "Underwriting",

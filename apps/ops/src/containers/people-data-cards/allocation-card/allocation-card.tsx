@@ -46,7 +46,7 @@ const getEstimatedAmount = (allocation: number | undefined, deathBenefit: number
     }
 };
 
-const AllocationPercentage = ({ allocation }: AllocationPercentageProps) => {
+export const AllocationPercentage = ({ allocation }: AllocationPercentageProps) => {
     const { t } = useTranslation();
 
     return (
@@ -81,7 +81,7 @@ const RelationshipToInsuredInfo = ({ relationshipToInsured }: RelationshipToInsu
     );
 };
 
-export const AllocationCard = ({
+const AllocationCard = ({
     allocation,
     deathBenefit,
     editable = false,

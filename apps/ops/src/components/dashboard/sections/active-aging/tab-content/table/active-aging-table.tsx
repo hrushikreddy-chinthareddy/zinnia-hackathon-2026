@@ -149,7 +149,7 @@ export const ActiveAgingTable = () => {
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {'Something went wrong fetching the application types, please try again by refreshing the page'}
+                                {'Something went wrong fetching insights, please try again by refreshing the page'}
                             </Typography>
                         </div>
                     ) : searchedData?.length === 0 ? (

@@ -64,10 +64,7 @@ export const CreateProducerForm = () => {
   // @TODO: refactor this once we use tanstack query
   if (response)
     return (
-      <div
-        id={PomStyles['producer-onboarding-maintenance']}
-        className="card-container"
-      >
+      <div id={PomStyles['producer-onboarding-maintenance']}>
         {response.success ? (
           <Success
             message={`A new record for ${firstName} ${lastName} was submitted for processing.`}
@@ -92,95 +89,94 @@ export const CreateProducerForm = () => {
     );
 
   return (
-    <div
-      id={PomStyles['producer-onboarding-maintenance']}
-      className="card-container"
-    >
-      <h1 className={styles.title}>Add a Sales Entity</h1>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="pom_flex-column gap-xl"
-      >
-        <div className={styles.formField}>
+    <div id={PomStyles['producer-onboarding-maintenance']}>
+      <div className="card-container">
+        <h1 className={styles.title}>Add a Sales Entity</h1>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="pom_flex-column gap-xl"
+        >
+          <div className={styles.formField}>
+            <Controller
+              name="recordType"
+              control={control}
+              rules={{ required: 'ProducerType is missing.' }}
+              render={() => (
+                <ButtonGroup
+                  items={[
+                    {
+                      children: <span>Individual</span>,
+                      id: ProducerType.INDIVIDUAL,
+                      value: ProducerType.INDIVIDUAL,
+                    },
+                    {
+                      children: <span>Corporation</span>,
+                      id: ProducerType.CORPORATION,
+                      value: ProducerType.CORPORATION,
+                    },
+                  ]}
+                  onClick={value => {
+                    reset({
+                      recordType: value as ProducerType,
+                    });
+                  }}
+                />
+              )}
+            />
+          </div>
+
           <Controller
-            name="recordType"
+            name="carrier"
             control={control}
-            rules={{ required: 'ProducerType is missing.' }}
-            render={() => (
-              <ButtonGroup
-                items={[
-                  {
-                    children: <span>Individual</span>,
-                    id: ProducerType.INDIVIDUAL,
-                    value: ProducerType.INDIVIDUAL,
-                  },
-                  {
-                    children: <span>Corporation</span>,
-                    id: ProducerType.CORPORATION,
-                    value: ProducerType.CORPORATION,
-                  },
-                ]}
-                onClick={value => {
-                  reset({
-                    recordType: value as ProducerType,
-                  });
-                }}
-              />
+            rules={{ required: 'Carrier is missing.' }}
+            render={({ field }) => (
+              <div className={styles.formField}>
+                <Select
+                  id="field-select-carrier"
+                  fieldSize="small"
+                  label={<Label labelFor="field-select-carrier">Carrier</Label>}
+                  placeholder="-- Select carrier --"
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  errorMessage={errors.carrier?.message}
+                  fieldStatus={
+                    errors.carrier ? FieldStatus.ERROR : FieldStatus.DEFAULT
+                  }
+                  options={Object.values(Carrier).map(carrier => ({
+                    textValue: carrier,
+                    value: carrier,
+                  }))}
+                />
+              </div>
             )}
           />
-        </div>
 
-        <Controller
-          name="carrier"
-          control={control}
-          rules={{ required: 'Carrier is missing.' }}
-          render={({ field }) => (
-            <div className={styles.formField}>
-              <Select
-                id="field-select-carrier"
-                fieldSize="small"
-                label={<Label labelFor="field-select-carrier">Carrier</Label>}
-                placeholder="-- Select carrier --"
-                value={field.value}
-                onValueChange={field.onChange}
-                errorMessage={errors.carrier?.message}
-                fieldStatus={
-                  errors.carrier ? FieldStatus.ERROR : FieldStatus.DEFAULT
-                }
-                options={Object.values(Carrier).map(carrier => ({
-                  textValue: carrier,
-                  value: carrier,
-                }))}
-              />
-            </div>
+          {recordType === ProducerType.CORPORATION && (
+            <CorporationFormFields
+              register={register}
+              errors={errors}
+              control={control}
+            />
           )}
-        />
 
-        {recordType === ProducerType.CORPORATION && (
-          <CorporationFormFields
-            register={register}
-            errors={errors}
-            control={control}
-          />
-        )}
+          {recordType === ProducerType.INDIVIDUAL && (
+            <IndividualFormFields
+              register={register}
+              errors={errors}
+              control={control}
+            />
+          )}
 
-        {recordType === ProducerType.INDIVIDUAL && (
-          <IndividualFormFields
-            register={register}
-            errors={errors}
-            control={control}
-          />
-        )}
-
-        <div className={styles.submitButtons}>
-          <Button type="submit" size="small">
-            Create Record
-          </Button>
-          <Button mode="link" size="small" disabled>
-            Cancel
-          </Button>
-        </div>
-      </form>
+          <div className={styles.submitButtons}>
+            <Button type="submit" size="small">
+              Create Record
+            </Button>
+            <Button mode="link" size="small" disabled>
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

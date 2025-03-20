@@ -18,7 +18,7 @@ type AddressProps = {
     showAddressLines?: boolean;
     isOL4753?: boolean;
     combinedAddress?: string;
-    className?: string,
+    className?: string;
 };
 
 export const DEFAULT_ADDRESS = {
@@ -33,6 +33,7 @@ export const DEFAULT_ADDRESS = {
     zip: '',
     zipPlusFour: null,
     isAddressChanged: false,
+    ssn: '',
 };
 
 const zipFormat = { format: '#####' };
@@ -56,6 +57,8 @@ export default function AddressEntry({
     const [state, setState] = useState(initialAddress.state || '');
     const [zip, setZip] = useState(initialAddress.zip || '');
     const [zipPlusFour, setZipPlusFour] = useState(initialAddress.zipPlusFour || '');
+    const [ssn, setSsn] = useState(initialAddress.ssn || '');
+
     const stateOptions = getStateCodes().map(state => ({ label: state, value: state }));
     useEffect(() => {
         onDataChange({ ...DEFAULT_ADDRESS, ...initialAddress, addressLine1, addressLine2, addressLine3, city, state, zip, zipPlusFour });

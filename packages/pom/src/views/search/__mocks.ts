@@ -1,7 +1,7 @@
 import { ProducerType } from '../../types';
 import { SearchResult } from '../../types/search.types';
 
-export const generateSearchResults = (npn: string): SearchResult[] => {
+export const generateSearchResults = (npn: number): SearchResult[] => {
   return [
     {
       producerType: ProducerType.INDIVIDUAL,
@@ -9,7 +9,7 @@ export const generateSearchResults = (npn: string): SearchResult[] => {
       firstName: 'Jane',
       lastName: 'Doe',
       producerName: '123456789',
-      nationalProducerNumber: npn,
+      nationalProducerNumber: npn.toString(),
       email: 'producer@g.com',
       phone: '514999999',
     },
