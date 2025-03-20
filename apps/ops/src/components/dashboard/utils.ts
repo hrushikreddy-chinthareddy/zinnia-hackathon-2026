@@ -18,15 +18,15 @@ export enum TimeframeFilterOptions {
 }
 
 export const caseStatusMap = {
-    [Statuses.InProgress]: 'In Progress',
-    [Statuses.Exception]: 'Exception',
-    [Statuses.NotStarted]: 'Not Started',
+    [Statuses.InProgress]: 'In progress',
+    [Statuses.Exception]: 'Not in good order',
+    [Statuses.NotStarted]: 'Not started',
     [Statuses.Completed]: 'Completed',
     [Statuses.Canceled]: 'Canceled',
     [Statuses.New]: 'New',
     [Statuses.Overridden]: 'Overridden',
     [Statuses.Withdrawn]: 'Withdrawn',
-    [Statuses.Inprogress]: 'Inprogress',
+    [Statuses.Inprogress]: 'In progress',
     [Statuses.Pending]: 'Pending',
 };
 

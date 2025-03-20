@@ -7,11 +7,12 @@ export enum SortOrder {
 
 interface UseTableOptionsArgs<T> {
     sortByDefault: string;
+    defaultSortOrder?: SortOrder;
     dataToSort: T[];
 }
 
-export const useTableOptions = <T>({ sortByDefault, dataToSort }: UseTableOptionsArgs<T>) => {
-    const [sortOrder, setSortOrder] = useState(SortOrder.DESC);
+export const useTableOptions = <T>({ sortByDefault, dataToSort, defaultSortOrder }: UseTableOptionsArgs<T>) => {
+    const [sortOrder, setSortOrder] = useState(defaultSortOrder ?? SortOrder.DESC);
     const [sortBy, setSortBy] = useState(sortByDefault as keyof T);
 
     const handleSort = (column: keyof T) => {

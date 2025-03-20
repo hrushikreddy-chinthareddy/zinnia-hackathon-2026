@@ -20,7 +20,11 @@ export const CaseTimingFilters = () => {
                 />
             </div>
             <div className="w-3/4">
-                <TimeFilter defaultValue={timeframe} onValueChange={val => setTimeframe(val as TimeframeFilterOptions)} />
+                <TimeFilter
+                    defaultValue={timeframe}
+                    controlledTimeValue={timeframe}
+                    onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
+                />
             </div>
         </div>
     );

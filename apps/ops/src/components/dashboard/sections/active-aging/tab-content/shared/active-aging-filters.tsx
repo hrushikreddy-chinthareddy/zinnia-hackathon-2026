@@ -11,6 +11,7 @@ import { Statuses, Processes } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 
 import { getFormattedDateRange, ActiveAgingTimeRange } from '../../utils';
+import { CaseStatusFilter } from '@deps/components/dashboard/filters/case-status-filter';
 
 export const ActiveAgingFilters: FC = () => {
     const {
@@ -33,10 +34,10 @@ export const ActiveAgingFilters: FC = () => {
         { label: 'Distribution Partner', value: GroupByOptions.BrokerDealerName },
     ];
 
-    const caseStatusOptions = [
-        { label: 'In Progress', displayText: 'In Progress', value: Statuses.InProgress },
-        { label: 'Exception', displayText: 'Exception', value: Statuses.Exception },
-        { label: 'Not Started', displayText: 'Not Started', value: Statuses.NotStarted },
+    const caseStatusOptions: { label: string; displayText: string; value: Statuses }[] = [
+        { label: 'In progress', displayText: 'In progress', value: Statuses.InProgress },
+        { label: 'Not in good order', displayText: 'Not in good order', value: Statuses.Exception },
+        { label: 'Not started', displayText: 'Not started', value: Statuses.NotStarted },
     ];
 
     const handleCaseStatusChange = (status: Statuses) => {
@@ -73,16 +74,7 @@ export const ActiveAgingFilters: FC = () => {
                     defaultProcess={Processes.NewBusiness}
                     value={selectedProcess}
                 />
-                <Select
-                    maxContentWidth
-                    label="Case status"
-                    className={sharedStyles.selectDropdowns}
-                    options={caseStatusOptions}
-                    value={caseStatus}
-                    size={FieldSize.XS}
-                    isMultiselect
-                    onChange={val => handleCaseStatusChange(val as Statuses)}
-                />
+                <CaseStatusFilter caseStatus={caseStatus} handleChangeCallback={setCaseStatus} options={caseStatusOptions} />
             </div>
             <div className="w-1/2">
                 <TimeFilter
