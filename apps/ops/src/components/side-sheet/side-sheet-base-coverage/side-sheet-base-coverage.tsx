@@ -1,5 +1,4 @@
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import CardColumns, { CardColumnsVariant } from '@deps/components/card/card-columns/card-columns';
 import DescriptionLists from '@deps/components/description-list/description-lists';
@@ -38,7 +37,6 @@ export default function SideSheetCoverage({ policy }: SideSheetPolicyItemProps) 
 
     const title = t(`${BASE_KEY}.coverageChangeRulesSidesheet`);
     const subHeaderContent = t(`${BASE_KEY}.sideSheetBody`);
-    const footer = t(`${BASE_KEY}.footer`);
 
     return (
         <div className="rounded bg-white">
@@ -48,7 +46,6 @@ export default function SideSheetCoverage({ policy }: SideSheetPolicyItemProps) 
                     titles={[title]}
                     variant={CardColumnsVariant.SIDE_SHEET}
                     subHeader={subHeaderContent}
-                    footer={footer}
                     keepFormattingOnAllSize={true}
                 />
             </div>

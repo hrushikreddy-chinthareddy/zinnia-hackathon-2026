@@ -11,7 +11,7 @@ import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import {
     SignatureFieldNames,
-    SignatureFields
+    SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helper';
@@ -45,7 +45,6 @@ import {
 import { createValidator } from '../../utils/helper-utils';
 
 export default function getUsaaConfig(t: TFunction) {
-
     const formValidation = ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
         if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
@@ -74,105 +73,108 @@ export default function getUsaaConfig(t: TFunction) {
             );
         }
 
-        if (formDisbursement?.bank[0].accountType?.text === '' && [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
+        ) {
             errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
         }
         return errors;
     };
 
     const formPartyConfigs: PartyConfig[] = [
-      {
-          partyRoleType: PartyRoles.OWNER,
-          title: t('personalDetails.title'),
-          fields: [
-              {
-                  fieldName: PartyFields.FirstName,
-                  fieldLabel: t('personalDetails.firstName'),
-              },
-              {
-                  fieldName: PartyFields.MiddleName,
-                  fieldLabel: t('personalDetails.middleName'),
-              },
-              {
-                  fieldName: PartyFields.LastName,
-                  fieldLabel: t('personalDetails.lastName'),
-              },
-              {
-                  fieldName: PartyFields.TaxId,
-                  fieldLabel: t('personalDetails.ssn'),
-              },
-          ],
-          phones: [
-              {
-                  phoneType: PhoneTypes.Owner_Phone_Day,
-                  fields: [
-                      {
-                          fieldName: PhoneFields.phoneNumber,
-                          fieldLabel: t('phoneDetails.daytimePhone'),
-                      },
-                  ],
-              },
-              {
-                  phoneType: PhoneTypes.Owner_Phone_Home,
-                  fields: [
-                      {
-                          fieldName: PhoneFields.phoneNumber,
-                          fieldLabel: t('phoneDetails.homePhone'),
-                      },
-                  ],
-              },
-          ],
-          addressFields: [
-              {
-                  addressType: AddressTypes.DEFAULT,
-                  title: t('addressDetails.title'),
-              },
-          ],
-      },
-      {
-          partyRoleType: PartyRoles.JOINT_OWNER,
-          title: t('jointOwner.title'),
-          fields: [
-              {
-                  fieldName: PartyFields.FirstName,
-                  fieldLabel: t('personalDetails.firstName'),
-              },
-              {
-                  fieldName: PartyFields.MiddleName,
-                  fieldLabel: t('personalDetails.middleName'),
-              },
-              {
-                  fieldName: PartyFields.LastName,
-                  fieldLabel: t('personalDetails.lastName'),
-              },
-              {
-                  fieldName: PartyFields.TaxId,
-                  fieldLabel: t('personalDetails.ssn'),
-              },
-          ],
-      },
-      {
-          partyRoleType: PartyRoles.ANNUITANT,
-          title: t('Annuitant.title'),
-          fields: [
-              {
-                  fieldName: PartyFields.FirstName,
-                  fieldLabel: t('personalDetails.firstName'),
-              },
-              {
-                  fieldName: PartyFields.MiddleName,
-                  fieldLabel: t('personalDetails.middleName'),
-              },
-              {
-                  fieldName: PartyFields.LastName,
-                  fieldLabel: t('personalDetails.lastName'),
-              },
-              {
-                  fieldName: PartyFields.TaxId,
-                  fieldLabel: t('personalDetails.ssn'),
-              },
-          ],
-      },
+        {
+            partyRoleType: PartyRoles.OWNER,
+            title: t('personalDetails.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+                {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+            ],
+            phones: [
+                {
+                    phoneType: PhoneTypes.Owner_Phone_Day,
+                    fields: [
+                        {
+                            fieldName: PhoneFields.phoneNumber,
+                            fieldLabel: t('phoneDetails.daytimePhone'),
+                        },
+                    ],
+                },
+                {
+                    phoneType: PhoneTypes.Owner_Phone_Home,
+                    fields: [
+                        {
+                            fieldName: PhoneFields.phoneNumber,
+                            fieldLabel: t('phoneDetails.homePhone'),
+                        },
+                    ],
+                },
+            ],
+            addressFields: [
+                {
+                    addressType: AddressTypes.DEFAULT,
+                    title: t('addressDetails.title'),
+                },
+            ],
+        },
+        {
+            partyRoleType: PartyRoles.JOINT_OWNER,
+            title: t('jointOwner.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+                {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+            ],
+        },
+        {
+            partyRoleType: PartyRoles.ANNUITANT,
+            title: t('Annuitant.title'),
+            fields: [
+                {
+                    fieldName: PartyFields.FirstName,
+                    fieldLabel: t('personalDetails.firstName'),
+                },
+                {
+                    fieldName: PartyFields.MiddleName,
+                    fieldLabel: t('personalDetails.middleName'),
+                },
+                {
+                    fieldName: PartyFields.LastName,
+                    fieldLabel: t('personalDetails.lastName'),
+                },
+                {
+                    fieldName: PartyFields.TaxId,
+                    fieldLabel: t('personalDetails.ssn'),
+                },
+            ],
+        },
     ];
 
     const generateSSWPayload = (val: SSWProgram, subType: SSWType) => ({
@@ -214,11 +216,11 @@ export default function getUsaaConfig(t: TFunction) {
     const fundWithdrawnMethodOptions = [
         {
             label: t(`distributionInstruction.prorata`),
-            value: FundWithdrawnMethod.Prorata
+            value: FundWithdrawnMethod.Prorata,
         },
         {
             label: t(`distributionInstruction.specifyFunds`),
-            value: FundWithdrawnMethod.SpecifyFunds
+            value: FundWithdrawnMethod.SpecifyFunds,
         },
     ];
 
@@ -249,179 +251,166 @@ export default function getUsaaConfig(t: TFunction) {
     ];
 
     const disbursementOptions: PaymentMethodOption[] = [
-      {
-          label: t('distributionMethod.eft'),
-          value: FormDisbursementSelections.EFT,
-          fields: [
-              {
-                  fieldName: BankingFields.Bank,
-                  fieldLabel: t('distributionMethod.chooseTheBank'),
-                  component: DisbursementFields.SelectBank,
-              },
-              {
-                  fieldName: BankingFields.IsVoidCheckAttached,
-                  fieldLabel: t('distributionMethod.isVoidCheckAttached'),
-                  component: DisbursementFields.BankBooleanButtonGroup,
-                  classNames: 'col-start-1',
-              },
-              {
-                  fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                  fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
-                  component: DisbursementFields.BankBooleanButtonGroup,
-              },
-              {
-                  fieldName: BankingFields.AccountType,
-                  fieldLabel: t('distributionMethod.accountType'),
-                  component: DisbursementFields.AccountTypes,
-                  classNames: 'col-start-1 col-span-2 w-full',
-                  isBankingField: true,
-              },
-              {
-                  fieldName: BankingFields.AccountNumber,
-                  fieldLabel: t('distributionMethod.accountNumber'),
-                  component: DisbursementFields.BankTextField,
-                  classNames: 'col-start-1',
-                  isBankingField: true,
-                  maskOnBlur: true,
-                  disableCopyPaste: true,
-              },
-              {
-                  fieldName: BankingFields.ReEnterAccountNumber,
-                  fieldLabel: t('distributionMethod.reEnterAccountNumber'),
-                  component: DisbursementFields.BankTextField,
-                  classNames: 'col-start-2',
-                  isBankingField: true,
-                  disableCopyPaste: true,
-                  validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
-              },
-              {
-                  fieldName: BankingFields.BankRoutingNumber,
-                  fieldLabel: t('distributionMethod.bankRoutingNumber'),
-                  component: DisbursementFields.BankTextField,
-                  isBankingField: true,
-                  maskOnBlur: true,
-                  disableCopyPaste: true,
-                  classNames: 'col-start-1',
-              },
-              {
-                  fieldName: BankingFields.ReEnterBankRoutingNumber,
-                  fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
-                  component: DisbursementFields.BankTextField,
-                  isBankingField: true,
-                  disableCopyPaste: true,
-                  validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
-              },
-              {
-                  fieldName: BankingFields.BankName,
-                  fieldLabel: t('distributionMethod.bankName'),
-                  component: DisbursementFields.BankTextField,
-                  isBankingField: true,
-                  classNames: 'col-start-1',
-              },
-              {
-                  fieldName: BankingFields.AccountHolder,
-                  fieldLabel: t('distributionMethod.accountHolder'),
-                  component: DisbursementFields.BankTextField,
-              },
-          ],
-          getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
-              if (paymentMethod.text !== PaymentMethod.EFT) {
-                  return DEFAULT_DISBURSEMENT_UPDATE;
-              }
-              const selectedBank = bank[0];
-              return {
-                  ...DEFAULT_DISBURSEMENT_UPDATE,
-                  doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
-                  isVoidCheckAttached: voidCheck,
-                  accountHolder: selectedBank.nameOnBankAccount ?? '',
-                  accountNumber: selectedBank.accountNumber ?? '',
-                  accountType: selectedBank.accountType?.text ?? AccountType.Checking,
-                  bankName: selectedBank.bankName ?? '',
-                  bankRoutingNumber: selectedBank.routingNumber ?? '',
-              };
-          },
-          generatePayloadFromSelection: ({
-              accountNumber,
-              accountType,
-              bankName,
-              bankRoutingNumber,
-              accountHolder,
-              isVoidCheckAttached,
-              doesCheckMeetSecurityRequirements,
-              reEnterAccountNumber,
-              reEnterBankRoutingNumber,
-          }: DisbursementParts) => {
-              return {
-                  ...getDefaultFormDisbursementValues(),
-                  paymentMethod: { text: PaymentMethod.EFT },
-                  paymentMailType: { text: null },
-                  bank: [
-                      {
-                          ...DEFAULT_BANK_DETAILS,
-                          accountNumber,
-                          accountType: {
-                              text: accountType,
-                          },
-                          bankName,
-                          nameOnBankAccount: accountHolder ?? '',
-                          routingNumber: bankRoutingNumber,
-                          reEnterAccountNumber,
-                          reEnterBankRoutingNumber,
-                      },
-                  ],
-                  voidCheck: isVoidCheckAttached ?? null,
-                  doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
-              };
-          },
-      },
-      {
-          label: t('distributionMethod.sendCheck'),
-          value: FormDisbursementSelections.Check,
-          fields: [
-              {
-                  fieldName: BankingFields.SelectIfPayeeIsDifferent,
-                  fieldLabel: t('distributionMethod.selectIfDifferentPayee'),
-                  component: DisbursementFields.BankCheckboxField,
-                  classNames: 'col-start-1 col-span-3',
-              },
-              {
-                  fieldName: BankingFields.PayeeName,
-                  fieldLabel: t('distributionMethod.payeeName'),
-                  classNames: 'col-start-1 col-span-2 max-w-lg',
-                  component: DisbursementFields.BankTextField,
-              },
-              {
-                  fieldName: BankingFields.Address,
-                  fieldLabel: '',
-                  classNames: 'col-span-3',
-                  component: DisbursementFields.BankAddress,
-              },
-          ],
-          getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
-              if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
-                  return {
-                      ...DEFAULT_DISBURSEMENT_UPDATE,
-                      selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
-                      address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
-                      payeeName: payee?.name?.text ?? '',
-                  };
-              }
-              return DEFAULT_DISBURSEMENT_UPDATE;
-          },
-          generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
-              return {
-                  ...getDefaultFormDisbursementValues(),
-                  paymentMethod: { text: PaymentMailType.Check },
-                  paymentMailType: { text: null },
-                  isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
-                  payee: {
-                      name: { text: payeeName || null },
-                      addresses: [address || DEFAULT_ADDRESS],
-                      contractNumber: { text: null },
-                  },
-              };
-          },
-      },
+        {
+            label: t('distributionMethod.eft'),
+            value: FormDisbursementSelections.EFT,
+            fields: [
+                {
+                    fieldName: BankingFields.Bank,
+                    fieldLabel: t('distributionMethod.chooseTheBank'),
+                    component: DisbursementFields.SelectBank,
+                },
+                {
+                    fieldName: BankingFields.AccountType,
+                    fieldLabel: t('distributionMethod.accountType'),
+                    component: DisbursementFields.AccountTypes,
+                    classNames: 'col-start-1 col-span-2 w-full',
+                    isBankingField: true,
+                },
+                {
+                    fieldName: BankingFields.AccountNumber,
+                    fieldLabel: t('distributionMethod.accountNumber'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                    isBankingField: true,
+                    maskOnBlur: true,
+                    disableCopyPaste: true,
+                },
+                {
+                    fieldName: BankingFields.ReEnterAccountNumber,
+                    fieldLabel: t('distributionMethod.reEnterAccountNumber'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-2',
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                },
+                {
+                    fieldName: BankingFields.BankRoutingNumber,
+                    fieldLabel: t('distributionMethod.bankRoutingNumber'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    maskOnBlur: true,
+                    disableCopyPaste: true,
+                    classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.ReEnterBankRoutingNumber,
+                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                },
+                {
+                    fieldName: BankingFields.BankName,
+                    fieldLabel: t('distributionMethod.bankName'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.AccountHolder,
+                    fieldLabel: t('distributionMethod.accountHolder'),
+                    component: DisbursementFields.BankTextField,
+                },
+            ],
+            getDefaultPayload({ paymentMethod, bank }: FormDisbursement) {
+                if (paymentMethod.text !== PaymentMethod.EFT) {
+                    return DEFAULT_DISBURSEMENT_UPDATE;
+                }
+                const selectedBank = bank[0];
+                return {
+                    ...DEFAULT_DISBURSEMENT_UPDATE,
+                    accountHolder: selectedBank.nameOnBankAccount ?? '',
+                    accountNumber: selectedBank.accountNumber ?? '',
+                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    bankName: selectedBank.bankName ?? '',
+                    bankRoutingNumber: selectedBank.routingNumber ?? '',
+                };
+            },
+            generatePayloadFromSelection: ({
+                accountNumber,
+                accountType,
+                bankName,
+                bankRoutingNumber,
+                accountHolder,
+                isVoidCheckAttached,
+                doesCheckMeetSecurityRequirements,
+                reEnterAccountNumber,
+                reEnterBankRoutingNumber,
+            }: DisbursementParts) => {
+                return {
+                    ...getDefaultFormDisbursementValues(),
+                    paymentMethod: { text: PaymentMethod.EFT },
+                    paymentMailType: { text: null },
+                    bank: [
+                        {
+                            ...DEFAULT_BANK_DETAILS,
+                            accountNumber,
+                            accountType: {
+                                text: accountType,
+                            },
+                            bankName,
+                            nameOnBankAccount: accountHolder ?? '',
+                            routingNumber: bankRoutingNumber,
+                            reEnterAccountNumber,
+                            reEnterBankRoutingNumber,
+                        },
+                    ],
+                    voidCheck: isVoidCheckAttached ?? null,
+                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                };
+            },
+        },
+        {
+            label: t('distributionMethod.sendCheck'),
+            value: FormDisbursementSelections.Check,
+            fields: [
+                {
+                    fieldName: BankingFields.SelectIfPayeeIsDifferent,
+                    fieldLabel: t('distributionMethod.selectIfDifferentPayee'),
+                    component: DisbursementFields.BankCheckboxField,
+                    classNames: 'col-start-1 col-span-3',
+                },
+                {
+                    fieldName: BankingFields.PayeeName,
+                    fieldLabel: t('distributionMethod.payeeName'),
+                    classNames: 'col-start-1 col-span-2 max-w-lg',
+                    component: DisbursementFields.BankTextField,
+                },
+                {
+                    fieldName: BankingFields.Address,
+                    fieldLabel: '',
+                    classNames: 'col-span-3',
+                    component: DisbursementFields.BankAddress,
+                },
+            ],
+            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
+                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+                    return {
+                        ...DEFAULT_DISBURSEMENT_UPDATE,
+                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
+                        address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
+                        payeeName: payee?.name?.text ?? '',
+                    };
+                }
+                return DEFAULT_DISBURSEMENT_UPDATE;
+            },
+            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
+                return {
+                    ...getDefaultFormDisbursementValues(),
+                    paymentMethod: { text: PaymentMailType.Check },
+                    paymentMailType: { text: null },
+                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
+                    payee: {
+                        name: { text: payeeName || null },
+                        addresses: [address || DEFAULT_ADDRESS],
+                        contractNumber: { text: null },
+                    },
+                };
+            },
+        },
     ];
 
     const signaturesConfig: SignatureValidationConfig[] = [

@@ -7,6 +7,7 @@ import { buildCaseLink } from '@deps/components/tasks-listing/task-listing.helpe
 import { TranslationFiles } from '@deps/config/translations';
 import { getNigoExceptions } from '@deps/containers/task-container/components/steps/nigo-details/nigo-details.helper';
 import TaskContainer from '@deps/containers/task-container/task-container';
+import { applyDynamicOptions } from '@deps/containers/task-container/task-handlers/handle-task';
 import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
@@ -25,8 +26,6 @@ import { logError, logWarn, parseErrorInformation, withPageAuthAndLogging } from
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
 
-import { applyDynamicOptions } from '../../../containers/task-container/task-handlers/handle-task';
-
 type TaskPageProps = {
     task: ManagementTask;
     taskMetadata: FormMetadata[];
@@ -34,6 +33,7 @@ type TaskPageProps = {
     taskInfoLink: string;
     nigoExceptions: any;
     nigoSubExceptions: any;
+    isSaveAsDraftEnabled: any;
 };
 
 export const TaskPage: React.FC<TaskPageProps> = ({
@@ -43,6 +43,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     nigoExceptions,
     nigoSubExceptions,
     taskMetadata,
+    isSaveAsDraftEnabled,
 }: TaskPageProps) => {
     return (
         <div>
@@ -53,6 +54,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
                         nigoExceptions={nigoExceptions}
                         nigoSubExceptions={nigoSubExceptions}
                         taskMetadata={taskMetadata}
+                        isSaveAsDraftEnabled={isSaveAsDraftEnabled}
                     />
                 </TaskProvider>
             </NoNavLayout>
@@ -111,7 +113,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 const { taskType, carrier, caseId, process } = task;
 
                 if (!taskType || !carrier || !caseId || !process) {
-                    logWarn('task/details not found', { taskType, carrier, caseId, process, ...loggingContext });
+                    logWarn('task/details not found', { ...loggingContext, taskType, carrier, caseId, process });
                     return {
                         redirect: {
                             destination: '/403',
@@ -129,7 +131,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                                     task.prefferedAssignee.toLowerCase() == user.email.toLowerCase()))
                         )
                     ) {
-                        logWarn('task/:id::task is not assigned to user', { assignee: task.assignee, ...loggingContext });
+                        logWarn('task/:id::task is not assigned to user', { ...loggingContext, assignee: task.assignee });
                         return {
                             redirect: {
                                 destination: '/403',
@@ -143,10 +145,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                         user.sub,
                         loggingContext
                     );
+
                     const flag = convertToCamelCase(taskType);
                     const enabledTask = Object.keys(isTaskEnabled).includes(flag);
                     if (!enabledTask) {
-                        logWarn('task/:id::feature flag not enabled', { carrier, ...loggingContext });
+                        logWarn('task/:id::feature flag not enabled', { ...loggingContext, carrier });
                         return {
                             redirect: {
                                 destination: '/403',
@@ -156,6 +159,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                     }
                 }
 
+                const flag = convertToCamelCase(taskType);
+                const featureFlags = await optimizelyService.getFeatureFlagVariables(
+                    FEATURE_FLAG_VARIABLES.TASK_SAVE_AS_DRAFT,
+                    carrier?.toLowerCase(),
+                    user.sub,
+                    loggingContext
+                );
+                const isSaveAsDraftEnabled = Boolean(featureFlags?.[flag]);
                 const nigoFilters = {
                     categoryIds: ['Form', 'Signature', 'Account Information'],
                     carrier: carrier?.toUpperCase(),
@@ -203,6 +214,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         taskInfoLink,
                         nigoExceptions,
                         nigoSubExceptions,
+                        isSaveAsDraftEnabled,
                     },
                 };
             } catch (error) {
@@ -213,7 +225,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
         },
     },
-    { file: 'task/[taskId]/index', function: 'getServerSideProps', page: 'task/:taskId' }
+    { file: 'pages/task/[taskId]/index', function: 'getServerSideProps', page: 'task/:taskId' }
 );
 
 export default TaskPage;

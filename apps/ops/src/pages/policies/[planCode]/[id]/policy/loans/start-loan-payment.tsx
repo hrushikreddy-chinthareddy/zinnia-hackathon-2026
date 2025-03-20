@@ -1,10 +1,8 @@
-import router from 'next/router';
-import { useEffect } from 'react';
-
 import { PageHead } from '@deps/components/page-title';
-import LoanAutopayContainer from '@deps/containers/financial-transactions/loan/loan-autopay/loan-autopay-container';
-import { LoanAutopayProvider } from '@deps/contexts/transactions/LoanAutopayContext';
-import { Policy } from '@deps/models/policy/sor-policy';
+import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import AutopayContainer from '@deps/containers/financial-transactions/autopay/autopay-container';
+import { AutopayProvider } from '@deps/contexts/transactions/AutopayContext';
+import { ArrangementType, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 
@@ -13,21 +11,20 @@ export interface StartLoanPaymentProps {
 }
 
 const StartLoanPayment = ({ policy }: StartLoanPaymentProps) => {
-    useEffect(() => {
-        if (!policy?.loanValues?.totalLoanBalance || policy.loanValues.totalLoanBalance <= 0) {
-            router.push(`/403`);
-
-            return;
-        }
-    }, [policy?.loanValues?.totalLoanBalance]);
-
     return (
-        <LoanAutopayProvider>
+        <AutopayProvider>
             <PageHead titleKey="loanAutopay" />
             <div className="px-4 py-6 flex justify-center md:px-6 md:py-8 lg:px-8 lg:py-10 xl:px-0 xl:py-16">
-                <LoanAutopayContainer isSetUp={true} policy={policy} />
+                <AutopayContainer
+                    arrangementType={ArrangementType.LOANREPAYMENT}
+                    isSetUp={true}
+                    policy={policy}
+                    parentPage={ParentPage.Loans}
+                    systematicProgramReason={Reason.LOANREPAYMENT}
+                    translationKeyPrefix="loanAutopay"
+                />
             </div>
-        </LoanAutopayProvider>
+        </AutopayProvider>
     );
 };
 

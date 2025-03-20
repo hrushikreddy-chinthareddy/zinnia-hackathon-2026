@@ -1,3 +1,4 @@
+import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import { TFunction } from 'next-i18next';
 
 import { PopoverPlacement } from '@deps/components/popover/popover';
@@ -42,7 +43,7 @@ export const toSideSheetCoverageDto = (policy: Policy): SideSheetCoverageColDto 
 
     const issueDate = policy.policyDates?.issueDate;
 
-    const eligibleForIncreaseUntil = String(coverage?.maximumAgeNumberCoverageAmountIncrease);
+    const eligibleForIncreaseUntil = String(coverage?.maximumAgeNumberCoverageAmountIncrease === 0 ? 'N/A' : coverage?.maximumAgeNumberCoverageAmountIncrease) ?? DEFAULT_ERROR_STRING;
 
     return {
         baseDeathBenefit,

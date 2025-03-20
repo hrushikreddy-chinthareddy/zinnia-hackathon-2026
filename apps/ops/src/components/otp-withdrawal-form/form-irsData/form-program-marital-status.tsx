@@ -1,38 +1,35 @@
 import { useTranslation } from 'next-i18next';
+import { v4 as uuidv4 } from 'uuid';
 
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import { maritalStatusType } from '@deps/models/case/withdrawal/case';
 
+import { MaritalStatusAllowances } from '../maritial-status-allowance-withholdings';
+
 interface FormProgramProcessDateProps {
-  isFormStateReadOnly?: boolean;
-  selected: maritalStatusType;
-  setSelected: (selected: maritalStatusType) => void;
+    isFormStateReadOnly?: boolean;
+    selected: maritalStatusType | MaritalStatusAllowances;
+    setSelected: (selected: maritalStatusType) => void;
+    options: SelectOneOption[];
 }
 
 export interface SelectOneOption {
-  label: string;
-  value: maritalStatusType;
-
+    label: string;
+    value: maritalStatusType | MaritalStatusAllowances;
 }
 
-export default function FormProgramMaritalStatus({ isFormStateReadOnly, selected, setSelected }: FormProgramProcessDateProps) {
+export default function FormProgramMaritalStatus({ isFormStateReadOnly, selected, setSelected, options }: FormProgramProcessDateProps) {
+    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.irsData' });
 
-  const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.irsData' });
-
-  const options: SelectOneOption[] = [
-    { label: 'Single', value: maritalStatusType.single },
-    { label: 'Married filing jointly', value: maritalStatusType.marriedFilingJointly },
-    { label: 'Married filing separately', value: maritalStatusType.marriedFilingSeparately },
-  ];
-
-  return (
-    <Radio
-      items={options}
-      label={t('maritalStatus') as string}
-      onChange={event => setSelected(event.target.value as maritalStatusType)}
-      value={selected}
-      variant={isFormStateReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
-      className='!m-0'
-    />
-  );
+    return (
+        <Radio
+            items={options}
+            label={t('maritalStatus') as string}
+            onChange={event => setSelected(event.target.value as maritalStatusType)}
+            value={selected}
+            variant={isFormStateReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
+            className="!m-0"
+            name={'maritalStatus-' + uuidv4()}
+        />
+    );
 }

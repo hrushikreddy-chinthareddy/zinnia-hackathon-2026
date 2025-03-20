@@ -13,7 +13,7 @@ import { Carrier } from '@deps/models/case/withdrawal/case';
 
 import getFlicOftConfig from './flic-oft-form.helper';
 
-export default function FlicOftWithdrawalForm() {
+export default function FlicOftWithdrawalForm({ qualType }: { qualType: string }) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
         signaturesConfig,
@@ -24,8 +24,8 @@ export default function FlicOftWithdrawalForm() {
         identifySelectedFormProgramOption,
         selectOneOptions,
         defaultValues,
-        qualificationOptions
-    } = getFlicOftConfig(t);
+        qualificationOptions,
+    } = getFlicOftConfig(t, qualType);
 
     const {
         formParty,
@@ -72,10 +72,7 @@ export default function FlicOftWithdrawalForm() {
                 selectOneOptions={selectOneOptions}
             />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            <CedingCompanyDistribution
-                qualificationOptions={qualificationOptions}
-                isFormStateReadOnly={isFormStateReadOnly}
-            />
+            <CedingCompanyDistribution qualificationOptions={qualificationOptions} isFormStateReadOnly={isFormStateReadOnly} />
             <FormDisbursement
                 options={disbursementOptions}
                 isFormStateReadOnly={isFormStateReadOnly}

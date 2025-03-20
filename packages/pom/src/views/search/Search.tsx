@@ -9,16 +9,16 @@ import {
   FieldStatus,
 } from '@zinnia/bloom/components';
 import { SearchResult } from '../../types/search.types';
-import { generateSearchResults } from './__mocks';
 import { ProducerType } from '../../types';
 import { Controller, useForm } from 'react-hook-form';
-import { useState } from 'react';
 import PomTable from '../../components/pom-table/PomTable';
 import { default as PomStyles } from '../../styles/pom.module.css';
 import { useNavigate } from 'react-router';
+import { searchProducer } from '../../queries/producers';
+import { useMutation } from '@tanstack/react-query';
 
 interface SearchFormValues {
-  npn: string;
+  npn: number;
 }
 
 export const Search = () => {
@@ -32,9 +32,20 @@ export const Search = () => {
     email: 'Email',
     businessPhone: 'Business Phone',
   };
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
-  const tableRows = (searchResults: SearchResult[]) =>
+  // Create a mutation for the search operation
+  const { isSuccess, isError, isPending, data, mutate, isIdle } = useMutation({
+    mutationFn: (data: {
+      nationalProducerNumber: number;
+      limit?: number;
+      offset?: number;
+    }) => searchProducer(data),
+    onError: error => {
+      console.error('Error searching for producers:', error);
+    },
+  });
+
+  const tableRows = (searchResults: SearchResult[] = []) =>
     searchResults.map(searchResult => {
       const iconType =
         searchResult.producerType === ProducerType.INDIVIDUAL
@@ -72,7 +83,13 @@ export const Search = () => {
     });
 
   const onSubmit = ({ npn }: SearchFormValues) => {
-    setSearchResults(generateSearchResults(npn));
+    // This query is supposed to only return 1 result, so we can default to limit: 10, offset:0
+    // Design specifically asked not to implement pagination in the UI
+    mutate({
+      nationalProducerNumber: npn,
+      limit: 10,
+      offset: 0,
+    });
   };
 
   return (
@@ -118,18 +135,23 @@ export const Search = () => {
               )}
             />
           </div>
-          <Button type="submit">Search</Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? 'Searching...' : 'Search'}
+          </Button>
         </form>
         <div className={clsx(styles.content)}>
-          {formState.isSubmitSuccessful ? (
+          {/* @TODO: style this better with designer */}
+          {isError && (
+            <div>Error searching for producers. Please try again.</div>
+          )}
+          {isSuccess && data && (
             <PomTable
               headers={tableHeaders}
-              rows={tableRows(searchResults)}
+              rows={tableRows(data.results)}
               emptyRowMessage="No producers found."
             />
-          ) : (
-            <FindAProducer />
           )}
+          {isIdle && <FindAProducer />}
         </div>
       </div>
     </div>

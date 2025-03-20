@@ -25,6 +25,7 @@ const CallLogCard = ({
     tag,
     createdAt,
     summary,
+    notes,
 }: {
     callEntryId?: number;
     callerName?: string;
@@ -33,6 +34,7 @@ const CallLogCard = ({
     createdAt?: string;
     summary?: string;
     className?: string;
+    notes?: string;
 }) => {
     tag = toSentenceCase(tag);
     const displayName = (
@@ -72,13 +74,23 @@ const CallLogCard = ({
                     <Tag text={tag} />
                 </div>
             )}
-            {summary ? (
-                <Typography variant={TypographyVariant.BodySm} className="break-normal">
-                    <PiiWrapper>{summary}</PiiWrapper>
-                </Typography>
-            ) : (
-                <NoSummaryCard content={missingSummaryText} />
+            {notes && (
+                <>
+                    <Typography variant={TypographyVariant.LabelLg}>{t('sideSheet.callLogNotes')}</Typography>
+                    <Typography variant={TypographyVariant.Body} className="break-normal">
+                        <PiiWrapper>{notes}</PiiWrapper>
+                    </Typography>
+                </>
             )}
+            {summary && (
+                <>
+                    <Typography variant={TypographyVariant.LabelLg}>{t('sideSheet.callLogSummary')}</Typography>
+                    <Typography variant={TypographyVariant.Body} className="break-normal">
+                        <PiiWrapper>{summary}</PiiWrapper>
+                    </Typography>
+                </>
+            )}
+            {!summary && !notes && <NoSummaryCard content={missingSummaryText} />}
         </div>
     );
 };
@@ -113,7 +125,7 @@ export default function CallLogsTab({ loadingCallLogs, callLogs, callLogsStatusC
             )}
             {!loadingCallLogs && !!callLogs.length && (
                 <>
-                    {callLogs.map(({ callEntryID, callerName, callerType, createdDate, callType, callSummary }) => (
+                    {callLogs.map(({ callEntryID, callerName, callerType, createdDate, callType, callSummary, notes }) => (
                         <CallLogCard
                             key={`call-log-${callEntryID}`}
                             callEntryId={callEntryID}
@@ -122,6 +134,7 @@ export default function CallLogsTab({ loadingCallLogs, callLogs, callLogsStatusC
                             createdAt={createdDate}
                             tag={callType}
                             summary={callSummary}
+                            notes={notes}
                         />
                     ))}
                 </>

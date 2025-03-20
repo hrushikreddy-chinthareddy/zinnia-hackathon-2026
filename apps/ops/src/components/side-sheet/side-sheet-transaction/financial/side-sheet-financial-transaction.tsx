@@ -15,7 +15,7 @@ import { getPolicyTransactions } from '@deps/queries/api/policies';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import SideSheetFinancialTransactionContent from './side-sheet-financial-content';
-import SidesheetCancelPending from '../cancel/side-sheet-cancel-pending';
+import SidesheetCancelPending from '../cancel-pending/side-sheet-cancel-pending';
 import SideSheetNewLoanTransactionContent from '../loan/side-sheet-new-loan-transaction-content';
 import { NewLoanTransactionSideSheetValues } from '../loan/types';
 import SidesheetReverseRecreate from '../reverse-recreate/side-sheet-reverse-recreate';

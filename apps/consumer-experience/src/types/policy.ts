@@ -166,7 +166,9 @@ export enum CompletedPremiumTransactionType {
 export enum PendingPremiumTransactionType {
   PaymentInitialPremium = 'PaymentInitialPremium',
   SubsequentPayment = 'SubsequentPayment',
+  SubsequentPremium = 'SubsequentPremium',
   PaymentOneTimePremium = 'PaymentOneTimePremium',
+  OneTimePremium = 'OneTimePremium',
 }
 
 export enum CompletedAnnuityTransactionType {

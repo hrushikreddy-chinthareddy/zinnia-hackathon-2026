@@ -18,7 +18,7 @@
     "link-package": "node ./scripts/link-package.mjs",
     "unlink-package": "node ./scripts/unlink-packages.mjs",
     "pre-commit": "turbo run pre-commit --filter=\"[HEAD^1]\"",
-    "pre-push": "sh ./scripts/pre-push.sh",
+    "pre-push": "bash ./scripts/pre-push.sh",
     "prepare": "husky install"
   },
   "devDependencies": {

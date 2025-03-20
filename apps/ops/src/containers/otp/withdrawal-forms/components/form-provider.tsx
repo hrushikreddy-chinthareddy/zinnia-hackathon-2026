@@ -121,6 +121,7 @@ export const FormProvider = ({
         return {};
     });
     const [formBeneInfo, setFormBeneInfo] = useState(form.data.formRequest?.formBeneInfo || null);
+    const [formPeriodicPension, setFormPeriodicPension] = useState(form.data.formRequest?.periodicPensionForm || null);
 
     // Update contract issue state when issue state changes
     useEffect(() => {
@@ -178,6 +179,8 @@ export const FormProvider = ({
                 formComment,
                 formReindexingData,
                 formBeneInfo,
+                formPeriodicPension,
+                setFormPeriodicPension,
                 setFormSubtype,
                 setCurrentFormState,
                 setFormWarnings,

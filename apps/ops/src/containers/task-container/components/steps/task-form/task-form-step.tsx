@@ -1,15 +1,23 @@
 import Form from '@rjsf/core';
+import { AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { createRef, memo, useCallback, useState } from 'react';
+import { createRef, memo, useCallback, useContext, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText from '@deps/components/assistive-text/assistive-text';
+import PageLoader from '@deps/components/page-loader/page-loader';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { TaskDataContext } from '@deps/containers/task-container/task-context';
+import { updateTask } from '@deps/containers/task-container/task.helper';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata } from '@deps/models/case/task';
+import { TaskStatus } from '@deps/models/case/task-instance';
 
 import { TaskForm } from './task-form';
+import { browserLogError } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
+
 
 type TaskFormStepProps = {
     readonly?: boolean;
@@ -17,13 +25,17 @@ type TaskFormStepProps = {
     taskInfoLink?: string;
     isSubmit?: boolean;
     taskMetadata: FormMetadata;
+    isSaveAsDraftEnabled?: boolean;
 };
 
-const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata }: TaskFormStepProps) => {
+const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, isSaveAsDraftEnabled = false }: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `taskManagement.taskForm` });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
+    const formState = useContext(TaskDataContext);
+    const { task, correlationId } = formState;
     const formRef = createRef<Form>();
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false)
 
     const handleStepContinue = useCallback(async () => {
         if (formRef.current) {
@@ -46,6 +58,19 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata }
         [currentStepIndex, goToNext, setCurrentStepIndex]
     );
 
+    const handleSaveAsDraft = async () => {
+        try {
+            setLoading(true)
+            await updateTask(task, correlationId, TaskStatus.InProgress);
+        } catch (error) {
+            browserLogError('updateTask::Error updating task', {
+                ...parseErrorInformation(error),
+                taskId: task.id,
+            });
+        } finally {
+            setLoading(false)
+        }
+    }
     return (
         <WorkflowCard
             className="!gap-0"
@@ -57,17 +82,29 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata }
                     cancelLabel={t('cancel') as string}
                     isSubmit={true}
                     handleContinue={handleStepContinue}
+                    handleSaveAsDraft={handleSaveAsDraft}
+                    isDraft={isSaveAsDraftEnabled}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
+
                 />
             }
         >
-            <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
+            <div className="relative">
+                {loading && (
+                    <div className="fixed inset-0 z-50 grid place-content-center bg-white/50">
+                        <PageLoader />
+                    </div>
+                )}
+                <div className="flex flex-col gap-4">
                     <TaskForm readonly={readonly} ref={formRef} onSubmit={handleSubmit} isSubmit={isSubmit} taskMetadata={taskMetadata} />
                     {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
                 </div>
             </div>
+
+
+
+
         </WorkflowCard>
     );
 };

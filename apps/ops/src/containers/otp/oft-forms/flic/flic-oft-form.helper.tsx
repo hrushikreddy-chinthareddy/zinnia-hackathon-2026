@@ -20,6 +20,12 @@ import {
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    getAnnuitantStateOfResidence,
+    getOwnerStateOfResidence,
+    spousalSignatureOnAnnuitantStateCodes,
+    validQualTypesForSpousalSignature,
+} from '@deps/helpers/otp-withdrawal.helper';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
@@ -51,9 +57,22 @@ import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
 import { commonOftFormValidation, getQualTypeOptions } from '../oft-form-helper';
 
-export default function getFlicOftConfig(t: TFunction) {
+export default function getFlicOftConfig(t: TFunction, qualType: string) {
     // importing base configuration from FLIC form helper.
     const formValidation = (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values);
+
+    function isValidQualType(qualType: string): boolean {
+        return validQualTypesForSpousalSignature.includes(qualType);
+    }
+
+    const shouldCheckSpouseSignatureOnAnnuitantState = isValidQualType(qualType);
+
+    const isSpousalSignatureRequired = (ownerState: string | null, annuitantState: string | null): boolean => {
+        if (shouldCheckSpouseSignatureOnAnnuitantState) {
+            return !!annuitantState && spousalSignatureOnAnnuitantStateCodes.includes(annuitantState);
+        }
+        return !!ownerState && spousalSignatureStateCodes.includes(ownerState?.toUpperCase());
+    };
 
     const signaturesConfig: SignatureValidationConfig[] = [
         {
@@ -142,8 +161,10 @@ export default function getFlicOftConfig(t: TFunction) {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
+                const ownerState = getOwnerStateOfResidence(formParty);
+                const annuitantState = getAnnuitantStateOfResidence(formParty);
+                return isSpousalSignatureRequired(ownerState, annuitantState);
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },

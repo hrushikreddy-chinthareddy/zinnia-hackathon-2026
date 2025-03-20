@@ -15,6 +15,7 @@ export type GetStepsProps = {
     nigoSubExceptions: any;
     taskMetadata: FormMetadata[];
     task?: any;
+    isSaveAsDraftEnabled: boolean;
 };
 
 export interface GetSteps {
