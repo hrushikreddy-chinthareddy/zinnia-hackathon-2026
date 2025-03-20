@@ -139,6 +139,7 @@
                                             "type": "string",
                                             "$ref": "#/definitions/declineReason"
                                         },
+                                        "minItems": 1,
                                         "uniqueItems": true
                                     }
                                 },
@@ -249,7 +250,8 @@
                                 "Goals conflicting or don't match explanation",
                                 "Reverse mortgage"
                             ]
-                        }
+                        },
+                        "ui:placeholder": "Select Issue"
                     },
                     "attachment": {
                         "ui:options": {
