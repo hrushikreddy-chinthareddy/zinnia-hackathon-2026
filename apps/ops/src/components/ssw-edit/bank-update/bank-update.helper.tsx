@@ -62,8 +62,6 @@ export const accountTypeOptions = (t: TFunction) => [
 
 const isVoidCheckFieldApplicable = (clientCode: string) => {
     switch (clientCode) {
-        // case Carrier.DLIC:
-        //     return false;
         case Carrier.GLCO:
             return false;
         case Carrier.ULPC:
