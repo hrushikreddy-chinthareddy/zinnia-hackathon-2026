@@ -56,7 +56,7 @@ export const getCaseType = (docTypeQuery: string): CaseType => {
 };
 
 export const getWithdrawalFormComponentMap = (qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
-    [Carrier.FLIC]: <FlicWithdrawalForm />,
+    [Carrier.FLIC]: <FlicWithdrawalForm qualType={qualType} />,
     [Carrier.SBGC]: <SbgcWithdrawalForm />,
     [Carrier.DLIC]: <DlicWithdrawalForm />,
     [Carrier.MASS]: <MassWithdrawalForm qualType={qualType} />,
@@ -68,7 +68,7 @@ export const getWithdrawalFormComponentMap = (qualType: QualTypes | ''): Record<
 });
 
 export const getOFTFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
-    [Carrier.FLIC]: <FlicOftWithdrawalForm />,
+    [Carrier.FLIC]: <FlicOftWithdrawalForm qualType={qualType} />,
     [Carrier.MASS]: <MassOftWithdrawalForm />,
     [Carrier.SBGC]: <SbgcOftWithdrawalForm planCode={planCode} />,
     [Carrier.DLIC]: <OftDlicForm qualType={qualType} />,
