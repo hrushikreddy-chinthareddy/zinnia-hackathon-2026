@@ -1466,6 +1466,7 @@
             "additionalData": "Details",
             "multiInstance": "Steps",
             "documentId": "Document ID: {{documentId}}",
+            "documentType": "Document Type: {{documentType}}",
             "documents": "Documents",
             "view": "View",
             "viewTask": "View task"

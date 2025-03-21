@@ -13,8 +13,8 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { formatSSN } from '@deps/helpers/string.helper';
-import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { formatSSN, toSentenceCase } from '@deps/helpers/string.helper';
+import { formatDirtyAddress, replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { CardTypes, DataFormattingTypes } from '@deps/models/case/task';
 import loadingImage from '@deps/styles/images/loader.png';
@@ -91,8 +91,11 @@ export const formatValueByDataType = (dataType: string, value: any) => {
             return formatSSN(value);
         case DataFormattingTypes.Amount:
             return numberFormatify(Math.abs(value));
+        case DataFormattingTypes.DirtyAddress: {
+            return formatDirtyAddress(JSON.parse(value));
+        }
         default:
-            return value;
+            return toSentenceCase(value);
     }
 };
 

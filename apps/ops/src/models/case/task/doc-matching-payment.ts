@@ -16,29 +16,22 @@ export enum MatchingCaseTypes {
     RMD_APP_DATA = 'RMD Application',
 }
 
-export type TransactionData = [
-    {
-        recordId: string;
-        correlationId: string;
-        transactionType: string;
-        carrier: string;
-        source: string;
-        entityType: string;
-        entityId: string;
-        entity: Entity;
-        expireTs: string;
-        createdTs: string;
-        updatedTs: string;
-        createdBy: string;
-        updatedBy: string;
-        identifiers: [
-            {
-                identifier: string;
-                value: string;
-            }
-        ];
-    }
-];
+export type TransactionData = {
+    recordId: string;
+    correlationId: string;
+    transactionType: string;
+    carrier: string;
+    source: string;
+    entityType: string;
+    entityId: string;
+    entity: Entity;
+    expireTs: string;
+    createdTs: string;
+    updatedTs: string;
+    createdBy: string;
+    updatedBy: string;
+    identifiers?: TransactionIdentifier[];
+};
 
 export enum MatchingCase {
     REINDEX = 'REINDEX',
@@ -55,6 +48,7 @@ type Entity = {
         paymentMethod: string;
         netAmount: number;
         grossAmount: number;
+        companyName?: string;
         taxInfo: {
             taxYear: string;
             currentContribAmount: number;
@@ -89,6 +83,11 @@ type Entity = {
         };
     };
     paymentRecordStatus: 'COMPLETED';
+};
+
+type TransactionIdentifier = {
+    identifier: string;
+    value: string;
 };
 
 export enum EntityTypes {

@@ -1464,6 +1464,7 @@
             "additionalData": "Détails",
             "multiInstance": "Étapes",
             "documentId": "ID du document: {{documentId}}",
+            "documentType": "Document Type: {{documentType}}",
             "documents": "Documents",
             "view": "Voir",
             "viewTask": "Voir la tâche"
