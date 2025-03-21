@@ -152,7 +152,6 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
     const onSubmit = (data: any, files: any) => {
         const attachments = [...(formContext?.customData?.attachments || [])];
-        const uploadedFiles: string[] = [];
 
         const uploadPromises = Object.keys(files).map(key => {
             const { blob, name } = dataURItoBlob(files[key]);
@@ -173,7 +172,6 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                         documentName: name || '',
                     };
                     attachments.push(attachment);
-                    uploadedFiles.push(files[key]);
                 }
             });
         });
