@@ -18,7 +18,7 @@ export default function SubmitButton<T = any, S extends StrictRJSFSchema = RJSFS
         <div className="flex gap-2">
             <Button
                 aria-label={t('continue') as string}
-                disabled={submitButtonOptions?.props?.disabled == true}
+                disabled={submitButtonOptions?.props?.disabled ?? false}
                 mode="primary"
                 size={ButtonSize.Small}
                 type={'submit'}
