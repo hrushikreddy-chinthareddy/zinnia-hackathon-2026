@@ -152,7 +152,8 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
     const onSubmit = (data: any, files: any) => {
         const attachments = [...(formContext?.customData?.attachments || [])];
-        Object.keys(files).map((key: any) => {
+
+        const uploadPromises = Object.keys(files).map(key => {
             const { blob, name } = dataURItoBlob(files[key]);
             const processedData = replacePlaceholders(data, formContext ?? {});
             const metaData = {
@@ -161,18 +162,25 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                 fileType: blob.type,
             };
-
-            uploadDocumentV2(metaData, files[key], formContext?.correlationId || '').then(response => {
-                attachments.push({
-                    documentId: response?.documentId,
-                    documentCategory: metaData?.docCategory,
-                    documentType: metaData?.documentType,
-                    documentExt: metaData?.fileType,
-                    documentName: name || '',
-                });
-                formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
-                sideSheet.onClose();
+            return uploadDocumentV2(metaData, files[key], formContext?.correlationId || '').then(response => {
+                if (response?.documentId) {
+                    const attachment = {
+                        documentId: response.documentId,
+                        documentCategory: metaData?.docCategory,
+                        documentType: metaData?.documentType,
+                        documentExt: metaData?.fileType,
+                        documentName: name || '',
+                    };
+                    attachments.push(attachment);
+                }
             });
+        });
+
+        Promise.allSettled(uploadPromises).then(results => {
+            if (formContext?.setCustomData) {
+                formContext.setCustomData({ attachments: attachments });
+            }
+            sideSheet.onClose();
         });
     };
 
@@ -218,9 +226,9 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                     values = value?.concat(newValue);
                     onChange(value?.concat(newValue));
                 } else {
-                    values = newValue[0] ?? '';
-                    // For single file upload, just take the first element if newValue is an array
+                    values = newValue[0] || '';
                     onChange(newValue[0]);
+                    // For single file upload, just take the first element if newValue is an array
                 }
 
                 const content = (
@@ -238,7 +246,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                                 schema={attachmentSchema}
                                 formData={{}}
                                 onClose={() => sideSheet.onClose()}
-                                onSubmit={(formData: any) => onSubmit(formData, values)}
+                                onSubmit={(formData: any) => onSubmit(formData, newValue)}
                             />
                         )}
                     </div>
