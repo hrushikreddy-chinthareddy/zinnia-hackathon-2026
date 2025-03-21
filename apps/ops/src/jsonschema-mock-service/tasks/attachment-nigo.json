@@ -54,7 +54,8 @@
                                         "ssn": {
                                             "type": "string",
                                             "title": "SSN",
-                                            "ui:field": "subTitle"
+                                            "ui:field": "subTitle",
+                                            "dataType": "ssn"
                                         },
                                         "lastName": {
                                             "type": "string",
@@ -68,7 +69,8 @@
                                     "properties": {
                                         "documentId": {
                                             "type": "string",
-                                            "ui:field": "subTitle"
+                                            "ui:field": "subTitle",
+                                            "title": "Document Id"
                                         },
                                         "documentSource": {
                                             "type": "string",

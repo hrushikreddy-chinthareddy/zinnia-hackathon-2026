@@ -16,10 +16,6 @@
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "sectionHeader": {
-                            "type": "object",
-                            "title": "Processing Instructions"
-                        },
                         "rules": {
                             "type": "array",
                             "title": "",
@@ -158,7 +154,7 @@
                     "required": ["issueResolved"]
                 },
                 "uiSchema": {
-                    "ui:order": ["sectionHeader", "rules", "details", "issueResolved", "declineReason", "uploadDocuments", "attachments"],
+                    "ui:order": ["rules", "details", "issueResolved", "declineReason", "uploadDocuments", "attachments"],
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
                         "orderable": false,
@@ -168,15 +164,7 @@
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "sectionHeader": {
-                        "props": {
-                            "description": "This customer's application was flagged for review. Accept or Decline the issues before submitting a final decision."
-                        },
-                        "ui:options": {
-                            "label": true,
-                            "ObjectFieldTemplate": "InstructionsTemplate"
-                        }
-                    },
+
                     "details": {
                         "ui:options": {
                             "label": false

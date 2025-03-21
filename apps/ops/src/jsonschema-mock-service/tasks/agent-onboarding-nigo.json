@@ -219,7 +219,8 @@
                                 "icon": "CIRCLE_USER",
                                 "label": false,
                                 "ObjectFieldTemplate": "CardTemplate",
-                                "key": "agentDetails"
+                                "key": "agentDetails",
+                                "sectionTitle": "Details"
                             }
                         },
                         "documents": {
