@@ -307,7 +307,7 @@ export const getUnassignedTasks = async (): Promise<UnassignedTask[] | []> => {
         const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/unassigned`);
         return data ?? [];
     } catch (error) {
-        logError('getUnassignedTasks::', {
+        browserLogError('getUnassignedTasks::', {
             ...parseErrorInformation(error),
             file: 'queries/v1/tasks/unassigned',
             function: 'getUnassignedTasks',
