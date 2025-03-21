@@ -26,6 +26,19 @@ const FileAttachmentComponent = ({ schema, formData, onSubmit, onClose }: FileAt
     );
 
     const onSubmitHandler = useCallback(() => {
+        setCurrentSchema((prevSchema: any) => ({
+            ...prevSchema,
+            uiSchema: {
+                ...prevSchema.uiSchema,
+                'ui:submitButtonOptions': {
+                    ...prevSchema.uiSchema?.['ui:submitButtonOptions'],
+                    props: {
+                        ...prevSchema.uiSchema?.['ui:submitButtonOptions']?.props,
+                        disabled: true,
+                    },
+                },
+            },
+        }));
         onSubmit(currentFormData);
     }, [currentFormData, onSubmit]);
 
