@@ -71,6 +71,7 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<CaseDocumentOption[]>([]);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
     const [email, setEmail] = useState<Email>(updateEmail ?? INITIAL_EMAIL);
+    const [newCaseId, setNewCaseId] = useState<string>();
 
     const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
     const [viewState, setViewState] = useState(ViewState.Default);
@@ -146,7 +147,7 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
             });
         }
 
-        handleResponse({ response, setViewState, setValidationResults });
+        handleResponse({ response, setViewState, setValidationResults, setNewCaseId });
     };
 
     switch (viewState) {
@@ -198,7 +199,7 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
                     onCancel={onCancel}
                     transaction={NonFinancialTransactions.Email}
                     type={emailTypeTranslation}
-                    caseId={body.caseId}
+                    caseId={newCaseId}
                 />
             );
         case ViewState.Default:

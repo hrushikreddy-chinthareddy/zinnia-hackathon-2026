@@ -93,6 +93,7 @@ const SideSheetAddress = ({
     const [currentErrors, setCurrentErrors] = useState<Errors>();
     const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
     const [viewState, setViewState] = useState<ViewState>(ViewState.Default);
+    const [newCaseId, setNewCaseId] = useState<string>();
 
     const { addressType } = address;
     const { caseId } = body;
@@ -170,7 +171,7 @@ const SideSheetAddress = ({
             });
         }
 
-        handleResponse({ response, setViewState, setValidationResults });
+        handleResponse({ response, setViewState, setValidationResults, setNewCaseId });
     };
 
     switch (viewState) {
@@ -220,7 +221,7 @@ const SideSheetAddress = ({
                     onCancel={onCancel}
                     transaction={NonFinancialTransactions.Address}
                     type={addressTypeTranslation}
-                    caseId={caseId}
+                    caseId={newCaseId}
                 />
             );
         case ViewState.Default:

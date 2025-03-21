@@ -68,6 +68,7 @@ const SideSheetBank = ({ party, planCode, policyNumber, onCancel, setCurrentBank
 
     const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
     const [viewState, setViewState] = useState(ViewState.Default);
+    const [newCaseId, setNewCaseId] = useState<string>();
 
     const { caseId } = body;
     const { partyId } = party ?? {};
@@ -98,6 +99,9 @@ const SideSheetBank = ({ party, planCode, policyNumber, onCancel, setCurrentBank
         switch (response?.status) {
             case StatusCode.Accepted:
                 setViewState(ViewState.Success);
+                if (response?.data?.caseId) {
+                    setNewCaseId(response?.data?.caseId);
+                }
                 break;
             case StatusCode.BadRequest:
                 setValidationResults(response?.data?.validationResult);
@@ -149,7 +153,7 @@ const SideSheetBank = ({ party, planCode, policyNumber, onCancel, setCurrentBank
                     name={bankAccount.branchName ?? ''}
                     onCancel={onCancel}
                     transaction={NonFinancialTransactions.BankAccount}
-                    caseId={caseId}
+                    caseId={newCaseId}
                 />
             );
         case ViewState.Default:
