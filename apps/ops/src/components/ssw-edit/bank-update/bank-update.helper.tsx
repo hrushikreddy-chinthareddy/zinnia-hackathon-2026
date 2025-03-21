@@ -9,14 +9,7 @@ import { BankUpdateType, ChannelType, ContributionType } from '@deps/models/case
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import {
-    AccountType,
-    ActiveWithdrawalCase,
-    Carrier,
-    FormSignature,
-    LifeCadPartyRoles,
-    PartyRoles,
-} from '@deps/models/case/withdrawal/case';
+import { AccountType, ActiveWithdrawalCase, FormSignature, LifeCadPartyRoles, PartyRoles } from '@deps/models/case/withdrawal/case';
 import { DisbursementParts } from '@deps/models/case/withdrawal/disbursement-types';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -62,10 +55,13 @@ export const accountTypeOptions = (t: TFunction) => [
 
 const isVoidCheckFieldApplicable = (clientCode: string) => {
     switch (clientCode) {
-        case Carrier.GLCO:
-            return false;
-        case Carrier.ULPC:
-            return false;
+        //TODO:  DEPU-4170 DEPU-4370 DEPU-4379
+        // case Carrier.DLIC:
+        //     return false;
+        // case Carrier.GLCO:
+        //     return false;
+        // case Carrier.ULPC:
+        //     return false;
         default:
             return true;
     }
@@ -73,12 +69,13 @@ const isVoidCheckFieldApplicable = (clientCode: string) => {
 
 const isSecurityRequirementsFieldApplicable = (clientCode: string) => {
     switch (clientCode) {
+        //TODO:  DEPU-4170 DEPU-4370 DEPU-4379
         // case Carrier.DLIC:
         //     return false;
-        case Carrier.GLCO:
-            return false;
-        case Carrier.ULPC:
-            return false;
+        // case Carrier.GLCO:
+        //     return false;
+        // case Carrier.ULPC:
+        //     return false;
         default:
             return true;
     }
