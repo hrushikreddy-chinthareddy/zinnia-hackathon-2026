@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 import { ActiveReg60Case } from '@deps/containers/otp/reg60-forms/reg60.types';
 import { ProcessType } from '@deps/models/case/enums';
 import { CreateTaskBody, CreateTaskResponse, FormMetadata, TaskType, TaskV1Payload } from '@deps/models/case/task';
-import { AssignedTask, ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+import { AssignedTask, ManagementTask, TaskStatus, UnassignedTask } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, DigitalFormWithdrawal } from '@deps/models/case/withdrawal/case';
 import { baseAppUrl, se2ApiServerUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
@@ -257,5 +257,19 @@ export const claimTask = async (taskId: string): Promise<any> => {
             function: 'tasks.claimTask',
         });
         return null;
+    }
+};
+
+export const getUnassignedTasks = async (): Promise<UnassignedTask[] | []> => {
+    try {
+        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/unassigned`);
+        return data ?? [];
+    } catch (error) {
+        logError('getUnassignedTasks::', {
+            ...parseErrorInformation(error),
+            file: 'queries/v1/tasks/unassigned',
+            function: 'getUnassignedTasks',
+        });
+        return [];
     }
 };

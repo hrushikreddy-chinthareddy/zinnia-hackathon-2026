@@ -5,23 +5,23 @@ import { Loader } from '@deps/components/page-loader';
 import { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { AssignedTask } from '@deps/models/case/task-instance';
+import { AssignedTask, UnassignedTask } from '@deps/models/case/task-instance';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import styles from '@deps/utils/styles';
 
 import TaskQueueTableHeader from './task-queue-table-header';
 import TaskQueueTableRow from './task-queue-table-row';
 
-
 type TaskQueueTableProps = {
-    tasks: AssignedTask[];
+    tasks: (AssignedTask | UnassignedTask)[];
     featureFlagDecisions: FeatureFlags;
     isLoading?: boolean;
-    getTasks: () => void;
+    showClaimTask?: boolean;
+    getTasks: (handleLoader: boolean) => void;
     setErrorMessage: (message: string) => void;
 };
 
-const TaskQueueTable = ({ tasks, featureFlagDecisions, isLoading, getTasks, setErrorMessage }: TaskQueueTableProps) => {
+const TaskQueueTable = ({ tasks, featureFlagDecisions, isLoading, showClaimTask, getTasks, setErrorMessage }: TaskQueueTableProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
 
     return (
@@ -31,23 +31,45 @@ const TaskQueueTable = ({ tasks, featureFlagDecisions, isLoading, getTasks, setE
                 <TableBody>
                     {isLoading && (
                         <TableRow>
-                            <TableCell colSpan={7}>
-                                <div className={styles.loaderContainer}>
+                            <TableCell colSpan={8}>
+                                <div className={`${styles.loaderContainer} p-2`}>
                                     <Loader variant={PageLoaderVariant.Center} />
                                 </div>
                             </TableCell>
                         </TableRow>
                     )}
-                    {tasks?.map(task => {
-                        return task && <TaskQueueTableRow task={task} key={`task_queue_${task.id}`} featureFlagDecisions={featureFlagDecisions} getTasks={getTasks} setErrorMessage={setErrorMessage} />
-                    })}
-                    {!tasks.length && (
+                    {!isLoading &&
+                        tasks?.map((task, index) => {
+                            return (
+                                task && (
+                                    <TaskQueueTableRow
+                                        task={task}
+                                        key={`task_queue_${task.id}`}
+                                        featureFlagDecisions={featureFlagDecisions}
+                                        getTasks={() => {
+                                            getTasks(true);
+                                        }}
+                                        setErrorMessage={setErrorMessage}
+                                        tabIndex={index}
+                                    />
+                                )
+                            );
+                        })}
+                    {tasks.length === 0 && !isLoading && (
                         <TableRow className="disabled-tr w-full">
-                            <TableCell className="!text-left md:!text-center" colSpan={7}>
-                                <Typography variant={TypographyVariant.BodyBold} className="mt-1 text-center">
-                                    {t('noTasksFoundTitle')}
-                                </Typography>
-                                <p className="mt-1 text-center font-secondary text-base font-normal">{t('noTasksMessage')}</p>
+                            <TableCell className="!text-left md:!text-center" colSpan={8}>
+                                {showClaimTask ? (
+                                    <>
+                                        <Typography variant={TypographyVariant.BodyBold} className="text-center">
+                                            {t('noTasksFoundTitle')}
+                                        </Typography>
+                                        <p className="mt-1 text-center font-secondary text-base font-normal">{t('noTasksMessage')}</p>
+                                    </>
+                                ) : (
+                                    <Typography className="p-2" variant={TypographyVariant.BodySm}>
+                                        {t('noTasks')}
+                                    </Typography>
+                                )}
                             </TableCell>
                         </TableRow>
                     )}
