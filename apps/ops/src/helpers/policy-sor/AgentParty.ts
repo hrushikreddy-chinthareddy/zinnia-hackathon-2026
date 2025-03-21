@@ -49,7 +49,7 @@ export const transformAgentDataToParty = (agentData: AgentData | undefined, part
         dateOfBirth: firstAgent?.birthDate || undefined,
         doingBusinessAs: agentData?.organizationName || undefined,
         firstName: firstAgent?.firstName || undefined,
-        fullName: firstAgent?.fullName || undefined,
+        fullName: firstAgent?.fullName || firstAgent?.businessName || undefined,
         middleName: firstAgent?.middleName || undefined,
         lastName: firstAgent?.lastName || undefined,
         gender: (firstAgent?.gender as Gender) || undefined,
