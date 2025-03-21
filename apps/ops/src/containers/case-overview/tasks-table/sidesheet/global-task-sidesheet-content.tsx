@@ -60,6 +60,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     const [startLoader, setStartLoader] = useState(false);
     const [additionalLoader, setAdditionalLoader] = useState(false);
     const [errorClaimingTask, setErrorClaimingTask] = useState(false);
+    const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] = useState('')
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
     const [timer] = useState(performance.now());
@@ -137,13 +138,15 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                         }
                     );
                     setErrorClaimingTask(false);
+                    setClaimingTaskErrorMessage('')
                     browserLogInfo('task-queue:handleClaimTask::Successfully claimed task', { taskId: taskId });
                 } else {
                     browserLogInfo('task-queue:handleClaimTask::An error occurred while claiming the task', {
                         taskId: taskId,
-                        status: response?.status,
+                        status: response?.statusCode,
                     });
                     setErrorClaimingTask(true);
+                    setClaimingTaskErrorMessage(response?.message)
                 }
             } catch (e) {
                 browserLogError('task-queue:handleClaimTask::Error claiming task', {
@@ -152,6 +155,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     caseId: task.caseId,
                 });
                 setErrorClaimingTask(true);
+                setClaimingTaskErrorMessage(t('sideSheet.task.claimTaskError') as string)
                 return;
             } finally {
                 setClaimTaskLoader(false);
@@ -410,7 +414,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                         {task.assignee ? task.assignee : task.prefferedAssignee ? task.prefferedAssignee : NoAssigneeComp}
                     </Typography>
                     {errorClaimingTask ? (
-                        <AssistiveText variant={AssistiveTextVariant.Error} text={t('sideSheet.task.claimTaskError')} />
+                        <AssistiveText variant={AssistiveTextVariant.Error} text={claimingTaskErrorMessage} />
                     ) : null}
                 </div>
 
