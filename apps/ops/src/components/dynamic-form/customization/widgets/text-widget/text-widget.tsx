@@ -6,16 +6,13 @@ import { formatValueByDataType } from '../../templates/card-templates/card-templ
 
 export const TextWidget = function (props: WidgetProps) {
     const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder, formContext } = props;
-    const { inline, prefix, inlinetext, leading, dataType } = getUiOptions(uiSchema);
+    const { inline, prefix, inlinetext, dataType } = getUiOptions(uiSchema);
 
     if (inline) {
         return (
             <div className="grid grid-cols-2 text-md  max-w-screen-sm">
                 <div className="text-gray-500">{label}</div>
-                <div>
-                    {leading ? leading.toString() : ''}
-                    {formatValueByDataType((dataType as string) || 'text', value)}
-                </div>
+                <div>{formatValueByDataType((dataType as string) || 'text', value)}</div>
             </div>
         );
     }
