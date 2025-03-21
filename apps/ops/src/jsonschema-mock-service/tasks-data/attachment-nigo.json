@@ -20,7 +20,41 @@
                 "documentSource": "EDS"
             }
         },
-        "issuesList": []
+        "issuesList": [
+            {
+                "id": "c55223ce-ec1f-40a5-8353-819e6054fb81",
+                "externalId": "c55223ce-ec1f-40a5-8353-819e6054fb81",
+                "nmid": "NB.EM.061",
+                "type": "NIGO",
+                "category": "FORM",
+                "reason": "SUPPORTING DOCUMENTATION IS MISSING",
+                "detailedReason": "NAIC PAPERWORK",
+                "processingInstruction": "Reason: Replacement form is missing. ",
+                "processingReason": "Replacement form is missing."
+            },
+            {
+                "id": "35bfe98c-b4c9-46e0-8a22-664c9a271a0e",
+                "externalId": "35bfe98c-b4c9-46e0-8a22-664c9a271a0e",
+                "nmid": "NB.EM.062",
+                "type": "NIGO",
+                "category": "FORM",
+                "reason": "SUPPORTING DOCUMENTATION IS MISSING",
+                "detailedReason": "NB DISCLOSURE FORM",
+                "processingInstruction": "Reason: Disclosure form is missing. ",
+                "processingReason": "Disclosure form is missing."
+            },
+            {
+                "id": "abc16c1d-52b1-4a13-9643-769feb7bf2df",
+                "externalId": "abc16c1d-52b1-4a13-9643-769feb7bf2df",
+                "nmid": "NB.EM.060",
+                "type": "NIGO",
+                "category": "FORM",
+                "reason": "FORM IS MISSING",
+                "detailedReason": "PAPER APPLICATION",
+                "processingInstruction": "Reason: Application form is missing. ",
+                "processingReason": "Application form is missing."
+            }
+        ]
     },
     "mappedExceptions": [],
     "mappedDocuments": [],

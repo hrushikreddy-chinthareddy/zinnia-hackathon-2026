@@ -1,0 +1,107 @@
+{
+    "id": "TA000000021179",
+    "caseId": "CA0000399256",
+    "source": "BPM.PreNoteProcessing",
+    "templateId": "33ced572-3c45-4ea3-bc64-4827873a380e",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_PRENOTE_NIGO",
+    "taskName": "Prenote NIGO",
+    "status": "INPROGRESS",
+
+    "data": {
+        "details": {
+            "exchangeReplace": {
+                "entityId": "entity.1",
+                "paymentRecordId": "5d28e1dc-9a48-4491-9ca8-c773a1fb767b",
+                "surrenderContractNumber": "FX18434826",
+                "surrenderCompanyName": "Pacific Life",
+                "exchangeType": 1,
+                "eappErId": "1",
+                "netAmount": 0,
+                "grossAmount": 0,
+                "paymentMethod": "EXCREP",
+                "amountRequested": 15000,
+                "replacementIndicator": false,
+                "originalCostBasis": "0",
+                "policyNumber": "ADA2502447",
+                "address": {
+                    "addressLine1": "P.O. Box 2378",
+                    "addressLine2": "1050 N Western St",
+                    "addressLine3": null,
+                    "city": "Omaha",
+                    "state": "NE",
+                    "zip": "68103",
+                    "country": "USA"
+                }
+            },
+            "documents": [
+                {
+                    "documentId": "67d11df0039b1f4d0671eb6d",
+                    "documentName": "WELLAAI041120241125012982_001_Notice Regarding Proposed Replacement of Life Insurance or Annuity_7.pdf",
+                    "documentSource": "EDS",
+                    "documentExt": "pdf",
+                    "documentType": "NB State Replacement"
+                },
+                {
+                    "documentId": "67d11ded039b1f4d0671eb67",
+                    "documentName": "WELLAAI041120241125012982_001_Deferred Annuity Application_1.pdf",
+                    "documentSource": "EDS",
+                    "documentExt": "pdf",
+                    "documentType": "NB Application"
+                }
+            ]
+        },
+        "issuesList": [
+            {
+                "id": "f34bdc2d-3758-40b9-890c-5565bf6718cf",
+                "externalId": "f34bdc2d-3758-40b9-890c-5565bf6718cf",
+                "nmid": "PN.EM.008",
+                "type": "NIGO",
+                "category": "FORM",
+                "reason": "FORM IS INCOMPLETE",
+                "detailedReason": "Ceding carrier company name is missing from Replacement form. ",
+                "processingInstruction": "Reason: Ceding carrier company name is missing from Replacement form. Resolution: Ceding carrier company on Replacement form is missing for Pacific Life and Contract FX18434826.",
+                "processingReason": "Ceding carrier company name is missing from Replacement form.",
+                "processingResolution": "Ceding carrier company on Replacement form is missing for Pacific Life and Contract FX18434826."
+            }
+        ],
+        "nigos": ["EX000000011381"]
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-02-24T10:34:37Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-02-24T10:34:37Z",
+    "identifiers": [
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2501907"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000394985"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2501907"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "410289"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67bc2fdb05bed22312f9a8a4"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI011280282025020124"
+        }
+    ],
+    "externalId": "23dddb93-951a-4c91-b01b-7a107469a8ab"
+}

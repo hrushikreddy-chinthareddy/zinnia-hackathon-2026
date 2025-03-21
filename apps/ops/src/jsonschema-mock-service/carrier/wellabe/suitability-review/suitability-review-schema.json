@@ -64,15 +64,15 @@
                                 "properties": {
                                     "issue": {
                                         "type": "string",
-                                        "title": "Issue"
+                                        "title": "Issues"
                                     },
                                     "rule": {
                                         "type": "string",
-                                        "title": "Rule"
+                                        "title": "Processing Instructions"
                                     },
                                     "applicationValue": {
                                         "type": "string",
-                                        "title": "Additional Info"
+                                        "title": "Application Information"
                                     },
                                     "nmid": {
                                         "type": "string",
