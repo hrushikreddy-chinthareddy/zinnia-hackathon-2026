@@ -1,8 +1,7 @@
 import clsx from 'clsx';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { CaseTimingProvider } from '@deps/components/dashboard/sections/case-timing/context/case-timing-context';
-import { CaseTimingChart } from '@deps/components/dashboard/sections/case-timing/tab-content/chart/case-timing-chart';
+import { CaseTiming } from '@deps/components/dashboard/sections/case-timing/case-timing';
 import { NigoClosedTransactions } from '@deps/components/dashboard/sections/nigo-closed-transactions/nigo-closed-transactions';
 import { TransactionTrendsProvider } from '@deps/components/dashboard/sections/transaction-trends/context/transaction-trends-context';
 import { TransactionTrends } from '@deps/components/dashboard/sections/transaction-trends/transaction-trends';
@@ -16,9 +15,7 @@ export const ClosedTransactions = () => {
     return (
         <div className={styles.container}>
             <div className={clsx(sharedStyles.dashboardCard, sharedStyles.dashboardCardFirst)}>
-                <CaseTimingProvider>
-                    <CaseTimingChart />
-                </CaseTimingProvider>
+                <CaseTiming />
             </div>
 
             <div className={sharedStyles.dashboardCard}>

@@ -18,9 +18,9 @@ import { useDashboardStore } from '@deps/store/store';
 export type CaseStatusType = { [key: string]: string };
 
 const defaultCaseStatus: CaseStatusType = {
-    [Statuses.InProgress]: 'In Progress',
-    [Statuses.Exception]: 'Exception',
-    [Statuses.NotStarted]: 'Not Started',
+    [Statuses.InProgress]: 'In progress',
+    [Statuses.Exception]: 'Not in good order',
+    [Statuses.NotStarted]: 'Not started',
 };
 
 interface ActiveAgingContextTypes {

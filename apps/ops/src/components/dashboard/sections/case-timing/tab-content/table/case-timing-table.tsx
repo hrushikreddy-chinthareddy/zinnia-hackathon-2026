@@ -13,75 +13,44 @@ import {
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
-import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
-import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
+import { CaseTimingContext } from '@deps/components/dashboard/sections/case-timing/context/case-timing-context';
+import { CaseTimingFilters } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-filters';
+import { CaseTimingHeader } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-header';
+import { generateTableTimeRange } from '@deps/components/dashboard/sections/case-timing/utils';
 import { generateCaseLink, startDates } from '@deps/components/dashboard/utils';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
-import { DashboardStatsElementResponse, Statuses } from '@deps/models/case/case';
+import { SortOrder, useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
+import { GroupByOptions } from '@deps/models/case/enums';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
-
-import { SubmissionMethodTooltip } from '../../submission-type';
-import { friendlyGroupByName } from '../../utils';
-
-// Define the type for the flattened structure
-interface FlattenedDashboardStatsElement {
-    name: string;
-    submissionMethod: string;
-    count: number;
-}
-
-// We render out the table view of these stats a bit differently than the chart.
-// Since we're returning arrays of carriers with nested data for the submission method,
-// we need to flatten the list of submission methods out and associate them with the carrier
-// Carrier | Method | Count
-const flattenDashboardStats = (data: DashboardStatsElementResponse[], parentName: string): FlattenedDashboardStatsElement[] => {
-    return data.flatMap(item => {
-        if (item.values && item.values.length > 0) {
-            return flattenDashboardStats(item.values, item.name);
-        } else {
-            return [
-                {
-                    name: parentName,
-                    submissionMethod: item.name,
-                    count: item.count,
-                },
-            ];
-        }
-    });
-};
+import { Statuses } from '@deps/models/case/case';
 
 enum SortByOptions {
     NAME = 'name',
-    SUBMISSION_METHOD = 'submissionMethod',
+    SECOND_MEDIAN = 'secondMedian',
+    SECOND_HIGH = 'secondHigh',
+    SECOND_LOW = 'secondLow',
     COUNT = 'count',
 }
 
-export const SubmissionTypeTable = () => {
+export const CaseTimingTable = () => {
     const [offset, setOffset] = useState(0);
     const [searchText, setSearchText] = useState('');
     const limit = 10;
 
-    const { graphStats, timeframe, submissionVs, selectedProcess, graphStatsLoading, graphStatsFetching, graphStatsError, filter } =
-        useContext(SubmissionTypeContext);
-
-    // Transform the data by flattening it
-    const flattenedData = useMemo(() => {
-        if (!graphStats?.data) return [];
-        return flattenDashboardStats(graphStats.data, '');
-    }, [graphStats?.data]);
+    const { timeframe, caseTimingData, selectedProcess, caseTimingDataError, caseTimingDataFetching, filter } =
+        useContext(CaseTimingContext);
 
     // Filter by search
     const searchedData = useMemo(() => {
-        return flattenedData.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
-    }, [flattenedData, searchText]);
+        return caseTimingData?.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase())) || [];
+    }, [caseTimingData, searchText]);
 
     const { handleSort, sortedData } = useTableOptions({
-        sortByDefault: SortByOptions.COUNT,
+        sortByDefault: SortByOptions.SECOND_MEDIAN,
+        defaultSortOrder: SortOrder.ASC,
         dataToSort: searchedData,
     });
 
@@ -103,35 +72,17 @@ export const SubmissionTypeTable = () => {
         goToPage(1);
     }, [goToPage, sortedData]);
 
-    const totalCaseCount = graphStats?.data?.map(stat => stat.count).reduce((a, b) => a + b, 0);
-
-    const totalCases = graphStatsFetching ? (
-        <div className="blur">
-            <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
-        </div>
-    ) : (
-        <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
-    );
-
     return (
         <CardContainer>
-            <ChartHeader
-                title="Submission Method"
-                subtitle={totalCases}
-                titleToolTip={SubmissionMethodTooltip}
-                description="The distribution of incoming case requests by submission method, comparing Electronic (E-App) and Paper submissions."
-            />
+            <CaseTimingHeader />
+
             <div className={sharedStyles.searchContainer}>
-                <FieldDataActive
-                    fieldSize="small"
-                    placeholder={`Search by ${friendlyGroupByName[submissionVs]?.toLocaleLowerCase()} name`}
-                    onChange={e => setSearchText(e.target.value)}
-                />
+                <FieldDataActive fieldSize="small" placeholder={`Search by case subtype`} onChange={e => setSearchText(e.target.value)} />
             </div>
-            <SubmissionTypeFilters />
+            <CaseTimingFilters />
             <div className={sharedStyles.tableContainer}>
-                <BlurOverlayLoader loading={graphStatsFetching || graphStatsLoading}>
-                    {graphStatsError ? (
+                <BlurOverlayLoader loading={caseTimingDataFetching}>
+                    {caseTimingDataError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
@@ -150,7 +101,7 @@ export const SubmissionTypeTable = () => {
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
-                                        {friendlyGroupByName[submissionVs]} Name
+                                        Case subtype
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -159,8 +110,28 @@ export const SubmissionTypeTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.SUBMISSION_METHOD)} sortable>
-                                        Submission Method
+                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.SECOND_MEDIAN)} sortable>
+                                        Median processing time
+                                        <Icon
+                                            className={sharedStyles.sortIcon}
+                                            type={IconType.SORT}
+                                            color="#00628B"
+                                            height={16}
+                                            width={16}
+                                        />
+                                    </TableHeaderCell>
+                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.SECOND_HIGH)} sortable>
+                                        Max processing time
+                                        <Icon
+                                            className={sharedStyles.sortIcon}
+                                            type={IconType.SORT}
+                                            color="#00628B"
+                                            height={16}
+                                            width={16}
+                                        />
+                                    </TableHeaderCell>
+                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.SECOND_LOW)} sortable>
+                                        Min processing time
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -170,7 +141,7 @@ export const SubmissionTypeTable = () => {
                                         />
                                     </TableHeaderCell>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.COUNT)} sortable>
-                                        Total Submissions
+                                        Total cases
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -185,29 +156,28 @@ export const SubmissionTypeTable = () => {
                             <TableBody>
                                 {paginatedData.map(item => {
                                     const startDate = startDates[timeframe];
-
-                                    const link = generateCaseLink({
-                                        process: selectedProcess,
-                                        carrierOrProductName: item.name,
-                                        submissionMethod: item.submissionMethod,
-                                        startDate,
-                                        status: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
-                                        groupBy: submissionVs,
-                                        carrier: filter.carrier,
-                                        brokerDealer: filter.brokerDealerName,
-                                    });
                                     return (
-                                        <TableRow key={`${item.name}-${item.submissionMethod}`}>
-                                            <TableCell>{item.name}</TableCell>
-                                            <TableCell>{item.submissionMethod}</TableCell>
-                                            <TableCell>{item.count}</TableCell>
+                                        <TableRow key={`${item.name}-${item.key}`}>
+                                            <TableCell className={sharedStyles.tableCellMaxWidth}>{item.name}</TableCell>
+                                            <TableCell>{generateTableTimeRange(item.secondMedian)}</TableCell>
+                                            <TableCell>{generateTableTimeRange(item.secondHigh)}</TableCell>
+                                            <TableCell>{generateTableTimeRange(item.secondLow)}</TableCell>
+                                            <TableCell>{item.count.toLocaleString()}</TableCell>
                                             <TableCell>
                                                 <NavElement
                                                     type={NavElementType.Link}
+                                                    target="_blank"
                                                     variant={NavElementVariant.Secondary}
                                                     className="underline"
-                                                    target="_blank"
-                                                    href={link}
+                                                    href={generateCaseLink({
+                                                        process: selectedProcess,
+                                                        carrierOrProductName: item.name,
+                                                        startDate,
+                                                        groupBy: GroupByOptions.ProcessSubType,
+                                                        status: [Statuses.Completed],
+                                                        carrier: filter.carrier,
+                                                        brokerDealer: filter.brokerDealerName,
+                                                    })}
                                                     rel="noreferrer"
                                                 >
                                                     View cases
@@ -219,7 +189,7 @@ export const SubmissionTypeTable = () => {
                             </TableBody>
                         </Table>
                     )}
-                    {!graphStatsError && searchedData?.length > 0 && searchedData.length > limit && (
+                    {!caseTimingDataError && searchedData?.length > 0 && searchedData.length > limit && (
                         <div className={sharedStyles.paginationContainer}>
                             <Pagination limit={limit} offset={offset} total={searchedData?.length || 0} goToPage={goToPage} />
                         </div>

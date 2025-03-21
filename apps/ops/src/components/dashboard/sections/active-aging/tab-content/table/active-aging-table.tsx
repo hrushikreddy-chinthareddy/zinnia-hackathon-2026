@@ -15,7 +15,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { generateCaseLink } from '@deps/components/dashboard/utils';
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
@@ -76,12 +76,10 @@ export const ActiveAgingTable = () => {
         [setOffset]
     );
 
-    //Send users back to page 1 if data for page doesnt exist after filters update
+    // If sorted data updates, go back to page 1
     useEffect(() => {
-        if (offset > sortedData.length) {
-            goToPage(1);
-        }
-    }, [sortedData, goToPage, offset]);
+        goToPage(1);
+    }, [goToPage, sortedData]);
 
     const generateExpandableContent = useCallback(
         (name: string, countByDay: { [key: string]: number }) => {
@@ -99,6 +97,8 @@ export const ActiveAgingTable = () => {
                                 <NavElement
                                     type={NavElementType.Link}
                                     target="_blank"
+                                    variant={NavElementVariant.Secondary}
+                                    className="underline"
                                     href={generateCaseLink({
                                         process: selectedProcess,
                                         carrierOrProductName: name,
@@ -106,6 +106,8 @@ export const ActiveAgingTable = () => {
                                         endDate: key,
                                         groupBy,
                                         status: filter.caseStatus,
+                                        brokerDealer: filter.brokerDealerName,
+                                        carrier: filter.carrier,
                                     })}
                                     rel="noreferrer"
                                 >
@@ -199,7 +201,14 @@ export const ActiveAgingTable = () => {
                                             <TableCell>{item.total}</TableCell>
                                             <TableCell>{timeframe}</TableCell>
                                             <TableCell>
-                                                <NavElement type={NavElementType.Link} target="_blank" href={link} rel="noreferrer">
+                                                <NavElement
+                                                    type={NavElementType.Link}
+                                                    variant={NavElementVariant.Secondary}
+                                                    target="_blank"
+                                                    className="underline"
+                                                    href={link}
+                                                    rel="noreferrer"
+                                                >
                                                     View cases
                                                 </NavElement>
                                             </TableCell>

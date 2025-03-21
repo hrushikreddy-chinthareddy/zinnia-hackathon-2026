@@ -23,6 +23,8 @@ export const getDaysFromSeconds = (seconds: number) => dayjs.duration(seconds, '
 
 export const getHoursFromSeconds = (seconds: number) => dayjs.duration(seconds, 'seconds').asHours();
 
+export const getMinutesFromSeconds = (seconds: number) => dayjs.duration(seconds, 'seconds').asMinutes();
+
 /**
  *
  * Creates tooltip for the case to close time chart.
@@ -58,4 +60,39 @@ export const generateLabel = (label: Highcharts.AxisLabelsFormatterContextObject
     const time = isOver24Hours ? daysFromSeconds.toFixed(0) : hoursFromSeconds.toFixed(0);
 
     return `${time} ${isOver24Hours || isSeriesShowingDays ? 'day' : 'hour'}${time !== '1' ? 's' : ''}`;
+};
+
+/**
+ *
+ * Formats the timespan for the table view.
+ * If longer than 24 hours, show days,
+ * if less than 24 hours, show hours, if less than 1 hour, show minutes, if less than 1 minute, show seconds
+ */
+export const generateTableTimeRange = (seconds: number) => {
+    const hours = getHoursFromSeconds(seconds);
+    const days = getDaysFromSeconds(seconds);
+    const minutes = getMinutesFromSeconds(seconds);
+
+    const isLongerThan24Hours = hours > 24;
+    const isLessThanOneHour = minutes < 60;
+    const isLessThanOneMinute = seconds < 60;
+
+    let time;
+    let unit;
+
+    if (isLongerThan24Hours) {
+        time = days.toFixed(1);
+        unit = 'day';
+    } else if (isLessThanOneMinute) {
+        time = seconds;
+        unit = 'second';
+    } else if (isLessThanOneHour) {
+        time = minutes.toFixed(1);
+        unit = 'minute';
+    } else {
+        time = hours.toFixed(1);
+        unit = 'hour';
+    }
+
+    return `${+time} ${unit}${time !== '1' ? 's' : ''}`;
 };

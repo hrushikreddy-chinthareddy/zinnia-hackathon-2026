@@ -2,7 +2,7 @@ import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext'
 import { DocumentData } from '@deps/models/case/document';
 import { CreateTaskBody, TaskSource } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, ActiveWithdrawalCaseData, Carrier, CaseStatus, Party, PartyRoles } from '@deps/models/case/withdrawal/case';
+import { ActiveWithdrawalCase, ActiveWithdrawalCaseData, Carrier, CaseStatus, PartyRoles } from '@deps/models/case/withdrawal/case';
 
 import { OtpBuildFormProcess } from './build-form-process.helper';
 
@@ -50,7 +50,7 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
                 return true;
             });
         }
-        formParty.parties = filteredParty as Party[];
+        formParty.parties = filteredParty ?? formParty.parties;
     }
 
     return {

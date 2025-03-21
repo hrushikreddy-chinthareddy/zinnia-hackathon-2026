@@ -9,7 +9,7 @@
     "taskName": "Suitability Review",
     "status": "NEW",
     "data": {
-        "suitabilityRules": [
+        "rules": [
             {
                 "issue": "Future Distribution Plan",
                 "rule": "FutureDistribution = 3-4 Years",
@@ -25,15 +25,9 @@
                 "externalId": "d0641107-4dd7-4925-b6e3-8260fc2f5f2a"
             }
         ],
-        "nigos": [
-            "EX000000002744",
-            "EX000000002745"
-        ]
+        "nigos": ["EX000000002744", "EX000000002745"]
     },
-    "mappedExceptions": [
-        "EX000000002744",
-        "EX000000002745"
-    ],
+    "mappedExceptions": ["EX000000002744", "EX000000002745"],
     "mappedDocuments": [],
     "escalated": false,
     "createdBy": "SYSTEM",

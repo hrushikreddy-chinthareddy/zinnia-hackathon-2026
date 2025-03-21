@@ -1,33 +1,27 @@
 import clsx from 'clsx';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { FC, useContext, useMemo } from 'react';
+import { FC, useContext } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
-import { AiInsightSummary } from '@deps/components/dashboard/ai-insight-summary/ai-insight-summary';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
-import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
-import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
+import { CaseTimingContext } from '@deps/components/dashboard/sections/case-timing/context/case-timing-context';
+import { CaseTimingFilters } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-filters';
+import { CaseTimingHeader } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-header';
+import { generateLabel, generateSeries, generateTooltip, getDaysFromSeconds } from '@deps/components/dashboard/sections/case-timing/utils';
+import { generateCarouselDataLengths } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
-import { Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
 import { CaseTimingData } from '@deps/queries/api/cases';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
 
 import styles from './case-timing-chart.module.css';
-import { generateCarouselDataLengths, TimeframeFilterOptions } from '../../../../utils';
-import { CaseTimingContext } from '../../context/case-timing-context';
-import { generateLabel, generateSeries, generateTooltip, getDaysFromSeconds } from '../../utils';
 
 export const CaseTimingChart: FC = () => {
-    const { caseTimingData, caseTimingDataFetching, caseTimingDataError, selectedProcess, timeframe, setSelectedProcess, setTimeframe } =
-        useContext(CaseTimingContext);
+    const { caseTimingData, caseTimingDataFetching, caseTimingDataError, selectedProcess, timeframe } = useContext(CaseTimingContext);
 
     // get 5 items for each slide
     const chunkedResponse: CaseTimingData[][] = chunkArray(caseTimingData || [], 5);
@@ -83,41 +77,10 @@ export const CaseTimingChart: FC = () => {
     // Pass to the carousel to say which number of items you're currently viewing out of total
     const chunkedResponseLengths = chunkedResponse.map(chunk => chunk.length);
     const eachChunkPortionOfTotal = generateCarouselDataLengths(chunkedResponseLengths);
-    const totalCaseCount = caseTimingData?.reduce((acc, val) => acc + val.count, 0);
-    const content = caseTimingData ? JSON.stringify(caseTimingData) : '';
-
-    const prompt = useMemo(
-        () =>
-            [
-                `You are an expert in all things ${selectedProcess} case data.`,
-                `Your job is to summarize the data for business and executive users.`,
-                `They want simple and insightful information about the data provided to you.`,
-                `The data provided to you here are completed ${dashboardChartTitleFormat(selectedProcess || '', false)} cases.`,
-                `The data is grouped by ${GroupByOptions.ProcessSubType}.`,
-                `The timespan the data comes from is ${timeframe}.`,
-                `You are to take the median time in seconds and conver it to days`,
-                `Avoid using phrases such as "the data".`,
-                `Your responses should be insightful and will be displayed on a UI as a summary for a module related to a timeseries chart.`,
-                `Use percentages and real data where it makes sense.`,
-                `Keep it concise and to the point`,
-                `Format number values to U.S. including commas where appropriate.`,
-                `Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
-            ].join(' '),
-        [selectedProcess, timeframe]
-    );
-
-    const totalCases = caseTimingDataFetching ? (
-        <div className="blur">
-            <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
-        </div>
-    ) : (
-        <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
-    );
 
     return (
         <CardContainer fullWidth={false}>
-            <ChartHeader title="Median Case Processing Times" subtitle={totalCases} />
-
+            <CaseTimingHeader />
             <BlurOverlayLoader loading={caseTimingDataFetching}>
                 <div className=" flex bg-[--color-base-surface-surface-primary">
                     {caseTimingDataError ? (
@@ -129,25 +92,8 @@ export const CaseTimingChart: FC = () => {
                         </div>
                     ) : (
                         <>
-                            <div className={clsx('w-1/4', styles.insightsContainer)}>
-                                <AiInsightSummary className="grow" prompt={prompt} content={content} />
-                            </div>
-                            <div className={clsx('w-3/4', sharedStyles.chartContainer)}>
-                                <div className={sharedStyles.filterContainer}>
-                                    <div className="w-1/4">
-                                        <CaseTypeFilter
-                                            onValueChange={setSelectedProcess}
-                                            caseStatus={[Statuses.Completed]}
-                                            defaultProcess={Processes.NewBusiness}
-                                        />
-                                    </div>
-                                    <div className="w-3/4">
-                                        <TimeFilter
-                                            defaultValue={timeframe}
-                                            onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
-                                        />
-                                    </div>
-                                </div>
+                            <div className={clsx(sharedStyles.chartContainer, sharedStyles.noBorder)}>
+                                <CaseTimingFilters />
                                 {caseTimingData?.length === 0 ? (
                                     <div className=" h-[19rem] flex flex-col gap-2 items-center justify-center">
                                         <>

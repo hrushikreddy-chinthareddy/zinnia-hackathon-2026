@@ -1,0 +1,71 @@
+{
+    "id": "TA000000021022",
+    "caseId": "CA0000398763",
+    "source": "BPM.OFAC",
+    "templateId": "16d2dc89-cb33-456d-b524-93bb5e597e19",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "OFAC_REVIEW",
+    "taskName": "Review OFAC",
+    "status": "INPROGRESS",
+    "data": {
+        "details": {
+            "documentDetails": [
+                {
+                    "documentId": "67cec3f9f2f846195327e33a",
+                    "documentSource": "EDS"
+                }
+            ]
+        },
+        "rules": [
+            {
+                "issue": "Entity Match",
+                "rule": "Contains Profile",
+                "applicationValue": "Pep-class-2",
+                "nmid": "OF.EM.005",
+                "externalId": "2ff50887-20f9-4a84-b286-3ae4da2962b5"
+            }
+        ],
+        "nigos": ["EX000000011142"]
+    },
+    "mappedExceptions": ["EX000000011142"],
+    "mappedDocuments": [],
+    "queue": "compliance",
+    "escalated": false,
+    "assignee": "keely.foux@zinnia.com",
+    "assigneePartyId": "f3d7659e3eb1461590bb1da63bedde64",
+    "assignedAt": "2025-03-11T13:01:04Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-03-10T10:53:59Z",
+    "updatedBy": "keely.foux@zinnia.com",
+    "updatedByPartyId": "f3d7659e3eb1461590bb1da63bedde64",
+    "updatedAt": "2025-03-11T13:01:06Z",
+    "identifiers": [
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2502370"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000398763"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "412746"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2502370"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67cec403f2f846195327e33f"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI011280282025067967"
+        }
+    ],
+    "externalId": "282dba70-6972-4e2a-84a7-923de13d1c33"
+}
