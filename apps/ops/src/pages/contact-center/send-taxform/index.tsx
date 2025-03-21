@@ -1,6 +1,5 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
-import { GetServerSidePropsContext } from 'next';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -32,7 +31,7 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES, FEATURE_VARIABLES_CORRESPONDENCE_KEYS } from '@deps/utils/optimizely/variables';
-import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
+import { logWarn, logError, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendTaxFormsProps extends SegmentTrackedPageProps {
@@ -173,87 +172,90 @@ const SendTaxForms = ({
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, query, req, res, resolvedUrl } = context;
-        const planCode = (query.planCode as string) || '';
-        const policyNumber = (query?.policyNumber as string) || '';
-        const correlationId = (query?.correlationId as string) || '';
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const { locale = DEFAULT_LOCALE, query, req, res } = context;
+            const planCode = (query.planCode as string) || '';
+            const policyNumber = (query?.policyNumber as string) || '';
 
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('getServerSidePropsPolicyDetailsPage::Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'utils/page',
-                function: 'getServerSidePropsSendTaxFormsPage',
-            });
-            return serverSidePropsLogout();
-        }
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('getServerSidePropsPolicyDetailsPage::Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
-        //  const shouldShowSendTaxFormsPage = featureFlagDecisions?.[FEATURE_FLAGS.SEND_TAX_FORMS];
-        const shouldShowCaseButton = featureFlagDecisions?.[FEATURE_FLAGS.SEND_TAX_FORMS_SHOW_CASE_BUTTON];
+            //  const shouldShowSendTaxFormsPage = featureFlagDecisions?.[FEATURE_FLAGS.SEND_TAX_FORMS];
+            const shouldShowCaseButton = featureFlagDecisions?.[FEATURE_FLAGS.SEND_TAX_FORMS_SHOW_CASE_BUTTON];
 
-        const translations = await serverSideTranslations(
-            locale,
-            [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-            nextI18nextConfig,
-            ALL_LOCALES
-        );
-        try {
-            const userInfoForLogging = getUserInfoFromUser(user);
-            const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
-            const carrierId = policy?.carrierId?.toLowerCase() || '';
-            if (!policy || !carrierId) {
-                logInfo('contact-center/send-taxforms/policy-not-found', { policyNumber, planCode, correlationId, page: resolvedUrl });
+            const translations = await serverSideTranslations(
+                locale,
+                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
+            try {
+                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
+                const carrierId = policy?.carrierId?.toLowerCase() || '';
+                if (!policy || !carrierId) {
+                    logInfo('contact-center/send-taxforms/policy-not-found', loggingContext);
+                    return {
+                        redirect: {
+                            destination: `/404?title=policyNotFound&planCode=${planCode}&policyNumber=${policyNumber}`,
+                            permanent: false,
+                        },
+                    };
+                }
+
+                const mailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
+                    FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
+                    FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Mail,
+                    user.sub,
+                    loggingContext
+                );
+                const emailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
+                    FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
+                    FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Email,
+                    user.sub,
+                    loggingContext
+                );
+                const faxOptionEnabled = await optimizelyService.getFeatureFlagVariables(
+                    FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
+                    FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Fax,
+                    user.sub,
+                    loggingContext
+                );
+                const shouldShowMailOption = Object.keys(mailOptionEnabled).includes(carrierId);
+                const shouldShowEmailOption = Object.keys(emailOptionEnabled).includes(carrierId);
+                const shouldShowFaxOption = Object.keys(faxOptionEnabled).includes(carrierId);
+
                 return {
-                    redirect: {
-                        destination: `/404?title=policyNotFound&planCode=${planCode}&policyNumber=${policyNumber}`,
-                        permanent: false,
+                    props: {
+                        ...translations,
+                        policy,
+                        shouldShowCaseButton: shouldShowCaseButton ?? false,
+                        user,
+                        shouldShowEmailOption: shouldShowEmailOption ?? false,
+                        shouldShowFaxOption: shouldShowFaxOption ?? false,
+                        shouldShowMailOption: shouldShowMailOption ?? false,
                     },
                 };
+            } catch (error) {
+                logError('getServerSidePropsSendTaxFormsPage', { ...parseErrorInformation(error), ...loggingContext });
+                return {
+                    props: {},
+                };
             }
-
-            const mailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
-                FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
-                FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Mail,
-                user.sub
-            );
-            const emailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
-                FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
-                FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Email,
-                user.sub
-            );
-            const faxOptionEnabled = await optimizelyService.getFeatureFlagVariables(
-                FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
-                FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Fax,
-                user.sub
-            );
-            const shouldShowMailOption = Object.keys(mailOptionEnabled).includes(carrierId);
-            const shouldShowEmailOption = Object.keys(emailOptionEnabled).includes(carrierId);
-            const shouldShowFaxOption = Object.keys(faxOptionEnabled).includes(carrierId);
-
-            return {
-                props: {
-                    ...translations,
-                    policy,
-                    shouldShowCaseButton: shouldShowCaseButton ?? false,
-                    user,
-                    shouldShowEmailOption: shouldShowEmailOption ?? false,
-                    shouldShowFaxOption: shouldShowFaxOption ?? false,
-                    shouldShowMailOption: shouldShowMailOption ?? false,
-                },
-            };
-        } catch (error) {
-            logError('getServerSidePropsSendTaxFormsPage', { ...parseErrorInformation(error) });
-            return {
-                props: {},
-            };
-        }
+        },
     },
-});
+    { file: 'contact-center/send-taxform/index', function: 'getServerSideProps', page: 'contact-center/send-taxform' }
+);
 
 export default SendTaxForms;

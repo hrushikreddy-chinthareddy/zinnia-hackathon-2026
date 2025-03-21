@@ -1,5 +1,5 @@
 import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
-import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, LoggingContext, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { se2ApiServerUrl } from '../api-config';
 import { serverApi } from '../api-utils/serverApiClient';
@@ -13,9 +13,10 @@ const nigoBaseUrl = se2ApiServerUrl + '/exceptionrefs';
 
 export const NigoSearch = async (
     filters: searchNigoExceptionsFilters,
-    accessToken: string | undefined
+    accessToken: string | undefined,
+    logCtx: LoggingContext
 ): Promise<NigoExceptionResponse[] | null> => {
-    const loggingContext = { file: 'queries/api/exception-refs', function: 'searchNigoExceptions', filters };
+    const loggingContext = { ...logCtx, file: 'queries/api/exception-refs', function: 'searchNigoExceptions', inputs: { filters } };
 
     if (!accessToken) {
         logWarn('exception-refs::No accessToken to fetch nigo exceptions', loggingContext);
@@ -41,7 +42,7 @@ export const NigoSearch = async (
             },
         };
 
-        const { data } = await serverApi.post<any>(`${nigoBaseUrl}/nigos/search`, formData, config);
+        const { data } = await serverApi.post<any>(`${nigoBaseUrl}/nigos/search`, formData, config, loggingContext);
         return data;
     } catch (error: any) {
         logError('exception-refs::searchNigoExceptions', { ...parseErrorInformation(error), ...loggingContext });

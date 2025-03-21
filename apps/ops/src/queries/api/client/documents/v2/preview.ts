@@ -4,7 +4,8 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/Document
 import { DocumentDownloadV2 } from '@deps/models/case/document';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { browserLogWarn } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 export const getDocumentPreviewV2 = async (
     documentNumber: string,
@@ -17,7 +18,7 @@ export const getDocumentPreviewV2 = async (
 
         return data;
     } catch (error: any) {
-        logWarn('An error occurred while getting document', {
+        browserLogWarn('An error occurred while getting document', {
             ...parseErrorInformation(error),
             file: 'queries/api/documents',
             function: 'getDocumentDownload',

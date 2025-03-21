@@ -2,7 +2,7 @@ import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext'
 import { DocumentData } from '@deps/models/case/document';
 import { CreateTaskBody, TaskSource } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, ActiveWithdrawalCaseData, CaseStatus } from '@deps/models/case/withdrawal/case';
+import { ActiveWithdrawalCase, ActiveWithdrawalCaseData, Carrier, CaseStatus, PartyRoles } from '@deps/models/case/withdrawal/case';
 
 import { OtpBuildFormProcess } from './build-form-process.helper';
 
@@ -21,6 +21,7 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
         formBeneInfo,
         formTaxWithholding,
         formTpaAuthorization,
+        formPeriodicPension,
         formSurrenderingCompany,
         formProgram,
         formDistribution,
@@ -32,6 +33,25 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
         formReindexingData,
         formComment,
     } = currentFormState;
+
+    if (initialForm.carrier === Carrier.FLIC && initialForm.taskType.includes('SSW')) {
+        const hasCoveredLifePerson = !!formParty?.parties?.find(
+            item => item.partyRoleType === PartyRoles.GLWB_FIRST_COVERED_PERSON || item.partyRoleType === PartyRoles.GLWB_SEC_COVERED_PERSON
+        );
+        let filteredParty;
+        if (hasCoveredLifePerson) {
+            filteredParty = formParty.parties.filter(item => {
+                if (
+                    item.partyRoleType === PartyRoles.GLWB_FIRST_COVERED_PERSON ||
+                    item.partyRoleType === PartyRoles.GLWB_SEC_COVERED_PERSON
+                ) {
+                    return item.firstName !== '' || item.lastName !== '' || item.middleName !== '';
+                }
+                return true;
+            });
+        }
+        formParty.parties = filteredParty ?? formParty.parties;
+    }
 
     return {
         ...initialForm.data,
@@ -64,6 +84,7 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
             formReindexingData,
             formComment,
             formBeneInfo,
+            periodicPensionForm: formPeriodicPension,
         },
     };
 };

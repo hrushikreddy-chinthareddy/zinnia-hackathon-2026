@@ -63,6 +63,7 @@
             "documents": "Documents",
             "newPremium": "New Premium",
             "cancelFreeLook": "Free Look Cancel",
+            "addPremiumAutopay": "Add Premium Autopay",
             "updatePremium": "Update Premium Autopay",
             "newWithdrawal": "New Withdrawal",
             "formData": "Form Data",
@@ -723,6 +724,7 @@
         "loadingThing": "Loading {{thing}}",
         "preview": "Preview",
         "rate": "rate",
+        "draft": "Save as Draft",
         "submitPayment": "Submit payment",
         "successExclamation": "Success!",
         "total": "Total",
@@ -820,7 +822,9 @@
         "process": "Process",
         "client": "Client",
         "createdAt": "Created Date",
+        "created": "Created",
         "status": "Status",
+        "taskStatus": "Task Status",
         "taskTitle": "My Tasks",
         "noTasksFoundTitle": "Your task list is currently empty.",
         "noTasksMessage": "Click 'Claim Task' to get started.",
@@ -828,6 +832,7 @@
         "unassignTaskError": "Unassign task error: ",
         "unassignTask": "Unassign Task",
         "startTask": "Start Task",
+        "assignTask": "Assign Task",
         "transaction": "Transaction: {{transactionType}}",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Update Task Status",
@@ -857,9 +862,40 @@
         },
         "caseId": "Case ID: ",
         "documentNumber": "Document: ",
+        "caseID": "Case/ID",
+        "carrierPolicy": "Carrier/Policy",
+        "ID": "ID:",
+        "product": "Product",
+        "assignee": "Assignee",
+        "temporal": {
+            "month": "month",
+            "week": "week",
+            "day": "day",
+            "hour": "hour",
+            "minute": "minute",
+            "days": "{{min}} - {{max}} days",
+            "daysMax": "{{min}}+ days",
+            "daysAgo_zero": "Today",
+            "daysAgo_one": "1 day ago",
+            "daysAgo_other": "{{count}} days ago",
+            "daysOld_zero": "Opened today",
+            "daysOld_one": "1 day old",
+            "daysOld_other": "{{count}} days old",
+            "lastUpdated": "Last updated",
+            "timeago_one": "{{count}} $t(temporal.{{unit}}) ago {{formattedDate}}",
+            "timeago_other": "{{count}} $t(temporal.{{unit}})s ago {{formattedDate}}",
+            "nYears": "{{n}} years",
+            "oneYear": "1 year",
+            "timeLeft": "{{timespan}} left"
+        },
         "noDocumentFound": "No documents found",
         "documentSelectError": "Document already selected",
-        "fetchingDocuments": "Fetching Documents..."
+        "fetchingDocuments": "Fetching Documents...",
+        "noteTitle": "Notes",
+        "notePlaceholder": "Add a note.",
+        "addNote": "Add note",
+        "errorSavingNote": "Error occurred while saving note. Please try again",
+        "notePostDate": "Posted on {{date}} by"
     },
     "caseManagementDashboard": {
         "h1": "Case Management",
@@ -1412,10 +1448,10 @@
             "entityTypes": {
                 "agent": "Agent: {{label}}",
                 "pre-note": "Pre-Note: {{label}}",
-                "source of premium": "Source of Premium: {{label}}",
+                "source of premium": "Funding Source: {{label}}",
                 "transfer of assets": "Transfer of Assets: {{label}}",
                 "ceding carrier": "Ceding Carrier: {{label}}",
-                "premium source": "Premium Source: {{label}}",
+                "premium source": "Funding Source: {{label}}",
                 "re-illustration": "Re-Illustration: {{label}}"
             },
             "reviewIssues": "Review {{taskType}}",
@@ -1459,6 +1495,7 @@
             "additionalData": "Details",
             "multiInstance": "Steps",
             "documentId": "Document ID: {{documentId}}",
+            "documentType": "Document Type: {{documentType}}",
             "documents": "Documents",
             "view": "View",
             "viewTask": "View task"
@@ -1746,7 +1783,9 @@
                 },
                 "singleLifeTimeIncome": {
                     "title": "Name of Income Life"
-                }
+                },
+                "COVERED_PERSON_1": "Name of Covered Life 1",
+                "COVERED_PERSON_2": "Name of Covered Life 2"
             },
             "rmdMethod": {
                 "title": "RMD Method",
@@ -2076,6 +2115,20 @@
                 "numberofAllowance": "Number of allowances",
                 "signatureValidation": "Signature validation",
                 "Type": "type"
+            },
+            "w4pPeriodicPayment": {
+                "maritalStatusAllowanceItems": {
+                    "single": "Single",
+                    "married": "Married",
+                    "headOfHousehold": "Head of household"
+                },
+                "title": "W4-P for Periodic Payments",
+                "ssn": "SSN",
+                "signatureValidation": "Signature Validation",
+                "nonJobIncome": "Income from a Job/Pension/Annuity",
+                "claimsAndCredits": "Claim Dependent and other Credits",
+                "otherIncomeAndPensions": "Other Income",
+                "otherDeductions": "Deduction"
             },
             "OL4753Data": {
                 "isOL4753Attached": "Is OL4753 form attached",
@@ -2988,8 +3041,8 @@
                 "surrenderAmountTooltip": "",
                 "requestedWithdrawalAmount": "Requested withdrawal amount",
                 "requestedWithdrawalAmountTooltip": "This is how much the owner is requesting to withdraw from the account value. This number can differ from the actual total payment or the actual withdrawal amount depending on the disbursement type (gross or net) selected and the policy’s rules around withdrawal fees.",
-                "totalPayment": "Total payment",
-                "totalPaymentTooltip": "This is how much will actually be paid from this withdrawal. It's the requested amount minus any applicable transaction fees.",
+                "totalCharges": "Total charges",
+                "totalChargesTooltip": "This is how much will be charged from this withdrawal.",
                 "actualWithdrawalAmount": "Actual withdrawal amount",
                 "actualWithdrawalAmountTooltip": "This is how much will actually be withdrawn from the account value. If the owner selected net disbursement, we will withdraw any transaction fees (if applicable) in addition to the requested withdrawal amount. If gross was selected, the actual and requested withdrawal amounts will match.",
                 "actualTransactionAmount": "Actual {{transactionType}} amount",
@@ -3098,8 +3151,8 @@
                 "title": "Reverse Payment",
                 "apiError": {
                     "cta": "Reverse premium payment",
-                    "title": "Sorry, that didn’t work.",
-                    "subtitle": "Services are down, so we couldn’t reverse this transaction. You can try reversing again. If it’s still not working, ",
+                    "title": "Sorry, that didn't work.",
+                    "subtitle": "Services are down, so we couldn't reverse this transaction. You can try reversing again. If it's still not working, ",
                     "submitHelpDeskTicket": "submit a help desk ticket."
                 },
                 "transactionTypes": {
@@ -3113,6 +3166,48 @@
         }
     },
     "transactions": {
+        "states": {
+            "success": {
+                "cta": "Go to case",
+                "subtitle": {
+                    "1": " request was received.",
+                    "2": " It should complete overnight.",
+                    "3": " You can track the progress by viewing the case.",
+                    "nigo": "We submitted this request for NIGO processing."
+                },
+                "title": "Got it!"
+            },
+            "apiError": {
+                "cta": "Submit",
+                "title": "Sorry, that didn't work.",
+                "secondaryCta": "Cancel and close",
+                "subtitle": {
+                    "1": "Services are down, so we couldn't submit this transaction.",
+                    "2": "You can try submitting again. If it's still not working ",
+                    "3": "submit a help desk ticket."
+                }
+            },
+            "bpmError": {
+                "cta": "Submit",
+                "edit": "Edit",
+                "nigo": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+                "nigoAssistive": "Please acknowledge NIGO",
+                "secondaryCta": "Cancel",
+                "subtitle": "Review the errors below.",
+                "title": "Hm, we found an issue."
+            }
+        },
+        "cancelAutopay": {
+            "cancel": "Cancel",
+            "cancelAutopay": "Cancel autopay",
+            "confirmCancelError": "Confirm before canceling autopay.",
+            "effectiveDate": "Effective date",
+            "invalidEffectiveDate": "Enter a valid effective date.",
+            "loanAutopayCancellation": "Loan autopay cancellation",
+            "missingCaseDocument": "Select a document (or proceed without) to continue.",
+            "premiumAutopayCancellation": "Premium autopay cancellation",
+            "proceedCancel": "Proceed with canceling {{frequency}} autopay of {{amount}}"
+        },
         "loans": {
             "header": {
                 "loansTitle": "Loans",
@@ -3149,6 +3244,7 @@
                     "header": "View additional loan information",
                     "interestFirst": "Interest first",
                     "loanCollateral": "Loan collateral",
+
                     "loanCollateralTooltip": "This is the loan principal, plus any credit earned since the loan started. This amount is held separate from the unloaned portion of the account value and has its own credit rate at which it gains earnings. A loan from a cash value life insurance policy is a loan from the insurance carrier with the account value on the policy used as collateral. When an owner borrows from their policy, the principal loan amount remains invested and continues to earn interest gains at an annual percentage rate.",
                     "loanPrincipal": "Loan principal",
                     "loanPrincipalTooltip": "The total shown here is what was borrowed, plus any interest accrued. A loan's principal is the original amount borrowed. Interest charges accrues annually, and outstanding interest is added to remaining principal, according to the interest method.",
@@ -3221,6 +3317,8 @@
         "callID": "Call ID",
         "backToCallList": "Back to call listing",
         "noCallLogSummary": "No summary to display.",
+        "callLogNotes": "Notes",
+        "callLogSummary": "Summary",
         "allocation": {
             "allocation": "Allocation",
             "allocationsMustNotEqual0": "Allocations cannot equal 0.",
@@ -3299,6 +3397,7 @@
             "errorAdditionalDocuments": "Error fetching additional documents.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
             "reasonLabel": "Status reason",
+            "inProgress": "In Progress",
             "pendinglabel": "Pending until",
             "canceledLabel": "Canceled on",
             "completedLabel": "Completed on",
@@ -3676,7 +3775,7 @@
                     "title": "Hm, we found an issue.",
                     "secondaryCta": "Cancel",
                     "nigo": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
-                    "nigoAssistive": "Please aknowledge NIGO"
+                    "nigoAssistive": "Please acknowledge NIGO"
                 },
                 "warn": {
                     "cta": "Remove {{type}} {{transaction}}",
@@ -3722,7 +3821,8 @@
                 "amount": "Amount",
                 "edit": "Edit",
                 "relationshipToInsured": "Relationship to insured",
-                "label": "Allocation"
+                "label": "Allocation",
+                "commissionAllocation": "Commission allocation"
             },
             "bank": {
                 "accountOptions": {
@@ -3763,6 +3863,13 @@
                     "showAdditional": "Show additional email addresses"
                 },
                 "label": "Email"
+            },
+            "firmInformation": {
+                "label": "Firm Information",
+                "name": "Name",
+                "business": "Business",
+                "address": "Address",
+                "empty": "No firm information."
             },
             "phone": {
                 "bestTimes": {
@@ -3829,7 +3936,9 @@
                     "trustDate": "Trust date",
                     "trustType": "Trust type",
                     "usCitizen": "United States citizen",
-                    "citizenCountry": "Citizenship country"
+                    "citizenCountry": "Citizenship country",
+                    "externalId": "External ID",
+                    "channel": "Channel"
                 }
             },
             "underwriting": "Underwriting",
@@ -3934,6 +4043,7 @@
     },
     "premium": {
         "upcoming": {
+            "startAutopay": "Set up autopay",
             "upcomingAutopay": "Upcoming Autopay",
             "paymentMode": {
                 "monthly": "Monthly"
@@ -3955,6 +4065,9 @@
             "manageAutopay": "Manage autopay",
             "setUpAutopay": "Set up autopay",
             "oneTimePaymentText": "Make one-time payment",
+            "cancelAutopay": "Cancel autopay",
+            "cancelLoanAutopayTitle": "Cancel Loan Autopay",
+            "cancelPremiumAutopayTitle": "Cancel Premium Autopay",
             "noAdditionalCharges": "None",
             "flatCharges": {
                 "text": "Flat extra",
@@ -4102,16 +4215,24 @@
         },
         "checkingEndingIn": "Checking ending in {{ accountNumber }}"
     },
-    "cancelFreeLook": {
+    "financialTransaction": {
         "confirm": {
-            "cta": "Go to transaction history",
-            "label": "Confirm",
+            "cta": "Go to case",
             "secondaryCta": "Close",
             "subtitle": {
-                "0": "A cancellation request was submitted. Once processed, a refund payment for ",
-                "1": " will be sent."
+                "a": "A ",
+                "requestFrom": " request from ",
+                "for": " for ",
+                "wasReceived": " was received. It should complete overnight. You can track the progress by viewing the case.",
+                "wasReceivedNigo": " request was received and a NIGO issue was created. You can track the progress by viewing the case."
             },
-            "title": "Submitted!"
+            "title": "Got it!"
+        }
+    },
+    "cancelFreeLook": {
+        "confirm": {
+            "label": "Confirm",
+            "type": "cancellation"
         },
         "date": {
             "label": "Date",
@@ -4242,18 +4363,8 @@
             "withdrawalType": "Withdrawal type"
         },
         "confirm": {
-            "cta": "Go to transaction history",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "A ",
-                "1": " withdrawal request was submitted. Once processed, a ",
-                "2": " payment for ",
-                "3": " will be sent.",
-                "NIGO": " withdrawal request was submitted for",
-                "NIGO1": " NIGO processing."
-            },
-            "title": "Submitted!"
+            "type": "withdrawal"
         },
         "rmd": {
             "title": "Required Minimum Distribution",
@@ -4344,11 +4455,12 @@
         },
         "summary": {
             "amount": "Amount",
+            "bpm500Error": "BPM 500 error",
             "current": "Current",
             "frequency": "Frequency",
             "paymentFrequency": "Payment frequency",
             "label": "Summary",
-            "loanAutopayAmount": "Loan autopay amount",
+            "autopayAmount": "Loan autopay amount",
             "newAutopayDetails": "New loan autopay details",
             "nextPaymentDate": "Next payment date",
             "paymentStartDate": "Payment start date",
@@ -4362,18 +4474,8 @@
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         },
         "confirm": {
-            "cta": "Go to case",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "A",
-                "1": " loan repayment autopay",
-                "2": " request was received.",
-                "2NIGO": " request was received and a NIGO issue was created.",
-                "3": " It should complete overnight. ",
-                "4": " You can track the progress by viewing the case."
-            },
-            "title": "Got it!"
+            "type": "loan repayment autopay"
         }
     },
     "loanPayment": {
@@ -4385,17 +4487,8 @@
             "invalidPaymentAmountError": "Payment amount must be at least $1."
         },
         "confirm": {
-            "cta": "Go to transaction history",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "A ",
-                "1": " one-time loan payment from ",
-                "2": " was submitted.",
-                "NIGO": " one-time loan payment was submitted for",
-                "NIGO1": " NIGO processing."
-            },
-            "title": "Submitted!"
+            "type": "one-time loan payment"
         },
         "payment": {
             "label": "Payment Method",
@@ -4458,24 +4551,15 @@
             }
         },
         "confirm": {
-            "cta": "Go to transaction history",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "A ",
-                "1": " loan was submitted.",
-                "NIGO": " loan was submitted",
-                "NIGO1": " for",
-                "NIGO2": " NIGO processing."
-            },
-            "title": "Submitted!"
+            "type": "loan"
         },
         "payment": {
             "label": "Payment Method",
             "title": "Where should we send the payment?"
         },
-        "payor": {
-            "label": "Payor"
+        "payee": {
+            "label": "Payee"
         },
         "start": {
             "label": "Start",
@@ -4488,7 +4572,7 @@
             "fundAllocationTooltip": "The account value is invested in one or more investment funds. When we withdraw the money, we need to know how to take the amount from each investment fund. Pro rata means take an equal amount from each investment fund. Custom allows the owner to choose a certain amount from each investment fund.",
             "funds": "Funds",
             "label": "Summary",
-            "payor": "Payor",
+            "payee": "Payee",
             "proRata": "Pro rata",
             "submitLoan": "Submit loan",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
@@ -4496,7 +4580,7 @@
             "loanAmount": "Loan amount",
             "effectiveDate": "Effective date",
             "effectiveDateTooltip": "This is the date used to calculate all the available account values for this loan. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point  to effectively withdraw the funds, even if we're processing the transaction some days before or after.",
-            "payorTitle": "Payor",
+            "payeeTitle": "Payee",
             "validationStatusLabel": "Validation status",
             "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
@@ -4553,32 +4637,29 @@
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         },
         "confirm": {
-            "cta": "Go to transaction history",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "A ",
-                "1": " one-time premium payment from {{ name }} was submitted.",
-                "NIGO": " one-time premium pament was submitted for ",
-                "NIGO1": "NIGO processing."
-            },
-            "title": "Submitted!"
+            "type": "one-time premium payment"
         }
     },
-    "autopay": {
+    "premiumAutopay": {
         "start": {
             "label": "Start",
-            "title": "Update Premium Autopay",
-            "subtitle": "Make changes to the schedule, amount, or payment method for this policy’s premium autopay. First up, let’s make sure we can keep track of this transaction in OnBase."
+            "subtitleManage": "Make changes to the schedule, amount, or payment method for this policy's premium autopay. First up, let's make sure we can keep track of this transaction in OnBase.",
+            "titleStart": "Set Up Premium Autopay",
+            "titleManage": "Manage Premium Autopay"
         },
         "amount": {
             "label": "Amount",
             "paymentAmount": "Premium autopay amount",
             "paymentFrequency": "Payment frequency",
+            "paymentStartDate": "Payment start date",
             "nextPaymentDate": "Next payment date",
             "casesLabel": "Select a case",
-            "missingDateError": "Next payment date is missing.",
-            "invalidDateError": "Enter a valid next payment date.",
+            "missingFrequencyError": "Payment frequency is missing.",
+            "missingNextPaymentDateError": "Next payment date is missing.",
+            "invalidNextPaymentDateError": "Enter a valid next payment date.",
+            "missingStartDateError": "Payment start date is missing.",
+            "invalidStartDateError": "Enter a valid payment start date.",
             "missingAmountError": "Premium autopay amount is missing.",
             "invalidAmountError": "Premium autopay amount must be greater than $1.00",
             "annually": "Annually",
@@ -4598,33 +4679,27 @@
         },
         "summary": {
             "amount": "Amount",
+            "bpm500Error": "BPM 500 error",
             "current": "Current",
             "frequency": "Frequency",
+            "paymentFrequency": "Payment frequency",
             "label": "Summary",
+            "autopayAmount": "Premium autopay amount",
             "newAutopayDetails": "New premium autopay details",
             "nextPaymentDate": "Next payment date",
+            "paymentStartDate": "Payment start date",
             "payor": "Payor",
-            "submit": "Submit",
+            "submit": "Submit payment",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
             "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
-            "updateAutopay": "Update autopay",
+            "updateAutopay": "Update premium autopay",
             "validationStatusLabel": "Validation status",
             "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         },
         "confirm": {
-            "cta": "Go to transaction history",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "Autopay details were updated.",
-                "1": "'s next",
-                "2": "payment of",
-                "3": "will be submitted on",
-                "NIGO": " autopay update was submitted for ",
-                "NIGO1": "NIGO processing."
-            },
-            "title": "Submitted!"
+            "type": "premium repayment autopay"
         }
     },
     "footnote": {
@@ -4845,7 +4920,8 @@
             "bankDataCard": {
                 "accountNumber": "Account number",
                 "endingIn": "Ending in "
-            }
+            },
+            "fieldLabel": "Banking details"
         },
         "payeesStep": {
             "add": "Add new person or entity",
@@ -4933,7 +5009,7 @@
             "relatedTab": {
                 "lastUpdated": "Last updated",
                 "caseId": "Case ID ",
-                 "noCasesAvailable": "No related cases available."
+                "noCasesAvailable": "No related cases available."
             }
         },
         "confirmStep": {

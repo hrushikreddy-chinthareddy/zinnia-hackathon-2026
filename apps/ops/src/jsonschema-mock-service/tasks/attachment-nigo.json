@@ -16,22 +16,29 @@
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "sectionHeader": {
-                            "type": "object",
-                            "title": "Processing Instructions"
-                        },
                         "issuesList": {
                             "type": "array",
-                            "title": "Issues",
+                            "title": "",
                             "items": {
                                 "type": "object",
+                                "title": "",
                                 "properties": {
-                                    "reason": {
-                                        "type": "string"
+                                    "processingReason": {
+                                        "type": "string",
+                                        "title": "Issues"
+                                    },
+                                    "processingInstruction": {
+                                        "type": "string",
+                                        "title": "Processing Instructions"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
                                     }
                                 }
                             }
                         },
+
                         "details": {
                             "type": "object",
                             "title": "Supporting Information",
@@ -47,7 +54,8 @@
                                         "ssn": {
                                             "type": "string",
                                             "title": "SSN",
-                                            "ui:field": "subTitle"
+                                            "ui:field": "subTitle",
+                                            "dataType": "ssn"
                                         },
                                         "lastName": {
                                             "type": "string",
@@ -61,7 +69,8 @@
                                     "properties": {
                                         "documentId": {
                                             "type": "string",
-                                            "ui:field": "subTitle"
+                                            "ui:field": "subTitle",
+                                            "title": "Document Id"
                                         },
                                         "documentSource": {
                                             "type": "string",
@@ -80,6 +89,41 @@
                             "enumNames": ["Yes", "No"],
                             "enum": [true, false],
                             "title": "Can you resolve the issues?"
+                        },
+                        "uploadDocuments": {
+                            "type": "object",
+                            "title": "Link or upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "upload",
+                                    "items": {
+                                        "title": "upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
                         }
                     },
                     "dependencies": {
@@ -89,41 +133,6 @@
                                     "properties": {
                                         "issueResolved": {
                                             "enum": [true]
-                                        },
-                                        "uploadDocuments": {
-                                            "type": "object",
-                                            "title": "Link or upload document",
-                                            "properties": {
-                                                "upload": {
-                                                    "type": "string"
-                                                },
-                                                "or": {
-                                                    "type": "string",
-                                                    "title": "or"
-                                                },
-                                                "attachment": {
-                                                    "type": "array",
-                                                    "title": "upload",
-                                                    "items": {
-                                                        "title": "upload",
-                                                        "type": "string",
-                                                        "format": "data-url"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "attachments": {
-                                            "type": "array",
-                                            "items": {
-                                                "documentName": {
-                                                    "title": "Name",
-                                                    "type": "string"
-                                                },
-                                                "documentId": {
-                                                    "title": "Document Id",
-                                                    "type": "string"
-                                                }
-                                            }
                                         }
                                     }
                                 },
@@ -144,30 +153,56 @@
                     }
                 },
                 "uiSchema": {
+                    "ui:order": [
+                        "issuesList",
+                        "details",
+                        "issueResolved",
+                        "declineReason",
+                        "issueReason",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
-                        "orderable": false,
                         "copyable": false
                     },
                     "$schema": "http://json-schema.org/draft-07/schema#",
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "sectionHeader": {
-                        "props": {
-                            "description": "Application form may be missing or mismatched for the signed state. Review the application and confirm that we can resolve the issue."
-                        },
-                        "ui:options": {
-                            "label": true,
-                            "ObjectFieldTemplate": "InstructionsTemplate"
-                        }
-                    },
                     "issuesList": {
+                        "ui:readonly": true,
                         "ui:options": {
-                            "ArrayFieldTemplate": "TextListTemplate",
-                            "keyName": "processingReason"
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                            },
+                            "processingReason": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "processingInstruction": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "resolved": {
+                                "ui:options": {
+                                    "label": false
+                                }
+                            }
                         }
                     },
+
                     "details": {
                         "ui:options": {
                             "label": true

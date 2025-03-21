@@ -1,6 +1,5 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { deleteCookie, getCookie, setCookie, hasCookie } from 'cookies-next';
-import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
@@ -39,7 +38,7 @@ import { MOCK_COOKIE_KEY, PREV_POLICY_COOKIE_KEY } from '@deps/queries/api-utils
 import { getMockPolicy } from '@deps/services/mocks/mock-policy.helper';
 import { FgaRelation } from '@deps/types/fga';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
-import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface PolicyPageProps extends SegmentTrackedPageProps {
@@ -281,72 +280,77 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        // Get the user object from the Auth0 Session
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, res, req } = context;
-        try {
-            (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('policies/:id/:slug:: Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'policies/:id/:slug',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            // Get the user object from the Auth0 Session
+            const user = await getUserData(context);
+            const { locale = DEFAULT_LOCALE, res, req } = context;
+            try {
+                (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('policies/:id/:slug:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
 
-        // Create a permissions object to pass to the page, strongly typed using the enum.
-        const permissions = {
-            [UserPermission.AllowReadPolicyAdmin]: false,
-        };
-
-        // We can use the enum to access the permissions object.
-        permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin);
-
-        const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE);
-
-        // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
-        if (!isAdvisorsExcel && !permissions[UserPermission.AllowReadPolicyAdmin]) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
+            // Create a permissions object to pass to the page, strongly typed using the enum.
+            const permissions = {
+                [UserPermission.AllowReadPolicyAdmin]: false,
             };
-        }
 
-        try {
-            const translations = await serverSideTranslations(
-                locale,
-                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-                nextI18nextConfig,
-                ALL_LOCALES
+            // We can use the enum to access the permissions object.
+            permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadPolicyAdmin,
+                loggingContext
             );
 
-            return {
-                props: {
-                    ...translations,
-                    user,
-                },
-            };
-        } catch (error) {
-            // TODO: Perhaps redirect to a 500 page?
-            logError('policies/:id/:slug', {
-                ...parseErrorInformation(error),
-                file: 'policies/:planCode/:id/:slug',
-                function: 'getServerSideProps',
-            });
+            const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
 
-            return {
-                redirect: {
-                    destination: '/404',
-                    permanent: false,
-                },
-            };
-        }
+            // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
+            if (!isAdvisorsExcel && !permissions[UserPermission.AllowReadPolicyAdmin]) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
+
+            try {
+                const translations = await serverSideTranslations(
+                    locale,
+                    [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                    nextI18nextConfig,
+                    ALL_LOCALES
+                );
+
+                return {
+                    props: {
+                        ...translations,
+                        user,
+                    },
+                };
+            } catch (error) {
+                // TODO: Perhaps redirect to a 500 page?
+                logError('policies/:id/:slug:: Error fetching translations', {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                });
+
+                return {
+                    redirect: {
+                        destination: '/404',
+                        permanent: false,
+                    },
+                };
+            }
+        },
     },
-});
+    { file: 'policies/[id]/[...slug]', function: 'getServerSideProps', page: 'policies/:planCode/:id/:...slug' }
+);
 
 export default PolicyDetailsPage;

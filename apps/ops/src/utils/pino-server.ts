@@ -11,6 +11,21 @@ const levelToStatus = {
     60: 'fatal',
     99: 'compliance',
 };
+const redactKeys = [
+    'accountNumber',
+    'authorization',
+    'Authorization',
+    'iban',
+    'key',
+    'password',
+    'routingNumber',
+    'secret',
+    'ssn',
+    'SSN',
+    'taxid',
+    'taxId',
+    'token',
+];
 const logger = pino({
     // put browser logs into a single line for datadog.  Used for middleware, which is considered browser?
     browser: {
@@ -43,6 +58,10 @@ const logger = pino({
     },
     customLevels: {
         compliance: 99, // compliance logs should be shipped if logging is enabled.
+    },
+    redact: {
+        paths: ['req.headers', ...redactKeys, ...redactKeys.map(key => `inputs.${key}`), ...redactKeys.map(key => `params.${key}`)],
+        censor: 'REDACTED',
     },
     // level of logs to display. trace|debug|info|warn|error|fatal
     level: isNonProductionEnvironment() ? process.env.PINO_LOG_LEVEL || 'trace' : 'trace',

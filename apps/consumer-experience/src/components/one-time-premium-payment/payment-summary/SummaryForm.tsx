@@ -8,6 +8,7 @@ import { useFormStatus } from 'react-dom';
 
 import { Button } from '@/components/button/Button';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
+import { Payor } from '@/components/pii/Payor';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { FieldData } from '../../field-data/FieldData';
@@ -153,9 +154,10 @@ export const SummaryForm = ({
       <div className={styles.paymentSummaryContainer}>
         <div className={styles.paymentSummaryDetails}>
           <FieldData Label={<Label>Payor</Label>}>
-            <span className="typography-content-body-sm">
-              {payorBank.nameOnAccount}
-            </span>
+            <Payor
+              className="typography-content-body-sm"
+              payor={payorBank.nameOnAccount}
+            />
           </FieldData>
           <FieldData Label={<Label>Effective date</Label>}>
             <span className="typography-content-body-sm">

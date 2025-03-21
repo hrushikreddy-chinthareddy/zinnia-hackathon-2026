@@ -26,7 +26,7 @@ export enum TaskType {
     TOA_Nigo = 'NB_TOA_NIGO',
     Standard_Document_Matching = 'STANDARD_DOCUMENT_MATCHING',
     Prenote_Nigo = 'NB_PRENOTE_NIGO',
-    Agent_Onboarding_Review = 'AGENT_ONBOARDING_REVIEW'
+    Agent_Onboarding_Review = 'AGENT_ONBOARDING_REVIEW',
 }
 
 export enum EarlyTaskType {
@@ -176,4 +176,14 @@ export enum DataFormattingTypes {
     SSN = 'ssn',
     Date = 'date',
     Amount = 'amount',
+    DirtyAddress = 'dirtyAddress',
+}
+
+export interface AddressFormFields {
+    addressType?: string;
+    addresses?: any[];
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    defaultAddress?: boolean;
 }

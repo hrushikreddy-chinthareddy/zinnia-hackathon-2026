@@ -9,6 +9,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
+import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
 import { getStateName } from '@deps/helpers/states.helper';
 import { convertKebabedDateString, formatSSN, safeString } from '@deps/helpers/string.helper';
@@ -18,7 +19,7 @@ import { ReactComponent as FingerprintIcon } from '@deps/styles/elements/icons/i
 
 export interface IdentificationCardProps {
     editable?: boolean;
-    selectedPolicyParty?: PolicyParty;
+    selectedPolicyParty?: PolicyParty | AgentParty;
     isAnnuity?: boolean;
 }
 
@@ -49,6 +50,8 @@ const IdentificationCard = ({ editable = false, selectedPolicyParty, isAnnuity }
     const isIndividual = partyType === PartyType.INDIVIDUAL;
     const isOrganization = partyType === PartyType.ORGANIZATION;
     const isTrust = partyType === ('Trust' as PartyType);
+
+    const isAgent = selectedPolicyParty instanceof AgentParty;
 
     const hasAdditional = driversLicense || stateId || passports?.length;
 
@@ -162,6 +165,17 @@ const IdentificationCard = ({ editable = false, selectedPolicyParty, isAnnuity }
                                     {isUSCitizenText}
                                 </FieldData>
                                 {!isUSCitizen && <FieldData label={t('options.citizenCountry')}>{citizenCountry}</FieldData>}
+                            </>
+                        )}
+
+                        {isAgent && (
+                            <>
+                                <FieldData label={t('options.externalId')} sentenceCase={false}>
+                                    {selectedPolicyParty?.party.agentExternalId}
+                                </FieldData>
+                                <FieldData label={t('options.channel')} sentenceCase={false}>
+                                    {selectedPolicyParty?.channel}
+                                </FieldData>
                             </>
                         )}
                     </div>

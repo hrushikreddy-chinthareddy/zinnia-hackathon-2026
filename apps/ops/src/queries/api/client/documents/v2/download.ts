@@ -4,7 +4,8 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/Document
 import { DocumentDownloadV2WithMime } from '@deps/models/case/document';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { browserLogWarn } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 export const downloadDocumentV2 = async (
     documentNumber: string,
@@ -16,7 +17,7 @@ export const downloadDocumentV2 = async (
         const { data } = await client.get<DocumentDownloadV2WithMime, AxiosResponse>(url);
         return data;
     } catch (error: any) {
-        logWarn('An error occurred while downloading document', {
+        browserLogWarn('An error occurred while downloading document', {
             ...parseErrorInformation(error),
             file: 'queries/api/documents',
             function: 'getDocumentDownload',

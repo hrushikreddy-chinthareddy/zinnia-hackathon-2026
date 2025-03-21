@@ -31,12 +31,12 @@ import { formatPhone, safeString, toTitleCase } from './string.helper';
 export const getHeaderIcon = (partyType: string | undefined): JSX.Element => {
     switch (partyType) {
         case PartyType.TRUST:
-            return <DocumentIcon height={24} className="self-center" />;
+            return <DocumentIcon height={24} width={24} className="self-center" />;
         case PartyType.ORGANIZATION:
-            return <OfficeBuildingIcon height={24} className="self-center" />;
+            return <OfficeBuildingIcon height={24} width={24} className="self-center" />;
         case PartyType.INDIVIDUAL:
         default:
-            return <User role="presentation" height={24} className="self-center" />;
+            return <User role="presentation" height={24} width={24} className="self-center" />;
     }
 };
 
@@ -58,16 +58,20 @@ export const getHeaderText = (partyInfo: PolicyAllOfPartiesItem | undefined): st
     const { partyType } = partyInfo || {};
     switch (partyType) {
         case PartyType.INDIVIDUAL:
-            return (
-                <PiiWrapper className="flex whitespace-nowrap xs:flex-col xs:gap-0 lg:flex-row lg:gap-2">
-                    <span>
-                        {`${safeString(toTitleCase(partyInfo?.firstName))}`} {`${toTitleCase(partyInfo?.middleName)} `}
-                    </span>
-                    <span>
-                        {`${safeString(toTitleCase(partyInfo?.lastName))}`} {`${toTitleCase(partyInfo?.suffix)}`}
-                    </span>
-                </PiiWrapper>
-            );
+            if (!partyInfo?.firstName && !!partyInfo?.fullName) {
+                return <PiiWrapper>{toTitleCase(partyInfo?.fullName)}</PiiWrapper>;
+            } else {
+                return (
+                    <PiiWrapper className="flex whitespace-nowrap xs:flex-col xs:gap-0 lg:flex-row lg:gap-2">
+                        <span>
+                            {`${safeString(toTitleCase(partyInfo?.firstName))}`} {`${toTitleCase(partyInfo?.middleName)} `}
+                        </span>
+                        <span>
+                            {`${safeString(toTitleCase(partyInfo?.lastName))}`} {`${toTitleCase(partyInfo?.suffix)}`}
+                        </span>
+                    </PiiWrapper>
+                );
+            }
 
         case PartyType.ORGANIZATION:
             return <PiiWrapper>{toTitleCase(partyInfo?.fullName)}</PiiWrapper>;

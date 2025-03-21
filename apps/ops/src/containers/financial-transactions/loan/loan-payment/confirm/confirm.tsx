@@ -1,22 +1,15 @@
-import { AllocationOption } from '@zinnia/api-types/types/sor';
-import dayjs from 'dayjs';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { v4 as uuidV4 } from 'uuid';
 
-import CardInfo from '@deps/components/card/card-info/card-info';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
-import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { ACH, useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
+import { Statuses } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitLoanPayment } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
-import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { buildLoanPaymentRequestBody } from '../loan-payment.helpers';
 
@@ -28,21 +21,27 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'loanPayment.confirm' });
     const { t: defaultT } = useTranslation();
 
-    const router = useRouter();
     const { loanPayment } = useLoanPayment();
     const [submitFailed, setSubmitFailed] = useState(false);
+    const [submitNigo, setSubmitNigo] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    const {  paymentAmount, payorFullName, validationResponse } = loanPayment;
+    const { caseId, paymentAmount, payorFullName, validationResponse } = loanPayment;
 
+    const [newCaseId, setNewCaseId] = useState<string | undefined>(caseId);
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
 
     const submit = useCallback(async () => {
         const paymentBody = buildLoanPaymentRequestBody(loanPayment);
         const response = await submitLoanPayment(policy.product?.planCode, policy.policyNumber, paymentBody);
-
+      
         if (response.status !== StatusCode.Accepted) {
             setSubmitFailed(true);
+        } else {
+            if (response?.data?.caseStatus === Statuses.Exception) {
+                setSubmitNigo(true);
+            }
+            setNewCaseId(response?.data?.caseId);
         }
 
         setIsLoading(false);
@@ -73,55 +72,16 @@ const Confirm = ({ policy }: ConfirmProps) => {
     }
 
     return (
-        <>
-            <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
-                <>
-                    {validationSucceeded ? (
-                        <CardInfo
-                            cta={{
-                                action: () => {
-                                    router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/activity/transactions`);
-                                },
-                                text: t('cta'),
-                            }}
-                            icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
-                            subtitle={
-                                <>
-                                    {t('subtitle.0')}
-                                    <PiiWrapper className="font-bold">
-                                        {numberFormatify(paymentAmount)}
-                                    </PiiWrapper>
-                                    {t('subtitle.1')}
-                                    <PiiWrapper className="font-bold">{payorFullName}</PiiWrapper>
-                                    {t('subtitle.2')}
-                                </>
-                            }
-                            title={t('title')}
-                        />
-                    ) : (
-                        <CardInfo
-                            cta={{
-                                action: () => {
-                                    router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans`);
-                                },
-                                text: t('secondaryCta'),
-                            }}
-                            icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
-                            subtitle={
-                                <>
-                                    <PiiWrapper className="font-bold">
-                                        {payorFullName}'s {numberFormatify(paymentAmount)}
-                                    </PiiWrapper>
-                                    {t('subtitle.NIGO')}
-                                    <span className="font-bold">{t('subtitle.NIGO1')}</span>
-                                </>
-                            }
-                            title={t('title')}
-                        />
-                    )}
-                </>
-            </div>
-        </>
+        <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
+            <ConfirmCard
+                caseId={newCaseId}
+                isNigo={!validationSucceeded || submitNigo}
+                parentPage={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans`}
+                amount={Number(paymentAmount)}
+                payorPayeeName={payorFullName}
+                type={t('type')}
+            />
+        </div>
     );
 };
 

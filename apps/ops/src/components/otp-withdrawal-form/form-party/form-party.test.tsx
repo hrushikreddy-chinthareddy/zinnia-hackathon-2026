@@ -7,7 +7,7 @@ import getFlicConfig from '@deps/containers/otp/withdrawal-forms/flic-withdrawal
 import getSbgcConfig from '@deps/containers/otp/withdrawal-forms/sbgc-withdrawal-form.helper';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
-import { AddressTypes, maritalStatusType, PartyRoles, PhoneTypes } from '@deps/models/case/withdrawal/case';
+import { AddressTypes, maritalStatusType, PartyRoles, PhoneTypes, QualTypes } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import FormParties from './form-party';
@@ -31,7 +31,7 @@ afterEach(() => {
 describe('Formparty component', () => {
     describe('FLIC Form', () => {
         it('should render empty formControls if parties object is empty', async () => {
-            const { formPartyConfigs } = getFlicConfig(t);
+            const { formPartyConfigs } = getFlicConfig(t, QualTypes.CustInhIRA);
             render(
                 <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
                     <FormParties configs={formPartyConfigs} />
@@ -77,7 +77,7 @@ describe('Formparty component', () => {
                 return setMethodArgs;
             });
 
-            const { formPartyConfigs } = getFlicConfig(t);
+            const { formPartyConfigs } = getFlicConfig(t, QualTypes.CustInhIRA);
             render(
                 <FormDataContext.Provider value={{ ...defaultFormDataContext, formParty: mockformPartyData, setFormParty: setMockData }}>
                     <FormParties configs={formPartyConfigs} />
@@ -191,7 +191,7 @@ describe('Formparty component', () => {
                 return setMethodArgs;
             });
 
-            const { formPartyConfigs } = getFlicConfig(t);
+            const { formPartyConfigs } = getFlicConfig(t, QualTypes.CustInhIRA);
 
             render(
                 <FormDataContext.Provider value={{ ...defaultFormDataContext, formParty: mockformPartyData, setFormParty: setMockData }}>
@@ -217,7 +217,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType,
+                            text: '' as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -374,7 +374,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType,
+                            text: '' as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -460,7 +460,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType,
+                            text: '' as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -565,7 +565,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType,
+                            text: '' as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -681,7 +681,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType,
+                            text: '' as maritalStatusType,
                         },
                         addresses: [
                             {
@@ -737,7 +737,7 @@ describe('Formparty component', () => {
 
     describe('OFT FLIC Form', () => {
         it('Should not render Address controls for flic withdrawal', () => {
-            const { formPartyConfigs } = getFlicOftConfig(t);
+            const { formPartyConfigs } = getFlicOftConfig(t, QualTypes.CustInhIRA);
             let setMethodArgs;
             const mockformPartyData = CaseDetails.data.formRequest.formParty;
             const setMockData = jest.fn(cb => {
@@ -792,7 +792,7 @@ describe('Formparty component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType,
+                            text: '' as maritalStatusType,
                         },
                         addresses: [
                             {

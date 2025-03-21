@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
 import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
-import React from 'react';
 
 import { SignatureBonusFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { FormDataContext, OtpWithdrawalFormState, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -16,6 +15,7 @@ import {
     FormSignature,
     PartyRoles,
     PhoneTypes,
+    QualTypes,
     SignatureWithdrawal,
 } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
@@ -64,7 +64,7 @@ describe('FLIC Form Specific component', () => {
     const formTpaAuthorization = data.formTpaAuthorization;
 
     const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
-    const flicConfig = getFlicOftConfig(t);
+    const flicConfig = getFlicOftConfig(t, QualTypes.CustInhIRA);
 
     describe('Config existence', () => {
         it('should return an object with the correct configuration options', () => {
@@ -116,7 +116,7 @@ describe('FLIC Form Specific component', () => {
                     setFormData: setMockData,
                 }}
             >
-                <FlicOftWithdrawalForm />
+                <FlicOftWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
             </FormDataContext.Provider>
         );
     });
@@ -161,7 +161,7 @@ describe('FLIC Form Specific component', () => {
                     setFormData: setMockData,
                 }}
             >
-                <FlicOftWithdrawalForm />
+                <FlicOftWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
             </FormDataContext.Provider>
         );
 

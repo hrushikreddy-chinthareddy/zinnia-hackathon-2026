@@ -21,8 +21,15 @@ type SideSheetWithdrawalContentProps = {
 };
 
 const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentProps) => {
-    const { disbursementType, transactionType, withdrawalDetails, taxWithholdings, actualWithdrawalAmount, withdrawalCharges, payeePaymentDetails } =
-        values || {};
+    const {
+        disbursementType,
+        transactionType,
+        withdrawalDetails,
+        taxWithholdings,
+        actualWithdrawalAmount,
+        withdrawalCharges,
+        payeePaymentDetails,
+    } = values || {};
     let transactionTypeLabel;
 
     if (transactionType === TransactionType.FullSurrender) {

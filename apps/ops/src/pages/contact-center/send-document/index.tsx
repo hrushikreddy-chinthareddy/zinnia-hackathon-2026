@@ -1,5 +1,4 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { GetServerSidePropsContext } from 'next';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -34,7 +33,7 @@ import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, logError, getUserInfoFromUser, parseErrorInformation, logInfo } from '@deps/utils/server-logging';
+import { logWarn, logError, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendDocumentProps extends SegmentTrackedPageProps {
@@ -165,90 +164,92 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, query, req, res, resolvedUrl } = context;
-        const planCode = (query.planCode as string) || '';
-        const policyNumber = (query?.policyNumber as string) || '';
-        const correlationId = (query?.correlationId as string) || '';
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const { locale = DEFAULT_LOCALE, query, req, res } = context;
+            const planCode = (query.planCode as string) || '';
+            const policyNumber = (query?.policyNumber as string) || '';
+            const correlationId = (query?.correlationId as string) || '';
 
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('getServerSidePropsPolicyDetailsPage::Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'utils/page',
-                function: 'getServerSidePropsPolicyDetailsPage',
-            });
-            return serverSidePropsLogout();
-        }
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
-        const shouldShowSendDocumentPage = featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT];
-        const shouldShowCaseButton = featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT_SHOW_CASE_BUTTON];
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('getServerSidePropsPolicyDetailsPage::Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
+            // Create a permissions object to pass to the page, strongly typed using the enum.
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const shouldShowSendDocumentPage = featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT];
+            const shouldShowCaseButton = featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT_SHOW_CASE_BUTTON];
 
-        if (!shouldShowSendDocumentPage) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
-
-        const translations = await serverSideTranslations(
-            locale,
-            [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-            nextI18nextConfig,
-            ALL_LOCALES
-        );
-        try {
-            const userInfoForLogging = getUserInfoFromUser(user);
-            const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, userInfoForLogging, true);
-            if (!policy) {
-                logInfo('contact-center/send-document/policy-not-found', { policyNumber, planCode, correlationId, page: resolvedUrl });
+            if (!shouldShowSendDocumentPage) {
                 return {
                     redirect: {
-                        destination: `/404?title=policyNotFound&planCode=${planCode}&policyNumber=${policyNumber}`,
+                        destination: '/403',
                         permanent: false,
                     },
                 };
             }
-            const transactionRequestBody: SearchTransactionRequestBody = {
-                carrier: policy.carrierId || '',
-                issueState: policy.issueState || '',
-                planCode: policy.product?.planCode || '',
-            };
 
-            const transactionTypeSubTypes = await getSearchTransactionsSSR(transactionRequestBody, accessToken, {
-                userInfoForLogging,
-                correlationId,
-                page: resolvedUrl,
-            });
-            const hideMailOptionForSpecifiedCarrier = `SEND_DOCUMENT_HIDE_MAIL_OPTION_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
+            const translations = await serverSideTranslations(
+                locale,
+                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
+            try {
+                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
+                if (!policy) {
+                    logInfo('contact-center/send-document/policy-not-found', loggingContext);
+                    return {
+                        redirect: {
+                            destination: `/404?title=policyNotFound&planCode=${planCode}&policyNumber=${policyNumber}`,
+                            permanent: false,
+                        },
+                    };
+                }
+                const transactionRequestBody: SearchTransactionRequestBody = {
+                    carrier: policy.carrierId || '',
+                    issueState: policy.issueState || '',
+                    planCode: policy.product?.planCode || '',
+                };
 
-            const shouldShowMailOption =
-                featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT_SHOW_MAIL_OPTION] &&
-                !featureFlagDecisions?.[FEATURE_FLAGS[hideMailOptionForSpecifiedCarrier]];
+                const transactionTypeSubTypes = await getSearchTransactionsSSR(transactionRequestBody, accessToken, {
+                    ...loggingContext,
+                    correlationId,
+                });
+                const hideMailOptionForSpecifiedCarrier =
+                    `SEND_DOCUMENT_HIDE_MAIL_OPTION_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
 
-            return {
-                props: {
-                    ...translations,
-                    policy,
-                    availableFormsTransactions: transactionTypeSubTypes || [],
-                    shouldShowCaseButton: shouldShowCaseButton ?? false,
-                    shouldShowMailOption: shouldShowMailOption ?? false,
-                    user,
-                },
-            };
-        } catch (error) {
-            logError('getServerSidePropsPolicyDetailsPage', { ...parseErrorInformation(error) });
-            return {
-                props: {},
-            };
-        }
+                const shouldShowMailOption =
+                    featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT_SHOW_MAIL_OPTION] &&
+                    !featureFlagDecisions?.[FEATURE_FLAGS[hideMailOptionForSpecifiedCarrier]];
+
+                return {
+                    props: {
+                        ...translations,
+                        policy,
+                        availableFormsTransactions: transactionTypeSubTypes || [],
+                        shouldShowCaseButton: shouldShowCaseButton ?? false,
+                        shouldShowMailOption: shouldShowMailOption ?? false,
+                        user,
+                    },
+                };
+            } catch (error) {
+                logError('getServerSidePropsPolicyDetailsPage', { ...parseErrorInformation(error), ...loggingContext });
+                return {
+                    props: {},
+                };
+            }
+        },
     },
-});
+    { file: 'contact-center/send-document/index', function: 'getServerSideProps', page: 'contact-center/send-document' }
+);
 
 export default SendDocument;

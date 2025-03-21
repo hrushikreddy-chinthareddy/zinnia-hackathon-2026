@@ -1,3 +1,5 @@
+import { ApiError } from 'next/dist/server/api-utils';
+
 import { formatAccountNumber, formatSSN, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { Case } from '@deps/models/case/case';
 import { DocumentInstance } from '@deps/models/case/document-instance';
@@ -19,9 +21,10 @@ import {
     TaxWithholding,
 } from '@deps/models/policy/sor-policy';
 import { GetPolicyResponse } from '@deps/queries/api/policies';
+import { AgentAddress, AgentData, AgentDataResponse, AgentEmail, AgentPhone } from '@deps/types/agents';
 import { CaseSearchResponse } from '@deps/types/search';
 
-import { logError, parseErrorInformation } from './server-logging';
+import { logErrorWithoutContext, parseErrorInformation } from './server-logging';
 
 interface SanitizeOptions {
     isDemoUser: boolean;
@@ -52,8 +55,8 @@ export const caseSearchSanitizer = ({ data, ...rest }: CaseSearchResponse, optio
     try {
         return { data: data.map(d => caseSanitizer(d, options)), ...rest };
     } catch (e) {
-        logError('Error sanitizing case search results', { ...parseErrorInformation(e) });
-        throw e;
+        logErrorWithoutContext('Error sanitizing case search results', { ...parseErrorInformation(e) });
+        throw new ApiError(500, `caseSearchSanitizer::error sanitizing case search results: ${(e as Error).message}`);
     }
 };
 
@@ -89,8 +92,8 @@ export const policySanitizer = ({ parties = [], ...rest }: Policy): Policy => {
         const sanitizedParties = parties.map(sanitizePolicyParty);
         return { ...rest, parties: sanitizedParties };
     } catch (e) {
-        logError('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
-        throw e;
+        logErrorWithoutContext('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
+        throw new ApiError(500, `policySanitizer::error sanitizing policy: ${(e as Error).message}`);
     }
 };
 
@@ -102,8 +105,8 @@ export const policySanitizerWithoutSSN = ({ parties = [], ...rest }: Policy): Po
         const sanitizedParties = parties.map(sanitizePolicyPartyWithoutSSN);
         return { ...rest, parties: sanitizedParties };
     } catch (e) {
-        logError('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
-        throw e;
+        logErrorWithoutContext('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
+        throw new ApiError(500, `policySanitizerWithoutSSN::error sanitizing policy: ${(e as Error).message}`);
     }
 };
 
@@ -117,8 +120,8 @@ export const policyResponseSanitizer = (policyResponse: GetPolicyResponse): GetP
         const policy = policySanitizer(policyResponse.data);
         return { ...policyResponse, data: policy };
     } catch (e) {
-        logError('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
-        throw e;
+        logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
+        throw new ApiError(500, `policyResponseSanitizer::error sanitizing policyResponse: ${(e as Error).message}`);
     }
 };
 
@@ -128,8 +131,8 @@ export const lcPartyResponseSanitizer = (partyResponse: LifeCadParty[] = []): Li
             return { ...val, TaxID: formatSSN(`${val.TaxID}`) };
         });
     } catch (e) {
-        logError('sanitizers::lcPartyResponseSanitizer::error', { ...parseErrorInformation(e) });
-        throw e;
+        logErrorWithoutContext('sanitizers::lcPartyResponseSanitizer::error', { ...parseErrorInformation(e) });
+        throw new ApiError(500, `lcPartyResponseSanitizer::error sanitizing lcPartyResponse: ${(e as Error).message}`);
     }
 };
 
@@ -297,8 +300,8 @@ export const fullyMaskPolicyResponse = (policyResponse: GetPolicyResponse): GetP
         const policy = policyMasker(policyResponse.data);
         return { ...policyResponse, data: policy };
     } catch (e) {
-        logError('sanitizers::fullyMaskPolicyResponse::error', { ...parseErrorInformation(e) });
-        throw e;
+        logErrorWithoutContext('sanitizers::fullyMaskPolicyResponse::error', { ...parseErrorInformation(e) });
+        throw new ApiError(500, `fullyMaskPolicyResponse::error masking policy response: ${(e as Error).message}`);
     }
 };
 
@@ -360,7 +363,92 @@ export const caseSearchFullMasker = ({ data, ...rest }: CaseSearchResponse): Cas
     try {
         return { data: data.map(d => fullyMaskCase(d)), ...rest };
     } catch (e) {
-        logError('Error sanitizing case search results', { ...parseErrorInformation(e) });
+        logErrorWithoutContext('Error sanitizing case search results', { ...parseErrorInformation(e) });
+        throw new ApiError(500, `caseSearchFullMasker::error sanitizing case search results: ${(e as Error).message}`);
+    }
+};
+
+export const mcsResponseSanitizer = (mcsResponse: AgentDataResponse): AgentDataResponse => {
+    try {
+        const response = agentSanitizer(mcsResponse.items[0]);
+        return { ...mcsResponse, items: [response] };
+    } catch (e) {
+        logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
         throw e;
     }
+};
+
+export const agentSanitizer = (agent: AgentData): AgentData => {
+    try {
+        const { bankAccountNumber, taxId, individuals, ...rest } = agent;
+        const firstAgent = individuals?.[0];
+        return {
+            ...rest,
+            bankAccountNumber: formatAccountNumber(bankAccountNumber || undefined),
+            taxId: formatSSN(taxId || firstAgent?.taxId || undefined),
+            individuals: [{ ...firstAgent, taxId: formatSSN(firstAgent.taxId || undefined) }],
+        };
+    } catch (e) {
+        logErrorWithoutContext('sanitizers::policySanitizers::error', { ...parseErrorInformation(e) });
+        throw e;
+    }
+};
+
+export const fullyMaskMcsResponse = (mcsResponse: AgentDataResponse): AgentDataResponse => {
+    try {
+        const agent = agentSanitizer(mcsResponse.items[0]);
+
+        const { bankAccountNumber, taxId, individuals, addresses, phones, emails, ...rest } = agent;
+        const firstAgent = individuals?.[0];
+        const response = {
+            ...rest,
+            bankAccountNumber: formatAccountNumber(bankAccountNumber || undefined),
+            taxId: toMaskedStringOrNull(taxId || firstAgent?.taxId || undefined),
+            individuals: [{ ...firstAgent, taxId: toMaskedStringOrNull(firstAgent.taxId || undefined) }],
+            addresses: fullyMaskAgentAddresses(addresses),
+            phones: fullyMaskAgentPhones(phones) || [],
+            emails: fullyMaskAgentEmails(emails) || [],
+        };
+
+        return { ...mcsResponse, items: [response] };
+    } catch (e) {
+        logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
+        throw e;
+    }
+};
+
+const fullyMaskAgentAddresses = (addresses: AgentAddress[]): AgentAddress[] => {
+    return addresses.map(address => {
+        return {
+            ...address,
+            addressLine1: toMaskedStringOrNull(address?.addressLine1),
+            addressLine2: toMaskedStringOrNull(address?.addressLine2),
+            addressLine3: toMaskedStringOrNull(address?.addressLine3),
+            addressLine4: toMaskedStringOrNull(address?.addressLine3),
+            city: toMaskedStringOrNull(address?.city),
+            stateCode: toMaskedStringOrNull(address?.stateCode),
+            zip: toMaskedStringOrNull(address?.zip),
+        };
+    });
+};
+
+const fullyMaskAgentPhones = (phones: AgentPhone[] | undefined): AgentPhone[] | undefined => {
+    return phones?.map(({ areaCode, countryCode, number, extension, ...rest }) => {
+        return {
+            ...rest,
+            areaCode: toMaskedStringOrNull(areaCode),
+            countryCode: toMaskedStringOrNull(countryCode),
+            number: toMaskedStringOrNull(number),
+            extension: toMaskedStringOrNull(extension),
+        };
+    });
+};
+
+const fullyMaskAgentEmails = (emails: AgentEmail[] | undefined): AgentEmail[] | undefined => {
+    return emails?.map(email => {
+        return {
+            ...email,
+            email: toMaskedStringOrNull(email?.email),
+        };
+    });
 };

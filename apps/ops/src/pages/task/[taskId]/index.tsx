@@ -1,4 +1,4 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { convertToCamelCase } from '@zinnia/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
@@ -7,6 +7,7 @@ import { buildCaseLink } from '@deps/components/tasks-listing/task-listing.helpe
 import { TranslationFiles } from '@deps/config/translations';
 import { getNigoExceptions } from '@deps/containers/task-container/components/steps/nigo-details/nigo-details.helper';
 import TaskContainer from '@deps/containers/task-container/task-container';
+import { applyDynamicOptions } from '@deps/containers/task-container/task-handlers/handle-task';
 import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
@@ -21,11 +22,9 @@ import { getCaseDetailsSSR } from '@deps/queries/api/cases';
 import { isProd } from '@deps/utils/environment.helper';
 import { optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
-import { logError, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
 import nextI18nextConfig from 'next-i18next.config';
-
-import { applyDynamicOptions } from '../../../containers/task-container/task-handlers/handle-task';
 
 type TaskPageProps = {
     task: ManagementTask;
@@ -34,6 +33,7 @@ type TaskPageProps = {
     taskInfoLink: string;
     nigoExceptions: any;
     nigoSubExceptions: any;
+    isSaveAsDraftEnabled: any;
 };
 
 export const TaskPage: React.FC<TaskPageProps> = ({
@@ -43,6 +43,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     nigoExceptions,
     nigoSubExceptions,
     taskMetadata,
+    isSaveAsDraftEnabled,
 }: TaskPageProps) => {
     return (
         <div>
@@ -53,6 +54,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
                         nigoExceptions={nigoExceptions}
                         nigoSubExceptions={nigoSubExceptions}
                         taskMetadata={taskMetadata}
+                        isSaveAsDraftEnabled={isSaveAsDraftEnabled}
                     />
                 </TaskProvider>
             </NoNavLayout>
@@ -60,58 +62,32 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: any) => {
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, query, req, res } = context;
-        const taskId = (query.taskId as string) || '';
-        const taskTypeOverride = (query.taskTypeOverride as string) || '';
-        const taskUserOverride = Boolean(query.taskUserOverride) || false;
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const { locale = DEFAULT_LOCALE, query, req, res } = context;
+            const taskId = (query.taskId as string) || '';
+            const taskTypeOverride = (query.taskTypeOverride as string) || '';
+            const taskUserOverride = Boolean(query.taskUserOverride) || false;
 
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('getServerSidePropsTaskPage::Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'pages/task/{taskId}/index',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
-
-        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
-        if (!hasPermissionToReadCaseManagement) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
-
-        try {
-            const mockedTaskType = taskTypeOverride && !isProd() && taskTypeOverride;
-            const task = await getCaseTaskById(taskId, accessToken, mockedTaskType as TaskType);
-
-            if (!task) {
-                logError('Task::Error getting task by id', {
-                    taskId,
-                    file: 'pages/task',
-                    function: 'getServerSideProps',
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('getServerSidePropsTaskPage::Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
                 });
-                return {
-                    redirect: {
-                        destination: `task/:id/error?errorCode=${ERROR_CODES.SUITABILITY_REVIEW_TASK_INITIALIZATION}`,
-                        permanent: false,
-                    },
-                };
+                return serverSidePropsLogout();
             }
 
-            const { taskType, carrier, caseId, process } = task;
-
-            if (!taskType || !carrier || !caseId || !process) {
-                logWarn('task/details not found', { taskType, carrier, caseId, process });
+            const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadCaseManagement,
+                loggingContext
+            );
+            if (!hasPermissionToReadCaseManagement) {
                 return {
                     redirect: {
                         destination: '/403',
@@ -119,15 +95,25 @@ export const getServerSideProps = withPageAuthRequired({
                     },
                 };
             }
-            if (!(!isProd() && (taskUserOverride || taskTypeOverride))) {
-                if (
-                    !(
-                        user.email &&
-                        ((task.assignee && task.assignee.toLowerCase() == user.email.toLowerCase()) ||
-                            (!task.assignee && task.prefferedAssignee && task.prefferedAssignee.toLowerCase() == user.email.toLowerCase()))
-                    )
-                ) {
-                    logWarn('task/:id::task is not assigned to user', { assignee: task.assignee, user: user.email });
+
+            try {
+                const mockedTaskType = taskTypeOverride && !isProd() && taskTypeOverride;
+                const task = await getCaseTaskById(taskId, accessToken, loggingContext, mockedTaskType as TaskType);
+
+                if (!task) {
+                    logError('Task::Error getting task by id', loggingContext);
+                    return {
+                        redirect: {
+                            destination: `task/:id/error?errorCode=${ERROR_CODES.SUITABILITY_REVIEW_TASK_INITIALIZATION}`,
+                            permanent: false,
+                        },
+                    };
+                }
+
+                const { taskType, carrier, caseId, process } = task;
+
+                if (!taskType || !carrier || !caseId || !process) {
+                    logWarn('task/details not found', { ...loggingContext, taskType, carrier, caseId, process });
                     return {
                         redirect: {
                             destination: '/403',
@@ -135,75 +121,111 @@ export const getServerSideProps = withPageAuthRequired({
                         },
                     };
                 }
-                const isTaskEnabled = await optimizelyService.getFeatureFlagVariables(
-                    FEATURE_FLAG_VARIABLES.TASK_MANAGEMENT,
-                    carrier?.toLowerCase(),
-                    user.sub
-                );
+                if (!(!isProd() && (taskUserOverride || taskTypeOverride))) {
+                    if (
+                        !(
+                            user.email &&
+                            ((task.assignee && task.assignee.toLowerCase() == user.email.toLowerCase()) ||
+                                (!task.assignee &&
+                                    task.prefferedAssignee &&
+                                    task.prefferedAssignee.toLowerCase() == user.email.toLowerCase()))
+                        )
+                    ) {
+                        logWarn('task/:id::task is not assigned to user', { ...loggingContext, assignee: task.assignee });
+                        return {
+                            redirect: {
+                                destination: '/403',
+                                permanent: false,
+                            },
+                        };
+                    }
+                    const isTaskEnabled = await optimizelyService.getFeatureFlagVariables(
+                        FEATURE_FLAG_VARIABLES.TASK_MANAGEMENT,
+                        carrier?.toLowerCase(),
+                        user.sub,
+                        loggingContext
+                    );
+
+                    const flag = convertToCamelCase(taskType);
+                    const enabledTask = Object.keys(isTaskEnabled).includes(flag);
+                    if (!enabledTask) {
+                        logWarn('task/:id::feature flag not enabled', { ...loggingContext, carrier });
+                        return {
+                            redirect: {
+                                destination: '/403',
+                                permanent: false,
+                            },
+                        };
+                    }
+                }
+
                 const flag = convertToCamelCase(taskType);
-                const enabledTask = Object.keys(isTaskEnabled).includes(flag);
-                if (!enabledTask) {
-                    logWarn('task/:id::feature flag not enabled', { carrier });
-                    return {
-                        redirect: {
-                            destination: '/403',
-                            permanent: false,
-                        },
-                    };
-                }
-            }
-
-            const nigoFilters = {
-                categoryIds: ['Form', 'Signature', 'Account Information'],
-                carrier: carrier?.toUpperCase(),
-                process: taskType,
-            };
-
-            const [translations, caseDetails, nigoExceptionResponse, taskMetadata] = await Promise.all([
-                await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
-                await getCaseDetailsSSR(caseId, accessToken as string),
-                await getNigoExceptions(nigoFilters, accessToken),
-                await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken),
-            ]);
-
-            const correlationId = caseDetails?.correlationId;
-
-            const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
-
-            if (!currentTaskMetadata.length) {
-                const fallbackMetadata: FormMetadata = {
-                    title: '',
-                    formSchema: taskMetadata?.formSchema ?? {},
-                    uiSchema: taskMetadata?.uiSchema ?? {},
+                const featureFlags = await optimizelyService.getFeatureFlagVariables(
+                    FEATURE_FLAG_VARIABLES.TASK_SAVE_AS_DRAFT,
+                    carrier?.toLowerCase(),
+                    user.sub,
+                    loggingContext
+                );
+                const isSaveAsDraftEnabled = Boolean(featureFlags?.[flag]);
+                const nigoFilters = {
+                    categoryIds: ['Form', 'Signature', 'Account Information'],
+                    carrier: carrier?.toUpperCase(),
+                    process: taskType,
                 };
-                currentTaskMetadata.push(fallbackMetadata ?? {});
+
+                const [translations, caseDetails, nigoExceptionResponse, taskMetadata] = await Promise.all([
+                    await serverSideTranslations(
+                        locale,
+                        [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                        nextI18nextConfig,
+                        ALL_LOCALES
+                    ),
+                    await getCaseDetailsSSR(caseId, accessToken as string, loggingContext),
+                    await getNigoExceptions(nigoFilters, accessToken, loggingContext),
+                    await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken, loggingContext),
+                ]);
+
+                const correlationId = caseDetails?.correlationId;
+
+                const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
+
+                if (!currentTaskMetadata.length) {
+                    const fallbackMetadata: FormMetadata = {
+                        title: '',
+                        formSchema: taskMetadata?.formSchema ?? {},
+                        uiSchema: taskMetadata?.uiSchema ?? {},
+                    };
+                    currentTaskMetadata.push(fallbackMetadata ?? {});
+                }
+
+                const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
+
+                const taskInfoLink = buildCaseLink(caseId);
+
+                //transform schema options with api
+                await applyDynamicOptions(task, accessToken, currentTaskMetadata);
+
+                return {
+                    props: {
+                        ...translations,
+                        taskMetadata: TaskMetadataHelper(task, currentTaskMetadata),
+                        task,
+                        correlationId,
+                        taskInfoLink,
+                        nigoExceptions,
+                        nigoSubExceptions,
+                        isSaveAsDraftEnabled,
+                    },
+                };
+            } catch (error) {
+                logError('getServerSidePropsTask', { ...parseErrorInformation(error), ...loggingContext });
+                return {
+                    props: {},
+                };
             }
-
-            const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
-
-            const taskInfoLink = buildCaseLink(caseId);
-
-            //transform schema options with api
-            await applyDynamicOptions(task, accessToken, currentTaskMetadata);
-
-            return {
-                props: {
-                    ...translations,
-                    taskMetadata: TaskMetadataHelper(task, currentTaskMetadata),
-                    task,
-                    correlationId,
-                    taskInfoLink,
-                    nigoExceptions,
-                    nigoSubExceptions,
-                },
-            };
-        } catch (error) {
-            logError('getServerSidePropsTask', { ...parseErrorInformation(error) });
-            return {
-                props: {},
-            };
-        }
+        },
     },
-});
+    { file: 'pages/task/[taskId]/index', function: 'getServerSideProps', page: 'task/:taskId' }
+);
 
 export default TaskPage;

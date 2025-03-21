@@ -42,6 +42,7 @@ export type DatePickerProps = {
     handleDateSelect: (_year: number, _month: number, _day: number) => void;
     handleCustomSelection?: (_year: number, _quarter?: Quarter) => void;
     isFutureDateDisabled?: boolean;
+    isPastDateDisabled?: boolean;
     isDateAllowed?: (dayjsDate: Dayjs) => boolean;
     datePickerType?: DatePickerTypes;
     showMonths?: boolean;
@@ -452,12 +453,12 @@ const RangeDays = ({
     );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function DatePicker({
     open,
     date,
     handleDateSelect,
     isFutureDateDisabled = true,
+    isPastDateDisabled = false,
     isDateAllowed = () => true,
     datePickerType,
     handleCustomSelection,
@@ -533,11 +534,14 @@ export default function DatePicker({
         const disabledClasses = '!cursor-auto !pointer-events-none !text-gray-300';
         const dayjsDate = dayjs().year(year).month(_month).date(_day);
         const dateAllowed = isDateAllowed(dayjsDate);
+
         if (!dateAllowed) {
             return disabledClasses;
         }
-        // Disables future dates
-        if (isFutureDateDisabled && dayjsDate.isAfter(dayjs(), 'day')) {
+
+        if ((isPastDateDisabled && dayjsDate.isBefore(dayjs(), 'day'))
+            || (isFutureDateDisabled && dayjsDate.isAfter(dayjs(), 'day'))
+        ) {
             return disabledClasses;
         }
         return '';

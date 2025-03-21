@@ -1,0 +1,250 @@
+import { AssistiveTextVariant } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
+import { useTranslation } from 'next-i18next';
+import { useMemo, useState } from 'react';
+import { v4 as uuidV4 } from 'uuid';
+
+import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/components/case-document-select/case-document-select';
+import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
+import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
+import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
+import { TranslationFiles } from '@deps/config/translations';
+import { ACH } from '@deps/contexts/transactions/AutopayContext';
+import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { getFrequency } from '@deps/helpers/systematic-program.helper';
+import { Processes } from '@deps/models/case/case';
+import { AmountType, ArrangementType, Frequency, PaymentForm, Policy, Reason } from '@deps/models/policy/sor-policy';
+import { submitSystematicProgramUpdate, validateSystematicProgramUpdate, ValidationResult } from '@deps/queries/api/bpm';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
+import { CancelAutopayDetails } from './cancel-autopay-details';
+import { ViewState } from '../non-financial-transactions/states/states.helpers';
+import ApiErrorState from '../states/api-error-state';
+import BpmErrorState from '../states/bpm-error-state';
+import { handleResponse } from '../states/states.helpers';
+import SuccessState from '../states/success-state';
+
+interface CancelSystematicProgramBody {
+    caseId?: string;
+    correlationId: string;
+    effectiveDate: string;
+}
+
+type Errors = {
+    caseId?: string;
+    confirmCancel?: string;
+    effectiveDate?: string;
+}
+
+export type SideSheetCancelAutopayProps = {
+    arrangementType: ArrangementType;
+    onCancel: () => void;
+    policy: Policy;
+    systematicProgramReason: Reason;
+};
+
+const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicProgramReason }: SideSheetCancelAutopayProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'transactions.cancelAutopay' });
+    const { t: defaultT } = useTranslation();
+
+    const INITIAL_BODY: CancelSystematicProgramBody = {
+        correlationId: uuidV4(),
+        effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+    };
+
+    const systematicProgram = useMemo(() => policy.systematicPrograms?.find(sp => sp.reason === systematicProgramReason), [policy.systematicPrograms, systematicProgramReason]);
+    const [caseDocumentOptions, setCaseDocumentOptions] = useState<CaseDocumentOption[]>([]);
+    const [body, setBody] = useState(INITIAL_BODY);
+    const { caseId } = body;
+    const [newCaseId, setNewCaseId] = useState<string>();
+    const [effectiveDate, setEffectiveDate] = useState<string>(dayjs(policy.policyDates?.nextMonthiversaryDate).format(NUMERIC_DATE_FORMAT));
+    const [confirmCancel, setConfirmCancel] = useState<boolean>(false);
+    const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
+
+    const [errors, setErrors] = useState<Errors>({});
+    const [viewState, setViewState] = useState(ViewState.Default);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const dateValue = event.target.value;
+        const { effectiveDate, ...remainingErrors } = errors;
+
+        setEffectiveDate(String(dateValue));
+        setErrors(remainingErrors);
+    };
+
+    const validateFields = (effectiveDate: string, confirmCancel: boolean, caseId?: string) => {
+        let localErrors: Errors = {};
+        
+        if (caseId == undefined) {
+            localErrors = { ...localErrors, caseId: errors.caseId || `${t('missingCaseDocument')}` };
+        }
+
+        if (isNullEmptyOrUndefined(effectiveDate)) {
+            localErrors = { ...localErrors, effectiveDate: `${t('invalidEffectiveDate')}` };
+        }
+
+        if (!confirmCancel) {
+            localErrors = { ...localErrors, confirmCancel: `${t('confirmCancelError')}` };
+        }
+        
+        setErrors(localErrors);
+
+        return Object.keys(localErrors).length === 0;
+    }
+
+    const getUpdateSystematicProgramBody = () => {
+        const effectiveDateFormatted = dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
+
+        return {
+            caseId: caseId || '',
+            correlationId: uuidV4(),
+            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+            reverseInitiator: false,
+            systematicProgram: {
+                amount: Number(systematicProgram?.amount),
+                arrangementType: arrangementType,
+                paymentForm: ACH as PaymentForm,
+                amountType: AmountType.AMOUNT,
+                frequency: systematicProgram?.frequency,
+                startDate: systematicProgram?.startDate,
+                endDate: effectiveDateFormatted,
+                previousProgramDate: systematicProgram?.previousProgramDate,
+                nextProgramDate: effectiveDateFormatted,
+                party: {
+                    bankId: systematicProgram?.party?.[0]?.bankId,
+                    partyId: systematicProgram?.party?.[0]?.partyId,
+                },
+            },
+        }
+    }
+
+    const validateAndSubmitUpdate = async () => {
+        setLoading(true);
+
+        if (!validateFields(effectiveDate, confirmCancel, body.caseId)) {
+            setLoading(false);
+            return;
+        }
+
+        const arrangementId = systematicProgram?.arrangementId || '';
+        const updateBody = getUpdateSystematicProgramBody();
+
+        const validateResponse = await validateSystematicProgramUpdate(policy.product?.planCode, policy.policyNumber || '', arrangementId, updateBody);
+
+        if (validateResponse?.status !== StatusCode.Accepted && validateResponse?.status !== StatusCode.Okay) {
+            handleResponse({ response: validateResponse, setViewState, setValidationResults });
+
+            return;
+        }
+
+        await submitUpdate();
+    };
+
+    const submitUpdate = async () => {
+        const arrangementId = systematicProgram?.arrangementId || '';
+        const updateBody = getUpdateSystematicProgramBody();
+        const submitResponse = await submitSystematicProgramUpdate(policy.product?.planCode, policy.policyNumber || '', arrangementId, updateBody);
+
+        if (submitResponse?.data?.caseId) {
+            setNewCaseId(submitResponse?.data?.caseId);
+        }
+
+        handleResponse({ response: submitResponse, setViewState, setValidationResults });
+
+        return;
+    }
+
+    switch (viewState) {
+        case ViewState.BpmError:
+            return (
+                <BpmErrorState
+                    onCancel={onCancel}
+                    onContinue={submitUpdate}
+                    setViewState={setViewState}
+                    validationResults={validationResults}
+                >
+                    <CancelAutopayDetails effectiveDate={effectiveDate} />
+                </BpmErrorState>
+            );
+        case ViewState.ApiError:
+            return (
+                <ApiErrorState
+                    onCancel={onCancel}
+                    onContinue={submitUpdate}
+                />
+            );
+        case ViewState.Success:
+            return (
+                <SuccessState
+                    caseId={newCaseId}
+                    transactionType={arrangementType === ArrangementType.PAYMENT ? t('premiumAutopayCancellation') : t('loanAutopayCancellation')}
+                    isNigo={!!validationResults?.length}
+                    onCancel={onCancel}
+                />
+            );
+        case ViewState.Default:
+        default:
+            break;
+    }
+
+    return (
+        <div className="flex flex-col p-8">
+            <div className="flex flex-col gap-8">
+                <CaseDocumentSelect
+                    caseId={caseId}
+                    caseDocumentOptions={caseDocumentOptions}
+                    currentErrors={errors}
+                    policyNumber={policy?.policyNumber}
+                    processType={Processes.SSW}
+                    setBody={setBody as SetStateCaseId}
+                    setCaseDocumentOptions={setCaseDocumentOptions}
+                    setCurrentErrors={setErrors as SetStateCaseId}
+                    setViewState={setViewState}
+                />
+                <FieldDateSelect
+                    data-testid={t('effectiveDate') as string}
+                    className="flex max-w-[155px]"
+                    label={t('effectiveDate') as string}
+                    value={String(effectiveDate)}
+                    onChange={handleDateChange}
+                    size={FieldSize.Small}
+                    type={FieldType.BaseActive}
+                    isFutureDateDisabled={false}
+                    isPastDateDisabled={true}
+                    variant={errors.effectiveDate ? FieldVariant.Error : FieldVariant.Default}
+                    message={errors.effectiveDate || ''}
+                />
+                <CheckboxText
+                    assistiveText={!confirmCancel && errors.confirmCancel ? { text: errors.confirmCancel, variant: AssistiveTextVariant.Error } : undefined}
+                    checked={confirmCancel}
+                    label={t('proceedCancel',
+                        {
+                            frequency: getFrequency(systematicProgram?.frequency as Frequency, defaultT),
+                            amount: numberFormatify(systematicProgram?.amount)
+                        }
+                    )}
+                    onChange={() => setConfirmCancel(!confirmCancel)}
+                />
+            </div>
+
+            <TransactionCta
+                className="mt-10"
+                mainCta={{
+                    onClick: validateAndSubmitUpdate,
+                    text: t('cancelAutopay'),
+                }}
+                secondaryCta={{
+                    onClick: onCancel,
+                    text: t('cancel'),
+                }}
+                stopLoading={!loading}
+            />
+        </div>
+    );
+};
+
+export default SideSheetCancelAutopay;

@@ -3,13 +3,13 @@ import { AxiosResponse } from 'axios';
 import { ActiveReg60Case } from '@deps/containers/otp/reg60-forms/reg60.types';
 import { ProcessType } from '@deps/models/case/enums';
 import { CreateTaskBody, CreateTaskResponse, FormMetadata, TaskType, TaskV1Payload } from '@deps/models/case/task';
-import { AssignedTask, ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+import { AssignedTask, ManagementTask, TaskStatus, UnassignedTask } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, DigitalFormWithdrawal } from '@deps/models/case/withdrawal/case';
 import { baseAppUrl, se2ApiServerUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, LoggingContext, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const baseTasksUrl = `${baseAppUrl}/api/case/v1/tasks`;
@@ -19,26 +19,40 @@ const ssrSchemaUrl = `${se2ApiServerUrl}`;
 export const getCaseTasksSSR = async (
     caseId: string,
     accessToken: string,
-    queryParams: { [key: string]: string } = {}
+    queryParams: { [key: string]: string } = {},
+    logCtx: LoggingContext
 ): Promise<ActiveWithdrawalCase[]> => {
+    const loggingContext = { ...logCtx, file: 'queries/api/v1/task', function: 'getCaseTasksSSR' };
     try {
         const url = new URL(`${ssrCasesUrl}/${caseId}/tasks`);
         url.search = new URLSearchParams(queryParams).toString();
-        logInfo('getCaseTasksSSR', { caseId, file: 'queries/api/v1/task', function: 'getCaseTasksSSR', url });
-
-        const { data } = await serverApi.get<{ data: ActiveWithdrawalCase[] }>(url.href, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
-                'Access-Control-Allow-Origin': '*',
-            },
+        logInfo('getCaseTasksSSR', {
+            ...loggingContext,
+            inputs: { caseId, queryParams },
+            url: url.toString(),
         });
+
+        const { data } = await serverApi.get<{ data: ActiveWithdrawalCase[] }>(
+            url.href,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            },
+            loggingContext
+        );
 
         return data.data;
     } catch (error: any) {
-        logError('getCaseTasksSSR', { ...parseErrorInformation(error), caseId, file: 'queries/api/cases', function: 'getCaseTasksSSR' });
+        logError('getCaseTasksSSR', {
+            ...parseErrorInformation(error),
+            ...loggingContext,
+            inputs: { caseId, queryParams },
+        });
         return [];
     }
 };
@@ -46,24 +60,37 @@ export const getCaseTasksSSR = async (
 export const postCaseTasksSSR = async (
     caseId: string,
     formData: DigitalFormWithdrawal,
-    accessToken: string
+    accessToken: string,
+    logCtx: LoggingContext
 ): Promise<ActiveWithdrawalCase | null> => {
+    const loggingContext = { ...logCtx, file: 'queries/api/v1/task', function: 'postCaseTasksSSR' };
     try {
         const url = `${ssrCasesUrl}/${caseId}/tasks`;
-        logInfo('postCaseTasksSSR', { caseId, file: 'queries/api/v1/task', function: 'postCaseTasksSSR', url });
-        const { data } = await serverApi.post<DigitalFormWithdrawal>(url, formData, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
-                'Access-Control-Allow-Origin': '*',
-            },
+        logInfo('postCaseTasksSSR', {
+            ...loggingContext,
+            inputs: { caseId },
+            file: 'queries/api/v1/task',
+            function: 'postCaseTasksSSR',
+            url,
         });
+        const { data } = await serverApi.post<DigitalFormWithdrawal>(
+            url,
+            formData,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            },
+            loggingContext
+        );
 
         return data as ActiveWithdrawalCase;
     } catch (error: any) {
-        logError('postCaseTasksSSR', { ...parseErrorInformation(error), caseId, file: 'queries/api/cases', function: 'postCaseTasksSSR' });
+        logError('postCaseTasksSSR', { ...parseErrorInformation(error), ...loggingContext, caseId });
         return null;
     }
 };
@@ -103,14 +130,14 @@ export const putCaseTask = async (
             `${baseCasesUrl}/${caseId}/tasks/${taskId}`,
             body
         );
-        logInfo('Saving a case task SSR', {
+        browserLogInfo('Saving a case task SSR', {
             file: 'queries/api/v1/task',
             function: 'putCaseTask',
             url: `${baseCasesUrl}/${caseId}/tasks/${taskId}`,
         });
         return data;
     } catch (error: any) {
-        logError('An error occurred while saving a case task', {
+        browserLogError('An error occurred while saving a case task', {
             error,
             caseId,
             taskId,
@@ -123,7 +150,7 @@ export const putCaseTask = async (
 
 export const getCaseTasks = async (query: any): Promise<any | null> => {
     try {
-        logInfo('getCaseTasks', {
+        browserLogInfo('getCaseTasks', {
             caseId: query.caseId,
             file: 'queries/api/v1/task',
             function: 'getCaseTasks',
@@ -132,34 +159,41 @@ export const getCaseTasks = async (query: any): Promise<any | null> => {
         const { data } = await client.get<any, AxiosResponse>(`${baseCasesUrl}/${query.caseId}/tasks`, query);
         return data?.data;
     } catch (error: any) {
-        logError('getCaseTasks', { error });
+        browserLogError('getCaseTasks', { error });
         return error.response;
     }
 };
 
-export const getCaseTasksByIdSSR = async (caseId: string, taskId: string, accessToken: string): Promise<ActiveWithdrawalCase | null> => {
+export const getCaseTasksByIdSSR = async (
+    caseId: string,
+    taskId: string,
+    accessToken: string,
+    logCtx: LoggingContext
+): Promise<ActiveWithdrawalCase | null> => {
+    const loggingContext = { ...logCtx, file: 'queries/api/v1/task', function: 'getCaseTasksByIdSSR', inputs: { caseId, taskId } };
     try {
         const url = new URL(`${ssrCasesUrl}/${caseId}/tasks/${taskId}`);
-        logInfo('getCaseTasksByIdSSR', { caseId, taskId, file: 'queries/api/v1/task', function: 'getCaseTasksByIdSSR', url });
+        logInfo('getCaseTasksByIdSSR', { ...loggingContext, url: url.toString() });
 
-        const { data } = await serverApi.get<ActiveWithdrawalCase>(url.href, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
-                'Access-Control-Allow-Origin': '*',
+        const { data } = await serverApi.get<ActiveWithdrawalCase>(
+            url.href,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
             },
-        });
+            loggingContext
+        );
 
         return data;
     } catch (error: any) {
         logError('getCaseTasksByIdSSR', {
             ...parseErrorInformation(error),
-            caseId,
-            taskId,
-            file: 'queries/api/cases',
-            function: 'getCaseTasksByIdSSR',
+            ...loggingContext,
         });
         return null;
     }
@@ -167,10 +201,10 @@ export const getCaseTasksByIdSSR = async (caseId: string, taskId: string, access
 
 export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
     try {
-        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/assigned`);
+        const { data } = await client.post(`${baseAppUrl}/api/case/v1/tasks/assigned`);
         return data ?? [];
     } catch (error) {
-        logError('getAssignedTasks::Failed to retrieve unassigned tasks', {
+        browserLogError('getAssignedTasks::Failed to retrieve unassigned tasks', {
             ...parseErrorInformation(error),
             file: 'queries/v1/tasks/assigned',
             function: 'getAssignedTasks',
@@ -181,48 +215,55 @@ export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
 
 export const getTaskFormMetadataSSR = async (
     clientId: string,
-    taskType?: TaskType,
-    processType?: ProcessType,
-    accessToken?: string
+    taskType: TaskType | undefined,
+    processType: ProcessType | undefined,
+    accessToken: string | undefined,
+    logCtx: LoggingContext
 ): Promise<FormMetadata | null> => {
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/v1/task',
+        function: 'getTaskFormMetadataSSR',
+        inputs: { clientId, taskType, processType },
+    };
     try {
         const url = `${ssrSchemaUrl}/form/metadata?process=${processType}&taskType=${taskType}&carrier=${clientId.toUpperCase()}`;
         logInfo('getTaskFormMetadataSSR', {
-            file: 'queries/api/newBusiness/v1/suitability',
-            function: 'getTaskFormMetadataSSR',
+            ...loggingContext,
             url,
         });
-        const { data } = await serverApi.get<FormMetadata, AxiosResponse>(url, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
-                'Access-Control-Allow-Origin': '*',
+        const { data } = await serverApi.get<FormMetadata, AxiosResponse>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
             },
-        });
+            loggingContext
+        );
 
         return data as FormMetadata;
     } catch (error: any) {
         logError('getFormSchemaSSR', {
             ...parseErrorInformation(error),
-
-            file: 'queries/api/newBusiness/v1/suitability',
-            function: 'getTaskFormMetadataSSR',
+            ...loggingContext,
         });
         return null;
     }
 };
-export const unassignTask = async (caseId: string, taskId: string, entryDuration?: number): Promise<any> => {
+export const unassignTask = async (taskId: string, entryDuration?: number): Promise<any> => {
     try {
         const logTime = entryDuration ? performance.now() - entryDuration : 0;
         const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
-        const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/unclaim`;
-        const { data } = await client.put<AxiosResponse>(url);
+        const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/assignments`;
+        const { data } = await client.delete<AxiosResponse>(url);
 
         browserLogInfo('unassignTask::Successfully unassigned task', {
             timeElapsedSinceLoad: timeInSeconds,
-            caseId,
             taskId,
             url,
             function: 'tasks.unassignTask',
@@ -232,7 +273,6 @@ export const unassignTask = async (caseId: string, taskId: string, entryDuration
         browserLogError('unassignTask::::Failed to unassign task', {
             ...parseErrorInformation(error),
             error,
-            caseId,
             taskId,
             function: 'tasks.unassignTask',
         });
@@ -240,14 +280,12 @@ export const unassignTask = async (caseId: string, taskId: string, entryDuration
     }
 };
 
-export const claimTask = async (caseId: string, taskId: string): Promise<any> => {
-
+export const claimTask = async (taskId: string): Promise<any> => {
     try {
-        const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/claim`;
+        const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/assignments`;
         const { data } = await client.put<AxiosResponse>(url);
 
         browserLogInfo('Form entry time', {
-            caseId,
             taskId,
             url,
             function: 'tasks.claimTask',
@@ -257,10 +295,23 @@ export const claimTask = async (caseId: string, taskId: string): Promise<any> =>
         browserLogError('An error occurred during update task using v1', {
             ...parseErrorInformation(error),
             error,
-            caseId,
             taskId,
             function: 'tasks.claimTask',
         });
         return null;
     }
-}
+};
+
+export const getUnassignedTasks = async (): Promise<UnassignedTask[] | []> => {
+    try {
+        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/unassigned`);
+        return data ?? [];
+    } catch (error) {
+        browserLogError('getUnassignedTasks::', {
+            ...parseErrorInformation(error),
+            file: 'queries/v1/tasks/unassigned',
+            function: 'getUnassignedTasks',
+        });
+        return [];
+    }
+};

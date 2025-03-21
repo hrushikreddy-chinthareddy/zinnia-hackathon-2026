@@ -13,7 +13,7 @@ import { withAuthAndLogging } from '@deps/utils/server-logging';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<Policy> | ErrorResponse>, loggingContext: object) => {
+    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<Policy> | ErrorResponse>, loggingContext) => {
         const session = await getSession(req, res);
         const { id, planCode, versionNumber } = req.query;
         const unmaskingResponse = await serverApi.post<any, AxiosResponse<CheckTupleResponse>>(

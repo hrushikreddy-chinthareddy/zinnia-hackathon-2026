@@ -1,0 +1,33 @@
+.legendContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: var(--measure-dimension-gap-xl);
+}
+
+.color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.items {
+    display: grid;
+    gap: 16px; /* Adjust the gap between items as needed */
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: var(--measure-dimension-gap-md);
+}
+
+/* Media query to handle the case when there are only two items */
+@media (max-width: 600px) {
+    .items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

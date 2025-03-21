@@ -1,5 +1,4 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { GetServerSidePropsContext } from 'next';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
@@ -10,7 +9,7 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { downloadFormById } from '@deps/queries/api/c2web';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface FormViewerProps extends SegmentTrackedPageProps {
@@ -58,52 +57,54 @@ const FormViewer = ({ formId, user }: FormViewerProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const { locale = DEFAULT_LOCALE, params, res, req } = context;
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const { locale = DEFAULT_LOCALE, params, res, req } = context;
 
-        try {
-            (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('documents:: Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'documents',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
+            try {
+                (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('documents:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
 
-        const formId = (params?.formId as string) || '';
+            const formId = (params?.formId as string) || '';
 
-        if (!formId) {
-            return {
-                redirect: {
-                    destination: '/406',
-                    permanent: false,
-                },
-            };
-        }
-        try {
-            const translations = await serverSideTranslations(
-                locale,
-                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-                nextI18nextConfig,
-                ALL_LOCALES
-            );
-
-            return {
-                props: {
+            if (!formId) {
+                return {
+                    redirect: {
+                        destination: '/406',
+                        permanent: false,
+                    },
+                };
+            }
+            try {
+                const translations = await serverSideTranslations(
                     locale,
-                    ...translations,
-                    formId: Number(formId),
-                },
-            };
-        } catch (e) {
-            return {
-                props: {},
-            };
-        }
+                    [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                    nextI18nextConfig,
+                    ALL_LOCALES
+                );
+
+                return {
+                    props: {
+                        locale,
+                        ...translations,
+                        formId: Number(formId),
+                    },
+                };
+            } catch (e) {
+                return {
+                    props: {},
+                };
+            }
+        },
     },
-});
+    { file: 'contact-center/document/[formId]/index', function: 'getServerSideProps', page: 'contact-center/document/:formId' }
+);
 
 export default FormViewer;

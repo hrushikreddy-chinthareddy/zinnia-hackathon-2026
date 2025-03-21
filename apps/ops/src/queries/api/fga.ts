@@ -3,8 +3,8 @@ import { AxiosResponse } from 'axios';
 import { UserPermission } from '@deps/models/user-profile';
 import { ApiResponse } from '@deps/types/api-response';
 import { CheckTupleResponse, Tuple, GetCarrierListQuery, TupleRequest, TupleResponse } from '@deps/types/fga';
+import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
-import { logError, logWarn } from '@deps/utils/server-logging';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
@@ -28,7 +28,7 @@ export const bulkCheckResponseClient = async (body?: TupleRequest): Promise<ApiR
         }
         return response;
     } catch (e) {
-        logError('bulkCheckResponse::An error occurred while calling bulk check endpoint', {
+        browserLogError('bulkCheckResponse::An error occurred while calling bulk check endpoint', {
             file: 'queries/api/fga',
             function: 'bulkCheckResponse',
             url: bulkCheckUrl,
@@ -93,7 +93,7 @@ export const getCarrierList = async (
         if (carrierListCheck.status === 200) {
             writeToCache('getCarrierList', query, response, 10);
         } else {
-            logWarn('getCarrierList::An error occurred while getting the carrier list', {
+            browserLogWarn('getCarrierList::An error occurred while getting the carrier list', {
                 file: 'queries/api/fga',
                 function: 'getCarrierList',
                 url,
@@ -103,7 +103,7 @@ export const getCarrierList = async (
 
         return response;
     } catch (error: any) {
-        logWarn('getCarrierList::An error occurred while getting the carrier list', {
+        browserLogWarn('getCarrierList::An error occurred while getting the carrier list', {
             file: 'queries/api/fga',
             function: 'getCarrierList',
             url,

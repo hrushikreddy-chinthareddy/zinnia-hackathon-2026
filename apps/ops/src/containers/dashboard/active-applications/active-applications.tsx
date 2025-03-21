@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { FC } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import ActiveAging from '@deps/components/dashboard/sections/active-aging/active-aging';
+import { ActiveAging } from '@deps/components/dashboard/sections/active-aging/active-aging';
 import { NigoOpenTransactions } from '@deps/components/dashboard/sections/nigo-open-transactions/nigo-open-transactions';
 import SankeyChart from '@deps/components/dashboard/sections/sankey-chart/sankey-chart';
 import { SubmissionTypeProvider } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';

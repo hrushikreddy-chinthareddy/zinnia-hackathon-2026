@@ -1,6 +1,5 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { setCookie } from 'cookies-next';
-import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -28,7 +27,7 @@ import loadingImage from '@deps/styles/images/loader.png';
 import { browserLogInfo, browserLogWarn } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 const OTP_FORM_CLIENT_COOKIE = 'otp-form-client-cookie';
@@ -218,33 +217,39 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
     );
 }
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
-        const { locale = DEFAULT_LOCALE, res, req } = context;
-        try {
-            (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('create-case/create/index:: Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'create-case/create/index',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const { locale = DEFAULT_LOCALE, res, req } = context;
+            try {
+                (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('create-case/create/index:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
 
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
-        if (!doesUserHasPagePermissions) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
+            if (!doesUserHasPagePermissions) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
 
-        const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON], nextI18nextConfig, ALL_LOCALES);
-        return { props: { locale, ...translations, featureFlagDecisions } };
+            const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON], nextI18nextConfig, ALL_LOCALES);
+            return { props: { locale, ...translations, featureFlagDecisions } };
+        },
     },
-});
+    { file: 'create-case/create/index', function: 'getServerSideProps', page: 'create-case/create' }
+);

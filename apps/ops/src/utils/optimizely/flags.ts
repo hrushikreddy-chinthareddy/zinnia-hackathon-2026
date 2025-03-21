@@ -9,6 +9,7 @@ export enum FEATURE_FLAGS {
     // DEPU-2137 Case Management Case Redesign
     CASE_MANAGEMENT_CASE_REDESIGN_ENABLED = 'case-management-depu-1791_case_redesign',
     POLICY_MANAGEMENT_ANNUITIES_ENABLED = 'policy-management_feature_policy_mgmt_annuities',
+    SHOW_HOME_NAV_BTN = 'show-home-nav-btn',
     // CMW-14579 - Regulation 60
     REG_60 = 'case-management-otp_feature_regulation-60',
     SSW_MASS = 'case-management-otp_feature_mass_ssw',
@@ -145,5 +146,6 @@ export enum FEATURE_FLAGS {
     CASE_ADVISORS_EXCEL_ADDITIONAL_CARRIER_SUPPORT = 'case_advisors_excel_additional_carrier_support',
     DASHBOARD_CASE_TIMING_CHART = 'dashboard_case_timing_chart',
     LOAN_PAYMENT_TRANSACTION = 'loan_payment_transaction',
+    PREMIUM_SET_OR_CANCEL_AUTOPAY= 'premium_set_or_cancel_autopay',
     DASHBOARD_SECTION_TAB_VIEW = 'dashboard_section_tab_view',
 }

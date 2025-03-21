@@ -1,0 +1,230 @@
+import {
+    FieldDataActive,
+    Icon,
+    IconType,
+    Pagination,
+    Table,
+    TableBody,
+    TableCell,
+    TableHeader,
+    TableHeaderCell,
+    TableRow,
+} from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+
+import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
+import { generateCaseLink } from '@deps/components/dashboard/utils';
+import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import CardContainer from '@deps/containers/card-container/card-container';
+import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
+import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
+
+import { friendlyGroupByName } from '../../../submission-type/utils';
+import { ActiveAgingContext } from '../../context/active-aging-context';
+import { calculateEndDate, startDates } from '../../utils';
+import { ActiveAgingFilters } from '../shared/active-aging-filters';
+import { ActiveAgingHeader } from '../shared/active-aging-header';
+
+enum SortByOptions {
+    NAME = 'name',
+    TOTAL = 'total',
+}
+
+export const ActiveAgingTable = () => {
+    const [offset, setOffset] = useState(0);
+    const [searchText, setSearchText] = useState('');
+    const limit = 10;
+
+    const {
+        timeframe,
+        activeAgingDataFetching,
+        activeAgingDataLoading,
+        activeAgingDataError,
+        groupBy,
+        timeRangeData,
+        selectedProcess,
+        filter,
+    } = useContext(ActiveAgingContext);
+
+    const dataByTimeframe = useMemo(() => {
+        return timeRangeData?.[timeframe].data || [];
+    }, [timeRangeData, timeframe]);
+
+    // Filter by search
+    const searchedData = useMemo(() => {
+        return dataByTimeframe.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+    }, [dataByTimeframe, searchText]);
+
+    const { handleSort, sortedData } = useTableOptions({
+        sortByDefault: SortByOptions.TOTAL,
+        dataToSort: searchedData,
+    });
+
+    // Create paginatedData from transformed data
+    const paginatedData = useMemo(() => {
+        return sortedData.slice(offset, offset + limit);
+    }, [offset, limit, sortedData]);
+
+    //Pagination stuff
+    const goToPage = useCallback(
+        (pageNumber: number) => {
+            setOffset((pageNumber - 1) * limit);
+        },
+        [setOffset]
+    );
+
+    // If sorted data updates, go back to page 1
+    useEffect(() => {
+        goToPage(1);
+    }, [goToPage, sortedData]);
+
+    const generateExpandableContent = useCallback(
+        (name: string, countByDay: { [key: string]: number }) => {
+            return Object.keys(countByDay)
+                .reverse()
+                .map(key => {
+                    const startDate = dayjs(key);
+                    const daysActive = dayjs().diff(startDate, 'day');
+                    return (
+                        <TableRow key={key}>
+                            <TableCell>{name}</TableCell>
+                            <TableCell>{countByDay[key]}</TableCell>
+                            <TableCell>{daysActive} Days</TableCell>
+                            <TableCell>
+                                <NavElement
+                                    type={NavElementType.Link}
+                                    target="_blank"
+                                    variant={NavElementVariant.Secondary}
+                                    className="underline"
+                                    href={generateCaseLink({
+                                        process: selectedProcess,
+                                        carrierOrProductName: name,
+                                        startDate: key,
+                                        endDate: key,
+                                        groupBy,
+                                        status: filter.caseStatus,
+                                        brokerDealer: filter.brokerDealerName,
+                                        carrier: filter.carrier,
+                                    })}
+                                    rel="noreferrer"
+                                >
+                                    View cases
+                                </NavElement>
+                            </TableCell>
+                        </TableRow>
+                    );
+                });
+        },
+        [filter.caseStatus, groupBy, selectedProcess]
+    );
+
+    return (
+        <CardContainer>
+            <ActiveAgingHeader />
+            <div className={sharedStyles.searchContainer}>
+                <FieldDataActive
+                    fieldSize="small"
+                    placeholder={`Search by ${friendlyGroupByName[groupBy]?.toLocaleLowerCase()} name`}
+                    onChange={e => setSearchText(e.target.value)}
+                />
+            </div>
+            <ActiveAgingFilters />
+            <div className={sharedStyles.tableContainer}>
+                <BlurOverlayLoader loading={activeAgingDataFetching || activeAgingDataLoading}>
+                    {activeAgingDataError ? (
+                        <div className="grid place-content-center h-full w-full min-h-[400px]">
+                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                                <ChartBarsIcon height={'24px'} width={'24px'} />
+                                {'Something went wrong fetching insights, please try again by refreshing the page'}
+                            </Typography>
+                        </div>
+                    ) : searchedData?.length === 0 ? (
+                        <div className="grid place-content-center h-full w-full min-h-[400px]">
+                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                                <ChartBarsIcon height={'24px'} width={'24px'} />
+                                {'There is no data for this selection'}
+                            </Typography>
+                        </div>
+                    ) : (
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
+                                        {friendlyGroupByName[groupBy]}
+                                        <Icon
+                                            className={sharedStyles.sortIcon}
+                                            type={IconType.SORT}
+                                            color="#00628B"
+                                            height={16}
+                                            width={16}
+                                        />
+                                    </TableHeaderCell>
+                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.TOTAL)} sortable>
+                                        Total submissions
+                                        <Icon
+                                            className={sharedStyles.sortIcon}
+                                            type={IconType.SORT}
+                                            color="#00628B"
+                                            height={16}
+                                            width={16}
+                                        />
+                                    </TableHeaderCell>
+                                    <TableHeaderCell>Days active</TableHeaderCell>
+                                    <TableHeaderCell>Actions</TableHeaderCell>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {paginatedData.map(item => {
+                                    const startDate = startDates[timeframe];
+                                    const endDate = calculateEndDate(timeframe);
+                                    const link = generateCaseLink({
+                                        process: selectedProcess,
+                                        carrierOrProductName: item.name,
+                                        startDate,
+                                        endDate,
+                                        groupBy,
+                                        carrier: filter.carrier,
+                                        brokerDealer: filter.brokerDealerName,
+                                        status: filter.caseStatus,
+                                    });
+                                    return (
+                                        <TableRow
+                                            key={`${item.name}-${item.count}`}
+                                            isExpandable
+                                            showChevron
+                                            expandedContent={generateExpandableContent(item.name, item.countByDay)}
+                                        >
+                                            <TableCell>{item.name}</TableCell>
+                                            <TableCell>{item.total}</TableCell>
+                                            <TableCell>{timeframe}</TableCell>
+                                            <TableCell>
+                                                <NavElement
+                                                    type={NavElementType.Link}
+                                                    variant={NavElementVariant.Secondary}
+                                                    target="_blank"
+                                                    className="underline"
+                                                    href={link}
+                                                    rel="noreferrer"
+                                                >
+                                                    View cases
+                                                </NavElement>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    )}
+                    {!activeAgingDataError && searchedData?.length > 0 && (
+                        <div className={sharedStyles.paginationContainer}>
+                            <Pagination limit={limit} offset={offset} total={searchedData?.length || 0} goToPage={goToPage} />
+                        </div>
+                    )}
+                </BlurOverlayLoader>
+            </div>
+        </CardContainer>
+    );
+};

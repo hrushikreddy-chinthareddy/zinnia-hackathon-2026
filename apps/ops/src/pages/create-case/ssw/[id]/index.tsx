@@ -1,7 +1,6 @@
 /* eslint-disable import/order */
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import clsx from 'clsx';
-import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -38,7 +37,7 @@ import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { logError, logInfo, logWarn } from '@deps/utils/server-logging';
+import { logError, logInfo, logWarn, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-form';
@@ -229,139 +228,147 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     );
 }
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
-        const { locale = DEFAULT_LOCALE, params, query, res, req } = context;
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('Access token expired', { error: e, file: 'create-case/ssw/:id/index', function: 'getServerSideProps' });
-            return serverSidePropsLogout();
-        }
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const { locale = DEFAULT_LOCALE, params, query, res, req } = context;
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('Access token expired', { error: e, ...loggingContext });
+                return serverSidePropsLogout();
+            }
 
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadOtpRenewals);
-        if (!doesUserHasPagePermissions) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
-
-        const id = (params?.id as string) || '';
-        const documentNumber = (query.doc as string) || '';
-        const clientId = (query.clientId as string) || '';
-        const action = (query.action as string) || '';
-        const taskId = (query.taskId as string) || '';
-        const getLastSaved = (query?.getLastSaved as string) || '';
-
-        // If feature flag is not enabled, redirect to error page
-        if (!isFormFeatureEnabled(ProcessType.SSW, clientId, featureFlagDecisions)) {
-            logWarn('create-case/ssw/:id::feature flag not enabled', { documentNumber, clientId });
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
-
-        const [translations, document] = await Promise.all([
-            serverSideTranslations(locale, [TranslationFiles.COMMON]),
-            getDocumentV2SSR(documentNumber, DocumentType.SSW, clientId.toUpperCase(), accessToken),
-        ]);
-        if (!document?.contract) {
-            logError('create-case/ssw/:id::Error getting document', { documentNumber, clientId });
-            return {
-                redirect: {
-                    destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
-                    permanent: false,
-                },
-            };
-        }
-
-        const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-        const isUsedLastSaved = shouldShowNewExperience && deStringifyTrueFalseNull(getLastSaved.toLowerCase());
-        if (shouldShowNewExperience && action !== 'readonly') {
-            logInfo('create-case/ssw/:id:Checking NIGO', { taskId, action, documentNumber, id, clientId });
-            const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken);
-            if (isNigoCase && !isUsedLastSaved) {
-                logInfo('create-case/ssw/:id::Nigo exists for case', {
-                    documentNumber,
-                    clientId,
-                    caseId: document.caseId,
-                    lob: document?.lob,
-                });
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                loggingContext
+            );
+            if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
-                        destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
+                        destination: '/403',
                         permanent: false,
                     },
                 };
             }
-        } else {
-            logInfo('create-case/ssw/:id:Skipping NIGO check', { taskId, action, documentNumber, id, clientId });
-        }
 
-        const policyNumber = document?.contract ?? '';
-        const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0);
-        const planCode = response ? response[0]?.planCode : null;
-        if (!planCode) {
-            logInfo('create-case/ssw/:id::Plan code not found', { documentNumber, policyNumber, clientId });
-            return {
-                redirect: {
-                    destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
-                    permanent: false,
-                },
-            };
-        } else {
-            logInfo('create-case/ssw/:id::Plan code found', { documentNumber, policyNumber, clientId, planCode });
-        }
+            const id = (params?.id as string) || '';
+            const documentNumber = (query.doc as string) || '';
+            const clientId = (query.clientId as string) || '';
+            const action = (query.action as string) || '';
+            const taskId = (query.taskId as string) || '';
+            const getLastSaved = (query?.getLastSaved as string) || '';
 
-        const form = await initializeOTPTaskSSR({
-            accessToken,
-            caseId: id,
-            clientId,
-            contractNumber: document.contract,
-            documentNumber,
-            userId: user.name,
-            taskType: TaskType.SSW,
-            getLastSaved,
-            taskId: taskId,
-            action: action,
-        });
-        if (!form) {
-            logError('create-case/ssw/:id::Error initializing task ssw form', {
-                documentNumber,
+            // If feature flag is not enabled, redirect to error page
+            if (!isFormFeatureEnabled(ProcessType.SSW, clientId, featureFlagDecisions)) {
+                logWarn('create-case/ssw/:id::feature flag not enabled', loggingContext);
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
+
+            const [translations, document] = await Promise.all([
+                serverSideTranslations(locale, [TranslationFiles.COMMON]),
+                getDocumentV2SSR(documentNumber, DocumentType.SSW, clientId.toUpperCase(), accessToken, loggingContext),
+            ]);
+            if (!document?.contract) {
+                logError('create-case/ssw/:id::Error getting document', loggingContext);
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
+                        permanent: false,
+                    },
+                };
+            }
+
+            const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+            const isUsedLastSaved = shouldShowNewExperience && deStringifyTrueFalseNull(getLastSaved.toLowerCase());
+            if (shouldShowNewExperience && action !== 'readonly') {
+                logInfo('create-case/ssw/:id:Checking NIGO', loggingContext);
+                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken, loggingContext);
+                if (isNigoCase && !isUsedLastSaved) {
+                    logInfo('create-case/ssw/:id::Nigo exists for case', {
+                        ...loggingContext,
+                        caseId: document.caseId,
+                        lob: document?.lob,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
+                            permanent: false,
+                        },
+                    };
+                }
+            } else {
+                logInfo('create-case/ssw/:id:Skipping NIGO check', loggingContext);
+            }
+
+            const policyNumber = document?.contract ?? '';
+            const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0, loggingContext);
+            const planCode = response ? response[0]?.planCode : null;
+            if (!planCode) {
+                logInfo('create-case/ssw/:id::Plan code not found', loggingContext);
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                        permanent: false,
+                    },
+                };
+            } else {
+                logInfo('create-case/ssw/:id::Plan code found', loggingContext);
+            }
+
+            const form = await initializeOTPTaskSSR({
+                accessToken,
+                caseId: id,
                 clientId,
-                contract: document?.contract,
+                contractNumber: document.contract,
+                documentNumber,
+                userId: user.name,
+                taskType: TaskType.SSW,
+                getLastSaved,
+                taskId: taskId,
+                action: action,
+                loggingContext,
             });
+            if (!form) {
+                logError('create-case/ssw/:id::Error initializing task ssw form', {
+                    ...loggingContext,
+                    contract: document?.contract,
+                });
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.SSW_TASK_INITIALIZATION}`,
+                        permanent: false,
+                    },
+                };
+            }
+
+            const parties = document?.contract
+                ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
+                : [];
+
             return {
-                redirect: {
-                    destination: `/create-case/error?errorCode=${ERROR_CODES.SSW_TASK_INITIALIZATION}`,
-                    permanent: false,
+                props: {
+                    ...translations,
+                    document,
+                    form,
+                    locale,
+                    transactionsHistory: null,
+                    parties: Array.isArray(parties) ? parties : [],
+                    featureFlagDecisions,
+                    user,
+                    planCode,
                 },
             };
-        }
-
-        const parties = document?.contract ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string) : [];
-
-        return {
-            props: {
-                ...translations,
-                document,
-                form,
-                locale,
-                transactionsHistory: null,
-                parties: Array.isArray(parties) ? parties : [],
-                featureFlagDecisions,
-                user,
-                planCode,
-            },
-        };
+        },
     },
-});
+    { file: 'create-case/ssw/:id', function: 'getServerSideProps', page: 'create-case/ssw/:id' }
+);

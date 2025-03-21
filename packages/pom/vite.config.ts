@@ -1,10 +1,13 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import dts from 'vite-plugin-dts'
+import dts from 'vite-plugin-dts';
 import { libInjectCss } from 'vite-plugin-lib-inject-css';
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    'process.env': process.env
+  },
   plugins: [
     react(),
     libInjectCss(),
@@ -20,7 +23,7 @@ export default defineConfig({
       fileName: 'pom',
     },
     rollupOptions: {
-      external: ['react','@zinnia/utils'],
+      external: ['react', '@zinnia/utils'],
       output: {
         globals: {
           react: 'React',

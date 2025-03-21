@@ -13,22 +13,20 @@ import {
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
-import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
-import { startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
-import { FieldSize } from '@deps/components/fields/field';
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
+import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
+import { generateCaseLink, startDates } from '@deps/components/dashboard/utils';
+import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Select from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
+import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
+import { DashboardStatsElementResponse, Statuses } from '@deps/models/case/case';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import { SubmissionMethodTooltip } from '../../submission-type';
+import { friendlyGroupByName } from '../../utils';
 
 // Define the type for the flattened structure
 interface FlattenedDashboardStatsElement {
@@ -63,58 +61,13 @@ enum SortByOptions {
     COUNT = 'count',
 }
 
-enum SortOrder {
-    ASC = 'asc',
-    DESC = 'desc',
-}
-
-const generateCaseLink = (
-    process: Processes | ExtendedProcesses | undefined,
-    name: string,
-    submissionMethod: string,
-    timeframe: TimeframeFilterOptions,
-    groupBy: GroupByOptions
-) => {
-    const method = submissionMethod === 'Electronic (E-App)' ? 'electronic' : 'paper';
-    const carrierOrProduct =
-        groupBy === GroupByOptions.ProductName ? 'productName' : groupBy === GroupByOptions.Carrier ? 'carrier' : 'brokerDealerName';
-    const createdStartDate = startDates[timeframe];
-
-    return `/cases?process=${
-        process === 'all' ? '' : process
-    }&${carrierOrProduct}=${name}&applicationType=${method}&createdDateStart=${createdStartDate}&caseStatus=${[
-        Statuses.InProgress,
-        Statuses.Exception,
-        Statuses.NotStarted,
-    ].join('&caseStatus=')}`;
-};
-
 export const SubmissionTypeTable = () => {
     const [offset, setOffset] = useState(0);
-    const [sortOrder, setSortOrder] = useState(SortOrder.DESC);
-    const [sortBy, setSortBy] = useState(SortByOptions.COUNT);
     const [searchText, setSearchText] = useState('');
     const limit = 10;
 
-    const {
-        graphStats,
-        timeframe,
-        submissionVs,
-        filter,
-        setTimeframe,
-        selectedProcess,
-        setSubmissionVs,
-        setSelectedProcess,
-        graphStatsLoading,
-        graphStatsFetching,
-        graphStatsError,
-    } = useContext(SubmissionTypeContext);
-
-    const submissionVsOptions = [
-        { label: 'Carrier', value: GroupByOptions.Carrier, disabled: filter.carrier?.length === 1 },
-        { label: 'Product', value: GroupByOptions.ProductName },
-        { label: 'Distribution Partner', value: GroupByOptions.BrokerDealerName },
-    ];
+    const { graphStats, timeframe, submissionVs, selectedProcess, graphStatsLoading, graphStatsFetching, graphStatsError, filter } =
+        useContext(SubmissionTypeContext);
 
     // Transform the data by flattening it
     const flattenedData = useMemo(() => {
@@ -127,48 +80,15 @@ export const SubmissionTypeTable = () => {
         return flattenedData.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
     }, [flattenedData, searchText]);
 
-    // Sorted data asc/desc
-    // When sorting by the first column, we want to actually sort by parentElement since we flatten the data
-    const sortedData = useMemo(() => {
-        return [...searchedData].sort((a, b) => {
-            if (sortBy === SortByOptions.NAME) {
-                return sortOrder === SortOrder.ASC ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-            } else if (sortBy === SortByOptions.SUBMISSION_METHOD) {
-                return sortOrder === SortOrder.ASC
-                    ? a.submissionMethod.localeCompare(b.submissionMethod)
-                    : b.submissionMethod.localeCompare(a.submissionMethod);
-            } else {
-                return sortOrder === SortOrder.ASC ? a.count - b.count : b.count - a.count;
-            }
-        });
-    }, [searchedData, sortBy, sortOrder]);
+    const { handleSort, sortedData } = useTableOptions({
+        sortByDefault: SortByOptions.COUNT,
+        dataToSort: searchedData,
+    });
 
     // Create paginatedData from transformed data
     const paginatedData = useMemo(() => {
         return sortedData.slice(offset, offset + limit);
     }, [offset, limit, sortedData]);
-
-    // This will trigger redefination of the memoized sortedData
-    const handleSort = (column: SortByOptions) => {
-        if (sortBy === column) {
-            setSortOrder(sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC);
-        } else {
-            setSortBy(column);
-            setSortOrder(SortOrder.ASC);
-        }
-    };
-
-    const friendlySubmissionTypeName = useMemo(() => {
-        switch (submissionVs) {
-            case GroupByOptions.Carrier:
-                return 'Carrier';
-            case GroupByOptions.ProductName:
-                return 'Product';
-            case GroupByOptions.BrokerDealerName:
-                return 'Distribution Partner';
-            default:
-        }
-    }, [submissionVs]);
 
     //Pagination stuff
     const goToPage = useCallback(
@@ -178,12 +98,10 @@ export const SubmissionTypeTable = () => {
         [setOffset]
     );
 
-    //Send users back to page 1 if data for page doesnt exist after filters update
+    // If sorted data updates, go back to page 1
     useEffect(() => {
-        if (offset > sortedData.length) {
-            goToPage(1);
-        }
-    }, [sortedData, goToPage, offset]);
+        goToPage(1);
+    }, [goToPage, sortedData]);
 
     const totalCaseCount = graphStats?.data?.map(stat => stat.count).reduce((a, b) => a + b, 0);
 
@@ -206,37 +124,11 @@ export const SubmissionTypeTable = () => {
             <div className={sharedStyles.searchContainer}>
                 <FieldDataActive
                     fieldSize="small"
-                    placeholder={`Search by ${friendlySubmissionTypeName?.toLocaleLowerCase()} name`}
+                    placeholder={`Search by ${friendlyGroupByName[submissionVs]?.toLocaleLowerCase()} name`}
                     onChange={e => setSearchText(e.target.value)}
                 />
             </div>
-            <div className={sharedStyles.timeFilterContainer}>
-                <div className="w-1/2 flex gap-2">
-                    <Select
-                        maxContentWidth
-                        label="Group by"
-                        className={sharedStyles.selectDropdowns}
-                        options={submissionVsOptions}
-                        value={submissionVs}
-                        size={FieldSize.XS}
-                        onChange={val => setSubmissionVs(val as GroupByOptions)}
-                    />
-
-                    <CaseTypeFilter
-                        onValueChange={setSelectedProcess}
-                        caseStatus={[Statuses.InProgress, Statuses.Exception, Statuses.NotStarted]}
-                        defaultProcess={Processes.NewBusiness}
-                        value={selectedProcess}
-                    />
-                </div>
-                <div className="w-1/2">
-                    <TimeFilter
-                        defaultValue={timeframe}
-                        onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
-                        controlledTimeValue={timeframe}
-                    />
-                </div>
-            </div>
+            <SubmissionTypeFilters />
             <div className={sharedStyles.tableContainer}>
                 <BlurOverlayLoader loading={graphStatsFetching || graphStatsLoading}>
                     {graphStatsError ? (
@@ -258,7 +150,7 @@ export const SubmissionTypeTable = () => {
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
-                                        {friendlySubmissionTypeName} Name
+                                        {friendlyGroupByName[submissionVs]} Name
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -292,6 +184,18 @@ export const SubmissionTypeTable = () => {
                             </TableHeader>
                             <TableBody>
                                 {paginatedData.map(item => {
+                                    const startDate = startDates[timeframe];
+
+                                    const link = generateCaseLink({
+                                        process: selectedProcess,
+                                        carrierOrProductName: item.name,
+                                        submissionMethod: item.submissionMethod,
+                                        startDate,
+                                        status: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+                                        groupBy: submissionVs,
+                                        carrier: filter.carrier,
+                                        brokerDealer: filter.brokerDealerName,
+                                    });
                                     return (
                                         <TableRow key={`${item.name}-${item.submissionMethod}`}>
                                             <TableCell>{item.name}</TableCell>
@@ -300,14 +204,10 @@ export const SubmissionTypeTable = () => {
                                             <TableCell>
                                                 <NavElement
                                                     type={NavElementType.Link}
+                                                    variant={NavElementVariant.Secondary}
+                                                    className="underline"
                                                     target="_blank"
-                                                    href={generateCaseLink(
-                                                        selectedProcess,
-                                                        item.name,
-                                                        item.submissionMethod,
-                                                        timeframe,
-                                                        submissionVs
-                                                    )}
+                                                    href={link}
                                                     rel="noreferrer"
                                                 >
                                                     View cases

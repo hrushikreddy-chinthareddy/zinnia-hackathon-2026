@@ -26,7 +26,7 @@ export interface OneTimePremiumRequestQuery extends OneTimePremiumRequest {
     caseId: string;
 }
 
-interface SystematicProgramUpdateRequestQuery extends SystematicProgramUpdateRequest {
+export interface SystematicProgramUpdateRequestQuery extends SystematicProgramUpdateRequest {
     caseId: string;
 }
 
@@ -83,6 +83,7 @@ export interface TransactionResponse {
     status: string | number;
     quoteResponse?: FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse;
     validationResult?: ValidationResult[];
+    data?: any;
 }
 
 export interface TransactionRequest {
@@ -320,15 +321,16 @@ export const validateSystematicProgramUpdate = async (
     query: SystematicProgramUpdateRequestQuery
 ): Promise<TransactionResponse> => {
     try {
-        const { data } = await client.post<SystematicProgramUpdateRequestQuery, AxiosResponse>(
+        const response = await client.post<SystematicProgramUpdateRequestQuery, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}/validation`,
             query
         );
-        return data;
+
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('validateSystematicProgramUpdate::an error occurred during validation', error);
 
-        return error?.data;
+        return { status: error?.status, data: error?.data };
     }
 };
 
@@ -342,7 +344,7 @@ export const submitFreeLookCancel = async (
             `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation`,
             query
         );
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitFreeLookCancel::an error occurred during submission', error);
 
@@ -360,7 +362,7 @@ export const submitFullSurrenderWithdrawal = async (
             `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender`,
             query
         );
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitFullSurrenderWithdrawal::an error occurred during submission', error);
 
@@ -378,7 +380,7 @@ export const submitOneTimePremium = async (
             `${baseUrl}/policies/${planCode}/${policyNumber}/onetimepremium`,
             query
         );
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitOneTimePremium::an error occurred during submission', error);
 
@@ -394,7 +396,7 @@ export const submitLoanPayment = async (
     try {
         const response = await client.post<LoanRepaymentOneTimeRequestQuery, AxiosResponse>(`${baseUrl}/policies/${planCode}/${policyNumber}/loanrepaymentonetime`, query);
 
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitLoanPayment::an error occurred during submission', error);
 
@@ -409,7 +411,7 @@ export const submitNewLoan = async (
 ): Promise<TransactionResponse> => {
     try {
         const response = await client.post<NewLoanRequest, AxiosResponse>(`${baseUrl}/policies/${planCode}/${policyNumber}/newloan`, query);
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitNewLoan::an error occurred during submission', error);
 
@@ -427,7 +429,7 @@ export const submitPartialWithdrawalOneTime = async (
             `${baseUrl}/policies/${planCode}/${policyNumber}/partialwithdrawalonetime`,
             query
         );
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitPartialWithdrawalOneTime::an error occurred during submission', error);
 

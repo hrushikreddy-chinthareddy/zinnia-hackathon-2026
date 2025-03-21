@@ -95,6 +95,7 @@ export const IndividualFormFields = ({
                   Date of birth
                 </Label>
               }
+              value={field.value}
               name="dateOfBirth"
               onDateSelect={date =>
                 field.onChange(standardDateMonthDayYear(date))

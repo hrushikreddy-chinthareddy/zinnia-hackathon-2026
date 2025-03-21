@@ -1,5 +1,5 @@
 {
-    "formId": "d30857ef-cf3f-46dc-b461-694c5b0e0c19",
+    "formId": "27ee24f0-bb0c-4e36-86c2-90d10c98887b",
     "process": "New Business",
     "carrier": "WELB",
     "taskType": "NB_TOA_NIGO",
@@ -19,18 +19,24 @@
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "sectionHeader": {
-                            "type": "object",
-                            "title": "Processing Instructions"
-                        },
                         "issuesList": {
                             "type": "array",
-                            "title": "Issues",
+                            "title": "",
                             "items": {
                                 "type": "object",
+                                "title": "",
                                 "properties": {
-                                    "reason": {
-                                        "type": "string"
+                                    "processingReason": {
+                                        "type": "string",
+                                        "title": "Issues"
+                                    },
+                                    "processingInstruction": {
+                                        "type": "string",
+                                        "title": "Processing Instructions"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
                                     }
                                 }
                             }
@@ -82,6 +88,41 @@
                             "enum": [true, false],
                             "enumNames": ["Yes", "No"],
                             "title": "Can you proceed ?"
+                        },
+                        "documentList": {
+                            "type": "object",
+                            "title": "Link or upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "upload",
+                                    "items": {
+                                        "title": "upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
                         }
                     },
                     "dependencies": {
@@ -150,41 +191,6 @@
                                         "deliveryFaxNumber": {
                                             "type": "string",
                                             "title": "Fax number"
-                                        },
-                                        "documentList": {
-                                            "type": "object",
-                                            "title": "Link or upload document",
-                                            "properties": {
-                                                "upload": {
-                                                    "type": "string"
-                                                },
-                                                "or": {
-                                                    "type": "string",
-                                                    "title": "or"
-                                                },
-                                                "attachment": {
-                                                    "type": "array",
-                                                    "title": "upload",
-                                                    "items": {
-                                                        "title": "upload",
-                                                        "type": "string",
-                                                        "format": "data-url"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "attachments": {
-                                            "type": "array",
-                                            "items": {
-                                                "documentName": {
-                                                    "title": "Name",
-                                                    "type": "string"
-                                                },
-                                                "documentId": {
-                                                    "title": "Document Id",
-                                                    "type": "string"
-                                                }
-                                            }
                                         }
                                     }
                                 },
@@ -274,6 +280,24 @@
                     }
                 },
                 "uiSchema": {
+                    "ui:order": [
+                        "issuesList",
+                        "details",
+                        "paymentRecordId",
+                        "documents",
+                        "issueResolved",
+                        "surrenderCompanyName",
+                        "surrenderContractNumber",
+                        "isEligible",
+                        "grossAmount",
+                        "deliveryMethod",
+                        "address",
+                        "deliveryFaxNumber",
+                        "statusReason",
+                        "communicationSent",
+                        "documentList",
+                        "attachments"
+                    ],
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
                         "orderable": false,
@@ -282,19 +306,36 @@
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "sectionHeader": {
-                        "props": {
-                            "description": "Review the supporting information and provide an external ID for the Agent."
-                        },
-                        "ui:options": {
-                            "label": true,
-                            "ObjectFieldTemplate": "InstructionsTemplate"
-                        }
-                    },
                     "issuesList": {
+                        "ui:readonly": true,
                         "ui:options": {
-                            "ArrayFieldTemplate": "TextListTemplate",
-                            "keyName": "processingReason"
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                            },
+                            "processingReason": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "processingInstruction": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "resolved": {
+                                "ui:options": {
+                                    "label": false
+                                }
+                            }
                         },
                         "ui:dataPath": ["issuesList"]
                     },

@@ -19,6 +19,7 @@ const mockCallLog = {
     contract: 'alsoTest',
     createdByUser: 'Inigo Montoya',
     createdDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    notes: 'test',
 };
 
 const mockResult = {

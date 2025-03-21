@@ -1,6 +1,5 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import dayjs from 'dayjs';
-import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -26,7 +25,7 @@ import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyDetailsSsr, searchPolicySSR, getSpecialProgramsSSR } from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { getUserInfoFromUser, logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 type SswUpdateProps = {
@@ -141,148 +140,156 @@ const SswEdit = (props: SswUpdateProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, query, req, res } = context;
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const { locale = DEFAULT_LOCALE, query, req, res } = context;
 
-        const taskId = (query.taskId as string) || '';
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
+            const taskId = (query.taskId as string) || '';
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('getServerSidePropsBankUpdatePage::Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'utils/page',
-                function: 'getServerSidePropsBankUpdatePage',
-            });
-            return serverSidePropsLogout();
-        }
-
-        try {
-            const [translations, activeForm] = await Promise.all([
-                await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS], nextI18nextConfig, ALL_LOCALES),
-                await getCaseTaskByIdSSR(taskId, accessToken),
-            ]);
-
-            if (!activeForm) {
-                logError('ssw-edit::Error getting task by id', {
-                    taskId,
-                    file: 'pages/ssw-update/ssw-edit',
-                    function: 'getServerSideProps',
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('getServerSidePropsBankUpdatePage::Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
                 });
-                return {
-                    redirect: {
-                        destination: `ssw-edit/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
-                        permanent: false,
-                    },
-                };
+                return serverSidePropsLogout();
             }
 
-            logInfo('ssw-edit::getCaseTaskByIdSSR task active form found', {
-                taskId,
-                file: 'pages/ssw-edit',
-                function: 'getServerSideProps',
-            });
+            try {
+                const [translations, activeForm] = await Promise.all([
+                    await serverSideTranslations(
+                        locale,
+                        [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                        nextI18nextConfig,
+                        ALL_LOCALES
+                    ),
+                    await getCaseTaskByIdSSR(taskId, accessToken, loggingContext),
+                ]);
 
-            const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId: user?.name });
+                if (!activeForm) {
+                    logError('ssw-edit::Error getting task by id', loggingContext);
+                    return {
+                        redirect: {
+                            destination: `ssw-edit/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
+                            permanent: false,
+                        },
+                    };
+                }
 
-            const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
+                logInfo('ssw-edit::getCaseTaskByIdSSR task active form found', loggingContext);
 
-            const userInfoForLogging = getUserInfoFromUser(user);
+                const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm.data, userId: user?.name });
 
-            const response = await searchPolicySSR(contractNum, [clientCode?.toUpperCase() as Carrier], accessToken, 1, 0);
-            const planCode = response ? response[0]?.planCode : null;
-            if (!planCode) {
-                logError('ssw-edit::Policy plan code not found', {
-                    taskId,
-                    documentNumber,
-                    clientCode,
+                const { documentNumber, contractNum, clientCode } = activeForm?.data || {};
+
+                const response = await searchPolicySSR(
                     contractNum,
-                    file: 'pages/ssw-edit',
-                    function: 'getServerSideProps',
-                });
+                    [clientCode?.toUpperCase() as Carrier],
+                    accessToken,
+                    1,
+                    0,
+                    loggingContext
+                );
+                const planCode = response ? response[0]?.planCode : null;
+                if (!planCode) {
+                    logError('ssw-edit::Policy plan code not found', {
+                        taskId,
+                        documentNumber,
+                        clientCode,
+                        contractNum,
+                        ...loggingContext,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/ssw-edit/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                            permanent: false,
+                        },
+                    };
+                }
+
+                const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, loggingContext, true);
+                if (!policy) {
+                    logError('ssw-edit::Policy not found', {
+                        taskId,
+                        documentNumber,
+                        clientCode,
+                        contractNum,
+                        ...loggingContext,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/ssw-edit/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
+                            permanent: false,
+                        },
+                    };
+                }
+
+                const document = documentNumber
+                    ? await getDocumentV2SSR(
+                          documentNumber,
+                          DocumentType.SSW,
+                          clientCode?.toUpperCase(),
+                          accessToken as string,
+                          loggingContext
+                      )
+                    : null;
+
+                if (!document) {
+                    logError('ssw-edit::Error getting document', {
+                        documentNumber,
+                        clientCode,
+                        contractNum,
+                        taskId,
+                        ...loggingContext,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/ssw-edit/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
+                            permanent: false,
+                        },
+                    };
+                }
+
+                const specialProgramdetails = await getSpecialProgramsSSR(form.data.contractNum, form.carrier, accessToken, loggingContext);
+                if (!specialProgramdetails) {
+                    logError('ssw-edit::Special Program API responded - not found', {
+                        taskId,
+                        documentNumber,
+                        clientCode,
+                        contractNum,
+                        ...loggingContext,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/ssw-edit/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
+                            permanent: false,
+                        },
+                    };
+                }
                 return {
-                    redirect: {
-                        destination: `/ssw-edit/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
-                        permanent: false,
+                    props: {
+                        ...translations,
+                        form,
+                        policy,
+                        document,
+                        specialProgramdetails,
+                        featureFlagDecisions,
                     },
                 };
-            }
-
-            const policy = await getPolicyDetailsSsr(contractNum, planCode, accessToken, userInfoForLogging, true);
-            if (!policy) {
-                logError('ssw-edit::Policy not found', {
-                    taskId,
-                    documentNumber,
-                    clientCode,
-                    contractNum,
-                    file: 'pages/ssw-edit',
-                    function: 'getServerSideProps',
-                });
+            } catch (error) {
+                logError('getServerSidePropsBankUpdatePage', { ...parseErrorInformation(error), ...loggingContext });
                 return {
-                    redirect: {
-                        destination: `/ssw-edit/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
-                        permanent: false,
-                    },
+                    props: {},
                 };
             }
-
-            const document = documentNumber
-                ? await getDocumentV2SSR(documentNumber, DocumentType.SSW, clientCode?.toUpperCase(), accessToken as string)
-                : null;
-
-            if (!document) {
-                logError('ssw-edit::Error getting document', {
-                    documentNumber,
-                    clientCode,
-                    contractNum,
-                    taskId,
-                });
-                return {
-                    redirect: {
-                        destination: `/ssw-edit/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
-                        permanent: false,
-                    },
-                };
-            }
-
-            const specialProgramdetails = await getSpecialProgramsSSR(form.data.contractNum, form.carrier, accessToken);
-            if (!specialProgramdetails) {
-                logError('ssw-edit::Special Program API responded - not found', {
-                    taskId,
-                    documentNumber,
-                    clientCode,
-                    contractNum,
-                    file: 'pages/ssw-edit',
-                    function: 'getServerSideProps',
-                });
-                return {
-                    redirect: {
-                        destination: `/ssw-edit/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
-                        permanent: false,
-                    },
-                };
-            }
-            return {
-                props: {
-                    ...translations,
-                    form,
-                    policy,
-                    document,
-                    specialProgramdetails,
-                    featureFlagDecisions,
-                },
-            };
-        } catch (error) {
-            logError('getServerSidePropsBankUpdatePage', { ...parseErrorInformation(error) });
-            return {
-                props: {},
-            };
-        }
+        },
     },
-});
+    { file: 'ssw-edit/ssw-update', function: 'getServerSideProps', page: 'ssw-edit/ssw-update' }
+);
 
 export default SswEdit;

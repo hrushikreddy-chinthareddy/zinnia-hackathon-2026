@@ -7,9 +7,16 @@ interface TimeFilterProps {
     onValueChange: (val: string) => void;
     timeframeOptions?: { [key: string]: string };
     controlledTimeValue?: RadioOption['value'];
+    controlledRangeText?: string;
 }
 
-export const TimeFilter: FC<TimeFilterProps> = ({ defaultValue, onValueChange, timeframeOptions, controlledTimeValue }) => {
+export const TimeFilter: FC<TimeFilterProps> = ({
+    defaultValue,
+    onValueChange,
+    timeframeOptions,
+    controlledTimeValue,
+    controlledRangeText,
+}) => {
     const [time, setTime] = useState(defaultValue);
     const options = timeframeOptions
         ? Object.values(timeframeOptions).map(option => ({
@@ -29,7 +36,8 @@ export const TimeFilter: FC<TimeFilterProps> = ({ defaultValue, onValueChange, t
         setTime(val);
         onValueChange(val);
     };
-    const timerangeText = getDateRangeText((controlledTimeValue as TimeframeFilterOptions) || (time as TimeframeFilterOptions));
+    const timerangeText =
+        controlledRangeText || getDateRangeText((controlledTimeValue as TimeframeFilterOptions) || (time as TimeframeFilterOptions));
     return (
         <div>
             <p className="field-label text-right my-4">{timerangeText}</p>

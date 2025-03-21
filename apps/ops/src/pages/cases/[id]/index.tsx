@@ -1,4 +1,4 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
@@ -18,7 +18,7 @@ import getCase from '@deps/queries/server/case/get-case';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
-import { getUserInfoFromUser, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 interface BaseCaseDetailsPageProps {
     caseDetails: Case;
@@ -41,74 +41,80 @@ const CaseDetailsPage = ({ caseDetails, id, tab, user }: CaseDetailsPageProps) =
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: any) => {
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, params, req, res } = context;
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const { locale = DEFAULT_LOCALE, params, req, res } = context;
 
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('cases/:id::Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'cases/:id/index',
-                function: 'getServerSideProps',
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('cases/:id::Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
+
+            const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadCaseManagement,
+                loggingContext
+            );
+            const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
+
+            if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
+
+            const id = (params?.id as string) || '';
+            const tab = (params?.tab as string) || '';
+
+            const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+            const caseDetails = await getCase({
+                partyId: user.partyId,
+                caseId: id,
+                accessToken: accessToken as string,
+                loggingContext,
             });
-            return serverSidePropsLogout();
-        }
 
-        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
-        const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE);
+            if (!caseDetails?.data) {
+                return {
+                    redirect: {
+                        destination: '/404',
+                        permanent: false,
+                    },
+                };
+            }
 
-        if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {
+            if (!tab || !CaseDetailsTabValues[tab]) {
+                return {
+                    redirect: {
+                        destination: `/cases/${id}/${CaseDetailsTabValues.progress}`,
+                        permanent: false,
+                    },
+                    props: {},
+                };
+            }
             return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
+                props: {
+                    ...translations,
+                    caseDetails: caseDetails.data,
+                    id,
+                    tab,
+                    user,
                 },
             };
-        }
-
-        const id = (params?.id as string) || '';
-        const tab = (params?.tab as string) || '';
-
-        const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
-        const caseDetails = await getCase({
-            partyId: user.partyId,
-            caseId: id,
-            accessToken: accessToken as string,
-            loggingContext: { file: 'cases/:id', function: 'getServerSideProps', ...getUserInfoFromUser(user) },
-        });
-
-        if (!caseDetails?.data) {
-            return {
-                redirect: {
-                    destination: '/404',
-                    permanent: false,
-                },
-            };
-        }
-
-        if (!tab || !CaseDetailsTabValues[tab]) {
-            return {
-                redirect: {
-                    destination: `/cases/${id}/${CaseDetailsTabValues.progress}`,
-                    permanent: false,
-                },
-                props: {},
-            };
-        }
-        return {
-            props: {
-                ...translations,
-                caseDetails: caseDetails.data,
-                id,
-                tab,
-                user,
-            },
-        };
+        },
     },
-});
+    { file: 'cases/[id]/index', function: 'getServerSideProps', page: 'cases/:id' }
+);
 
 export default CaseDetailsPage;

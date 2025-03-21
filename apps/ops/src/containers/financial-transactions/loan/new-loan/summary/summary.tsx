@@ -95,7 +95,7 @@ const Summary = ({ policy }: SummaryProps) => {
                 <div className="mb-4 flex flex-row items-center">
                     <UserIcon className="mr-2 text-primary" height={24} width={24} />
                     <Typography variant={TypographyVariant.H2} className="mr-5">
-                        {t('payor')}
+                        {t('payee')}
                     </Typography>
                 </div>
                 <PayeeSummaryCard

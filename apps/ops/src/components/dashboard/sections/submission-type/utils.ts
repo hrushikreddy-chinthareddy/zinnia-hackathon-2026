@@ -9,6 +9,24 @@ type TransformedData = {
     [key: string]: { [key: string]: number };
 };
 
+export const friendlyGroupByName: Record<GroupByOptions, string> = {
+    [GroupByOptions.ApplicationType]: 'Application type',
+    [GroupByOptions.BrokerDealerName]: 'Distribution partner',
+    [GroupByOptions.ProductName]: 'Product',
+    [GroupByOptions.Carrier]: 'Carrier',
+    [GroupByOptions.ProcessSubType]: 'Case subtype',
+    [GroupByOptions.CaseStatus]: 'Case status',
+    [GroupByOptions.AgingRange]: 'Aging range',
+    [GroupByOptions.OpenStages]: 'Open stages',
+    [GroupByOptions.ExceptionCategory]: 'Exception category',
+    [GroupByOptions.PolicyNumber]: 'Policy number',
+    [GroupByOptions.Process]: 'Process',
+    [GroupByOptions.CreatedAt]: 'Created date',
+    [GroupByOptions.UpdatedAt]: 'Updated date',
+    [GroupByOptions.AgingTimeRanges]: 'Aging time ranges',
+    [GroupByOptions.Default]: 'Default',
+};
+
 export const submissionTypeQuery = async (baseInsightQueryFilter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
     const response = await getCaseDashboardStatsQuery(baseInsightQueryFilter, groupBy);
     if (!response?.data) {

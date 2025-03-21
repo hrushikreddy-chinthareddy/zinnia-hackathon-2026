@@ -42,8 +42,13 @@ const PayorStep = ({ parentPage, policy, setState, state }: PayorStepProps) => {
     const { payorPartyId: currentPayorPartyId } = state;
 
     const eligiblePayors = useMemo(() => {
-        const eligibleRoles = partyRoles?.filter(role => role.partyRole === PartyRole.OWNER);
+        const ownerPayorRoles = partyRoles?.filter(role => role.partyRole === PartyRole.OWNER || role.partyRole === PartyRole.PAYOR);
 
+        const eligibleRoles = ownerPayorRoles?.filter((value, index, self) =>
+            index === self.findIndex((t) => (
+                t.partyId === value.partyId
+            ))
+        );
         return eligibleRoles?.map(eligibleRole => {
             const party = parties?.find(party => eligibleRole.partyId === party.partyId);
 
@@ -97,7 +102,6 @@ const PayorStep = ({ parentPage, policy, setState, state }: PayorStepProps) => {
             title={t('workflows.payorStep.title')}
             footerContent={
                 <TransactionNavigationButtons
-                    className="mt-4"
                     handleContinue={handleContinue}
                     parentPage={parentPage}
                     planCode={policy.product?.planCode}
@@ -148,7 +152,7 @@ const PayorStep = ({ parentPage, policy, setState, state }: PayorStepProps) => {
                     </div>
                     {formError && (
                         <AssistiveText
-                            className="col-span-full pt-1"
+                            className="col-span-full"
                             iconOverride={<ErrorIcon height={16} width={16} />}
                             text={t('workflows.payorStep.error')}
                             variant={AssistiveTextVariant.Error}
