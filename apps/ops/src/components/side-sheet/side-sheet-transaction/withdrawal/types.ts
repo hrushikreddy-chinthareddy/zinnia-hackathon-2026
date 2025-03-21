@@ -1,8 +1,16 @@
-import { TFunction } from "next-i18next";
+import { TFunction } from 'next-i18next';
 
-import { BankAccount, FullSurrenderQuoteResponse, PartialWithdrawalOneTimeQuoteResponse, Policy, Transaction, TransactionChargesItem, TransactionType } from "@deps/models/policy/sor-policy";
+import {
+    BankAccount,
+    FullSurrenderQuoteResponse,
+    PartialWithdrawalOneTimeQuoteResponse,
+    Policy,
+    Transaction,
+    TransactionChargesItem,
+    TransactionType,
+} from '@deps/models/policy/sor-policy';
 
-import { BaseTransactionSideSheetValues, PayeePaymentDetails } from "../types";
+import { BaseTransactionSideSheetValues, PayeePaymentDetails } from '../types';
 
 export type Charge = {
     amount: string;
@@ -15,7 +23,7 @@ export type TaxWithholdingsValues = {
     state?: string;
     stateTax?: string;
     federalTax?: string;
-}
+};
 
 export type WithdrawalDetails = {
     amount?: string;
@@ -26,7 +34,7 @@ export type WithdrawalDetails = {
     tooltipBody?: string;
     tooltipTitle?: string;
     value?: string;
-}
+};
 
 export interface WithdrawalSideSheetValues extends BaseTransactionSideSheetValues {
     actualWithdrawalAmount?: number;
@@ -47,9 +55,9 @@ export type WithdrawalChargesValues = {
     stateTaxWithheld?: string;
     totalChargesWithoutTaxes?: number;
     totalPayment?: number;
-}
+};
 
-export type WithdrawalQuoteResponse = FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse
+export type WithdrawalQuoteResponse = FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse;
 
 export type WithdrawalDetailsValues = {
     // ---------------------
@@ -72,12 +80,12 @@ export type WithdrawalDetailsValues = {
     // ---------------------
     // Pending - no date would pass from the backend represent on side sheet as “--”
 
-    // Completed - should pass the date the transaction went in the batch cycle 
+    // Completed - should pass the date the transaction went in the batch cycle
     processDate?: string;
     // ---------------------
 
     // ---------------------
-    // Amount requested for withdrawal. 
+    // Amount requested for withdrawal.
     // Gross disbursement, taxes and fees will be taken out from the selected amount.
     //   So,Amount Requested would be less than Total payment amount.
     // Net Disbursement, payee’s are paid their % of the requested withdrawal amount.
@@ -89,19 +97,14 @@ export type WithdrawalDetailsValues = {
     status?: string;
 
     // ---------------------
-    // This number should represent the actual number that will be paid out to the payees.
-    // Gross disbursement, taxes and fees will be taken out from the selected amount.
-    //  So, Amount Requested would be less than Total payment amount.
-    // Net Disbursement, payee’s are paid their % of the requested withdrawal amount.
-    // Taxes and fees are taken out on top of the selected amount.
-    // In this case, Amount Requested would be = to the Total payment amount.
-    totalPayment?: number;
+    // This is the total charged from the withdrawal.
+    totalChargeAmount?: number;
     // ---------------------
     transactionType?: TransactionType;
-}
+};
 
 export type WithdrawalSideSheetProps = {
     policy: Policy;
     t: TFunction;
     transaction: Transaction;
-}
+};
