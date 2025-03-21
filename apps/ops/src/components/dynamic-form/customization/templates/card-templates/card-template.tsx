@@ -1,11 +1,13 @@
 import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
+import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { MetadataSearchResponse } from 'node_modules/@zinnia/api-types/dist/generated-types/documents-v3/models/MetadataSearchResponse';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
@@ -15,10 +17,7 @@ import { formatSSN, toSentenceCase } from '@deps/helpers/string.helper';
 import { formatDirtyAddress, replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { CardTypes, DataFormattingTypes } from '@deps/models/case/task';
-import { ContentVariant } from '@deps/components/content/content';
-import Content from '@deps/components/content/content';
 import loadingImage from '@deps/styles/images/loader.png';
-import Image from 'next/image';
 
 export function CardTemplate(props: ObjectFieldTemplateProps) {
     const { formData, uiSchema, schema, formContext } = props;
@@ -129,76 +128,50 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
 
     return (
         <>
-            {cardType === CardTypes.Document ? (
-                <DocumentActions document={replacePlaceholders(data, formData) || data} properties={displayProperties} t={t} />
-            ) : (
-                <div className={`flex w-[455px] rounded border border-gray-100 p-[12px] ${className}`}>
-                    <div className="px-2">
-                        <Icon width={25} height={25} type={IconType[icon as string as keyof typeof IconType] || IconType.CIRCLE_USER} />{' '}
+            <div className={`flex w-[455px] rounded border border-gray-100 p-[12px] ${className}`}>
+                <div className="px-2">
+                    <Icon width={25} height={25} type={IconType[icon as string as keyof typeof IconType] || IconType.CIRCLE_USER} />{' '}
+                </div>
+                <div className="grow">
+                    <div className="text-sm font-bold break-all">
+                        {title?.field?.[0] && <PiiWrapper>{formatValueByDataType(title.field[0].dataType, title.value)}</PiiWrapper>}
                     </div>
-                    <div className="grow">
-                        <div>
-                            {title?.field?.[0] && (
-                                <PiiWrapper>
-                                    <Content
-                                        className="min-w-max  break-all"
-                                        variant={ContentVariant.BodySmBold}
-                                        details={formatValueByDataType(title.field[0].dataType, title.value)}
-                                    />
-                                </PiiWrapper>
-                            )}
-                        </div>
-                        {subtitle?.field?.[0] && (
-                            <div className="flex">
-                                <Content
-                                    className="text-[--color-base-text-text-secondary]"
-                                    variant={ContentVariant.BodySm}
-                                    details={subtitle?.field[0]?.title ? subtitle?.field[0].title + ': ' : ''}
-                                />{' '}
-                                <PiiWrapper>
-                                    <Content
-                                        className="text-[--color-base-text-text-secondary]"
-                                        variant={ContentVariant.BodySm}
-                                        details={formatValueByDataType(subtitle?.field?.[0]?.dataType, subtitle?.value)}
-                                    />
-                                </PiiWrapper>
-                            </div>
-                        )}
+                    <div className="flex items-center text-sm font-normal text-gray-300">
+                        <PiiWrapper>
+                            {subtitle?.field?.[0] && subtitle?.field[0]?.title ? subtitle?.field[0].title + ': ' : ''}{' '}
+                            {subtitle?.field?.[0] && formatValueByDataType(subtitle?.field?.[0]?.dataType, subtitle?.value)}
+                        </PiiWrapper>
                     </div>
-
+                </div>
+                {cardType === CardTypes.Detailed && (
                     <div onClick={handleCardClick}>
                         <Icon width={25} height={25} type={IconType.CHEVRON_RIGHT} />
                     </div>
-                </div>
-            )}
+                )}
+                {cardType === CardTypes.Document && (
+                    <DocumentActions document={replacePlaceholders(data, formData) || data} properties={displayProperties} t={t} />
+                )}
+            </div>
         </>
     );
 };
 
 export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
     return (
-        <CardContainer classNames={'w-full'} containerClassNames="w-full">
+        <CardContainer classNames={'w-full'} containerClassNames="w-full content-divider">
             <div className="flex flex-col w-full">
                 <Typography variant={TypographyVariant.H3} className="mb-3">
                     {sectionTitle}
                 </Typography>
                 {properties?.map((schema: any) => {
                     return (
-                        <div key={schema.key} className="grid grid-cols-3 gap-2 text-md align-center mb-1">
-                            <Content
-                                className="min-w-max text-[--color-base-text-text-secondary] colspan-1"
-                                variant={ContentVariant.BodySm}
-                                details={schema?.title}
-                            />
-                            <Content
-                                className="min-w-max colspan-2"
-                                variant={ContentVariant.BodySm}
-                                details={formatValueByDataType(
-                                    schema?.dataType,
-                                    details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--'
-                                )}
-                            />
-                        </div>
+                        <Typography variant={TypographyVariant.BodySm} key={schema.key} className="p-1">
+                            {schema?.title}:{' '}
+                            {formatValueByDataType(
+                                schema?.dataType,
+                                details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--'
+                            )}
+                        </Typography>
                     );
                 })}
             </div>
@@ -223,38 +196,39 @@ const DocumentActions = ({ document, t }: any) => {
     };
 
     return (
-        <li className="flex w-[455px] items-center justify-between rounded-sm border-2 border-gray-100 px-4 py-3">
-            <div className="flex flex-row items-center justify-start gap-2">
-                <Icon width={24} height={24} className="shrink-0" type={IconType.DOCUMENT_TEXT} />
-                <div className="flex flex-col">
-                    <Content variant={ContentVariant.BodySm} details={document.documentName} />
-                    <Content
-                        className="text-gray-600"
-                        variant={ContentVariant.BodySm}
-                        details={t('caseOverview.sidesheet.documentType', { documentType: document.documentType }) as string}
-                    />
-                </div>
+        <>
+            <div className="px-4">
+                <DocumentPreviewer
+                    className="flex max-w-[234px] gap-1"
+                    activeDocType={DocumentTypeView.Case}
+                    carrier={document?.carrier || ''}
+                    displayName={document?.displayName || ''}
+                    documentId={document?.documentId ?? (document?.documentID as string)}
+                >
+                    {t('general.view')}
+                </DocumentPreviewer>
             </div>
-            <DocumentPreviewer {...document}>{t('caseOverview.sidesheet.view')}</DocumentPreviewer>
-            <NavElement
-                onClick={handleClick}
-                size={NavElementSize.Small}
-                title={`${t('general.download')} ${document?.displayName}`}
-                type={NavElementType.Button}
-                variant={NavElementVariant.Secondary}
-            >
-                {loading ? (
-                    <Image
-                        alt={t('general.downloading')}
-                        className="transform-origin-center duration-2000 animate-spin ease-linear"
-                        height={20}
-                        src={loadingImage}
-                        width={20}
-                    />
-                ) : (
-                    <Icon width={20} height={20} type={IconType.DOWNLOAD} />
-                )}
-            </NavElement>
-        </li>
+            <div className="px-2">
+                <NavElement
+                    onClick={handleClick}
+                    size={NavElementSize.Small}
+                    title={`${t('general.download')} ${document?.displayName}`}
+                    type={NavElementType.Button}
+                    variant={NavElementVariant.Secondary}
+                >
+                    {loading ? (
+                        <Image
+                            alt={t('general.downloading')}
+                            className="transform-origin-center duration-2000 animate-spin ease-linear"
+                            height={20}
+                            src={loadingImage}
+                            width={20}
+                        />
+                    ) : (
+                        <Icon width={20} height={20} type={IconType.DOWNLOAD} />
+                    )}
+                </NavElement>
+            </div>
+        </>
     );
 };
