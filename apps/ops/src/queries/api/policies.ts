@@ -18,12 +18,12 @@ import { isMockPolicyDetailsRequestEnabled, isMockPolicySearchRequestEnabled } f
 import { mockPolicy } from '@deps/services/mocks/sor-policy';
 import { CheckTupleResponse } from '@deps/types/fga';
 import { PolicySearchResponse, SearchViewQuery } from '@deps/types/search';
+import { browserLogError, browserLogInfo, browserLogWarn } from '@deps/utils/browser-logging';
 import { fullyMaskPolicyResponse, lcPartyResponseSanitizer, policySanitizer, policySanitizerWithoutSSN } from '@deps/utils/sanitizers';
-import { logError, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, LoggingContext, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl, policyApiBaseUrl } from '../api-config';
 import { serverApi } from '../api-utils/serverApiClient';
-import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 
 export interface GetPolicyResponse {
     data: Policy;
@@ -127,7 +127,7 @@ export const fetchPolicy = async (id?: string, planCode?: string): Promise<Polic
         browserLogInfo('fetchPolicy::No policyNumber to fetch policy', {
             poicyNumber: id,
             planCode: planCode,
-            file: 'policies::fetchPolicy'
+            file: 'policies::fetchPolicy',
         });
         return null;
     }
@@ -136,7 +136,7 @@ export const fetchPolicy = async (id?: string, planCode?: string): Promise<Polic
         browserLogInfo('fetchPolicy::No planCode to fetch policy', {
             poicyNumber: id,
             planCode: planCode,
-            file: 'policies::fetchPolicy'
+            file: 'policies::fetchPolicy',
         });
         return null;
     }
@@ -149,7 +149,7 @@ export const fetchPolicy = async (id?: string, planCode?: string): Promise<Polic
             browserLogInfo('fetchPolicy::Policy data not', {
                 poicyNumber: id,
                 planCode: planCode,
-                file: 'policies::fetchPolicy'
+                file: 'policies::fetchPolicy',
             });
             throw new Error('fetchPolicy::Invalid response from API');
         }
@@ -157,7 +157,7 @@ export const fetchPolicy = async (id?: string, planCode?: string): Promise<Polic
         browserLogInfo('fetchPolicy::Successfully retrieved policy', {
             poicyNumber: id,
             planCode: planCode,
-            file: 'policies::fetchPolicy'
+            file: 'policies::fetchPolicy',
         });
         return data.data;
     } catch (e) {
@@ -165,7 +165,7 @@ export const fetchPolicy = async (id?: string, planCode?: string): Promise<Polic
             ...parseErrorInformation(e),
             poicyNumber: id,
             planCode: planCode,
-            file: 'policies::fetchPolicy'
+            file: 'policies::fetchPolicy',
         });
         return null;
     }
@@ -199,13 +199,18 @@ export const fetchVersionedPolicy = async (id: string, planCode: string, version
 };
 
 export const getPolicyDetailsSsr = async (
-    id?: string,
-    planCode?: string,
-    accessToken?: string,
-    userInfo: { partyId?: string; sessionId?: string; userId?: string; userName?: string } = {},
+    id: string | undefined,
+    planCode: string | undefined,
+    accessToken: string | undefined,
+    logCtx: LoggingContext,
     nonSanitizedSSN = false
 ): Promise<Policy | null> => {
-    const loggingContext = { file: 'queries/api/policies', function: 'getPolicyDetailsSSR', ...userInfo };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/policies',
+        function: 'getPolicyDetailsSSR',
+        inputs: { id, planCode, nonSanitizedSSN },
+    };
 
     if (!id) {
         logWarn('getPolicyDetailsSSR:no policyNumber to fetch policy', loggingContext);
@@ -232,24 +237,28 @@ export const getPolicyDetailsSsr = async (
     try {
         const url = `${policyApiBaseUrl}/${planCode}/${id}?viewDetails=true`;
 
-        logInfo('getPolicyDetailsSSR', { url, id, ...loggingContext });
+        logInfo('getPolicyDetailsSSR', { ...loggingContext, url });
 
         const unmaskingRequest = serverApi.post<any, AxiosResponse<CheckTupleResponse>>(
             `${apiServerBaseUrl}/fga/v1/check`,
-            { user: `party:${userInfo?.partyId}`, relation: 'unmask_pii', object: `policy:${id}_${planCode}` },
+            { user: `party:${logCtx?.user?.partyId}`, relation: 'unmask_pii', object: `policy:${id}_${planCode}` },
             { authorization: 'Bearer ' + accessToken },
             loggingContext
         );
 
-        const policyRequest = serverApi.get<SearchViewQuery, AxiosResponse<GetPolicyResponse>>(url, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                Accept: 'application/json',
-                Authorization: `Bearer ${accessToken}`,
+        const policyRequest = serverApi.get<SearchViewQuery, AxiosResponse<GetPolicyResponse>>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
             },
-        });
+            loggingContext
+        );
 
         const [unmaskingResponse, policyResponse] = await Promise.all([unmaskingRequest, policyRequest]);
 
@@ -271,21 +280,30 @@ export const getPolicyPartiesSSR = async (
     policyNumber: string,
     clientCode: string,
     accessToken: string | undefined,
-    userInfo: object = {}
+    logCtx: LoggingContext
 ): Promise<LifeCadParty[] | null> => {
-    const loggingContext = { file: 'queries/api/policies', function: 'getPolicyPartiesSSR', ...userInfo };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/policies',
+        function: 'getPolicyPartiesSSR',
+        inputs: { policyNumber, clientCode },
+    };
     try {
         const url = `${apiServerBaseUrl}/policy/v1/policies/party?policyNumber=${policyNumber}&clientCode=${clientCode}`;
-        logInfo('getPolicyPartiesSSR', { url, policyNumber, clientCode, ...loggingContext });
-        const { data } = await serverApi.get<LifeCadParty[], AxiosResponse<LifeCadParty[]>>(url, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                Accept: 'application/json',
-                Authorization: `Bearer ${accessToken}`,
+        logInfo('getPolicyPartiesSSR', { ...loggingContext, url, policyNumber, clientCode });
+        const { data } = await serverApi.get<LifeCadParty[], AxiosResponse<LifeCadParty[]>>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
             },
-        });
+            loggingContext
+        );
 
         return lcPartyResponseSanitizer(data);
     } catch (error: any) {
@@ -298,12 +316,12 @@ export const getPolicyParties = async (policyNumber: string, clientCode: string)
     const loggingContext = { file: 'queries/api/policies', function: 'getPolicyParties' };
     try {
         const url = `${baseUrl}/party?policyNumber=${policyNumber}&clientCode=${clientCode}`;
-        logInfo('getPolicyParties', { url, policyNumber, clientCode, ...loggingContext });
+        browserLogInfo('getPolicyParties', { url, policyNumber, clientCode, ...loggingContext });
         const { data } = await client.get<LifeCadParty[], AxiosResponse<LifeCadParty[]>>(url);
 
         return lcPartyResponseSanitizer(data);
     } catch (error: any) {
-        logError('getPolicyParties', { error, policyNumber, clientCode, ...loggingContext });
+        browserLogError('getPolicyParties', { error, policyNumber, clientCode, ...loggingContext });
         return null;
     }
 };
@@ -327,18 +345,33 @@ export const getPolicyAccountInfo = async (policyNumber: string, clientCode: str
     }
 };
 
-export const getPolicyAccountInfoSSR = async (policyNumber: string, clientCode: string, accessToken: any): Promise<AccountInfo | null> => {
+export const getPolicyAccountInfoSSR = async (
+    policyNumber: string,
+    clientCode: string,
+    accessToken: any,
+    logCtx: LoggingContext
+): Promise<AccountInfo | null> => {
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/policies',
+        function: 'getPolicyAccountInfoSSR',
+        inputs: { policyNumber, clientCode },
+    };
     try {
         const url = `${apiServerBaseUrl}/policy/v1/policies/accountInfo?policyNumber=${policyNumber}&clientCode=${clientCode}`;
-        const { data } = await serverApi.get<any, AxiosResponse<AccountInfo>>(url, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                Accept: 'application/json',
-                Authorization: `Bearer ${accessToken}`,
+        const { data } = await serverApi.get<any, AxiosResponse<AccountInfo>>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
             },
-        });
+            loggingContext
+        );
         return data;
     } catch (e) {
         console.error('policies::getPolicyAccountInfoSSR::error', e);
@@ -402,31 +435,36 @@ export const getPolicyTransactionHistorySSR = async (
     clientCode: string,
     typeDesc: string,
     transactionType: string,
-    accessToken?: string,
-    userInfo: object = {}
+    accessToken: string | undefined,
+    logCtx: LoggingContext
 ): Promise<TransactionHistory | null> => {
-    const loggingContext = { file: 'queries/api/policies', function: 'getPolicyTransactionHistorySSR', ...userInfo };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/policies',
+        function: 'getPolicyTransactionHistorySSR',
+        inputs: { policyNumber, clientCode, typeDesc, transactionType },
+    };
     try {
         const url = `${apiServerBaseUrl}/policy/v1/policies/transactionHistory?policyNumber=${policyNumber}&TransactionType=${transactionType}&TypeDesc=${typeDesc}&clientCode=${clientCode}&limit=1000`;
-        logInfo('getPolicyTransactionHistorySSR', { url, policyNumber, clientCode, typeDesc, transactionType, ...loggingContext });
-        const { data } = await serverApi.get<TransactionHistory, AxiosResponse<TransactionHistory>>(url, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                Accept: 'application/json',
-                Authorization: `Bearer ${accessToken}`,
+        logInfo('getPolicyTransactionHistorySSR', { ...loggingContext, url });
+        const { data } = await serverApi.get<TransactionHistory, AxiosResponse<TransactionHistory>>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
             },
-        });
+            loggingContext
+        );
 
         return data;
     } catch (error: any) {
         logWarn('getPolicyTransactionHistorySSR', {
             ...parseErrorInformation(error),
-            policyNumber,
-            clientCode,
-            typeDesc,
-            transactionType,
             ...loggingContext,
         });
         return null;
@@ -454,12 +492,12 @@ export const getPolicyTransactionHistory = async (
     const loggingContext = { file: 'queries/api/policies', function: 'getPolicyTransactionHistory', ...userInfo };
     try {
         const url = `${baseUrl}/transactionHistory?policyNumber=${policyNumber}&TransactionType=${transactionType}&TypeDesc=${typeDesc}&clientCode=${clientCode}&fromDate=${fromDate}&limit=1000`;
-        logInfo('getPolicyTransactionHistory', { url, policyNumber, clientCode, typeDesc, transactionType, ...loggingContext });
+        browserLogInfo('getPolicyTransactionHistory', { url, policyNumber, clientCode, typeDesc, transactionType, ...loggingContext });
         const { data } = await client.get<TransactionHistory, AxiosResponse<TransactionHistory>>(url);
 
         return data;
     } catch (error: any) {
-        logWarn('getPolicyTransactionHistory', {
+        browserLogWarn('getPolicyTransactionHistory', {
             ...parseErrorInformation(error),
             policyNumber,
             clientCode,
@@ -474,24 +512,31 @@ export const getPolicyTransactionHistory = async (
 export const getSpecialProgramsSSR = async (
     policyNumber: string,
     clientCode: string,
-    accessToken?: string
+    accessToken: string | undefined,
+    logCtx: LoggingContext
 ): Promise<SpecialProgram | null> => {
     const loggingContext = {
+        ...logCtx,
+        inputs: { policyNumber, clientCode },
         file: 'queries/api/policies',
         function: 'getSpecialProgramsSSR',
     };
 
     try {
         const url = `${apiServerBaseUrl}/policy/v1/policies/specialprogramdetails?policyNumber=${policyNumber}&clientCode=${clientCode}`;
-        const { data } = await serverApi.get<SpecialProgram | null, AxiosResponse<SpecialProgram>>(url, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                Accept: 'application/json',
-                Authorization: `Bearer ${accessToken}`,
+        const { data } = await serverApi.get<SpecialProgram | null, AxiosResponse<SpecialProgram>>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
             },
-        });
+            loggingContext
+        );
         return data;
     } catch (error: any) {
         logWarn('getSpecialProgramsSSR', {
@@ -659,8 +704,20 @@ export const searchPolicySSR = async (
     carrierIds: Carrier[],
     accessToken: any,
     limit: number,
-    offset: number
+    offset: number,
+    logCtx: LoggingContext
 ): Promise<any | null> => {
+    const loggingContext = {
+        ...logCtx,
+        function: 'searchPolicySSR',
+        file: 'queries/api/policies',
+        inputs: {
+            policyNumber,
+            carrierIds,
+            limit,
+            offset,
+        },
+    };
     limit = limit || 10;
     offset = offset || 0;
     const searchUrl = `${apiServerBaseUrl}/policy/v1/policies/reference/search?offset=${offset}&limit=${limit}`;
@@ -669,19 +726,29 @@ export const searchPolicySSR = async (
         carrierIds: carrierIds,
     };
     try {
-        logInfo('searchPolicySSR::Started policy search', { url: searchUrl, payload: formData });
-        const { data: searchResponse } = await serverApi.post<any>(searchUrl, formData, {
-            authorization: 'Bearer ' + accessToken,
-        });
+        logInfo('searchPolicySSR::Started policy search', loggingContext);
+        const { data: searchResponse } = await serverApi.post<any>(
+            searchUrl,
+            formData,
+            {
+                authorization: 'Bearer ' + accessToken,
+            },
+            loggingContext
+        );
 
         if (!searchResponse.results) {
-            logInfo('searchPolicySSR::Policy search result not found', { url: searchUrl, payload: formData });
+            logInfo('searchPolicySSR::Policy search result not found', { ...loggingContext, url: searchUrl });
             return null;
         }
-        logInfo('searchPolicySSR::Completed policy search', { url: searchUrl, payload: formData, records: searchResponse?.results?.length });
+        logInfo('searchPolicySSR::Completed policy search', {
+            ...loggingContext,
+            url: searchUrl,
+            payload: formData,
+            records: searchResponse?.results?.length,
+        });
         return searchResponse.results;
     } catch (e) {
-        logInfo('searchPolicySSR::Policy search failed', { url: searchUrl, payload: formData, ...parseErrorInformation(e) });
+        logInfo('searchPolicySSR::Policy search failed', { ...loggingContext, url: searchUrl, ...parseErrorInformation(e) });
         return null;
     }
 };

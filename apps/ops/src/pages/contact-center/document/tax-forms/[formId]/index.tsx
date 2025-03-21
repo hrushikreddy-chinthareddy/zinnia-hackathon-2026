@@ -1,6 +1,5 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { deleteCookie, getCookies } from 'cookies-next';
-import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
@@ -15,7 +14,7 @@ import { UserPermission } from '@deps/models/user-profile';
 import { downloadTaxFormById } from '@deps/queries/api/tax-forms';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface FormViewerProps extends SegmentTrackedPageProps {
@@ -81,73 +80,83 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear 
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const { locale = DEFAULT_LOCALE, params, res, req } = context;
-        try {
-            (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('documents:: Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'documents',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const { locale = DEFAULT_LOCALE, params, res, req } = context;
+            try {
+                (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('documents:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
 
-        const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
-        if (!hasPermissionToReadCaseManagement) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
-
-        const formId = (params?.formId as string) || '';
-
-        if (!formId) {
-            return {
-                redirect: {
-                    destination: '/406',
-                    permanent: false,
-                },
-            };
-        }
-
-        try {
-            const { contractNumber, carrierCode, fChar, taxYear } = getCookies({ req, res });
-
-            deleteCookie('contractNumber');
-            deleteCookie('carrierCode');
-            deleteCookie('fChar');
-            deleteCookie('taxYear');
-
-            const translations = await serverSideTranslations(
-                locale,
-                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-                nextI18nextConfig,
-                ALL_LOCALES
+            const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadCaseManagement,
+                loggingContext
             );
+            if (!hasPermissionToReadCaseManagement) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
 
-            return {
-                props: {
+            const formId = (params?.formId as string) || '';
+
+            if (!formId) {
+                return {
+                    redirect: {
+                        destination: '/406',
+                        permanent: false,
+                    },
+                };
+            }
+
+            try {
+                const { contractNumber, carrierCode, fChar, taxYear } = getCookies({ req, res });
+
+                deleteCookie('contractNumber');
+                deleteCookie('carrierCode');
+                deleteCookie('fChar');
+                deleteCookie('taxYear');
+
+                const translations = await serverSideTranslations(
                     locale,
-                    ...translations,
-                    formId: Number(formId),
-                    contractNumber,
-                    carrierCode,
-                    fChar,
-                    taxYear,
-                },
-            };
-        } catch (e) {
-            return {
-                props: {},
-            };
-        }
+                    [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                    nextI18nextConfig,
+                    ALL_LOCALES
+                );
+
+                return {
+                    props: {
+                        locale,
+                        ...translations,
+                        formId: Number(formId),
+                        contractNumber,
+                        carrierCode,
+                        fChar,
+                        taxYear,
+                    },
+                };
+            } catch (e) {
+                return {
+                    props: {},
+                };
+            }
+        },
     },
-});
+    {
+        file: 'contact-center/document/tax-forms/[formId]/index',
+        function: 'getServerSideProps',
+        page: 'contact-center/document/tax-forms/:formId',
+    }
+);
 
 export default FormViewer;

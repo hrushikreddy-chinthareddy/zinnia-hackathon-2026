@@ -6,16 +6,15 @@ import { DocumentDownloadV2, DocumentDownloadV2WithMime } from '@deps/models/cas
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
-import { getUserInfoForLogging, logCompliance, logError, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import { logCompliance, logError, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const baseUrl = `${apiServerBaseUrl}/document/v3`;
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadV2WithMime | any | null>) => {
+    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadV2WithMime | any | null>, loggingContext) => {
         const session = await getSession(req, res);
-        const userInfo = await getUserInfoForLogging(req, res);
         // Note: parentCarrierCode(clientCode) and documentClassification(source) are *only* used to allow v3 to handle v2 documents.  Can remove once all docs are on v3
         const { documentId, parentCarrierCode, documentClassification } = req.query;
         const accessToken = session?.accessToken;
@@ -34,14 +33,6 @@ export default withAuthAndLogging(
         }
         const canUnmask = await canUnmaskPii(session?.accessToken, session?.user?.partyId);
 
-        const loggingContext = {
-            parentCarrierCode,
-            documentId,
-            file: 'document/v3/documents/:documentId/download',
-            function: 'routeHandler',
-            documentClassification,
-            ...userInfo,
-        };
         if (!canUnmask) {
             logCompliance('Document Download request denied due to missing unmask pii permission', loggingContext);
             return res.status(403).json({ error: 'Forbidden' });
@@ -62,9 +53,8 @@ export default withAuthAndLogging(
             res.json({ ...data, mimeType });
         } catch (error) {
             logError('documents/download:: error', {
-                file: 'document/v3/documents/:documentNumber/download',
-                function: 'routeHandler',
                 ...parseErrorInformation(error),
+                ...loggingContext,
             });
             res.status(500).json(null);
         }

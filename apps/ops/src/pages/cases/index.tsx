@@ -1,8 +1,6 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import { GetServerSidePropsContext } from 'next';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -44,6 +42,7 @@ import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import useCaseFilterQueryStore from './caseFilterQueryStore';
@@ -456,37 +455,44 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        const user = await getUserData(context);
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
 
-        const doesUserHasPagePermissions = await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement);
+            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
+                context,
+                UserPermission.AllowReadCaseManagement,
+                loggingContext
+            );
 
-        // DEPU-2835
-        const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE);
+            // DEPU-2835
+            const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
 
-        if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
-            return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
-                },
-            };
-        }
+            if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
 
-        const { locale = DEFAULT_LOCALE } = context;
+            const { locale = DEFAULT_LOCALE } = context;
 
-        const translations = await serverSideTranslations(
-            locale,
-            [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-            nextI18nextConfig,
-            ALL_LOCALES
-        );
+            const translations = await serverSideTranslations(
+                locale,
+                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
 
-        const authorizedCarriers = await listCarriersPage(context, UserPermission.AllowReadCaseManagement);
+            const authorizedCarriers = await listCarriersPage(context, UserPermission.AllowReadCaseManagement, loggingContext);
 
-        return { props: { authorizedCarriers, isAdvisorsExcel, user, locale, ...translations } };
+            return { props: { authorizedCarriers, isAdvisorsExcel, user, locale, ...translations } };
+        },
     },
-});
+    { file: 'cases/index', function: 'getServerSideProps', page: 'cases' }
+);
 
 export default CaseManagementDashboard;

@@ -1,10 +1,9 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-
 import { PageHead } from '@deps/components/page-title';
 import LoanPaymentContainer from '@deps/containers/financial-transactions/loan/loan-payment/loan-payment-container';
 import { LoanPaymentProvider } from '@deps/contexts/transactions/LoanPaymentContext';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
+import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 export interface LoanPaymentOneTimeProps {
     policy: Policy;
@@ -21,8 +20,15 @@ const LoanPaymentOneTime = ({ policy }: LoanPaymentOneTimeProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: getServerSidePropsPolicyDetailsPage,
-});
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: getServerSidePropsPolicyDetailsPage,
+    },
+    {
+        file: 'policies/[planCode]/[id]/policy/loans/loan-payment',
+        function: 'getServerSideProps',
+        page: 'policies/:planCode/:id/policy/loans/loan-payment',
+    }
+);
 
 export default LoanPaymentOneTime;

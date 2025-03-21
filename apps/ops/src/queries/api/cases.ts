@@ -21,7 +21,7 @@ import { CaseSearchBody, CaseSearchErrorResponse, CaseSearchResponse } from '@de
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { caseSanitizer } from '@deps/utils/sanitizers';
-import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, LoggingContext, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { baseAppUrl, se2ApiServerUrl } from '../api-config';
 import { client } from '../api-utils/client';
@@ -206,50 +206,64 @@ export const getCaseDetails = async (id: string): Promise<Case | null> => {
     }
 };
 
-export const getCaseDetailsSSR = async (id: string, accessToken: string): Promise<Case | null> => {
+export const getCaseDetailsSSR = async (id: string, accessToken: string, loggingContext: LoggingContext): Promise<Case | null> => {
     try {
         if (isMockCaseDetailsRequestEnabled()) {
             return mockCaseDetails;
         }
 
         const url = `${ssrCasesUrl}/${id}`;
-        logInfo('getCaseDetailsSSR', { file: 'queries/api/cases', function: 'getCaseDetailsSSR', url });
+        logInfo('getCaseDetailsSSR', { ...loggingContext, file: 'queries/api/cases', function: 'getCaseDetailsSSR', url });
 
-        const { data } = await serverApi.get<null, AxiosResponse>(url, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
-                'Access-Control-Allow-Origin': '*',
+        const { data } = await serverApi.get<null, AxiosResponse>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
             },
-        });
+            loggingContext
+        );
 
         return caseSanitizer(data);
     } catch (error: any) {
-        logError('getCaseDetailsSSR', { ...parseErrorInformation(error), id, file: 'queries/api/cases', function: 'getCaseDetailsSSR' });
+        logError('getCaseDetailsSSR', {
+            ...parseErrorInformation(error),
+            ...loggingContext,
+            file: 'queries/api/cases',
+            function: 'getCaseDetailsSSR',
+        });
         return null;
     }
 };
 
-export const getCaseMetadataSSR = async (id: string, accessToken: string): Promise<Metadata | null> => {
+export const getCaseMetadataSSR = async (id: string, accessToken: string, loggingContext: LoggingContext): Promise<Metadata | null> => {
     try {
         const url = `${ssrCasesUrl}/${id}/metadata`;
-        logInfo('getCaseMetadataSSR', { file: 'queries/api/cases', function: 'getCaseMetadataSSR', url });
-        const { data } = await serverApi.get<null, AxiosResponse>(url, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
-                'Access-Control-Allow-Origin': '*',
+        logInfo('getCaseMetadataSSR', { ...loggingContext, file: 'queries/api/cases', function: 'getCaseMetadataSSR', url });
+        const { data } = await serverApi.get<null, AxiosResponse>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
             },
-        });
+            loggingContext
+        );
 
         return data;
     } catch (error: any) {
         logError('getCaseMetadataSSR', {
             ...parseErrorInformation(error),
+            ...loggingContext,
             id,
             file: 'queries/api/cases',
             function: 'getCaseMetadataSSR',
@@ -278,46 +292,62 @@ export const getReferenceData = async (query: ReferenceDataQuery): Promise<CaseR
 
 export const getReferenceDataSSR = async (
     query: ReferenceDataQuery,
-    accessToken: string | undefined
+    accessToken: string | undefined,
+    loggingContext: LoggingContext
 ): Promise<CaseReferenceResponse | null> => {
     try {
         const refUrl = `${se2ApiServerUrl}/refdata`;
-        const { data } = await serverApi.post<any>(refUrl, query, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
-                'Access-Control-Allow-Origin': '*',
+        const { data } = await serverApi.post<any>(
+            refUrl,
+            query,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
             },
-        });
+            loggingContext
+        );
 
         return data;
     } catch (error: any) {
-        console.error('getReferenceData::An error occurred while getting reference data', error);
+        logWarn('getReferenceData::An error occurred while getting reference data', { ...parseErrorInformation(error), ...loggingContext });
         return error.response;
     }
 };
 
-export const searchCasesSSR = async (formData: CaseSearchBody, accessToken: string | undefined): Promise<CaseSearchResponse | null> => {
+export const searchCasesSSR = async (
+    formData: CaseSearchBody,
+    accessToken: string | undefined,
+    loggingContext: LoggingContext
+): Promise<CaseSearchResponse | null> => {
     try {
         const searchUrl = `${ssrCasesUrl}/search`;
-        logInfo('searchCasesSSR', { file: 'queries/api/cases', function: 'searchCasesSSR', searchUrl });
+        logInfo('searchCasesSSR', { ...loggingContext, file: 'queries/api/cases', function: 'searchCasesSSR', url: searchUrl });
 
-        const { data: searchResponse } = await serverApi.post<any>(searchUrl, formData, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
-                'Access-Control-Allow-Origin': '*',
+        const { data: searchResponse } = await serverApi.post<any>(
+            searchUrl,
+            formData,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
             },
-        });
+            loggingContext
+        );
 
         return searchResponse;
     } catch (error: any) {
         logError('searchCasesSSR', {
             ...parseErrorInformation(error),
+            ...loggingContext,
             file: 'queries/api/cases',
             function: 'searchCasesSSR',
         });
@@ -329,7 +359,7 @@ export const getCaseDocuments = async (id: string): Promise<CaseDocument[]> => {
     try {
         const url = `${baseCasesUrl}/${id}/document`;
         const { data } = await client.get<CaseSearchBody, AxiosResponse>(url);
-        logInfo('getCaseDocuments', { file: 'queries/api/cases', function: 'getCaseDocuments', url });
+        console.log('getCaseDocuments', { file: 'queries/api/cases', function: 'getCaseDocuments', url });
         return data;
     } catch (error: any) {
         console.error('getCaseDocuments::An error occurred while getting case document results', error);

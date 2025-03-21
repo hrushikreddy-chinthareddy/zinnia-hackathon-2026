@@ -1,68 +1,117 @@
-import { Claims, Session, getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
+import {
+    Claims,
+    Session,
+    WithPageAuthRequired,
+    WithPageAuthRequiredOptions,
+    getSession,
+    withApiAuthRequired,
+    withPageAuthRequired,
+} from '@auth0/nextjs-auth0';
 import { AxiosError, AxiosResponse } from 'axios';
-import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 import { UserProfile } from '@deps/models/user-profile';
 
 import pino from './pino-server';
 
 type UserInfo = {
-    sessionId?: string;
-    userId?: string;
-    userName?: string;
+    sessionId: string;
+    partyId: string;
+    userName: string;
 };
 
-type LoggingFunction = (message: string, serializableValues: any) => void;
+type LoggingFunction = (message: string, serializableValues?: LoggingContext) => void;
 
-type LoggingContext = UserInfo & {
-    method: string | undefined;
-    url: string | undefined;
-    params?: Partial<{
-        [key: string]: string | string[];
-    }>;
+type APIErrorInformation = {
+    requestData?: any;
+    requestHost?: string;
+    requestMethod?: string;
+    requestPath?: string;
+    requestStatus?: string | number;
+    requestStatusText?: string;
+    requestUrl?: string;
+};
+
+type MinimumRequiredErrorInformation = {
+    error: string;
     [key: string]: any;
+};
+
+type AdditionalContext = {
+    file: string;
+    function: string;
+    [key: string]: any;
+};
+
+export type LoggingContext = {
+    inputs:
+        | {
+              // request body
+              [key: string]: any;
+          }
+        | undefined;
+    file: string; // what file you're calling this from
+    function: string; // what function/method you're calling this from
+    method: string | undefined; // http verb
+    page: string | undefined; // the page for page views,
+    params: Partial<{ [key: string]: string | string[] }> | undefined; // query params of the page for page views, request params for api requests
+    referrer: string | undefined; // the referer for page views and api requests
+    url: string | undefined; // the request URL for api requests, undefined for page views
+    user: UserInfo | undefined;
+    [key: string]: any; // any other values
 };
 
 type RouteHandlerWithLoggingContext = (
     ...args: [...Parameters<NextApiHandler>, ...[loggingContext: LoggingContext]]
 ) => ReturnType<NextApiHandler>;
-export const withAuthAndLogging = (routeHandler: RouteHandlerWithLoggingContext, additionalContext: object = {}): NextApiHandler => {
-    return withApiAuthRequired(async (req, res) => {
-        const userInfo = await getUserInfoForLogging(req, res);
-        const loggingContext: LoggingContext = {
-            method: req.method,
-            url: req.url,
-            params: req.query || '',
-            ...userInfo,
-            ...additionalContext,
-        };
-        logTrace('next-server request made', loggingContext);
-        return routeHandler(req, res, loggingContext);
-    });
+
+// Define the type for the wrapped getServerSideProps function
+export type GetServerSidePropsWithLoggingContext = (
+    ...args: [...Parameters<GetServerSideProps>, ...[loggingContext: LoggingContext]]
+) => ReturnType<GetServerSideProps>;
+
+// Define the type for the wrapper function
+type WithPageAuthAndLogging = (
+    opts: Omit<WithPageAuthRequiredOptions, 'getServerSideProps'> & {
+        getServerSideProps: GetServerSidePropsWithLoggingContext;
+    },
+    loggingContext: { file: string; function: string; page: string; [key: string]: any }
+) => ReturnType<WithPageAuthRequired>;
+
+export const logCompliance: LoggingFunction = (message, serializableValues) => {
+    pino.compliance({ ...(serializableValues || {}), isCompliance: true }, message);
 };
 
-export const getUserInfoFromUser = (user: Claims | UserProfile | null | undefined) => {
-    return { sessionId: user?.sid, userId: user?.sub, userName: user?.name, partyId: user?.partyId, email: user?.email };
+export const logFatal: LoggingFunction = (message, serializableValues) => {
+    pino.fatal(serializableValues || {}, message);
 };
 
-export const getUserInfoFromSession = (session: Session | null | undefined) => {
-    return { ...getUserInfoFromUser(session?.user) };
-};
-export const getUserInfoForLogging = async (req: NextApiRequest, res: NextApiResponse): Promise<UserInfo> => {
-    try {
-        const session = await getSession(req, res);
-        return getUserInfoFromSession(session);
-    } catch (error) {
-        logWarn('getUserInfoForLogging:: error', {
-            ...parseErrorInformation(error),
-            file: 'utils/server-logging',
-            function: 'getUserInfoForLogging',
-        });
-        return {};
-    }
+export const logError: LoggingFunction = (message, serializableValues) => {
+    pino.error(serializableValues || {}, message);
 };
 
-export const parseFailedNetworkRequest = (error?: AxiosResponse): object => {
+export const logWarn: LoggingFunction = (message, serializableValues) => {
+    pino.warn(serializableValues || {}, message);
+};
+
+export const logInfo: LoggingFunction = (message, serializableValues) => {
+    pino.info(serializableValues || {}, message);
+};
+
+export const logDebug: LoggingFunction = (message, serializableValues) => {
+    pino.debug(serializableValues || {}, message);
+};
+
+export const logTrace: LoggingFunction = (message, serializableValues) => {
+    pino.trace(serializableValues || {}, message);
+};
+
+// TRY NOT TO USE THIS! Error without context are much less valuable than errors with context
+export const logErrorWithoutContext = (message: string, serializableValues?: any) => {
+    pino.error(serializableValues || {}, message);
+};
+
+export const parseFailedNetworkRequest = (error?: AxiosResponse): APIErrorInformation => {
     return {
         requestData: error?.data,
         requestHost: error?.request?.host,
@@ -74,7 +123,7 @@ export const parseFailedNetworkRequest = (error?: AxiosResponse): object => {
     };
 };
 
-export const parseErrorInformation = (error?: any): object => {
+export const parseErrorInformation = (error?: any): APIErrorInformation | MinimumRequiredErrorInformation => {
     try {
         // The error is an Axios Error.  Parse the response to get the required fields.
         if ((error as AxiosError)?.response) {
@@ -96,30 +145,122 @@ export const parseErrorInformation = (error?: any): object => {
     }
 };
 
-export const logCompliance: LoggingFunction = (message, serializableValues = {}) => {
-    pino.compliance({ ...serializableValues, isCompliance: true }, message);
+const getContextFromRequest = (req: NextApiRequest): Pick<LoggingContext, 'method' | 'url' | 'inputs' | 'page' | 'params' | 'referrer'> => {
+    if (!req) {
+        return {
+            method: '',
+            url: '',
+            inputs: undefined,
+            page: '',
+            params: undefined,
+            referrer: undefined,
+        };
+    }
+    return {
+        method: req.method || 'GET',
+        url: req.url,
+        params: req.query,
+        inputs: req.body,
+        page: undefined,
+        referrer: req.headers.referer || '',
+    };
 };
 
-export const logFatal: LoggingFunction = (message, serializableValues = {}) => {
-    pino.fatal(serializableValues, message);
+export const getUserInfoFromUser = (user: Claims | UserProfile | null | undefined) => {
+    return { sessionId: user?.sid, userId: user?.sub, userName: user?.name, partyId: user?.partyId, email: user?.email };
 };
 
-export const logError: LoggingFunction = (message, serializableValues = {}) => {
-    pino.error(serializableValues, message);
+export const getUserInfoFromSession = (session: Session | null | undefined) => {
+    return { ...getUserInfoFromUser(session?.user) };
+};
+export const getUserInfoForLogging = async (req: NextApiRequest, res: NextApiResponse): Promise<UserInfo | undefined> => {
+    try {
+        const session = await getSession(req, res);
+        return getUserInfoFromSession(session);
+    } catch (error) {
+        pino.warn('getUserInfoForLogging:: error', {
+            ...parseErrorInformation(error),
+            ...getContextFromRequest(req),
+            file: 'utils/server-logging',
+            function: 'getUserInfoForLogging',
+            user: undefined,
+        });
+        return undefined;
+    }
 };
 
-export const logWarn: LoggingFunction = (message, serializableValues = {}) => {
-    pino.warn(serializableValues, message);
+export const buildNextApiLoggingContext = async (
+    req: NextApiRequest,
+    res: NextApiResponse
+): Promise<Omit<LoggingContext, 'file' | 'function'>> => {
+    const userInfo = await getUserInfoForLogging(req, res);
+    return {
+        ...getContextFromRequest(req),
+        user: userInfo,
+    };
+};
+export const buildNextPageLoggingContext = async (
+    context: GetServerSidePropsContext,
+    page: string,
+    file: string,
+    func: string
+): Promise<LoggingContext> => {
+    try {
+        const session = await getSession(context.req, context.res);
+        const userInfo = getUserInfoFromSession(session);
+        const { req, query, params } = context;
+        return {
+            method: req.method || 'GET',
+            url: req.url,
+            params,
+            inputs: query,
+            page,
+            referrer: req.headers.referer || '',
+            file,
+            function: func,
+            user: userInfo,
+        };
+    } catch (error) {
+        pino.warn('buildNextPageLoggingContext:: error', {
+            ...parseErrorInformation(error),
+        });
+        return {
+            method: '',
+            url: '',
+            params: undefined,
+            inputs: undefined,
+            page: '',
+            referrer: '',
+            file: '',
+            function: '',
+            user: undefined,
+        };
+    }
 };
 
-export const logInfo: LoggingFunction = (message, serializableValues = {}) => {
-    pino.info(serializableValues, message);
+// Wrapper method to provide logging context to route handlers
+export const withAuthAndLogging = (routeHandler: RouteHandlerWithLoggingContext, additionalContext: AdditionalContext): NextApiHandler => {
+    return withApiAuthRequired(async (req, res) => {
+        const baseContext = await buildNextApiLoggingContext(req, res);
+        const loggingContext = {
+            ...baseContext,
+            ...additionalContext,
+        } as LoggingContext; // Casting to LoggingContext as ts is confused by the omit joining with additionalContext
+        logTrace('next-server request made', loggingContext);
+        return routeHandler(req, res, loggingContext);
+    });
 };
 
-export const logDebug: LoggingFunction = (message, serializableValues = {}) => {
-    pino.debug(serializableValues, message);
-};
-
-export const logTrace: LoggingFunction = (message, serializableValues = {}) => {
-    pino.trace(serializableValues, message);
+// Wrapper method to provide logging context to getServerSideProps on page views
+export const withPageAuthAndLogging: WithPageAuthAndLogging = (options, logCtx) => {
+    const { getServerSideProps, ...otherOptions } = options;
+    return withPageAuthRequired({
+        ...otherOptions,
+        getServerSideProps: async context => {
+            const { page, file, function: func } = logCtx;
+            const loggingContext = await buildNextPageLoggingContext(context, page, file, func);
+            logTrace('next-server page view', loggingContext);
+            return getServerSideProps(context, loggingContext);
+        },
+    });
 };

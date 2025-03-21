@@ -6,6 +6,7 @@ import { TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { getCaseTaskInstances, getCaseTasks, getTaskFormMetadataSSR } from '@deps/queries/api/v1/task';
 import { getCaseTaskByIdSSR, updateTask } from '@deps/queries/api/v2/task';
+import { LoggingContext } from '@deps/utils/server-logging';
 
 interface TaskItem {
     id: string;
@@ -64,18 +65,25 @@ export const fetchTasks = async (caseId: string, caseType: CaseType) => {
     return formattedList;
 };
 
-export const getTaskFormMetadata = async (clientId: string, taskType: TaskType, processType?: ProcessType, accessToken?: string) => {
-    return getTaskFormMetadataSSR(clientId, taskType, processType, accessToken);
+export const getTaskFormMetadata = async (
+    clientId: string,
+    taskType: TaskType,
+    processType: ProcessType | undefined,
+    accessToken: string | undefined,
+    logCtx: LoggingContext
+) => {
+    return getTaskFormMetadataSSR(clientId, taskType, processType, accessToken, logCtx);
 };
 export const getCaseTaskById = async (
     taskId: string,
-    accessToken?: string,
+    accessToken: string | undefined,
+    logCtx: LoggingContext,
     taskType?: TaskType
 ): Promise<ManagementTask<TaskStatus> | null> => {
     if (taskType) {
         return mockService.getCaseTaskByIdSSRMock(taskType);
     }
-    return getCaseTaskByIdSSR(taskId, accessToken);
+    return getCaseTaskByIdSSR(taskId, accessToken, logCtx);
 };
 
 export const updateCaseTask = async (task: ManagementTask, taskStatus?: TaskStatus): Promise<ManagementTask<TaskStatus> | null> => {

@@ -1,10 +1,9 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-
 import { PageHead } from '@deps/components/page-title';
 import NewLoanContainer from '@deps/containers/financial-transactions/loan/new-loan/new-loan-container';
 import { NewLoanProvider } from '@deps/contexts/transactions/NewLoanContext';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
+import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 export interface NewLoanProps {
     policy: Policy;
@@ -21,8 +20,15 @@ const NewLoan = ({ policy }: NewLoanProps) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: getServerSidePropsPolicyDetailsPage,
-});
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: getServerSidePropsPolicyDetailsPage,
+    },
+    {
+        file: 'policies/[planCode]/[id]/policy/loans/new-loan',
+        function: 'getServerSideProps',
+        page: 'policies/:planCode/:id/policy/loans/new-loan',
+    }
+);
 
 export default NewLoan;

@@ -1,6 +1,7 @@
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
-import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 export type ClaimNextTask = {
     id: string;
@@ -27,10 +28,10 @@ export const claimNextTask = async () => {
     try {
         const url = `${baseAppUrl}/api/case/v1/tasks/assignments`;
         const data = await client.post(url);
-        logInfo('claimNextTask::Task is claimed successfully', { file: 'queries/api/v1/claimTask', function: 'claimNextTask', url });
+        browserLogInfo('claimNextTask::Task is claimed successfully', { file: 'queries/api/v1/claimTask', function: 'claimNextTask', url });
         return data;
     } catch (error: any) {
-        logError('claimNextTask::Something went wrong while claiming task', {
+        browserLogError('claimNextTask::Something went wrong while claiming task', {
             ...parseErrorInformation(error),
             file: 'queries/api/v1/claimTask',
             function: 'claimNextTask',

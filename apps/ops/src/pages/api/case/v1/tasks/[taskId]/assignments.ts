@@ -1,11 +1,11 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 
+import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
+import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 
 type error = {
     error: string;
@@ -19,7 +19,7 @@ export default withAuthAndLogging(
         const accessToken = (await getAccessToken(req, res)).accessToken;
         const baseUrl = `${apiServerBaseUrl}/case/v1/tasks/${taskId}/assignments`;
 
-        const loggingContext = { ...logCtx, baseUrl, method };
+        const loggingContext = { ...logCtx, baseUrl };
         logTrace(`assignments::${method}::start`, loggingContext);
 
         const config = {
@@ -33,9 +33,9 @@ export default withAuthAndLogging(
         try {
             let response;
             if (method === 'PUT') {
-                response = await serverApi.put(baseUrl, {}, config);
+                response = await serverApi.put(baseUrl, {}, config, loggingContext);
             } else if (method === 'DELETE') {
-                response = await serverApi.delete(baseUrl, config);
+                response = await serverApi.delete(baseUrl, config, loggingContext);
             } else {
                 return res.status(405).json({ error: `Method ${method} not allowed` });
             }

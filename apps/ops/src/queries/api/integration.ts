@@ -4,9 +4,9 @@ import { Nigo, OnbaseCase } from '@deps/models/case/case';
 import { DigitalFormWithdrawal } from '@deps/models/case/withdrawal/case';
 import { CalculateRmdBody, CalculateRmdResponse } from '@deps/models/case/withdrawal/rmd';
 import { ProductFund, ProductFundsRequestBody } from '@deps/models/integration/product-funds';
-import { logError, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, LoggingContext, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
-import { apiServerBaseUrl , baseAppUrl } from '../api-config';
+import { apiServerBaseUrl, baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
 import { serverApi as serverHttpClient } from '../api-utils/serverApiClient';
 
@@ -15,30 +15,34 @@ const ssrBaseUrl = `${apiServerBaseUrl}/integration/v1`;
 
 export const getDigitalFormSSR = async (
     accessToken: string,
-    queryParams: { contractNumber: string; clientCode: string; source: string; taskType?: string }
+    queryParams: { contractNumber: string; clientCode: string; source: string; taskType?: string },
+    logCtx: LoggingContext
 ): Promise<DigitalFormWithdrawal | null> => {
+    const loggingContext = { ...logCtx, inputs: { queryParams }, file: 'queries/api/integration', function: 'getDigitalFormSSR' };
     try {
         const url = new URL(`${ssrBaseUrl}/digital/form`);
-        logInfo('getDigitalFormSSR', { url, queryParams, file: 'queries/api/integration', function: 'getDigitalFormSSR' });
+        logInfo('getDigitalFormSSR', { ...loggingContext, url: url.toString() });
         url.search = new URLSearchParams(queryParams).toString();
 
-        const { data } = await serverHttpClient.get<DigitalFormWithdrawal>(url.href, {
-            authorization: `Bearer ${accessToken}`,
-            headers: {
-                Accept: '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                Connection: 'keep-alive',
-                'Access-Control-Allow-Origin': '*',
+        const { data } = await serverHttpClient.get<DigitalFormWithdrawal>(
+            url.href,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
             },
-        });
+            loggingContext
+        );
 
         return data;
     } catch (error: any) {
         logError('getDigitalFormSSR', {
             ...parseErrorInformation(error),
-            queryParams,
-            file: 'queries/api/integration',
-            function: 'getDigitalFormSSR',
+            ...loggingContext,
         });
         return null;
     }
@@ -87,12 +91,18 @@ export const calculateRmd = async (query: CalculateRmdBody, policyNumber: string
     }
 };
 
-export const getOnbaseCaseDetailsSSR = async (lob: string, caseId: string, accessToken: string | undefined): Promise< Promise<OnbaseCase | null>> => {
+export const getOnbaseCaseDetailsSSR = async (
+    lob: string,
+    caseId: string,
+    accessToken: string | undefined,
+    logCtx: LoggingContext
+): Promise<Promise<OnbaseCase | null>> => {
+    const loggingContext = { ...logCtx, file: 'queries/api/integration', function: 'getOnbaseCaseDetailsSSR', inputs: { lob, caseId } };
     try {
         const url = `${ssrBaseUrl}/onbase/getCaseDetails`;
         const formData = {
             lob,
-            caseId
+            caseId,
         };
         const config = {
             authorization: `Bearer ${accessToken}`,
@@ -104,34 +114,34 @@ export const getOnbaseCaseDetailsSSR = async (lob: string, caseId: string, acces
             },
         };
 
-        logInfo('getOnbaseCaseDetailsSSR', { file: 'queries/api/cases', function: 'getOnbaseCaseDetailsSSR', url, formData });
-        const { data } = await serverHttpClient.post<any, AxiosResponse>(url, formData, config);
+        logInfo('getOnbaseCaseDetailsSSR', loggingContext);
+        const { data } = await serverHttpClient.post<any, AxiosResponse>(url, formData, config, loggingContext);
         return data;
     } catch (error: any) {
         logError('getOnbaseCaseDetailsSSR', {
             ...parseErrorInformation(error),
-            lob,
-            caseId,
-            file: 'queries/api/integration',
-            function: 'getOnbaseCaseDetailsSSR'
+            ...loggingContext,
         });
         return null;
     }
-}
+};
 
-export const checkNigoExistsSSR = async (lob: string, caseId: string, accessToken: string | undefined): Promise<boolean> => {
+export const checkNigoExistsSSR = async (
+    lob: string,
+    caseId: string,
+    accessToken: string | undefined,
+    logCtx: LoggingContext
+): Promise<boolean> => {
+    const loggingContext = { ...logCtx, file: 'queries/api/integration', function: 'checkNigoExistsSSR', inputs: { lob, caseId } };
     try {
-        const caseDetails = await getOnbaseCaseDetailsSSR(lob, caseId, accessToken as string);
+        const caseDetails = await getOnbaseCaseDetailsSSR(lob, caseId, accessToken as string, loggingContext);
         const nigoExists = caseDetails?.nigos?.some((nigo: Nigo) => nigo?.status.toUpperCase() === 'NEW') || false;
-        logInfo('checkNigoExistsSSR', { file: 'queries/api/integration', function: 'checkNigoExistsSSR', lob, caseId, nigoExists });
+        logInfo('checkNigoExistsSSR', { ...loggingContext, nigoExists });
         return nigoExists;
     } catch (error: any) {
         logError('checkNigoExistsSSR', {
             ...parseErrorInformation(error),
-            lob,
-            caseId,
-            file: 'queries/api/integration',
-            function: 'checkNigoExistsSSR',
+            ...loggingContext,
         });
         return false;
     }

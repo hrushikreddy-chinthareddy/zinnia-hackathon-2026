@@ -16,7 +16,7 @@ export default withAuthAndLogging(
         const accessToken = (await getAccessToken(req, res)).accessToken;
 
         const url = `${baseUrl}/${clientCode}/transactions`;
-        const loggingContext = { ...logCtx, clientCode, url };
+        const loggingContext = { ...logCtx, url };
         logTrace('webnonfinancial::transactions::start', loggingContext);
 
         const formData = req.body;
@@ -33,7 +33,11 @@ export default withAuthAndLogging(
             logTrace('webnonfinancial::transactions::success', { ...loggingContext, duration: performance.now() - now });
             res.json(data);
         } catch (error) {
-            logWarn('webnonfinancial::transactions::error', { ...parseErrorInformation(error), ...loggingContext, duration: performance.now() - now });
+            logWarn('webnonfinancial::transactions::error', {
+                ...parseErrorInformation(error),
+                ...loggingContext,
+                duration: performance.now() - now,
+            });
             res.status(500).json(null);
         }
     },

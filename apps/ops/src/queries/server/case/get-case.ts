@@ -1,7 +1,7 @@
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { caseSanitizer, fullyMaskCase } from '@deps/utils/sanitizers';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { LoggingContext, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import canUnmaskPii from '../fga/can-unmask';
 const getCase = async ({
@@ -12,7 +12,7 @@ const getCase = async ({
 }: {
     accessToken: string;
     caseId: string;
-    loggingContext?: object;
+    loggingContext: LoggingContext;
     partyId?: string;
 }) => {
     try {
@@ -27,7 +27,7 @@ const getCase = async ({
 
         return { ...getCaseResponse, data: maskedData };
     } catch (e) {
-        logWarn('get-case::getCase', { ...parseErrorInformation(e) });
+        logWarn('get-case::getCase', { ...parseErrorInformation(e), ...loggingContext });
         return {
             status: 500,
             data: null,

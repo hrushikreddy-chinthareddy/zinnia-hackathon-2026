@@ -116,7 +116,7 @@ describe('FLIC Form Specific component', () => {
                     setFormData: setMockData,
                 }}
             >
-                <FlicOftWithdrawalForm />
+                <FlicOftWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
             </FormDataContext.Provider>
         );
     });

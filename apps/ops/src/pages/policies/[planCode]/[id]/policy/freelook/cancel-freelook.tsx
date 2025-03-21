@@ -1,10 +1,9 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-
 import { PageHead } from '@deps/components/page-title';
 import FreeLookCancelContainer from '@deps/containers/financial-transactions/free-look-cancel/free-look-cancel';
 import { WithdrawalProvider } from '@deps/contexts/transactions/WithdrawalContext';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
+import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 const CancelFreeLook = ({ policy }: { policy: Policy }) => {
     return (
@@ -17,8 +16,15 @@ const CancelFreeLook = ({ policy }: { policy: Policy }) => {
     );
 };
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: getServerSidePropsPolicyDetailsPage,
-});
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: getServerSidePropsPolicyDetailsPage,
+    },
+    {
+        file: 'policies/[planCode]/[id]/policy/freelook/cancel-freelook',
+        function: 'getServerSideProps',
+        page: 'policies/:planCode/:id/policy/freelook/cancel-freelook',
+    }
+);
 
 export default CancelFreeLook;

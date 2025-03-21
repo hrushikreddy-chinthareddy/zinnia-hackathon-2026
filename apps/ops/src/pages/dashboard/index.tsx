@@ -1,7 +1,6 @@
-import { getAccessToken, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { TabContent } from '@zinnia/bloom/components';
 import { FgaRoles } from '@zinnia/utils';
-import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRef } from 'react';
 
@@ -23,7 +22,7 @@ import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { FgaRelation } from '@deps/types/fga';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './Dashboard.module.css';
@@ -78,55 +77,62 @@ const DashboardPage = ({
 
 export default DashboardPage;
 
-export const getServerSideProps = withPageAuthRequired({
-    getServerSideProps: async (context: GetServerSidePropsContext) => {
-        // Get the user object from the Auth0 Session
-        const user = await getUserData(context);
-        const { locale = DEFAULT_LOCALE, res, req } = context;
-        let accessToken;
-        try {
-            accessToken = (await getAccessToken(req, res)).accessToken;
-        } catch (e) {
-            logWarn('dashboard/index:: Access token expired', {
-                ...parseErrorInformation(e),
-                file: 'dashboard/index',
-                function: 'getServerSideProps',
-            });
-            return serverSidePropsLogout();
-        }
+export const getServerSideProps = withPageAuthAndLogging(
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            // Get the user object from the Auth0 Session
+            const user = await getUserData(context);
+            const { locale = DEFAULT_LOCALE, res, req } = context;
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('dashboard/index:: Access token expired', {
+                    ...parseErrorInformation(e),
+                    ...loggingContext,
+                });
+                return serverSidePropsLogout();
+            }
 
-        const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub);
-        const doesUserHavePagePermission = await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.CASE_STATS_DASHBOARD_ENTITY);
-        if (!doesUserHavePagePermission || !featureFlagDecisions['case-management-case_stats_dashboard']) {
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const doesUserHavePagePermission = await checkTuplePage(
+                context,
+                FgaRelation.UiAccess,
+                FgaRoles.CASE_STATS_DASHBOARD_ENTITY,
+                loggingContext
+            );
+            if (!doesUserHavePagePermission || !featureFlagDecisions['case-management-case_stats_dashboard']) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
+
+            const translations = await serverSideTranslations(
+                locale,
+                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
+
+            const brokerDealersSSR = await fetchAgentsSSR(accessToken || '', loggingContext);
+            const filteredBrokerDealers = brokerDealersSSR.filter(
+                brokerDealer => brokerDealer.name !== 'NOT_APPLICABLE' && brokerDealer.name !== ''
+            );
+
+            const authorizedCarriers = await listCarriersPage(context, UserPermission.AllowReadCaseManagement, loggingContext);
+
             return {
-                redirect: {
-                    destination: '/403',
-                    permanent: false,
+                props: {
+                    locale,
+                    authorizedCarriers,
+                    brokerDealersSSR: filteredBrokerDealers,
+                    ...translations,
                 },
             };
-        }
-
-        const translations = await serverSideTranslations(
-            locale,
-            [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-            nextI18nextConfig,
-            ALL_LOCALES
-        );
-
-        const brokerDealersSSR = await fetchAgentsSSR(accessToken || '');
-        const filteredBrokerDealers = brokerDealersSSR.filter(
-            brokerDealer => brokerDealer.name !== 'NOT_APPLICABLE' && brokerDealer.name !== ''
-        );
-
-        const authorizedCarriers = await listCarriersPage(context, UserPermission.AllowReadCaseManagement);
-
-        return {
-            props: {
-                locale,
-                authorizedCarriers,
-                brokerDealersSSR: filteredBrokerDealers,
-                ...translations,
-            },
-        };
+        },
     },
-});
+    { file: 'dashboard/index', function: 'getServerSideProps', page: 'dashboard' }
+);

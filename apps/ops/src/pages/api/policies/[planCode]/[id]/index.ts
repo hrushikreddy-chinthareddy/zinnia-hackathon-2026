@@ -9,11 +9,11 @@ import { CheckTupleResponse } from '@deps/types/fga';
 import { fullyMaskPolicyResponse, policyResponseSanitizer } from '@deps/utils/sanitizers';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiResponse } from 'next';
 
 // Will proxy any request made to the next server directly to the gateway apis
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>, loggingContext: object) => {
+    async (req, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>, loggingContext) => {
         const session = await getSession(req, res);
         const { id, planCode } = req.query;
         const unmaskingResponse = await serverApi.post<any, AxiosResponse<CheckTupleResponse>>(

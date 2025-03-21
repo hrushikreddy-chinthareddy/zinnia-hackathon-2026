@@ -1,11 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
 
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { TaskType } from '@deps/models/case/task';
-import { AccountCloseReason, CaseStatus } from '@deps/models/case/withdrawal/case';
+import { AccountCloseReason, CaseStatus, QualTypes } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import FlicWithdrawalForm from './flic-withdrawal-form';
@@ -92,7 +91,7 @@ describe('FLIC Form Specific component', () => {
                     setFormData: setMockData,
                 }}
             >
-                <FlicWithdrawalForm />
+                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
             </FormDataContext.Provider>
         );
 
@@ -148,7 +147,7 @@ describe('FLIC Form Specific component', () => {
                     setFormData: setMockData,
                 }}
             >
-                <FlicWithdrawalForm />
+                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
             </FormDataContext.Provider>
         );
 
@@ -204,7 +203,7 @@ describe('FLIC Form Specific component', () => {
                     setFormData: setMockData,
                 }}
             >
-                <FlicWithdrawalForm />
+                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
             </FormDataContext.Provider>
         );
 
@@ -265,7 +264,7 @@ describe('FLIC Form Specific component', () => {
                     },
                 }}
             >
-                <FlicWithdrawalForm />
+                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
             </FormDataContext.Provider>
         );
 
@@ -316,7 +315,7 @@ describe('FLIC Form Specific component', () => {
                     },
                 }}
             >
-                <FlicWithdrawalForm />
+                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
             </FormDataContext.Provider>
         );
 

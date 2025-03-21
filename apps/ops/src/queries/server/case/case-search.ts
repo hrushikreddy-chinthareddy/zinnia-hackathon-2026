@@ -4,7 +4,7 @@ import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { CaseSearchBody, CaseSearchResponse } from '@deps/types/search';
 import { caseSanitizer, fullyMaskCase } from '@deps/utils/sanitizers';
-import { logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { LoggingContext, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import canUnmaskPii from '../fga/can-unmask';
 const caseSearch = async ({
@@ -15,8 +15,8 @@ const caseSearch = async ({
 }: {
     accessToken: string;
     body: CaseSearchBody;
-    loggingContext?: object;
-    partyId?: string;
+    loggingContext: LoggingContext;
+    partyId: string | undefined;
 }) => {
     try {
         const canUnmask = await canUnmaskPii(accessToken, partyId, loggingContext);
@@ -36,7 +36,7 @@ const caseSearch = async ({
             return null;
         }
     } catch (e) {
-        logWarn('case-search::caseSearch', { ...parseErrorInformation(e) });
+        logWarn('case-search::caseSearch', { ...parseErrorInformation(e), ...loggingContext });
     }
 };
 
