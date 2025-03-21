@@ -7,10 +7,8 @@ import PageLoader from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { UserPermission } from '@deps/models/user-profile';
 import { downloadTaxFormById } from '@deps/queries/api/tax-forms';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -92,20 +90,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ...loggingContext,
                 });
                 return serverSidePropsLogout();
-            }
-
-            const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadCaseManagement,
-                loggingContext
-            );
-            if (!hasPermissionToReadCaseManagement) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
             }
 
             const formId = (params?.formId as string) || '';
