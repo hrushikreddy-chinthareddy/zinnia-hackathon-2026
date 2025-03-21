@@ -4192,16 +4192,24 @@
         },
         "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}"
     },
-    "cancelFreeLook": {
+    "financialTransaction": {
         "confirm": {
-            "cta": "Accéder à l'historique des transactions",
-            "label": "Confirmer",
+            "cta": "Aller au dossier",
             "secondaryCta": "Fermer",
             "subtitle": {
-                "0": "Une demande d'annulation a été soumise. Une fois traitée, un remboursement pour ",
-                "1": " sera envoyé."
+                "a": "Une ",
+                "requestFrom": " demande de ",
+                "for": " pour ",
+                "wasReceived": " a été reçue. Elle devrait se compléter pendant la nuit. Vous pouvez suivre la progression en consultant le dossier.",
+                "wasReceivedNigo": " demande a été reçue et un problème NIGO a été créé. Vous pouvez suivre la progression en consultant le dossier."
             },
-            "title": "Soumis !"
+            "title": "Compris!"
+        }
+    },
+    "cancelFreeLook": {
+        "confirm": {
+            "label": "Confirmer",
+            "type": "annulation"
         },
         "date": {
             "label": "Date",
@@ -4330,18 +4338,8 @@
             "withdrawalType": "Type de retrait"
         },
         "confirm": {
-            "cta": "Accéder à l'historique des transactions",
             "label": "Confirmer",
-            "secondaryCta": "Fermer",
-            "subtitle": {
-                "0": "Une ",
-                "1": " demande de retrait a été soumise. Une fois traitée, un paiement de ",
-                "2": " pour ",
-                "3": " sera envoyé.",
-                "NIGO": " une demande de retrait a été soumise pour",
-                "NIGO1": " traitement NIGO."
-            },
-            "title": "Soumis !"
+            "type": "retrait"
         },
         "rmd": {
             "title": "Distribution Minimum requise",
@@ -4451,18 +4449,8 @@
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO."
         },
         "confirm": {
-            "cta": "Aller au dossier",
             "label": "Confirmer",
-            "secondaryCta": "Fermer",
-            "subtitle": {
-                "0": "Une",
-                "1": " demande de paiement automatique de remboursement de prêt",
-                "2": " a été reçue.",
-                "2NIGO": " la demande a été reçue et un problème NIGO a été créé.",
-                "3": " Elle devrait être complétée pendant la nuit.",
-                "4": " Vous pouvez suivre la progression en consultant le dossier."
-            },
-            "title": "Compris!"
+            "type": "prélèvement automatique de remboursement de prêt"
         }
     },
     "loanPayment": {
@@ -4474,17 +4462,8 @@
             "invalidPaymentAmountError": "Le montant du paiement doit être d'au moins 1 $."
         },
         "confirm": {
-            "cta": "Aller à l'historique des transactions",
             "label": "Confirmer",
-            "secondaryCta": "Fermer",
-            "subtitle": {
-                "0": "Un ",
-                "1": " paiement unique de prêt de ",
-                "2": " a été soumis.",
-                "NIGO": " le paiement unique du prêt a été soumis pour",
-                "NIGO1": " traitement NIGO."
-            },
-            "title": "Soumis!"
+            "type": "paiement unique de prêt"
         },
         "payment": {
             "label": "Méthode de paiement",
@@ -4547,17 +4526,8 @@
             }
         },
         "confirm": {
-            "cta": "Aller à l'historique des transactions",
             "label": "Confirmer",
-            "secondaryCta": "Fermer",
-            "subtitle": {
-                "0": "Un ",
-                "1": " prêt a été soumis.",
-                "NIGO": " prêt a été soumis",
-                "NIGO1": " pour",
-                "NIGO2": " traitement NIGO."
-            },
-            "title": "Soumis!"
+            "type": "prêt"
         },
         "payment": {
             "label": "Méthode de paiement",
@@ -4641,16 +4611,8 @@
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO."
         },
         "confirm": {
-            "cta": "Accéder à l'historique des transactions",
             "label": "Confirmer",
-            "secondaryCta": "Fermer",
-            "subtitle": {
-                "0": "Un ",
-                "1": " paiement unique de prime de {{ name }} a été soumis.",
-                "NIGO": " un paiement unique de prime a été soumis pour ",
-                "NIGO1": "traitement NIGO."
-            },
-            "title": "Soumis !"
+            "type": "paiement unique de prime"
         }
     },
     "premiumAutopay": {
@@ -4710,18 +4672,8 @@
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO."
         },
         "confirm": {
-            "cta": "Aller au dossier",
             "label": "Confirmer",
-            "secondaryCta": "Fermer",
-            "subtitle": {
-                "0": "Une",
-                "1": " demande de prélèvement automatique de remboursement de prime",
-                "2": " a été reçue.",
-                "2NIGO": " a été reçue et un problème NIGO a été créé.",
-                "3": " Elle devrait être complétée pendant la nuit.",
-                "4": " Vous pouvez suivre la progression en consultant le dossier."
-            },
-            "title": "C'est noté !"
+            "type": "prélèvement automatique de remboursement de prime"
         }
     },
     "footnote": {

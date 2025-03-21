@@ -344,7 +344,7 @@ export const submitFreeLookCancel = async (
             `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation`,
             query
         );
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitFreeLookCancel::an error occurred during submission', error);
 
@@ -362,7 +362,7 @@ export const submitFullSurrenderWithdrawal = async (
             `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender`,
             query
         );
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitFullSurrenderWithdrawal::an error occurred during submission', error);
 
@@ -380,7 +380,7 @@ export const submitOneTimePremium = async (
             `${baseUrl}/policies/${planCode}/${policyNumber}/onetimepremium`,
             query
         );
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitOneTimePremium::an error occurred during submission', error);
 
@@ -396,7 +396,7 @@ export const submitLoanPayment = async (
     try {
         const response = await client.post<LoanRepaymentOneTimeRequestQuery, AxiosResponse>(`${baseUrl}/policies/${planCode}/${policyNumber}/loanrepaymentonetime`, query);
 
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitLoanPayment::an error occurred during submission', error);
 
@@ -411,7 +411,7 @@ export const submitNewLoan = async (
 ): Promise<TransactionResponse> => {
     try {
         const response = await client.post<NewLoanRequest, AxiosResponse>(`${baseUrl}/policies/${planCode}/${policyNumber}/newloan`, query);
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitNewLoan::an error occurred during submission', error);
 
@@ -429,7 +429,7 @@ export const submitPartialWithdrawalOneTime = async (
             `${baseUrl}/policies/${planCode}/${policyNumber}/partialwithdrawalonetime`,
             query
         );
-        return { status: response.status };
+        return { status: response.status, data: response.data };
     } catch (error: any) {
         console.error('submitPartialWithdrawalOneTime::an error occurred during submission', error);
 

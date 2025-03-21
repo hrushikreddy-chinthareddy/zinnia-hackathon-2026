@@ -1,12 +1,10 @@
 import dayjs from 'dayjs';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
-import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { ACH, useAutopay } from '@deps/contexts/transactions/AutopayContext';
@@ -30,6 +28,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         effectiveDate,
         paymentBankId,
         payorPartyId,
+        payorFullName,
         validationResponse,
         reverseInitiator,
     } = autopay;
@@ -37,7 +36,6 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.confirm` });
     const { t: defaultT } = useTranslation();
 
-    const router = useRouter();
     const [submitFailed, setSubmitFailed] = useState(false);
     const [submitNigo, setSubmitNigo] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -116,68 +114,14 @@ const Confirm = ({ policy }: ConfirmProps) => {
 
     return (
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
-            <>
-                {validationSucceeded && !submitNigo ? (
-                    <CardInfo
-                        cta={newCaseId ? {
-                            action: () => {
-                                router.push(`/cases/${newCaseId}/progress`);
-                            },
-                            text: t('cta'),
-                        } : undefined}
-                        secondaryCta={
-                            <NavElement
-                                aria-label={t('secondaryCta') as string}
-                                onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/${parentPage}`)}
-                                size={NavElementSize.Small}
-                                type={NavElementType.Button}
-                                variant={NavElementVariant.Default}
-                            >
-                                {t('secondaryCta')}
-                            </NavElement>
-                        }
-                        subtitle={
-                            <>
-                                {t('subtitle.0')}
-                                <span className="font-bold">{t('subtitle.1')}</span>
-                                {t('subtitle.2')}
-                                {t('subtitle.3')}
-                                {t('subtitle.4')}
-                            </>
-                        }
-                        title={t('title')}
-                    />
-                ) : (
-                    <CardInfo
-                        cta={newCaseId ? {
-                            action: () => {
-                                router.push(`/cases/${newCaseId}/progress`);
-                            },
-                            text: t('cta'),
-                        } : undefined}
-                        secondaryCta={
-                            <NavElement
-                                aria-label={t('secondaryCta') as string}
-                                onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/${parentPage}`)}
-                                size={NavElementSize.Small}
-                                type={NavElementType.Button}
-                                variant={NavElementVariant.Default}
-                            >
-                                {t('secondaryCta')}
-                            </NavElement>
-                        }
-                        subtitle={
-                            <>
-                                {t('subtitle.0')}
-                                <span className="font-bold">{t('subtitle.1')}</span>
-                                {t('subtitle.2NIGO')}
-                                {t('subtitle.4')}
-                            </>
-                        }
-                        title={t('title')}
-                    />
-                )}
-            </>
+            <ConfirmCard
+                caseId={newCaseId}
+                isNigo={!validationSucceeded || submitNigo}
+                parentPage={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/${parentPage}`}
+                amount={Number(paymentAmount)}
+                payorPayeeName={payorFullName}
+                type={t('type')}
+            />
         </div>
     );
 };

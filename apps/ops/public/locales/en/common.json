@@ -4215,16 +4215,24 @@
         },
         "checkingEndingIn": "Checking ending in {{ accountNumber }}"
     },
-    "cancelFreeLook": {
+    "financialTransaction": {
         "confirm": {
-            "cta": "Go to transaction history",
-            "label": "Confirm",
+            "cta": "Go to case",
             "secondaryCta": "Close",
             "subtitle": {
-                "0": "A cancellation request was submitted. Once processed, a refund payment for ",
-                "1": " will be sent."
+                "a": "A ",
+                "requestFrom": " request from ",
+                "for": " for ",
+                "wasReceived": " was received. It should complete overnight. You can track the progress by viewing the case.",
+                "wasReceivedNigo": " request was received and a NIGO issue was created. You can track the progress by viewing the case."
             },
-            "title": "Submitted!"
+            "title": "Got it!"
+        }
+    },
+    "cancelFreeLook": {
+        "confirm": {
+            "label": "Confirm",
+            "type": "cancellation"
         },
         "date": {
             "label": "Date",
@@ -4355,18 +4363,8 @@
             "withdrawalType": "Withdrawal type"
         },
         "confirm": {
-            "cta": "Go to transaction history",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "A ",
-                "1": " withdrawal request was submitted. Once processed, a ",
-                "2": " payment for ",
-                "3": " will be sent.",
-                "NIGO": " withdrawal request was submitted for",
-                "NIGO1": " NIGO processing."
-            },
-            "title": "Submitted!"
+            "type": "withdrawal"
         },
         "rmd": {
             "title": "Required Minimum Distribution",
@@ -4476,18 +4474,8 @@
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         },
         "confirm": {
-            "cta": "Go to case",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "A",
-                "1": " loan repayment autopay",
-                "2": " request was received.",
-                "2NIGO": " request was received and a NIGO issue was created.",
-                "3": " It should complete overnight. ",
-                "4": " You can track the progress by viewing the case."
-            },
-            "title": "Got it!"
+            "type": "loan repayment autopay"
         }
     },
     "loanPayment": {
@@ -4499,17 +4487,8 @@
             "invalidPaymentAmountError": "Payment amount must be at least $1."
         },
         "confirm": {
-            "cta": "Go to transaction history",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "A ",
-                "1": " one-time loan payment from ",
-                "2": " was submitted.",
-                "NIGO": " one-time loan payment was submitted for",
-                "NIGO1": " NIGO processing."
-            },
-            "title": "Submitted!"
+            "type": "one-time loan payment"
         },
         "payment": {
             "label": "Payment Method",
@@ -4572,17 +4551,8 @@
             }
         },
         "confirm": {
-            "cta": "Go to transaction history",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "A ",
-                "1": " loan was submitted.",
-                "NIGO": " loan was submitted",
-                "NIGO1": " for",
-                "NIGO2": " NIGO processing."
-            },
-            "title": "Submitted!"
+            "type": "loan"
         },
         "payment": {
             "label": "Payment Method",
@@ -4667,16 +4637,8 @@
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         },
         "confirm": {
-            "cta": "Go to transaction history",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "A ",
-                "1": " one-time premium payment from {{ name }} was submitted.",
-                "NIGO": " one-time premium pament was submitted for ",
-                "NIGO1": "NIGO processing."
-            },
-            "title": "Submitted!"
+            "type": "one-time premium payment"
         }
     },
     "premiumAutopay": {
@@ -4736,18 +4698,8 @@
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         },
         "confirm": {
-            "cta": "Go to case",
             "label": "Confirm",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "A",
-                "1": " premium repayment autopay",
-                "2": " request was received.",
-                "2NIGO": " request was received and a NIGO issue was created.",
-                "3": " It should complete overnight. ",
-                "4": " You can track the progress by viewing the case."
-            },
-            "title": "Got it!"
+            "type": "premium repayment autopay"
         }
     },
     "footnote": {
