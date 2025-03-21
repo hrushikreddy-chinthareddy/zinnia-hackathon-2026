@@ -44,7 +44,7 @@ const AdditionalLinks: FC<AdditionalLinksProps> = async ({
             url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/beneficiaries`,
             urlLabel: 'beneficiaries',
             isInternal: true,
-            iconType: IconType.SHIELD,
+            iconType: IconType.USER_GROUP,
             linkText: 'Beneficiaries',
           },
         ]
