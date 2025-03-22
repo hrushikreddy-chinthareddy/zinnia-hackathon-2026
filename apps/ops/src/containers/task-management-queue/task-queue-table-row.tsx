@@ -44,7 +44,8 @@ import { NO_ASSIGNEE } from './task-management-queue-container';
 import TaskQueueDrawer from './task-queue-drawer';
 
 import styles from './task-management-queue.module.css';
-import { Processes } from '@deps/models/case/case';
+import { CaseIdentifier, Processes } from '@deps/models/case/case';
+import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 
 type TaskQueueTableRowProps = {
     task: AssignedTask | UnassignedTask;
@@ -58,7 +59,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
     const router = useRouter();
     const [timer] = useState(performance.now());
-    //const documentNumber = getCaseIdentifierValue(task.identifiers, CaseIdentifier.DocumentNumber);
+    const policyNumber = getCaseIdentifierValue(task.identifiers, CaseIdentifier.PolicyNumber);
 
     const [loader, setLoader] = useState(false);
     const { taskName, taskType, createdAt, status, carrier, assignee, process } = task;
@@ -345,11 +346,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
                     </div>
                     <div>
                         <Content details={carrierName} variant={ContentVariant.BodySm} />
-                        <Content
-                            className="text-secondary"
-                            details={task?.identifiers.find(identifierItem => identifierItem.identifier === 'policyNumber')?.value || '-'}
-                            variant={ContentVariant.BodySm}
-                        />
+                        <Content className="text-secondary" details={policyNumber || '-'} variant={ContentVariant.BodySm} />
                     </div>
                 </div>
             </TableCell>

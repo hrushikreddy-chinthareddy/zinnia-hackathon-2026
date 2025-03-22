@@ -15,6 +15,7 @@ export enum CaseIdentifier {
     contractNumber = 'contractNumber',
     DocumentNum = 'documentNum',
     TransactionId = 'transactionId',
+    PolicyNumber = 'policyNumber',
 }
 
 export type Case = {
