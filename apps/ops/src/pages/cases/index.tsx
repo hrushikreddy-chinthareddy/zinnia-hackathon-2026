@@ -364,7 +364,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             <SideSheetRefineResults
                 authorizedCarriers={authorizedCarriers}
                 filters={caseManagementFilters.additionalFilters}
-                isAdvisorsExcel={isAdvisorsExcel}
                 setCaseManagementFilters={setCaseManagementFilters}
                 closeSideSheet={() => sideSheet.handleOpen(false)}
             />
