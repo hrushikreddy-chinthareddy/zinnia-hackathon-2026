@@ -61,10 +61,14 @@
                             }
                         },
                         "issuesResolved": {
-                            "type": "boolean",
+                            "type": "string",
                             "title": "Can you resolve the issues?",
-                            "enumNames": ["Yes, I can proceed to the next step", "No, there are one or more issues that need to be logged"],
-                            "enum": [true, false]
+                            "enumNames": [
+                                "Yes, I can proceed to the next step",
+                                "No, there are one or more issues that need to be logged",
+                                "Agent already exist in system of record"
+                            ],
+                            "enum": ["true", "false", "cancelled"]
                         },
                         "uploadDocuments": {
                             "type": "object",
@@ -108,14 +112,14 @@
                                 {
                                     "properties": {
                                         "issuesResolved": {
-                                            "enum": [true]
+                                            "enum": ["true"]
                                         }
                                     }
                                 },
                                 {
                                     "properties": {
                                         "issuesResolved": {
-                                            "enum": [false]
+                                            "enum": ["false"]
                                         },
                                         "declineReason": {
                                             "title": "",
