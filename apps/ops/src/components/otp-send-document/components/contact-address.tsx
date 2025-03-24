@@ -26,7 +26,7 @@ const ContactCenterAddress = ({ policy, setAddress }: ContactCenterAddressProps)
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
 
     const checkCustodialContract = policy?.parties?.find((party, index) => {
-        if (party.partyType === 'ORGANIZATION') {
+        if (party.partyType === PartyType.ORGANIZATION) {
             const correspondingRole = policy?.partyRoles?.[index];
             return correspondingRole?.partyRole === PartyRole.OWNER;
         }
