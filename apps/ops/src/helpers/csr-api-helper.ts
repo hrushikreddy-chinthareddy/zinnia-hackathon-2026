@@ -5,6 +5,7 @@ import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 
 import { replacePlaceholders } from './value-placement.helper';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 const baseUrl = baseAppUrl + '/api/';
 export const csrApiHelper = async (props: ApiProps, formData: any) => {
     const { apiUrl, apiMethod, apiPayload, responseData, response } = props;
@@ -16,12 +17,19 @@ export const csrApiHelper = async (props: ApiProps, formData: any) => {
             let filteredApiData = responseData ? replacePlaceholders(responseData, data) : data;
 
             if (response) {
+                let filteredResponse: any;
                 if (typeof filteredApiData == 'string') {
-                    filteredApiData = filteredApiData.split(',').filter(Boolean);
+                    try {
+                        const parsedData = JSON.parse(filteredApiData);
+                        filteredResponse = parsedData.filter(Boolean);
+                    } catch (e) {
+                        filteredResponse = filteredApiData;
+                        browserLogWarn('Error parsing JSON:', { data: filteredApiData, e });
+                    }
                 }
                 const mapDataToKeys: Record<string, any> = {};
                 Object.keys(response).forEach(key => {
-                    mapDataToKeys[key] = filteredApiData?.map((item: any) => {
+                    mapDataToKeys[key] = filteredResponse?.map((item: any) => {
                         return item[(response as any)?.[key]] != undefined ? item[(response as any)?.[key]] : item;
                     });
                 });
