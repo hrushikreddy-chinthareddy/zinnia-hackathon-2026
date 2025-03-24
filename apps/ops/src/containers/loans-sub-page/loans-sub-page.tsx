@@ -38,6 +38,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const [isLoanRepaymentEligible, setIsLoanRepaymentEligible] = useState<boolean | null>(null);
     const [loanRepaymentIneligibilityMessage, setLoanRepaymentIneligibilityMessage] = useState('');
     const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
+    const loanCancelEnabled = featureFlags[FEATURE_FLAGS.LOAN_CANCEL_AUTOPAY];
 
     const {
         allocation,
@@ -145,7 +146,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                         },
                         {
                             href: '#',
-                            isDisabled: !loanPaymentEnabled || !upcomingLoanRepayment?.nextProgramDate,
+                            isDisabled: !loanCancelEnabled || !loanPaymentEnabled || !upcomingLoanRepayment?.nextProgramDate,
                             text: t('cancelAutopay'),
                             onClick: openCancelSideSheet
                         },

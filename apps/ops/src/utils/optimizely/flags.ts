@@ -148,4 +148,5 @@ export enum FEATURE_FLAGS {
     LOAN_PAYMENT_TRANSACTION = 'loan_payment_transaction',
     PREMIUM_SET_OR_CANCEL_AUTOPAY= 'premium_set_or_cancel_autopay',
     DASHBOARD_SECTION_TAB_VIEW = 'dashboard_section_tab_view',
+    LOAN_CANCEL_AUTOPAY = 'loan_cancel_autopay',
 }
