@@ -42,7 +42,7 @@ export default handleAuth({
         }
 
         // If a connectionName is provided, use it to try to authenticate
-        // A failed authentication will redirect to the login page without the connectionName
+        // A failed authentication will redirect to the login page without the connectionName via the callback method
         if (connectionName) {
             logTrace('Silent login', loggingContext);
             await handleLogin(req, res, {
