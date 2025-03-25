@@ -91,10 +91,10 @@
                             }
                         },
                         "issuesResolved": {
-                            "type": "boolean",
+                            "type": "string",
                             "title": "Can you resolve the issues?",
                             "enumNames": ["Yes", "No"],
-                            "enum": [true, false]
+                            "enum": ["true", "false"]
                         },
                         "uploadDocuments": {
                             "type": "object",
@@ -138,14 +138,14 @@
                                 {
                                     "properties": {
                                         "issuesResolved": {
-                                            "enum": [true]
+                                            "enum": ["true"]
                                         }
                                     }
                                 },
                                 {
                                     "properties": {
                                         "issuesResolved": {
-                                            "enum": [false]
+                                            "enum": ["false"]
                                         },
                                         "issueReason": {
                                             "type": "object",
