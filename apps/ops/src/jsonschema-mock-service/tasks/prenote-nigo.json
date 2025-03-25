@@ -30,7 +30,7 @@
                                         "type": "string",
                                         "title": "Issues"
                                     },
-                                    "processingInstruction": {
+                                    "processingResolution": {
                                         "type": "string",
                                         "title": "Processing Instructions"
                                     },
@@ -326,7 +326,7 @@
                                     "inline": true
                                 }
                             },
-                            "processingInstruction": {
+                            "processingResolution": {
                                 "ui-widget": "ValueWidget",
                                 "ui:options": {
                                     "label": false,
