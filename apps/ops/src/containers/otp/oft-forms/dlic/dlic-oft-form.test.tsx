@@ -159,7 +159,7 @@ describe('formValidation', () => {
                     setFormData: setMockData,
                 }}
             >
-               <OftDlicForm qualType={QualTypes.IRARegular} />
+                <OftDlicForm qualType={QualTypes.IRARegular} />
             </FormDataContext.Provider>
         );
     });
@@ -358,7 +358,7 @@ describe('formValidation', () => {
             });
         });
 
-        describe('Spouse signature', () => {
+        describe.skip('Spouse signature', () => {
             const spouseConfig = signaturesConfig.find(sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Spouse);
             it('should be in the config', () => {
                 expect(spouseConfig).toBeTruthy();

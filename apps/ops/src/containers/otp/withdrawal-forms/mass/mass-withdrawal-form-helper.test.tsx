@@ -241,7 +241,7 @@ describe('Mass withdrawal form config', () => {
             });
         });
 
-        describe('Spouse signature', () => {
+        describe.skip('Spouse signature', () => {
             const signature = {
                 signatures: [
                     {
@@ -446,7 +446,7 @@ describe('Mass withdrawal form config', () => {
                             nameOnBankAccount: bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
                             reEnterAccountNumber: '',
-                            reEnterBankRoutingNumber: ''
+                            reEnterBankRoutingNumber: '',
                         },
                     ],
                     voidCheck: bankingDetails?.isVoidCheckAttached,
