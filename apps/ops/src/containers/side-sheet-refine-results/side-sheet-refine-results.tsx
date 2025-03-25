@@ -29,7 +29,6 @@ type Errors = {
 
 export interface SideSheetRefineResultsProps {
     filters: CaseSearchAdditionalFilters;
-    isAdvisorsExcel?: boolean;
     setCaseManagementFilters: Dispatch<SetStateAction<CaseSearchFilters>>;
     closeSideSheet: () => void;
     authorizedCarriers: string[];
@@ -37,13 +36,13 @@ export interface SideSheetRefineResultsProps {
 
 export default function SideSheetRefineResults({
     filters,
-    isAdvisorsExcel,
     setCaseManagementFilters,
     closeSideSheet,
     authorizedCarriers,
 }: SideSheetRefineResultsProps) {
     const { t } = useTranslation();
     const perms = usePermissionsContext();
+
     const carrierFilterItems = authorizedCarriers.map((carrierCode: string) => {
         const valueAndDisplay = getCarrierNameByClientId(carrierCode) || carrierCode.toUpperCase();
 
@@ -84,10 +83,6 @@ export default function SideSheetRefineResults({
 
     // update ProductName when carrier changes
     useEffect(() => {
-        if (isAdvisorsExcel) {
-            return;
-        }
-
         const selectedCarriers = getSelectedCarriers(additionalFilters.carriers);
 
         if (selectedCarriers.length) {
@@ -119,10 +114,6 @@ export default function SideSheetRefineResults({
 
     // update ProcessList when Carriers changes
     useEffect(() => {
-        if (isAdvisorsExcel) {
-            return;
-        }
-
         setLoadingProcessList(true);
 
         const getProcessListRefData = async () => {
@@ -149,10 +140,6 @@ export default function SideSheetRefineResults({
 
     // update RequestSubType when processList changes (which changes if Carrier Changes)
     useEffect(() => {
-        if (isAdvisorsExcel) {
-            return;
-        }
-
         const selectedProcesses = Array.from(additionalFilters.processTypes);
 
         if (selectedProcesses.length) {
@@ -360,46 +347,44 @@ export default function SideSheetRefineResults({
     // Render
     return (
         <div className="flex flex-col px-8">
-            {!isAdvisorsExcel && (
-                <>
-                    <div className="border-b-2 border-b-gray-100 py-8">
-                        <Select
-                            isMultiselect
-                            label={t(`${REFINE_RESULTS_BASE_KEY}carrier`) as string}
-                            options={getUniqueCarrierFilterItems()}
-                            value={selectedCarriers}
-                            onChange={updateCarrierFilters}
-                            size={FieldSize.Small}
-                            placeholder={t(`${REFINE_RESULTS_BASE_KEY}selectCarrier`) as string}
-                            disabled={carrierFilterItems.length === 1}
-                            name="carrier-dropdown-btn"
-                        />
-                        <MultiselectField
-                            isLoading={loadingProductName}
-                            label={t(`${REFINE_RESULTS_BASE_KEY}productName`) as string}
-                            options={productNameOptions}
-                            value={additionalFilters.products ?? {}}
-                            handleChange={updateProductNameFilters}
-                        />
-                    </div>
-                    <div className={Object.keys(selectedCarriers).length ? `border-b-2 border-b-gray-100 pb-8` : ''}>
-                        <MultiselectField
-                            isLoading={loadingProcessList}
-                            label={t(`${REFINE_RESULTS_BASE_KEY}processType`) as string}
-                            options={processListOptions}
-                            value={additionalFilters.processTypes ?? {}}
-                            handleChange={updateProcessFilters}
-                        />
-                        <MultiselectField
-                            isLoading={loadingRequestSubType}
-                            label={t(`${REFINE_RESULTS_BASE_KEY}requestSubtype`) as string}
-                            options={requestSubTypeOptions}
-                            value={additionalFilters.requestSubType ?? {}}
-                            handleChange={updateRequestSubTypeFilters}
-                        />
-                    </div>
-                </>
-            )}
+            <>
+                <div className="border-b-2 border-b-gray-100 py-8">
+                    <Select
+                        isMultiselect
+                        label={t(`${REFINE_RESULTS_BASE_KEY}carrier`) as string}
+                        options={getUniqueCarrierFilterItems()}
+                        value={selectedCarriers}
+                        onChange={updateCarrierFilters}
+                        size={FieldSize.Small}
+                        placeholder={t(`${REFINE_RESULTS_BASE_KEY}selectCarrier`) as string}
+                        disabled={carrierFilterItems.length === 1}
+                        name="carrier-dropdown-btn"
+                    />
+                    <MultiselectField
+                        isLoading={loadingProductName}
+                        label={t(`${REFINE_RESULTS_BASE_KEY}productName`) as string}
+                        options={productNameOptions}
+                        value={additionalFilters.products ?? {}}
+                        handleChange={updateProductNameFilters}
+                    />
+                </div>
+                <div className={Object.keys(selectedCarriers).length ? `border-b-2 border-b-gray-100 pb-8` : ''}>
+                    <MultiselectField
+                        isLoading={loadingProcessList}
+                        label={t(`${REFINE_RESULTS_BASE_KEY}processType`) as string}
+                        options={processListOptions}
+                        value={additionalFilters.processTypes ?? {}}
+                        handleChange={updateProcessFilters}
+                    />
+                    <MultiselectField
+                        isLoading={loadingRequestSubType}
+                        label={t(`${REFINE_RESULTS_BASE_KEY}requestSubtype`) as string}
+                        options={requestSubTypeOptions}
+                        value={additionalFilters.requestSubType ?? {}}
+                        handleChange={updateRequestSubTypeFilters}
+                    />
+                </div>
+            </>
             <DateRangeFields
                 additionalFilters={additionalFilters}
                 errors={errors}

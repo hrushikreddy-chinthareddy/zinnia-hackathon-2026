@@ -1,7 +1,7 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import UnauthorizedCard from '@deps/components/card/card-unauthorized';
 import EventsLoader from '@deps/components/events-loader/events-loader';
@@ -28,91 +28,65 @@ const getKnownCaseDocIds = (caseDetails: Case): string[] => {
     return Array.from(knownDocIds);
 };
 
-const DocumentsResults = ({
-    searchType,
-    caseDetails,
-    knownCaseDocIds,
-    docSource,
-}: {
-    searchType: 'policyNumber' | 'zinniaLiveCaseId';
-    caseDetails: Case;
-    knownCaseDocIds: string[];
-    docSource: string;
-}) => {
+export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
     const { t } = useTranslation();
+    const knownCaseDocIds = getKnownCaseDocIds(caseDetails);
+    const [docSource, setDocSource] = useState(DocumentTypeView.Policy as string);
     const limit = 25;
-    const [offset, setOffset] = useState(0);
-
-    const goToPage = useCallback(
-        (pageNumber: number) => {
-            setOffset((pageNumber - 1) * limit);
-        },
-        [limit, setOffset]
-    );
-
-    useEffect(() => {
-        setOffset(0);
-    }, [docSource]);
-    const documentSearchBody = useMemo<SearchRequest | null>(() => {
-        if (searchType === 'policyNumber' && !caseDetails.policyNumber) {
-            return null;
-        }
+    const [caseOffset, setCaseOffset] = useState(0);
+    const [policyOffset, setPolicyOffset] = useState(0);
+    const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
         return {
             parentCarrierCode: caseDetails.carrier,
             documentClassification:
                 docSource === (DocumentTypeView.Policy as string)
                     ? SearchRequest.documentClassification.INBOUND
                     : SearchRequest.documentClassification.OUTBOUND,
-            ...(searchType === 'policyNumber' ? { policyNumber: caseDetails.policyNumber } : { zinniaLiveCaseId: caseDetails.id }),
+            zinniaLiveCaseId: caseDetails.id,
         };
-    }, [caseDetails, docSource, searchType]);
+    }, [caseDetails, docSource]);
 
-    const [documents, loadingDocuments, totalDocuments, documentsStatusCode] = useDocumentSearch(documentSearchBody, limit, offset);
+    const policyDocumentSearchBody = useMemo<SearchRequest | null>(() => {
+        return {
+            parentCarrierCode: caseDetails.carrier,
+            documentClassification:
+                docSource === (DocumentTypeView.Policy as string)
+                    ? SearchRequest.documentClassification.INBOUND
+                    : SearchRequest.documentClassification.OUTBOUND,
+            policyNumber: caseDetails.policyNumber,
+        };
+    }, [caseDetails, docSource]);
 
-    return (
-        <>
-            {documentsStatusCode === StatusCode.Forbidden ? (
-                <UnauthorizedCard />
-            ) : (
-                <>
-                    <Typography variant={TypographyVariant.H3} className="-mb-4 mt-6">
-                        {
-                            t(
-                                searchType === 'policyNumber' ? 'caseOverview.tabs.policyDocuments' : `caseOverview.tabs.caseDocuments`
-                            ) as string
-                        }
-                    </Typography>
-                    {!loadingDocuments && (
-                        <DocumentsResultsTable
-                            carrierCode={caseDetails.carrier}
-                            documentType={docSource as DocumentTypeView}
-                            linkedDocumentIdentifiers={knownCaseDocIds}
-                            results={documents ?? []}
-                            policyNumber={caseDetails.policyNumber}
-                        />
-                    )}
-                    {loadingDocuments && (
-                        <div className="mx-auto flex items-center justify-center gap-2 my-8">
-                            <EventsLoader message={t('policy.documents.loadingDocuments')} />
-                        </div>
-                    )}
-                    <DocumentResultsPagination
-                        goToPage={goToPage}
-                        limit={limit}
-                        offset={offset}
-                        total={totalDocuments}
-                        loading={loadingDocuments}
-                    />
-                </>
-            )}
-        </>
+    const handleDocSourceChange = (value: string) => {
+        setCaseOffset(0);
+        setPolicyOffset(0);
+        setDocSource(value);
+    };
+
+    const goToCasePage = useCallback(
+        (pageNumber: number) => {
+            setCaseOffset((pageNumber - 1) * limit);
+        },
+        [limit, setCaseOffset]
     );
-};
 
-export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
-    const { t } = useTranslation();
-    const knownCaseDocIds = getKnownCaseDocIds(caseDetails);
-    const [docSource, setDocSource] = useState(DocumentTypeView.Policy as string);
+    const goToPolicyPage = useCallback(
+        (pageNumber: number) => {
+            setPolicyOffset((pageNumber - 1) * limit);
+        },
+        [limit, setPolicyOffset]
+    );
+
+    const [caseDocuments, loadingCaseDocuments, totalCaseDocuments, caseDocumentsStatusCode] = useDocumentSearch(
+        caseDocumentSearchBody,
+        limit,
+        caseOffset
+    );
+    const [policyDocuments, loadingPolicyDocuments, totalPolicyDocuments, policyDocumentsStatusCode] = useDocumentSearch(
+        policyDocumentSearchBody,
+        limit,
+        policyOffset
+    );
 
     return (
         <CardContainer>
@@ -124,7 +98,7 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
                 <div className="mt-6 flex w-full flex-col gap-6 md:flex-row md:justify-between">
                     <div className="flex flex-col gap-2">
                         <Label label={t('policy.documents.filterByCategory') as string} variant={LabelVariant.LabelSm} />
-                        <RadioGroup.Root className="flex gap-2" onValueChange={setDocSource} value={docSource}>
+                        <RadioGroup.Root className="flex gap-2" onValueChange={handleDocSourceChange} value={docSource}>
                             <RadioGroup.Item className="chip" value={DocumentTypeView.Policy}>
                                 {t('policy.documents.received') as string}
                             </RadioGroup.Item>
@@ -134,18 +108,76 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
                         </RadioGroup.Root>
                     </div>
                 </div>
-                <DocumentsResults
-                    searchType="zinniaLiveCaseId"
-                    caseDetails={caseDetails}
-                    knownCaseDocIds={knownCaseDocIds}
-                    docSource={docSource}
-                />
-                <DocumentsResults
-                    searchType="policyNumber"
-                    caseDetails={caseDetails}
-                    knownCaseDocIds={knownCaseDocIds}
-                    docSource={docSource}
-                />
+
+                {caseDocumentsStatusCode === StatusCode.Forbidden && policyDocumentsStatusCode === StatusCode.Forbidden ? (
+                    <UnauthorizedCard />
+                ) : (
+                    <>
+                        {/* only show the case table if it has documents or there are no documents */}
+                        {(!!caseDocuments?.length || !policyDocuments?.length) && (
+                            <>
+                                {/* only show titles if both tables are showing */}
+                                {!!caseDocuments?.length && !!policyDocuments?.length && (
+                                    <Typography variant={TypographyVariant.H3} className="-mb-4 mt-6">
+                                        {t('caseOverview.tabs.caseDocuments') as string}
+                                    </Typography>
+                                )}
+                                {loadingCaseDocuments ? (
+                                    <div className="mx-auto w-full flex items-center justify-center gap-2 my-8">
+                                        <EventsLoader message={t('policy.documents.loadingDocuments')} />
+                                    </div>
+                                ) : (
+                                    <DocumentsResultsTable
+                                        carrierCode={caseDetails.carrier}
+                                        documentType={docSource as DocumentTypeView}
+                                        linkedDocumentIdentifiers={knownCaseDocIds}
+                                        results={caseDocuments ?? []}
+                                        policyNumber={caseDetails.policyNumber}
+                                    />
+                                )}
+
+                                <DocumentResultsPagination
+                                    goToPage={goToCasePage}
+                                    limit={limit}
+                                    offset={caseOffset}
+                                    total={totalCaseDocuments}
+                                    loading={loadingCaseDocuments}
+                                />
+                            </>
+                        )}
+                        {/* only show policy documents if there are policy documents */}
+                        {!!policyDocuments?.length && (
+                            <>
+                                {/* only show titles if both tables are showing */}
+                                {!!caseDocuments?.length && (
+                                    <Typography variant={TypographyVariant.H3} className="-mb-4 mt-6">
+                                        {t('caseOverview.tabs.policyDocuments') as string}
+                                    </Typography>
+                                )}
+                                {loadingPolicyDocuments ? (
+                                    <div className="mx-auto w-full flex items-center justify-center gap-2 my-8">
+                                        <EventsLoader message={t('policy.documents.loadingDocuments')} />
+                                    </div>
+                                ) : (
+                                    <DocumentsResultsTable
+                                        carrierCode={caseDetails.carrier}
+                                        documentType={docSource as DocumentTypeView}
+                                        linkedDocumentIdentifiers={knownCaseDocIds}
+                                        results={policyDocuments ?? []}
+                                        policyNumber={caseDetails.policyNumber}
+                                    />
+                                )}
+                                <DocumentResultsPagination
+                                    goToPage={goToPolicyPage}
+                                    limit={limit}
+                                    offset={policyOffset}
+                                    total={totalPolicyDocuments}
+                                    loading={loadingPolicyDocuments}
+                                />
+                            </>
+                        )}
+                    </>
+                )}
             </>
         </CardContainer>
     );

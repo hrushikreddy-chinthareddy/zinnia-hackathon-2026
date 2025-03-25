@@ -4215,6 +4215,12 @@
         },
         "checkingEndingIn": "Checking ending in {{ accountNumber }}"
     },
+    "autopay": {
+        "pendingBanner": {
+            "caseLinkText": "go to the case",
+            "text": "An update to this policy's autopay details is pending. For more information, "
+        }
+    },
     "financialTransaction": {
         "confirm": {
             "cta": "Go to case",
@@ -4672,10 +4678,6 @@
         },
         "payment": {
             "label": "Payment Method"
-        },
-        "pendingBanner": {
-            "caseLinkText": "go to the case",
-            "text": "An update to this policy's autopay details is pending. For more information, "
         },
         "summary": {
             "amount": "Amount",

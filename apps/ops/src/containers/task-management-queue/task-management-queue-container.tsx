@@ -1,18 +1,18 @@
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import { TranslationFiles } from '@deps/config/translations';
 import { MessageType } from '@deps/models/case/task';
 import { AssignedTask, UnassignedTask } from '@deps/models/case/task-instance';
+import { additionalDataProps } from '@deps/pages/home';
 import { claimNextTask } from '@deps/queries/api/v1/claim-task';
 import { getAssignedTasks, getUnassignedTasks } from '@deps/queries/api/v1/task';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import TaskQueueTable from './task-queue-table';
-import { additionalDataProps } from '@deps/pages/home';
 
 export const NO_ASSIGNEE = 'No Assignee';
 
@@ -56,11 +56,12 @@ const TaskManagementQueue = ({ featureFlagDecisions, showClaimTask, additionalDa
                             break;
                     }
                 } else {
-                    getTasks(true);
+                    await getTasks(true);
                 }
             }
         } catch (error) {
             setErrorMessage(t('claimTaskError') || '');
+        } finally {
             setIsLoading(false);
         }
     };
@@ -114,7 +115,7 @@ const TaskManagementQueue = ({ featureFlagDecisions, showClaimTask, additionalDa
                                 data-testid="claim-task"
                                 aria-label={t('claimTask') as string}
                                 size={ButtonSize.Small}
-                                disabled={taskDetails.length > 0}
+                                disabled={taskDetails.length > 0 || isLoading}
                                 variant={ButtonVariant.Default}
                             >
                                 {t('claimTask')}

@@ -47,7 +47,15 @@ export const useDocumentSearch = (
     const [responseStatus, setResponseStatus] = useState<number | null>(null);
     const [loadedForArgs, setLoadedForArgs] = useState('');
 
+    // clear results when searchBody changes (not offset or limit)
+    useEffect(() => {
+        setTotal(0);
+        setDocs(null);
+        setResponseStatus(null);
+    }, [searchBody]);
+
     const searchDocs = useCallback(async () => {
+        // don't refetch if already loading or if we've already loaded for these args
         if (loading || loadedForArgs === JSON.stringify({ searchBody, limit, offset })) return;
         if (!searchBody) {
             setDocs([]);

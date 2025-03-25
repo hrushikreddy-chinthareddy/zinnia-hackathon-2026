@@ -4192,6 +4192,12 @@
         },
         "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}"
     },
+    "autopay": {
+        "pendingBanner": {
+            "caseLinkText": "aller au dossier",
+            "text": "Une mise à jour des détails de paiement automatique de cette police est en attente. Pour plus d'informations, "
+        }
+    },
     "financialTransaction": {
         "confirm": {
             "cta": "Aller au dossier",
@@ -4646,10 +4652,6 @@
         },
         "payment": {
             "label": "Méthode de paiement"
-        },
-        "pendingBanner": {
-            "caseLinkText": "aller au dossier",
-            "text": "Une mise à jour des détails de paiement automatique de cette police est en attente. Pour plus d'informations, "
         },
         "summary": {
             "amount": "Montant",

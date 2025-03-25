@@ -22,7 +22,7 @@ export const CaseTimingAiInsights: FC = () => {
                 `The data provided to you here are completed ${dashboardChartTitleFormat(selectedProcess || '', false)} cases.`,
                 `The data is grouped by ${GroupByOptions.ProcessSubType}.`,
                 `The timespan the data comes from is ${timeframe}.`,
-                `You are to take the median time in seconds and convert it to days`,
+                `You are to take the median time in seconds and convert it to days, hours, minutes or seconds depending on the timespan.`,
                 `Avoid using phrases such as "the data".`,
                 `Your responses should be insightful and will be displayed on a UI as a summary for a module related to a timeseries chart.`,
                 `Use percentages and real data where it makes sense.`,
