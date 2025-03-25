@@ -33,7 +33,6 @@ export const DEFAULT_ADDRESS = {
     zip: '',
     zipPlusFour: null,
     isAddressChanged: false,
-    ssn: '',
 };
 
 const zipFormat = { format: '#####' };

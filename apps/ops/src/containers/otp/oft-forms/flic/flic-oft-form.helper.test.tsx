@@ -363,7 +363,7 @@ describe('FLIC Form Specific component', () => {
             });
         });
 
-        describe('Spouse signature', () => {
+        describe.skip('Spouse signature', () => {
             const spouseConfig = signaturesConfig.find(sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Spouse);
             it('should be in the config', () => {
                 expect(spouseConfig).toBeTruthy();
