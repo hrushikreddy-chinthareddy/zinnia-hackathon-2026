@@ -5,10 +5,12 @@ import { AddressList } from '@/components/address-list/AddressList';
 import { BankList } from '@/components/bank-list/BankList';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
+import { CommunicationPreferences } from '@/components/person-data/CommunicationPreferences';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { getPreferencesByPlanCode } from '@/services/preferences/v1/[partyId]/e-delivery/[planCode]/[policyNumber]';
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
@@ -25,8 +27,14 @@ export const ProfileView = async ({
   const flags = await getFeatureFlags();
   const allowBankingChanges =
     flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT];
-
   const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
+  const showCommunicationPreferences =
+    flags?.[FEATURE_FLAGS.COMMUNICATION_PREFERENCES];
+
+  const { data: preferencesData } = await getPreferencesByPlanCode({
+    planCode,
+    policyNumber,
+  });
 
   const addresses = () => {
     return (
@@ -58,6 +66,15 @@ export const ProfileView = async ({
       if (currentEmails) {
         return <Emails emails={currentEmails as Email[]} title="Email" />;
       }
+    }
+
+    return null;
+  };
+
+  const communicationPreferences = () => {
+    // The api returns an array of preferences, instead of a single object per the api spec
+    if (preferencesData) {
+      return <CommunicationPreferences preferenceData={preferencesData} />;
     }
 
     return null;
@@ -97,6 +114,7 @@ export const ProfileView = async ({
         {addresses()}
         {phone()}
         {email()}
+        {showCommunicationPreferences && communicationPreferences()}
         {bank()}
       </div>
     </div>
