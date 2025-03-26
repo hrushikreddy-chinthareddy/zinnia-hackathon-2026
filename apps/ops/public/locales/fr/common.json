@@ -3717,16 +3717,19 @@
                 "success": {
                     "title": {
                         "submitted": "Soumis!",
-                        "success": "Succès!"
+                        "success": "C’est bon!"
                     },
                     "subtitle": {
                         "bank": " a été ajouté.",
                         "default": {
-                            "1": "{{name}}'s {{type}} {{transaction}} ",
-                            "2": "a été {{action}}."
+                            "1": "{{name}}'s ",
+                            "2": "demande à",
+                            "3": " {{action}} {{type}} {{transaction}}",
+                            "4": " a été reçu. Il devrait être finalisé prochainement, sauf problème. Vous pouvez suivre l'avancement du dossier en le consultant."
                         },
                         "nigo": "Nous avons soumis cette demande pour traitement NIGO."
-                    }
+                    },
+                    "cta": "Aller à l'historique des transactions"
                 },
                 "alert": {
                     "cta": "Annuler",

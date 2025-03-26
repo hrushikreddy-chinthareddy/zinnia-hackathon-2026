@@ -85,6 +85,7 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
     const [phone, setPhone] = useState<Phone>(updatePhone ?? INITIAL_PHONE);
     const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
     const [viewState, setViewState] = useState(ViewState.Default);
+    const [newCaseId, setNewCaseId] = useState<string>();
 
     const { caseId } = body;
     const { partyId } = party ?? {};
@@ -158,7 +159,7 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
             });
         }
 
-        handleResponse({ response, setViewState, setValidationResults });
+        handleResponse({ response, setViewState, setValidationResults, setNewCaseId });
     };
 
     switch (viewState) {
@@ -208,6 +209,7 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
                     onCancel={onCancel}
                     transaction={NonFinancialTransactions.Number}
                     type={phoneTypeTranslationLowercase}
+                    caseId={newCaseId}
                 />
             );
         case ViewState.Default:

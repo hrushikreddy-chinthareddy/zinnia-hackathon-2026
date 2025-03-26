@@ -5,9 +5,8 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
 
-
 interface SuccessStateProps {
-    caseId?: string
+    caseId?: string;
     isNigo?: boolean;
     onCancel: () => void;
     transactionType: string;
@@ -32,20 +31,18 @@ const SuccessState = ({ caseId, transactionType, isNigo, onCancel }: SuccessStat
     return (
         <CardInfo
             className="mt-8"
-            cta={caseId ? {
-                action: () => {
-                    router.push(`/cases/${caseId}/progress`);
-                },
-                text: t('cta'),
-            } : undefined}
+            cta={
+                caseId
+                    ? {
+                          action: () => {
+                              router.push(`/cases/${caseId}/progress`);
+                          },
+                          text: t('cta'),
+                      }
+                    : undefined
+            }
             secondaryCta={
-                <NavElement
-                    aria-label={t('secondaryCta') as string}
-                    onClick={onCancel}
-                    size={NavElementSize.Small}
-                    type={NavElementType.Button}
-                    variant={NavElementVariant.Default}
-                >
+                <NavElement onClick={onCancel} size={NavElementSize.Small} type={NavElementType.Button} variant={NavElementVariant.Default}>
                     {defaultT('general.close')}
                 </NavElement>
             }

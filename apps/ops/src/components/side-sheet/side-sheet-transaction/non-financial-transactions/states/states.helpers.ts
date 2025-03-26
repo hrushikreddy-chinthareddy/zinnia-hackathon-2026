@@ -8,6 +8,7 @@ interface HandleResponse {
     response: any;
     setViewState: Dispatch<SetStateAction<ViewState>>;
     setValidationResults: Dispatch<SetStateAction<ValidationResult[]>>;
+    setNewCaseId?: Dispatch<SetStateAction<string | undefined>>;
 }
 
 export enum ViewState {
@@ -20,7 +21,7 @@ export enum ViewState {
     Warn = 'warn',
 }
 
-export const handleResponse = ({ response, setViewState, setValidationResults }: HandleResponse) => {
+export const handleResponse = ({ response, setViewState, setValidationResults, setNewCaseId }: HandleResponse) => {
     switch (response?.status) {
         case StatusCode.Accepted:
             setViewState(ViewState.Success);
@@ -33,5 +34,8 @@ export const handleResponse = ({ response, setViewState, setValidationResults }:
         default:
             setViewState(ViewState.ApiError);
             break;
+    }
+    if (response?.data?.caseId && setNewCaseId) {
+        setNewCaseId(response?.data?.caseId);
     }
 };
