@@ -26,12 +26,14 @@ export default handleAuth({
             const queryString = returnTo?.split('?')?.[1];
             const params = new URLSearchParams(queryString);
             connectionName = params.get('connection');
-            let modifiedReturnTo = returnTo?.split('?')?.[0];
-            params.delete('connection');
-            if (params.toString()?.length) {
-                modifiedReturnTo += `?${params.toString()}`;
+            if (connectionName) {
+                let modifiedReturnTo = returnTo?.split('?')?.[0];
+                params.delete('connection');
+                if (params.toString()?.length) {
+                    modifiedReturnTo += `?${params.toString()}`;
+                }
+                req.query.returnTo = modifiedReturnTo.toString();
             }
-            req.query.returnTo = modifiedReturnTo.toString();
         } catch (e) {
             logTrace('login - no connection id', {
                 ...loggingContext,
@@ -60,8 +62,8 @@ export default handleAuth({
                 returnTo: '/',
                 authorizationParams: {
                     scope: 'openid profile email offline_access',
+                    grant_type: 'password',
                     audience: process.env.NEXT_PUBLIC_SE2_BACKEND_URL,
-                    prompt: 'login', // Ensure regular login
                 },
             });
         }
@@ -70,6 +72,7 @@ export default handleAuth({
     async callback(req, res) {
         const logCtx = await buildNextApiLoggingContext(req, res);
         const loggingContext = { ...logCtx, file: '[...auth0]', function: 'callback' } as LoggingContext;
+        logTrace('callback ', loggingContext);
         try {
             await handleCallback(req, res);
         } catch (e) {
