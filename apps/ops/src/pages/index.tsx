@@ -61,7 +61,7 @@ const WelcomePage = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async context => {
-    const { locale = DEFAULT_LOCALE, req, res } = context;
+    const { locale = DEFAULT_LOCALE, req, res, query } = context;
     setNextLocaleCookie(locale, req, res);
     const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON]);
 
@@ -100,6 +100,15 @@ export const getServerSideProps: GetServerSideProps = async context => {
         return {
             redirect: {
                 destination: returnTo,
+                permanent: false,
+            },
+        };
+    }
+    // if a connection query param is passed in, attempt to authenticate using it
+    if (query?.connection) {
+        return {
+            redirect: {
+                destination: `/api/auth/login?returnTo=${encodeURIComponent(`/?connection=${query?.connection}`)}`,
                 permanent: false,
             },
         };
