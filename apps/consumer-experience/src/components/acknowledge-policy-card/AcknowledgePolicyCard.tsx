@@ -13,6 +13,7 @@ import { toSentenceCase } from '@zinnia/utils';
 import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
+import { Button } from '@/components/button/Button';
 import { CarrierNames } from '@/types/carriers';
 import { CarrierPolicyDetails } from '@/types/policy';
 import { getCarrierNameById } from '@/utils/carriers';
@@ -28,7 +29,6 @@ import { acknowledgePolicyAction } from './acknowledge-policy-action';
 import styles from './AcknowledgePolicyCard.module.css';
 import { ClickableCardContainer } from '../clickable-card-container/ClickableCardContainer';
 import { FullName } from '../pii/FullName';
-import { Button } from '@/components/button/Button';
 
 export interface AckowledgeInputs {
   policyAcknowledged: boolean;
@@ -101,14 +101,14 @@ export const AcknowledgePolicyCard = ({
   return (
     <ClickableCardContainer>
       <div>
-        <p className="typography-labels-label-lg-alt">
+        <p className="typography-labels-label-md-alt">
           <span>{policy.marketingName || ''}</span>
         </p>
         <div className={styles.policyDetails}>
-          <p className="typography-labels-label-md-alt">{`${toSentenceCase(lineOfBusinessDisplayText(policy.lineOfBusiness))} #: ${checkIfNull(policy.policyNumber)}`}</p>
+          <p className="typography-labels-label-sm-alt">{`${toSentenceCase(lineOfBusinessDisplayText(policy.lineOfBusiness))} #: ${checkIfNull(policy.policyNumber)}`}</p>
 
           <>
-            <p className="typography-labels-label-md-alt">
+            <p className="typography-labels-label-sm-alt">
               <span>
                 {isAnnuity(policy.lineOfBusiness) ? 'Annuitant' : 'Insured'}
               </span>

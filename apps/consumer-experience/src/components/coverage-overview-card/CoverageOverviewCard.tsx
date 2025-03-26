@@ -13,7 +13,6 @@ import { LabelPopover } from '../label-popover/LabelPopover';
 import { PolicyDetailsSummary } from '../policy-details-summary/PolicyDetailsSummary';
 import { CoveragePopover } from '../policy-overview/CoveragePopover';
 
-// TODO: move the styles into this component folder
 export const CoverageOverviewCard = ({
   policy,
 }: {
@@ -85,7 +84,10 @@ export const CoverageOverviewCard = ({
                 Label={
                   <Label
                     interactiveElements={[
-                      <LabelPopover title="Death Benefit">
+                      <LabelPopover
+                        key="death-benefit-popover"
+                        title="Death Benefit"
+                      >
                         <div className={styles.popoverContent}>
                           <p>
                             This is how much money your beneficiaries may

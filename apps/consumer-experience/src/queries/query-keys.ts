@@ -6,5 +6,6 @@ export enum QueryKeys {
   POLICY_STATUS = 'policyStatus',
   POLICY_ACKNOWLEDGEMENT = 'policyAcknowledgement',
   USER_AUTHENTICATION_METHODS = 'userAuthenticationMethods',
+  CASE_DETAILS = 'caseDetails',
   CASES_FOR_POLICY = 'casesForPolicy',
 }

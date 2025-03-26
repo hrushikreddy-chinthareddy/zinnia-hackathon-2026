@@ -1506,7 +1506,7 @@ components:
     CaseInstanceSummary:
       type: object
       properties:
-        _id:
+        id:
           type: string
           example: 15ea7582-262f-4dfe-8a60-1e8b8e763fd4
         templateId:

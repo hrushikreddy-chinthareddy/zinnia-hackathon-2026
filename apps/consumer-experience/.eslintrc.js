@@ -1,6 +1,15 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
+  settings: {
+    "import/resolver": {
+      "alias": {
+        map: [
+          ['@/', './src'],
+        ]
+      }
+    }
+  },
   extends: ['@zinnia/eslint-config/next.js'],
   overrides: [
     {

@@ -1,81 +1,44 @@
 import { Meta, StoryObj } from '@storybook/react';
+import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 
-import { NotificationCenter, Notification } from './NotificationCenter';
+import { NotificationCenter } from './NotificationCenter';
 
-const onClick = () => {};
-
-const notifications: Notification[] = [
+const notifications: CaseInstanceSummary[] = [
   {
     id: '123251-55843',
-    title: 'Payment failed',
-    date: new Date(),
-    completed: false,
-    link: {
-      url: '#',
-      label: 'Case ID 123251-55844',
-    },
-    priority: true,
-    onClick,
+    process: 'Payment failed',
+    updatedAt: new Date().toDateString(),
+    caseStatus: 'FAILED',
   },
   {
     id: '659989-32646',
-    title: 'Tax documents available',
-    date: new Date(2025, 0, 14),
-    completed: false,
-    link: {
-      url: '#',
-      label: 'Case ID 123251-55843',
-    },
-    priority: false,
-    onClick,
+    process: 'Tax documents available',
+    updatedAt: new Date(2025, 0, 14).toDateString(),
+    caseStatus: 'REVERSED',
   },
   {
     id: '659989-32647',
-    title: 'Address removed',
-    date: new Date(),
-    completed: true,
-    link: {
-      url: '#',
-      label: 'More info',
-    },
-    priority: false,
-    onClick,
+    process: 'Address removed',
+    updatedAt: new Date(2025, 1, 14).toDateString(),
+    caseStatus: 'COMPLETED',
   },
   {
     id: '659989-32648',
-    title: 'Address added',
-    date: new Date(2025, 0, 25),
-    completed: true,
-    link: {
-      url: '#',
-      label: 'More info',
-    },
-    priority: false,
-    onClick,
+    process: 'Address added',
+    updatedAt: new Date(2025, 0, 25).toDateString(),
+    caseStatus: 'COMPLETED',
   },
   {
     id: '659989-32649',
-    title: 'Premium processed',
-    date: new Date(2025, 0, 14),
-    completed: true,
-    link: {
-      url: '#',
-      label: 'More info',
-    },
-    priority: false,
-    onClick,
+    process: 'Premium processed',
+    updatedAt: new Date(2025, 0, 14).toDateString(),
+    caseStatus: 'COMPLETED',
   },
   {
     id: '659989-32650',
-    title: 'Premium processed',
-    date: new Date(2025, 0, 7),
-    completed: true,
-    link: {
-      url: '#',
-      label: 'More info',
-    },
-    priority: false,
-    onClick,
+    process: 'Premium processed',
+    updatedAt: new Date(2025, 0, 7).toDateString(),
+    caseStatus: 'COMPLETED',
   },
 ];
 
@@ -84,7 +47,7 @@ const meta: Meta<typeof NotificationCenter> = {
   title: 'Components/NotificationCenter',
   tags: ['autodocs'],
   args: {
-    notifications: notifications,
+    initialNotifications: notifications,
   },
   parameters: {
     backgrounds: {
@@ -97,8 +60,26 @@ export default meta;
 
 export const Default: StoryObj<typeof NotificationCenter> = {};
 
+export const ActionNeeded: StoryObj<typeof NotificationCenter> = {
+  args: {
+    initialNotifications: notifications.map(notification => ({
+      ...notification,
+      caseStatus: 'IN_PROGRESS',
+    })),
+  },
+};
+
+export const Completed: StoryObj<typeof NotificationCenter> = {
+  args: {
+    initialNotifications: notifications.map(notification => ({
+      ...notification,
+      caseStatus: 'COMPLETED',
+    })),
+  },
+};
+
 export const noNotifications: StoryObj<typeof NotificationCenter> = {
   args: {
-    notifications: [],
+    initialNotifications: [],
   },
 };

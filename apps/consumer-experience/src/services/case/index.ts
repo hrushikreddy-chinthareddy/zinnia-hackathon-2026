@@ -1,35 +1,95 @@
-import { CaseSearchCriteria } from '@zinnia/api-types/types/case';
+import { CaseInstanceSummary, CaseSearchCriteria } from '@zinnia/api-types/types/case';
 
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
-import { logError, logWarn } from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/server-logging';
 
 import { caseManagementBaseUrl } from '../api-config';
-import { ServerApi } from '../server-http';
+import { EnterpriseTokenApi } from '../enterprise-api-token-http';
 
-const searchCases = async (searchData: CaseSearchCriteria) => {
+type CaseSearchServiceResponse = {
+  data: CaseInstanceSummary[] | null;
+  error: {
+    message: string;
+    status: number;
+    name: string;
+  } | null;
+}
+
+
+export const fetchCase = async (caseId: string) => {
+  const url = new URL(caseManagementBaseUrl);
+  url.pathname = `${url.pathname}/${caseId}`;
+
+  try {
+    const rawResponse = await EnterpriseTokenApi.get(url.href, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const response = await parseAPIResponse(rawResponse);
+
+    if (!rawResponse?.ok) {
+      logError('Error fetching case', JSON.stringify(
+        await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+      ));
+
+      throw new Error('Error fetching case');
+    }
+
+    return {
+      data: response,
+      error: null,
+    };
+  } catch {
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        status: 500,
+        name: 'fetchCase Error',
+      }
+    }
+  }
+
+
+}
+
+const searchCases = async (searchData: CaseSearchCriteria): Promise<CaseSearchServiceResponse> => {
   const url = `${caseManagementBaseUrl}/search`;
 
-  const rawResponse = await ServerApi.post(url, JSON.stringify(searchData), {
+  const rawResponse = await EnterpriseTokenApi.post(url, JSON.stringify(searchData), {
     headers: { 'Content-Type': 'application/json' },
   });
 
-  const response = await parseAPIResponse(rawResponse);
+  try {
+    const response = await parseAPIResponse(rawResponse);
 
-  if (!rawResponse?.ok) {
-    logError(
-      'Error searching case by policy number',
-      await logApiNotOkDetails({
-        rawResponse,
-        parsedResponse: response,
-      })
-    );
+    if (!rawResponse?.ok) {
+      logError(
+        'Error searching case by policy number',
+        await logApiNotOkDetails({
+          rawResponse,
+          parsedResponse: response,
+        })
+      );
 
-    throw new Error('Error calling search case', {
-      cause: response.status,
-    });
+      throw new Error('Error calling search case', {
+        cause: response.status,
+      });
+    }
+
+    return response;
+
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        message: 'Something went wrong',
+        // TODO: fix this to be the status
+        status: 500,
+        name: 'searchCases Error',
+      },
+    };
   }
-
-  return response;
 };
 
 export const searchCasesByPolicyNumber = async ({
@@ -40,7 +100,7 @@ export const searchCasesByPolicyNumber = async ({
 }: {
   policyNumber: string;
   carrierCode?: string;
-}) => {
+}): Promise<CaseSearchServiceResponse> => {
   try {
     // TODO: do i need to transform this response at all?
     const response = await searchCases({ policyNumber });
@@ -50,7 +110,7 @@ export const searchCasesByPolicyNumber = async ({
       error: null,
     };
   } catch (error) {
-    logWarn('error thrown in searchCasesByPolicyNumber', { error });
+    logError('error thrown in searchCasesByPolicyNumber', { error });
     return {
       data: null,
       error: {

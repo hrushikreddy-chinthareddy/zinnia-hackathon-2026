@@ -1,7 +1,25 @@
 import React from 'react';
 import type { Decorator, Preview } from '@storybook/react';
-// TODO: change theme https://storybook.js.org/docs/configure/theming
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '../src/app/styles/globals.css';
+
+const mockQueryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      enabled: false,
+      retry: false,
+      throwOnError: false,
+    },
+  },
+});
+
+const withQueryProvider: Decorator = Story => {
+  return (
+    <QueryClientProvider client={mockQueryClient}>
+      <Story />
+    </QueryClientProvider>
+  );
+};
 
 const withTheme: Decorator = (Story, context) => {
   const theme = context.parameters.theme || context.globals.theme || 'bloom';
@@ -60,7 +78,7 @@ const preview: Preview = {
   initialGlobals: {
     theme: 'bloom',
   },
-  decorators: [withTheme],
+  decorators: [withQueryProvider, withTheme],
   parameters: {
     controls: {
       matchers: {

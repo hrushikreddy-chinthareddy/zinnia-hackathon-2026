@@ -1,10 +1,10 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
+import { DocumentsView } from '@/app/(authenticated)/coverage/shared-views/documents-view/DocumentsView';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { DocumentCategory } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
-import { DocumentsView } from '@/app/(authenticated)/coverage/shared-views/documents-view/DocumentsView';
 
 const pageTitle = getPageTitle(RouteKey.DOCUMENTS);
 // disable because NextJS needs this to be exported from this file
