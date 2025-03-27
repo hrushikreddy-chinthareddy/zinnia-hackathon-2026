@@ -3,20 +3,20 @@ import { FC, useContext } from 'react';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
+import { TimeframeFilterOptions } from '@deps/components/dashboard/utils';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 
 import { TransactionTrendsContext } from '../../context/transaction-trends-context';
-import { TransactionTrendsTimeframe } from '../../utils';
 
 export const TransactionTrendsFilters: FC = () => {
     const { setTimeframe, setGroupBy, setSelectedProcess, timeframe, filter, groupBy, selectedProcess } =
         useContext(TransactionTrendsContext);
 
     const groupByOptions = [
-        { label: 'Sub process', value: GroupByOptions.ProcessSubType },
+        { label: 'Case subtype', value: GroupByOptions.ProcessSubType },
         { label: 'Carrier', value: GroupByOptions.Carrier, disabled: filter.carrier?.length === 1 },
         { label: 'Product', value: GroupByOptions.ProductName },
         { label: 'Distribution Partner', value: GroupByOptions.BrokerDealerName },
@@ -44,8 +44,7 @@ export const TransactionTrendsFilters: FC = () => {
             <div className="w-1/2">
                 <TimeFilter
                     defaultValue={timeframe}
-                    onValueChange={val => setTimeframe(val as TransactionTrendsTimeframe)}
-                    timeframeOptions={TransactionTrendsTimeframe}
+                    onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
                     controlledTimeValue={timeframe}
                 />
             </div>

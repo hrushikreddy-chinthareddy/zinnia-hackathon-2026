@@ -11,55 +11,74 @@ import {
     TableHeaderCell,
     TableRow,
 } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { friendlyGroupByName, generateCaseLink } from '@deps/components/dashboard/utils';
+import {
+    friendlyGroupByName,
+    generateCaseLink,
+    getNumberOfDaysInTimeframe,
+    getNumberOfMonthsInTimeframe,
+    startDates,
+    TimeframeFilterOptions,
+} from '@deps/components/dashboard/utils';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
+import { Statuses } from '@deps/models/case/case';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
-import { ActiveAgingContext } from '../../context/active-aging-context';
-import { calculateEndDate, startDates } from '../../utils';
-import { ActiveAgingFilters } from '../shared/active-aging-filters';
-import { ActiveAgingHeader } from '../shared/active-aging-header';
+import { TransactionTrendsContext } from '../../context/transaction-trends-context';
+import { TransactionTrendsFilters } from '../shared/transaction-trends-filters';
+import { TransactionTrendsHeader } from '../shared/transaction-trends-header';
 
 enum SortByOptions {
     NAME = 'name',
-    TOTAL = 'total',
+    COUNT = 'count',
+    AVERAGE = 'average',
 }
 
-export const ActiveAgingTable = () => {
+const calculateAverage = (count: number, timeframe: TimeframeFilterOptions) => {
+    if (timeframe === TimeframeFilterOptions.Last1Month || timeframe === TimeframeFilterOptions.LastWeek) {
+        const numberOfDays = getNumberOfDaysInTimeframe(timeframe);
+        return Math.round(count / numberOfDays);
+    }
+
+    const numberOfMonths = getNumberOfMonthsInTimeframe(timeframe);
+    return Math.round(count / numberOfMonths);
+};
+
+export const TransactionTrendsTable = () => {
     const [offset, setOffset] = useState(0);
     const [searchText, setSearchText] = useState('');
     const limit = 10;
 
     const {
         timeframe,
-        activeAgingDataFetching,
-        activeAgingDataLoading,
-        activeAgingDataError,
-        groupBy,
-        timeRangeData,
         selectedProcess,
         filter,
-    } = useContext(ActiveAgingContext);
+        groupBy,
+        transactionTrendsData,
+        transactionTrendsDataFetching,
+        transactionTrendsDataError,
+    } = useContext(TransactionTrendsContext);
 
-    const dataByTimeframe = useMemo(() => {
-        return timeRangeData?.[timeframe].data || [];
-    }, [timeRangeData, timeframe]);
+    const dataWithMonthlyAverage = useMemo(() => {
+        return transactionTrendsData?.data?.map(item => ({
+            ...item,
+            average: calculateAverage(item.count, timeframe),
+        }));
+    }, [timeframe, transactionTrendsData?.data]);
 
     // Filter by search
     const searchedData = useMemo(() => {
-        return dataByTimeframe.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
-    }, [dataByTimeframe, searchText]);
+        return dataWithMonthlyAverage?.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase())) || [];
+    }, [dataWithMonthlyAverage, searchText]);
 
     const { handleSort, sortedData } = useTableOptions({
-        sortByDefault: SortByOptions.TOTAL,
+        sortByDefault: SortByOptions.COUNT,
         dataToSort: searchedData,
     });
 
@@ -81,49 +100,9 @@ export const ActiveAgingTable = () => {
         goToPage(1);
     }, [goToPage, sortedData]);
 
-    const generateExpandableContent = useCallback(
-        (name: string, countByDay: { [key: string]: number }) => {
-            return Object.keys(countByDay)
-                .reverse()
-                .map(key => {
-                    const startDate = dayjs(key);
-                    const daysActive = dayjs().diff(startDate, 'day');
-                    return (
-                        <TableRow key={key}>
-                            <TableCell>{name}</TableCell>
-                            <TableCell>{countByDay[key]}</TableCell>
-                            <TableCell>{daysActive} Days</TableCell>
-                            <TableCell>
-                                <NavElement
-                                    type={NavElementType.Link}
-                                    target="_blank"
-                                    variant={NavElementVariant.Secondary}
-                                    className="underline"
-                                    href={generateCaseLink({
-                                        process: selectedProcess,
-                                        carrierOrProductName: name,
-                                        startDate: key,
-                                        endDate: key,
-                                        groupBy,
-                                        status: filter.caseStatus,
-                                        brokerDealer: filter.brokerDealerName,
-                                        carrier: filter.carrier,
-                                    })}
-                                    rel="noreferrer"
-                                >
-                                    View cases
-                                </NavElement>
-                            </TableCell>
-                        </TableRow>
-                    );
-                });
-        },
-        [filter.brokerDealerName, filter.carrier, filter.caseStatus, groupBy, selectedProcess]
-    );
-
     return (
         <CardContainer>
-            <ActiveAgingHeader />
+            <TransactionTrendsHeader />
             <div className={sharedStyles.searchContainer}>
                 <FieldData
                     fieldSize={FieldSize.Small}
@@ -131,14 +110,14 @@ export const ActiveAgingTable = () => {
                     onChange={e => setSearchText(e.target.value)}
                 />
             </div>
-            <ActiveAgingFilters />
+            <TransactionTrendsFilters />
             <div className={sharedStyles.tableContainer}>
-                <BlurOverlayLoader loading={activeAgingDataFetching || activeAgingDataLoading}>
-                    {activeAgingDataError ? (
+                <BlurOverlayLoader loading={transactionTrendsDataFetching}>
+                    {transactionTrendsDataError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
                             <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {'Something went wrong fetching insights, please try again by refreshing the page'}
+                                {'Something went wrong fetching the application types, please try again by refreshing the page'}
                             </Typography>
                         </div>
                     ) : searchedData?.length === 0 ? (
@@ -153,7 +132,7 @@ export const ActiveAgingTable = () => {
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
-                                        {friendlyGroupByName[groupBy]}
+                                        {friendlyGroupByName[groupBy]} Name
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -162,8 +141,8 @@ export const ActiveAgingTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.TOTAL)} sortable>
-                                        Total submissions
+                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.COUNT)} sortable>
+                                        Total cases
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -172,40 +151,46 @@ export const ActiveAgingTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell>Days active</TableHeaderCell>
+                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.AVERAGE)} sortable>
+                                        {timeframe === TimeframeFilterOptions.LastWeek || timeframe === TimeframeFilterOptions.Last1Month
+                                            ? 'Daily'
+                                            : 'Monthly'}{' '}
+                                        average
+                                        <Icon
+                                            className={sharedStyles.sortIcon}
+                                            type={IconType.SORT}
+                                            color="#00628B"
+                                            height={16}
+                                            width={16}
+                                        />
+                                    </TableHeaderCell>
                                     <TableHeaderCell>Actions</TableHeaderCell>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {paginatedData.map(item => {
+                                {paginatedData.map((item, index) => {
                                     const startDate = startDates[timeframe];
-                                    const endDate = calculateEndDate(timeframe);
+
                                     const link = generateCaseLink({
                                         process: selectedProcess,
                                         carrierOrProductName: item.name,
                                         startDate,
-                                        endDate,
+                                        status: [Statuses.Completed],
                                         groupBy,
                                         carrier: filter.carrier,
                                         brokerDealer: filter.brokerDealerName,
-                                        status: filter.caseStatus,
                                     });
                                     return (
-                                        <TableRow
-                                            key={`${item.name}-${item.count}`}
-                                            isExpandable
-                                            showChevron
-                                            expandedContent={generateExpandableContent(item.name, item.countByDay)}
-                                        >
+                                        <TableRow key={`${item.name}-${index}`}>
                                             <TableCell>{item.name}</TableCell>
-                                            <TableCell>{item.total}</TableCell>
-                                            <TableCell>{timeframe}</TableCell>
+                                            <TableCell>{item.count.toLocaleString()}</TableCell>
+                                            <TableCell>{item.average.toLocaleString()}</TableCell>
                                             <TableCell>
                                                 <NavElement
                                                     type={NavElementType.Link}
                                                     variant={NavElementVariant.Secondary}
-                                                    target="_blank"
                                                     className="underline"
+                                                    target="_blank"
                                                     href={link}
                                                     rel="noreferrer"
                                                 >
@@ -218,7 +203,7 @@ export const ActiveAgingTable = () => {
                             </TableBody>
                         </Table>
                     )}
-                    {!activeAgingDataError && searchedData?.length > 0 && (
+                    {!transactionTrendsDataFetching && searchedData?.length > 0 && searchedData.length > limit && (
                         <div className={sharedStyles.paginationContainer}>
                             <Pagination limit={limit} offset={offset} total={searchedData?.length || 0} goToPage={goToPage} />
                         </div>

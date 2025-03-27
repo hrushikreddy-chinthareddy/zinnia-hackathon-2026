@@ -42,6 +42,10 @@ export const startDates: Record<TimeframeFilterOptions, string> = {
     [TimeframeFilterOptions.LastWeek]: dayjs().subtract(1, 'week').format(defaultDateFormat),
 };
 
+export const getNumberOfMonthsInTimeframe = (timeframe: TimeframeFilterOptions) => dayjs().diff(dayjs(startDates[timeframe]), 'month');
+
+export const getNumberOfDaysInTimeframe = (timeframe: TimeframeFilterOptions) => dayjs().diff(dayjs(startDates[timeframe]), 'day');
+
 /**
  *
  * Formats the time ranges into a friendly date format.
@@ -203,4 +207,22 @@ export const generateCaseLink = ({
     }
 
     return `/cases?${queryParams.join('&')}`;
+};
+
+export const friendlyGroupByName: Record<GroupByOptions, string> = {
+    [GroupByOptions.ApplicationType]: 'Application type',
+    [GroupByOptions.BrokerDealerName]: 'Distribution partner',
+    [GroupByOptions.ProductName]: 'Product',
+    [GroupByOptions.Carrier]: 'Carrier',
+    [GroupByOptions.ProcessSubType]: 'Case subtype',
+    [GroupByOptions.CaseStatus]: 'Case status',
+    [GroupByOptions.AgingRange]: 'Aging range',
+    [GroupByOptions.OpenStages]: 'Open stages',
+    [GroupByOptions.ExceptionCategory]: 'Exception category',
+    [GroupByOptions.PolicyNumber]: 'Policy number',
+    [GroupByOptions.Process]: 'Process',
+    [GroupByOptions.CreatedAt]: 'Created date',
+    [GroupByOptions.UpdatedAt]: 'Updated date',
+    [GroupByOptions.AgingTimeRanges]: 'Aging time ranges',
+    [GroupByOptions.Default]: 'Default',
 };

@@ -17,7 +17,7 @@ import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
 import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
-import { generateCaseLink, startDates } from '@deps/components/dashboard/utils';
+import { friendlyGroupByName, generateCaseLink, startDates } from '@deps/components/dashboard/utils';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -27,7 +27,6 @@ import { DashboardStatsElementResponse, Statuses } from '@deps/models/case/case'
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import { SubmissionMethodTooltip } from '../../submission-type';
-import { friendlyGroupByName } from '../../utils';
 
 // Define the type for the flattened structure
 interface FlattenedDashboardStatsElement {

@@ -3,6 +3,7 @@ import isBetween from 'dayjs/plugin/isBetween';
 import * as Highcharts from 'highcharts';
 
 import { TransactionTrendsTimeframe } from '@deps/components/dashboard/sections/transaction-trends/utils';
+import { TimeframeFilterOptions } from '@deps/components/dashboard/utils';
 import { DashboardStatsElementResponse } from '@deps/models/case/case';
 
 dayjs.extend(isBetween);
@@ -398,7 +399,7 @@ export const getBottomChartConfig = (
 
 export function processGroupedData(
     input: DashboardStatsElementResponse[],
-    timeframe: TransactionTrendsTimeframe
+    timeframe: TimeframeFilterOptions
 ): LineAndVolumeCategoryAndSeries {
     const today = dayjs();
     let earliestDate = dayjs();
@@ -407,21 +408,21 @@ export function processGroupedData(
 
     // Determine the earliest date and chart interval based on the selected timeframe
     switch (timeframe) {
-        case TransactionTrendsTimeframe.Trailing12Months:
+        case TimeframeFilterOptions.Trailing12Months:
             earliestDate = today.subtract(12, 'month').startOf('month');
             break;
-        case TransactionTrendsTimeframe.Last6Months:
+        case TimeframeFilterOptions.Last6Months:
             earliestDate = today.subtract(6, 'month').startOf('month');
             break;
-        case TransactionTrendsTimeframe.Last90Days:
-            earliestDate = today.subtract(90, 'day').startOf('month');
+        case TimeframeFilterOptions.Last3Months:
+            earliestDate = today.subtract(3, 'month').startOf('month');
             break;
-        case TransactionTrendsTimeframe.Last60Days:
-            earliestDate = today.subtract(60, 'day').startOf('month');
+        case TimeframeFilterOptions.Last1Month:
+            earliestDate = today.subtract(1, 'month').startOf('month');
             chartInterval = 'day';
             break;
-        case TransactionTrendsTimeframe.LastMonth:
-            earliestDate = today.subtract(1, 'month').startOf('month');
+        case TimeframeFilterOptions.LastWeek:
+            earliestDate = today.subtract(1, 'day').startOf('month');
             chartInterval = 'day';
             break;
     }

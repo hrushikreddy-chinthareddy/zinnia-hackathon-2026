@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { CaseTiming } from '@deps/components/dashboard/sections/case-timing/case-timing';
 import { NigoClosedTransactions } from '@deps/components/dashboard/sections/nigo-closed-transactions/nigo-closed-transactions';
-import { TransactionTrendsProvider } from '@deps/components/dashboard/sections/transaction-trends/context/transaction-trends-context';
 import { TransactionTrends } from '@deps/components/dashboard/sections/transaction-trends/transaction-trends';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
 
@@ -19,9 +18,7 @@ export const ClosedTransactions = () => {
             </div>
 
             <div className={sharedStyles.dashboardCard}>
-                <TransactionTrendsProvider>
-                    <TransactionTrends />
-                </TransactionTrendsProvider>
+                <TransactionTrends />
             </div>
             <div className={sharedStyles.dashboardCard}>
                 <NigoClosedTransactions />
