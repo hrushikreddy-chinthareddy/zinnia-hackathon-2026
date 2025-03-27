@@ -1,5 +1,6 @@
 import {
-    FieldDataActive,
+    FieldData,
+    FieldSize,
     Icon,
     IconType,
     Pagination,
@@ -23,9 +24,9 @@ import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loade
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { SortOrder, useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
+import { Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
-import { Statuses } from '@deps/models/case/case';
 
 enum SortByOptions {
     NAME = 'name',
@@ -77,7 +78,11 @@ export const CaseTimingTable = () => {
             <CaseTimingHeader />
 
             <div className={sharedStyles.searchContainer}>
-                <FieldDataActive fieldSize="small" placeholder={`Search by case subtype`} onChange={e => setSearchText(e.target.value)} />
+                <FieldData
+                    fieldSize={FieldSize.Small}
+                    placeholder={`Search by case subtype`}
+                    onChange={e => setSearchText(e.target.value)}
+                />
             </div>
             <CaseTimingFilters />
             <div className={sharedStyles.tableContainer}>

@@ -1,5 +1,6 @@
 import {
-    FieldDataActive,
+    FieldData,
+    FieldSize,
     Icon,
     IconType,
     Pagination,
@@ -122,8 +123,8 @@ export const SubmissionTypeTable = () => {
                 description="The distribution of incoming case requests by submission method, comparing Electronic (E-App) and Paper submissions."
             />
             <div className={sharedStyles.searchContainer}>
-                <FieldDataActive
-                    fieldSize="small"
+                <FieldData
+                    fieldSize={FieldSize.Small}
                     placeholder={`Search by ${friendlyGroupByName[submissionVs]?.toLocaleLowerCase()} name`}
                     onChange={e => setSearchText(e.target.value)}
                 />

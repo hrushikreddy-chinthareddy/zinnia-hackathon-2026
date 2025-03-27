@@ -1,5 +1,6 @@
 import {
-    FieldDataActive,
+    FieldData,
+    FieldSize,
     Icon,
     IconType,
     Pagination,
@@ -125,8 +126,8 @@ export const ActiveAgingTable = () => {
         <CardContainer>
             <ActiveAgingHeader />
             <div className={sharedStyles.searchContainer}>
-                <FieldDataActive
-                    fieldSize="small"
+                <FieldData
+                    fieldSize={FieldSize.Small}
                     placeholder={`Search by ${friendlyGroupByName[groupBy]?.toLocaleLowerCase()} name`}
                     onChange={e => setSearchText(e.target.value)}
                 />
