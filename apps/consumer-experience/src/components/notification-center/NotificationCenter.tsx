@@ -156,7 +156,7 @@ export const NotificationCenter = ({
             >
               {isError
                 ? 'There was a problem fetching notifications'
-                : "That's all Your Notifications from the last 30 days"}
+                : "That's All Your Notifications From the Last 30 Days"}
             </h2>
           </>
         )}
