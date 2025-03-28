@@ -1,4 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
+
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
@@ -20,6 +21,7 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { PartyRole } from '@deps/models/policy/sor-policy';
 import { getAgentData } from '@deps/queries/api/agents';
+import { isEndDated } from '@deps/helpers/date.helper';
 
 import {
     NameTag,
@@ -61,8 +63,11 @@ export const PeopleSubPage: React.FC = () => {
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
     const router = useRouter();
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
-    // if there's an enddate, that role is no longer valid
-    const extractedPartyRoles = useMemo(() => policy?.partyRoles?.filter(role => !role.endDate) || [], [policy]);
+    // if there's an enddate and the enddate is in the past, that role is no longer valid
+    const extractedPartyRoles = useMemo(
+        () => policy?.partyRoles?.filter(role => !role.endDate || !isEndDated(role.endDate)) || [],
+        [policy]
+    );
     const countedRoles = useMemo(() => countPartyRoles(extractedPartyRoles, t), [extractedPartyRoles, t]);
     const nameTags = useMemo(
         () => combineNameAndRoles(extractedParties, extractedPartyRoles, t),
