@@ -1,4 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
@@ -63,7 +64,7 @@ export const PeopleSubPage: React.FC = () => {
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
     // if there's an enddate, that role is no longer valid
     const extractedPartyRoles = useMemo(
-        () => policy?.partyRoles?.filter(role => !role.endDate || role.endDate === '2999-12-31') || [],
+        () => policy?.partyRoles?.filter(role => !role.endDate || dayjs().isBefore(role.endDate)) || [],
         [policy]
     );
     const countedRoles = useMemo(() => countPartyRoles(extractedPartyRoles, t), [extractedPartyRoles, t]);
