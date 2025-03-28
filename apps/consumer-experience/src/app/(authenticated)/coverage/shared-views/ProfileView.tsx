@@ -4,8 +4,8 @@ import { Label } from '@zinnia/bloom/components';
 import { AddressList } from '@/components/address-list/AddressList';
 import { BankList } from '@/components/bank-list/BankList';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
+import { CommunicationPreferences } from '@/components/communication-preferences/CommunicationPreferences';
 import { FieldData } from '@/components/field-data/FieldData';
-import { CommunicationPreferences } from '@/components/person-data/CommunicationPreferences';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
@@ -74,7 +74,12 @@ export const ProfileView = async ({
   const communicationPreferences = () => {
     // The api returns an array of preferences, instead of a single object per the api spec
     if (preferencesData) {
-      return <CommunicationPreferences preferenceData={preferencesData} />;
+      return (
+        <CommunicationPreferences
+          preferenceData={preferencesData}
+          profileData={profileData}
+        />
+      );
     }
 
     return null;

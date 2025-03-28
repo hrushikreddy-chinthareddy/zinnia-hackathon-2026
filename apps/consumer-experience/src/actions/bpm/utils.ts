@@ -6,6 +6,7 @@ import { logError } from '@/utils/logging/server-logging';
 export enum TransactionTypes {
   ADDRESS = 'address',
   BANK = 'bank',
+  COMMUNICATION_PREFERENCE = 'communication-preference',
 }
 export enum ActionTypes {
   ADD = 'add',
@@ -105,6 +106,12 @@ const generateSuccessMessage = (
       return {
         title: `Thanks!`,
         message: `Bank account is being ${action}. Bank account changes may not save immediately. If you need assistance to change a bank account, call ${phone}.`,
+      };
+    }
+    case TransactionTypes.COMMUNICATION_PREFERENCE: {
+      return {
+        title: `Thanks!`,
+        message: `Communication preference is being ${action}. Communication preference changes may not save immediately. If you need assistance to change a communication preference, call ${phone}.`,
       };
     }
     default: {

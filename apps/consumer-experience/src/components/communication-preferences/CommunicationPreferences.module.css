@@ -1,0 +1,91 @@
+.itemsRowContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: var(--measure-dimension-gap-lg);
+}
+
+.deliveryOptionRadioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+}
+
+.emailContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-md);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-3xl);
+}
+
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-margin-md);
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+}
+
+.emailRadioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-md);
+}
+
+.radioSubElement {
+  display: flex;
+  flex-direction: column;
+  border: var(--measure-dimension-stroke-sm) solid
+    var(--color-base-border-border-light);
+  border-radius: var(--measure-dimension-radius-sm);
+  padding: var(--measure-dimension-padding-2xl);
+  cursor: pointer;
+  font: var(--font-family-secondary);
+
+  &:hover {
+    border-color: var(--color-states-selected-border-selected-border);
+  }
+}
+
+.radioSubElement:has(input:checked) {
+  border-color: var(--color-states-selected-border-selected-border);
+  &:hover {
+    border-color: var(--color-states-selected-border-selected-border);
+  }
+}
+
+.radioSubElement:has(input:focus-visible) {
+  outline: 2px solid var(--color-states-selected-border-selected-border);
+  outline-offset: 2px;
+}
+
+.emailContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xs);
+}
+
+.triggerIcon {
+  transform: rotate(90deg);
+  color: var(--color-base-text-text-link);
+}
+
+.triggerContainer {
+  display: flex;
+  align-items: center;
+}
+
+.cancel {
+  width: fit-content;
+  align-self: center;
+}

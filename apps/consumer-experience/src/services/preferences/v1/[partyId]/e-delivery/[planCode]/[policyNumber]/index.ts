@@ -1,7 +1,7 @@
 import * as jose from 'jose';
 
 import { preferencesBaseUrl } from '@/services/api-config';
-import { EnterpriseTokenApi } from '@/services/enterprise-api-token-http';
+import { ServerApi } from '@/services/server-http';
 import { UserClaims } from '@/types/auth';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { getAccessToken } from '@/utils/auth';
@@ -21,7 +21,7 @@ export const getPreferencesByPlanCode = async ({
   const url = new URL(
     `${preferencesBaseUrl}/${partyId}/e-delivery/${planCode}/${policyNumber}`
   );
-  const rawResponse = await EnterpriseTokenApi.get(url);
+  const rawResponse = await ServerApi.get(url);
   const response = await parseAPIResponse(rawResponse);
 
   if (!rawResponse?.ok) {
