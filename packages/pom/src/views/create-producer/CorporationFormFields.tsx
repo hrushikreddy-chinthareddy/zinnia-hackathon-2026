@@ -46,8 +46,11 @@ export const CorporationFormFields = ({
         label={<Label>National Producer Number</Label>}
         {...register('nationalProducerNumber', {
           required: 'National producer number is missing.',
-          maxLength: 8,
-          minLength: 8,
+          pattern: {
+            value: /^\d{1,10}$/,
+            message:
+              'National producer number must be a number up to 10 digits',
+          },
         })}
         errorMessage={errors.nationalProducerNumber?.message}
         fieldStatus={

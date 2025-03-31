@@ -54,23 +54,14 @@ export const IndividualFormFields = ({
         style={{ width: '200px' }}
         fieldSize="small"
         label={<Label>National Producer Number</Label>}
+        type="number"
         {...register('nationalProducerNumber', {
           required: 'National producer number is missing.',
-          maxLength: {
-            value: 8,
-            message: 'National producer number must be exactly 8 characters.',
-          },
-          minLength: {
-            value: 8,
-            message: 'National producer number must be exactly 8 characters.',
-          },
-          validate: {
-            validFormat: value => {
-              if (value && value.length !== 8) {
-                return 'National producer number must be exactly 8 characters.';
-              }
-              return true;
-            },
+          setValueAs: npn => Number(npn),
+          pattern: {
+            value: /^\d{1,10}$/,
+            message:
+              'National producer number must be a number up to 10 digits',
           },
         })}
         errorMessage={errors.nationalProducerNumber?.message}
@@ -81,7 +72,7 @@ export const IndividualFormFields = ({
         }
       />
 
-      <div style={{ width: '150px' }}>
+      <div style={{ width: '150px', textWrap: 'nowrap' }}>
         <Controller
           control={control}
           name="dateOfBirth"

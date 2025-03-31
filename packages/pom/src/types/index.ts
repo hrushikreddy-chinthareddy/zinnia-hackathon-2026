@@ -15,10 +15,18 @@ export enum CorporationType {
   REGISTERED_INVESTMENT_ADVISOR = 'RegisteredInvestmentAdvisor',
 }
 
-export enum Carrier {
+export enum CarrierName {
+  THRIVENT = 'thrivent',
   ZINNIA = 'zinnia',
-  SBUL = 'SBUL',
 }
+
+export const Carriers: Record<
+  CarrierName,
+  { shortName: string; name: string }
+> = {
+  [CarrierName.THRIVENT]: { shortName: 'THRI', name: 'Thrivent' },
+  [CarrierName.ZINNIA]: { shortName: 'zinnia', name: 'Zinnia' },
+};
 
 export enum Channel {
   INDEPENDENT_PLANNERS = 'IndependentPlanners',

@@ -83,32 +83,29 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
         control={control}
         rules={{ required: 'Product is missing.' }}
         render={({ field }) => (
-          console.log(field),
-          (
-            <div style={{ width: '30%' }}>
-              <Select
-                id="field-select-product"
-                fieldSize="small"
-                label={<Label labelFor="field-select-product">Product</Label>}
-                value={field.value}
-                onValueChange={field.onChange}
-                errorMessage={errors.product?.message}
-                fieldStatus={
-                  errors.product ? FieldStatus.ERROR : FieldStatus.DEFAULT
-                }
-                options={[
-                  {
-                    textValue: 'Product1',
-                    value: 'product1',
-                  },
-                  {
-                    textValue: 'Product2',
-                    value: 'product2',
-                  },
-                ]}
-              />
-            </div>
-          )
+          <div style={{ width: '30%' }}>
+            <Select
+              id="field-select-product"
+              fieldSize="small"
+              label={<Label labelFor="field-select-product">Product</Label>}
+              value={field.value}
+              onValueChange={field.onChange}
+              errorMessage={errors.product?.message}
+              fieldStatus={
+                errors.product ? FieldStatus.ERROR : FieldStatus.DEFAULT
+              }
+              options={[
+                {
+                  textValue: 'Product1',
+                  value: 'product1',
+                },
+                {
+                  textValue: 'Product2',
+                  value: 'product2',
+                },
+              ]}
+            />
+          </div>
         )}
       />
     ),
@@ -128,7 +125,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
                 </Label>
               }
               name="completionDate"
-              onDateSelect={(date) =>
+              onDateSelect={date =>
                 field.onChange(standardDateMonthDayYear(date))
               }
               fieldStatus={

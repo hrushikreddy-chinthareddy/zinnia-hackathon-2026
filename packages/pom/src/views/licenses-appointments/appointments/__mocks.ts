@@ -173,5 +173,3 @@ export const groupedAppointments = generateAppointments().reduce(
   },
   {} as Record<string, Appointment[]>
 );
-
-console.log(groupedAppointments);

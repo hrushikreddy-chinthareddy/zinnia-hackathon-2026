@@ -3,6 +3,10 @@ import { ProducerFormData } from '../views/create-producer/types';
 import { ClientApi } from './client-http';
 import { ProducerType } from '../types';
 import { GetProducersResponse } from '../types/search.types';
+import {
+  CreateProducerRequestBody,
+  CreateProducerResponse,
+} from '../types/create.types';
 
 export const searchProducer = async ({
   nationalProducerNumber,
@@ -31,8 +35,10 @@ export const searchProducer = async ({
   return await response.json();
 };
 
-export const createProducer = async (data: ProducerFormData) => {
-  const reqBody =
+export const createProducer = async (
+  data: ProducerFormData
+): Promise<CreateProducerResponse> => {
+  const reqBody: CreateProducerRequestBody =
     data.recordType === ProducerType.INDIVIDUAL
       ? {
           firstName: data.firstName,
@@ -53,13 +59,33 @@ export const createProducer = async (data: ProducerFormData) => {
           channel: data.channel,
         };
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const url = new URL(`${baseUrl}/api/pom/bpm/onboarding/v1/producer`);
-
-  const response = await ClientApi.post(url, JSON.stringify(reqBody), {
-    headers: {
-      'Content-Type': 'application/json',
+  reqBody.externalHierarchies = [
+    {
+      // this is always set to the national producer number of the producer to create
+      producerLookupId: data.nationalProducerNumber.toString(),
+      level: data.hierarchy.level,
+      carrierShortName: data.carrier,
+      effectiveDate: toEnterpriseDate(data.hierarchy.effectiveDate),
+      uplineProducersInformation: data.hierarchy.uplineProducersInformation,
     },
-  });
-  return await response.json();
+  ];
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+  const url = new URL(
+    `${baseUrl ?? 'http://localhost:3000'}/api/pom/bpm/onboarding/v1/producer`
+  );
+
+  const response: CreateProducerResponse = await (
+    await ClientApi.post(url, JSON.stringify(reqBody), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  ).json();
+
+  if (response.statusCode !== 202) {
+    throw new Error(response.message);
+  }
+  return response;
 };
