@@ -6,16 +6,18 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { toTitleCase } from '@deps/helpers/string.helper';
 import { AdditionalDataInstance, CaseAdditionalDataKeys, CommunicationTypes } from '@deps/models/case/additional-data-instance';
+import { Processes } from '@deps/models/case/case';
 import { TransactionTypes } from '@deps/models/case/correspondence';
-import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
+import { toSentenceCase } from '@zinnia/utils';
 
 type CaseDetailsSideNavProps = {
     CaseAdditionalDetails: AdditionalDataInstance;
     carrier: string;
+    process?: Processes;
+    applicationType?: string;
 };
-const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier }: CaseDetailsSideNavProps) => {
+const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier, process, applicationType }: CaseDetailsSideNavProps) => {
     const { t } = useTranslation();
 
     const setCookies = () => {
@@ -28,56 +30,87 @@ const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier }: CaseDetailsSideN
             ? `/contact-center/document/${CaseAdditionalDetails[CaseAdditionalDataKeys.formId]}`
             : `/documents/${CaseAdditionalDetails[CaseAdditionalDataKeys.formId]}`;
 
+    const deliveryMethod = CaseAdditionalDetails[CaseAdditionalDataKeys.deliveryMethod];
+    CaseAdditionalDetails[CaseAdditionalDataKeys.deliveryMethod];
+
+    const appTypeLowerCase = applicationType?.toLocaleLowerCase();
+    const submissionType =
+        appTypeLowerCase === 'digital' || appTypeLowerCase === 'electronic' ? t('sidenav.electronic') : t(`sidenav.${appTypeLowerCase}`);
+
     return (
         <div className="flex w-full flex-col border-t-2 border-gray-100 p-4">
             <Title className="mb-2" variant={TitleVariant.SubTitle}>
                 {t('sidenav.navButtons.caseDetails')}
             </Title>
 
-            <NavElement
-                className={'whitespace-normal break-words'}
-                href={url}
-                isNewPage={true}
-                size={NavElementSize.Small}
-                target="_blank"
-                title={CaseAdditionalDetails[CaseAdditionalDataKeys.formName]}
-                type={NavElementType.Link}
-                startIcon={<DocumentIcon width={20} height={20} />}
-                onClick={setCookies}
-                variant={NavElementVariant.Secondary}
-            >
-                {CaseAdditionalDetails[CaseAdditionalDataKeys.formName]}
-            </NavElement>
+            <div className="grid grid-cols-2 my-4 gap-y-2">
+                {process && (
+                    <>
+                        <Typography variant={TypographyVariant.BodySm} className="text-[--color-base-text-text-secondary]">
+                            {t('sidenav.type')}
+                        </Typography>
+                        <Content details={toSentenceCase(process)} variant={ContentVariant.BodySm} />
+                    </>
+                )}
 
-            <div className="grid grid-cols-2 my-4">
-                <div>
-                    <Typography variant={TypographyVariant.BodyBold}> {t('sidenav.navButtons.deliveryMethod')}</Typography>
-                    <Content
-                        details={toTitleCase(CaseAdditionalDetails[CaseAdditionalDataKeys.deliveryMethod])}
-                        variant={ContentVariant.BodySm}
-                    />
-                </div>
-                <div>
-                    {CaseAdditionalDetails[CaseAdditionalDataKeys.deliveryMethod] === CommunicationTypes.Mail &&
-                        CaseAdditionalDetails[CaseAdditionalDataKeys.documentId] && (
-                            <>
-                                <Typography variant={TypographyVariant.BodyBold}> {t('sidenav.navButtons.correspondence')}</Typography>
-                                <NavElement
-                                    className={''}
-                                    href={`/documents/${CaseAdditionalDetails[CaseAdditionalDataKeys.documentId]}`}
-                                    isNewPage={true}
-                                    size={NavElementSize.Small}
-                                    target="_blank"
-                                    title={CaseAdditionalDetails[CaseAdditionalDataKeys?.documentName] ?? ''}
-                                    type={NavElementType.Link}
-                                    onClick={setCookies}
-                                    variant={NavElementVariant.Secondary}
-                                >
-                                    {CaseAdditionalDetails[CaseAdditionalDataKeys?.documentName] ?? ''}
-                                </NavElement>
-                            </>
-                        )}
-                </div>
+                {applicationType && (
+                    <>
+                        <Typography variant={TypographyVariant.BodySm} className="text-[--color-base-text-text-secondary]">
+                            {t('sidenav.submissionType')}
+                        </Typography>
+                        <Content details={toSentenceCase(submissionType)} variant={ContentVariant.BodySm} />
+                    </>
+                )}
+
+                {process === Processes.Correspondence && (
+                    <>
+                        <Typography variant={TypographyVariant.BodySm} className="text-[--color-base-text-text-secondary]">
+                            {t('sidenav.navButtons.document')}
+                        </Typography>
+                        <NavElement
+                            className={'whitespace-normal break-words'}
+                            href={url}
+                            isNewPage={true}
+                            size={NavElementSize.Small}
+                            target="_blank"
+                            type={NavElementType.Link}
+                            onClick={setCookies}
+                            variant={NavElementVariant.Secondary}
+                        >
+                            {CaseAdditionalDetails[CaseAdditionalDataKeys.formName] || CaseAdditionalDetails[CaseAdditionalDataKeys.formId]}
+                        </NavElement>
+                    </>
+                )}
+
+                {deliveryMethod && (
+                    <>
+                        <Typography variant={TypographyVariant.BodySm} className="text-[--color-base-text-text-secondary]">
+                            {t('sidenav.navButtons.deliveryType')}
+                        </Typography>
+                        <Content details={toSentenceCase(deliveryMethod)} variant={ContentVariant.BodySm} />
+                    </>
+                )}
+
+                {deliveryMethod === CommunicationTypes.Mail && CaseAdditionalDetails[CaseAdditionalDataKeys.documentId] && (
+                    <div>
+                        <Typography variant={TypographyVariant.BodySm} className="text-[--color-base-text-text-secondary]">
+                            {t('sidenav.navButtons.correspondence')}
+                        </Typography>
+                        <NavElement
+                            className={''}
+                            href={`/documents/${CaseAdditionalDetails[CaseAdditionalDataKeys.documentId]}`}
+                            isNewPage={true}
+                            size={NavElementSize.Small}
+                            target="_blank"
+                            title={CaseAdditionalDetails[CaseAdditionalDataKeys?.documentName] ?? ''}
+                            type={NavElementType.Link}
+                            onClick={setCookies}
+                            variant={NavElementVariant.Secondary}
+                        >
+                            {CaseAdditionalDetails[CaseAdditionalDataKeys?.documentName] ?? ''}
+                        </NavElement>
+                    </div>
+                )}
             </div>
         </div>
     );

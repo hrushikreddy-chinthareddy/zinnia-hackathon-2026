@@ -4151,11 +4151,16 @@
             "transactions": "Transactions",
             "history": "History",
             "documents": "Documents",
+            "document": "Document",
             "caseDetails": "Case Details",
-            "deliveryMethod": "Delivery method",
+            "deliveryType": "Delivery type",
             "correspondence": "Correspondence",
             "activity": "Activity"
-        }
+        },
+        "type": "Type",
+        "submissionType": "Submission Type",
+        "electronic": "Electronic",
+        "paper": "Paper"
     },
     "bannerAlert": {
         "close": "Close"

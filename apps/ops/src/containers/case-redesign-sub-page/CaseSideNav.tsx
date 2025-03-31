@@ -9,7 +9,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
-import { Case, Processes, Statuses } from '@deps/models/case/case';
+import { Case, Statuses } from '@deps/models/case/case';
 import { LineOfBusiness } from '@deps/models/policy/sor-policy';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
@@ -207,9 +207,12 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                 <ProcessingTimeStamp data={data} />
                 <div className="flex w-full flex-col rounded bg-white shadow-elevation-light-04">
                     <ContractDetails data={data} />
-                    {caseDetails.process === Processes.Correspondence && (
-                        <CaseDetailsSideNav CaseAdditionalDetails={caseDetails?.additionalData} carrier={caseDetails?.carrier} />
-                    )}
+                    <CaseDetailsSideNav
+                        CaseAdditionalDetails={caseDetails?.additionalData}
+                        carrier={caseDetails?.carrier}
+                        process={caseDetails.process}
+                        applicationType={caseDetails.applicationType}
+                    />
                     {shouldShowCaseInsights && (
                         <div className="flex w-full flex-col p-4 border-t-2 border-gray-100">
                             <Title className="mb-2 flex items-center gap-2" variant={TitleVariant.SubTitle}>

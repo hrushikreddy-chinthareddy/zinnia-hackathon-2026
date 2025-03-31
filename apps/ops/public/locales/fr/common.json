@@ -4126,11 +4126,16 @@
             "transactions": "Transactions",
             "history": "Histoire",
             "documents": "Documents",
+            "document": "Document",
             "caseDetails": "Détails du Dossier",
-            "deliveryMethod": "Méthode de livraison",
+            "deliveryMethod": "Type de livraison",
             "correspondence": "Correspondence",
             "activity": "Activité"
-        }
+        },
+        "type": "Type",
+        "submissionType": "Type de soumission",
+        "electronic": "Électronique",
+        "paper": "Papier"
     },
     "bannerAlert": {
         "close": "Fermer"

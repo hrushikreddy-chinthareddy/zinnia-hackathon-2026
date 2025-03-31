@@ -20,6 +20,7 @@ export enum CaseIdentifier {
 
 export type Case = {
     additionalData: AdditionalDataInstance;
+    applicationType?: string;
     carrier: string;
     caseStatus: Statuses;
     correlationId?: string;

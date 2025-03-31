@@ -1,4 +1,4 @@
-import { BadgeVariant, Tag } from '@zinnia/bloom/components';
+import { BadgeVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
@@ -11,7 +11,6 @@ import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { PolicyStatus } from '@deps/models/policy/sor-policy';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-
 
 interface CasePageHeaderProps {
     caseId: string;
@@ -42,7 +41,6 @@ const CasePageHeader = ({ caseId, title, tag, status, statusTooltip, statusVaria
                 </Tooltip>
             )}
             <div className="flex flex-col gap-2">
-                {caseTitle && <Tag text={tag} />}
                 <div className="flex flex-col md:flex-row items-start md:gap-4">
                     <div className="flex flex-col">
                         <Typography variant={TypographyVariant.H1}>{toTitleCase(caseTitle || tag)}</Typography>
