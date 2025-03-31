@@ -49,7 +49,7 @@ const defaultChartOptions = {
 };
 
 const DEFAULT_GROUPBY_FILTER_OPTIONS = {
-    L1SelectValue: GroupByOptions.BrokerDealerName,
+    L1SelectValue: GroupByOptions.Process,
     L2SelectValue: GroupByOptions.ProcessSubType,
     L3SelectValue: GroupByOptions.CaseStatus,
 };
