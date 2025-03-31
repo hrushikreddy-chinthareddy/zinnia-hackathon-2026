@@ -6,6 +6,7 @@ import {
   toTitleCase,
   pluralize,
   createQueryString,
+  indefiniteArticle,
 } from './strings';
 
 describe('toTitleCase', () => {
@@ -95,5 +96,25 @@ describe('createQueryString', () => {
     const obj = { foo: 123, baz: true };
     const queryString = createQueryString(obj);
     expect(queryString).toBe('foo=123&baz=true');
+  });
+});
+
+describe('indefiniteArticle', () => {
+  it('should return an empty string when word is undefined', () => {
+    expect(indefiniteArticle(undefined)).toBe('');
+  });
+
+  it('should return an empty string when word is an empty string', () => {
+    expect(indefiniteArticle('')).toBe('');
+  });
+
+  it('should return "an" when the word starts with a vowel', () => {
+    expect(indefiniteArticle('elephant')).toBe('an');
+    expect(indefiniteArticle('Aardvark')).toBe('an');
+  });
+
+  it('should return "a" when the word starts with a non-vowel', () => {
+    expect(indefiniteArticle('tiger')).toBe('a');
+    expect(indefiniteArticle('123')).toBe('a');
   });
 });

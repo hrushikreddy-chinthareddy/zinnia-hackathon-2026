@@ -1,12 +1,14 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { FC, useMemo, useRef } from 'react';
 
 import { actionLogInfo } from '@/actions/log-actions';
 import { getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { PropertyKeys, useBpmStore } from '@/store/store';
+import { CaseSummary, CaseTypes } from '@/types/case';
 import { PolicyProfile } from '@/types/policy';
 import { refetchHandler } from '@/utils/transactions';
 
@@ -14,6 +16,7 @@ import styles from './BankList.module.css';
 import { AddBankSidesheet } from '../add-bank/AddBankSidesheet';
 import { BankData } from '../bank-data/BankData';
 import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
+import { OpenTransactionCaseDetails } from '../open-transaction-case-details/OpenTransactionCaseDetails';
 
 const POLL_INTERVAL = 1000;
 const POLL_LIMIT = 5;
@@ -23,6 +26,8 @@ interface BankListProps {
   policyNumber: string;
   allowBankingChanges: boolean;
   initialProfileData?: PolicyProfile | null;
+  initialCaseData?: CaseSummary[];
+  lineOfBusiness?: LineOfBusiness;
 }
 
 export const BankList: FC<BankListProps> = ({
@@ -30,10 +35,14 @@ export const BankList: FC<BankListProps> = ({
   policyNumber,
   allowBankingChanges,
   initialProfileData,
+  initialCaseData,
+  lineOfBusiness,
 }) => {
   const bpmAction = useBpmStore(state => state.bpmAction);
   const pollCount = useRef(0);
   const removeBpmAction = useBpmStore(state => state.removeBpmAction);
+  const queryClient = useQueryClient();
+
   const logHandler = () => {
     actionLogInfo('BankList poll limit reached', {
       policyNumber,
@@ -50,13 +59,20 @@ export const BankList: FC<BankListProps> = ({
         bpmAction,
         propertyKey: PropertyKeys.BANK_DETAILS,
         logHandler,
-        finishedHandler: () => removeBpmAction(),
+        finishedHandler: () => {
+          removeBpmAction();
+          queryClient.refetchQueries({
+            queryKey: [QueryKeys.CASES_FOR_POLICY, policyNumber],
+          });
+        },
         pollCount,
       });
     },
     initialData: initialProfileData,
     queryFn: () => getPolicyProfile(planCode, policyNumber),
-    select: data => data?.bankDetails,
+    select: data => {
+      return data?.bankDetails;
+    },
   });
 
   const allBankData = useMemo(() => {
@@ -85,9 +101,17 @@ export const BankList: FC<BankListProps> = ({
             Need help updating banking details? Give us a call at{' '}
             <CarrierPhoneNumber />.
           </p>
+          <OpenTransactionCaseDetails
+            cases={initialCaseData}
+            planCode={planCode}
+            policyNumber={policyNumber}
+            lineOfBusiness={lineOfBusiness}
+            caseType={CaseTypes.BANK_INFO_CHANGE}
+          />
           <div className={styles.multipleItemsInSection}>{allBankData}</div>
         </>
       )}
+
       {allowBankingChanges && (
         <AddBankSidesheet
           partyId={initialProfileData?.partyId || ''}

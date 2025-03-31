@@ -1,4 +1,4 @@
-import { Email, Phone } from '@zinnia/api-types/types/sor';
+import { Email, LineOfBusiness, Phone } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
 import { AddressList } from '@/components/address-list/AddressList';
@@ -16,20 +16,23 @@ import { filterItemsWithPastEndDate } from '@/utils/data';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 export const ProfileView = async ({
+  lineOfBusiness,
   profileData,
   planCode,
   policyNumber,
 }: {
+  lineOfBusiness: LineOfBusiness;
   profileData: PolicyProfile;
   planCode: string;
   policyNumber: string;
 }) => {
   const flags = await getFeatureFlags();
-  const allowBankingChanges =
-    flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT];
-  const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
+
   const showCommunicationPreferences =
     flags?.[FEATURE_FLAGS.COMMUNICATION_PREFERENCES];
+  const allowBankingChanges =
+    flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT] || false;
+  const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
 
   const { data: preferencesData } = await getPreferencesByPlanCode({
     planCode,
@@ -43,6 +46,7 @@ export const ProfileView = async ({
         policyNumber={policyNumber}
         initialProfileData={profileData}
         allowAddressChanges={allowAddressChanges}
+        lineOfBusiness={lineOfBusiness}
       />
     );
   };
@@ -92,6 +96,7 @@ export const ProfileView = async ({
         policyNumber={policyNumber}
         allowBankingChanges={allowBankingChanges}
         initialProfileData={profileData}
+        lineOfBusiness={lineOfBusiness}
       />
     );
   };

@@ -118,15 +118,10 @@ const AddressGroup = ({
 
 export const Addresses = ({
   addresses,
-  title,
   preferredAddressIndicator,
   partyId,
   allowAddressChanges,
 }: AddressProps) => {
-  if (addresses.length === 0) {
-    return null;
-  }
-
   const residentialAddresses = addresses?.filter(
     address => address.addressType === AddressType.RESIDENCE
   );
@@ -139,9 +134,12 @@ export const Addresses = ({
 
   const userOnlyHasOneAddress = addresses.length == 1;
 
+  if (!addresses?.length) {
+    return null;
+  }
+
   return (
     <div className={styles.itemsRowContainer}>
-      <h2 className="mb-lg">{title}</h2>
       <div className={styles.itemsRow}>
         <AddressGroup
           addresses={residentialAddresses}
@@ -165,12 +163,6 @@ export const Addresses = ({
           userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
       </div>
-      {allowAddressChanges && (
-        <AddEditAddressSidesheet
-          partyId={partyId}
-          actionType={FormActionType.ADD}
-        />
-      )}
     </div>
   );
 };

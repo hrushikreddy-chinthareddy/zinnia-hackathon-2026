@@ -29,6 +29,7 @@ export const refetchHandler = ({
   finishedHandler,
 }: RefetchArgs) => {
   if (bpmAction?.propertyKey !== propertyKey) return false;
+
   //If we triggered stopPolling or if pollCount is greater than our limit
   if (shouldStopPolling(data, bpmAction) || pollCount.current >= POLL_LIMIT) {
     // if pollCount has reached the limit and there is no change to the data, send a log

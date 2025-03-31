@@ -1,13 +1,15 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { Address } from '@zinnia/api-types/types/sor';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Address, LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { FC, useRef } from 'react';
 
 import { actionLogInfo } from '@/actions/log-actions';
+import { OpenTransactionCaseDetails } from '@/components/open-transaction-case-details/OpenTransactionCaseDetails';
 import { getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { PropertyKeys, useBpmStore } from '@/store/store';
+import { CaseSummary, CaseTypes } from '@/types/case';
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { refetchHandler } from '@/utils/transactions';
@@ -21,6 +23,8 @@ interface AddressListProps {
   policyNumber: string;
   initialProfileData?: PolicyProfile | null;
   allowAddressChanges?: boolean;
+  initialCaseData?: CaseSummary[];
+  lineOfBusiness?: LineOfBusiness;
 }
 
 const POLL_INTERVAL = 1000;
@@ -31,10 +35,14 @@ export const AddressList: FC<AddressListProps> = ({
   policyNumber,
   initialProfileData,
   allowAddressChanges,
+  initialCaseData,
+  lineOfBusiness,
 }) => {
   const bpmAction = useBpmStore(state => state.bpmAction);
   const pollCount = useRef(0);
   const removeBpmAction = useBpmStore(state => state.removeBpmAction);
+  const queryClient = useQueryClient();
+
   const logHandler = () => {
     actionLogInfo('Address poll limit reached', {
       policyNumber,
@@ -43,6 +51,7 @@ export const AddressList: FC<AddressListProps> = ({
       actionType: bpmAction?.actionType,
     });
   };
+
   const { data: addresses } = useQuery({
     queryKey: [QueryKeys.POLICY_PROFILE, 'addresses', policyNumber],
     refetchInterval: ({ state }) => {
@@ -52,45 +61,46 @@ export const AddressList: FC<AddressListProps> = ({
         bpmAction,
         propertyKey: PropertyKeys.ADDRESSES,
         logHandler,
-        finishedHandler: () => removeBpmAction(),
+        finishedHandler: async () => {
+          queryClient.refetchQueries({
+            queryKey: [QueryKeys.CASES_FOR_POLICY, policyNumber],
+          });
+          removeBpmAction();
+        },
         pollCount,
       });
     },
     initialData: initialProfileData,
     queryFn: () => getPolicyProfile(planCode, policyNumber),
-    select: data => data?.addresses,
+    select: data => filterItemsWithPastEndDate(data?.addresses),
   });
 
-  if (addresses && addresses.length) {
-    const currentAddresses: Address[] = filterItemsWithPastEndDate(addresses);
-
-    if (currentAddresses && currentAddresses.length) {
-      return (
-        <Addresses
-          addresses={currentAddresses}
-          title="Address"
-          preferredAddressIndicator={
-            initialProfileData?.preferredAddressIndicator || ''
-          }
-          partyId={initialProfileData?.partyId || ''}
-          allowAddressChanges={allowAddressChanges}
-        />
-      );
-    }
-  }
-
-  if (!allowAddressChanges) {
-    return null;
-  }
-  // If there are no addresses, show the add address button and set defaultAddress to true
   return (
-    <>
-      <h2 className="mb-lg">Addresses</h2>
-      <AddEditAddressSidesheet
-        values={{ defaultAddress: true }}
+    <div>
+      <h2 className="mb-lg">Address</h2>
+      {allowAddressChanges && (
+        <OpenTransactionCaseDetails
+          cases={initialCaseData}
+          planCode={planCode}
+          policyNumber={policyNumber}
+          lineOfBusiness={lineOfBusiness}
+          caseType={CaseTypes.ADDRESS_CHANGE}
+        />
+      )}
+      <Addresses
+        addresses={addresses as Address[]}
+        preferredAddressIndicator={
+          initialProfileData?.preferredAddressIndicator || ''
+        }
         partyId={initialProfileData?.partyId || ''}
-        actionType={FormActionType.ADD}
+        allowAddressChanges={allowAddressChanges}
       />
-    </>
+      {allowAddressChanges && (
+        <AddEditAddressSidesheet
+          partyId={initialProfileData?.partyId || ''}
+          actionType={FormActionType.ADD}
+        />
+      )}
+    </div>
   );
 };

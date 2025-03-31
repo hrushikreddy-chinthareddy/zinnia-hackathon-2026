@@ -68,7 +68,6 @@ export default async function AuthenticatedLayout({
           <SessionManager>
             <RefreshRouterManager>
               <MourningBanner />
-              {/* TODO: fix naming of classes */}
               <div className="layout-wrapper">
                 <div className="layout-wrapper-inner">
                   <div className={styles.mainContent}>

@@ -3,6 +3,7 @@
   justify-content: space-between;
   align-items: baseline;
   margin-bottom: var(--measure-dimension-gap-lg);
+  margin-right: var(--measure-dimension-gap-lg);
   gap: var(--measure-dimension-gap-md);
 }
 

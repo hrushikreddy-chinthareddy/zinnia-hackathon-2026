@@ -74,13 +74,15 @@ export default async function Beneficiary({
       const currentAddresses = filterItemsWithPastEndDate(data.addresses);
       if (currentAddresses.length > 0) {
         return (
-          <Addresses
-            addresses={currentAddresses as Address[]}
-            title="Address"
-            preferredAddressIndicator="1"
-            partyId={partyId}
-            allowAddressChanges={allowAddressChanges}
-          />
+          <div>
+            <h2 className="mb-lg">Address</h2>
+            <Addresses
+              addresses={currentAddresses as Address[]}
+              preferredAddressIndicator="1"
+              partyId={partyId}
+              allowAddressChanges={allowAddressChanges}
+            />
+          </div>
         );
       }
     }

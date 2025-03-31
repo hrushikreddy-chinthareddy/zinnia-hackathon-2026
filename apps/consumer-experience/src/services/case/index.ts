@@ -1,5 +1,6 @@
-import { CaseInstanceSummary, CaseSearchCriteria } from '@zinnia/api-types/types/case';
+import { CaseSearchCriteria } from '@zinnia/api-types/types/case';
 
+import { CaseSummary } from '@/types/case';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError } from '@/utils/logging/server-logging';
 
@@ -7,14 +8,13 @@ import { caseManagementBaseUrl } from '../api-config';
 import { EnterpriseTokenApi } from '../enterprise-api-token-http';
 
 type CaseSearchServiceResponse = {
-  data: CaseInstanceSummary[] | null;
+  data: CaseSummary[] | null;
   error: {
     message: string;
     status: number;
     name: string;
   } | null;
-}
-
+};
 
 export const fetchCase = async (caseId: string) => {
   const url = new URL(caseManagementBaseUrl);
@@ -28,9 +28,12 @@ export const fetchCase = async (caseId: string) => {
     const response = await parseAPIResponse(rawResponse);
 
     if (!rawResponse?.ok) {
-      logError('Error fetching case', JSON.stringify(
-        await logApiNotOkDetails({ rawResponse, parsedResponse: response })
-      ));
+      logError(
+        'Error fetching case',
+        JSON.stringify(
+          await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+        )
+      );
 
       throw new Error('Error fetching case');
     }
@@ -46,19 +49,23 @@ export const fetchCase = async (caseId: string) => {
         message: 'Something went wrong',
         status: 500,
         name: 'fetchCase Error',
-      }
-    }
+      },
+    };
   }
+};
 
-
-}
-
-const searchCases = async (searchData: CaseSearchCriteria): Promise<CaseSearchServiceResponse> => {
+const searchCases = async (
+  searchData: CaseSearchCriteria
+): Promise<CaseSearchServiceResponse> => {
   const url = `${caseManagementBaseUrl}/search`;
 
-  const rawResponse = await EnterpriseTokenApi.post(url, JSON.stringify(searchData), {
-    headers: { 'Content-Type': 'application/json' },
-  });
+  const rawResponse = await EnterpriseTokenApi.post(
+    url,
+    JSON.stringify(searchData),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 
   try {
     const response = await parseAPIResponse(rawResponse);
@@ -78,7 +85,6 @@ const searchCases = async (searchData: CaseSearchCriteria): Promise<CaseSearchSe
     }
 
     return response;
-
   } catch (error) {
     return {
       data: null,

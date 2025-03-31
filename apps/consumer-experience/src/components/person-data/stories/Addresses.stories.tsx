@@ -69,7 +69,6 @@ const meta: Meta<typeof Addresses> = {
         country: 'US' as Country,
       },
     ],
-    title: 'Address',
   },
   tags: ['autodocs'],
 };

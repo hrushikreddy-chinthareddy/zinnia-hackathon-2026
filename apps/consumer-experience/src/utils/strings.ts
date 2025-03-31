@@ -72,3 +72,23 @@ export const createQueryString = (obj: Record<string, unknown>) =>
   Object.entries(obj)
     .map(([key, value]) => `${key}=${value}`)
     .join('&');
+
+/**
+ * Returns the indefinite article for a given word.
+ * This is a the most basic version of this rule and does not account
+ * for the wacky exceptions like 'hotel' or acronyms
+ *
+ * @example
+ * indefiniteArticle('elephant') // 'an'
+ * indefiniteArticle('tiger') // 'a'
+ *
+ * @param {string} word - The word to get the indefinite article for
+ * @returns {string} The indefinite article for the given word
+ */
+export const indefiniteArticle = (word?: string): string => {
+  if (!word) {
+    return '';
+  }
+
+  return word[0]?.match(/[aeiou]/i) ? 'an' : 'a';
+};
