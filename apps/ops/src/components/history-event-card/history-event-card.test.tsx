@@ -53,14 +53,14 @@ describe.skip('HistoryEventCard Component', () => {
         render(
             <SideSheetContext.Provider
                 value={{
-                    changeSideSheetContent: () => { },
-                    handleLocation: () => { },
-                    handleOpen: () => { },
-                    openSecondarySideSheet: () => { },
-                    onClose: () => { },
+                    changeSideSheetContent: () => {},
+                    handleLocation: () => {},
+                    handleOpen: () => {},
+                    openSecondarySideSheet: () => {},
+                    onClose: () => {},
                 }}
             >
-                <HistoryEventCard policy={mockPolicy} refreshTransactions={() => { }} transaction={sample} />
+                <HistoryEventCard policy={mockPolicy} refreshTransactions={() => {}} transaction={sample} />
             </SideSheetContext.Provider>
         );
 
@@ -110,7 +110,7 @@ describe('getEventCardValues', () => {
                 transactionType: TransactionType.SubsequentPayment,
             });
 
-            expect(amount).toBe(100000);
+            expect(amount).toBe(86753.09);
             expect(caption).toBe('6/26/2023');
             expect(eventBody).toBe(`${toTitleCase(mockPremiumSystematicProgram.frequency)} | historyEventCard.bankingBody`);
             expect(eventTitle).toBe('historyEventCard.transactionTypes.SubsequentPayment');

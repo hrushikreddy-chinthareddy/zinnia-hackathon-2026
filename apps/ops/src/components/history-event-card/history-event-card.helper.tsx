@@ -155,11 +155,21 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
             isClickable = true;
             break;
 
-        case TransactionType.SubsequentPayment:
         case TransactionType.SubsequentPremium: {
             const systematicProgram = systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
 
-            amount = appliedAmount || systematicProgram?.amount;
+            amount = appliedAmount;
+            eventBody = toTitleCase(systematicProgram?.frequency);
+
+            if (bankingBody) eventBody += ` | ${bankingBody}`;
+            isClickable = true;
+            break;
+        }
+
+        case TransactionType.SubsequentPayment: {
+            const systematicProgram = systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
+
+            amount = paymentAmount;
             eventBody = toTitleCase(systematicProgram?.frequency);
 
             if (bankingBody) eventBody += ` | ${bankingBody}`;
