@@ -253,7 +253,8 @@
                             "label": false,
                             "inline": true,
                             "enumDisabled": [true]
-                        }
+                        },
+                        "ui:hideError": true
                     },
                     "communicationSent": {
                         "ui:options": {

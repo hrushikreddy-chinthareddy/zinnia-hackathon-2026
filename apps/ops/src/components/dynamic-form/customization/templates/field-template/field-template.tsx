@@ -5,7 +5,7 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 import styles from './field-template.module.css';
 
 export function FieldTemplate(props: FieldTemplateProps) {
-    const { id, label, required, description, errors, children, readonly, formData, classNames, uiSchema } = props;
+    const { id, label, required, description, errors, children, readonly, formData, classNames, uiSchema, hideError = false } = props;
 
     const uiOptions = getUiOptions(uiSchema);
     const helpText = uiOptions.help;
@@ -49,7 +49,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                         )}
                         {description}
                         {readonly && typeof formData === 'string' ? formData : children}
-                        {errors}
+                        {!hideError && errors}
                     </div>
                 </>
             )}

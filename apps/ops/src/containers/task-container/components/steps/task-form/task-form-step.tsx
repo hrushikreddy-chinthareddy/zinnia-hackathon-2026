@@ -1,7 +1,7 @@
 import Form from '@rjsf/core';
 import { AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { createRef, memo, useCallback, useContext, useState } from 'react';
+import { createRef, memo, useCallback, useContext, useEffect, useState } from 'react';
 
 import AssistiveText from '@deps/components/assistive-text/assistive-text';
 import PageLoader from '@deps/components/page-loader/page-loader';
@@ -18,7 +18,6 @@ import { TaskForm } from './task-form';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
-
 type TaskFormStepProps = {
     readonly?: boolean;
     formRef?: any;
@@ -32,19 +31,25 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, 
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `taskManagement.taskForm` });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
     const formState = useContext(TaskDataContext);
-    const { task, correlationId } = formState;
+    const { task, correlationId, formErrors } = formState;
     const formRef = createRef<Form>();
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false)
-
+    const [loading, setLoading] = useState(false);
+    const [isValidForm, setIsValidForm] = useState(false);
     const handleStepContinue = useCallback(async () => {
         if (formRef.current) {
-            const isValid = formRef.current.validateForm();
-            if (isValid) {
+            setIsValidForm(formRef?.current?.validateForm() || false);
+            if (isValidForm) {
                 formRef.current.submit();
             }
         }
     }, [formRef]);
+
+    useEffect(() => {
+        if (formRef.current) {
+            setIsValidForm(formRef?.current?.validateForm() || false);
+        }
+    }, [task.data]);
 
     const handleSubmit = useCallback(
         async (error: any) => {
@@ -60,7 +65,7 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, 
 
     const handleSaveAsDraft = async () => {
         try {
-            setLoading(true)
+            setLoading(true);
             await updateTask(task, correlationId, TaskStatus.InProgress);
         } catch (error) {
             browserLogError('updateTask::Error updating task', {
@@ -68,9 +73,10 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, 
                 taskId: task.id,
             });
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
+
     return (
         <WorkflowCard
             className="!gap-0"
@@ -86,7 +92,7 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, 
                     isDraft={isSaveAsDraftEnabled}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
-
+                    disableContinue={!isValidForm}
                 />
             }
         >
@@ -101,10 +107,6 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, 
                     {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
                 </div>
             </div>
-
-
-
-
         </WorkflowCard>
     );
 };

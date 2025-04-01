@@ -244,7 +244,8 @@
                         "ui:options": {
                             "label": true,
                             "inline": true
-                        }
+                        },
+                        "ui:hideError": true
                     },
                     "uploadDocuments": {
                         "inline": true,

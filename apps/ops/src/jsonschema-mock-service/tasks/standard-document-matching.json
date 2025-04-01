@@ -20,9 +20,7 @@
                         "caseTypeEnum": {},
                         "caseSubTypeEnum": {}
                     },
-                    "required": [
-                        "matchingResult"
-                    ],
+                    "required": ["matchingResult"],
                     "properties": {
                         "sectionHeader": {
                             "type": "object",
@@ -102,9 +100,7 @@
                                             "$ref": "#/definitions/caseSubTypeEnum"
                                         }
                                     },
-                                    "required": [
-                                        "caseType"
-                                    ]
+                                    "required": ["caseType"]
                                 },
                                 "else": {
                                     "if": {
@@ -118,12 +114,11 @@
                                         "properties": {
                                             "caseId": {
                                                 "type": "string",
-                                                "title": "Case Id"
+                                                "title": "Case Id",
+                                                "minLength": 12
                                             }
                                         },
-                                        "required": [
-                                            "caseId"
-                                        ]
+                                        "required": ["caseId"]
                                     }
                                 }
                             }
@@ -199,13 +194,15 @@
                                     }
                                 }
                             ]
-                        }
+                        },
+                        "ui:hideError": true
                     },
                     "caseId": {
                         "ui:placeholder": "eg: CA1234567890",
                         "ui:options": {
                             "label": true
-                        }
+                        },
+                        "ui:hideError": true
                     },
                     "caseTitle": {
                         "ui:options": {
@@ -219,15 +216,9 @@
                         "ui:props": {
                             "apiUrl": "case/v1/refdata",
                             "apiPayload": {
-                                "carrier": [
-                                    "{{carrier}}"
-                                ],
-                                "keys": [
-                                    "requestSubType"
-                                ],
-                                "process": [
-                                    "{{value}}"
-                                ]
+                                "carrier": ["{{carrier}}"],
+                                "keys": ["requestSubType"],
+                                "process": ["{{value}}"]
                             },
                             "apiMethod": "post",
                             "dataKey": "caseSubTypeEnum",
@@ -236,7 +227,8 @@
                                 "enumNames": []
                             },
                             "responseData": "{{data.referenceData.requestSubType}}"
-                        }
+                        },
+                        "ui:hideError": true
                     },
                     "caseSubType": {
                         "ui:widget": "SelectWidget",
@@ -253,9 +245,7 @@
                 "formSchema": {
                     "$schema": "http://json-schema.org/draft-07/schema#",
                     "type": "object",
-                    "required": [
-                        "matchedDocumentData"
-                    ],
+                    "required": ["matchedDocumentData"],
                     "properties": {
                         "details": {
                             "type": "object",
@@ -303,11 +293,7 @@
                             "properties": {
                                 "matchType": {
                                     "type": "string",
-                                    "enum": [
-                                        "NEW",
-                                        "EXISTING",
-                                        "DUPLICATE"
-                                    ],
+                                    "enum": ["NEW", "EXISTING", "DUPLICATE"],
                                     "enumNames": [
                                         "Add as a new document",
                                         "Replace the existing document with this version",
@@ -316,18 +302,13 @@
                                     "title": ""
                                 }
                             },
-                            "required": [
-                                "matchType"
-                            ],
+                            "required": ["matchType"],
                             "allOf": [
                                 {
                                     "if": {
                                         "properties": {
                                             "matchType": {
-                                                "enum": [
-                                                    "",
-                                                    "NEW"
-                                                ]
+                                                "enum": ["", "NEW"]
                                             }
                                         }
                                     },
@@ -338,10 +319,7 @@
                                         "if": {
                                             "properties": {
                                                 "matchType": {
-                                                    "enum": [
-                                                        "EXISTING",
-                                                        "DUPLICATE"
-                                                    ]
+                                                    "enum": ["EXISTING", "DUPLICATE"]
                                                 }
                                             }
                                         },
@@ -425,7 +403,8 @@
                             "ui:widget": "radio",
                             "ui:options": {
                                 "label": false
-                            }
+                            },
+                            "ui:hideError": true
                         },
                         "documentList": {
                             "inline": true,
@@ -463,7 +442,8 @@
                                     "listName": "attachments"
                                 }
                             }
-                        }
+                        },
+                        "ui:hideError": true
                     }
                 }
             }

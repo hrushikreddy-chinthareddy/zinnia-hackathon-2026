@@ -390,7 +390,8 @@
                         "ui:options": {
                             "inline": true
                         },
-                        "ui:dataPath": ["issueResolved"]
+                        "ui:dataPath": ["issueResolved"],
+                        "ui:hideError": true
                     },
                     "surrenderCompanyName": {
                         "ui:widget": "text",

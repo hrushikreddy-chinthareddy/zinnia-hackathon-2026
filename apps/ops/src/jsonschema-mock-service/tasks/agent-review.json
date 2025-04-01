@@ -254,7 +254,8 @@
                         "ui:widget": "radio",
                         "ui:options": {
                             "inline": true
-                        }
+                        },
+                        "ui:hideError": true
                     },
                     "agentExternalId": {
                         "ui:widget": "text"

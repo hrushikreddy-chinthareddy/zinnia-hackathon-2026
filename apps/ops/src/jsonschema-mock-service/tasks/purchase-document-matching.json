@@ -122,9 +122,11 @@
                                     "properties": {
                                         "caseId": {
                                             "type": "string",
-                                            "title": "Case ID"
+                                            "title": "Case ID",
+                                            "minLength": 12
                                         }
-                                    }
+                                    },
+                                    "required": ["caseId"]
                                 },
                                 "else": {
                                     "properties": {
@@ -133,7 +135,8 @@
                                             "title": "Is this document a duplicate?",
                                             "$ref": "#/definitions/isDuplicateEnum"
                                         }
-                                    }
+                                    },
+                                    "required": ["isDuplicate"]
                                 }
                             },
                             "required": ["matchingResult"]
@@ -217,13 +220,15 @@
                                     }
                                 }
                             ]
-                        }
+                        },
+                        "ui:hideError": true
                     },
                     "caseId": {
                         "ui:placeholder": "eg: CA1234567890",
                         "ui:options": {
                             "label": true
-                        }
+                        },
+                        "ui:hideError": true
                     },
                     "caseType": {
                         "ui:widget": "SelectWidget",
@@ -249,7 +254,8 @@
                         }
                     },
                     "isDuplicate": {
-                        "ui:widget": "radio"
+                        "ui:widget": "radio",
+                        "ui:hideError": true
                     }
                 }
             },
@@ -425,7 +431,8 @@
                                     "dataType": "dirtyAddress"
                                 }
                             }
-                        }
+                        },
+                        "ui:hideError": true
                     }
                 }
             }
