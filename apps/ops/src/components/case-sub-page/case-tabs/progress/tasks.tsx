@@ -25,6 +25,7 @@ export const SupportedTaskMap = [
     TaskType.TOA_Nigo,
     TaskType.Agent_Review,
     TaskType.Standard_Document_Matching,
+    TaskType.Application_Review,
     TaskType.AppDataEntry,
     TaskType.Prenote_Nigo,
     TaskType.Agent_Onboarding_Review,

@@ -1468,6 +1468,7 @@
             "agentOnboardingNigo": "Review Onboarding Issues",
             "standardDocumentMatching": "Match Document",
             "toaNigo": "Review Transfer Issues",
+            "applicationReview": "Validate Application Details",
             "appDataEntry": "New Business Data Entry",
             "agentOnboardingReview": "Validate Onboarding Issues"
         },
@@ -5327,6 +5328,15 @@
             "subTitle": "Task: Review Transfer was submitted.",
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home"
+        }
+    },
+    "nbApplicationReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Validate Application Details was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     },
     "agentOnboardingReview": {
