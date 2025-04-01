@@ -27,7 +27,7 @@
                                         "type": "string",
                                         "title": "Issues"
                                     },
-                                    "processingInstruction": {
+                                    "processingResolution": {
                                         "type": "string",
                                         "title": "Processing Instructions"
                                     },
@@ -67,10 +67,14 @@
                                 "documentDetails": {
                                     "type": "object",
                                     "properties": {
+                                        "docType": {
+                                            "type": "string",
+                                            "ui:field": "title"
+                                        },
                                         "documentId": {
                                             "type": "string",
                                             "ui:field": "subTitle",
-                                            "title": "Document Id"
+                                            "placeholder": "Document ID"
                                         },
                                         "documentSource": {
                                             "type": "string",
@@ -188,7 +192,7 @@
                                     "inline": true
                                 }
                             },
-                            "processingInstruction": {
+                            "processingResolution": {
                                 "ui-widget": "ValueWidget",
                                 "ui:options": {
                                     "label": false,

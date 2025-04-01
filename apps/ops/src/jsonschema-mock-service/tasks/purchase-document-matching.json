@@ -67,11 +67,14 @@
                                     "type": "object",
                                     "title": "",
                                     "properties": {
-                                        "documentName": {
-                                            "type": "string"
+                                        "docType": {
+                                            "type": "string",
+                                            "ui:field": "title"
                                         },
                                         "documentId": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "ui:field": "subTitle",
+                                            "ui:placeholder": "Documemt ID: "
                                         },
                                         "documentSource": {
                                             "type": "string"
@@ -119,7 +122,7 @@
                                     "properties": {
                                         "caseId": {
                                             "type": "string",
-                                            "title": "Case Id"
+                                            "title": "Case ID"
                                         }
                                     }
                                 },

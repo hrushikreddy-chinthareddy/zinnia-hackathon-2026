@@ -13,7 +13,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { formatSSN, toSentenceCase } from '@deps/helpers/string.helper';
+import { formatSSN } from '@deps/helpers/string.helper';
 import { formatDirtyAddress, replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { CardTypes, DataFormattingTypes } from '@deps/models/case/task';
@@ -95,7 +95,7 @@ export const formatValueByDataType = (dataType: string, value: any) => {
             return formatDirtyAddress(JSON.parse(value));
         }
         default:
-            return toSentenceCase(value);
+            return value;
     }
 };
 
@@ -199,7 +199,7 @@ const DocumentActions = ({ document, t }: any) => {
         <>
             <div className="px-4">
                 <DocumentPreviewer
-                    className="flex max-w-[234px] gap-1"
+                    className="flex max-w-[234px] pt-1"
                     activeDocType={DocumentTypeView.Case}
                     carrier={document?.carrier || ''}
                     displayName={document?.displayName || ''}
