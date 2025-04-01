@@ -239,6 +239,15 @@ module.exports = {
                     focus: 'rgb(var(--color-semantic-focus) / <alpha-value>)',
                     highlight: 'rgb(var(--color-semantic-highlight) / <alpha-value>)',
                 },
+                surface: {
+                    dark: 'var(--color-base-surface-surface-dark)',
+                    tertiary: 'var(--color-base-surface-surface-tertiary)'
+                },
+                border: {
+                    light: 'var(--color-base-border-border-light)',
+                    selected: 'var(--color-base-border-selected-border)',
+                    hover: 'var(--color-states-hover-border-hover-border)'
+                },
             },
             boxShadow: {
                 sm: '0 0.3px 0.9px rgba(0, 0, 0, 0.07), 0 1.6px 3.6px rgba(0, 0, 0, 0.11)',

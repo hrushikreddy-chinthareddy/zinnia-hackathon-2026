@@ -20,6 +20,7 @@ export type LabelProps = {
     variant: LabelVariant;
     className?: string;
     editable?: boolean;
+    handleEditClick?: () => void;
 } & PropsWithChildren<PiiProps> &
     TooltipProps &
     HTMLAttributes<HTMLDivElement>;
@@ -46,13 +47,13 @@ export const labelMapping: Record<LabelVariant, LabelData> = {
         styles: 'font-primary text-base font-medium uppercase',
     },
     [LabelVariant.FieldLabel]: {
-        styles: 'font-primary text-field-label font-bold',
+        styles: 'typography-labels-field-label',
     },
     [LabelVariant.FieldLabelCaps]: {
         styles: 'font-secondary text-sm font-medium uppercase',
     },
     [LabelVariant.LabelLg]: {
-        styles: 'font-primary text-base font-semibold',
+        styles: 'typography-labels-label-lg',
     },
     [LabelVariant.LabelLgAlt]: {
         styles: 'font-primary text-base font-medium',
@@ -80,6 +81,7 @@ export const Label = ({
     sentenceCase = true,
     editable,
     pii = false,
+    handleEditClick,
     ...rest
 }: LabelProps) => {
     const { className, ...newRest } = rest;
@@ -107,7 +109,7 @@ export const Label = ({
                 </Popover>
             )}
             {editable && (
-                <IconButton>
+                <IconButton onClick={handleEditClick}>
                     <EditIcon height={16} width={16} />
                 </IconButton>
             )}

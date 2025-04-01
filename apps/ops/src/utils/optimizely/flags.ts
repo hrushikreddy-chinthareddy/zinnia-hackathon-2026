@@ -146,7 +146,8 @@ export enum FEATURE_FLAGS {
     CASE_ADVISORS_EXCEL_ADDITIONAL_CARRIER_SUPPORT = 'case_advisors_excel_additional_carrier_support',
     DASHBOARD_CASE_TIMING_CHART = 'dashboard_case_timing_chart',
     LOAN_PAYMENT_TRANSACTION = 'loan_payment_transaction',
-    PREMIUM_SET_OR_CANCEL_AUTOPAY= 'premium_set_or_cancel_autopay',
+    PREMIUM_SET_OR_CANCEL_AUTOPAY = 'premium_set_or_cancel_autopay',
     DASHBOARD_SECTION_TAB_VIEW = 'dashboard_section_tab_view',
     LOAN_CANCEL_AUTOPAY = 'loan_cancel_autopay',
+    COMMUNICATIONS_PREFERENCES = 'communications_preferences',
 }

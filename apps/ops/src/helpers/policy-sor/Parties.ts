@@ -13,6 +13,7 @@ import {
     Party,
     PartyRole,
     PartyType,
+    PreferredCommunicationType,
     Phone,
     Policy,
     PolicyParties,
@@ -140,8 +141,27 @@ export class PolicyParty {
     public get preferredAddress(): Address | undefined {
         return this.addresses.preferred;
     }
+
     public get preferredBank(): BankAccount | undefined {
         return this.banks.preferred;
+    }
+
+    public get preferredCommunicationType(): PreferredCommunicationType {
+        return this.party.preferredCommunicationType ?? PreferredCommunicationType.NOPREFERENCESPECIFIED;
+    };
+
+    public get preferredCommunication(): Address | Email | Phone | undefined {
+        switch (this.preferredCommunicationType) {
+            case PreferredCommunicationType.EMAIL:
+                return this.emails.preferred;
+            case PreferredCommunicationType.PHONE:
+            case PreferredCommunicationType.TEXT:
+                return this.phones.preferred;
+            case PreferredCommunicationType.REGULARMAIL:
+                return this.addresses.preferred;
+            default:
+                return undefined;
+        }
     }
 
     public get preferredEmail(): Email | undefined {

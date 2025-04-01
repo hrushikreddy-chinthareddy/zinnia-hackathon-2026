@@ -137,8 +137,8 @@ export const getPrefCommunicationType = (partyInfo: PolicyAllOfPartiesItem | nul
     if (contactValue) {
         return (
             <div className="mr-8 break-all">
-                <p className="field-label font-primary font-bold leading-6">{t('people.party.contact.method')}</p>
-                <p className="body-sm">
+                <p className="typography-labels-field-label">{t('people.party.contact.method')}</p>
+                <p className="typography-content-body-sm">
                     <PiiWrapper>{contactValue}</PiiWrapper>
                 </p>
                 {text && <AssistiveText text={text} variant={AssistiveTextVariant.Success} />}

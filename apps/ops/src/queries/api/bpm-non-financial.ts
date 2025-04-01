@@ -24,6 +24,7 @@ export enum NonFinancialTransactions {
     Address = 'address',
     Allocations = 'allocations',
     BankAccount = 'bankaccount',
+    CommunicationPreference = 'communicationpreference',
     Email = 'email',
     EmailAddress = 'emailaddress',
     Number = 'number',
@@ -63,7 +64,7 @@ interface NonFinancialTransaction {
     transaction: NonFinancialTransactions;
 }
 
-interface AddNonFinancialTransaction extends NonFinancialTransaction {}
+interface AddNonFinancialTransaction extends NonFinancialTransaction { }
 interface EditNonFinancialTransaction extends NonFinancialTransaction {
     itemId?: string;
 }

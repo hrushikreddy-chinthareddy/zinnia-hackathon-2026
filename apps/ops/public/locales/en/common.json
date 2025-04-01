@@ -3689,6 +3689,25 @@
                     "update": "Update {{type}} email"
                 }
             },
+            "communicationpreference": {
+                "mainCta": {
+                    "update": "Update Communication Preferences"
+                },
+                "general": {
+                    "cancel": "Cancel"
+                },
+                "labels": {
+                    "email": "Email",
+                    "address": "Address"
+                },
+                "errors": {
+                    "missingCaseDocument": "Select a document (or proceed without) to continue.",
+                    "isInvalid": "Enter a valid email address.",
+                    "isMissing": "Preferred communication selection is missing.",
+                    "address": "Please verify selected address.",
+                    "emailAddress": "Please verify selected email address."
+                }
+            },
             "email": {
                 "errors": {
                     "isInvalid": "Enter a valid email address.",
@@ -3799,6 +3818,7 @@
                 "address": "Address",
                 "allocations": "Allocations",
                 "bankaccount": "Bank Account",
+                "communicationpreference": "Preferred Communication",
                 "email": "Email",
                 "emailaddress": "Email",
                 "number": "Number",

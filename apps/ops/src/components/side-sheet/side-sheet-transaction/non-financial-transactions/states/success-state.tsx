@@ -54,7 +54,7 @@ const SuccessState = ({ action, isNigo, name, onCancel, transaction, type, caseI
             {t('subtitle.default.2')}
             <b>
                 {t('subtitle.default.3', {
-                    transaction,
+                    transaction: defaultT(`people.sideSheet.transactions.${transaction}`).toLowerCase(),
                     type,
                     action: defaultT(`people.sideSheet.actions.${actionMap[action]}`),
                 })}

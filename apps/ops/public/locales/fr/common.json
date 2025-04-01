@@ -3665,6 +3665,25 @@
                     "update": "Mettre à jour l'email {{type}}"
                 }
             },
+            "communicationpreference": {
+                "mainCta": {
+                    "update": "Mettre à jour les préférances de communication"
+                },
+                "general": {
+                    "Cancel": "Annuler"
+                },
+                "labels": {
+                    "email": "E-mail",
+                    "address": "Adresse"
+                },
+                "errors": {
+                    "missingCaseDocument": "Sélectionnez un document (ou continuez sans) pour continuer.",
+                    "isInvalid": "Entrez une adresse e-mail valide.",
+                    "isMissing": "preference est manquante.",
+                    "address": "L'adresse est manquante.",
+                    "emailAddress": "L'adresse e-mail est manquante."
+                }
+            },
             "email": {
                 "errors": {
                     "isInvalid": "Entrez une adresse e-mail valide.",
@@ -3775,6 +3794,7 @@
                 "address": "Adresse",
                 "allocations": "Répartitions",
                 "bankaccount": "Compte bancaire",
+                "communicationpreference": "Préférences de communication",
                 "email": "E-mail",
                 "number": "Numéro",
                 "phone": "Téléphone"

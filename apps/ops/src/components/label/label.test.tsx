@@ -21,7 +21,7 @@ describe('Label Typography Without PII wrapper', () => {
         const { getByText } = render(<Label label="A Sentence Case Field Label" variant={LabelVariant.FieldLabel} />);
         const myLabel = getByText('A sentence case field label');
         expect(myLabel.tagName).toBe('DIV');
-        expect(myLabel.className).toBe('font-primary text-field-label font-bold');
+        expect(myLabel.className).toBe('typography-labels-field-label');
         expect(myLabel.textContent).toBe('A sentence case field label');
     });
 
@@ -38,7 +38,7 @@ describe('Label Typography Without PII wrapper', () => {
         const { getByText } = render(<Label label="Label With Sentance Case" variant={LabelVariant.LabelLg} />);
         const myLabel = getByText('Label with sentance case');
         expect(myLabel.tagName).toBe('DIV');
-        expect(myLabel.className).toBe('font-primary text-base font-semibold');
+        expect(myLabel.className).toBe('typography-labels-label-lg');
         expect(myLabel.textContent).toBe('Label with sentance case');
     });
 
@@ -104,7 +104,7 @@ describe('Label Typography With PII wrapper', () => {
         const { getByText } = render(<Label pii={true} label="A Sentence Case Field Label" variant={LabelVariant.FieldLabel} />);
         const myLabel = getByText('A sentence case field label');
         expect(myLabel.parentElement?.tagName).toBe('DIV');
-        expect(myLabel.parentElement?.className).toBe('font-primary text-field-label font-bold');
+        expect(myLabel.parentElement?.className).toBe('typography-labels-field-label');
         expect(myLabel.parentElement?.textContent).toBe('A sentence case field label');
     });
 
@@ -121,7 +121,7 @@ describe('Label Typography With PII wrapper', () => {
         const { getByText } = render(<Label pii={true} label="Label With Sentance Case" variant={LabelVariant.LabelLg} />);
         const myLabel = getByText('Label with sentance case');
         expect(myLabel.parentElement?.tagName).toBe('DIV');
-        expect(myLabel.parentElement?.className).toBe('font-primary text-base font-semibold');
+        expect(myLabel.parentElement?.className).toBe('typography-labels-label-lg');
         expect(myLabel.parentElement?.textContent).toBe('Label with sentance case');
     });
 

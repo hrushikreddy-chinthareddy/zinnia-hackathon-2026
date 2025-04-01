@@ -25,6 +25,7 @@ export interface SideSheetProps {
     children?: ReactNode;
     displayItemCount?: boolean;
     closeOnEscape?: boolean;
+    closeOnOutsideClick?: boolean;
 }
 
 export default function SideSheet({
@@ -36,6 +37,7 @@ export default function SideSheet({
     children,
     displayItemCount = false,
     closeOnEscape = true,
+    closeOnOutsideClick = true,
 }: SideSheetProps) {
     const [isDelayedMount, setIsDelayedMount] = useState(false);
     const { t } = useTranslation();
@@ -73,6 +75,8 @@ export default function SideSheet({
     const isRight = location === SideSheetLocation.Right;
     const isLeft = location === SideSheetLocation.Left;
 
+    const handleCloseOnOutsideClick = closeOnOutsideClick ? handleClose : undefined;
+
     const innerTransitionClasses = clsx(
         'pointer-events-auto fixed top-0 h-full w-screen transform bg-gradient-to-r from-accent1 to-accent2 pt-2 transition duration-300 ease-in-out sm:w-[500px]',
         {
@@ -97,7 +101,7 @@ export default function SideSheet({
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                     >
-                        <div className="fixed inset-0 overflow-hidden bg-gray-500 bg-opacity-75" />
+                        <div onClick={handleCloseOnOutsideClick} className="fixed inset-0 overflow-hidden bg-gray-500 bg-opacity-75" />
                     </Transition.Child>
 
                     <div className="pointer-events-none fixed inset-0 overflow-hidden">

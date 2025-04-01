@@ -6,6 +6,7 @@ import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/t
 import { PageHeader } from '@deps/components/page-header/page-header';
 import PartyTag from '@deps/components/party/party-tag';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { calculateAgeNumber } from '@deps/helpers/age.helper';
 import { getHeaderIcon, getHeaderText, getPrefCommunicationType } from '@deps/helpers/party-info-helper';
 import { orderObjectsByString } from '@deps/helpers/sort.helper';
@@ -14,6 +15,7 @@ import { PartyRole, PartyStatus, PartyType, PolicyAllOfPartiesItem, PolicyPartie
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { ReactComponent as UserGroup } from '@deps/styles/elements/icons/icons_outlined/user-group.svg';
 
+import { HeaderInfoCard } from '../people-data-cards/header-info-card/header-info-card';
 import { convertToChipText } from '../people-sub-page/people-sub-page.helpers';
 
 interface InteriorPeoplePageHeaderContainerProps {
@@ -34,6 +36,8 @@ const InteriorPeoplePageHeaderContainer = ({
     partyStatus,
 }: InteriorPeoplePageHeaderContainerProps) => {
     const { t } = useTranslation();
+    const { featureFlags } = useOptimizely();
+    const shouldShowEditCommunicationsPreferences = featureFlags?.communications_preferences;
     const selectedPartyRoles = selectedPolicyPartyRoles?.map(roleObject => {
         return roleObject.partyRole?.toLowerCase();
     });
@@ -69,7 +73,7 @@ const InteriorPeoplePageHeaderContainer = ({
             return (
                 <div>
                     <span className="flex items-center gap-2 align-middle">
-                        <p className="field-label font-primary font-bold" id="people-birth-date">
+                        <p className="field-label" id="people-birth-date">
                             {t('people.party.birthDate')}
                         </p>
                         {isStillInactive.interiorPeoplePageDOB ? (
@@ -156,11 +160,15 @@ const InteriorPeoplePageHeaderContainer = ({
     const icon = getHeaderIcon(selectedPolicyParty?.partyType);
     const headerText = getHeaderText(selectedPolicyParty);
     const headerTextSiblingsGroupOne = getPronouns(selectedPolicyParty?.partyType);
-    const headerTextSiblingsGroupTwo = (
+    const headerTextSiblingsGroupTwo = shouldShowEditCommunicationsPreferences ? (
+        <HeaderInfoCard t={t} selectedPolicyParty={selectedPolicyParty} editable={editable}>
+            {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
+        </HeaderInfoCard>
+    ) : (
         <div className="flex">
             {getPrefCommunicationType(selectedPolicyParty ?? null, t)}
             {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
-        </div> // getPrefCommunicationType is pulled in from helpers
+        </div>
     );
     const belowHeaderTextChildren = partyRoleTags;
     const headerRowFlexClassNames = 'xs:flex-col lg:flex-row xs:gap-4 lg:gap-0';
