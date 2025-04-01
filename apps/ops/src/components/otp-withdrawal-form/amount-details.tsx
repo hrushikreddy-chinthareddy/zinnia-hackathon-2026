@@ -17,7 +17,7 @@ import { SimpleOption } from '../select/select.helpers';
 const dollarIcon = <span>$</span>;
 const percentageIcon = <span>%</span>;
 
-const determineProgramType = (formProgram: FormProgram): ProgramType | '' => {
+export const determineProgramType = (formProgram: FormProgram): ProgramType | '' => {
     switch (formProgram?.programType?.text) {
         case ProgramType.GMWB:
             return ProgramType.GMWB;
@@ -26,11 +26,11 @@ const determineProgramType = (formProgram: FormProgram): ProgramType | '' => {
         case 'Withdrawal':
             if (formProgram?.programSubType?.text === ProgramSubType.TotalFreeWithdrawal) {
                 return ProgramType.TotalFreeAmt;
-            }
-            if (formProgram?.partialAmount?.text) {
+            } else if (formProgram?.programSubType?.text === ProgramSubType.FullSurrender) {
+                return ProgramType.TotalFreeAmt;
+            } else {
                 return ProgramType.Partial;
             }
-            return '';
         default:
             return '';
     }
@@ -93,7 +93,7 @@ export default function AmountDetails({ isFormStateReadOnly, isOnlyWithdrawalTyp
             setFormProgram(fs => ({
                 ...fs,
                 withdrawType: { text: withdrawType ? withdrawType : WithdrawalType.Gross },
-            }))
+            }));
         } else {
             setFormProgram({
                 ...formProgram,

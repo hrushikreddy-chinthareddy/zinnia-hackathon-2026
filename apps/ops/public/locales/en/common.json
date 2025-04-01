@@ -1972,6 +1972,7 @@
                 "contractLabelPopoverTitle": "Info",
                 "taxId": "SSN",
                 "alternatePayeeAddress": "Alternate payee / address",
+                "alternatePayee": "Alternate payee",
                 "upsAccountNumber": "UPS account number",
                 "upsAccountName": "UPS account name",
                 "zip": "Zip",

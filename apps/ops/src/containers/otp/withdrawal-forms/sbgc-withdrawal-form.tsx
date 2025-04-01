@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
-import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
+import AmountDetails, { determineProgramType } from '@deps/components/otp-withdrawal-form/amount-details';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FinancialProfessionalSignature from '@deps/components/otp-withdrawal-form/financial-professional-signature';
@@ -22,6 +22,19 @@ import getSbgcConfig from './sbgc-withdrawal-form.helper';
 
 export default function SbgcWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const {
+        formParty,
+        formTpaAuthorization,
+        setFormValidator,
+        formData,
+        setFormData,
+        initialForm,
+        isFormStateReadOnly,
+        contractIssueState,
+        formProgram,
+    } = useContext(FormDataContext);
+
+    const withdrawalType = determineProgramType(formProgram);
 
     const {
         formValidation,
@@ -34,10 +47,8 @@ export default function SbgcWithdrawalForm() {
         hardshipOptions,
         reasonOptions,
         w4pSignaturesConfig,
-        programTypes
+        programTypes,
     } = getSbgcConfig(t);
-    const { formParty, formTpaAuthorization, setFormValidator, formData, setFormData, initialForm, isFormStateReadOnly, contractIssueState } =
-        useContext(FormDataContext);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -56,7 +67,7 @@ export default function SbgcWithdrawalForm() {
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const ownerIsVirginiaResident = ownerStateOfResidence === USStates.VIRGINIA;
-    const shouldStateW4pRender = isAllowedState(contractIssueState)
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
 
     return (
         <>
@@ -68,14 +79,14 @@ export default function SbgcWithdrawalForm() {
                 unforeseenOptions={unforeseeableEmergencyOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
             />
-            <AmountDetails isFormStateReadOnly={isFormStateReadOnly} programTypes={programTypes}/>
+            <AmountDetails isFormStateReadOnly={isFormStateReadOnly} programTypes={programTypes} />
             <FormDistribution
                 moneyTypeOptions={moneyTypeOptions}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.distributionInstruction') as string}
                 isFormStateReadOnly={isFormStateReadOnly}
             />
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
+            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions(withdrawalType)} />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <LoanAcknowledgement isFormStateReadOnly={isFormStateReadOnly} />

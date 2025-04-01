@@ -1966,6 +1966,7 @@
                 "contractLabelPopoverTitle": "Info",
                 "taxId": "SSN",
                 "alternatePayeeAddress": "Autre bénéficiaire/adresse",
+                "alternatePayee": "Autre bénéficiaire",
                 "upsAccountNumber": "Le nom du bénéficiaire",
                 "upsAccountName": "Nom du compte UPS",
                 "zip": "Code postal",

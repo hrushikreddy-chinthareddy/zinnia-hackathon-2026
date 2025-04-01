@@ -13,6 +13,7 @@ import {
     PaymentMailType,
     PaymentMethod,
     PhoneTypes,
+    ProgramType,
     SignatureWithdrawal,
 } from '@deps/models/case/withdrawal/case';
 import { DisbursementParts, DEFAULT_DISBURSEMENT_UPDATE, DEFAULT_BANK_DETAILS } from '@deps/models/case/withdrawal/disbursement-types';
@@ -80,7 +81,7 @@ describe('SBGC withdrawal form config', () => {
         };
         describe('payload generation', () => {
             it('should generate a correct payload for an eft selection', () => {
-                const eftOption = disbursementOptions.find(option => option.value === PaymentMethod.EFT);
+                const eftOption = disbursementOptions(ProgramType.Partial).find(option => option.value === PaymentMethod.EFT);
                 expect(eftOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
@@ -104,7 +105,7 @@ describe('SBGC withdrawal form config', () => {
                 });
             });
             it('should generate a correct payload for a wire selection', () => {
-                const wireOption = disbursementOptions.find(option => option.value === PaymentMethod.Wire);
+                const wireOption = disbursementOptions(ProgramType.Full).find(option => option.value === PaymentMethod.Wire);
                 expect(wireOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.Wire },
@@ -128,7 +129,7 @@ describe('SBGC withdrawal form config', () => {
                 });
             });
             it('should generate a correct payload for a check selection', () => {
-                const checkOption = disbursementOptions.find(option => option.value === PaymentMailType.Check);
+                const checkOption = disbursementOptions(ProgramType.Full).find(option => option.value === PaymentMailType.Check);
                 expect(checkOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
@@ -136,7 +137,7 @@ describe('SBGC withdrawal form config', () => {
                 });
             });
             it('should generate a correct payload for a brokerage selection', () => {
-                const brokerageOption = disbursementOptions.find(option => option.value === PaymentMethod.Brokerage);
+                const brokerageOption = disbursementOptions(ProgramType.Full).find(option => option.value === PaymentMethod.Brokerage);
 
                 expect(brokerageOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
                     thisIsMocked: true,

@@ -1,5 +1,6 @@
 import { TFunction } from 'next-i18next';
 
+import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
     BankingFields,
     DisbursementFields,
@@ -45,11 +46,7 @@ import { createValidator } from '../../utils/helper-utils';
 export default function useSbgcConfig(t: TFunction) {
     const { formValidation } = sbgcConfig(t);
 
-    const sswFormValidation = ({
-        formParty,
-        formSignature,
-        formDisbursement,
-    }: Partial<FormParts> = {}): FormValidationErrors => {
+    const sswFormValidation = ({ formParty, formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
         if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
             if (
@@ -72,19 +69,20 @@ export default function useSbgcConfig(t: TFunction) {
     const reasonOptions = [
         {
             label: t('distributionReason.reasonOptions.age595'),
-            value: RestrictionOption.Age595
+            value: RestrictionOption.Age595,
         },
         {
             label: t('distributionReason.reasonOptions.disabled'),
-            value: RestrictionOption.Disabled
+            value: RestrictionOption.Disabled,
         },
         {
             label: t('distributionReason.reasonOptions.severance'),
-            value: RestrictionOption.Severance, subElement: <ReasonDate />
+            value: RestrictionOption.Severance,
+            subElement: <ReasonDate />,
         },
         {
             label: t('distributionReason.reasonOptions.internalRevCode72'),
-            value: RestrictionOption.InternalRevenueCode72
+            value: RestrictionOption.InternalRevenueCode72,
         },
         {
             label: t('distributionReason.reasonOptions.inSvcDistrib'),
@@ -234,6 +232,57 @@ export default function useSbgcConfig(t: TFunction) {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
+                };
+            },
+        },
+        {
+            label: t('distributionMethod.alternatePayee'),
+            value: FormDisbursementSelections.AlternatePayeeAddress,
+            fields: [
+                {
+                    fieldName: BankingFields.PayeeName,
+                    fieldLabel: t('distributionMethod.payeeName'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 40,
+                },
+                {
+                    fieldName: BankingFields.FboDetails,
+                    fieldLabel: t('distributionMethod.fboDetails'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 35,
+                },
+                {
+                    fieldName: BankingFields.Address,
+                    component: DisbursementFields.BankAddress,
+                    fieldLabel: '',
+                },
+            ],
+            getDefaultPayload({ paymentMethod, payee }: FormDisbursement) {
+                if (paymentMethod.text !== PaymentMethod.AlternatePayeeAddress) {
+                    return DEFAULT_DISBURSEMENT_UPDATE;
+                }
+
+                return {
+                    ...DEFAULT_DISBURSEMENT_UPDATE,
+                    payeeName: payee?.name?.text ?? '',
+                    address: payee?.addresses[0] ?? DEFAULT_ADDRESS,
+                    fboDetails: payee?.fboDetails?.text || '',
+                };
+            },
+            generatePayloadFromSelection: ({ payeeName, address, fboDetails }: DisbursementParts) => {
+                return {
+                    ...getDefaultFormDisbursementValues(),
+                    paymentMethod: { text: PaymentMethod.AlternatePayeeAddress },
+                    payee: {
+                        name: {
+                            text: payeeName || null,
+                        },
+                        addresses: [address || DEFAULT_ADDRESS],
+                        contractNumber: {
+                            text: null,
+                        },
+                        fboDetails: { text: fboDetails ?? null },
+                    },
                 };
             },
         },
@@ -528,6 +577,6 @@ export default function useSbgcConfig(t: TFunction) {
         coveredPartyConfigs,
         reasonOptions,
         systematicWithdrawalOptions,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
     };
 }
