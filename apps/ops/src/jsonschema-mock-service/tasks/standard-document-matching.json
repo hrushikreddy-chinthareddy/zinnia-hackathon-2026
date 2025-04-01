@@ -37,11 +37,12 @@
                                         "properties": {
                                             "documentId": {
                                                 "type": "string",
-                                                "ui:field": "title"
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Document ID: "
                                             },
                                             "docType": {
                                                 "type": "string",
-                                                "ui:field": "subTitle"
+                                                "ui:field": "title"
                                             },
                                             "documentSource": {
                                                 "type": "string"
@@ -114,7 +115,7 @@
                                         "properties": {
                                             "caseId": {
                                                 "type": "string",
-                                                "title": "Case Id",
+                                                "title": "Case ID",
                                                 "minLength": 12
                                             }
                                         },
@@ -257,16 +258,21 @@
                                     "items": {
                                         "type": "object",
                                         "properties": {
-                                            "documentId": {
+                                            "docType": {
                                                 "type": "string",
                                                 "ui:field": "title"
                                             },
-                                            "docType": {
+                                            "documentId": {
                                                 "type": "string",
-                                                "ui:field": "subTitle"
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Document ID: "
                                             },
                                             "documentSource": {
                                                 "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
                                             }
                                         }
                                     }
@@ -394,7 +400,8 @@
                     },
                     "matchCaseId": {
                         "ui:options": {
-                            "label": false
+                            "label": false,
+                            "type": "link"
                         },
                         "ui:widget": "HyperLinkWidget"
                     },
@@ -417,7 +424,8 @@
                                     "label": false,
                                     "icon": "Search",
                                     "placeholder": "Find existing documents...",
-                                    "singleDocument": true
+                                    "singleDocument": true,
+                                    "default": "{{matchedCaseId}}"
                                 }
                             },
                             "attachment": {

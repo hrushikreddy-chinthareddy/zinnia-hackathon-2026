@@ -1,225 +1,202 @@
 {
-    "id": "TA000000013545",
-    "correlationId": "e3a4a780-de9d-4fa9-b0aa-2dc936d8a94f",
-    "caseId": "CA0000372640",
+    "id": "TA000000018285",
+    "caseId": "CA0000392079",
     "source": "BPM.Suitability",
-    "externalTaskId": "61f65203-def6-4b17-bb1c-febf1d481573",
-    "templateId": "g9f78538-18b6-45f1-b365-59f75a1fc198",
-    "process": "Suitability",
-    "carrier": "SBGC",
-    "taskType": "SUITABILITY",
-    "taskName": "Suitability Task",
-    "taskDetail": "The Suitability must be reviewed for given rules",
-    "status": "NEW",
+    "templateId": "c1a6cfbe-c2b7-46cb-a5f7-a7df8fb3dcc2",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "SUITABILITY_DATA_ENTRY",
+    "taskName": "Suitability Data Entry",
+    "status": "INPROGRESS",
     "data": {
-        "contractNum": "7700002658",
-        "clientCode": "SBGC",
-        "documentNumber": "20241008-MAN-997616",
-        "applicationId": "ASEJ041120240000000001",
-        "requestId": "ACAP001234567",
+        "financialObjectives": {
+            "purchaseReason": ["PASS_TO_BENEFICIARIES"]
+        },
+        "adminClient": null,
+        "suitabilityId": "4ab47991-90ec-437a-976d-d4a5bd194ed4",
+        "policyData": {
+            "productType": "SecureWell 7 Year MYGA",
+            "qualPlanType": "QUALIFIED",
+            "annualPaymentAmt": null,
+            "lineOfBusiness": null,
+            "productCode": "WBFDAV07"
+        },
+        "policyNumber": "ADA2501312",
+        "emailId": null,
+        "californiaResidentQuestions": null,
+        "fiscalData": {
+            "annualIncome": "100000",
+            "netWorth": "100000000",
+            "liquidNetWorth": "1000000",
+            "sourceOfIncome": ["CHECKING_SAVING_ACCOUNT"],
+            "totalAssets": "10",
+            "totalDebt": "0",
+            "annualExpenses": "0",
+            "sourceOfFunds": ["LIFETIME_INCOME"],
+            "federalTaxBand": "10",
+            "surrPeriodMaterialChangeExp": "NO"
+        },
+        "transmittingCompanyIdentifier": null,
+        "requestId": null,
+        "additionalInfo": {
+            "currentResidenceOption": "FAMILY_RESIDENCE"
+        },
+        "correlationId": "5cd17f1b-d49f-4491-9d6c-d520a770e31c",
+        "financialExperience": {
+            "rateChangeAcknowledgment": "NO",
+            "totalAnnuityValue": "0",
+            "financialProducts": {
+                "assetsDistribution": [],
+                "totalAsset": []
+            }
+        },
+        "liquidityOptions": {
+            "fundsAccessExplanation": "NO",
+            "futureDistributionMethods": [],
+            "benefitAnnuityQuestions": {
+                "planForIncomeDecreaseAfter10Years": []
+            }
+        },
+        "transmittingCompanyName": null,
+        "submittedBy": null,
+        "clientId": "WELB",
+        "userId": null,
+        "receivingCompanyName": null,
+        "investmentRiskInfo": {
+            "riskTolerance": "MODERATE_CONSERVATIVE"
+        },
+        "agentAcknowledgment": {
+            "maApplicationQuestionnaire": {
+                "soldPoliciesToApplicant": "NO"
+            }
+        },
+        "signatureInfo": [
+            {
+                "signatureRoleCode": "AGENT",
+                "signatureDate": "2025-04-01"
+            }
+        ],
         "parties": [
             {
                 "partyType": "PERSON",
                 "roleType": "OWNER",
-                "fullName": "John D Doe",
+                "fullName": "Abhigyan A Anand",
                 "person": {
-                    "firstName": "John",
-                    "middleName": "D",
-                    "lastName": "Doe",
-                    "gender": "MALE",
+                    "firstName": "Abhigyan",
+                    "middleName": "A",
+                    "lastName": "Anand",
                     "age": "50",
-                    "birthDate": "1985-03-21",
-                    "martialStatus": "SINGLE",
-                    "birthCountry": "AA",
-                    "birthJurisdictionState": "AA"
+                    "martialStatus": "MARRIED",
+                    "birthCountry": "AF",
+                    "birthJurisdictionState": "AK",
+                    "gender": "MALE",
+                    "birthDate": null
                 },
                 "govtIdInfo": [
                     {
-                        "govtId": "123423455",
-                        "govtIdType": "PASSPORT",
-                        "govtIdExpDate": "2024-10-01"
+                        "govtId": "902502021",
+                        "govtIdType": "SSN",
+                        "govtIdExpDate": "2025-04-27"
                     }
                 ],
                 "addresses": [
                     {
                         "addressType": "RESIDENCE",
-                        "line1": "123 Main St",
-                        "line2": "Apt 4B",
-                        "city": "Los Angeles",
-                        "state": "AA",
-                        "country": "AD",
-                        "zip": "90001"
+                        "line1": "8725 HORNADY DRIVE",
+                        "line2": "address 2",
+                        "city": "INDIANAPOLIS",
+                        "state": "IN",
+                        "country": "AL",
+                        "zip": "46239"
                     }
                 ],
                 "employment": {
-                    "employmentStatus": ["DISABLED", "RETIRED"],
-                    "occupation": "Software Engineer",
-                    "disabilityExplanation": "I am disabled"
+                    "employmentStatus": "DISABLED",
+                    "disabilityExplanation": "disabled"
                 }
-            }
-        ],
-        "policyData": {
-            "lineOfBusiness": "ANNUITY",
-            "productCode": "999",
-            "productType": "SecureWellTM",
-            "qualPlanType": "NON_QUALIFIED",
-            "annualPaymentAmt": "109890"
-        },
-        "applicationInfo": {
-            "replacementInd": "YES",
-            "replacementReason": "Replacement Reason",
-            "replacedContractType": "ANNUITY",
-            "additionalInformation": {
-                "soldPoliciesToApplicant": "YES",
-                "pastReplacement": "YES",
-                "coverageExpenseConsideration": "YES"
-            }
-        },
-        "fiscalData": {
-            "annualIncome": "112890.00",
-            "netWorth": "500000.00",
-            "liquidNetWorth": "400000.00",
-            "materialChangeExp": "NO",
-            "materialChangeReason": "change reason statement",
-            "sourceOfIncome": ["FIXED_ANNUITY", "LIFE_INSURENCE"],
-            "sourceOfIncomeOther": "Other income of source details",
-            "surrPeriodMaterialChangeExp": "YES",
-            "surrPeriodMaterialChangeReason": "change reason statement",
-            "surrPeriodMaterialChangeDetails": [
-                {
-                    "changeType": "LIVING_EXPENSE_INCREASE",
-                    "isApplicable": "YES",
-                    "numberOfYears": "2",
-                    "amount": "32000"
-                }
-            ],
-            "totalAssets": "25000",
-            "totalDebt": "25000",
-            "annualExpenses": "25000",
-            "sourceOfFunds": ["FIXED_ANNUITY"],
-            "federalTaxBand": "12",
-            "otherTaxBand": "10"
-        },
-        "financialExperience": {
-            "rateChangeAcknowledgment": "YES",
-            "totalAnnuityValue": "3000000",
-            "financialProducts": {
-                "assetsDistribution": [
+            },
+            {
+                "partyType": "PERSON",
+                "roleType": "AGENT",
+                "fullName": "John B Doe",
+                "person": {
+                    "firstName": "John",
+                    "middleName": "B",
+                    "lastName": "Doe",
+                    "age": "50",
+                    "martialStatus": "MARRIED",
+                    "birthCountry": "FJ",
+                    "birthJurisdictionState": "AE",
+                    "gender": null,
+                    "birthDate": null
+                },
+                "govtIdInfo": [
                     {
-                        "productType": "CHECKING_SAVING_ACCOUNT",
-                        "qualificationType": "QUALIFIED",
-                        "amount": "32000"
+                        "govtId": "902502021",
+                        "govtIdType": "SSN",
+                        "govtIdExpDate": "2025-04-01"
                     }
                 ],
-                "totalAsset": [
+                "addresses": [
                     {
-                        "qualificationType": "QUALIFIED",
-                        "assetType": "LIQUID_ASSET",
-                        "amount": "32000"
+                        "addressType": "RESIDENCE",
+                        "line1": "987 1st St",
+                        "line2": "987 1st St",
+                        "city": "Test",
+                        "state": "WI",
+                        "country": "BW",
+                        "zip": "53001"
                     }
-                ]
+                ],
+                "employment": null
             }
-        },
-        "investmentRiskInfo": {
-            "riskTolerance": "CONSERVATIVE",
-            "riskToleranceDesc": "Reason to support aggressive nature",
-            "annuityFitsRiskTolerance": "YES"
-        },
-        "financialObjectives": {
-            "purchaseReason": ["INCOME"],
-            "otherPurchaseReason": "Explain details in case of others",
-            "buyingReasonDetails": "Explain buying reason",
-            "annuityMeetsFinancialNeeds": "YES"
-        },
-        "liquidityOptions": {
-            "fundsAccessExplanation": "string",
-            "distributionMethods": ["INCOME", "TAX_DEFERRAL", "GURANTEES"],
-            "firstPayoutOption": "string",
-            "surrenderChargeConsent": "string",
-            "possibleReductionInValue": "string",
-            "planToHoldAnnuity": "string",
-            "explainedOtherCharges": "string",
-            "benefitAnnuityQuestions": {
-                "understandIncomeAdjustmentFactor": "string",
-                "consideredFinancialNeedsAfter10Years": "string",
-                "planForIncomeDecreaseAfter10Years": ["string"]
-            }
-        },
-        "agentAcknowledgment": {
-            "maApplicationQuestionnaire": {
-                "soldPoliciesToApplicant": "YES",
-                "saleInLast5Years": "YES",
-                "saleDetails": "Details about the sales",
-                "productDetails": [
-                    {
-                        "productType": "ANNUITY",
-                        "companyName": "XYZ",
-                        "policyNumber": "68353",
-                        "issueDate": "2023-12-01"
-                    }
-                ]
-            },
-            "financialAcknowledgement": {
-                "evaluatedInformation": "YES",
-                "informedOfFeatures": "YES",
-                "communicatedBasis": "YES",
-                "disclosureRetention": "YES"
-            },
-            "disclosureAcknowledgement": {
-                "scopeAndTerms": "YES",
-                "typesOfProducts": "YES",
-                "authorizedInsurers": "YES",
-                "compensationDescription": "YES",
-                "rightToRequestInfo": "YES",
-                "compensationEstimate": "YES",
-                "conflictsOfInterest": "YES",
-                "productAdvantages": "YES",
-                "productCons": "NO"
-            }
-        },
-        "additionalInfo": {
-            "currentResidenceOption": "R1",
-            "assistedLivingFacilityInd": "YES",
-            "extraFundAvailable": "YES",
-            "existingPoliciesSoldByAgent": "YES",
-            "consideredOtherInsuranceNeeds": "YES",
-            "resideInNursingHomeOrAssistedLiving": "YES",
-            "noOfDependents": "2",
-            "otherDependents": "NO"
-        },
-        "californiaResidentQuestions": {
-            "applyForMeansTestedBenefits": "YES",
-            "buyingForGovernmentBenefits": "YES",
-            "reverseMortgage": "YES"
-        },
-        "signatureInfo": [
-            {
-                "signatureRoleCode": "OWNER",
-                "signatoryName": "test b",
-                "signatureDate": "2023-12-01",
-                "signatureCity": "Quincy",
-                "signatureState": "US",
-                "signatoryDesignation": "TRUSTEE"
-            }
-        ]
+        ],
+        "applicationId": "WELLANI041120254278560002",
+        "applicationInfo": {
+            "replacementInd": "NO"
+        }
     },
-    "documents": [
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "suitability_data_entry",
+    "escalated": false,
+    "assigneeFirstName": "Vijayalaxmi",
+    "assigneeLastName": "Sambhane",
+    "assignee": "Vijayalaxmi.Sambhane@zinnia.com",
+    "assigneePartyId": "fa49a69c3939412d87b315cb39459497",
+    "assignedAt": "2025-02-14T09:51:39Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-02-13T14:26:48Z",
+    "updatedBy": "Vijayalaxmi.Sambhane@zinnia.com",
+    "updatedByPartyId": "fa49a69c3939412d87b315cb39459497",
+    "updatedAt": "2025-02-21T13:29:17Z",
+
+    "identifiers": [
         {
-            "documentId": "20156083",
-            "documentName": "Suitability review form ABC TEST - 10/8/2024",
-            "documentSource": "Working",
-            "createdDate": "2024-10-16T14:20:33.757Z",
-            "fileType": "pdf"
+            "identifier": "policyNumber",
+            "value": "ADA2501486"
         },
         {
-            "documentId": "20027230",
-            "documentName": "Suitability additional doc ABC TEST - 10/8/2024",
-            "documentSource": "Working",
-            "createdDate": "2024-10-16T14:20:33.757Z",
-            "fileType": "pdf"
+            "identifier": "zlCaseId",
+            "value": "CA0000392914"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "408911"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67ae00d7a2bf5f38309e7ad8"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI041120242025021305"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2501486"
         }
     ],
-    "queue": null,
-    "createdAt": "2024-10-14T10:21:35Z",
-    "updatedAt": "2024-10-15T19:48:30Z"
+    "externalId": "ce7291dd-7e08-434f-b1d2-bb6c0b2086af"
 }

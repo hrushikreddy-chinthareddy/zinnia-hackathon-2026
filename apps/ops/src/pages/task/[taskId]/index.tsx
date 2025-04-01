@@ -34,6 +34,7 @@ type TaskPageProps = {
     nigoExceptions: any;
     nigoSubExceptions: any;
     isSaveAsDraftEnabled: any;
+    isContinueButtonEnabled: boolean;
 };
 
 export const TaskPage: React.FC<TaskPageProps> = ({
@@ -44,6 +45,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     nigoSubExceptions,
     taskMetadata,
     isSaveAsDraftEnabled,
+    isContinueButtonEnabled,
 }: TaskPageProps) => {
     return (
         <div>
@@ -55,6 +57,7 @@ export const TaskPage: React.FC<TaskPageProps> = ({
                         nigoSubExceptions={nigoSubExceptions}
                         taskMetadata={taskMetadata}
                         isSaveAsDraftEnabled={isSaveAsDraftEnabled}
+                        isContinueButtonEnabled={isContinueButtonEnabled}
                     />
                 </TaskProvider>
             </NoNavLayout>
@@ -112,6 +115,8 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 const { taskType, carrier, caseId, process } = task;
 
+                const flag = convertToCamelCase(taskType);
+
                 if (!taskType || !carrier || !caseId || !process) {
                     logWarn('task/details not found', { ...loggingContext, taskType, carrier, caseId, process });
                     return {
@@ -146,7 +151,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                         loggingContext
                     );
 
-                    const flag = convertToCamelCase(taskType);
                     const enabledTask = Object.keys(isTaskEnabled).includes(flag);
                     if (!enabledTask) {
                         logWarn('task/:id::feature flag not enabled', { ...loggingContext, carrier });
@@ -159,14 +163,24 @@ export const getServerSideProps = withPageAuthAndLogging(
                     }
                 }
 
-                const flag = convertToCamelCase(taskType);
                 const featureFlags = await optimizelyService.getFeatureFlagVariables(
                     FEATURE_FLAG_VARIABLES.TASK_SAVE_AS_DRAFT,
                     carrier?.toLowerCase(),
                     user.sub,
                     loggingContext
                 );
+
                 const isSaveAsDraftEnabled = Boolean(featureFlags?.[flag]);
+
+                const continueButtonFeatureFlags = await optimizelyService.getFeatureFlagVariables(
+                    FEATURE_FLAG_VARIABLES.TASK_CONTINUE_BUTTON_ENABLE,
+                    carrier?.toLowerCase(),
+                    user.sub,
+                    loggingContext
+                );
+
+                const isContinueButtonEnabled = Boolean(continueButtonFeatureFlags?.[flag]);
+
                 const nigoFilters = {
                     categoryIds: ['Form', 'Signature', 'Account Information'],
                     carrier: carrier?.toUpperCase(),
@@ -215,6 +229,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         nigoExceptions,
                         nigoSubExceptions,
                         isSaveAsDraftEnabled,
+                        isContinueButtonEnabled,
                     },
                 };
             } catch (error) {

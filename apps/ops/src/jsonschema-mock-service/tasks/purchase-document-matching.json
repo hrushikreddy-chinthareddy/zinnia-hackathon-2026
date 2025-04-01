@@ -74,7 +74,7 @@
                                         "documentId": {
                                             "type": "string",
                                             "ui:field": "subTitle",
-                                            "ui:placeholder": "Documemt ID: "
+                                            "ui:placeholder": "Document ID: "
                                         },
                                         "documentSource": {
                                             "type": "string"
@@ -307,11 +307,14 @@
                                     "type": "object",
                                     "title": "",
                                     "properties": {
-                                        "documentName": {
-                                            "type": "string"
+                                        "docType": {
+                                            "type": "string",
+                                            "ui:field": "title"
                                         },
                                         "documentId": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "ui:field": "subTitle",
+                                            "ui:placeholder": "Document ID: "
                                         },
                                         "documentSource": {
                                             "type": "string"

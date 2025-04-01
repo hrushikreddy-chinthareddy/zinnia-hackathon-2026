@@ -16,6 +16,7 @@ export type GetStepsProps = {
     taskMetadata: FormMetadata[];
     task?: any;
     isSaveAsDraftEnabled: boolean;
+    isContinueButtonEnabled: boolean;
 };
 
 export interface GetSteps {

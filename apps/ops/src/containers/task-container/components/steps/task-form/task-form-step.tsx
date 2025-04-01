@@ -25,9 +25,17 @@ type TaskFormStepProps = {
     isSubmit?: boolean;
     taskMetadata: FormMetadata;
     isSaveAsDraftEnabled?: boolean;
+    isContinueButtonEnabled?: boolean;
 };
 
-const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, isSaveAsDraftEnabled = false }: TaskFormStepProps) => {
+const TaskFormStep = ({
+    readonly = false,
+    taskInfoLink,
+    isSubmit,
+    taskMetadata,
+    isSaveAsDraftEnabled = false,
+    isContinueButtonEnabled,
+}: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `taskManagement.taskForm` });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
     const formState = useContext(TaskDataContext);
@@ -46,8 +54,10 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, 
     }, [formRef]);
 
     useEffect(() => {
-        if (formRef.current) {
-            setIsValidForm(formRef?.current?.validateForm() || false);
+        if (!isContinueButtonEnabled) {
+            if (formRef.current) {
+                setIsValidForm(formRef?.current?.validateForm() || false);
+            }
         }
     }, [task.data]);
 
@@ -92,7 +102,7 @@ const TaskFormStep = ({ readonly = false, taskInfoLink, isSubmit, taskMetadata, 
                     isDraft={isSaveAsDraftEnabled}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
-                    disableContinue={!isValidForm}
+                    disableContinue={isContinueButtonEnabled ? !isContinueButtonEnabled : !isValidForm}
                 />
             }
         >
