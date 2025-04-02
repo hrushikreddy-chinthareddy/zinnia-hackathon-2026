@@ -1,12 +1,29 @@
 import Image from 'next/image';
 
+import allstate from '@deps/styles/elements/icons/carriers/allstate.svg';
+import arcus from '@deps/styles/elements/icons/carriers/arcus.svg';
+import delaware from '@deps/styles/elements/icons/carriers/delaware.svg';
+import empower from '@deps/styles/elements/icons/carriers/empower.svg';
 import everly from '@deps/styles/elements/icons/carriers/everly.svg';
+import globalAtlantic from '@deps/styles/elements/icons/carriers/global-atlantic.svg';
+import guaranty from '@deps/styles/elements/icons/carriers/guaranty.svg';
+import guggenheim from '@deps/styles/elements/icons/carriers/guggenheim.svg';
+import kuvareLincoln from '@deps/styles/elements/icons/carriers/kuvare-lincoln.svg';
 import kuvare from '@deps/styles/elements/icons/carriers/kuvare.svg';
 import massMutual from '@deps/styles/elements/icons/carriers/mass-mutual.svg';
+import modernWoodmen from '@deps/styles/elements/icons/carriers/modern-woodmen.svg';
+import nassau from '@deps/styles/elements/icons/carriers/nassau.svg';
+import nationalLife from '@deps/styles/elements/icons/carriers/national-life.svg';
+import pacificLife from '@deps/styles/elements/icons/carriers/pacific-life.svg';
 import placeholder from '@deps/styles/elements/icons/carriers/placeholder.svg';
+import prudential from '@deps/styles/elements/icons/carriers/prudential.svg';
 import securityBenefit from '@deps/styles/elements/icons/carriers/security-benefit.svg';
+import sunAmerica from '@deps/styles/elements/icons/carriers/sun-america.svg';
+import symetra from '@deps/styles/elements/icons/carriers/symetra.svg';
+import unitedLife from '@deps/styles/elements/icons/carriers/united-life.svg';
 import usaa from '@deps/styles/elements/icons/carriers/usaa.svg';
 import wellabe from '@deps/styles/elements/icons/carriers/wellabe.svg';
+import zinnia from '@deps/styles/elements/icons/carriers/zinnia.svg';
 
 // This is a stopgap until the carrier api is deployed
 const carriers = {
@@ -17,7 +34,7 @@ const carriers = {
     ELIC: 'Everly', // DEPU-2067 - used by Policy Management until we get a carrier API integration
     EMRS: 'Empower',
     FLIC: 'Forethought',
-    GDMN: 'Commonwealth',
+    GDMN: 'Goldman Sachs',
     GLAC: 'Industrial Alliance',
     GLCO: 'GILICO',
     ILIC: 'Arcus',
@@ -93,22 +110,58 @@ export const getSelectedCarriers = (carriers: { [key: string]: string } | undefi
 
 export const getCarrierLogoByClientId = (clientId: string): string => {
     switch (clientId.toUpperCase()) {
-        case 'ULIC':
-        case 'ULPC':
-        case 'GLCO':
-            return kuvare;
+        case 'ALLS':
+        case 'PRUD':
+            return allstate;
+        case 'ILIC':
+            return arcus;
+        case 'DLIC':
+            return delaware;
+        case 'EMRS':
+            return empower;
         case 'EVERLY':
         case 'ELIC':
         case 'SBUL':
             return everly;
-        case 'USAA':
-            return usaa;
+        case 'FLIC':
+        case 'ALLM':
+            return globalAtlantic;
+        case 'GLCO':
+        case 'GILICO':
+            return guaranty;
+        case 'GLAC':
+            return guggenheim;
+        case 'ULIC':
+            return kuvare;
+        case 'RSLN':
+            return kuvareLincoln;
         case 'MASS':
             return massMutual;
+        case 'MWOA':
+            return modernWoodmen;
+        case 'NASU':
+            return nassau;
+        case 'NLVF':
+            return nationalLife;
+        case 'PLIC':
+            return pacificLife;
+        case 'PRDN':
+        case 'PICA':
+            return prudential;
         case 'SBGC':
             return securityBenefit;
+        case 'SAAG':
+            return sunAmerica;
+        case 'SMTR':
+            return symetra;
+        case 'ULPC':
+            return unitedLife;
+        case 'USAA':
+            return usaa;
         case 'WELB':
             return wellabe;
+        case 'ZINN':
+            return zinnia;
         default:
             return placeholder;
     }
