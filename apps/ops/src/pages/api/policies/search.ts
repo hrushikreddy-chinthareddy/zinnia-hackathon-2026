@@ -16,7 +16,7 @@ export default withAuthAndLogging(
 
             const { offset = 0, limit = 5 } = req.query;
             const searchUrl = `${policyApiBaseUrl}/search?offset=${offset}&limit=${limit}`;
-            // BPB - YOU MUST MASK THE BODY
+
             logTrace('policySearch::start', { ...loggingContext, url: searchUrl });
             const { data, error } = await policySearch({
                 authToken: accessToken,

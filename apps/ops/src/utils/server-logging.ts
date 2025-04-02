@@ -9,6 +9,7 @@ import {
 } from '@auth0/nextjs-auth0';
 import { AxiosError, AxiosResponse } from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext, NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { v4 as uuidV4 } from 'uuid';
 
 import { UserProfile } from '@deps/models/user-profile';
 
@@ -44,6 +45,7 @@ type AdditionalContext = {
 };
 
 export type LoggingContext = {
+    correlationId: string; // the correlationId passed as x-correlation-id in the header of a request to the gateway
     inputs:
         | {
               // request body
@@ -219,12 +221,14 @@ export const buildNextPageLoggingContext = async (
             file,
             function: func,
             user: userInfo,
+            correlationId: req?.headers?.['x-correlation-id']?.toString() || query?.correlationId?.toString() || uuidV4(),
         };
     } catch (error) {
         pino.warn('buildNextPageLoggingContext:: error', {
             ...parseErrorInformation(error),
         });
         return {
+            correlationId: context?.req?.headers?.['x-correlation-id']?.toString() || context?.query?.correlationId?.toString() || uuidV4(),
             method: '',
             url: '',
             params: undefined,
@@ -241,11 +245,21 @@ export const buildNextPageLoggingContext = async (
 // Wrapper method to provide logging context to route handlers
 export const withAuthAndLogging = (routeHandler: RouteHandlerWithLoggingContext, additionalContext: AdditionalContext): NextApiHandler => {
     return withApiAuthRequired(async (req, res) => {
+        // Try and find a correlation id in the request.  Otherwise, generate one
+        const correlationId =
+            additionalContext?.correlationId ||
+            req?.body?.correlationId ||
+            req?.headers?.['x-correlation-id'] ||
+            req?.query?.correlationId ||
+            uuidV4();
+
         const baseContext = await buildNextApiLoggingContext(req, res);
         const loggingContext = {
+            correlationId: correlationId,
             ...baseContext,
             ...additionalContext,
-        } as LoggingContext; // Casting to LoggingContext as ts is confused by the omit joining with additionalContext
+        } as unknown as LoggingContext; // Casting to LoggingContext as ts is confused by the omit joining with additionalContext
+
         logTrace('next-server request made', loggingContext);
         return routeHandler(req, res, loggingContext);
     });

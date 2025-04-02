@@ -16,7 +16,7 @@ const sendRequest = <T>(
     loggingContext: LoggingContext,
     sanitizer: SanitizerFn<T> = x => x
 ) => {
-    logTrace('server::sendRequest', { ...loggingContext, function: 'sendRequest', status });
+    logTrace('server::sendRequest', { ...loggingContext, function: 'sendRequest', requestStatus: status });
     if (status === 200 || status === 201) {
         const isDemoUser = getCookie('demouser', { res, req })?.toString() === 'true';
         res.json(
@@ -34,7 +34,7 @@ const sendError = (res: NextApiResponse, ex: any, loggingContext: LoggingContext
         ...parseErrorInformation(ex),
         ...loggingContext,
         function: 'sendError',
-        status: ex.response?.status || ex.status || ex?.statusCode,
+        requestStatus: ex.response?.status || ex.status || ex?.statusCode,
     });
     res.status(ex.response?.status || ex.status || ex?.statusCode || 502).json({
         err: ex.response?.statusText || ex.statusText || ex.message,

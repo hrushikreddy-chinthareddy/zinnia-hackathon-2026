@@ -11,7 +11,7 @@ const levelToStatus = {
     60: 'fatal',
     99: 'compliance',
 };
-const redactKeys = [
+const nestedRedactKeys = [
     'accountNumber',
     'authorization',
     'Authorization',
@@ -25,6 +25,15 @@ const redactKeys = [
     'taxid',
     'taxId',
     'token',
+];
+
+const redactKeys = [
+    'req.headers',
+    'inputs.content', // OpenAi has a content field that can contain lots of sensitive data
+    'inputs.data', // Tasks have a data field that can contain lots of sensitive data
+    ...nestedRedactKeys,
+    ...nestedRedactKeys.map(key => `inputs.${key}`),
+    ...nestedRedactKeys.map(key => `params.${key}`),
 ];
 const logger = pino({
     // put browser logs into a single line for datadog.  Used for middleware, which is considered browser?
@@ -60,7 +69,7 @@ const logger = pino({
         compliance: 99, // compliance logs should be shipped if logging is enabled.
     },
     redact: {
-        paths: ['req.headers', ...redactKeys, ...redactKeys.map(key => `inputs.${key}`), ...redactKeys.map(key => `params.${key}`)],
+        paths: redactKeys,
         censor: 'REDACTED',
     },
     // level of logs to display. trace|debug|info|warn|error|fatal

@@ -25,13 +25,13 @@ export abstract class ServerApiClient {
         this.instance = this.initHttp();
     }
 
-    private async addToken(axiosConfig?: AxiosAuthRequestConfig): Promise<AxiosRequestConfig> {
+    private async addToken(axiosConfig: AxiosAuthRequestConfig = {}, correlationId?: string): Promise<AxiosRequestConfig> {
         const agent = new https.Agent({
             rejectUnauthorized: false,
         });
 
         const headers: any = {
-            'x-correlation-id': uuidV4(),
+            'x-correlation-id': correlationId || uuidV4(),
             ...axiosConfig?.headers,
             Authorization: axiosConfig?.authorization,
         };
@@ -46,7 +46,7 @@ export abstract class ServerApiClient {
 
     async get<T = any, R = AxiosResponse<T>>(url: string, config: AxiosAuthRequestConfig, logCtx: LoggingContext): Promise<R> {
         const now = performance.now();
-        const configWithToken = await this.addToken(config);
+        const configWithToken = await this.addToken(config, logCtx?.correlationId);
         const correlationId = configWithToken.headers?.['x-correlation-id'];
         const loggingContext = {
             ...logCtx,
@@ -77,7 +77,7 @@ export abstract class ServerApiClient {
 
     async post<T = any, R = AxiosResponse<T>>(url: string, data: T, config: AxiosAuthRequestConfig, logCtx: LoggingContext): Promise<R> {
         const now = performance.now();
-        const configWithToken = await this.addToken(config);
+        const configWithToken = await this.addToken(config, logCtx?.correlationId);
         const correlationId = configWithToken.headers?.['x-correlation-id'];
         const loggingContext = {
             ...logCtx,
@@ -107,7 +107,7 @@ export abstract class ServerApiClient {
 
     async put<T = any, R = AxiosResponse<T>>(url: string, data: T, config: AxiosAuthRequestConfig, logCtx: LoggingContext): Promise<R> {
         const now = performance.now();
-        const configWithToken = await this.addToken(config);
+        const configWithToken = await this.addToken(config, logCtx?.correlationId);
         const correlationId = configWithToken.headers?.['x-correlation-id'];
         const loggingContext = {
             ...logCtx,
@@ -120,7 +120,7 @@ export abstract class ServerApiClient {
         logTrace('serverApiClient::put', loggingContext);
         logInfo('serverApiClient::put::authorization', {
             ...loggingContext,
-            authorization: configWithToken?.headers?.Authorization ? true : false,
+            isAuthorized: configWithToken?.headers?.Authorization ? true : false,
         });
         try {
             const result = await this.instance.put<T, R>(url, data, configWithToken);
@@ -141,7 +141,7 @@ export abstract class ServerApiClient {
 
     async patch(url: string, config: AxiosAuthRequestConfig, logCtx: LoggingContext): Promise<any> {
         const now = performance.now();
-        const configWithToken = await this.addToken(config);
+        const configWithToken = await this.addToken(config, logCtx?.correlationId);
         const correlationId = configWithToken.headers?.['x-correlation-id'];
         const loggingContext = {
             ...logCtx,
@@ -171,7 +171,7 @@ export abstract class ServerApiClient {
 
     async delete<T = any, R = AxiosResponse<T>>(url: string, config: AxiosAuthRequestConfig, logCtx: LoggingContext): Promise<R> {
         const now = performance.now();
-        const configWithToken = await this.addToken(config);
+        const configWithToken = await this.addToken(config, logCtx?.correlationId);
         const correlationId = configWithToken.headers?.['x-correlation-id'];
         const loggingContext = {
             ...logCtx,
