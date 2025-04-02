@@ -11,7 +11,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { AmountType, SSWType, Frequency, PartyRoles, Party, FormParty } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import GuaranteedWithdrawalBenefits from './guaranteed-life-time-withdrawal-benefits';
+import GlWbWrapper from './glwb-wrapper';
 import SingleLifePersonDetails from './single-life-person-details';
 import { getCoveredLifeInitialValues, SSWFormProgramFields } from './ssw-form-program.helper';
 import SystematicWithdrawalRow, { SSWProgram } from './ssw-row';
@@ -121,21 +121,8 @@ const SystematicWithdrawalProgram = ({
             {singleLifePersonApplicable && sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption && (
                 <SingleLifePersonDetails personDetails={jointOwnerDetails as Party} />
             )}
-            {glwbApplicable &&
-                (sswData.programSubType.text === SSWType.SingleLifetimeIncomeOption ||
-                    sswData.programSubType.text === SSWType.JointLifetimeIncomeOption) &&
-                formParty.parties.map(
-                    item =>
-                        (item.partyRoleType === PartyRoles.GLWB_FIRST_COVERED_PERSON ||
-                            item.partyRoleType === PartyRoles.GLWB_SEC_COVERED_PERSON) && (
-                            <GuaranteedWithdrawalBenefits
-                                glwbDetails={item}
-                                setFormParty={setFormParty}
-                                isFormStateReadOnly={false}
-                                key={item.partyRoleType}
-                            />
-                        )
-                )}
+
+            {glwbApplicable && <GlWbWrapper sswData={sswData} />}
 
             {formErrors && (
                 <div className="flex flex-col">

@@ -1,3 +1,5 @@
+import { TFunction } from 'next-i18next';
+
 import { AmountType, PartyRoles, ProgramType } from '@deps/models/case/withdrawal/case';
 
 import { EditableFormProgramFields } from '../form-program/form-program.helper';
@@ -42,4 +44,14 @@ const createCoveredLifeInitialValue = (partyRoleType: PartyRoles) => ({
 export const getCoveredLifeInitialValues = () => [
     createCoveredLifeInitialValue(PartyRoles.GLWB_FIRST_COVERED_PERSON),
     createCoveredLifeInitialValue(PartyRoles.GLWB_SEC_COVERED_PERSON),
+];
+
+export enum GlwbType {
+    Static = 'STATIC',
+    Dynamic = 'DYNAMIC',
+}
+
+export const glwbTypeOptions = (t: TFunction) => [
+    { label: t('glwbType.static'), value: GlwbType.Static },
+    { label: t('glwbType.dynamic'), value: GlwbType.Dynamic },
 ];

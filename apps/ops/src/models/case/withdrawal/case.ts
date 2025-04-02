@@ -311,6 +311,9 @@ export interface FormProgram {
         text: string | null;
         amountType: AmountType | null;
     };
+    glwbType?: {
+        text: string | null;
+    };
     processRequestType?: { text: ProcessRequestType }[] | null;
     isValidAsOfDate?: boolean;
     accountCloseReason?: {
