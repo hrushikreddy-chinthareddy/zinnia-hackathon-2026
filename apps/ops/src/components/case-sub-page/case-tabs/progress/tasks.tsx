@@ -84,7 +84,6 @@ export function Task({ task }: { task: TaskView }) {
             task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
         }`;
     }
-
     return (
         <li className={`flex w-full flex-row items-center gap-2 ${beforeClasses} `}>
             <button
@@ -96,8 +95,13 @@ export function Task({ task }: { task: TaskView }) {
                     <Content
                         contentClassName="min-w-max"
                         variant={ContentVariant.BodySm}
-                        details={t('caseOverview.tabs.reviewIssues', { taskType: TaskTypeMap[task.description] }) as string}
+                        details={
+                            task.taskName
+                                ? task.taskName
+                                : (t('caseOverview.tabs.reviewIssues', { taskType: TaskTypeMap[task.description] }) as string)
+                        }
                     />
+
                     <Content className="min-w-max" variant={ContentVariant.BodySm} details={dateString} />
                 </div>
                 <ChevronDown className="rotate-270 text-secondary" width={16} height={16} />
