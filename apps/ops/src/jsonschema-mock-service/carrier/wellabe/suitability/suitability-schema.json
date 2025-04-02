@@ -111,9 +111,7 @@
                         "replacementIndEnum": {
                             "enum": ["YES", "NO"]
                         },
-                        "replacedContractTypeEnum": {
-                            "enum": ["ANNUITY", "LIFE"]
-                        },
+
                         "soldPoliciesToApplicantEnum": {
                             "enum": ["YES", "NO"]
                         },
@@ -193,15 +191,11 @@
                         "investProduct_riskToleranceEnum": {
                             "enum": ["CONSERVATIVE", "MODERATE_CONSERVATIVE", "MODERATE", "MODERATE_AGGRESSIVE", "AGGRESSIVE"]
                         },
-                        "investProduct_annuityFitsRiskToleranceEnum": {
-                            "enum": ["YES", "NO"]
-                        },
+
                         "financialObjectives_purchaseReasonEnum": {
                             "enum": ["INCOME", "TAX_DEFERRAL", "GURANTEES", "GROWTH", "PRINCIPAL_PROTECTION", "OTHERS"]
                         },
-                        "liquidityOptions_fundsAccessExplanationEnum": {
-                            "enum": ["YES", "NO"]
-                        },
+
                         "liquidityOptions_distributionOptionEnum": {
                             "enum": [
                                 "PENALTY-FREE-WITHDRWAWAL",
@@ -211,27 +205,11 @@
                                 "NO_PLANS_TO_ACCESS"
                             ]
                         },
-                        "liquidityOptions_surrenderChargeConsentUnderAgeEnum": {
-                            "enum": ["YES", "NO"]
-                        },
-                        "liquidityOptions_possibleReductionInValueEnum": {
-                            "enum": ["YES", "NO"]
-                        },
-                        "liquidityOptions_planToHoldAnnuityEnum": {
-                            "enum": ["1", "2", "3", "4"]
-                        },
-                        "liquidityOptions_explainedOtherChargesEnum": {
-                            "enum": ["YES", "NO"]
-                        },
-                        "financialObjectives_annuityMeetsFinancialNeedsEnum": {
-                            "enum": ["YES", "NO"]
-                        },
+
                         "agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum": {
                             "enum": ["YES", "NO"]
                         },
-                        "agentAcknowledgment_maApplicationQuestionnaire_saleInLast5YearsEnum": {
-                            "enum": ["YES", "NO"]
-                        },
+
                         "agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum": {
                             "enum": ["ANNUITY", "LIFE"]
                         },
@@ -327,6 +305,30 @@
                                 "INSURANCE_INVESTMENT_COMPONENTS",
                                 "OTHERS"
                             ]
+                        },
+                        "assistedLivingFacilityIndEnum": {
+                            "enum": ["YES", "NO"]
+                        },
+                        "extraFundAvailableEnum": {
+                            "enum": ["YES", "NO"]
+                        },
+                        "existingPoliciesSoldByAgentEnum": {
+                            "enum": ["YES", "NO"]
+                        },
+                        "consideredOtherInsuranceNeedsEnum": {
+                            "enum": ["YES", "NO"]
+                        },
+                        "resideInNursingHomeOrAssistedLivingEnum": {
+                            "enum": ["YES", "NO"]
+                        },
+                        "californiaResidentQuestions_applyForMeansTestedBenefitsEnum": {
+                            "enum": ["YES", "NO"]
+                        },
+                        "californiaResidentQuestions_buyingForGovernmentBenefitsEnum": {
+                            "enum": ["YES", "NO"]
+                        },
+                        "californiaResidentQuestions_reverseMortgageEnum": {
+                            "enum": ["YES", "NO"]
                         }
                     },
                     "properties": {
@@ -665,14 +667,9 @@
                                             "replacementReason": {
                                                 "type": "string",
                                                 "title": "Replacement purchase reason"
-                                            },
-                                            "replacedContractType": {
-                                                "type": "string",
-                                                "title": "Replaced contract type",
-                                                "$ref": "#/definitions/replacedContractTypeEnum"
                                             }
                                         },
-                                        "required": ["replacementReason", "replacedContractType"]
+                                        "required": ["replacementReason"]
                                     }
                                 }
                             }
@@ -778,7 +775,7 @@
                                                 "$ref": "#/definitions/fedralIncomeTaxEnum"
                                             }
                                         },
-                                        "required": ["materialChangeDetails"]
+                                        "required": ["materialChangeReason"]
                                     },
                                     "else": {
                                         "properties": {
@@ -950,24 +947,9 @@
                                             "riskToleranceDesc": {
                                                 "type": "string",
                                                 "title": "Risk tolerance description"
-                                            },
-                                            "annuityFitsRiskTolerance": {
-                                                "type": "string",
-                                                "title": "Annuity fits risk tolerance",
-                                                "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
                                             }
                                         },
-                                        "required": ["riskToleranceDesc", "annuityFitsRiskTolerance"]
-                                    },
-                                    "else": {
-                                        "properties": {
-                                            "annuityFitsRiskTolerance": {
-                                                "type": "string",
-                                                "title": "Annuity fits risk tolerance",
-                                                "$ref": "#/definitions/investProduct_annuityFitsRiskToleranceEnum"
-                                            }
-                                        },
-                                        "required": ["annuityFitsRiskTolerance"]
+                                        "required": ["riskToleranceDesc"]
                                     }
                                 }
                             },
@@ -985,18 +967,9 @@
                                         "$ref": "#/definitions/financialObjectives_purchaseReasonEnum"
                                     },
                                     "uniqueItems": true
-                                },
-                                "otherPurchaseReason": {
-                                    "type": "string",
-                                    "title": "Other purchase reason"
-                                },
-                                "annuityMeetsFinancialNeeds": {
-                                    "type": "string",
-                                    "title": "Annuity meets financial needs",
-                                    "$ref": "#/definitions/financialObjectives_annuityMeetsFinancialNeedsEnum"
                                 }
                             },
-                            "required": ["purchaseReason", "annuityMeetsFinancialNeeds"],
+                            "required": ["purchaseReason"],
                             "if": {
                                 "properties": {
                                     "purchaseReason": {
@@ -1004,9 +977,16 @@
                                             "const": "OTHERS"
                                         }
                                     }
-                                }
+                                },
+                                "required": ["purchaseReason"]
                             },
                             "then": {
+                                "properties": {
+                                    "otherPurchaseReason": {
+                                        "type": "string",
+                                        "title": "Other purchase reason"
+                                    }
+                                },
                                 "required": ["otherPurchaseReason"]
                             }
                         },
@@ -1014,11 +994,6 @@
                             "type": "object",
                             "title": "Liquidity Options",
                             "properties": {
-                                "fundsAccessExplanation": {
-                                    "type": "string",
-                                    "title": "Funds access explanation",
-                                    "$ref": "#/definitions/liquidityOptions_fundsAccessExplanationEnum"
-                                },
                                 "futureDistributionMethods": {
                                     "type": "array",
                                     "title": "Future distribution methods",
@@ -1038,55 +1013,9 @@
                                         },
                                         "required": ["distributionMethods", "optedYears"]
                                     }
-                                },
-                                "surrenderChargeConsentUnderAge": {
-                                    "type": "string",
-                                    "title": "Surrender charge consent Under Age",
-                                    "$ref": "#/definitions/liquidityOptions_surrenderChargeConsentUnderAgeEnum"
-                                },
-                                "possibleReductionInValue": {
-                                    "type": "string",
-                                    "title": "Possible reduction in value",
-                                    "$ref": "#/definitions/liquidityOptions_possibleReductionInValueEnum"
-                                },
-                                "planToHoldAnnuity": {
-                                    "type": "string",
-                                    "title": "Plan to hold annuity",
-                                    "$ref": "#/definitions/liquidityOptions_planToHoldAnnuityEnum"
-                                },
-                                "explainedOtherCharges": {
-                                    "type": "string",
-                                    "title": "Explained other charges",
-                                    "$ref": "#/definitions/liquidityOptions_explainedOtherChargesEnum"
-                                },
-                                "benefitAnnuityQuestions": {
-                                    "type": "object",
-                                    "title": "Benefit Annuity Questions",
-                                    "properties": {
-                                        "understandIncomeAdjustmentFactor": {
-                                            "type": "string",
-                                            "title": "Understand income adjustment factor"
-                                        },
-                                        "consideredFinancialNeedsAfter10Years": {
-                                            "type": "string",
-                                            "title": "Considered financial needs after 10 years"
-                                        },
-                                        "planForIncomeDecreaseAfter10Years": {
-                                            "type": "array",
-                                            "title": "Plan for Income Decrease After 10 Years",
-                                            "items": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
                                 }
                             },
-                            "required": [
-                                "surrenderChargeConsentUnderAge",
-                                "planToHoldAnnuity",
-                                "explainedOtherCharges",
-                                "benefitAnnuityQuestions"
-                            ]
+                            "required": ["distributionMethods"]
                         },
                         "agentAcknowledgment": {
                             "type": "object",
@@ -1100,72 +1029,44 @@
                                             "type": "string",
                                             "title": "Sold policies to applicant",
                                             "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum"
-                                        },
-                                        "saleInLast5Years": {
-                                            "type": "string",
-                                            "title": "Sale in last 5 years",
-                                            "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_saleInLast5YearsEnum"
-                                        },
-                                        "saleDetails": {
-                                            "type": "string",
-                                            "title": "Sale details"
+                                        }
+                                    },
+                                    "dependencies": {
+                                        "soldPoliciesToApplicant": {
+                                            "if": {
+                                                "properties": {
+                                                    "soldPoliciesToApplicant": {
+                                                        "const": "YES"
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "productDetails": {
+                                                        "type": "array",
+                                                        "title": "Product Details",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "productType": {
+                                                                    "type": "string",
+                                                                    "title": "Product type",
+                                                                    "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "required": ["productDetails"]
+                                            }
                                         }
                                     }
                                 },
-                                "financialAcknowledgement": {
-                                    "type": "object",
-                                    "title": "Financial Acknowledgement",
-                                    "properties": {
-                                        "evaluatedInformation": {
-                                            "type": "string",
-                                            "title": "Evaluated information"
-                                        },
-                                        "informedOfFeatures": {
-                                            "type": "string",
-                                            "title": "Informed of features"
-                                        },
-                                        "communicatedBasis": {
-                                            "type": "string",
-                                            "title": "Communicated basis"
-                                        },
-                                        "disclosureRetention": {
-                                            "type": "string",
-                                            "title": "Disclosure retention"
-                                        }
-                                    }
-                                },
+
                                 "disclosureAcknowledgement": {
                                     "type": "object",
                                     "title": "Disclosure Acknowledgement",
                                     "properties": {
-                                        "scopeAndTerms": {
-                                            "type": "string",
-                                            "title": "Scope and terms"
-                                        },
-                                        "typesOfProducts": {
-                                            "type": "string",
-                                            "title": "Types of products"
-                                        },
-                                        "authorizedInsurers": {
-                                            "type": "string",
-                                            "title": "Authorized insurers"
-                                        },
-                                        "compensationDescription": {
-                                            "type": "string",
-                                            "title": "Compensation description"
-                                        },
-                                        "rightToRequestInfo": {
-                                            "type": "string",
-                                            "title": "Right to request information"
-                                        },
-                                        "compensationEstimate": {
-                                            "type": "string",
-                                            "title": "Compensation estimate"
-                                        },
-                                        "conflictsOfInterest": {
-                                            "type": "string",
-                                            "title": "Conflicts of interest"
-                                        },
                                         "productConsDiscussed": {
                                             "type": "object",
                                             "title": "Product cons discussed",
@@ -1190,71 +1091,9 @@
                                                 }
                                             }
                                         }
-                                    },
-                                    "required": [
-                                        "scopeAndTerms",
-                                        "typesOfProducts",
-                                        "authorizedInsurers",
-                                        "compensationDescription",
-                                        "rightToRequestInfo",
-                                        "compensationEstimate",
-                                        "conflictsOfInterest"
-                                    ]
-                                }
-                            },
-                            "allOf": [
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "maApplicationQuestionnaire": {
-                                                "properties": {
-                                                    "saleInLast5Years": {
-                                                        "const": "YES"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "maApplicationQuestionnaire": {
-                                                "properties": {
-                                                    "productDetails": {
-                                                        "type": "array",
-                                                        "title": "Product Details",
-                                                        "items": {
-                                                            "type": "object",
-                                                            "title": "",
-                                                            "properties": {
-                                                                "productType": {
-                                                                    "type": "string",
-                                                                    "title": "Product type",
-                                                                    "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
-                                                                },
-                                                                "companyName": {
-                                                                    "type": "string",
-                                                                    "title": "Company name"
-                                                                },
-                                                                "policyNumber": {
-                                                                    "type": "string",
-                                                                    "title": "Policy number"
-                                                                },
-                                                                "issueDate": {
-                                                                    "type": "string",
-                                                                    "format": "date",
-                                                                    "title": "Issue date"
-                                                                }
-                                                            },
-                                                            "required": ["productType", "companyName", "policyNumber", "issueDate"]
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
                                     }
                                 }
-                            ],
-                            "required": ["maApplicationQuestionnaire", "financialAcknowledgement", "disclosureAcknowledgement"]
+                            }
                         },
                         "additionalInfo": {
                             "type": "object",
@@ -1266,23 +1105,28 @@
                                 },
                                 "assistedLivingFacilityInd": {
                                     "type": "string",
-                                    "title": "Assisted living facility indicator"
+                                    "title": "Assisted living facility indicator",
+                                    "$ref": "#/definitions/assistedLivingFacilityIndEnum"
                                 },
                                 "extraFundAvailable": {
                                     "type": "string",
-                                    "title": "Extra fund available"
+                                    "title": "Extra fund available",
+                                    "$ref": "#/definitions/extraFundAvailableEnum"
                                 },
                                 "existingPoliciesSoldByAgent": {
                                     "type": "string",
-                                    "title": "Existing policies sold by agent"
+                                    "title": "Existing policies sold by agent",
+                                    "$ref": "#/definitions/existingPoliciesSoldByAgentEnum"
                                 },
                                 "consideredOtherInsuranceNeeds": {
                                     "type": "string",
-                                    "title": "Considered other insurance needs"
+                                    "title": "Considered other insurance needs",
+                                    "$ref": "#/definitions/consideredOtherInsuranceNeedsEnum"
                                 },
                                 "resideInNursingHomeOrAssistedLiving": {
                                     "type": "string",
-                                    "title": "Reside in nursing home or assisted living"
+                                    "title": "Reside in nursing home or assisted living",
+                                    "$ref": "#/definitions/resideInNursingHomeOrAssistedLivingEnum"
                                 },
                                 "noOfDependents": {
                                     "type": "string",
@@ -1386,15 +1230,18 @@
                                         "properties": {
                                             "applyForMeansTestedBenefits": {
                                                 "type": "string",
-                                                "title": "Apply for means tested benefits"
+                                                "title": "Apply for means tested benefits",
+                                                "$ref": "#/definitions/californiaResidentQuestions_applyForMeansTestedBenefitsEnum"
                                             },
                                             "buyingForGovernmentBenefits": {
                                                 "type": "string",
-                                                "title": "Buying for government benefits"
+                                                "title": "Buying for government benefits",
+                                                "$ref": "#/definitions/californiaResidentQuestions_buyingForGovernmentBenefitsEnum"
                                             },
                                             "reverseMortgage": {
                                                 "type": "string",
-                                                "title": "Reverse mortgage"
+                                                "title": "Reverse mortgage",
+                                                "$ref": "#/definitions/californiaResidentQuestions_reverseMortgageEnum"
                                             }
                                         },
                                         "required": ["applyForMeansTestedBenefits", "buyingForGovernmentBenefits", "reverseMortgage"]
@@ -1678,11 +1525,7 @@
                         "replacementReason": {
                             "ui:options": {}
                         },
-                        "replacedContractType": {
-                            "ui:options": {
-                                "enumNames": ["Annuity", "Life"]
-                            }
-                        },
+
                         "additionalInformation": {
                             "soldPoliciesToApplicant": {
                                 "ui:widget": "radio",
@@ -1917,14 +1760,7 @@
                                 "enumNames": ["Conservative", "Moderate conversative", "Moderate", "Moderate aggressive", "Aggressive"]
                             }
                         },
-                        "riskToleranceDesc": {},
-                        "annuityFitsRiskTolerance": {
-                            "ui:widget": "radio",
-                            "ui:options": {
-                                "inline": true,
-                                "enumNames": ["Yes", "No"]
-                            }
-                        }
+                        "riskToleranceDesc": {}
                     },
                     "financialObjectives": {
                         "ui:options": {
@@ -1936,24 +1772,13 @@
                                 "enumNames": ["Income", "Tax deferal", "Gurantees", "Growth", "Principal protection", "Others"]
                             }
                         },
-                        "otherPurchaseReason": {},
-                        "annuityMeetsFinancialNeeds": {
-                            "ui:options": {
-                                "inline": true,
-                                "enumNames": ["Yes", "No"]
-                            }
-                        }
+                        "otherPurchaseReason": {}
                     },
                     "liquidityOptions": {
                         "ui:options": {
                             "classNames": "divider"
                         },
-                        "fundsAccessExplanation": {
-                            "ui:options": {
-                                "label": "true",
-                                "enumNames": ["Yes", "No"]
-                            }
-                        },
+
                         "futureDistributionMethods": {
                             "items": {
                                 "ui:options": {
@@ -1975,43 +1800,6 @@
                                 },
                                 "optedYears": {}
                             }
-                        },
-                        "surrenderChargeConsentUnderAge": {
-                            "ui:options": {
-                                "label": "true",
-                                "enumNames": ["Yes", "No"]
-                            }
-                        },
-                        "possibleReductionInValue": {
-                            "ui:options": {
-                                "label": "true",
-                                "enumNames": ["Yes", "No"]
-                            }
-                        },
-                        "planToHoldAnnuity": {
-                            "ui:options": {
-                                "enumNames": ["0-2 Years", "3-4 Years", "5-6 Years", "7+ Years"],
-                                "label": true
-                            }
-                        },
-                        "explainedOtherCharges": {
-                            "ui:options": {
-                                "label": "true",
-                                "enumNames": ["Yes", "No"]
-                            }
-                        },
-                        "benefitAnnuityQuestions": {
-                            "understandIncomeAdjustmentFactor": {},
-                            "consideredFinancialNeedsAfter10Years": {},
-                            "planForIncomeDecreaseAfter10Years": {
-                                "items": {
-                                    "ui:options": {
-                                        "label": false,
-                                        "title": "plan for income decrease after 10 years",
-                                        "minItems": 1
-                                    }
-                                }
-                            }
                         }
                     },
                     "agentAcknowledgment": {
@@ -2025,13 +1813,7 @@
                                     "enumNames": ["Yes", "No"]
                                 }
                             },
-                            "saleInLast5Years": {
-                                "ui:widget": "radio",
-                                "ui:options": {
-                                    "enumNames": ["Yes", "No"]
-                                }
-                            },
-                            "saleDetails": {},
+
                             "productDetails": {
                                 "items": {
                                     "ui:options": {
@@ -2050,18 +1832,8 @@
                                 }
                             }
                         },
-                        "financialAcknowledgement": {},
+
                         "disclosureAcknowledgement": {
-                            "ui:options": {
-                                "classNames": "divider"
-                            },
-                            "scopeAndTerms": {},
-                            "typesOfProducts": {},
-                            "authorizedInsurers": {},
-                            "compensationDescription": {},
-                            "rightToRequestInfo": {},
-                            "compensationEstimate": {},
-                            "conflictsOfInterest": {},
                             "productConsDiscussed": {
                                 "byAgent": {
                                     "ui:options": {
