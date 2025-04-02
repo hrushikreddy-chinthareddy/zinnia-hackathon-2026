@@ -1470,7 +1470,10 @@
             "toaNigo": "Review Transfer Issues",
             "applicationReview": "Validate Application Details",
             "appDataEntry": "New Business Data Entry",
-            "agentOnboardingReview": "Validate Onboarding Issues"
+            "agentOnboardingReview": "Validate Onboarding Issues",
+            "toaReview": "Review Transfer Issues",
+            "prenoteReview": "Review Prenote Issues",
+            "paymentProcessingReview": "Review Initial Premium"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -5355,6 +5358,14 @@
             "secondaryCta": "Back to home"
         }
     },
+    "nbPrenoteNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Transfer was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home"
+        }
+    },
     "nbApplicationReview": {
         "confirmStep": {
             "title": "Got It!",
@@ -5377,6 +5388,33 @@
         "message": "You do not have access to view this information."
     },
     "nbAppDataEntry": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: New Business Data Entry was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "nbToaReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: New Business Data Entry was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "nbPrenoteReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: New Business Data Entry was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "nbPaymentProcessingReview": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: New Business Data Entry was submitted.",

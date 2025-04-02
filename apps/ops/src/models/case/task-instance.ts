@@ -70,7 +70,7 @@ export type TaskDocument = {
     documentId: string;
     documentName: string;
     documentSource: DocumentSource;
-    fileType: string;
+    fileType?: string;
 };
 
 export enum DocumentSource {

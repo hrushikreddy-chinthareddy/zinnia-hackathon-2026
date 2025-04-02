@@ -29,6 +29,9 @@ export const SupportedTaskMap = [
     TaskType.AppDataEntry,
     TaskType.Prenote_Nigo,
     TaskType.Agent_Onboarding_Review,
+    TaskType.TOA_Review,
+    TaskType.Prenote_Review,
+    TaskType.Payment_Processing_Review,
 ];
 
 export function Task({ task }: { task: TaskView }) {
@@ -46,6 +49,9 @@ export function Task({ task }: { task: TaskView }) {
         [TaskType.Agent_Onboarding_Nigo]: t('caseOverview.tabs.agentOnboardingNigo'),
         [TaskType.AppDataEntry]: t('caseOverview.tabs.appDataEntry'),
         [TaskType.Agent_Onboarding_Review]: t('caseOverview.tabs.agentOnboardingReview'),
+        [TaskType.TOA_Review]: t('caseOverview.tabs.toaReview'),
+        [TaskType.Prenote_Review]: t('caseOverview.tabs.prenoteReview'),
+        [TaskType.Payment_Processing_Review]: t('caseOverview.tabs.paymentProcessingReview'),
     };
 
     const TaskTypeMap: Record<string, string> = {

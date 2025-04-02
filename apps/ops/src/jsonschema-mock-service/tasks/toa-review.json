@@ -1,0 +1,315 @@
+{
+    "formId": "500468fd-c5e1-4b20-9832-267a355d3d5d",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_TOA_REVIEW",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "process": "New Business",
+                "carrier": "WELB",
+                "taskType": "NB_TOA_REVIEW",
+                "title": "Review Transfer Issues",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "issuesList": {
+                            "type": "array",
+                            "title": "",
+                            "items": {
+                                "type": "object",
+                                "title": "Issues List",
+                                "properties": {
+                                    "processingResolution": {
+                                        "type": "string",
+                                        "title": "Processing Instructions"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
+                                    }
+                                }
+                            }
+                        },
+                        "documents": {
+                            "type": "array",
+                            "title": "Supporting Information",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "documentId": {
+                                        "type": "string",
+                                        "ui:field": "subTitle",
+                                        "ui:placeholder": "Documemt ID: "
+                                    },
+                                    "documentType": {
+                                        "type": "string",
+                                        "ui:field": "title",
+                                        "ui:separator": " - "
+                                    },
+                                    "documentName": {
+                                        "type": "string",
+                                        "ui:field": "title",
+                                        "ui:separator": " - "
+                                    },
+                                    "documentSource": {
+                                        "type": "string"
+                                    },
+                                    "documentExt": {
+                                        "type": "string"
+                                    },
+                                    "carrier": {
+                                        "type": "string",
+                                        "default": "{{carrier}}"
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enum": [true, false],
+                            "enumNames": ["Yes", "No"],
+                            "title": "Can you proceed?"
+                        },
+                        "documentList": {
+                            "type": "object",
+                            "title": "Link or Upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "upload",
+                                    "items": {
+                                        "title": "upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": true
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": false
+                                        },
+                                        "declineReason": {
+                                            "title": "",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "$ref": "#/definitions/declineReason"
+                                            }
+                                        },
+                                        "reviewFailureReasonDisplay": {
+                                            "type": "array",
+                                            "title": "These issues will be created for the case:",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "definitions": {
+                        "declineReason": {
+                            "enum": ["DEFAULT"]
+                        }
+                    },
+                    "required": ["issueResolved"]
+                },
+                "uiSchema": {
+                    "ui:order": [
+                        "issuesList",
+                        "documents",
+                        "issueResolved",
+                        "declineReason",
+                        "reviewFailureReasonDisplay",
+                        "documentList",
+                        "attachments"
+                    ],
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "issuesList": {
+                        "ui:readonly": true,
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:dataPath": ["issuesList"],
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                            },
+                            "processingResolution": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "resolved": {
+                                "ui:options": {
+                                    "label": false
+                                }
+                            }
+                        }
+                    },
+                    "documents": {
+                        "props": {
+                            "readonly": true
+                        },
+                        "items": {
+                            "ui:options": {
+                                "ObjectFieldTemplate": "CardTemplate",
+                                "cardType": "Document",
+                                "icon": "DOCUMENT_TEXT",
+                                "nobackground": true
+                            },
+                            "documentId": {
+                                "ui:widget": "text"
+                            },
+                            "documentName": {
+                                "ui:widget": "text"
+                            },
+                            "documentSource": {
+                                "ui:widget": "text"
+                            },
+                            "documentType": {
+                                "ui:widget": "text"
+                            }
+                        },
+                        "ui:options": {
+                            "addable": false
+                        },
+                        "ui:dataPath": ["details", "documents"]
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "inline": true
+                        },
+                        "ui:dataPath": ["issueResolved"],
+                        "ui:hideError": true
+                    },
+                    "declineReason": {
+                        "ui:widget": "select",
+                        "ui:options": {
+                            "label": false,
+                            "enumOptions": [
+                                {
+                                    "label": "Default",
+                                    "value": "DEFAULT"
+                                }
+                            ]
+                        },
+                        "items": {
+                            "ui:options": {
+                                "label": "false"
+                            }
+                        },
+                        "ui:placeholder": "Select Issues",
+                        "ui:dataPath": ["declineReason"]
+                    },
+                    "reviewFailureReasonDisplay": {
+                        "ui:options": {
+                            "label": true,
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "hasBg": true,
+                            "formContext": {
+                                "keyName": "customData",
+                                "listName": "declineReason"
+                            },
+                            "omitValue": true
+                        }
+                    },
+                    "documentList": {
+                        "inline": true,
+                        "ui:options": {
+                            "label": true,
+                            "omitValue": true
+                        },
+                        "ui:dataPath": ["documentList"],
+                        "upload": {
+                            "ui:widget": "AutoCompleteWidget",
+                            "ui:placeholder": "Find existing documents...",
+                            "ui:options": {
+                                "label": false,
+                                "icon": "Search"
+                            }
+                        },
+                        "or": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "attachment": {
+                            "ui:options": {
+                                "label": false,
+                                "showFiles": false
+                            },
+                            "ui:props": {
+                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiMethod": "get"
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "ui:dataPath": ["attachments"],
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

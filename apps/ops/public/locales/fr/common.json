@@ -1470,7 +1470,10 @@
             "toaNigo": "Examiner les problèmes de transfert",
             "applicationReview" : "Valider les détails de la candidature",
             "appDataEntry": "Résoudre les problèmes de saisie des données de l'application",
-            "agentOnboardingReview": "Valider les problèmes d'onboarding"
+            "agentOnboardingReview": "Valider les problèmes d'onboarding",
+            "toaReview": "Examiner les problèmes de transfert",
+            "prenoteReview": "Réviser les problèmes de pré-notes",
+            "paymentProcessingReview": "Examiner la prime initiale"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -5325,6 +5328,14 @@
             "secondaryCta": "Retour à l'accueil"
         }
     },
+    "nbPrenoteNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Le transfert de révision a été soumis",
+            "cta": "Aller au transfert entrant ",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
     "nbApplicationReview": {
         "confirmStep": {
             "title": "Compris!",
@@ -5339,6 +5350,30 @@
             "title": "Compris!",
             "subTitle": "Tâche : Valider des problèmes d'onboarding a été soumise.",
             "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbToaReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Le transfert de révision a été soumis",
+            "cta": "Aller au transfert entrant ",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbPrenoteReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Le transfert de révision a été soumis",
+            "cta": "Aller au transfert entrant ",
+            "secondaryCta": "Retour à l'accueil"
+        }
+    },
+    "nbPaymentProcessingReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Le transfert de révision a été soumis",
+            "cta": "Aller au transfert entrant ",
             "secondaryCta": "Retour à l'accueil"
         }
     },

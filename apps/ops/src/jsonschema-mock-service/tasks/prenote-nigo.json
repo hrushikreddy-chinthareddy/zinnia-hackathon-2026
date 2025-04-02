@@ -12,7 +12,7 @@
     "schemaContent": {
         "tabSchemas": [
             {
-                "process": "PrenoteProcessing",
+                "process": "New Business",
                 "carrier": "WELB",
                 "taskType": "NB_PRENOTE_NIGO",
                 "title": "Review Transfer Issues",

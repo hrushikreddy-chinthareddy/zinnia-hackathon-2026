@@ -15,6 +15,9 @@ import standardDocumentMatchingData from '@deps/jsonschema-mock-service/tasks-da
 import toaNigoData from '@deps/jsonschema-mock-service/tasks-data/toa-nigo.json';
 import ofacReviewData from '@deps/jsonschema-mock-service/tasks-data/ofac-review.json';
 import prenoteNigoData from '@deps/jsonschema-mock-service/tasks-data/prenote-nigo.json';
+import toaReviewData from '@deps/jsonschema-mock-service/tasks-data/toa-review.json';
+import prenoteReviewData from '@deps/jsonschema-mock-service/tasks-data/prenote-review.json';
+
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 
@@ -61,6 +64,12 @@ export const getCaseTaskByIdSSRMock = async (taskType: TaskType): Promise<Manage
             return ofacReviewData as ManagementTask<TaskStatus>;
         case TaskType.Prenote_Nigo:
             return prenoteNigoData as ManagementTask<TaskStatus>;
+        case TaskType.TOA_Review:
+            return toaReviewData as ManagementTask<TaskStatus>;
+        case TaskType.Prenote_Review:
+            return prenoteReviewData as ManagementTask<TaskStatus>;
+        case TaskType.Payment_Processing_Review:
+            return prenoteReviewData as ManagementTask<TaskStatus>; //change when proper task is there for payment processing
         default:
             return null;
     }

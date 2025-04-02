@@ -1,0 +1,128 @@
+{
+    "id": "TA000000021576",
+    "caseId": "CA0000400587",
+    "source": "BPM.TransferProcessing",
+    "templateId": "a146021e-8913-4f06-9a3b-24dab186e49c",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_TOA_REVIEW",
+    "taskName": "TOA Review",
+    "status": "NEW",
+    "data": {
+        "details": {
+            "exchangeReplace": {
+                "entityId": "entity.1",
+                "paymentRecordId": "9daf1100-6520-444f-a990-53b3bc24743d",
+                "surrenderContractNumber": "N000063960",
+                "surrenderCompanyName": "United States Life Insurance Company",
+                "exchangeType": 9,
+                "eappErId": "1",
+                "netAmount": 0.0,
+                "grossAmount": 0.0,
+                "paymentMethod": "EXCREP",
+                "amountRequested": 75000.0,
+                "address": {
+                    "addressLine1": "Attn Annuity Service Center",
+                    "addressLine2": "1050 N Western St",
+                    "addressLine3": null,
+                    "city": "Amarillo",
+                    "state": "TX",
+                    "zip": "79106",
+                    "country": "USA"
+                },
+                "deliveryMethod": "MAIL",
+                "deliveryFaxNumber": null
+            },
+            "policyNumber": "ADA2502579",
+            "documents": [
+                {
+                    "documentId": "67d921645134020b1b4d38e7",
+                    "documentName": "WELLAQI041120241125012935_001_Replacement of Life Insurance or Annuities_5.pdf",
+                    "documentSource": "EDS",
+                    "documentExt": "pdf",
+                    "documentType": "NB State Replacement"
+                },
+                {
+                    "documentId": "67d921645134020b1b4d38e8",
+                    "documentName": "WELLAQI041120241125012935_001_1035 Exchange  Rollover  Transfer eForm_6.pdf",
+                    "documentSource": "EDS",
+                    "documentExt": "pdf",
+                    "documentType": "NB Accord"
+                },
+                {
+                    "documentId": "67d921625134020b1b4d38e3",
+                    "documentName": "WELLAQI041120241125012935_001_Deferred Annuity Application_1.pdf",
+                    "documentSource": "EDS",
+                    "documentExt": "pdf",
+                    "documentType": "NB Application"
+                }
+            ]
+        },
+        "issuesList": [
+            {
+                "id": "df99ff93-3dd0-4faf-9336-8b69af5920f8",
+                "externalId": "df99ff93-3dd0-4faf-9336-8b69af5920f8",
+                "nmid": "TP.EM.004",
+                "type": "NOTE",
+                "processingInstruction": "Reason: Unable to create transfer letter. Resolution: ExchangeReplace | UNITED STATES LIFE INSURANCE COMPANY, ExchangeReplace | N000063960 - Unable to generate Transfer Letter. Please manually create Transfer Letter and request transfer to be mailed or faxed. ",
+                "processingReason": "Unable to create transfer letter.",
+                "processingResolution": "ExchangeReplace | UNITED STATES LIFE INSURANCE COMPANY, ExchangeReplace | N000063960 - Unable to generate Transfer Letter. Please manually create Transfer Letter and request transfer to be mailed or faxed. "
+            }
+        ]
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [
+        {
+            "documentId": "67d921625134020b1b4d38e3",
+            "documentName": "WELLAQI041120241125012935_001_Deferred Annuity Application_1.pdf",
+            "documentSource": "EDS",
+            "createdDate": null
+        },
+        {
+            "documentId": "67d921645134020b1b4d38e8",
+            "documentName": "WELLAQI041120241125012935_001_1035 Exchange  Rollover  Transfer eForm_6.pdf",
+            "documentSource": "EDS",
+            "createdDate": null
+        },
+        {
+            "documentId": "67d921645134020b1b4d38e7",
+            "documentName": "WELLAQI041120241125012935_001_Replacement of Life Insurance or Annuities_5.pdf",
+            "documentSource": "EDS",
+            "createdDate": null
+        }
+    ],
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-03-18T08:18:51Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-03-18T08:18:51Z",
+    "identifiers": [
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2502579"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLAQI041120241125012935"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000400587"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "414124"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2502579"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67d921645134020b1b4d38e8"
+        }
+    ],
+    "externalId": "151129a2-477a-4caf-8a6d-9005f5013b61"
+}

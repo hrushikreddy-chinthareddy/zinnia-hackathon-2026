@@ -1,0 +1,90 @@
+{
+    "id": "TA000000021573",
+    "caseId": "CA0000400039",
+    "source": "BPM.PreNoteProcessing",
+    "templateId": "ed5bcb33-0541-4f0e-9f35-f3913199b25e",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_PRENOTE_REVIEW",
+    "taskName": "Pre Note Review",
+    "status": "NEW",
+    "data": {
+        "details": {
+            "exchangeReplace": {
+                "entityId": "entity.1",
+                "paymentRecordId": "f9f95854-fa47-4d39-9a49-2d4b70aa7ea9",
+                "surrenderContractNumber": "N000063960",
+                "surrenderCompanyName": "United States Life Insurance Company",
+                "exchangeType": 9,
+                "eappErId": "1",
+                "netAmount": 0.0,
+                "grossAmount": 0.0,
+                "paymentMethod": "EXCREP",
+                "amountRequested": 75000.0,
+                "replacementIndicator": false,
+                "originalCostBasis": "0",
+                "policyNumber": "ADA2502548",
+                "address": {
+                    "addressLine1": "Attn Annuity Service Center",
+                    "addressLine2": "1050 N Western St",
+                    "addressLine3": null,
+                    "city": "Amarillo",
+                    "state": "TX",
+                    "zip": "79106",
+                    "country": "USA"
+                },
+                "deliveryMethod": "MAIL",
+                "deliveryFaxNumber": null,
+                "faxNumber": null
+            }
+        },
+        "issuesList": [
+            {
+                "id": "984e29e1-1d65-4c13-bf37-17c13541ee26",
+                "externalId": "984e29e1-1d65-4c13-bf37-17c13541ee26",
+                "nmid": "PN.EM.004",
+                "type": "NOTE",
+                "detailedReason": "Failure",
+                "processingInstruction": "Resolution: United States Life Insurance Company, N000063960 - Unable to send pre-notification letter due to system issue. Please review and send manually.",
+                "processingResolution": "United States Life Insurance Company, N000063960 - Unable to send pre-notification letter due to system issue. Please review and send manually."
+            }
+        ]
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "new_business",
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-03-18T07:30:12Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-03-18T07:30:12Z",
+    "identifiers": [
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2502548"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000400039"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2502548"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "413589"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI011280282025022555"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67d80e225134020b1b4d2e62"
+        }
+    ],
+    "externalId": "8368fd01-e706-469a-a811-890651a3d173"
+}
