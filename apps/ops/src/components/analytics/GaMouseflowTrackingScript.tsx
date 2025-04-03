@@ -1,10 +1,16 @@
+import { useUser } from '@auth0/nextjs-auth0/client';
 import Script from 'next/script';
+import { useMemo } from 'react';
 
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { isInternalZinniaUser } from '@deps/helpers/user.helpers';
+import { UserProfile } from '@deps/models/user-profile';
 import { NODE_ENV_PRODUCTION } from '@deps/types/constants';
 
 const GaMouseflowTrackingScript = () => {
     const { bulkCheckComplete, isAdvisorsExcel } = usePermissionsContext();
+    const { user } = useUser();
+    const isInternalUser = useMemo(() => isInternalZinniaUser(user as UserProfile), [user]);
 
     if (!bulkCheckComplete) {
         return;
@@ -21,6 +27,7 @@ const GaMouseflowTrackingScript = () => {
                 window._mfq = window._mfq || [];
 
                 window._mfq.push(['setVariable', 'isAdvisorsExcel', ${isAdvisorsExcel}]);
+                window._mfq.push(['setVariable', 'isInternalUser', ${isInternalUser}]);
 
                 (function() {
                     var mf = document.createElement("script");

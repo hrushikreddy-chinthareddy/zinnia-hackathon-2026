@@ -37,7 +37,6 @@ export interface PermissionsContextProps {
     bulkCheckComplete: boolean;
     fgaRoles: BulkCheckTuple[];
     isAdvisorsExcel: boolean;
-    isInternalUser: boolean;
     isSuperAdmin: boolean;
     hasDashboardPermission: boolean;
     hasCaseInsightPermission: boolean;
@@ -59,7 +58,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const [bulkCheckComplete, setBulkCheckComplete] = useState(false);
     const [isSuperAdmin, setIsSuperAdmin] = useState(false);
     const [isAdvisorsExcel, setIsAdvisorsExcel] = useState(false);
-    const [isInternalUser, setIsInternalUser] = useState(false);
     const [hasDashboardPermission, setHasDashboardPermission] = useState(false);
     const [hasCaseInsightPermission, setHasCaseInsightPermission] = useState(false);
 
@@ -126,7 +124,10 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const getRoles = async () => {
             try {
-                if (!partyId) return;
+                if (!partyId) {
+                    return;
+                }
+
                 const tuples = await bulkCheckPermissions(createBulkCheckBodyRequest(partyId));
                 setFgaRoles(tuples);
                 const superAdmin = checkIfUserIsSuperAdmin(tuples);
@@ -182,7 +183,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         return await getCarriersList(permission);
     };
 
-    // Can "const { user } = useUser();" and const permissions... be safely hoisted to the top of the method and used in a closure?
     const doesUserHavePagePermission = async (permission: UserPermission): Promise<boolean> => {
         if (!partyId || !permission) return false;
 
@@ -216,7 +216,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 doesUserHaveDashboardPermission,
                 canEditPolicy,
                 isAdvisorsExcel,
-                isInternalUser,
                 isSuperAdmin,
                 fgaRoles,
                 hasDashboardPermission,
