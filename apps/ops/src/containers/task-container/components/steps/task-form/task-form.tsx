@@ -57,11 +57,18 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         const error = !matchedCase ? 'caseNotFound' : 'correlationIdNotFount';
                         browserLogWarn(`task:: ${t(error)}`, task.data.caseId);
                         onSubmit(t(error));
-                        return;
+                        return false;
                     }
 
                     if (task.taskType === TaskType.Standard_Document_Matching) {
-                        return;
+                        setTask(previousTask => ({
+                            ...previousTask,
+                            data: {
+                                ...previousTask.data,
+                                policyNumber: matchedCase?.additionalData?.policyNumber || '',
+                            },
+                        }));
+                        return true;
                     }
 
                     const transactionResponse = await getTransactionsByCorrelationId(matchedCase?.correlationId || '', {

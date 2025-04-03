@@ -92,12 +92,12 @@
                                         },
                                         "caseType": {
                                             "type": "string",
-                                            "title": "Cases",
+                                            "title": "Case",
                                             "$ref": "#/definitions/caseTypeEnum"
                                         },
                                         "caseSubType": {
                                             "type": "string",
-                                            "title": "Case Types",
+                                            "title": "Case Type",
                                             "$ref": "#/definitions/caseSubTypeEnum"
                                         }
                                     },

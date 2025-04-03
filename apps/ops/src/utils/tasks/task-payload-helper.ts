@@ -66,20 +66,29 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
             let matchedData = {};
             let matchingResult = task?.data?.matchingResult;
 
-            if (![MatchingCase.NO_MATCH, MatchingCase.ENTERED].includes(correlationId)) {
+            if (![MatchingCase.NO_MATCH].includes(correlationId)) {
                 const potentialMatch = initialTask.data.potentialMatches?.find(
                     (item: PotentialMatches) => item.correlationid === correlationId
                 );
-                const { entityType, recordId, zlCaseId, policyNumber, taskId, firstName, lastName } = potentialMatch;
-                matchedData = {
-                    entityType,
-                    recordId,
-                    zlCaseId,
-                    policyNumber,
-                    taskId,
-                    firstName,
-                    lastName,
-                };
+
+                if (correlationId === MatchingCase.ENTERED) {
+                    matchedData = {
+                        zlCaseId: task.data?.caseId ?? '',
+                        policyNumber: task.data?.policyNumber ?? '',
+                    };
+                } else {
+                    const { entityType, recordId, zlCaseId, policyNumber, taskId, firstName, lastName } = potentialMatch;
+                    matchedData = {
+                        entityType,
+                        recordId,
+                        zlCaseId,
+                        policyNumber,
+                        taskId,
+                        firstName,
+                        lastName,
+                    };
+                }
+
                 matchingResult = MatchingCase.MATCH_FOUND;
             }
 

@@ -8,7 +8,7 @@ import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-f
 export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, taskMetadata, task }: GetStepsProps) => {
     let isSubmit = task.data.matchingResult === MatchingCase.REINDEX;
 
-    if (task?.data?.isPrimaryDocumentPresent == true) {
+    if (task.data.matchingResult === 'NO_MATCH' && task.taskType === 'STANDARD_DOCUMENT_MATCHING') {
         isSubmit = true;
     }
 

@@ -49,6 +49,7 @@ const generatePotentialMatchesOptions = (potentialMatches: PotentialMatches[]): 
                     value: item?.zlCaseId ?? '',
                     title: item?.entityType ?? '',
                     url: `/cases/${item.zlCaseId}`,
+                    type: 'link',
                     disabled: false,
                 };
                 return { label: item.entityType, value: item.correlationid, id, subElement };

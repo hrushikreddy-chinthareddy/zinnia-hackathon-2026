@@ -3,15 +3,16 @@ import { MetadataSearchResponse, SearchRequest } from '@zinnia/api-types/types/d
 import { IconType, Icon, AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { ChangeEvent, useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import ClickContainer from '@deps/components/click-container/click-container';
 import inputStyles from '@deps/components/search/search-field-toggle/search-field-toggle.module.css';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import style from './file-widget.module.css';
-import { useTranslation } from 'react-i18next';
 export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     props: WidgetProps<T, S, F>
 ) {
@@ -37,6 +38,9 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
     const [error, setError] = useState<boolean>(false);
     const { t } = useTranslation(undefined, { keyPrefix: 'taskManagementQueue' });
 
+    const caseKey = uiSchema?.['ui:options']?.['default'];
+    const extractedCaseId = caseKey ? replacePlaceholders(caseKey, formContext?.customData) : '';
+
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         const value = event.target.value;
@@ -49,7 +53,7 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
             setFetchingDocuments(true);
             const searchBody: SearchRequest = {
                 documentClassification: SearchRequest.documentClassification.INBOUND,
-                zinniaLiveCaseId: formContext?.customData?.caseId,
+                zinniaLiveCaseId: value ? value : extractedCaseId || formContext?.customData?.caseId,
                 parentCarrierCode: formContext?.customData?.carrier,
             };
             try {
