@@ -7,6 +7,24 @@ export enum ProducerType {
   CORPORATION = 'Corporation',
 }
 
+export enum PhoneNumberType {
+  PRIMARY = 'Primary',
+  ALTERNATE = 'Alternate',
+  RESIDENTIAL = 'Residential',
+  BUSINESS = 'Business',
+  CELLULAR = 'Cellular',
+  FAX_NUMBER = 'FaxNumber',
+  TOLL_FREE_NUMBER = 'TollFreeNumber',
+  UNKNOWN = 'Unknown',
+}
+
+// ResidentialMailingBusiness
+export enum AddressType {
+  RESIDENTIAL = 'Residential',
+  MAILING = 'Mailing',
+  BUSINESS = 'Business',
+}
+
 export enum CorporationType {
   GENERAL_AGENCY = 'GeneralAgency',
   BROKER_DEALER = 'BrokerDealer',
@@ -39,6 +57,9 @@ export enum AppointmentStatus {
   PENDING = 'Pending',
   TERMINATED = 'Terminated',
   JUST_IN_TIME = 'Just in time',
+  // these were added to the API recently, but are not in the UI designs
+  STATE_PENDING = 'State Pending',
+  PENDING_TERMINATION = 'Pending Termination',
 }
 
 export interface Appointment {
@@ -50,7 +71,7 @@ export interface Appointment {
   effectiveDate: string;
   company: string;
   licenseNumber: string;
-  lineOfAuthorities: LineOfAuthority[];
+  linesOfAuthority: LineOfAuthorityType[];
 }
 
 export interface License {
@@ -81,6 +102,22 @@ export interface LineOfAuthority {
   expiryDate: string;
 }
 
+export enum LineOfAuthorityType {
+  LIFE = 'Life',
+  CASUALTY = 'Casualty',
+  PROPERTY = 'Property',
+  LIFE_HEALTH_AND_VARIABLE = 'LifeHealthAndVariable',
+  ANNUITY = 'Annuity',
+  VARIABLE_LIFE = 'VariableLife',
+  DI = 'DI',
+  FIXED = 'FIXED',
+  HEALTH = 'HEALTH',
+  MEDICAL = 'MEDICAL',
+  LONG_TERM = 'LongTerm',
+  MUTUAL_FUND = 'MutualFund',
+  PRE_NEED = 'PreNeed',
+}
+
 export interface BackgroundCheck {
   carrier: string;
   dateRequested: string;
@@ -95,6 +132,30 @@ export enum BackgroundCheckStatus {
   UNDER_REVIEW = 'Under Review',
   DENIED = 'Denied',
   CANT_COMPLETE = 'Unable to complete',
+}
+
+export enum ApiBackgroundCheckStatus {
+  PENDING = 'Pending',
+  COMPLETED = 'Completed',
+  CANCELLED = 'Cancelled',
+  ERROR = 'Error',
+}
+
+export enum ApiBackgroundCheckAdjudicationResult {
+  PASS = 'Pass',
+  FAIL = 'Fail',
+  REVIEW = 'Review',
+}
+
+export enum ApiBackgroundCheckAdjudicationCarrierResult {
+  APPROVED = 'Approved',
+  DENIED = 'Denied',
+  PRODUCER_DISPUTE = 'ProducerDispute',
+}
+
+export enum LicensesAndAppointmentsStatus {
+  PENDING_VERTAFORE_CREATION = 'PendingVertaforeCreation',
+  CREATED = 'Created',
 }
 
 export enum YesNo {

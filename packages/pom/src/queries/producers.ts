@@ -7,7 +7,10 @@ import {
   CreateProducerRequestBody,
   CreateProducerResponse,
 } from '../types/create.types';
-
+import {
+  ApiGetProducerResponse,
+  MockGetProducerResponse,
+} from '../types/get.types';
 export const searchProducer = async ({
   nationalProducerNumber,
   limit = 10,
@@ -87,5 +90,18 @@ export const createProducer = async (
   if (response.statusCode !== 202) {
     throw new Error(response.message);
   }
+  return response;
+};
+
+export const getProducer = async (
+  id: string
+): Promise<ApiGetProducerResponse | MockGetProducerResponse | undefined> => {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const url = new URL(
+    `${baseUrl ?? 'http://localhost:3000'}/api/pom/distributors/v1/producers/${id}`
+  );
+  const response: MockGetProducerResponse = await (
+    await ClientApi.get(url)
+  ).json();
   return response;
 };

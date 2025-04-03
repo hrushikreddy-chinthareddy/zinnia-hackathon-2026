@@ -1,18 +1,17 @@
-import { CardHeader } from "../../components/card-header/CardHeader";
-import { Meta, StoryObj } from "@storybook/react";
-import { ProducerType } from "../../types";
+import { CardHeader } from '../../components/card-header/CardHeader';
+import { Meta, StoryObj } from '@storybook/react';
+import { IconType } from '@zinnia/bloom/components';
 
 const meta: Meta<typeof CardHeader> = {
-  title: "Components/CardHeader",
+  title: 'Components/CardHeader',
   component: CardHeader,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
-    id: { control: "text" },
-    producerType: { control: "select", options: ["corporation", "individual"] },
+    iconType: {
+      control: 'select',
+      options: [IconType.USER, IconType.OFFICEBUILDING],
+    },
   },
-  args: {
-    id: "123456789",
-  }
 };
 
 export default meta;
@@ -20,12 +19,16 @@ type Story = StoryObj<typeof CardHeader>;
 
 export const Individual: Story = {
   args: {
-    producerType: ProducerType.INDIVIDUAL
+    title: 'Ethan Conners',
+    subtext: 'National producer number: 987654321',
+    iconType: IconType.USER,
   },
 };
 
 export const Corporation: Story = {
   args: {
-    producerType: ProducerType.CORPORATION
+    title: 'Acme Corp.',
+    subtext: 'National producer number: 987654321',
+    iconType: IconType.OFFICEBUILDING,
   },
 };

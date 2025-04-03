@@ -1,15 +1,16 @@
 import { BadgeVariant } from '@zinnia/bloom/components';
 import { SideSheetProps } from '@zinnia/bloom/components';
 import { License, LicenseStatus } from '../../../types';
-import { standardDateMonthDayYear } from '@zinnia/utils';
+import { DEFAULT_ERROR_STRING, standardDateMonthDayYear } from '@zinnia/utils';
 import { ViewSidesheet } from '../../../components/view-sidesheet/ViewSidesheet';
+import { ApiLicense } from '../../../types/get.types';
 
 export interface LicenseSidesheetProps
   extends Omit<SideSheetProps, 'children' | 'header'> {
-  license: License;
+  license: License | ApiLicense;
 }
 
-const getBadgeVariant = (status: LicenseStatus): BadgeVariant => {
+const getBadgeVariant = (status: LicenseStatus | undefined): BadgeVariant => {
   switch (status) {
     case LicenseStatus.ACTIVE:
       return BadgeVariant.SUCCESS;
@@ -34,28 +35,31 @@ export const LicenseSidesheet = ({
     },
     {
       label: 'License number',
-      value: license.number,
+      value: license.number ?? DEFAULT_ERROR_STRING,
     },
     {
       label: 'State',
-      value: license.state,
+      value: license.state ?? DEFAULT_ERROR_STRING,
     },
     {
       label: 'Resident',
-      value: license.resident,
+      // missing field in the api
+      value: 'resident' in license ? license.resident : '--',
     },
     {
       label: 'License type',
-      value: license.type,
+      value: license.type ?? DEFAULT_ERROR_STRING,
     },
     {
       label: 'Lines of authority',
-      value: (
+      value: license.lineOfAuthorities ? (
         <ol className="pom_ordered-list">
-          {license.lineOfAuthorities.map((lineOfAuthority) => (
+          {license.lineOfAuthorities.map(lineOfAuthority => (
             <li key={lineOfAuthority.type}>{lineOfAuthority.type}</li>
           ))}
         </ol>
+      ) : (
+        '--'
       ),
     },
     {
@@ -68,7 +72,7 @@ export const LicenseSidesheet = ({
     },
     {
       label: 'Inactivation reason',
-      value: license.inactivationReason,
+      value: license.inactivationReason ?? DEFAULT_ERROR_STRING,
     },
     {
       label: 'Suspension start date',
@@ -82,7 +86,7 @@ export const LicenseSidesheet = ({
 
   return (
     <ViewSidesheet
-      header={license.number}
+      header={license.number ?? DEFAULT_ERROR_STRING}
       trigger={trigger}
       fields={fields}
       {...props}

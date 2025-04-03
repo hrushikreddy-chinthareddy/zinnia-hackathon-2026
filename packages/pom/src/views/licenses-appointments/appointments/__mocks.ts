@@ -1,4 +1,4 @@
-import { Appointment } from '../../../types';
+import { Appointment, LineOfAuthorityType } from '../../../types';
 
 import { AppointmentStatus } from '../../../types';
 
@@ -13,22 +13,7 @@ export const generateAppointments = (): Appointment[] => [
     effectiveDate: '01/01/2023',
     company: 'PBC Health Benefits Society',
     licenseNumber: '0012149A',
-    lineOfAuthorities: [
-      {
-        type: 'lineOfAuthority1',
-        label: 'Line of Authority 1',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-      {
-        type: 'lineOfAuthority2',
-        label: 'Line of Authority 2',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-    ],
+    linesOfAuthority: [LineOfAuthorityType.LIFE, LineOfAuthorityType.CASUALTY],
   },
   {
     id: '2',
@@ -39,22 +24,7 @@ export const generateAppointments = (): Appointment[] => [
     effectiveDate: '01/01/2023',
     company: 'PBC Health Benefits Society',
     licenseNumber: '0012149A',
-    lineOfAuthorities: [
-      {
-        type: 'lineOfAuthority1',
-        label: 'Line of Authority 1',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-      {
-        type: 'lineOfAuthority2',
-        label: 'Line of Authority 2',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-    ],
+    linesOfAuthority: [LineOfAuthorityType.LIFE, LineOfAuthorityType.CASUALTY],
   },
   {
     id: '3',
@@ -65,22 +35,7 @@ export const generateAppointments = (): Appointment[] => [
     effectiveDate: '01/01/2023',
     company: 'PBC Health Benefits Society',
     licenseNumber: '128815C',
-    lineOfAuthorities: [
-      {
-        type: 'lineOfAuthority1',
-        label: 'Line of Authority 1',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-      {
-        type: 'lineOfAuthority2',
-        label: 'Line of Authority 2',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-    ],
+    linesOfAuthority: [LineOfAuthorityType.LIFE, LineOfAuthorityType.CASUALTY],
   },
   {
     id: '4',
@@ -91,22 +46,7 @@ export const generateAppointments = (): Appointment[] => [
     effectiveDate: '01/01/2023',
     company: 'PBC Health Benefits Society',
     licenseNumber: '0012149A',
-    lineOfAuthorities: [
-      {
-        type: 'lineOfAuthority1',
-        label: 'Line of Authority 1',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-      {
-        type: 'lineOfAuthority2',
-        label: 'Line of Authority 2',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-    ],
+    linesOfAuthority: [LineOfAuthorityType.LIFE, LineOfAuthorityType.CASUALTY],
   },
   {
     id: '5',
@@ -117,22 +57,7 @@ export const generateAppointments = (): Appointment[] => [
     effectiveDate: '01/01/2023',
     company: 'AAA Insurance',
     licenseNumber: '0012149A',
-    lineOfAuthorities: [
-      {
-        type: 'lineOfAuthority1',
-        label: 'Line of Authority 1',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-      {
-        type: 'lineOfAuthority2',
-        label: 'Line of Authority 2',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-    ],
+    linesOfAuthority: [LineOfAuthorityType.LIFE, LineOfAuthorityType.CASUALTY],
   },
   {
     id: '6',
@@ -143,22 +68,7 @@ export const generateAppointments = (): Appointment[] => [
     effectiveDate: '01/01/2023',
     company: 'Acme Insurance',
     licenseNumber: '0012149A',
-    lineOfAuthorities: [
-      {
-        type: 'lineOfAuthority1',
-        label: 'Line of Authority 1',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-      {
-        type: 'lineOfAuthority2',
-        label: 'Line of Authority 2',
-        status: 'Active',
-        effectiveDate: '01/01/2023',
-        expiryDate: '01/01/2027',
-      },
-    ],
+    linesOfAuthority: [LineOfAuthorityType.LIFE, LineOfAuthorityType.CASUALTY],
   },
 ];
 

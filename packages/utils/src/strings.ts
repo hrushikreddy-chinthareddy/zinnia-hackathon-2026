@@ -1,4 +1,4 @@
-export const DEFAULT_ERROR_STRING = '-';
+export const DEFAULT_ERROR_STRING = '--';
 export const DEFAULT_UNAVAILABLE_STRING =
   'This data is unavailable at this time. Please try again later.';
 export const VALID_EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;

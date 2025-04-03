@@ -1,10 +1,17 @@
-import { generateAmlTraining, generateTableRows } from '../__mocks';
+import { generateTableRows } from '../__mocks';
 import type { AmlTrainingItem } from '../../../types/training-education.types';
 import PomTable from '../../../components/pom-table/PomTable';
 import { AmlTrainingSidesheet } from './AmlTrainingSidesheet';
 import { default as PomStyles } from '../../../styles/pom.module.css';
 import clsx from 'clsx';
-const amlTrainingData = generateAmlTraining(1);
+import { useQuery } from '@tanstack/react-query';
+import { useParams, useSearchParams } from 'react-router';
+import { getProducer } from '../../../queries/producers';
+import { generateMockProducer } from '../../producer/__mock';
+import {
+  ApiGetProducerResponse,
+  MockGetProducerResponse,
+} from '../../../types/get.types';
 
 const tableHeaders = {
   carrier: 'Carrier',
@@ -32,11 +39,41 @@ const tableRows = (data: AmlTrainingItem[]) =>
     expirationDate: training.expirationDate,
   }));
 
-const AmlTraining = ({ items = amlTrainingData }) => {
+// The API spec doesn't have any trainings
+const AmlTraining = () => {
+  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const isMockFromUrl = searchParams.get('isMock') === 'true';
+
+  const { data: queryData } = useQuery({
+    queryKey: ['producer', id],
+    queryFn: () => getProducer(id ?? ''),
+  });
+
+  const data: ApiGetProducerResponse | MockGetProducerResponse | undefined =
+    isMockFromUrl ? generateMockProducer(id ?? '') : queryData;
+
+  // have to do this weird ts check because the api spec doesn't have any trainings
+  // this will change once the api spec is fixed
+  if (!isMockFromUrl && (!data || !('trainings' in data))) {
+    return (
+      <PomTable
+        headers={tableHeaders}
+        rows={[]}
+        emptyRowMessage="There are currently no AML training for this entity."
+      />
+    );
+  }
+
+  // @TODO: clean this up once api spec is fixed
+  const amlTrainingRows = isMockFromUrl
+    ? tableRows(generateMockProducer(id ?? '').trainings.amlTrainings)
+    : [];
+
   return (
     <PomTable
       headers={tableHeaders}
-      rows={tableRows(items)}
+      rows={amlTrainingRows}
       emptyRowMessage="There are currently no AML training for this entity."
     />
   );
