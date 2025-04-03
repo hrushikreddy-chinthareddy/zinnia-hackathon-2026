@@ -406,8 +406,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api-types
       '@zinnia/bloom':
-        specifier: ^5.0.0
-        version: 5.0.0(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(rollup@4.34.8)(typescript@5.6.3)(vite@6.2.0(@types/node@18.11.18)(jiti@1.21.7)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0))
+        specifier: ^5.0.1
+        version: 5.0.1(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(rollup@4.34.8)(typescript@5.6.3)(vite@6.2.0(@types/node@18.11.18)(jiti@1.21.7)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0))
       '@zinnia/pom':
         specifier: workspace:*
         version: link:../../packages/pom
@@ -6427,8 +6427,8 @@ packages:
   '@zinnia/bloom@4.31.3':
     resolution: {integrity: sha512-VBogMzMbLVmZNbrwzk5ViZCHR2jOcNZBZ7Jepu40KoinkUmE8S+XIvSy9dIy3SGb1N93bH8e6ke6zLwb/6ZbLw==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/4.31.3/01a7a68ca41e157d57cb3e64ed6ed7266d1a9800}
 
-  '@zinnia/bloom@5.0.0':
-    resolution: {integrity: sha512-ztAapJQohrCiuf6FYvJTGTgmV9b9im1ol1yWdCZAfiGICxi2KTaf/ixwdV0T4SUxb9i9JEAWpXkKmcX+KvLEzQ==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.0.0/b811a1578cd0592210b92ee05b21f84566ce2150}
+  '@zinnia/bloom@5.0.1':
+    resolution: {integrity: sha512-4zT8dqr8Ucy4gxZVzVZCrnj3JvbgGHdwXDUCo6mPPcxLe9xWop8qhWS0N0rDf7IbckkSRtIt5Q4+eCOd5PVKSg==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.0.1/57e0abfc7bc4a5988a39ffcb09f4d734acbc13ad}
 
   abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
@@ -21405,7 +21405,7 @@ snapshots:
       - typescript
       - vite
 
-  '@zinnia/bloom@5.0.0(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(rollup@4.34.8)(typescript@5.6.3)(vite@6.2.0(@types/node@18.11.18)(jiti@1.21.7)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0))':
+  '@zinnia/bloom@5.0.1(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(rollup@4.34.8)(typescript@5.6.3)(vite@6.2.0(@types/node@18.11.18)(jiti@1.21.7)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0))':
     dependencies:
       '@ariakit/react': 0.4.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-checkbox': 1.1.4(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
