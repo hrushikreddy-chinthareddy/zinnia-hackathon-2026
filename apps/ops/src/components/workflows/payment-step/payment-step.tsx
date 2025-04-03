@@ -8,6 +8,7 @@ import { ParentPage } from '@deps/components/transaction-navigation-buttons/tran
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { isEndDated } from '@deps/helpers/date.helper';
 import { ArrangementType, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponse } from '@deps/queries/api/bpm';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
@@ -53,7 +54,10 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
     const paymentProgram = systematicPrograms?.find(program => program.arrangementType === ArrangementType.PAYMENT);
     const programBankId = paymentProgram?.party?.find(party => party.partyId === payPartyId);
     const bankDetails = useMemo(() => {
-        return party?.bankDetails?.sort((a, b) => {
+        const currentBankDetails = party?.bankDetails?.filter((bank: any) => {
+            return !isEndDated(bank?.endDate);
+        });
+        return currentBankDetails?.sort((a, b) => {
             if (a.bankId === programBankId) return -1;
             if (b.bankId === programBankId) return 1;
 
