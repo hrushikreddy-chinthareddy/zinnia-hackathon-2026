@@ -1,0 +1,11 @@
+.trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: var(--measure-dimension-gap-lg) 0;
+}
+
+.calendarIcon {
+    margin-right: var(--measure-dimension-gap-sm);
+}

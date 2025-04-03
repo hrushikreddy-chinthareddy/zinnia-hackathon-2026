@@ -5,11 +5,7 @@ import { TransactionTrendsContext } from '@deps/components/dashboard/sections/tr
 import { friendlyGroupByName } from '@deps/components/dashboard/utils';
 import { splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
 
-interface TransactionTrendsHeaderProps {
-    chartView?: boolean;
-}
-
-export const TransactionTrendsHeader: FC<TransactionTrendsHeaderProps> = ({ chartView }) => {
+export const TransactionTrendsHeader: FC = () => {
     const { groupBy, transactionTrendsData, transactionTrendsDataFetching } = useContext(TransactionTrendsContext);
 
     const totalCaseCount = transactionTrendsData?.data?.map(stat => stat.count).reduce((a, b) => a + b, 0);

@@ -1,17 +1,16 @@
 import { FC, useContext } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
+import { CaseStatusFilter } from '@deps/components/dashboard/filters/case-status-filter';
 import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { ActiveAgingContext } from '@deps/components/dashboard/sections/active-aging/context/active-aging-context';
-import { caseStatusMap } from '@deps/components/dashboard/utils';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { Statuses, Processes } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 
 import { getFormattedDateRange, ActiveAgingTimeRange } from '../../utils';
-import { CaseStatusFilter } from '@deps/components/dashboard/filters/case-status-filter';
 
 export const ActiveAgingFilters: FC = () => {
     const {
@@ -40,21 +39,6 @@ export const ActiveAgingFilters: FC = () => {
         { label: 'Not started', displayText: 'Not started', value: Statuses.NotStarted },
     ];
 
-    const handleCaseStatusChange = (status: Statuses) => {
-        const newStatus = { ...caseStatus };
-
-        if (newStatus[status]) {
-            //dont delete if its the only one selected
-            if (Object.keys(newStatus).length === 1) {
-                return;
-            }
-            delete newStatus[status];
-        } else {
-            newStatus[status] = caseStatusMap[status];
-        }
-        setCaseStatus(newStatus);
-    };
-
     return (
         <div className={sharedStyles.filterContainer}>
             <div className="w-1/2 flex gap-2">
@@ -80,9 +64,9 @@ export const ActiveAgingFilters: FC = () => {
                 <TimeFilter
                     defaultValue={timeframe}
                     timeframeOptions={ActiveAgingTimeRange}
-                    onValueChange={val => setTimeframe(val as ActiveAgingTimeRange)}
+                    onRadioChange={val => setTimeframe(val as ActiveAgingTimeRange)}
                     controlledTimeValue={timeframe}
-                    controlledRangeText={controlledTimeRangeText}
+                    timerange={controlledTimeRangeText}
                 />
             </div>
         </div>

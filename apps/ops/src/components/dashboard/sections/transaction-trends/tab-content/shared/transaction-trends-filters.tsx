@@ -12,8 +12,17 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { TransactionTrendsContext } from '../../context/transaction-trends-context';
 
 export const TransactionTrendsFilters: FC = () => {
-    const { setTimeframe, setGroupBy, setSelectedProcess, timeframe, filter, groupBy, selectedProcess } =
-        useContext(TransactionTrendsContext);
+    const {
+        setGroupBy,
+        setSelectedProcess,
+        filter,
+        groupBy,
+        selectedProcess,
+        timerange,
+        timeframeRadio,
+        handleRangeChange,
+        handleTimeframeRadioChange,
+    } = useContext(TransactionTrendsContext);
 
     const groupByOptions = [
         { label: 'Case subtype', value: GroupByOptions.ProcessSubType },
@@ -43,9 +52,11 @@ export const TransactionTrendsFilters: FC = () => {
             </div>
             <div className="w-1/2">
                 <TimeFilter
-                    defaultValue={timeframe}
-                    onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
-                    controlledTimeValue={timeframe}
+                    defaultValue={timeframeRadio}
+                    onRadioChange={val => handleTimeframeRadioChange(val as TimeframeFilterOptions)}
+                    controlledTimeValue={timeframeRadio}
+                    timerange={timerange}
+                    handleTimerangeChange={handleRangeChange}
                 />
             </div>
         </div>

@@ -10,8 +10,8 @@ import { DashboardSearchFilter } from '@deps/queries/cases';
 import { useDashboardStore } from '@deps/store/store';
 
 interface SubmissionTypeContextTypes {
-    timeframe: TimeframeFilterOptions;
-    setTimeframe: (value: TimeframeFilterOptions) => void;
+    timeframeRadio: TimeframeFilterOptions | undefined;
+    handleTimeframeRadioChange: (value: TimeframeFilterOptions) => void;
     setSubmissionVs: (value: GroupByOptions) => void;
     submissionVs: GroupByOptions;
     selectedProcess: Processes | ExtendedProcesses | undefined;
@@ -25,12 +25,17 @@ interface SubmissionTypeContextTypes {
     pieChartStats: CaseDashboardStatsResponse | undefined;
     filter: DashboardSearchFilter;
     graphStats: CaseDashboardStatsResponse | undefined;
+    timerange: {
+        to: string;
+        from: string;
+    };
+    handleRangeChange: (value: { from: string; to: string }) => void;
 }
 
 const defaultState = {
-    timeframe: TimeframeFilterOptions.Trailing12Months,
+    timeframeRadio: TimeframeFilterOptions.Trailing12Months,
+    handleTimeframeRadioChange: () => {},
     setSubmissionVs: () => {},
-    setTimeframe: () => {},
     submissionVs: GroupByOptions.Carrier,
     selectedProcess: Processes.NewBusiness,
     setSelectedProcess: () => {},
@@ -43,12 +48,22 @@ const defaultState = {
     pieChartStats: undefined,
     filter: {},
     graphStats: undefined,
+    timerange: {
+        to: '',
+        from: '',
+    },
+    handleRangeChange: () => {},
 };
 
 export const SubmissionTypeContext = createContext<SubmissionTypeContextTypes>(defaultState);
 
 export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
+    const [timeframeRadio, setTimeframeRadio] = useState<TimeframeFilterOptions | undefined>(TimeframeFilterOptions.Trailing12Months);
+
+    const [timerange, setTimerange] = useState({
+        from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
+        to: '',
+    });
 
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
     const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
@@ -59,8 +74,22 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
-        createdDateStart: startDates[timeframe],
+        createdDateStart: timerange.from,
+        createdDateEnd: timerange.to || undefined,
         process: formatProcessFilter(selectedProcess),
+    };
+
+    const handleTimeframeRadioChange = (value: TimeframeFilterOptions) => {
+        setTimeframeRadio(value);
+        setTimerange({
+            from: startDates[value],
+            to: '',
+        });
+    };
+
+    const handleRangeChange = (value: { from: string; to: string }) => {
+        setTimerange(value);
+        setTimeframeRadio(undefined);
     };
 
     const {
@@ -114,8 +143,8 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
     return (
         <SubmissionTypeContext.Provider
             value={{
-                timeframe,
-                setTimeframe,
+                timeframeRadio,
+                handleTimeframeRadioChange,
                 submissionVs,
                 setSubmissionVs,
                 selectedProcess,
@@ -129,6 +158,8 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
                 graphStatsFetching,
                 pieChartStatsError,
                 graphStatsError,
+                timerange,
+                handleRangeChange,
             }}
         >
             {children}

@@ -16,13 +16,31 @@ import { useDashboardStore } from '@deps/store/store';
 export const NigoClosedTransactions = () => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
     const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
-    const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
+    const [timeframeRadio, setTimeframeRadio] = useState<TimeframeFilterOptions | undefined>(TimeframeFilterOptions.Trailing12Months);
+
+    const [timerange, setTimerange] = useState({
+        from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
+        to: '',
+    });
+
+    const handleTimeframeRadioChange = (value: TimeframeFilterOptions) => {
+        setTimeframeRadio(value);
+        setTimerange({
+            from: startDates[value],
+            to: '',
+        });
+    };
+
+    const handleRangeChange = (value: { from: string; to: string }) => {
+        setTimerange(value);
+        setTimeframeRadio(undefined);
+    };
 
     const filter: DashboardSearchFilter = {
         caseStatus: [Statuses.Completed],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
-        createdDateStart: startDates[timeframe],
+        createdDateStart: timerange.from,
         process: formatProcessFilter(selectedProcess),
     };
 
@@ -56,7 +74,13 @@ export const NigoClosedTransactions = () => {
                                 />
                             </div>
                             <div className="w-1/2">
-                                <TimeFilter defaultValue={timeframe} onValueChange={val => setTimeframe(val as TimeframeFilterOptions)} />
+                                <TimeFilter
+                                    timerange={timerange}
+                                    defaultValue={timeframeRadio}
+                                    controlledTimeValue={timeframeRadio}
+                                    onRadioChange={val => handleTimeframeRadioChange(val as TimeframeFilterOptions)}
+                                    handleTimerangeChange={handleRangeChange}
+                                />
                             </div>
                         </div>
                     }

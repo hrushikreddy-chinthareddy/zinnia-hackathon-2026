@@ -10,9 +10,9 @@ import { CaseTimingContext } from '../../context/case-timing-context';
 import { CaseTimingHeader } from '../shared/case-timing-header';
 
 export const CaseTimingAiInsights: FC = () => {
-    const { timeframe, caseTimingData, selectedProcess } = useContext(CaseTimingContext);
+    const { timerange, caseTimingData, selectedProcess } = useContext(CaseTimingContext);
 
-    const content = JSON.stringify({ timeframe });
+    const content = JSON.stringify({ timerange });
     const prompt = useMemo(
         () =>
             [
@@ -21,7 +21,7 @@ export const CaseTimingAiInsights: FC = () => {
                 `They want simple and insightful information about the data provided to you.`,
                 `The data provided to you here are completed ${dashboardChartTitleFormat(selectedProcess || '', false)} cases.`,
                 `The data is grouped by ${GroupByOptions.ProcessSubType}.`,
-                `The timespan the data comes from is ${timeframe}.`,
+                `The timespan the data comes from is ${timerange.from} to ${timerange.to}.`,
                 `You are to take the median time in seconds and convert it to days, hours, minutes or seconds depending on the timespan.`,
                 `Avoid using phrases such as "the data".`,
                 `Your responses should be insightful and will be displayed on a UI as a summary for a module related to a timeseries chart.`,
@@ -32,7 +32,7 @@ export const CaseTimingAiInsights: FC = () => {
                 `You can use the following data to analyze: `,
                 `${JSON.stringify(caseTimingData)}`,
             ].join(' '),
-        [caseTimingData, selectedProcess, timeframe]
+        [caseTimingData, selectedProcess, timerange]
     );
     return (
         <CardContainer fullWidth={false} classNames={sharedStyles.aiInsightsTabContainer}>

@@ -9,14 +9,14 @@ import { SubmissionTypeContext } from '../../context/submission-type-context';
 import { SubmissionMethodTooltip } from '../../submission-type';
 
 export const SubmissionTypeAIInsights = () => {
-    const { graphStats, pieChartStats, timeframe, submissionVs } = useContext(SubmissionTypeContext);
+    const { graphStats, pieChartStats, timerange, submissionVs } = useContext(SubmissionTypeContext);
 
     const content = JSON.stringify({ ...graphStats, ...pieChartStats });
     const prompt = `You are an expert in all things case data. Your job is to summarize the data for business and executive users.
                           They want simple and insightful information about the data provided to you. The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
                           You are to use the following data to provide insights: ${JSON.stringify({
                               ...graphStats,
-                              timeframe,
+                              timerange,
                               submissionVs,
                           })}.
                           Give insights on who the highest volume carriers, distribution partners or products

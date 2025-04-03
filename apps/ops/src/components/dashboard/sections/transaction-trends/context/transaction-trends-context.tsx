@@ -1,16 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { createContext, FC, PropsWithChildren, useEffect, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
-import { createBaseQuery, formatProcessFilter, startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
+import {
+    createBaseQuery,
+    defaultDateFormat,
+    formatProcessFilter,
+    startDates,
+    TimeframeFilterOptions,
+} from '@deps/components/dashboard/utils';
 import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { useDashboardStore } from '@deps/store/store';
 
 interface TransactionTrendsContextTypes {
-    timeframe: TimeframeFilterOptions;
-    setTimeframe: (value: TimeframeFilterOptions) => void;
+    timeframeRadio: TimeframeFilterOptions | undefined;
+    handleTimeframeRadioChange: (value: TimeframeFilterOptions) => void;
+
     setGroupBy: (value: GroupByOptions) => void;
     groupBy: GroupByOptions;
     selectedProcess: Processes | ExtendedProcesses | undefined;
@@ -19,12 +27,19 @@ interface TransactionTrendsContextTypes {
     transactionTrendsDataFetching: boolean;
     filter: DashboardSearchFilter;
     transactionTrendsDataError: Error | null;
+    timerange: {
+        to: string;
+        from: string;
+    };
+    handleRangeChange: (value: { from: string; to: string }) => void;
 }
 
 const defaultState = {
-    timeframe: TimeframeFilterOptions.Trailing12Months,
+    timeframeRadio: TimeframeFilterOptions.Trailing12Months,
+    handleTimeframeRadioChange: () => {},
+
     transactionTrendsData: undefined,
-    setTimeframe: () => {},
+
     transactionTrendsDataFetching: false,
     transactionTrendsDataError: null,
     selectedProcess: Processes.NewBusiness,
@@ -32,6 +47,11 @@ const defaultState = {
     setGroupBy: () => {},
     groupBy: GroupByOptions.ProcessSubType,
     filter: {},
+    timerange: {
+        to: '',
+        from: '',
+    },
+    handleRangeChange: () => {},
 };
 
 export const TransactionTrendsContext = createContext<TransactionTrendsContextTypes>(defaultState);
@@ -39,14 +59,34 @@ export const TransactionTrendsContext = createContext<TransactionTrendsContextTy
 export const TransactionTrendsProvider: FC<PropsWithChildren> = ({ children }) => {
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
 
-    const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
     const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
     const [groupBy, setGroupBy] = useState<GroupByOptions>(
         Object.keys(selectedCarriers).length ? GroupByOptions.ProcessSubType : GroupByOptions.Carrier
     );
 
+    const [timeframeRadio, setTimeframeRadio] = useState<TimeframeFilterOptions | undefined>(TimeframeFilterOptions.Trailing12Months);
+
+    const [timerange, setTimerange] = useState({
+        from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
+        to: dayjs().format(defaultDateFormat),
+    });
+
+    const handleTimeframeRadioChange = (value: TimeframeFilterOptions) => {
+        setTimeframeRadio(value);
+        setTimerange({
+            from: startDates[value],
+            to: dayjs().format(defaultDateFormat),
+        });
+    };
+
+    const handleRangeChange = (value: { from: string; to: string }) => {
+        setTimerange(value);
+        setTimeframeRadio(undefined);
+    };
+
     const filter: DashboardSearchFilter = {
-        createdDateStart: startDates[timeframe],
+        createdDateStart: timerange.from,
+        createdDateEnd: timerange.to || undefined,
         process: formatProcessFilter(selectedProcess),
         caseStatus: [Statuses.Completed],
         carrier: Object.keys(selectedCarriers),
@@ -76,8 +116,8 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({ children }) =
     return (
         <TransactionTrendsContext.Provider
             value={{
-                timeframe,
-                setTimeframe,
+                timeframeRadio,
+                handleTimeframeRadioChange,
                 setGroupBy,
                 groupBy,
                 selectedProcess,
@@ -86,6 +126,8 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({ children }) =
                 transactionTrendsDataFetching,
                 transactionTrendsDataError,
                 filter,
+                timerange,
+                handleRangeChange,
             }}
         >
             {children}

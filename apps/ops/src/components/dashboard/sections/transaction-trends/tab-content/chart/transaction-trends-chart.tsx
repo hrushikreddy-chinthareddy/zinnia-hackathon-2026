@@ -5,6 +5,15 @@ import { useContext } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { DateTimeLineChart } from '@deps/components/dashboard/charts/line-charts/date-time-line-chart';
+import { TransactionTrendsContext } from '@deps/components/dashboard/sections/transaction-trends/context/transaction-trends-context';
+import { TransactionTrendsFilters } from '@deps/components/dashboard/sections/transaction-trends/tab-content/shared/transaction-trends-filters';
+import { TransactionTrendsHeader } from '@deps/components/dashboard/sections/transaction-trends/tab-content/shared/transaction-trends-header';
+import {
+    calculateTickInterval,
+    calculateTooltipRanges,
+    generateSeries,
+    getTooltipData,
+} from '@deps/components/dashboard/sections/transaction-trends/utils';
 import { friendlyGroupByName } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -13,22 +22,19 @@ import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/ill
 
 import { LabelComponent } from './label';
 import { Legend } from './legend';
-import { TransactionTrendsContext } from '../../context/transaction-trends-context';
-import { calculateTickInterval, calculateTooltipRanges, generateSeries, getTooltipData } from '../../utils';
-import { TransactionTrendsFilters } from '../shared/transaction-trends-filters';
-import { TransactionTrendsHeader } from '../shared/transaction-trends-header';
 
 dayjs.extend(relativeTime);
 
 export const TransactionTrendsChart = () => {
-    const { timeframe, transactionTrendsData, transactionTrendsDataFetching, groupBy, transactionTrendsDataError } =
+    const { timerange, transactionTrendsData, transactionTrendsDataFetching, groupBy, transactionTrendsDataError } =
         useContext(TransactionTrendsContext);
-    const series = generateSeries(transactionTrendsData?.data, timeframe);
-    const tickInterval = calculateTickInterval(timeframe);
+
+    const series = generateSeries(transactionTrendsData?.data, timerange);
+    const tickInterval = calculateTickInterval(timerange);
 
     const tooltipFormatter: Highcharts.TooltipFormatterCallbackFunction = function (this) {
         const points = this.points;
-        const dateStr = calculateTooltipRanges(this, timeframe);
+        const dateStr = calculateTooltipRanges(this, timerange);
         const tooltipData = getTooltipData(points) || '';
 
         return renderToStaticMarkup(<LabelComponent labelData={tooltipData.labelData} dateStr={dateStr} total={tooltipData.total ?? 0} />);
@@ -42,7 +48,7 @@ export const TransactionTrendsChart = () => {
 
     return (
         <CardContainer>
-            <TransactionTrendsHeader chartView />
+            <TransactionTrendsHeader />
 
             <div className="w-3/4">
                 <TransactionTrendsFilters />

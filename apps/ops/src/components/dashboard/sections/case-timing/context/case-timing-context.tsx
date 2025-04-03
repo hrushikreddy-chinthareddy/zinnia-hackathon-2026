@@ -11,19 +11,24 @@ import { getCaseDashboardTimingQuery } from '@deps/queries/tanstack/dashboard/da
 import { useDashboardStore } from '@deps/store/store';
 
 interface CaseTimingContextTypes {
-    timeframe: TimeframeFilterOptions;
-    setTimeframe: (value: TimeframeFilterOptions) => void;
+    timeframeRadio: TimeframeFilterOptions | undefined;
+    handleTimeframeRadioChange: (value: TimeframeFilterOptions) => void;
     selectedProcess: Processes | ExtendedProcesses | undefined;
     setSelectedProcess: (value: Processes | ExtendedProcesses) => void;
     caseTimingData: CaseTimingData[] | undefined;
     caseTimingDataFetching: boolean;
     caseTimingDataError: Error | null;
     filter: DashboardSearchFilter;
+    timerange: {
+        to: string;
+        from: string;
+    };
+    handleRangeChange: (value: { from: string; to: string }) => void;
 }
 
 const defaultState = {
-    timeframe: TimeframeFilterOptions.Trailing12Months,
-    setTimeframe: () => {},
+    timeframeRadio: TimeframeFilterOptions.Trailing12Months,
+    handleTimeframeRadioChange: () => {},
     selectedProcess: Processes.NewBusiness,
     setSelectedProcess: () => {},
     caseTimingData: undefined,
@@ -31,17 +36,41 @@ const defaultState = {
     caseTimingDataError: null,
     filter: {},
     graphStats: undefined,
+    timerange: {
+        to: '',
+        from: '',
+    },
+    handleRangeChange: () => {},
 };
 
 export const CaseTimingContext = createContext<CaseTimingContextTypes>(defaultState);
 
 export const CaseTimingProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [timeframe, setTimeframe] = useState<TimeframeFilterOptions>(TimeframeFilterOptions.Trailing12Months);
+    const [timeframeRadio, setTimeframeRadio] = useState<TimeframeFilterOptions | undefined>(TimeframeFilterOptions.Trailing12Months);
+
+    const [timerange, setTimerange] = useState({
+        from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
+        to: '',
+    });
+
     const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
 
+    const handleTimeframeRadioChange = (value: TimeframeFilterOptions) => {
+        setTimeframeRadio(value);
+        setTimerange({
+            from: startDates[value],
+            to: '',
+        });
+    };
+
+    const handleRangeChange = (value: { from: string; to: string }) => {
+        setTimerange(value);
+        setTimeframeRadio(undefined);
+    };
+
     const filter: DashboardSearchFilter = {
-        createdDateStart: startDates[timeframe],
+        createdDateStart: timerange.from,
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         process: formatProcessFilter(selectedProcess),
@@ -63,14 +92,15 @@ export const CaseTimingProvider: FC<PropsWithChildren> = ({ children }) => {
     return (
         <CaseTimingContext.Provider
             value={{
-                timeframe,
-                setTimeframe,
+                timeframeRadio,
+                handleTimeframeRadioChange,
+                timerange,
+                handleRangeChange,
                 caseTimingData,
                 caseTimingDataFetching,
                 caseTimingDataError,
                 selectedProcess,
                 setSelectedProcess,
-
                 filter,
             }}
         >

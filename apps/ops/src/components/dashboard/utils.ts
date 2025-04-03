@@ -42,17 +42,9 @@ export const startDates: Record<TimeframeFilterOptions, string> = {
     [TimeframeFilterOptions.LastWeek]: dayjs().subtract(1, 'week').format(defaultDateFormat),
 };
 
-export const getNumberOfMonthsInTimeframe = (timeframe: TimeframeFilterOptions) => dayjs().diff(dayjs(startDates[timeframe]), 'month');
-
-export const getNumberOfDaysInTimeframe = (timeframe: TimeframeFilterOptions) => dayjs().diff(dayjs(startDates[timeframe]), 'day');
-
-/**
- *
- * Formats the time ranges into a friendly date format.
- */
-export const getDateRangeText = (timeframe: TimeframeFilterOptions) => {
-    const startDate = dayjs(startDates[timeframe]).format(friendlyDateFormat);
-    const endDate = dayjs().format(friendlyDateFormat);
+export const getDateRangeText = (to: string, from: string) => {
+    const startDate = dayjs(from).format(friendlyDateFormat);
+    const endDate = to ? dayjs(to).format(friendlyDateFormat) : dayjs().format(friendlyDateFormat);
     return `${startDate} - ${endDate}`;
 };
 

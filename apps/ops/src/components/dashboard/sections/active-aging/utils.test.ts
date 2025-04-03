@@ -270,9 +270,13 @@ describe('Active Aging Utils', () => {
 
     describe('getFormattedDateRange', () => {
         it('should format date ranges', () => {
-            expect(getFormattedDateRange(ActiveAgingTimeRange.ZERO_TO_SIX)).toBe(
-                `${dayjs().subtract(6, 'day').format(friendlyDateFormat)} - ${dayjs().format(friendlyDateFormat)}`
-            );
+            const to = dayjs().format(friendlyDateFormat);
+            const from = dayjs().subtract(6, 'day').format(friendlyDateFormat);
+
+            const formattedDateRange = getFormattedDateRange(ActiveAgingTimeRange.ZERO_TO_SIX);
+
+            expect(formattedDateRange.from).toBe(from);
+            expect(formattedDateRange.to).toBe(to);
         });
     });
 

@@ -11,17 +11,15 @@ import {
     TableHeaderCell,
     TableRow,
 } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import {
-    friendlyGroupByName,
-    generateCaseLink,
-    getNumberOfDaysInTimeframe,
-    getNumberOfMonthsInTimeframe,
-    startDates,
-    TimeframeFilterOptions,
-} from '@deps/components/dashboard/utils';
+import { TransactionTrendsContext } from '@deps/components/dashboard/sections/transaction-trends/context/transaction-trends-context';
+import { TransactionTrendsFilters } from '@deps/components/dashboard/sections/transaction-trends/tab-content/shared/transaction-trends-filters';
+import { TransactionTrendsHeader } from '@deps/components/dashboard/sections/transaction-trends/tab-content/shared/transaction-trends-header';
+import { calculateAverage } from '@deps/components/dashboard/sections/transaction-trends/utils';
+import { friendlyGroupByName, generateCaseLink } from '@deps/components/dashboard/utils';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -30,25 +28,16 @@ import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { Statuses } from '@deps/models/case/case';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
-import { TransactionTrendsContext } from '../../context/transaction-trends-context';
-import { TransactionTrendsFilters } from '../shared/transaction-trends-filters';
-import { TransactionTrendsHeader } from '../shared/transaction-trends-header';
-
 enum SortByOptions {
     NAME = 'name',
     COUNT = 'count',
     AVERAGE = 'average',
 }
 
-const calculateAverage = (count: number, timeframe: TimeframeFilterOptions) => {
-    if (timeframe === TimeframeFilterOptions.Last1Month || timeframe === TimeframeFilterOptions.LastWeek) {
-        const numberOfDays = getNumberOfDaysInTimeframe(timeframe);
-        return Math.round(count / numberOfDays);
-    }
-
-    const numberOfMonths = getNumberOfMonthsInTimeframe(timeframe);
-    return Math.round(count / numberOfMonths);
-};
+enum TimeUnit {
+    MONTHLY = 'monthly',
+    DAILY = 'daily',
+}
 
 export const TransactionTrendsTable = () => {
     const [offset, setOffset] = useState(0);
@@ -56,7 +45,7 @@ export const TransactionTrendsTable = () => {
     const limit = 10;
 
     const {
-        timeframe,
+        timerange,
         selectedProcess,
         filter,
         groupBy,
@@ -68,9 +57,9 @@ export const TransactionTrendsTable = () => {
     const dataWithMonthlyAverage = useMemo(() => {
         return transactionTrendsData?.data?.map(item => ({
             ...item,
-            average: calculateAverage(item.count, timeframe),
+            average: calculateAverage(item.count, timerange),
         }));
-    }, [timeframe, transactionTrendsData?.data]);
+    }, [timerange, transactionTrendsData?.data]);
 
     // Filter by search
     const searchedData = useMemo(() => {
@@ -94,6 +83,19 @@ export const TransactionTrendsTable = () => {
         },
         [setOffset]
     );
+
+    const dailyOrMonthly = useMemo(() => {
+        const from = dayjs(timerange.from);
+        const to = dayjs(timerange.to);
+
+        const duration = dayjs.duration(to.diff(from));
+        const daysDiff = duration.asDays();
+
+        if (daysDiff < 30) {
+            return TimeUnit.DAILY;
+        }
+        return TimeUnit.MONTHLY;
+    }, [timerange.to, timerange.from]);
 
     // If sorted data updates, go back to page 1
     useEffect(() => {
@@ -152,10 +154,7 @@ export const TransactionTrendsTable = () => {
                                         />
                                     </TableHeaderCell>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.AVERAGE)} sortable>
-                                        {timeframe === TimeframeFilterOptions.LastWeek || timeframe === TimeframeFilterOptions.Last1Month
-                                            ? 'Daily'
-                                            : 'Monthly'}{' '}
-                                        average
+                                        {dailyOrMonthly} average
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -169,12 +168,11 @@ export const TransactionTrendsTable = () => {
                             </TableHeader>
                             <TableBody>
                                 {paginatedData.map((item, index) => {
-                                    const startDate = startDates[timeframe];
-
                                     const link = generateCaseLink({
                                         process: selectedProcess,
                                         carrierOrProductName: item.name,
-                                        startDate,
+                                        startDate: timerange.from,
+                                        endDate: timerange.to,
                                         status: [Statuses.Completed],
                                         groupBy,
                                         carrier: filter.carrier,

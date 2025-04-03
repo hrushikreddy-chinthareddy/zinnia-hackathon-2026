@@ -17,7 +17,7 @@ import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
 import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
-import { friendlyGroupByName, generateCaseLink, startDates } from '@deps/components/dashboard/utils';
+import { friendlyGroupByName, generateCaseLink } from '@deps/components/dashboard/utils';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -66,7 +66,7 @@ export const SubmissionTypeTable = () => {
     const [searchText, setSearchText] = useState('');
     const limit = 10;
 
-    const { graphStats, timeframe, submissionVs, selectedProcess, graphStatsLoading, graphStatsFetching, graphStatsError, filter } =
+    const { graphStats, timerange, submissionVs, selectedProcess, graphStatsLoading, graphStatsFetching, graphStatsError, filter } =
         useContext(SubmissionTypeContext);
 
     // Transform the data by flattening it
@@ -184,13 +184,12 @@ export const SubmissionTypeTable = () => {
                             </TableHeader>
                             <TableBody>
                                 {paginatedData.map(item => {
-                                    const startDate = startDates[timeframe];
-
                                     const link = generateCaseLink({
                                         process: selectedProcess,
                                         carrierOrProductName: item.name,
                                         submissionMethod: item.submissionMethod,
-                                        startDate,
+                                        startDate: timerange.from,
+                                        endDate: timerange.to,
                                         status: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
                                         groupBy: submissionVs,
                                         carrier: filter.carrier,

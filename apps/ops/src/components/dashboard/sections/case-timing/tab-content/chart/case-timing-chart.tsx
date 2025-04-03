@@ -21,7 +21,7 @@ import { chunkArray } from '@deps/utils/array';
 import styles from './case-timing-chart.module.css';
 
 export const CaseTimingChart: FC = () => {
-    const { caseTimingData, caseTimingDataFetching, caseTimingDataError, selectedProcess, timeframe } = useContext(CaseTimingContext);
+    const { caseTimingData, caseTimingDataFetching, caseTimingDataError } = useContext(CaseTimingContext);
 
     // get 5 items for each slide
     const chunkedResponse: CaseTimingData[][] = chunkArray(caseTimingData || [], 5);

@@ -9,7 +9,6 @@ export enum TransactionTrendsTimeframe {
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 
-import { TimeframeFilterOptions } from '@deps/components/dashboard/utils';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 
 export const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
@@ -21,14 +20,17 @@ dayjs.extend(isoWeek);
  * the data for the series it returns is like [[unixTimestamp, yValue], [unixTimestamp, yValue]] aka: [[x, y], [x, y]]
  *
  */
-export const generateSeries = (transactionTrendsData: DashboardResponseData[] | undefined, timeframe: TimeframeFilterOptions) => {
+export const generateSeries = (transactionTrendsData: DashboardResponseData[] | undefined, timerange: { from: string; to: string }) => {
     if (!transactionTrendsData || !transactionTrendsData.length) return [];
     const sortedByCount = transactionTrendsData.sort((a, b) => b.count - a.count);
     const top5 = sortedByCount.slice(0, 5);
+
+    const fromDate = dayjs(timerange.from);
+    const toDate = dayjs(timerange.to);
+    const olderThanOneWeek = toDate.diff(fromDate, 'week') > 1;
+
     return top5.map((item, index) => {
-        // TODO: In the future, we're going to support a custom date range. When that happens, we'll need to change the code to check
-        // how much time is being requested, then possibly group the data slightly differently (ie, if custom range is a week, show the days, if its 3 months, show weekly grouping).
-        const data = timeframe === TimeframeFilterOptions.LastWeek ? item.values : groupDataByWeek(item.values!);
+        const data = olderThanOneWeek ? groupDataByWeek(item.values!) : item.values;
 
         return {
             type: 'line',
@@ -89,29 +91,37 @@ export const groupDataByWeek = (data: DashboardResponseData[]): DashboardRespons
     return result;
 };
 
-//TODO: Support custom timeframe as well. Calculate how much time gets passed and categorize it somewhere in here
-export const calculateTickInterval = (timeframe: TimeframeFilterOptions) => {
+export const calculateTickInterval = (timerange: { from: string; to: string }) => {
+    const fromDate = dayjs(timerange.from);
+    const toDate = dayjs(timerange.to);
+
+    const duration = dayjs.duration(toDate.diff(fromDate));
+
+    const daysDiff = duration.asDays();
     const dailyTickInterval = 1 * 24 * 3600 * 1000;
     const weeklyTickInterval = 7 * 24 * 3600 * 1000;
     const monthlyTickInterval = 30 * 24 * 3600 * 1000;
 
-    switch (timeframe) {
-        case TimeframeFilterOptions.Trailing12Months:
-            return monthlyTickInterval;
-        case TimeframeFilterOptions.Last6Months:
-            return monthlyTickInterval;
-        case TimeframeFilterOptions.Last3Months:
-            return monthlyTickInterval;
-        case TimeframeFilterOptions.Last1Month:
-            return weeklyTickInterval;
-        case TimeframeFilterOptions.LastWeek:
-            return dailyTickInterval;
-    }
+    if (daysDiff <= 7) return dailyTickInterval;
+    if (daysDiff <= 30) return dailyTickInterval;
+    if (daysDiff <= 100) return weeklyTickInterval;
+
+    return monthlyTickInterval;
 };
 
-//TODO: Support custom timeframe. We will need to group and show a label depending on how long the custom range is.
-export const calculateTooltipRanges = (tooltipContext: Highcharts.TooltipFormatterContextObject, timeframe: TimeframeFilterOptions) => {
-    if (timeframe === TimeframeFilterOptions.LastWeek) return dayjs(tooltipContext.point.category).format('M/D/YYYY');
+export const calculateTooltipRanges = (
+    tooltipContext: Highcharts.TooltipFormatterContextObject,
+    timerange: { from: string; to: string }
+) => {
+    const fromDate = dayjs(timerange.from);
+    const toDate = dayjs(timerange.to);
+
+    const duration = dayjs.duration(toDate.diff(fromDate));
+    const daysDiff = duration.asDays();
+
+    if (daysDiff <= 7) {
+        return dayjs(tooltipContext.point.category).format('M/D/YYYY');
+    }
 
     const startOfWeek = dayjs(tooltipContext.point.category).startOf('week');
     const endOfWeek = dayjs(tooltipContext.point.category).endOf('week');
@@ -138,4 +148,17 @@ export const getTooltipData = (points: Highcharts.TooltipFormatterContextObject[
     });
 
     return { labelData, total };
+};
+
+export const calculateAverage = (count: number, timerange: { from: string; to: string }) => {
+    const from = dayjs(timerange.from);
+    const to = dayjs(timerange.to);
+
+    const monthsDiff = to.diff(from, 'months');
+    if (monthsDiff >= 1) {
+        return Math.round(count / monthsDiff);
+    }
+
+    const numberOfDays = to.diff(from, 'days');
+    return Math.round(count / numberOfDays);
 };

@@ -2,26 +2,45 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { TreeMapInsights } from '@deps/components/dashboard/charts/tree-map-insights';
+import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
-import { createBaseQuery, formatProcessFilter } from '@deps/components/dashboard/utils';
+import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
+import { createBaseQuery, formatProcessFilter, startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';
 import { useDashboardStore } from '@deps/store/store';
-
 export const NigoOpenTransactions = () => {
-    const { createdDateStart } = getStartAndEndDates('All');
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
     const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
+
+    const [timeframeRadio, setTimeframeRadio] = useState<TimeframeFilterOptions | undefined>(TimeframeFilterOptions.Trailing12Months);
+
+    const [timerange, setTimerange] = useState({
+        from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
+        to: '',
+    });
+
+    const handleTimeframeRadioChange = (value: TimeframeFilterOptions) => {
+        setTimeframeRadio(value);
+        setTimerange({
+            from: startDates[value],
+            to: '',
+        });
+    };
+
+    const handleRangeChange = (value: { from: string; to: string }) => {
+        setTimerange(value);
+        setTimeframeRadio(undefined);
+    };
 
     const filter: DashboardSearchFilter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
-        createdDateStart,
+        createdDateStart: timerange.from,
         process: formatProcessFilter(selectedProcess),
     };
 
@@ -45,12 +64,23 @@ export const NigoOpenTransactions = () => {
                     dashboardStatsData={insightExceptionStats}
                     heading="NIGO Distribution"
                     FilterComponents={
-                        <div className="w-1/4">
-                            <CaseTypeFilter
-                                onValueChange={setSelectedProcess}
-                                caseStatus={[Statuses.InProgress, Statuses.Exception, Statuses.NotStarted]}
-                                defaultProcess={Processes.NewBusiness}
-                            />
+                        <div className={sharedStyles.filterContainer}>
+                            <div className="w-1/2">
+                                <CaseTypeFilter
+                                    onValueChange={setSelectedProcess}
+                                    caseStatus={[Statuses.InProgress, Statuses.Exception, Statuses.NotStarted]}
+                                    defaultProcess={Processes.NewBusiness}
+                                />
+                            </div>
+                            <div className="w-1/2">
+                                <TimeFilter
+                                    timerange={timerange}
+                                    defaultValue={timeframeRadio}
+                                    controlledTimeValue={timeframeRadio}
+                                    onRadioChange={val => handleTimeframeRadioChange(val as TimeframeFilterOptions)}
+                                    handleTimerangeChange={handleRangeChange}
+                                />
+                            </div>
                         </div>
                     }
                 />

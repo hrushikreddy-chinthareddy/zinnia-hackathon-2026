@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 
-import { TimeframeFilterOptions } from '@deps/components/dashboard/utils';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 
 import { generateSeries, groupDataByWeek, colors } from './utils';
@@ -14,6 +13,10 @@ describe('Utils Functions', () => {
     describe('generateSeries', () => {
         describe('generateSeries', () => {
             it('should generate series correctly for LastMonth timeframe', () => {
+                const timerange = {
+                    from: '2025-03-01',
+                    to: '2025-03-31',
+                };
                 const data: DashboardResponseData[] = [
                     {
                         key: 'carrier',
@@ -28,7 +31,7 @@ describe('Utils Functions', () => {
                         ],
                     },
                 ];
-                const result = generateSeries(data, TimeframeFilterOptions.Last1Month);
+                const result = generateSeries(data, timerange);
                 const groupedData = groupDataByWeek(data[0].values || []);
 
                 expect(result).toEqual([

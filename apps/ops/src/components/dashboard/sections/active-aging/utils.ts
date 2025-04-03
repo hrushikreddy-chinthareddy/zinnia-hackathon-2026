@@ -295,9 +295,13 @@ export const calculateEndDate = (timeRange: ActiveAgingTimeRange): string => {
     }
 };
 
-// Formats the time ranges into a friendly date format
-export const getFormattedDateRange = (timeRange: ActiveAgingTimeRange): string => {
+// Formats the time ranges in the objet
+export const getFormattedDateRange = (timeRange: ActiveAgingTimeRange): { from: string; to: string } => {
     const startDate = dayjs(startDates[timeRange]).format(friendlyDateFormat);
     const endDate = calculateEndDate(timeRange);
-    return `${startDate} - ${dayjs(endDate).format(friendlyDateFormat)}`;
+
+    return {
+        from: startDate,
+        to: endDate,
+    };
 };

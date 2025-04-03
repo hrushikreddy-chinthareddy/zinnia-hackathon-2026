@@ -18,7 +18,7 @@ import { CaseTimingContext } from '@deps/components/dashboard/sections/case-timi
 import { CaseTimingFilters } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-filters';
 import { CaseTimingHeader } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-header';
 import { generateTableTimeRange } from '@deps/components/dashboard/sections/case-timing/utils';
-import { generateCaseLink, startDates } from '@deps/components/dashboard/utils';
+import { generateCaseLink } from '@deps/components/dashboard/utils';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -41,7 +41,7 @@ export const CaseTimingTable = () => {
     const [searchText, setSearchText] = useState('');
     const limit = 10;
 
-    const { timeframe, caseTimingData, selectedProcess, caseTimingDataError, caseTimingDataFetching, filter } =
+    const { timerange, caseTimingData, selectedProcess, caseTimingDataError, caseTimingDataFetching, filter } =
         useContext(CaseTimingContext);
 
     // Filter by search
@@ -160,7 +160,6 @@ export const CaseTimingTable = () => {
                             </TableHeader>
                             <TableBody>
                                 {paginatedData.map(item => {
-                                    const startDate = startDates[timeframe];
                                     return (
                                         <TableRow key={`${item.name}-${item.key}`}>
                                             <TableCell className={sharedStyles.tableCellMaxWidth}>{item.name}</TableCell>
@@ -177,7 +176,8 @@ export const CaseTimingTable = () => {
                                                     href={generateCaseLink({
                                                         process: selectedProcess,
                                                         carrierOrProductName: item.name,
-                                                        startDate,
+                                                        startDate: timerange.from,
+                                                        endDate: timerange.to,
                                                         groupBy: GroupByOptions.ProcessSubType,
                                                         status: [Statuses.Completed],
                                                         carrier: filter.carrier,

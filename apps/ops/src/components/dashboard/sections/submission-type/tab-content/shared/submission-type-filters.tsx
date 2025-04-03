@@ -12,8 +12,17 @@ import { GroupByOptions } from '@deps/models/case/enums';
 import { SubmissionTypeContext } from '../../context/submission-type-context';
 
 export const SubmissionTypeFilters = () => {
-    const { timeframe, submissionVs, setTimeframe, selectedProcess, setSubmissionVs, setSelectedProcess, filter } =
-        useContext(SubmissionTypeContext);
+    const {
+        timeframeRadio,
+        submissionVs,
+        handleTimeframeRadioChange,
+        selectedProcess,
+        setSubmissionVs,
+        setSelectedProcess,
+        filter,
+        timerange,
+        handleRangeChange,
+    } = useContext(SubmissionTypeContext);
 
     const submissionVsOptions = [
         { label: 'Carrier', value: GroupByOptions.Carrier, disabled: filter.carrier?.length === 1 },
@@ -43,9 +52,11 @@ export const SubmissionTypeFilters = () => {
             </div>
             <div className="w-1/2">
                 <TimeFilter
-                    defaultValue={timeframe}
-                    onValueChange={val => setTimeframe(val as TimeframeFilterOptions)}
-                    controlledTimeValue={timeframe}
+                    defaultValue={timeframeRadio}
+                    onRadioChange={val => handleTimeframeRadioChange(val as TimeframeFilterOptions)}
+                    controlledTimeValue={timeframeRadio}
+                    timerange={timerange}
+                    handleTimerangeChange={handleRangeChange}
                 />
             </div>
         </div>

@@ -1,13 +1,14 @@
+import { useContext } from 'react';
+
 import { AiInsightSummary } from '@deps/components/dashboard/ai-insight-summary/ai-insight-summary';
+import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
+import { TransactionTrendsContext } from '@deps/components/dashboard/sections/transaction-trends/context/transaction-trends-context';
+import { TransactionTrendsHeader } from '@deps/components/dashboard/sections/transaction-trends/tab-content/shared/transaction-trends-header';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
-import { useContext } from 'react';
-import { TransactionTrendsContext } from '../../context/transaction-trends-context';
-import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { TransactionTrendsHeader } from '../shared/transaction-trends-header';
 
 export const TransactionTrendsAIInsights = () => {
-    const { timeframe, groupBy, selectedProcess, transactionTrendsData } = useContext(TransactionTrendsContext);
+    const { timerange, groupBy, selectedProcess, transactionTrendsData } = useContext(TransactionTrendsContext);
 
     const content = JSON.stringify(transactionTrendsData?.data);
 
@@ -15,10 +16,9 @@ export const TransactionTrendsAIInsights = () => {
         `You are an expert in all things ${selectedProcess} case data.`,
         `Your job is to summarize the data for business and executive users.`,
         `They want simple and insightful information about the data provided to you.`,
-        `The data provided to you here are completed ${dashboardChartTitleFormat(
-            selectedProcess ?? 'Any type of',
-            false
-        )} cases in the last ${timeframe}`,
+        `The data provided to you here are completed ${dashboardChartTitleFormat(selectedProcess ?? 'Any type of', false)} cases between ${
+            timerange.from
+        } and ${timerange.to}.`,
         `The data is grouped by ${groupBy}.`,
         `Avoid using phrases such as "the data".`,
         `Your responses should be insightful and will be displayed on a UI as a summary for a module related to a timeseries chart.`,

@@ -1,52 +1,49 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import { ChipRadio, RadioOption } from '@deps/components/chip-radio/chip-radio';
-import { getDateRangeText, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
+import { TimeframeFilterOptions } from '@deps/components/dashboard/utils';
+
+import { CustomDateRange } from './custom-date-range';
 interface TimeFilterProps {
-    defaultValue: RadioOption['value'];
-    onValueChange: (val: string) => void;
-    timeframeOptions?: { [key: string]: string };
+    defaultValue: RadioOption['value'] | undefined;
+    onRadioChange: (val: string) => void;
+    timeframeOptions?: { [key: string]: string | undefined };
     controlledTimeValue?: RadioOption['value'];
-    controlledRangeText?: string;
+    timerange: { from: string; to: string };
+    handleTimerangeChange?: (value: { from: string; to: string }) => void;
 }
 
 export const TimeFilter: FC<TimeFilterProps> = ({
     defaultValue,
-    onValueChange,
+    onRadioChange,
     timeframeOptions,
     controlledTimeValue,
-    controlledRangeText,
+    timerange,
+    handleTimerangeChange,
 }) => {
-    const [time, setTime] = useState(defaultValue);
     const options = timeframeOptions
         ? Object.values(timeframeOptions).map(option => ({
-              label: option,
-              ariaLabel: option,
-              value: option,
-              displayText: option,
+              label: option ?? '',
+              ariaLabel: option ?? '',
+              value: option ?? '',
+              displayText: option ?? '',
           }))
         : Object.values(TimeframeFilterOptions).map(option => ({
-              label: option,
-              ariaLabel: option,
-              value: option,
-              displayText: option,
+              label: option ?? '',
+              ariaLabel: option ?? '',
+              value: option ?? '',
+              displayText: option ?? '',
           }));
 
-    const handleTimeChange = (val: string) => {
-        setTime(val);
-        onValueChange(val);
-    };
-    const timerangeText =
-        controlledRangeText || getDateRangeText((controlledTimeValue as TimeframeFilterOptions) || (time as TimeframeFilterOptions));
     return (
         <div>
-            <p className="field-label text-right my-4">{timerangeText}</p>
+            <CustomDateRange timerange={timerange} handleTimerangeChange={handleTimerangeChange} />
             <ChipRadio
                 id="timeframe-select"
                 options={options}
                 defaultValue={defaultValue}
-                onValueChange={handleTimeChange}
-                value={controlledTimeValue || time}
+                onValueChange={onRadioChange}
+                value={controlledTimeValue}
             />
         </div>
     );
