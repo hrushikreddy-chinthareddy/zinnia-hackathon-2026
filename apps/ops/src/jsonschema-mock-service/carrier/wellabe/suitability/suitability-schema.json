@@ -205,7 +205,12 @@
                                 "NO_PLANS_TO_ACCESS"
                             ]
                         },
-
+                        "liquidityOptions_planToHoldAnnuityEnum": {
+                            "enum": ["1", "2", "3", "4"]
+                        },
+                        "liquidityOptions_surrenderChargeConsentUnderAgeEnum": {
+                            "enum": ["YES", "NO"]
+                        },
                         "agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum": {
                             "enum": ["YES", "NO"]
                         },
@@ -774,8 +779,7 @@
                                                 "title": "Federal tax band",
                                                 "$ref": "#/definitions/fedralIncomeTaxEnum"
                                             }
-                                        },
-                                        "required": ["materialChangeReason"]
+                                        }
                                     },
                                     "else": {
                                         "properties": {
@@ -1013,9 +1017,20 @@
                                         },
                                         "required": ["distributionMethods", "optedYears"]
                                     }
+                                },
+                                "planToHoldAnnuity": {
+                                    "type": "string",
+                                    "title": "Plan to hold annuity",
+                                    "$ref": "#/definitions/liquidityOptions_planToHoldAnnuityEnum"
+                                },
+                                "surrenderChargeConsentUnderAge": {
+                                    "type": "string",
+                                    "title": "Surrender charge consent Under Age",
+                                    "$ref": "#/definitions/liquidityOptions_surrenderChargeConsentUnderAgeEnum"
                                 }
                             },
-                            "required": ["distributionMethods"]
+
+                            "required": ["planToHoldAnnuity"]
                         },
                         "agentAcknowledgment": {
                             "type": "object",
@@ -1213,8 +1228,7 @@
                                                             "state": {
                                                                 "const": "CA"
                                                             }
-                                                        },
-                                                        "minProperties": 1
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1223,6 +1237,7 @@
                                 }
                             },
                             "then": {
+                                "required": ["californiaResidentQuestions"],
                                 "properties": {
                                     "californiaResidentQuestions": {
                                         "type": "object",
@@ -1246,11 +1261,6 @@
                                         },
                                         "required": ["applyForMeansTestedBenefits", "buyingForGovernmentBenefits", "reverseMortgage"]
                                     }
-                                }
-                            },
-                            "else": {
-                                "not": {
-                                    "required": ["californiaResidentQuestions"]
                                 }
                             }
                         }
@@ -1596,9 +1606,7 @@
                                 "enumNames": ["Yes", "No"]
                             }
                         },
-                        "materialChangeReason": {
-                            "ui:options": {}
-                        },
+
                         "materialChangeDetails": {
                             "items": {
                                 "ui:options": {
@@ -1799,6 +1807,18 @@
                                     }
                                 },
                                 "optedYears": {}
+                            }
+                        },
+                        "planToHoldAnnuity": {
+                            "ui:options": {
+                                "enumNames": ["0-2 Years", "3-4 Years", "5-6 Years", "7+ Years"],
+                                "label": true
+                            }
+                        },
+                        "surrenderChargeConsentUnderAge": {
+                            "ui:options": {
+                                "label": "true",
+                                "enumNames": ["Yes", "No"]
                             }
                         }
                     },
