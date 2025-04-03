@@ -38,7 +38,8 @@ const buildV2SearchArgs = ({
 export const useDocumentSearch = (
     searchBody: SearchRequest | null,
     limit = 25,
-    offset = 0
+    offset = 0,
+    skip = false
 ): [DocumentWithSource[] | V3DocumentWithSource[] | null, boolean, number, number | null] => {
     const { featureFlags } = useOptimizely();
     const [loading, setLoading] = useState(false);
@@ -57,7 +58,7 @@ export const useDocumentSearch = (
     const searchDocs = useCallback(async () => {
         // don't refetch if already loading or if we've already loaded for these args
         if (loading || loadedForArgs === JSON.stringify({ searchBody, limit, offset })) return;
-        if (!searchBody) {
+        if (!searchBody || skip) {
             setDocs([]);
             setTotal(0);
             setResponseStatus(null);

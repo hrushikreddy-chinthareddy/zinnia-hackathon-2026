@@ -82,10 +82,12 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
         limit,
         caseOffset
     );
+
     const [policyDocuments, loadingPolicyDocuments, totalPolicyDocuments, policyDocumentsStatusCode] = useDocumentSearch(
         policyDocumentSearchBody,
         limit,
-        policyOffset
+        policyOffset,
+        !policyDocumentSearchBody?.policyNumber
     );
 
     return (
