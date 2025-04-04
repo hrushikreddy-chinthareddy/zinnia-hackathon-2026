@@ -19,6 +19,7 @@ interface GetFormErrors {
 
 interface EmailDetailsProps {
     email: EmailBase;
+    condensed?: boolean;
 }
 
 export interface Errors {
@@ -62,7 +63,7 @@ export const getEmailTypes = ({ t }: GetEmailTypes) => [
     { label: t('people.card.email.emailOptions.other') as string, value: EmailType.OTHER },
 ];
 
-export const EmailDetails = ({ email }: EmailDetailsProps) => {
+export const EmailDetails = ({ email, condensed = false }: EmailDetailsProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.sideSheet.email' });
     const { t: defaultT } = useTranslation();
 
@@ -71,14 +72,23 @@ export const EmailDetails = ({ email }: EmailDetailsProps) => {
 
     return (
         <div className="flex flex-col gap-6">
-            <div>
-                <Label label={t('labels.type')} variant={LabelVariant.FieldLabel} />
-                <Typography variant={TypographyVariant.BodySm}>{emailTypeTranslation}</Typography>
-            </div>
-            <div>
-                <Label label={t('labels.email')} variant={LabelVariant.FieldLabel} />
-                <Typography variant={TypographyVariant.BodySm}>{emailAddress}</Typography>
-            </div>
+            {condensed ? (
+                <div>
+                    <Label label={emailTypeTranslation} variant={LabelVariant.FieldLabel} />
+                    <Typography variant={TypographyVariant.BodySm}>{emailAddress}</Typography>
+                </div>
+            ) : (
+                <>
+                    <div>
+                        <Label label={t('labels.type')} variant={LabelVariant.FieldLabel} />
+                        <Typography variant={TypographyVariant.BodySm}>{emailTypeTranslation}</Typography>
+                    </div>
+                    <div>
+                        <Label label={t('labels.email')} variant={LabelVariant.FieldLabel} />
+                        <Typography variant={TypographyVariant.BodySm}>{emailAddress}</Typography>
+                    </div>
+                </>
+            )}
         </div>
     );
 };

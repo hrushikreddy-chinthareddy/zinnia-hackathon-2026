@@ -1,9 +1,8 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import { UpdateEDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
+import { CommunicationPreferenceChange, CommunicationPreferenceChangeRequest } from '@zinnia/api-types/types/bpm';
 import { Label } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useContext, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
@@ -32,12 +31,14 @@ import {
     getFormErrors,
     SideSheetCommnunicationPreferenceProps,
 } from '@deps/containers/people-data-cards/header-info-card/sidesheet/sidesheet-communications-preference.helpers';
-import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { Processes } from '@deps/models/case/case';
 import { PreferredCommunicationType, Email, Address } from '@deps/models/policy/sor-policy';
 import { ValidationResult } from '@deps/queries/api/bpm';
-import { NonFinancialTransactionActions, NonFinancialTransactionBody, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    NonFinancialTransactionActions,
+    NonFinancialTransactions,
+    updateEDeliveryPreferenceByPlanCode,
+} from '@deps/queries/api/bpm-non-financial';
 
 interface CommunicationPreferenceOption {
     contactType?: PreferredCommunicationType;
@@ -56,27 +57,22 @@ export const SidesheetCommunicationsPreference = ({
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.sideSheet.communicationpreference' });
     const { t: defaultT } = useTranslation();
 
-    const { policyDetails } = useContext(PolicyData);
-    const currentParty = policyDetails.parties?.getPartyById(party?.partyId ?? '');
-
-    const INITIAL_BODY: NonFinancialTransactionBody = {
+    const INITIAL_BODY: CommunicationPreferenceChangeRequest = {
         correlationId: uuidV4(),
-        effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
-        reverseInitiator: false,
     };
 
-    const [body, setBody] = useState(INITIAL_BODY);
+    const [body, setBody] = useState<CommunicationPreferenceChangeRequest>(INITIAL_BODY);
     const [newCaseId, setNewCaseId] = useState<string | undefined>(undefined);
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<CaseDocumentOption[]>([]);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
     const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
     const [viewState, setViewState] = useState(ViewState.Default);
     const [selectedOption, setSelectedOption] = useState<CommunicationPreferenceOption | undefined>({
-        contactType: currentParty?.preferredCommunicationType,
-        contactInfo: currentParty?.preferredCommunication,
+        contactType: party?.preferredCommunicationType,
+        contactInfo: party?.preferredCommunication,
     });
     const { caseId } = body;
-    const partyId = currentParty?.partyId ? (currentParty.partyId as string) : '';
+    const partyId = party?.partyId ?? '';
 
     const partyFullName = party?.fullName ?? '';
 
@@ -84,7 +80,6 @@ export const SidesheetCommunicationsPreference = ({
 
     const mainCtaText = t('mainCta.update');
 
-    const deliveryOption = selectedOption?.contactType;
     const selectedContactInfo = selectedOption?.contactInfo;
 
     const selectedRadioOption = useMemo(() => {
@@ -130,27 +125,62 @@ export const SidesheetCommunicationsPreference = ({
         }
 
         const errors = getFormErrors({ preferredCommunication: selectedContactInfo, caseId: caseId ?? '', isDelete: false, t: defaultT });
-        setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0 || !selectedContactInfo) return;
-
-        if (!planCode || !policyNumber || !partyId) {
+        if (Object.keys(errors).length > 0) {
+            setCurrentErrors(errors);
             return;
         }
 
-        // const response = await updateEDeliveryPreferenceByPlanCode({
-        //     planCode,
-        //     policyNumber,
-        //     partyId,
-        //     newPreferencesData: {
-        //         ...body,
-        //         deliveryOption,
-        //     },
-        // });
-        const response = {
-            data: {
-                caseId: '12345',
+        if (!selectedContactInfo) {
+            setCurrentErrors({
+                ...currentErrors,
+                communicationPreference: 'selected contact info is missing' + JSON.stringify(selectedContactInfo),
+            });
+        }
+
+        if (!planCode) {
+            setCurrentErrors({
+                ...currentErrors,
+                communicationPreference: 'plan code is missing' + JSON.stringify(planCode),
+            });
+            return;
+        }
+
+        if (!partyId) {
+            setCurrentErrors({
+                ...currentErrors,
+                communicationPreference: 'party id is missing' + JSON.stringify(partyId),
+            });
+            return;
+        }
+
+        if (!policyNumber) {
+            setCurrentErrors({
+                ...currentErrors,
+                communicationPreference: 'policy number is missing' + JSON.stringify(policyNumber),
+            });
+            return;
+        }
+
+        let preferredCommunicationType = CommunicationPreferenceChange.preferredCommunicationType.NOPREFERENCE;
+        if (selectedOption?.contactType === PreferredCommunicationType.REGULARMAIL) {
+            preferredCommunicationType = CommunicationPreferenceChange.preferredCommunicationType.REGULARMAIL;
+        }
+        if (selectedOption?.contactType === PreferredCommunicationType.EMAIL) {
+            preferredCommunicationType = CommunicationPreferenceChange.preferredCommunicationType.EMAIL;
+        }
+
+        const response = await updateEDeliveryPreferenceByPlanCode({
+            planCode: planCode,
+            policyNumber: policyNumber,
+            partyId,
+            newPreferencesData: {
+                ...body,
+                communicationPreference: {
+                    preferredCommunicationType,
+                    text: '',
+                },
             },
-        };
+        });
 
         handleResponse({
             response,
@@ -169,14 +199,14 @@ export const SidesheetCommunicationsPreference = ({
         label: role.emailAddress,
         value: role.emailId,
         type: NonFinancialTransactionIdKeys.Email,
-        children: <EmailDetails email={role} />,
+        children: <EmailDetails condensed={true} email={role} />,
     }));
 
     const addressRadioOptions = addresses.map(role => ({
         label: role.addressType,
         value: role.addressId,
         type: NonFinancialTransactionIdKeys.Address,
-        children: <AddressDetails address={role} />,
+        children: <AddressDetails condensed={true} address={role} />,
     }));
 
     switch (viewState) {
@@ -195,11 +225,11 @@ export const SidesheetCommunicationsPreference = ({
                 >
                     {selectedContactInfo && (
                         <>
-                            {deliveryOption === UpdateEDeliveryPreferenceModel.deliveryOption.EMAIL && (
-                                <EmailDetails email={selectedOption.contactInfo as Email} />
+                            {selectedOption?.contactType === PreferredCommunicationType.EMAIL && (
+                                <EmailDetails condensed={true} email={selectedOption.contactInfo as Email} />
                             )}
-                            {deliveryOption === PreferredCommunicationType.REGULARMAIL && (
-                                <AddressDetails address={selectedOption.contactInfo as Address} />
+                            {selectedOption?.contactType === PreferredCommunicationType.REGULARMAIL && (
+                                <AddressDetails condensed={true} address={selectedOption.contactInfo as Address} />
                             )}
                         </>
                     )}
@@ -241,7 +271,7 @@ export const SidesheetCommunicationsPreference = ({
         case ViewState.Default:
         default:
             return (
-                <div className="flex flex-col gap-6 p-10">
+                <div role="group" id="comm-pref-form" className="flex flex-col gap-8 p-8">
                     <CaseDocumentSelect
                         caseDocumentOptions={caseDocumentOptions}
                         caseId={caseId}
@@ -253,44 +283,55 @@ export const SidesheetCommunicationsPreference = ({
                         setCurrentErrors={setCurrentErrors}
                         setViewState={setViewState}
                     />
-                    <RadioGroup.Root
-                        id="email-pref"
-                        className="flex flex-col gap-2"
-                        value={selectedRadioOption}
-                        onValueChange={handleChange}
-                    >
-                        <Label size="lg" labelFor="email-pref">
-                            <span className="typography-desktop-headline-4-d">Email</span>
+                    <div role="group" className="flex flex-col gap-4" id="comm-pref-radios">
+                        <Label size="lg" labelFor="comm-pref-radios">
+                            <span className="typography-labels-label-lg">{t('labels.form')}</span>
                         </Label>
-                        {emailRadioOptions.map(role => (
-                            <RadioGroup.Item
-                                className="hover:gray-300 border-2 text-start rounded p-4 border-border-light hover:border-border-hover data-[state=checked]:border-border-selected overflow-auto"
-                                key={`people-chip-${role.label}`}
-                                value={`emailId-${role.value}`}
-                            >
-                                {role.children}
-                            </RadioGroup.Item>
-                        ))}
-                        <Label size="lg" labelFor="email-pref">
-                            <span className="typography-desktop-headline-4-d">Address</span>
-                        </Label>
-                        {addressRadioOptions?.map(role => (
-                            <RadioGroup.Item
-                                className="hover:gray-300 border-2 text-start rounded p-4 border-border-light hover:border-border-hover data-[state=checked]:border-border-selected overflow-auto"
-                                key={`people-chip-${role.label}`}
-                                value={`addressId-${role.value}`}
-                            >
-                                {role.children}
-                            </RadioGroup.Item>
-                        ))}
-                        {!!currentErrors?.address && <AssistiveText variant={AssistiveTextVariant.Error} text={currentErrors.address} />}
-                        {!!currentErrors?.emailAddress && (
-                            <AssistiveText variant={AssistiveTextVariant.Error} text={currentErrors.emailAddress} />
+                        <RadioGroup.Root
+                            id="comm-pref-radio-group"
+                            className="flex flex-col gap-3xl"
+                            value={selectedRadioOption}
+                            onValueChange={handleChange}
+                        >
+                            <div className="flex flex-col gap-md " role="group" id="comm-pref-email">
+                                <Label size="lg" labelFor="comm-pref-email">
+                                    <span className="typography-desktop-headline-4-d">{t('labels.email')}</span>
+                                </Label>
+                                {emailRadioOptions.map(role => (
+                                    <RadioGroup.Item
+                                        className="hover:gray-300 border-2 text-start rounded p-4 border-border-light hover:border-border-hover data-[state=checked]:border-border-selected overflow-auto"
+                                        key={`people-chip-${role.label}`}
+                                        value={`emailId-${role.value}`}
+                                    >
+                                        {role.children}
+                                    </RadioGroup.Item>
+                                ))}
+                            </div>
+                            <div className="flex flex-col gap-md" role="group" id="comm-pref-address">
+                                <Label size="lg" labelFor="comm-pref-address">
+                                    <span className="typography-desktop-headline-4-d">{t('labels.address')}</span>
+                                </Label>
+                                {addressRadioOptions?.map(role => (
+                                    <RadioGroup.Item
+                                        className="hover:gray-300 border-2 text-start rounded p-4 border-border-light hover:border-border-hover data-[state=checked]:border-border-selected overflow-auto"
+                                        key={`people-chip-${role.label}`}
+                                        value={`addressId-${role.value}`}
+                                    >
+                                        {role.children}
+                                    </RadioGroup.Item>
+                                ))}
+                            </div>
+                            {!!currentErrors?.address && (
+                                <AssistiveText variant={AssistiveTextVariant.Error} text={currentErrors.address} />
+                            )}
+                            {!!currentErrors?.emailAddress && (
+                                <AssistiveText variant={AssistiveTextVariant.Error} text={currentErrors.emailAddress} />
+                            )}
+                        </RadioGroup.Root>
+                        {!!currentErrors?.communicationPreference && (
+                            <AssistiveText variant={AssistiveTextVariant.Error} text={currentErrors.communicationPreference} />
                         )}
-                    </RadioGroup.Root>
-                    {!!currentErrors?.communicationPreference && (
-                        <AssistiveText variant={AssistiveTextVariant.Error} text={currentErrors.communicationPreference} />
-                    )}
+                    </div>
                     <TransactionCta
                         className="mt-4"
                         mainCta={{

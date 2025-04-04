@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useEffect } from 'react';
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import CardCaseDocument from '@deps/components/card/card-case-document/card-case-document';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import { ViewState } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers'
+import { ViewState } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Processes, Statuses } from '@deps/models/case/case';
 import { getCases } from '@deps/queries/api/cases';
@@ -131,7 +131,7 @@ const CaseDocumentSelect = ({
 
     return (
         <div className="flex flex-col gap-2">
-            <Label label={t('transactions.caseDocumentSelect.label')} sentenceCase={false} variant={LabelVariant.FieldLabel} />
+            <Label label={t('transactions.caseDocumentSelect.label')} sentenceCase={false} variant={LabelVariant.LabelLg} />
             <div className="flex flex-col gap-2">
                 {caseDocumentOptions.map(caseDocumentOption => (
                     <CardCaseDocument

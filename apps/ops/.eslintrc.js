@@ -2,6 +2,13 @@
 
 module.exports = {
     settings: {
+        "import/resolver": {
+            "alias": {
+                map: [
+                    ['@/', './src'],
+                ]
+            }
+        },
         react: {
             version: 'detect',
         },

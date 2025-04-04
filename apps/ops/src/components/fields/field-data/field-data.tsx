@@ -32,6 +32,7 @@ export type FieldDataProps = {
     label: string;
     variant?: FieldDataVariant;
     captionTag?: ElementType;
+    labelClassName?: string;
 } & Omit<LabelProps, 'variant'>;
 
 type FieldDataMappingProps = Partial<ResponsiveFlexProps> & {
@@ -133,6 +134,7 @@ const FieldData = ({
     className,
     sentenceCase,
     editable,
+    labelClassName,
     ...tooltipProps
 }: FieldDataProps) => (
     <ResponsiveFlex
@@ -146,6 +148,7 @@ const FieldData = ({
                 label={label}
                 sentenceCase={sentenceCase}
                 editable={editable}
+                className={labelClassName}
                 {...filterTruthyProps(tooltipProps)}
             />
         </ResponsiveFlex>

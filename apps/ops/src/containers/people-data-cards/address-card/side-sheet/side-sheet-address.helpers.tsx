@@ -21,6 +21,7 @@ interface AdditionalAddressLineProps {
 
 interface AddressDetailsProps {
     address: Address;
+    condensed?: boolean;
     isSelectedMailingAddress?: boolean;
 }
 
@@ -78,12 +79,15 @@ export const AdditionalAddressLine = ({ disabled, label, onChange, removeAddress
     );
 };
 
-export const AddressDetails = ({ address, isSelectedMailingAddress }: AddressDetailsProps) => {
+export const AddressDetails = ({ address, isSelectedMailingAddress, condensed = false }: AddressDetailsProps) => {
     const { t } = useTranslation();
 
     return (
         <>
-            <Label label={t('people.sideSheet.transactions.address')} variant={LabelVariant.FieldLabel} />
+            <Label
+                label={condensed ? address.addressType ?? '' : t('people.sideSheet.transactions.address')}
+                variant={LabelVariant.FieldLabel}
+            />
             <FormattedAddress address={address} />
             {isSelectedMailingAddress && (
                 <AssistiveText

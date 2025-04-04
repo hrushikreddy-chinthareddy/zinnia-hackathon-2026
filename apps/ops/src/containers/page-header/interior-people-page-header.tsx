@@ -14,6 +14,7 @@ import { formatDate } from '@deps/helpers/string.helper';
 import { PartyRole, PartyStatus, PartyType, PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { ReactComponent as UserGroup } from '@deps/styles/elements/icons/icons_outlined/user-group.svg';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { HeaderInfoCard } from '../people-data-cards/header-info-card/header-info-card';
 import { convertToChipText } from '../people-sub-page/people-sub-page.helpers';
@@ -37,7 +38,7 @@ const InteriorPeoplePageHeaderContainer = ({
 }: InteriorPeoplePageHeaderContainerProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
-    const shouldShowEditCommunicationsPreferences = featureFlags?.communications_preferences;
+    const shouldShowEditCommunicationsPreferences = featureFlags[FEATURE_FLAGS.COMMUNICATION_PREFERENCES];
     const selectedPartyRoles = selectedPolicyPartyRoles?.map(roleObject => {
         return roleObject.partyRole?.toLowerCase();
     });
@@ -73,7 +74,7 @@ const InteriorPeoplePageHeaderContainer = ({
             return (
                 <div>
                     <span className="flex items-center gap-2 align-middle">
-                        <p className="field-label" id="people-birth-date">
+                        <p className="typography-labels-field-label" id="people-birth-date">
                             {t('people.party.birthDate')}
                         </p>
                         {isStillInactive.interiorPeoplePageDOB ? (
@@ -98,11 +99,11 @@ const InteriorPeoplePageHeaderContainer = ({
                         )}
                     </span>
 
-                    <p className="body-sm">
+                    <p className="typography-content-body-sm">
                         <PiiWrapper>{formatDate(selectedPolicyParty?.dateOfBirth)}</PiiWrapper>
                     </p>
                     {ageInYears !== undefined && (
-                        <p className="body-sm">
+                        <p className="typography-content-body-sm">
                             <PiiWrapper>{t('policy.detailCards.coveredParty.yearsOld', { count: ageInYears })}</PiiWrapper>
                         </p>
                     )}
@@ -165,7 +166,7 @@ const InteriorPeoplePageHeaderContainer = ({
             {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
         </HeaderInfoCard>
     ) : (
-        <div className="flex">
+        <div className="flex items-start align-baseline">
             {getPrefCommunicationType(selectedPolicyParty ?? null, t)}
             {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
         </div>

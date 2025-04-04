@@ -78,10 +78,11 @@ const CommunicationPreferenceField = ({ partyInfo, t, editable = true }: Communi
         <div className="mr-8 break-all">
             <div className="flex flex:row gap-2 items-center align-middle">
                 <FieldData
+                    labelClassName="!gap-1"
                     className="field-label font-primary font-bold"
                     handleEditClick={handleEditClick}
                     editable={editable}
-                    label={t('people.party.contact.method')}
+                    label={t('people.sideSheet.transactions.communicationpreference')}
                 >
                     <PiiWrapper>{displayValue}</PiiWrapper>
                 </FieldData>

@@ -3699,12 +3699,13 @@
             },
             "communicationpreference": {
                 "mainCta": {
-                    "update": "Update Communication Preferences"
+                    "update": "Save Preferred Communication"
                 },
                 "general": {
                     "cancel": "Cancel"
                 },
                 "labels": {
+                    "form": "Select a preferred communication.",
                     "email": "Email",
                     "address": "Address"
                 },

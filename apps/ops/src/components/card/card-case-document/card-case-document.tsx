@@ -52,7 +52,7 @@ const CardCaseDocument = ({ caseDocumentOption, isSelected, onChange }: CardCase
             />
 
             {tag && <Tag text={tag} />}
-            <Typography variant={TypographyVariant.BodyBold}>
+            <Typography variant={TypographyVariant.BodySmBold}>
                 {isCaseDocument && t('workflows.start.documentNumber')}
                 <span className={clsx({ 'font-normal': isCaseDocument })}>{documentNumber}</span>
             </Typography>

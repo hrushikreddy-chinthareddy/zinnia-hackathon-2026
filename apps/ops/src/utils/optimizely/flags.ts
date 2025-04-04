@@ -149,5 +149,5 @@ export enum FEATURE_FLAGS {
     PREMIUM_SET_OR_CANCEL_AUTOPAY = 'premium_set_or_cancel_autopay',
     DASHBOARD_SECTION_TAB_VIEW = 'dashboard_section_tab_view',
     LOAN_CANCEL_AUTOPAY = 'loan_cancel_autopay',
-    COMMUNICATIONS_PREFERENCES = 'communications_preferences',
+    COMMUNICATION_PREFERENCES = 'communication_preferences',
 }

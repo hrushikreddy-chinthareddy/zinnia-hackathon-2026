@@ -1468,7 +1468,7 @@
             "agentOnboardingNigo": "Réviser les problèmes d'onboarding",
             "standardDocumentMatching": "Document de correspondance",
             "toaNigo": "Examiner les problèmes de transfert",
-            "applicationReview" : "Valider les détails de la candidature",
+            "applicationReview": "Valider les détails de la candidature",
             "appDataEntry": "Résoudre les problèmes de saisie des données de l'application",
             "agentOnboardingReview": "Valider les problèmes d'onboarding",
             "toaReview": "Examiner les problèmes de transfert",
@@ -3702,6 +3702,7 @@
                     "cancel": "Annuler"
                 },
                 "labels": {
+                    "form": "Sélectionnez les préférences de communication",
                     "email": "Email",
                     "removeEmail": "Supprimer cet e-mail",
                     "type": "Type"
