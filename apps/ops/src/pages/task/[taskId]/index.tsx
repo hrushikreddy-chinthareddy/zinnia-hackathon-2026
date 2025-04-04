@@ -214,7 +214,7 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
 
-                const taskInfoLink = buildCaseLink(caseId);
+                const taskInfoLink = context?.req?.headers?.referer  ? new URL(context.req.headers.referer)?.pathname : "/home"
 
                 //transform schema options with api
                 await applyDynamicOptions(task, accessToken, currentTaskMetadata);
