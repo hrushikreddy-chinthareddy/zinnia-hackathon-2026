@@ -12,7 +12,7 @@ import ImagePreview from '@deps/containers/documents-page/image-preview';
 import PdfPreview from '@deps/containers/documents-page/pdf-preview';
 import TxtPreview from '@deps/containers/documents-page/txt-preview';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { supportedExtensions, supportedImgExtensions } from '@deps/models/case/document';
+import { supportedExtensions, supportedHtmlExtensions, supportedImgExtensions } from '@deps/models/case/document';
 import { getDocumentPreviewV2 } from '@deps/queries/api/client/documents/v2/preview';
 import { getDocumentPreviewV3 } from '@deps/queries/api/client/documents/v3/preview';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -95,7 +95,7 @@ const DocumentViewer = (props: DocumentViewerProps) => {
         );
     }
 
-    if ((fileExtension === 'htm' || fileExtension === 'html') && documentBinary) {
+    if (supportedHtmlExtensions.includes(fileExtension || '') && documentBinary) {
         return <HtmlPreview documentBinary={documentBinary} />;
     }
 
@@ -103,7 +103,7 @@ const DocumentViewer = (props: DocumentViewerProps) => {
         return <ImagePreview documentBinary={documentBinary} fileExtension={fileExtension} />;
     }
 
-    if (fileExtension === 'pdf' && documentBinary) {
+    if (['pdf', 'application/pdf'].includes(fileExtension || '') && documentBinary) {
         return <PdfPreview documentBinary={documentBinary} />;
     }
 

@@ -219,5 +219,12 @@ export interface PolicyDocumentApiRequest {
 }
 
 // tif and tiff are supported via a conversion to png at the nextjs server level.
-export const supportedImgExtensions = ['png', 'jpg', 'jpeg', 'jfif'];
-export const supportedExtensions = ['pdf', 'adobe portable document', 'htm', 'html', 'txt', 'text/plain', ...supportedImgExtensions];
+export const supportedImgExtensions = ['png', 'jpg', 'jpeg', 'jfif', 'image/png', 'image/jpg', 'image/jpeg', 'image/jfif'];
+export const supportedHtmlExtensions = ['html', 'htm', 'text/html', 'text/htm', 'file/html', 'file/htm'];
+export const supportedExtensions = [
+    'pdf',
+    'application/pdf',
+    'adobe portable document',
+    ...supportedHtmlExtensions,
+    ...supportedImgExtensions,
+];
