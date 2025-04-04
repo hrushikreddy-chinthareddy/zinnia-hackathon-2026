@@ -21,9 +21,23 @@
                     "type": "object",
                     "required": ["issueResolved"],
                     "properties": {
-                        "sectionHeader": {
-                            "type": "object",
-                            "title": "Processing Instructions"
+                        "issuesList": {
+                            "type": "array",
+                            "title": "",
+                            "items": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "processingResolution": {
+                                        "type": "string",
+                                        "title": "Processing Instructions"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
+                                    }
+                                }
+                            }
                         },
                         "details": {
                             "type": "object",
@@ -159,17 +173,41 @@
                     }
                 },
                 "uiSchema": {
-                    "ui:order": ["sectionHeader", "details", "issueResolved", "declineReason", "reviewFailureReasonDisplay", "uploadDocuments", "attachments"],
+                    "ui:order": [
+                        "issuesList",
+                        "details",
+                        "issueResolved",
+                        "declineReason",
+                        "reviewFailureReasonDisplay",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "sectionHeader": {
-                        "props": {
-                            "description": "Review the supporting information and provide an external ID for the Agent."
-                        },
+                    "issuesList": {
+                        "ui:readonly": true,
                         "ui:options": {
-                            "label": true,
-                            "ObjectFieldTemplate": "InstructionsTemplate"
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                            },
+                            "processingResolution": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "resolved": {
+                                "ui:options": {
+                                    "label": false
+                                }
+                            }
                         }
                     },
                     "details": {
@@ -196,13 +234,14 @@
                                 "icon": "DOCUMENT_TEXT",
                                 "ObjectFieldTemplate": "CardTemplate"
                             }
-                        },
+                        }
                     },
                     "issueResolved": {
                         "ui:widget": "radio",
                         "ui:options": {
                             "inline": true
-                        }
+                        },
+                        "ui:hideError": true
                     },
                     "declineReason": {
                         "ui:widget": "select",
