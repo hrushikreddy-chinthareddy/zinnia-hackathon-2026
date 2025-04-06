@@ -17,6 +17,8 @@ import SendDocumentNavigationButtons from './action-components/navigation-button
 import { MultiselectOption } from '../autocomplete/autocomplete.types';
 import TaxFormsListing from './components/tax-forms-listing';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
+import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
+
 export type StatementSelectionProps = {
     policy: Policy;
     taxYearOptions?: MultiselectOption[];
@@ -25,6 +27,7 @@ export type StatementSelectionProps = {
     selectedYears: { [key: string]: string };
     setSelectedYears: (value: SetStateAction<{ [key: string]: string }>) => void;
 };
+
 const TaxFormsSelection = ({
     policy,
     taxFormSelectionDetails,
@@ -136,7 +139,13 @@ const TaxFormsSelection = ({
     return (
         <WorkflowCard
             title={t(`sendTaxForms.tabs.taxFormsSelection`)}
-            footerContent={<SendDocumentNavigationButtons handleContinue={handleContinue} handleCancel={handleCancel} />}
+            footerContent={
+                <SendDocumentNavigationButtons
+                    handleContinue={handleContinue}
+                    handleCancel={handleCancel}
+                    trackEventProps={{ type: ContactCenterTransactionType.TAX_FORM }}
+                />
+            }
         >
             <div className="my-8 w-[214px] sm:w-[234px]">
                 <Select

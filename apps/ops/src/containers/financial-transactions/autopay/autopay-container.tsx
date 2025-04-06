@@ -1,6 +1,7 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -15,6 +16,7 @@ import { Processes } from '@deps/models/case/case';
 import { AmountType, ArrangementType, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { validateSystematicProgramUpdate } from '@deps/queries/api/bpm';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
@@ -81,6 +83,13 @@ const AutopayContainer = ({ arrangementType, policy, isSetUp = false, parentPage
         return response?.data;
     };
 
+    const transactionType = useMemo(() => {
+        // TODO MG: these are prob wrong
+        return parentPage === ParentPage.Premiums
+            ? TransactionType.SUBSEQUENT_PREMIUM
+            : isSetUp ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+    }, [isSetUp, parentPage]);
+
     const steps: Step[] = [
         {
             ariaLabel: startLabel,
@@ -91,9 +100,9 @@ const AutopayContainer = ({ arrangementType, policy, isSetUp = false, parentPage
                     processType={Processes.SSW}
                     setState={setAutopay as StartStepSetState}
                     state={autopay}
-                    // TODO MG: cleaner way to handle this
                     subtitle={!isSetUp && parentPage === ParentPage.Premiums ? t('start.subtitleManage') as string : undefined}
                     title={isSetUp ? t('start.titleStart') : t('start.titleManage')}
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Start }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -110,7 +119,13 @@ const AutopayContainer = ({ arrangementType, policy, isSetUp = false, parentPage
         {
             ariaLabel: payorLabel,
             component: (
-                <PayorStep parentPage={parentPage} policy={policy} setState={setAutopay as PayorStepSetState} state={autopay} />
+                <PayorStep
+                    parentPage={parentPage}
+                    policy={policy}
+                    setState={setAutopay as PayorStepSetState}
+                    state={autopay}
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Payor }}
+                />
             ),
             screenReaderLabel: payorLabel,
             index: 2,
@@ -125,6 +140,7 @@ const AutopayContainer = ({ arrangementType, policy, isSetUp = false, parentPage
                     setState={setAutopay as unknown as PaymentStepSetState}
                     state={autopay}
                     validateTransaction={validateCall}
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Payment }}
                 />
             ),
             screenReaderLabel: paymentLabel,

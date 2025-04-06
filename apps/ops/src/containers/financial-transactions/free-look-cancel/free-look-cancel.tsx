@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -10,6 +11,7 @@ import WorkflowContainer from '@deps/containers/workflow-container/workflow-cont
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Processes } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 import Confirm from './confirm/confirm';
 import Summary from './summary/summary';
@@ -36,6 +38,7 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     setState={setWithdrawal as StartStepSetState}
                     state={withdrawal}
                     title={t('cancelFreeLook.start.title') as string}
+                    trackEventProps={{ type: TransactionType.FREE_LOOK_CANCELLATION, step: TransactionStep.Start }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -63,6 +66,7 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     policy={policy}
                     setState={setWithdrawal as PayeesStepSetState}
                     state={withdrawal}
+                    trackEventProps={{ type: TransactionType.FREE_LOOK_CANCELLATION, step: TransactionStep.Payees }}
                 />
             ),
             screenReaderLabel: payeeLabel,
@@ -78,6 +82,7 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     setState={setWithdrawal as PaymentStepSetState}
                     state={withdrawal}
                     subtitle={t('withdrawals.payment.title') as string}
+                    trackEventProps={{ type: TransactionType.FREE_LOOK_CANCELLATION, step: TransactionStep.Payment }}
                 />
             ),
             screenReaderLabel: paymentLabel,

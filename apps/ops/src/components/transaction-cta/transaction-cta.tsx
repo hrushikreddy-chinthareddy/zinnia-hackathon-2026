@@ -1,15 +1,18 @@
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import AssistiveText from '@deps/components/assistive-text/assistive-text';
 import { ButtonSize } from '@deps/components/button/button';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import SpinnerButton from '@deps/components/spinner-button/spinner-button';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { ReactComponent as ClockIcon } from '@deps/styles/elements/icons/icons_outlined/clock.svg';
+import { SegmentTrackedEventName, TransactionCancelClickedEvent, TransactionClickProps, TransactionContinueClickedEvent } from '@deps/types/segment-analytics';
 
-export interface TransactionCtaProps {
+export interface TransactionCtaProps extends TransactionClickProps {
     className?: string;
     mainCta: {
         text: string;
@@ -23,8 +26,9 @@ export interface TransactionCtaProps {
     stopLoading?: boolean;
 }
 
-const TransactionCta = ({ className, mainCta, secondaryCta, stopLoading }: TransactionCtaProps) => {
+const TransactionCta = ({ className, mainCta, secondaryCta, stopLoading, trackEventProps }: TransactionCtaProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'transactions.transactionCta' });
+    const perms = usePermissionsContext();
 
     const [assistiveTextMessageIndex, setAssistiveTextMessageIndex] = useState(-1);
     const [intervalId, setIntervalId] = useState<NodeJS.Timeout>();
@@ -32,7 +36,7 @@ const TransactionCta = ({ className, mainCta, secondaryCta, stopLoading }: Trans
     const assistiveTextMessages = [t('checkingRules'), t('creatingSummary'), t('upTo15'), t('stillWorking')];
     const hasSecondaryCta = secondaryCta != null;
 
-    const startInterval = () => {
+    const startInterval = useCallback(() => {
         const id = setInterval(() => {
             setAssistiveTextMessageIndex(prevIndex => {
                 if (prevIndex === assistiveTextMessages.length - 1) {
@@ -46,19 +50,45 @@ const TransactionCta = ({ className, mainCta, secondaryCta, stopLoading }: Trans
         }, 3000);
 
         setIntervalId(id);
-    };
+    }, [assistiveTextMessages]);
 
-    const handleClick = () => {
+    const trackCancelClick = useCallback(() => {
+        if (!trackEventProps) {
+            return;
+        }
+
+        segmentAnalyticsTrackEvent<TransactionCancelClickedEvent>(SegmentTrackedEventName.TransactionCancelClicked, {
+            session_id: perms.getSessionId(),
+            userId: perms.getUserPartyId(),
+            ...trackEventProps
+        });
+    }, [trackEventProps, segmentAnalyticsTrackEvent]);
+
+    const onContinueClick = useCallback(() => {
         startInterval();
+
+        if (trackEventProps) {
+            segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
+                session_id: perms.getSessionId(),
+                userId: perms.getUserPartyId(),
+                ...trackEventProps
+            });
+        }
         mainCta.onClick();
-    };
+    }, [trackEventProps, startInterval, mainCta.onClick]);
+
+    const onCancelClick = useCallback(() => {
+        startInterval();
+        trackCancelClick();
+        secondaryCta?.onClick?.();
+    }, [startInterval, secondaryCta?.onClick, trackCancelClick]);
 
     if (stopLoading) clearInterval(intervalId);
 
     return (
         <div className={clsx('flex flex-col gap-4', className)}>
             <div className="flex items-center gap-8">
-                <SpinnerButton stopLoading={stopLoading} size={ButtonSize.Small} text={mainCta.text} onClick={handleClick} />
+                <SpinnerButton stopLoading={stopLoading} size={ButtonSize.Small} text={mainCta.text} onClick={onContinueClick} />
                 {hasSecondaryCta &&
                     (secondaryCta?.onClick ? (
                         <NavElement
@@ -66,7 +96,7 @@ const TransactionCta = ({ className, mainCta, secondaryCta, stopLoading }: Trans
                             type={NavElementType.Button}
                             size={NavElementSize.Small}
                             variant={NavElementVariant.Default}
-                            onClick={secondaryCta.onClick}
+                            onClick={onCancelClick}
                         >
                             {secondaryCta.text}
                         </NavElement>
@@ -75,6 +105,7 @@ const TransactionCta = ({ className, mainCta, secondaryCta, stopLoading }: Trans
                             className="default-focus font-primary text-links-sm font-semibold text-secondary hover:text-secondary-dark hover:underline hover:decoration-2 hover:underline-offset-[6px] focus-visible:rounded"
                             href={secondaryCta.href}
                             data-testid="leave-transaction"
+                            onClick={trackCancelClick}
                         >
                             {secondaryCta.text}
                         </a>

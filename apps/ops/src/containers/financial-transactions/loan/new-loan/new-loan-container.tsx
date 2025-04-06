@@ -16,6 +16,8 @@ import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
 import { buildNewLoanRequestBody } from './new-loan.helpers';
 import Summary from './summary/summary';
+import { TransactionType } from '@zinnia/api-types/types/sor';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 export type NewLoanContainerProps = {
     policy: Policy;
@@ -50,6 +52,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
                     state={newLoan}
                     title={t('start.title') as string}
                     subtitle={t('start.subtitle') as string}
+                    trackEventProps={{ type: TransactionType.NEW_LOAN, step: TransactionStep.Start }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -71,6 +74,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
                     policy={policy}
                     setState={setNewLoan as PayeesStepSetState}
                     state={newLoan}
+                    trackEventProps={{ type: TransactionType.NEW_LOAN, step: TransactionStep.Payees }}
                 />
             ),
             screenReaderLabel: payeeLabel,
@@ -86,6 +90,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
                     setState={setNewLoan as PaymentStepSetState}
                     state={newLoan}
                     validateTransaction={validateCall}
+                    trackEventProps={{ type: TransactionType.NEW_LOAN, step: TransactionStep.Payment }}
                 />
             ),
             screenReaderLabel: paymentLabel,

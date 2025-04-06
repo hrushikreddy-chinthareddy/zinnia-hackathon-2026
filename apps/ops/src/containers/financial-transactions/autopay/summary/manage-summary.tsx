@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -17,6 +18,7 @@ import { getFrequency } from '@deps/helpers/systematic-program.helper';
 import { Frequency, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, ValidationResult } from '@deps/queries/api/bpm';
 import { DEFAULT_EXTENDED_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 interface SummaryProps {
     policy: Policy;
@@ -36,6 +38,12 @@ const ManageSummary = ({ policy }: SummaryProps) => {
     const { policyNumber, product } = policy;
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
 
+    // TODO MG: this is duped three times at least
+    const transactionType = useMemo(() => {
+        return parentPage === ParentPage.Premiums
+            ? TransactionType.SUBSEQUENT_PREMIUM
+            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+    }, [parentPage]);
     const systematicProgram = policy.systematicPrograms?.find(sp => sp.reason === systematicProgramReason);
     const currentPayor = (systematicProgram?.party || [])[0];
     const currentPayorParty = policy?.parties?.find(party => party.partyId === currentPayor?.partyId);
@@ -68,6 +76,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
         },
         {
             // TODO MG: fix the comparison table so this can be translated
+            // comparison table uses 'Banking details' to style
             header: 'Banking details',
             new: {
                 paymentType: ACH,
@@ -136,6 +145,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                     submitLabel={
                         validationSucceeded ? (t('updateAutopay') as string) : (t('submit') as string)
                     }
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Summary }}
                 />
             </div>
         </div>

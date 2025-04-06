@@ -9,11 +9,14 @@ import { AvailableFormsTransaction, SendDocumentFormParts, SendDocumentFormParts
 import { Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddDocumentIcon } from '@deps/styles/elements/icons/icons_outlined/add.svg';
 import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
+import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../nav-element/nav-element';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
+
+
 const mapIdToFormDetails = (value: SendDocumentFormParts[]): SendDocumentFormPartsAdditionData[] => {
     return value.map(formDetail => {
         return {
@@ -29,6 +32,7 @@ export const DefaultFormDetail = {
     transactionType: { list: [], selected: null },
     id: uuidv4(),
 };
+
 type FormSelectionProps = {
     policy: Policy;
     ctiCallNumber: string;
@@ -89,7 +93,13 @@ function FormSelection({
     return (
         <WorkflowCard
             title={t(`tabs.formSelection`)}
-            footerContent={<SendDocumentNavigationButtons handleContinue={handleContinue} handleCancel={handleCancel} />}
+            footerContent={
+                <SendDocumentNavigationButtons
+                    handleContinue={handleContinue}
+                    handleCancel={handleCancel}
+                    trackEventProps={{ type: ContactCenterTransactionType.DOCUMENT }}
+                />
+            }
         >
             {forms?.map((form, index) => (
                 <div className=" bg-gray-50 p-5 flex my-4" key={form.id}>

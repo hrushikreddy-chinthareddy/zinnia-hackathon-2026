@@ -17,6 +17,8 @@ import { validateOneTimePremium } from '@deps/queries/api/bpm';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import WorkflowContainer from '../../../workflow-container/workflow-container';
+import { TransactionType } from '@zinnia/api-types/types/sor';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 export type NewPremiumContainerProps = {
     policy: Policy;
@@ -61,6 +63,7 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
                     state={premium}
                     title={t('newPremium.start.title') as string}
                     subtitle={t('newPremium.start.subtitle') as string}
+                    trackEventProps={{ type: TransactionType.PAYMENT_ONE_TIME_PREMIUM, step: TransactionStep.Start }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -77,7 +80,13 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
         {
             ariaLabel: payorLabel,
             component: (
-                <PayorStep parentPage={ParentPage.Premiums} policy={policy} setState={setPremium as PayorStepSetState} state={premium} />
+                <PayorStep
+                    parentPage={ParentPage.Premiums}
+                    policy={policy}
+                    setState={setPremium as PayorStepSetState}
+                    state={premium}
+                    trackEventProps={{ type: TransactionType.PAYMENT_ONE_TIME_PREMIUM, step: TransactionStep.Payor }}
+                />
             ),
             screenReaderLabel: payorLabel,
             index: 2,
@@ -92,6 +101,7 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
                     setState={setPremium as unknown as PaymentStepSetState}
                     state={premium}
                     validateTransaction={validateCall}
+                    trackEventProps={{ type: TransactionType.PAYMENT_ONE_TIME_PREMIUM, step: TransactionStep.Payment }}
                 />
             ),
             screenReaderLabel: paymentLabel,

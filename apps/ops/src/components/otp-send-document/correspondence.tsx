@@ -13,8 +13,8 @@ import {
 } from '@deps/models/case/correspondence';
 import { CommunicationTypes, Confirm } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { Policy } from '@deps/models/policy/sor-policy';
-import { browserLogWarn , browserLogInfo } from '@deps/utils/browser-logging';
+import { Policy, TransactionType } from '@deps/models/policy/sor-policy';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
@@ -22,6 +22,7 @@ import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive
 import { Loader } from '../page-loader';
 import { RadioItem } from '../radio/radio';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
+import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 
 const getDefaultCommunicationType = (communicationOptions?: RadioItem[]) => {
     if (!communicationOptions) return '';
@@ -52,6 +53,7 @@ type CorrespondenceProps = {
     policy: Policy;
     submitRequest: (val: CorrespondenceFormParts) => Promise<Confirm | null>;
 };
+
 const ContactCenterCorrespondence = ({ policy, communicationOptions, submitRequest }: CorrespondenceProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const { setCurrentStepIndex, goToNext } = useWorkflow();
@@ -149,7 +151,13 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
     return (
         <WorkflowCard
             title={t(`tabs.correspondence`)}
-            footerContent={<SendDocumentNavigationButtons handleContinue={handleContinue} handleCancel={handleCancel} />}
+            footerContent={
+                <SendDocumentNavigationButtons
+                    handleContinue={handleContinue}
+                    handleCancel={handleCancel}
+                    trackEventProps={{ type: ContactCenterTransactionType.CORRESPONDENCE }}
+                />
+            }
         >
             <CorrespondenceCard
                 setCorrespondenceData={handleCorrespondenceData}

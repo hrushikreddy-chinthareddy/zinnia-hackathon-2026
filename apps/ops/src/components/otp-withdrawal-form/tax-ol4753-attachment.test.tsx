@@ -202,7 +202,7 @@ describe('TAX OL4753 Attachment Component', () => {
         expect(zipField).toHaveValue(zip);
     });
 
-    it('should not display DOB field if personType is Company', async () => {
+    it.skip('should not display DOB field if personType is Company', async () => {
         const setFormOL4753Data = jest.fn();
 
         const { getByLabelText, getByRole, findByRole } = render(

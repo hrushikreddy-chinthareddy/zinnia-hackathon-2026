@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -18,6 +19,7 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 interface SummaryProps {
     policy: Policy;
@@ -128,6 +130,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     submitLabel={t('submitPayment') as string}
+                    trackEventProps={{ type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME, step: TransactionStep.Summary }}
                 />
             </CardContainer>
         </div>

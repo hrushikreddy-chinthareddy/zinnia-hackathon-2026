@@ -13,6 +13,7 @@ type ConfirmProps = {
     shouldShowCaseButton: FeatureFlags;
     formNames?: string[];
 };
+
 const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const { state } = useCorrespondence();

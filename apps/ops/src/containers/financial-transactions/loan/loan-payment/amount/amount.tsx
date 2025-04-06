@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import React, { ChangeEvent, useState } from 'react';
@@ -12,6 +13,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 interface AmountProps {
     policy: Policy;
@@ -87,6 +89,8 @@ const Amount = ({ policy }: AmountProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     parentPage={ParentPage.Loans}
+                    // TODO MG: PAYMENT_LOAN_REPAYMENT_ONE_TIME or LOAN_REPAYMENT_ONE_TIME
+                    trackEventProps={{ type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME, step: TransactionStep.Amount }}
                 />
             }
         >

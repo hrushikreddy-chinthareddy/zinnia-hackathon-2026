@@ -1,5 +1,6 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import xss from 'xss';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
@@ -10,10 +11,11 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
+import { useWithdrawal, WithdrawalType } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { Policy, TaxWithholdingInstructions, TaxWithholdingType } from '@deps/models/policy/sor-policy';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 import {
     Errors,
@@ -49,6 +51,12 @@ const Taxes = ({ policy }: TaxesProps) => {
     const [currentErrors, setCurrentErrors] = useState<Errors>({});
     const ownerTaxState = getOwnersTaxJurisdictionState(policy);
 
+    const transactionType = useMemo(() => {
+        return withdrawal.type === WithdrawalType.Surrender
+            ? TransactionType.FULL_SURRENDER
+            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+    }, [withdrawal.type]);
+
     const handleContinue = () => {
         const errors = getFormErrors(federalTaxWithholdings, stateTaxWithholdings);
 
@@ -77,6 +85,7 @@ const Taxes = ({ policy }: TaxesProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     parentPage={ParentPage.Withdrawals}
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Taxes }}
                 />
             }
         >

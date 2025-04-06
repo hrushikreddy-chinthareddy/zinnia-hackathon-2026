@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -19,6 +20,7 @@ import { TransactionResponseStatus, ValidationResult } from '@deps/queries/api/b
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 interface SummaryProps {
     policy: Policy;
@@ -34,7 +36,7 @@ const Summary = ({ policy }: SummaryProps) => {
 
     const { effectiveDate, paymentAccountNumber, paymentBranchName, paymentAmount, payorAddress, payorFullName, validationResponse } =
         premium;
-
+    
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
     const bannerResults = validationResponse?.validationResult;
     const statusResponse = validationResponse?.status;
@@ -138,6 +140,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     parentPage={ParentPage.Premiums}
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
+                    trackEventProps={{ type: TransactionType.PAYMENT_ONE_TIME_PREMIUM, step: TransactionStep.Summary }}
                 />
             </CardContainer>
         </div>

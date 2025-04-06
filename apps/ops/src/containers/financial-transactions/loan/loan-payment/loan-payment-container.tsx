@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -11,6 +12,7 @@ import { useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
 import { Processes } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { validateLoanPayment } from '@deps/queries/api/bpm';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
@@ -50,6 +52,7 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                     state={loanPayment}
                     title={t('start.title') as string}
                     subtitle={t('start.subtitle') as string}
+                    trackEventProps={{ type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME, step: TransactionStep.Start }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -66,7 +69,13 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
         {
             ariaLabel: payorLabel,
             component: (
-                <PayorStep parentPage={ParentPage.Loans} policy={policy} setState={setLoanPayment as PayorStepSetState} state={loanPayment} />
+                <PayorStep
+                    parentPage={ParentPage.Loans}
+                    policy={policy}
+                    setState={setLoanPayment as PayorStepSetState}
+                    state={loanPayment}
+                    trackEventProps={{ type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME, step: TransactionStep.Payor }}
+                />
             ),
             screenReaderLabel: payorLabel,
             index: 2,
@@ -81,6 +90,7 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                     setState={setLoanPayment as PaymentStepSetState}
                     state={loanPayment}
                     validateTransaction={validateCall}
+                    trackEventProps={{ type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME, step: TransactionStep.Payment }}
                 />
             ),
             screenReaderLabel: paymentLabel,

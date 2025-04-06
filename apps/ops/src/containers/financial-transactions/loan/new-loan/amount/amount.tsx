@@ -1,4 +1,4 @@
-import { DisbursementType } from '@zinnia/api-types/types/sor';
+import { DisbursementType, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
@@ -21,6 +21,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 import { NewLoanContainerProps } from '../new-loan-container';
 
@@ -207,6 +208,7 @@ const Amount = ({ policy }: NewLoanContainerProps) => {
                     parentPage={ParentPage.Loans}
                     planCode={policy.product?.planCode}
                     policyNumber={policy.policyNumber}
+                    trackEventProps={{ type: TransactionType.NEW_LOAN, step: TransactionStep.Amount }}
                 />
             }
         >

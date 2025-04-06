@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
@@ -13,6 +14,8 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
+
 interface SummaryProps {
     policy: Policy;
 }
@@ -70,6 +73,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     submitLabel={t('submitCancellation') as string}
+                    trackEventProps={{ type: TransactionType.FREE_LOOK_CANCELLATION, step: TransactionStep.Summary }}
                 />
             </CardContainer>
         </div>

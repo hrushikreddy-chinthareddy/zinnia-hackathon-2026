@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -19,6 +20,7 @@ import { AmountType, ArrangementType, Frequency, PaymentForm, Policy, Reason } f
 import { submitSystematicProgramUpdate, validateSystematicProgramUpdate, ValidationResult } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 import { CancelAutopayDetails } from './cancel-autopay-details';
 import { ViewState } from '../non-financial-transactions/states/states.helpers';
@@ -242,6 +244,15 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
                     text: t('cancel'),
                 }}
                 stopLoading={!loading}
+                // TODO MG: better handling for this - will need to support withdrawal soon
+                trackEventProps={
+                    {
+                        type: systematicProgramReason === Reason.LOANREPAYMENT
+                            ? TransactionType.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT
+                            : TransactionType.SUBSEQUENT_PREMIUM,
+                        step: TransactionStep.Cancel
+                    }
+                }
             />
         </div>
     );

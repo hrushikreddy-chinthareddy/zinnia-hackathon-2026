@@ -11,6 +11,7 @@ import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Processes, Statuses } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getCases } from '@deps/queries/api/cases';
+import { TransactionClickProps } from '@deps/types/segment-analytics';
 
 import WorkflowCard from '../workflow-card/workflow-card';
 
@@ -21,7 +22,7 @@ export interface StartType {
 
 export type StartStepSetState = Dispatch<SetStateAction<StartType>>;
 
-interface StartStepProps {
+interface StartStepProps extends TransactionClickProps {
     parentPage: ParentPage;
     policy: Policy;
     processType: Processes;
@@ -33,7 +34,7 @@ interface StartStepProps {
     isContinueDisabled?: boolean;
 }
 
-const StartStep = ({ parentPage, policy, processType, setState, state, title, subtitle, isOnBaseUpdateAssistiveText = false, isContinueDisabled = false }: StartStepProps) => {
+const StartStep = ({ parentPage, policy, processType, setState, state, title, subtitle, trackEventProps, isOnBaseUpdateAssistiveText = false, isContinueDisabled = false }: StartStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
 
@@ -68,7 +69,7 @@ const StartStep = ({ parentPage, policy, processType, setState, state, title, su
                 });
                 setCaseOptions(options);
             } else {
-                // TODO MG: handle
+                // TODO MG: ensure this doesnt blow up
                 throw new Error(response?.data?.err ? response.data.err : 'Error fetching cases');
             }
         }
@@ -119,12 +120,12 @@ const StartStep = ({ parentPage, policy, processType, setState, state, title, su
                     policyNumber={policyNumber}
                     parentPage={parentPage}
                     disableContinue={isContinueDisabled}
+                    trackEventProps={trackEventProps}
                 />
             }
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col">
-                    {/* TODO MG: use CaseDocumentSelect */}
                     <Label className="mb-4" label={t('workflows.start.documentSelectionLabel')} sentenceCase={false} variant={LabelVariant.LabelLg} />
                     <div className="grid max-w-[436px] gap-2">
                         {caseOptions

@@ -8,7 +8,6 @@ interface WorkflowCardProps extends PropsWithChildren {
     title: string;
     subtitle?: string;
     footerContent?: JSX.Element;
-    transactionNavigationButtonsClassname?: string;
 }
 
 const WorkflowCard = ({ children, title, subtitle, footerContent, className }: WorkflowCardProps) => (

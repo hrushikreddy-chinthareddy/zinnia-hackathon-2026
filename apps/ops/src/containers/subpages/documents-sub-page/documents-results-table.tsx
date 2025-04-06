@@ -21,12 +21,15 @@ import Popover from '@deps/components/popover/popover';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
 import { isPreviewSupported, useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { ReactComponent as LinkIcon } from '@deps/styles/elements/icons/actions/link.svg';
 import loadingImage from '@deps/styles/images/loader.png';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
+import { CaseDocumentClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import styles from './documents-results-table.module.css';
 import { DocumentWithSource } from './documents-sub-page';
@@ -42,6 +45,7 @@ type DocumentsResultsTableProps = {
 const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource | MetadataSearchResponse; carrierCode: string }) => {
     const { t } = useTranslation();
     const docId = doc.documentId || ((doc as DocumentWithSource).documentID as string);
+    const perms = usePermissionsContext();
     const [loading, download] = useDocumentDownload(
         docId,
         (doc as DocumentWithSource).documentSource || (doc as MetadataSearchResponse).documentClassification,
@@ -50,10 +54,21 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource | Metadata
         doc.fileType
     );
 
+    const downloadDocument  = () => {   
+        download();
+
+        segmentAnalyticsTrackEvent<CaseDocumentClickedEvent>(SegmentTrackedEventName.CaseDocumentClicked, {
+            session_id: perms.getSessionId(),
+            userId: perms.getUserPartyId(),
+            type: 'Download',
+            documentId: docId,
+        });
+    }
+
     return (
         <NavElement
             className="text-left underline underline-offset-2"
-            onClick={download}
+            onClick={downloadDocument}
             size={NavElementSize.Small}
             title={`${t('general.download')} ${doc.displayName}`}
             type={NavElementType.Button}

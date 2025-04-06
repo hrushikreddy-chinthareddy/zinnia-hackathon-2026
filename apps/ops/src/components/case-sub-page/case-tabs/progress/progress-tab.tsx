@@ -7,6 +7,8 @@ import { PopoverPlacement } from '@deps/components/popover/popover';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { Case, Statuses } from '@deps/models/case/case';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
@@ -14,6 +16,7 @@ import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { CaseStageAccordionClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import Exceptions from './exceptions';
 import { completionPercentageString, TransformedCase, formatTimestamp, TransformedStage, TransformedStep } from './progress-tab-helpers';
@@ -58,10 +61,20 @@ const getStageStatusIconTooltip = (stage: TransformedStage, t: TFunction): React
 
 const Stage = React.forwardRef(({ stage }: { stage: TransformedStage }, forwardedRef: ForwardedRef<HTMLButtonElement>) => {
     const { t } = useTranslation();
+    const perms = usePermissionsContext();
     const [isOpen, setIsOpen] = useState(false);
 
     const handleStateChange = (state: boolean) => {
         setIsOpen(state);
+
+        segmentAnalyticsTrackEvent<CaseStageAccordionClickedEvent>(SegmentTrackedEventName.CaseStageAccordionClicked, {
+            caseId: stage.parentCase.caseRaw.id,
+            session_id: perms.getSessionId(),
+            userId: perms.getUserPartyId(),
+            isOpen: state,
+            stageId: stage.id,
+            stageName: stage.name,
+        });
     };
 
     return (
@@ -113,6 +126,7 @@ const Stage = React.forwardRef(({ stage }: { stage: TransformedStage }, forwarde
         </AccordionHeader>
     );
 });
+// TODO MG: add comment for what this is for
 Stage.displayName;
 
 //#region Stages

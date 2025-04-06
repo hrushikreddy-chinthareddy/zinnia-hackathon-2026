@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import React, { useCallback, useState } from 'react';
@@ -11,6 +12,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 const EffectiveDate = ({
     policy,
@@ -54,6 +56,7 @@ const EffectiveDate = ({
                     parentPage={ParentPage.Withdrawals}
                     planCode={policy.product?.planCode}
                     policyNumber={policy.policyNumber}
+                    trackEventProps={{ type: TransactionType.FREE_LOOK_CANCELLATION, step: TransactionStep.Date }}
                 />
             }
         >

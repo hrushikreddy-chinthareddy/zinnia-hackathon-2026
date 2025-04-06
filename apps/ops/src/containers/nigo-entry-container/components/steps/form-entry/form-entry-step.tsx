@@ -1,4 +1,5 @@
 import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
+// TODO MG: why are we using next/navigation instead of next/router here?
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useState } from 'react';

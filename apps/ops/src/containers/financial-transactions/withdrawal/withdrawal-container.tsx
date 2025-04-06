@@ -1,4 +1,6 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
+import { useMemo } from 'react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import PayeesStep, { PayeesStepSetState } from '@deps/components/workflows/payees-step/payees-step';
@@ -10,6 +12,7 @@ import { WithdrawalType, useWithdrawal } from '@deps/contexts/transactions/Withd
 import { Processes } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { validateFullSurrenderWithdrawal, validatePartialWithdrawalOneTime } from '@deps/queries/api/bpm';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
@@ -33,6 +36,12 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
     const summaryLabel = t('withdrawals.summary.label');
     const confirmLabel = t('withdrawals.confirm.label');
 
+    const transactionType = useMemo(() => {
+        return withdrawal.type === WithdrawalType.Surrender
+            ? TransactionType.FULL_SURRENDER
+            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+    }, [withdrawal.type]);
+
     const validateCall = () => {
         const query = buildWithdrawalsRequestBody(withdrawal);
 
@@ -53,6 +62,7 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
                     state={withdrawal}
                     title={t('withdrawals.start.title') as string}
                     subtitle={t('withdrawals.start.subtitle') as string}
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Start }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -81,6 +91,7 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
                     policy={policy}
                     setState={setWithdrawal as PayeesStepSetState}
                     state={withdrawal}
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Payees }}
                 />
             ),
             screenReaderLabel: payeeLabel,
@@ -96,6 +107,7 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
                     setState={setWithdrawal as PaymentStepSetState}
                     state={withdrawal}
                     validateTransaction={validateCall}
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Payment }}
                 />
             ),
             screenReaderLabel: paymentLabel,

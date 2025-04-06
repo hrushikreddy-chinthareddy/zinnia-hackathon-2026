@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
@@ -12,6 +13,7 @@ import { isEndDated } from '@deps/helpers/date.helper';
 import { ArrangementType, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponse } from '@deps/queries/api/bpm';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
+import { TransactionClickProps } from '@deps/types/segment-analytics';
 
 import WorkflowCard from '../workflow-card/workflow-card';
 
@@ -31,7 +33,7 @@ export interface PaymentState extends PaymentMethodType {
 
 export type PaymentStepSetState = Dispatch<SetStateAction<PaymentState>>;
 
-interface PaymentStepProps {
+interface PaymentStepProps extends TransactionClickProps {
     parentPage: ParentPage;
     policy: Policy;
     setState: PaymentStepSetState;
@@ -40,9 +42,10 @@ interface PaymentStepProps {
     validateTransaction?: () => Promise<TransactionResponse>;
 }
 
-const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTransaction }: PaymentStepProps) => {
+const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTransaction, trackEventProps }: PaymentStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
+    const router = useRouter();
 
     const { policyNumber, product, systematicPrograms } = policy;
     const { paymentBankId, paymentAccountNumber: currentPaymentAccountNumber, payeePartyId, payorPartyId } = state;
@@ -50,7 +53,6 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
 
     const payPartyId = payeePartyId || payorPartyId;
     const party = policy?.parties?.find(party => party.partyId === payPartyId);
-    // TODO MG: confirm this should always be payment
     const paymentProgram = systematicPrograms?.find(program => program.arrangementType === ArrangementType.PAYMENT);
     const programBankId = paymentProgram?.party?.find(party => party.partyId === payPartyId);
     const bankDetails = useMemo(() => {
@@ -121,7 +123,9 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
 
     const secondaryCta = {
         text: t('general.leaveTransaction'),
-        href: `/policies/${product?.planCode}/${policyNumber}/policy/${parentPage}`,
+        onClick: () => {
+            router.push(`/policies/${product?.planCode}/${policyNumber}/policy/${parentPage}`);
+        },
     };
 
     const stopLoading = currentPaymentAccountNumber === '' || formError;
@@ -129,7 +133,7 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
     return (
         <WorkflowCard
             title={t('workflows.paymentStep.heading')}
-            footerContent={<TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} stopLoading={stopLoading} />}
+            footerContent={<TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} stopLoading={stopLoading} trackEventProps={trackEventProps} />}
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col">
@@ -138,7 +142,6 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
                     </Typography>
 
                     <div className="flex flex-col gap-4">
-                        {/* TODO MG: 'Select payment account' for money in and 'Where should we send the payment' for money out */}
                         <Typography variant={TypographyVariant.LabelLg}>{t('workflows.paymentStep.label')}</Typography>
 
                         <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3" data-testid="payment-methods">

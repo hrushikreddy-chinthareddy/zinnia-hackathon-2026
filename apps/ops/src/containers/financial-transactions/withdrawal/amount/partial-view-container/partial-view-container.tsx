@@ -129,6 +129,7 @@ const PartialViewContainer = ({ policy, formError, exceedMaximumError, missingAm
                     labelTooltipBody={t('fundDisbursementTypeTooltip') as string}
                 />
                 <div className="flex">
+                    {/* TODO MG: fix this warning/use bloom component */}
                     <input checked className={radioClasses(RadioVariant.Default)} tabIndex={-1} type="radio" readOnly />
                     <Typography className="ml-2" variant={TypographyVariant.Body}>
                         {t('proRata')}

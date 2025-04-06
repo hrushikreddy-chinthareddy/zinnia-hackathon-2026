@@ -12,6 +12,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { buildFullNameFromParty, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { FilingStatus, PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
+import { TransactionClickProps } from '@deps/types/segment-analytics';
 
 import WorkflowCard from '../workflow-card/workflow-card';
 
@@ -24,14 +25,14 @@ export interface PayeesType {
 
 export type PayeesStepSetState = Dispatch<SetStateAction<PayeesType>>;
 
-interface PayeesStepProps {
+interface PayeesStepProps extends TransactionClickProps {
     parentPage: ParentPage;
     policy: Policy;
     setState: PayeesStepSetState;
     state: PayeesType;
 }
 
-const PayeesStep = ({ parentPage, policy, setState, state }: PayeesStepProps) => {
+const PayeesStep = ({ parentPage, policy, setState, state, trackEventProps }: PayeesStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
 
@@ -113,6 +114,7 @@ const PayeesStep = ({ parentPage, policy, setState, state }: PayeesStepProps) =>
                     parentPage={parentPage}
                     planCode={policy.product?.planCode}
                     policyNumber={policyNumber}
+                    trackEventProps={trackEventProps}
                 />
             }
         >

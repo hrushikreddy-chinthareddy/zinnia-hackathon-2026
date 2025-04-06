@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import React, { ChangeEvent, useCallback, useState } from 'react';
@@ -13,6 +14,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 import { isDateAllowed, isPaymentAllowed, getImportantDates } from './amount.helper';
 
@@ -139,6 +141,7 @@ const Amount = ({ policy }: AmountProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     parentPage={ParentPage.Premiums}
+                    trackEventProps={{ type: TransactionType.PAYMENT_ONE_TIME_PREMIUM, step: TransactionStep.Amount }}
                 />
             }
         >

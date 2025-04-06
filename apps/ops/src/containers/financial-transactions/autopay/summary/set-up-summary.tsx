@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { toTitleCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -20,6 +21,7 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 interface SummaryProps {
     policy: Policy;
@@ -39,6 +41,14 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
     const { paymentAmount, effectiveDate, frequency, paymentAccountNumber, paymentBranchName, payorFullName, validationResponse } = autopay;
 
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
+
+    const transactionType = useMemo(() => {
+        // TODO MG: these are prob wrong
+        return parentPage === ParentPage.Premiums
+            ? TransactionType.SUBSEQUENT_PREMIUM
+            // : isSetUp ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+    }, [parentPage]);
 
     const handleContinue = async () => {
         if (!validationSucceeded && !isChecked) {
@@ -141,6 +151,7 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     submitLabel={t('submit') as string}
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Summary }}
                 />
             </CardContainer>
         </div>

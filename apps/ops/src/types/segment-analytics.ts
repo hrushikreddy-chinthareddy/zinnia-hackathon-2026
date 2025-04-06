@@ -1,3 +1,5 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
+
 import { UserProfile } from '@deps/models/user-profile';
 
 export interface SegmentTrackedPageProps {
@@ -35,6 +37,11 @@ export enum SegmentTrackedEventName {
     PolicyClicked = 'Policy Clicked',
     CaseClicked = 'Case Clicked',
     FilterApplied = 'Filter Applied',
+    CaseDetailsTabClicked = 'Case Details Tab Clicked',
+    CaseStageAccordionClicked = 'Case Stage Accordion Clicked',
+    CaseDocumentClicked = 'Case Document Clicked',
+    TransactionContinueClicked = 'Transaction Continue Clicked',
+    TransactionCancelClicked = 'Transaction Cancel Clicked',
 }
 
 export interface BaseSegmentEventProperties {
@@ -66,9 +73,70 @@ export type CaseClickedEvent = BaseSegmentEventProperties & {
     caseId: string;
 };
 
+export type CaseTabClickedEvent = BaseSegmentEventProperties & {
+    caseId: string;
+    tabName: string;
+};
+
+export type CaseStageAccordionClickedEvent = BaseSegmentEventProperties & {
+    caseId: string;
+    isOpen: boolean;
+    stageId: string;
+    stageName: string;
+};
+
+export type CaseDocumentClickedEvent = BaseSegmentEventProperties & {
+    documentId: string;
+    type: string;
+};
+
 export type FilterClickedEvent = BaseSegmentEventProperties & {
     selectedItemName: string;
 };
+
+// TODO MG: this is the same as TransactionTrackEventProps
+type BaseTransactionClickedEvent = BaseSegmentEventProperties & {
+    step?: TransactionStep;
+    type?: TransactionType | ContactCenterTransactionType;
+}
+
+export type TransactionContinueClickedEvent = BaseTransactionClickedEvent & {
+    correlationId?: string;
+};
+
+export type TransactionCancelClickedEvent = BaseTransactionClickedEvent;
+
+// TODO MG: move these - not so much segment related as they are transactionButton props
+export enum TransactionStep {
+    Amount = 'amount',
+    Cancel = 'cancel',
+    // TODO MG: need?
+    Confirm = 'confirm',
+    Date = 'date',
+    Payees = 'payees',
+    Payment = 'payment',
+    Payor = 'payor',
+    Start = 'start',
+    Summary = 'summary',
+    Taxes = 'taxes',
+}
+
+export enum ContactCenterTransactionType {
+    CORRESPONDENCE = 'CORRESPONDENCE',
+    DOCUMENT = 'DOCUMENT',
+    STATEMENT = 'STATEMENT',
+    TAX_FORM = 'TAX_FORM',
+}
+
+type TransactionTrackEventProps = {
+    correlationId?: string;
+    type?: TransactionType | ContactCenterTransactionType;
+    step?: TransactionStep;
+}
+
+export type TransactionClickProps = {
+    trackEventProps?: TransactionTrackEventProps;
+}
 
 export enum SegmentTrackEventState {
     Close = 'close',

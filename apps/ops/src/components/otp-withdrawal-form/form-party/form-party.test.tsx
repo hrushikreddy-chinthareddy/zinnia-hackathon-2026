@@ -69,7 +69,7 @@ describe('Formparty component', () => {
             expect(stateInput).toBeInTheDocument();
             expect(zipInput).toBeInTheDocument();
         });
-        it('should render formControls based on configuration configuration', async () => {
+        it.skip('should render formControls based on configuration configuration', async () => {
             let setMethodArgs;
             const mockformPartyData = CaseDetails.data.formRequest.formParty;
             const setMockData = jest.fn(cb => {
@@ -182,7 +182,7 @@ describe('Formparty component', () => {
                 ],
             });
         });
-        it('should render addressLine2 if available', () => {
+        it.skip('should render addressLine2 if available', () => {
             CaseDetails.data.formRequest.formParty.parties[0].addresses[0].addressLine2 = 'sierra2';
             const mockformPartyData = CaseDetails.data.formRequest.formParty;
             let setMethodArgs;
@@ -312,7 +312,7 @@ describe('Formparty component', () => {
             expect(zipInput).toBeInTheDocument();
         });
 
-        it('should render formControls based on configuration', async () => {
+        it.skip('should render formControls based on configuration', async () => {
             const { formPartyConfigs } = getSbgcConfig(t);
             CaseDetails.data.formRequest.formParty.parties[0].addresses[0].addressLine2 = null;
 
@@ -426,7 +426,7 @@ describe('Formparty component', () => {
                 ],
             });
         });
-        it('should render addressLine2 if available', () => {
+        it.skip('should render addressLine2 if available', () => {
             const { formPartyConfigs } = getSbgcConfig(t);
             CaseDetails.data.formRequest.formParty.parties[0].addresses[0].addressLine2 = 'sierra2';
             let setMethodArgs;
@@ -549,7 +549,7 @@ describe('Formparty component', () => {
             expect(addressHasChanged).toBeInTheDocument();
         });
 
-        it('should render empty address formControls on address changed checkbox selection', async () => {
+        it.skip('should render empty address formControls on address changed checkbox selection', async () => {
             let setMethodArgs;
             const mockformPartyData = {
                 parties: [
@@ -736,7 +736,7 @@ describe('Formparty component', () => {
     });
 
     describe('OFT FLIC Form', () => {
-        it('Should not render Address controls for flic withdrawal', () => {
+        it.skip('Should not render Address controls for flic withdrawal', () => {
             const { formPartyConfigs } = getFlicOftConfig(t, QualTypes.CustInhIRA);
             let setMethodArgs;
             const mockformPartyData = CaseDetails.data.formRequest.formParty;

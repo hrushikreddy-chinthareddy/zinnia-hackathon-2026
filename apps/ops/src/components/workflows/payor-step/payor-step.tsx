@@ -14,6 +14,7 @@ import { buildFullNameFromParty, isNullEmptyOrUndefined } from '@deps/helpers/st
 import { Address, PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
+import { TransactionClickProps } from '@deps/types/segment-analytics';
 
 import WorkflowCard from '../workflow-card/workflow-card';
 
@@ -25,14 +26,14 @@ export interface PayorType {
 
 export type PayorStepSetState = Dispatch<SetStateAction<PayorType>>;
 
-interface PayorStepProps {
+interface PayorStepProps extends TransactionClickProps {
     parentPage: ParentPage;
     policy: Policy;
     setState: PayorStepSetState;
     state: PayorType;
 }
 
-const PayorStep = ({ parentPage, policy, setState, state }: PayorStepProps) => {
+const PayorStep = ({ parentPage, policy, setState, state, trackEventProps }: PayorStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
 
@@ -106,6 +107,7 @@ const PayorStep = ({ parentPage, policy, setState, state }: PayorStepProps) => {
                     parentPage={parentPage}
                     planCode={policy.product?.planCode}
                     policyNumber={policyNumber}
+                    trackEventProps={trackEventProps}
                 />
             }
         >

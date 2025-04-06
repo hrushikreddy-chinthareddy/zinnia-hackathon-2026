@@ -11,7 +11,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
-import { ACH, useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
+import { ACH, useWithdrawal, WithdrawalType } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { toTitleCase } from '@deps/helpers/string.helper';
@@ -20,8 +20,10 @@ import { DisbursementType, Policy, TaxWithholdingType } from '@deps/models/polic
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 import { getOwnersTaxJurisdictionState } from '../taxes/taxes.helpers';
+import { TransactionType } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
     policy: Policy;
@@ -53,6 +55,13 @@ const Summary = ({ policy }: SummaryProps) => {
         ? numberFormatify(Math.abs(validationResponse?.quoteResponse?.transactionAmounts?.appliedAmount))
         : numberFormatify(validationResponse?.quoteResponse?.transactionAmounts?.appliedAmount);
 
+    // TODO MG: move this to shared spot or pass down as prop
+    const transactionType = useMemo(() => {
+        return withdrawal.type === WithdrawalType.Surrender
+            ? TransactionType.FULL_SURRENDER
+            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+    }, [withdrawal.type]);
+    
     const handleContinue = async () => {
         if (!validationSucceeded && !isChecked) {
             setShowSelectionError(true);
@@ -252,6 +261,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     submitLabel={t('submitWithdrawal') as string}
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Summary }}
                 />
             </CardContainer>
         </div>

@@ -6,9 +6,15 @@ import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { SendDocumentFormParts } from '@deps/models/case/send-document';
 
 import FormSelection from './form-selection';
+import { PermissionsProvider } from '@deps/contexts/PermissionsContext';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 window.HTMLElement.prototype.hasPointerCapture = jest.fn();
+
+window.analytics = {
+    track: jest.fn(),
+}
 
 jest.mock('@deps/utils/server-logging');
 jest.mock('next-i18next', () => ({
@@ -59,19 +65,24 @@ describe('Form selection component', () => {
     }));
 
     const setMockDispatch = jest.fn();
+
     it('renders an error message when no form is selected', async () => {
         const { getByText } = render(
-            <SendDocumentContext.Provider value={{ ...defaultSendDocumentState, dispatch: setMockDispatch }}>
-                <WorkflowProvider>
-                    <FormSelection
-                        availableFormsTransactions={mockAvailableFormsTransactions}
-                        policy={{}}
-                        ctiCallNumber=""
-                        formDetails={[] as SendDocumentFormParts[]}
-                        setFormDetails={() => []}
-                    />
-                </WorkflowProvider>
-            </SendDocumentContext.Provider>
+            <UserProvider>
+                <PermissionsProvider>
+                    <SendDocumentContext.Provider value={{ ...defaultSendDocumentState, dispatch: setMockDispatch }}>
+                        <WorkflowProvider>
+                            <FormSelection
+                                availableFormsTransactions={mockAvailableFormsTransactions}
+                                policy={{}}
+                                ctiCallNumber=""
+                                formDetails={[] as SendDocumentFormParts[]}
+                                setFormDetails={() => []}
+                            />
+                        </WorkflowProvider>
+                    </SendDocumentContext.Provider>
+                </PermissionsProvider>
+            </UserProvider>
         );
         const continueButton = getByText('continue');
         fireEvent.click(continueButton);

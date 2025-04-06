@@ -3,11 +3,14 @@ import { Icon, IconType, TabGroup, TabList, TabTrigger, TabContent } from '@zinn
 import { useTranslation } from 'next-i18next';
 
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { toTitleCase } from '@deps/helpers/string.helper';
 import { Case } from '@deps/models/case/case';
 import { ReactComponent as AnnotationsIcon } from '@deps/styles/elements/icons/communications/annotations.svg';
 import { ReactComponent as ProgressIcon } from '@deps/styles/elements/icons/illustrations/check-progress.svg';
 import { CaseDetailsTabValues } from '@deps/types/constants';
+import { CaseTabClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import CallLogsTab from './case-tabs/call-logs-tab';
 import DocumentsTab from './case-tabs/documents-tab';
@@ -24,25 +27,35 @@ export default function CaseSubPage({
     handleTabChange: (val: string) => void;
 }) {
     const { t } = useTranslation();
+    const perms = usePermissionsContext();
     const { loadingCallLogs, callLogs, callLogsStatusCode } = useCaseActivityContext();
+
+    const trackTabClick = (tab: string) => () => {
+        segmentAnalyticsTrackEvent<CaseTabClickedEvent>(SegmentTrackedEventName.CaseDetailsTabClicked, {
+            caseId: caseDetails.id,
+            session_id: perms.getSessionId(),
+            userId: perms.getUserPartyId(),
+            tabName: tab,
+        });
+    };
 
     return (
         <div className="w-full rounded bg-white shadow-elevation-light-04 lg:w-2/3">
             <TabGroup defaultValue={tab} value={tab} activationMode="manual" onValueChange={handleTabChange}>
                 <TabList className="!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8">
-                    <TabTrigger value={CaseDetailsTabValues.progress}>
+                    <TabTrigger value={CaseDetailsTabValues.progress} onClick={trackTabClick('Progress')}>
                         <ProgressIcon width={24} height={24} className="hidden lg:block" />{' '}
                         {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues.progress}`) ?? '')}
                     </TabTrigger>
-                    <TabTrigger value={CaseDetailsTabValues.documents}>
+                    <TabTrigger value={CaseDetailsTabValues.documents} onClick={trackTabClick('Documents')}>
                         <Icon width={24} height={24} className="hidden lg:block" type={IconType.DOCUMENT_TEXT} />{' '}
                         {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues.documents}`) ?? '')}
                     </TabTrigger>
-                    <TabTrigger value={CaseDetailsTabValues.notes}>
+                    <TabTrigger value={CaseDetailsTabValues.notes} onClick={trackTabClick('Notes')}>
                         <AnnotationsIcon width={24} height={24} className="hidden lg:block" />{' '}
                         {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues.notes}`) ?? '')}
                     </TabTrigger>
-                    <TabTrigger value={CaseDetailsTabValues['call-logs']}>
+                    <TabTrigger value={CaseDetailsTabValues['call-logs']} onClick={trackTabClick('Call Logs')}>
                         <Icon type={IconType.PHONE} width={24} height={24} className="hidden flex-shrink-0 lg:block" />{' '}
                         {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues['call-logs']}`) ?? '')}
                     </TabTrigger>

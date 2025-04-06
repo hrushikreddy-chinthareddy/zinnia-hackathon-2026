@@ -10,6 +10,7 @@ import { StatementStartYear, StatementTypes } from '@deps/models/case/send-state
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getCorrespondenceDocsV2 } from '@deps/queries/api/documents';
+import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -233,7 +234,13 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
     return (
         <WorkflowCard
             title={t(`sendStatement.tabs.statementSelection`)}
-            footerContent={<SendDocumentNavigationButtons handleContinue={handleContinue} handleCancel={handleCancel} />}
+            footerContent={
+                <SendDocumentNavigationButtons
+                    handleContinue={handleContinue}
+                    handleCancel={handleCancel}
+                    trackEventProps={{ type: ContactCenterTransactionType.STATEMENT }}
+                />
+            }
         >
             <div className="flex flex-col gap-4">
                 {statementTypes.map(({ label, value }) => {

@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -15,6 +16,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { Policy, Frequency } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 interface AmountProps {
     isSetUp?: boolean;
@@ -54,8 +56,11 @@ const Amount = ({ policy, isSetUp = false }: AmountProps) => {
         if (autopay.initValues) {
             return;
         }
-        // TODO MG: only for everly
-        const effectiveDate = policyDates?.nextMonthiversaryDate;
+        // TODO MG: nextMonthiversaryDate only for everly?
+        // confirm nextProgramDate is right when updating autopayment
+        const effectiveDate = isSetUp
+            ? policyDates?.nextMonthiversaryDate
+            : systematicProgramData?.nextProgramDate;
 
         setAutopay(() => ({
             ...autopay,
@@ -65,6 +70,14 @@ const Amount = ({ policy, isSetUp = false }: AmountProps) => {
             paymentAmount: systematicProgramData?.amount ? String(systematicProgramData.amount) : '',
         }));
     }, [autopay, setAutopay, systematicProgramData, policyDates?.nextMonthiversaryDate, isSetUp]);
+
+    const transactionType = useMemo(() => {
+        // TODO MG: these are prob wrong
+        return parentPage === ParentPage.Premiums
+            ? TransactionType.SUBSEQUENT_PREMIUM
+            // : isSetUp ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+    }, [parentPage]);
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const dateValue = event.target.value;
@@ -139,6 +152,7 @@ const Amount = ({ policy, isSetUp = false }: AmountProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     parentPage={parentPage as ParentPage}
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Amount }}                    
                 />
             }
         >

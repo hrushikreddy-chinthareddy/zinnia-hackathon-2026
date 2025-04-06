@@ -1,6 +1,7 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import ButtonGroup from '@deps/components/button-group/button-group';
@@ -17,6 +18,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { DisbursementType } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 import { WithdrawalContainerProps } from '../withdrawal-container';
 import PartialViewContainer from './partial-view-container/partial-view-container';
@@ -67,6 +69,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
             value: WithdrawalType.Surrender,
             testId: WithdrawalType.Surrender,
         },
+        // TODO MG: do eligibilty check and disable if they cant do a partial
         {
             label: t('partial'),
             value: WithdrawalType.Partial,
@@ -143,6 +146,12 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
         withdrawal.withdrawalCustomAmount,
         withdrawalType,
     ]);
+    // TODO MG: pass in trackEventProps so we dont have to do this in every step
+    const transactionType = useMemo(() => {
+        return withdrawal.type === WithdrawalType.Surrender
+            ? TransactionType.FULL_SURRENDER
+            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+    }, [withdrawal.type]);
 
     return (
         <WorkflowCard
@@ -153,6 +162,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
                     parentPage={ParentPage.Withdrawals}
                     planCode={policy.product?.planCode}
                     policyNumber={policy.policyNumber}
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Amount }}
                 />
             }
         >
