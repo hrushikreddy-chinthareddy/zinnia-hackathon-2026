@@ -7,8 +7,9 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
 import { updatePreferencesByPlanCode } from '@/actions/bpm/communication-preferences-actions';
+import { ApiResponseError } from '@/services';
 import { PolicyProfile } from '@/types/policy';
-import { FormSteps } from '@/types/transactions';
+import { FormSteps, ResponseMessage } from '@/types/transactions';
 
 import styles from './CommunicationPreferences.module.css';
 import { EditCommunicationPreferences } from './EditCommunicationPreferences';
@@ -27,10 +28,16 @@ export const CommunicationPreferenceSidesheet = ({
   }>();
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<FormSteps>(FormSteps.FORM);
+  const [apiSuccessResponse, setApiSuccessResponse] =
+    useState<ResponseMessage>();
+  const [apiErrorResponse, setApiErrorResponse] =
+    useState<ApiResponseError | null>();
 
   // Close the sidesheet and reset the form
   const handleCancel = () => {
     setIsOpen(false);
+    setApiSuccessResponse(undefined);
+    setApiErrorResponse(undefined);
 
     setTimeout(() => {
       setStep(FormSteps.FORM);
@@ -47,11 +54,20 @@ export const CommunicationPreferenceSidesheet = ({
       updatePreferencesByPlanCode({
         planCode,
         policyNumber,
+        policyPartyId: profileData.partyId,
         newPreferencesData: data,
       }),
-    onSuccess: () => {
-      setStep(FormSteps.SUCCESS);
+    onSuccess: ({ data, error }) => {
+      if (data) {
+        setApiSuccessResponse(data.messages);
+        setStep(FormSteps.SUCCESS);
+      } else {
+        setApiErrorResponse(error);
+        setStep(FormSteps.ERROR);
+      }
     },
+    // This will never be hit unless we missed handling somewhere
+    // since we catch all errors on the server side
     onError: () => {
       setStep(FormSteps.ERROR);
     },
@@ -69,12 +85,7 @@ export const CommunicationPreferenceSidesheet = ({
       header="Communication Preferences"
       trigger={
         <div className={styles.triggerContainer}>
-          <Icon
-            width={16}
-            height={16}
-            type={IconType.SETTINGS}
-            className={styles.triggerIcon}
-          />
+          <Icon small type={IconType.SETTINGS} className={styles.triggerIcon} />
           <Button mode="link" size="small" onClick={() => setIsOpen(true)}>
             Manage Preferences
           </Button>
@@ -94,15 +105,21 @@ export const CommunicationPreferenceSidesheet = ({
       )}
       {step === FormSteps.SUCCESS && (
         <Success
-          successTitle="Success!"
-          successMessage="Your communication preferences have been updated."
+          successTitle={apiSuccessResponse?.title || 'Thanks!'}
+          successMessage={
+            apiSuccessResponse?.message ||
+            'Your communication preference is being updated.'
+          }
           closeCallback={handleCancel}
         />
       )}
       {step === FormSteps.ERROR && (
         <Error
-          errorTitle="Error"
-          errorMessage="Your communication preferences could not be updated. Please try again."
+          isServerError={
+            !!(apiErrorResponse?.status && apiErrorResponse?.status >= 500)
+          }
+          errorTitle={apiErrorResponse?.name || "Sorry, that didn't work"}
+          errorMessage={apiErrorResponse?.message}
           closeCallback={handleCancel}
         />
       )}

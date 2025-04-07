@@ -8,6 +8,9 @@ export const CommunicationPreferences = ({
 }: {
   preferenceData: EDeliveryPreferenceModel[];
 }) => {
+  // NOTE: If the policy was created manually (as it is for most development testing)
+  // you will need to initially set preferences using the preference managemnt API in postmant
+  // for consumers, communication preference is set during policy generation
   if (preferenceData.length === 0 || !preferenceData[0]) {
     return (
       <div className={styles.itemsRowContainer}>

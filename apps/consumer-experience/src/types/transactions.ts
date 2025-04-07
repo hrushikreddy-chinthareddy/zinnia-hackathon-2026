@@ -36,12 +36,14 @@ export enum FormSteps {
   VERIFY_IDENTITY_CODE = 'VERIFY_IDENTITY_CODE',
 }
 
+export interface ResponseMessage {
+  title: string;
+  message: string;
+}
+
 export interface BPMResponse {
   correlationId: string;
   caseId: string;
   caseStatus: string;
-  messages: {
-    title: string;
-    message: string;
-  };
+  messages: ResponseMessage;
 }
