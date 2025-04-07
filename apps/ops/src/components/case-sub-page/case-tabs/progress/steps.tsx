@@ -34,6 +34,10 @@ enum StepResults {
     Expired = 'expired',
 }
 
+enum ParentStageIds {
+    AgentValidation = 'agentValidation',
+}
+
 const StepResultTag = ({ step }: { step: TransformedStep }) => {
     const { t } = useTranslation();
     let text;
@@ -138,6 +142,9 @@ const Step = ({ step, ...rest }: { step: TransformedStep } & React.HTMLAttribute
         );
         sideSheet.handleOpen(true);
     };
+
+    const hasPii = step.parentStage.id === ParentStageIds.AgentValidation;
+
     return (
         <li
             {...rest}
@@ -147,7 +154,7 @@ const Step = ({ step, ...rest }: { step: TransformedStep } & React.HTMLAttribute
                 <div className="mr-4 flex w-full flex-row items-center justify-between gap-2">
                     <div className="flex flex-row items-center gap-2 justify-self-start">
                         {getStepStatusIconTooltip(step, t)}
-                        <Content contentClassName="min-w-max" variant={ContentVariant.BodySm} details={step.name} />
+                        <Content contentClassName="min-w-max" variant={ContentVariant.BodySm} details={step.name} pii={hasPii} />
                         <StepResultTag step={step} />
                         {step.documents?.length > 0 && (
                             <div className="flex flex-row items-center gap-0.5 text-gray-600">
