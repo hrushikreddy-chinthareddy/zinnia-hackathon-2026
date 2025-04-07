@@ -1,0 +1,19 @@
+name: 'Chromatic POM'
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'packages/xd-components/**'
+    branches-ignore:
+      - 'dependabot/**'
+
+jobs:
+  chromatic:
+    uses: './build-chromatic.yml'
+    with:
+      project-name: XD-Components
+      filter-path: '@zinnia/xd-components'
+      working-dir: packages/xd-components
+    secrets:
+      chromatic-token: ${{ secrets.CHROMATIC_PROJECT_TOKEN_XD_COMPONENTS }}

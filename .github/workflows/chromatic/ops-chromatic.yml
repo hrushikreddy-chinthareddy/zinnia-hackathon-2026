@@ -10,7 +10,7 @@ on:
 
 jobs:
   chromatic:
-    uses: './.github/workflows/build-chromatic.yml'
+    uses: './build-chromatic.yml'
     with:
       project-name: OPS
       filter-path: ops
