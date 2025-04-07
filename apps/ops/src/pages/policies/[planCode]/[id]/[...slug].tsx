@@ -88,7 +88,6 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
     const { data: canEditPolicy } = useQuery({
         queryKey: ['canEditPolicy', id, planCode],
         queryFn: () => perms.canEditPolicy(UserPermission.AllowEditPolicy, planCode, id as string),
-        initialData: () => false,
         placeholderData: previousData => previousData,
     });
 
