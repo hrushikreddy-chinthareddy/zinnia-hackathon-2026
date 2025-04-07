@@ -1,7 +1,8 @@
+import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
-import { PropsWithChildren, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
 import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -37,7 +38,6 @@ import { convertToQueryString } from '@deps/helpers/routing.helper';
 import { convertKebabedDateString, formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helper';
 import { CardColumnsTest, CardDetailsTest } from '@deps/jest/constants/test-id-constants';
-import { Statuses } from '@deps/models/case/case';
 import {
     Address,
     Email,
@@ -53,7 +53,7 @@ import {
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
-import { getCases } from '@deps/queries/api/cases';
+import { getCasesQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -687,42 +687,19 @@ const ActiveQuickView = ({ policy }: BasePolicyComponentArgs) => {
 
 export const PolicyQuickView: React.FC<SummaryCardProps> = ({ policy }) => {
     const policyDetails = new PolicyDetails(policy);
-    const [casesTotal, setCasesTotal] = useState<number>(0);
 
-    const fetchCases = useCallback(async () => {
-        try {
-            const policyNumber = policyDetails.policyNumber;
-            const response = await getCases({
-                limit: 5,
-                notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
-                policyNumber,
-            });
-
-            if (!response) {
-                console.log('Error fetching cases: No data in response');
-            }
-
-            if ('total' in response) {
-                const total = response.total;
-                setCasesTotal(total);
-            } else {
-                console.log('Error fetching cases: No data in response');
-            }
-        } catch (error) {
-            console.error(`Error fetching cases: No data in response: ${error}`);
-        }
-    }, [policyDetails.policyNumber]);
-
-    useEffect(() => {
-        fetchCases();
-    }, [fetchCases]);
+    const { data: caseData } = useQuery({
+        queryKey: ['caseData', policyDetails.policyNumber],
+        queryFn: () => getCasesQuery(policyDetails.policyNumber),
+        placeholderData: previousData => previousData,
+    });
 
     return (
         <section data-testid={CardDetailsTest.CARD} className="mb-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
             <ResponsivePadding>
                 <QuickViewHeader policy={policyDetails} />
                 <div data-testid={CardDetailsTest.CONTENT}>
-                    <StatusBanner policy={policyDetails} casesTotal={casesTotal} />
+                    <StatusBanner policy={policyDetails} casesTotal={caseData && 'total' in caseData ? caseData.total : 0} />
                     <div data-testid={CardColumnsTest.COLUMNS} className="my-4 md:my-6 lg:my-8 lg:flex">
                         <OwnerInformation policy={policyDetails} />
                         <QuickViewModule policy={policyDetails} />

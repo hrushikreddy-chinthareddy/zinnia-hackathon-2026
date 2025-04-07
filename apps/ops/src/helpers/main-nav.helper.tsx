@@ -51,9 +51,6 @@ export const getMainNavItems = async (
             navItems.push({
                 label: policySearchText,
                 link: policySearchHref,
-                queryParams: {
-                    isReset: true,
-                },
                 icon: <Icon type={IconType.SHIELD_CHECKMARK} />,
             });
         }

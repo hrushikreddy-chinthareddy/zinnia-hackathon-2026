@@ -1,11 +1,8 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
-import isBetween from 'dayjs/plugin/isBetween';
-import router from 'next/router';
+import { useQuery } from '@tanstack/react-query';
 import { TFunction, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useContext } from 'react';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
@@ -16,7 +13,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { PolicyQuickView } from '@deps/containers/policy-summary-card/policy-summary-card';
 import SearchResults from '@deps/containers/search-results/search-results';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicySearchFilters, PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
@@ -24,16 +20,13 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
-import { searchPolicy } from '@deps/queries/api/policies';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
-import { isResetQueryParam } from '@deps/types/constants';
+import { getPoliciesQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { LabelValue } from '@deps/types/data';
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -73,20 +66,6 @@ const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
     },
 ];
 
-const initialResults = {
-    policies: null,
-    loading: false,
-    error: false,
-    total: 0,
-};
-
-interface PolicySearchResultsProps {
-    policies: Policy[] | null;
-    loading: boolean;
-    error: unknown | boolean;
-    total: number;
-}
-
 export interface DashboardContextProps {
     searchValue: SearchViewQuery;
 }
@@ -102,86 +81,27 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
 
     const { policySearchFilters, setPolicySearchFilters, clearPolicySearchFilters, setShowFieldErrorMessage } =
         useContext(PolicySearchFiltersContext);
-    const [policySearchResults, setPolicySearchResults] = useState<PolicySearchResultsProps>(initialResults);
-    const limit = 5; // Hardcoding to 5 for now.
-    const [offset, setOffset] = useState(0);
-    const [loadSearchResults, setLoadSearchResults] = useState(false);
-    const [isIdle, setIsIdle] = useState(true);
-    const { featureFlags } = useOptimizely();
+
+    const { searchValue, limit, offset } = policySearchFilters;
 
     const goToPage = (pageNumber: number) => {
-        setOffset((pageNumber - 1) * limit);
+        setPolicySearchFilters({ ...policySearchFilters, offset: (pageNumber - 1) * limit });
         window.scrollTo(0, 0);
     };
 
-    const fetchPolicies = useCallback(
-        async (value: SearchViewQuery) => {
-            try {
-                setPolicySearchResults({
-                    policies: null,
-                    loading: true,
-                    error: false,
-                    total: 0,
-                });
-
-                const disableAnnuities = !featureFlags[FEATURE_FLAGS.POLICY_MANAGEMENT_ANNUITIES_ENABLED];
-
-                const transformedValue = Object.fromEntries(
-                    Object.entries(value).map(([key, val]) => (key === 'ssn' ? [key, val?.replaceAll('-', '')] : [key, val]))
-                );
-
-                const response = await searchPolicy(
-                    {
-                        ...transformedValue,
-                        ...(disableAnnuities ? { lineOfBusiness: 'LIFE' } : {}),
-                    },
-                    { limit, offset }
-                );
-
-                setPolicySearchResults({
-                    policies: response.results,
-                    loading: false,
-                    error: false,
-                    total: response.total,
-                });
-            } catch (error) {
-                console.error(error);
-                setPolicySearchResults({
-                    policies: null,
-                    loading: false,
-                    error,
-                    total: 0,
-                });
-            }
-        },
-        [offset, !!featureFlags[FEATURE_FLAGS.POLICY_MANAGEMENT_ANNUITIES_ENABLED]]
-    );
-
-    useEffect(() => {
-        const clearResults = () => {
-            setPolicySearchResults({ ...initialResults });
-        };
-
-        const handleRouteChangeComplete = (url: string) => {
-            if (url.indexOf(isResetQueryParam) !== -1) {
-                setLoadSearchResults(false);
-                clearResults();
-            }
-        };
-
-        router.events.on('routeChangeComplete', handleRouteChangeComplete);
-
-        return () => {
-            router.events.off('routeChangeComplete', handleRouteChangeComplete);
-        };
-    }, []);
+    const {
+        data: policyData,
+        isFetching: policyDataFetching,
+        error: policyDataError,
+    } = useQuery({
+        queryKey: ['policyData', searchValue, limit, offset],
+        placeholderData: previousData => previousData,
+        queryFn: () => getPoliciesQuery(searchValue, limit, offset),
+        enabled: Object.keys(searchValue).length > 0,
+    });
 
     // Handlers
     const handleSearch = (value: SearchViewQuery) => {
-        // we don't want to search on initial load so we wait until a user clicks Search to allow fetching of results
-        setLoadSearchResults(true);
-        setIsIdle(false);
-
         segmentAnalyticsTrackEvent<SearchSubmittedEvent>(SegmentTrackedEventName.SearchSubmitted, {
             policyNumber: value?.policyNumber,
             ssnUsed: !!value?.ssn,
@@ -206,38 +126,13 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         // Show the field error message if the search button is clicked and nothing have been entered into the field
         if (!hasSearchValue) {
             setShowFieldErrorMessage(true);
-            setIsIdle(true);
         } else {
             setShowFieldErrorMessage(false);
         }
 
-        const newSearchValues: PolicySearchFilters = { ...policySearchFilters, searchValue: value };
+        const newSearchValues: PolicySearchFilters = { ...policySearchFilters, searchValue: value, offset: 0 };
 
         setPolicySearchFilters(newSearchValues);
-        setOffset(0);
-    };
-
-    useEffect(() => {
-        // initial value of polichSearchFilters.searchValue is `{}`
-        // if any keys are present then this will return true
-        // we then know we are returning from a search
-
-        const searchValueIsSet =
-            !!Object.keys(policySearchFilters.searchValue).length &&
-            !(policySearchFilters.searchValue.ssn && !/\d/.test(policySearchFilters.searchValue.ssn));
-
-        // don't fetch search results on initial page load. Wait until the Search button is clicked
-        // unless
-        // if something is in the search value we know we are returning from a previous search. Fetch results
-        if (loadSearchResults && searchValueIsSet) {
-            fetchPolicies(policySearchFilters.searchValue);
-        }
-    }, [loadSearchResults, policySearchFilters.searchValue, fetchPolicies]);
-
-    dayjs.extend(isBetween);
-    const showPresidentialMourningBanner = () => {
-        const today = dayjs();
-        return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
     };
 
     return (
@@ -245,22 +140,6 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
             <PageHead titleKey="policySearch" />
             <NoNavLayout displayTopNavBar={false}>
                 <div className="flex flex-col items-center xl:items-start">
-                    {showPresidentialMourningBanner() && (
-                        <BannerAlert
-                            bodyText={
-                                <>
-                                    In recognition of the National Day of Mourning following the death of former{' '}
-                                    <strong>President Jimmy Carter</strong>, the stock market will be closed on{' '}
-                                    <strong>January 9, 2025</strong>. As a result, contract values are as of close of business{' '}
-                                    <strong>January 8, 2025</strong>. Any trades or other financial transactions submitted on{' '}
-                                    <strong>January 9, 2025</strong> will be processed when the stock market reopens on{' '}
-                                    <strong>January 10, 2025</strong>.
-                                </>
-                            }
-                            variant={BannerVariant.Warning}
-                            className="mb-8"
-                        />
-                    )}
                     <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
                         {t('dashboard.h1')}
                     </Typography>
@@ -268,9 +147,8 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                         searchValue={policySearchFilters.searchValue}
                         onSearch={handleSearch}
                         toggleLabels={toggleLabels}
-                        initialToggleValue={'policyNumber' as PolicySearchKeys}
+                        initialToggleValue={policySearchFilters.toggleValue}
                         onClear={() => {
-                            setIsIdle(true);
                             clearPolicySearchFilters();
                         }}
                     />
@@ -278,25 +156,24 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
 
                 <SearchResults
                     query={{
-                        error: policySearchResults.error,
-                        isEmpty: policySearchResults.policies?.length === 0,
-                        isError: !!policySearchResults.error,
-                        isIdle: isIdle || policySearchResults.policies === null,
-                        isLoading: policySearchResults.loading,
-                        isSuccess: policySearchResults.error === false && policySearchResults.loading === false,
+                        error: policyDataError,
+                        isEmpty: policyData?.results?.length === 0 || !policyData?.results,
+                        isError: !!policyDataError,
+                        isIdle: Object.keys(policySearchFilters.searchValue).length === 0,
+                        isLoading: policyDataFetching,
+                        isSuccess:
+                            policyDataFetching === false && (!!policyData?.results || (!!policyData && policyData?.results?.length > 0)),
                     }}
                 >
                     <>
-                        {policySearchResults.policies
+                        {policyData?.results
                             ?.filter(p => p.policyNumber)
                             .map(p => {
                                 return <PolicyQuickView key={'policy_' + p.policyNumber} policy={p} />;
                             })}
                     </>
                 </SearchResults>
-                {!!policySearchResults?.total && (
-                    <PaginationControls total={policySearchResults.total} limit={limit} offset={offset} goToPage={goToPage} />
-                )}
+                {!!policyData?.total && <PaginationControls total={policyData.total} limit={limit} offset={offset} goToPage={goToPage} />}
             </NoNavLayout>
         </DashboardContext.Provider>
     );

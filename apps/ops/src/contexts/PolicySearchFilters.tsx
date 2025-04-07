@@ -7,10 +7,14 @@ import { POLICY_SEARCH_FILTERS_STORAGE_KEY, isResetQueryParam } from '@deps/type
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 export interface PolicySearchFilters {
     searchValue: SearchViewQuery;
+    limit: number;
+    offset: number;
     toggleValue: PolicySearchKeys;
 }
 export const initialFilters: PolicySearchFilters = {
     searchValue: SearchBarInitialValues,
+    limit: 5,
+    offset: 0,
     toggleValue: 'policyNumber',
 };
 

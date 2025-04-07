@@ -34,7 +34,7 @@ const SearchBar = ({
     onClear,
     className,
 }: SearchBarProps) => {
-    const { setShowFieldErrorMessage } = useContext(PolicySearchFiltersContext);
+    const { setShowFieldErrorMessage, setPolicySearchFilters, policySearchFilters } = useContext(PolicySearchFiltersContext);
     const { t } = useTranslation(TranslationFiles.COMMON);
     const getToggleLabel = useCallback(
         (targetVal: string) => {
@@ -88,13 +88,14 @@ const SearchBar = ({
                 value = activeToggleBtn;
             }
             setActiveToggleBtn(value as PolicySearchKeys);
+            setPolicySearchFilters({ ...policySearchFilters, toggleValue: value as PolicySearchKeys });
             setActiveLabels(getToggleLabel(value));
 
             if (onToggle) {
                 onToggle(value as PolicySearchKeys);
             }
         },
-        [activeToggleBtn, getToggleLabel, onToggle]
+        [activeToggleBtn, getToggleLabel, onToggle, policySearchFilters, setPolicySearchFilters]
     );
 
     const dropdownLabels = toggleLabels(t);
