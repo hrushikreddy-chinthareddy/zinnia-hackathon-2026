@@ -3,7 +3,7 @@ export const DEFAULT_UNAVAILABLE_STRING =
   'This data is unavailable at this time. Please try again later.';
 export const VALID_EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-export const toTitleCase = (value?: string): string => {
+export const toTitleCase = (value?: string | null): string => {
   if (!value) return '';
 
   return value.replace(/\w\S*/g, function (txt) {
@@ -11,7 +11,7 @@ export const toTitleCase = (value?: string): string => {
   });
 };
 
-export const toSentenceCase = (value?: string): string => {
+export const toSentenceCase = (value?: string | null): string => {
   if (!value) {
     return DEFAULT_ERROR_STRING;
   }

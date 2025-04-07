@@ -5,7 +5,9 @@ import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
 
+import { AgentSidesheet } from '@/components/agent-sidesheet/AgentSidesheet';
 import { SkeletonLoader } from '@/components/skeleton-loader/SkeletonLoader';
+import { getAgentInformation } from '@/queries/agent-queries';
 import { getPolicyDetails } from '@/queries/policy-queries';
 import { isAnnuity, policyStatusDisplayText } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
@@ -29,6 +31,16 @@ export const HeaderPolicyDetails = ({
     queryFn: () => getPolicyDetails(planCode, policyNumber),
   });
 
+  const { data: agentData, isLoading: agentDataLoading } = useQuery({
+    queryKey: ['agentData', data?.primaryAgentExternalId, policyNumber],
+    queryFn: () =>
+      getAgentInformation({
+        clientCode: data?.carrierId,
+        agentId: data?.primaryAgentExternalId,
+      }),
+    enabled: !!data?.primaryAgentExternalId,
+  });
+
   const badgeVariant = () => {
     switch (data?.policyStatus) {
       case PolicyStatus.PENDINGISSUED:
@@ -45,9 +57,10 @@ export const HeaderPolicyDetails = ({
     }
   };
 
-  if (isLoading) {
+  if (isLoading || agentDataLoading) {
     return (
       <div className="stacked-items my-sm">
+        <SkeletonLoader width="150px" height="14px" className="mb-sm" />
         <SkeletonLoader width="150px" height="14px" className="mb-sm" />
         <SkeletonLoader width="150px" height="14px" className="mb-sm" />
       </div>
@@ -82,6 +95,14 @@ export const HeaderPolicyDetails = ({
           <span>{isAnnuity(lineOfBusiness) ? 'Contract' : 'Policy'} #: </span>
           <span>{policyNumber}</span>
         </p>
+        {/* There is the possibility that an agent id is on the policy, but no agent data
+          is returned from mcs so null check is on the name rather than on the full object */}
+        {agentData && (
+          <>
+            <span>Agent:</span>
+            <AgentSidesheet agentData={agentData} />
+          </>
+        )}
       </div>
       <div className={`ml-md ${styles.desktopBadge}`}>
         <Badge

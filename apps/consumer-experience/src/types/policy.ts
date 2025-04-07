@@ -18,6 +18,7 @@ import {
   Status,
   FeatureType,
   TransactionAmounts,
+  Policy,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -26,6 +27,10 @@ export enum CarrierId {
   SBUL = 'SBUL',
   SB = 'SB',
   ELIC = 'ELIC',
+}
+
+export interface PolicyWithAgent extends Partial<Policy> {
+  primaryAgentExternalId?: string | null;
 }
 
 export interface PolicyDetails {

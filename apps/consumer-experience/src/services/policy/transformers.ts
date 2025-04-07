@@ -35,6 +35,7 @@ import {
   PolicyStatusDetail,
   PolicyFeatureDetail,
   CarrierPolicyDetails,
+  PolicyWithAgent,
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
 import {
@@ -603,7 +604,17 @@ export const transformPolicyStatusDetails = (
   };
 };
 
-export const transformPolicyDetails = (policy: Policy): Partial<Policy> => {
+export const transformPolicyDetails = (policy: Policy): PolicyWithAgent => {
+  const primaryServicingAgentId = policy.partyRoles?.find(
+    party => party.partyRole === PartyRole.PRIMARYSERVICINGAGENT
+  )?.partyId;
+  const primaryWritingAgentId = policy.partyRoles?.find(
+    party => party.partyRole === PartyRole.PRIMARYWRITINGAGENT
+  )?.partyId;
+
+  // TODO: add comments about how this logic works
+  const primaryAgentId = primaryServicingAgentId || primaryWritingAgentId;
+
   return {
     policyStatus: policy?.policyStatus || PolicyStatus.NOTISSUED,
     product: {
@@ -617,6 +628,9 @@ export const transformPolicyDetails = (policy: Policy): Partial<Policy> => {
       loanedPortionOfAccountValue:
         policy.accountValues?.loanedPortionOfAccountValue,
     },
+    primaryAgentExternalId: primaryAgentId
+      ? policy.parties?.find(p => p.partyId === primaryAgentId)?.agentExternalId
+      : null,
   };
 };
 

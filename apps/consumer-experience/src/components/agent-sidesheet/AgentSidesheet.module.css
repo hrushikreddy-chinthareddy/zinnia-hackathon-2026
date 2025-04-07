@@ -1,0 +1,9 @@
+.personalInfo {
+  > div {
+    padding: var(--measure-dimension-padding-2xl) 0;
+  }
+
+  > div:not(:last-of-type) {
+    border-bottom: 2px solid var(--color-base-border-border-light);
+  }
+}

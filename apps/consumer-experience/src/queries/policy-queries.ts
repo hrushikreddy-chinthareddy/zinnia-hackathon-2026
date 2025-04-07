@@ -1,9 +1,11 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { ApiResponse } from '@/services';
 import { ClientApi } from '@/services/client-http';
 import { Fund } from '@/services/funds';
-import { PolicyProfile, PolicyStatusDetail } from '@/types/policy';
+import {
+  PolicyProfile,
+  PolicyStatusDetail,
+  PolicyWithAgent,
+} from '@/types/policy';
 
 /**
  *
@@ -15,9 +17,10 @@ export const getPolicyDetails = async (
   planCode: string,
   policyNumber: string
 ) => {
-  const response: ApiResponse<Partial<Policy>> = await (
+  const response: ApiResponse<PolicyWithAgent> = await (
     await ClientApi.get(`/api/policies/${planCode}/${policyNumber}`)
   ).json();
+
   if (response.error || !response) {
     throw response.error;
   }

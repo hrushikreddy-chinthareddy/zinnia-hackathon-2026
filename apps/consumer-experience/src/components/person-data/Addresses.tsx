@@ -9,17 +9,17 @@ import {
   Label,
 } from '@zinnia/bloom/components';
 
-import { FieldData } from '@/components/field-data/FieldData';
-import { Address } from '@/components/pii/Address';
-
-import styles from './Addresses.module.css';
-import { AddressProps } from './types';
-import { AddEditAddressSidesheet } from '../add-edit-address/AddEditAddressSidesheet';
+import { AddEditAddressSidesheet } from '@/components/add-edit-address/AddEditAddressSidesheet';
 import {
   AddressFormFields,
   AddressObj,
-} from '../add-edit-address/form-steps/add/AddEditAddress';
-import { FormActionType } from '../add-edit-address/types';
+} from '@/components/add-edit-address/form-steps/add/AddEditAddress';
+import { FormActionType } from '@/components/add-edit-address/types';
+import { FieldData } from '@/components/field-data/FieldData';
+import { AddressProps } from '@/components/person-data/types';
+import { Address } from '@/components/pii/Address';
+
+import styles from './Addresses.module.css';
 const displayAddressType: { [key in AddressType]?: string } = {
   [AddressType.POBOX]: 'PO Box',
   [AddressType.RESIDENCE]: 'Residential',
