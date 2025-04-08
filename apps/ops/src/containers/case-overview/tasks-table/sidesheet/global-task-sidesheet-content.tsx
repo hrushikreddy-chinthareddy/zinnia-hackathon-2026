@@ -2,8 +2,8 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Button, Icon, IconType, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { convertToCamelCase } from '@zinnia/utils';
-import router from 'next/router';
 import { useTranslation } from 'next-i18next';
+import router from 'next/router';
 import { useEffect, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
@@ -16,13 +16,13 @@ import CustomLoader from '@deps/components/loader/customLoader';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
 import { DocumentsLimit } from '@deps/constants/case';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { toSentenceCase, formatDateTime } from '@deps/helpers/string.helper';
+import { formatDateTime, toSentenceCase } from '@deps/helpers/string.helper';
 import { TaskSource } from '@deps/models/case/task';
-import { ManagementTask, TaskStatus, TaskLabel, DocumentData, TaskSideSheetProps } from '@deps/models/case/task-instance';
+import { DocumentData, ManagementTask, TaskLabel, TaskSideSheetProps, TaskStatus } from '@deps/models/case/task-instance';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { claimTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
@@ -30,12 +30,12 @@ import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/a
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/content/clipboard-1.svg';
+import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
 import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache, writeToCache } from '@deps/utils/cache';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 
 export enum TabOptions {
     Details = 'Details',
@@ -74,10 +74,10 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             displayName: doc.displayName
                 ? doc.displayName
                 : doc.documentName
-                ? doc.documentName
-                : doc.sourceFileName
-                ? doc.sourceFileName
-                : '',
+                    ? doc.documentName
+                    : doc.sourceFileName
+                        ? doc.sourceFileName
+                        : '',
             documentNumber: doc.documentNumber,
             fileType: doc.fileType || doc.documentSource || 'pdf',
             documentSource: DocumentTypeView.Case,
@@ -267,7 +267,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             break;
         default:
             badgeIcon = <ClipboardIcon height={16} width={16} />;
-            badgeVariant = BadgeVariant.Info;
+            badgeVariant = BadgeVariant.Default;
             badgeLabel = TaskLabel.New;
             break;
     }
@@ -373,28 +373,28 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
                 {((task.status === TaskStatus.Pending && task.impededReason) ||
                     (task.status === TaskStatus.Canceled && task.cancellationReason)) && (
-                    <>
-                        <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
-                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                            <Content
-                                truncate
-                                details={statusReason}
-                                variant={ContentVariant.BodySm}
-                                popoverBody={statusReason}
-                                popoverClassName="background-white w-full "
-                                pii={true}
-                            />
-                        </Typography>
-                    </>
-                )}
+                        <>
+                            <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
+                            <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                                <Content
+                                    truncate
+                                    details={statusReason}
+                                    variant={ContentVariant.BodySm}
+                                    popoverBody={statusReason}
+                                    popoverClassName="background-white w-full "
+                                    pii={true}
+                                />
+                            </Typography>
+                        </>
+                    )}
                 {(task.status === TaskStatus.Pending || task.status === TaskStatus.Canceled || task.status === TaskStatus.Completed) && (
                     <>
                         <div className="col-span-1 text-[--color-base-text-text-secondary]">
                             {task.status === TaskStatus.Pending
                                 ? t('sideSheet.task.pendinglabel')
                                 : task.status === TaskStatus.Canceled
-                                ? t('sideSheet.task.canceledLabel')
-                                : t('sideSheet.task.completedLabel')}
+                                    ? t('sideSheet.task.canceledLabel')
+                                    : t('sideSheet.task.completedLabel')}
                         </div>
                         <Typography variant={TypographyVariant.BodySm} className="col-span-2">
                             {task.status === TaskStatus.Pending
@@ -402,8 +402,8 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                                     ? formatTimestamp(formattedPending)
                                     : 'N/A'
                                 : formattedUpdated
-                                ? formatTimestamp(formattedUpdated)
-                                : 'N/A'}
+                                    ? formatTimestamp(formattedUpdated)
+                                    : 'N/A'}
                         </Typography>
                     </>
                 )}

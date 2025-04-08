@@ -240,7 +240,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
             break;
         default:
             badgeIcon = <Progress width={16} height={16} />;
-            badgeVariant = BadgeVariant.Info;
+            badgeVariant = BadgeVariant.Default;
             badgeLabel = 'To do';
             break;
     }
