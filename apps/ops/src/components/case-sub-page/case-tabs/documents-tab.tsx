@@ -36,6 +36,10 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
     const [caseOffset, setCaseOffset] = useState(0);
     const [policyOffset, setPolicyOffset] = useState(0);
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
+        if (!caseDetails?.id) {
+            return null;
+        }
+
         return {
             parentCarrierCode: caseDetails.carrier,
             documentClassification:
@@ -47,6 +51,10 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
     }, [caseDetails, docSource]);
 
     const policyDocumentSearchBody = useMemo<SearchRequest | null>(() => {
+        if (!caseDetails?.policyNumber) {
+            return null;
+        }
+
         return {
             parentCarrierCode: caseDetails.carrier,
             documentClassification:
