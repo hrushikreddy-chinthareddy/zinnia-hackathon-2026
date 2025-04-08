@@ -413,6 +413,21 @@ export default function getSbgcConfig(t: TFunction) {
                 },
             },
             {
+                label: t('distributionMethod.overnightCheck'),
+                value: FormDisbursementSelections.ExpressCheck,
+                fields: null,
+                getDefaultPayload() {
+                    return DEFAULT_DISBURSEMENT_UPDATE;
+                },
+                generatePayloadFromSelection: () => {
+                    return {
+                        ...getDefaultFormDisbursementValues(),
+                        paymentMethod: { text: PaymentMailType.Check },
+                        paymentMailType: { text: PaymentMailType.ExpressCheck },
+                    };
+                },
+            },
+            {
                 label: t('distributionMethod.brokerageAccount'),
                 value: FormDisbursementSelections.Brokerage,
                 fields: [
