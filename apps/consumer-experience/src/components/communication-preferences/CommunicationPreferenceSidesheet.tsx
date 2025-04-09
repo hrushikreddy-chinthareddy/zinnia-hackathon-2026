@@ -10,6 +10,7 @@ import { updatePreferencesByPlanCode } from '@/actions/bpm/communication-prefere
 import { ApiResponseError } from '@/services';
 import { PolicyProfile } from '@/types/policy';
 import { FormSteps, ResponseMessage } from '@/types/transactions';
+import { filterItemsWithPastEndDate } from '@/utils/data';
 
 import styles from './CommunicationPreferences.module.css';
 import { EditCommunicationPreferences } from './EditCommunicationPreferences';
@@ -99,7 +100,7 @@ export const CommunicationPreferenceSidesheet = ({
         <EditCommunicationPreferences
           onSubmit={handleSubmit}
           onCancel={handleCancel}
-          emailOptions={profileData.emails}
+          emailOptions={filterItemsWithPastEndDate(profileData.emails)}
           hasMailingAddress={!!mailingAddress}
         />
       )}

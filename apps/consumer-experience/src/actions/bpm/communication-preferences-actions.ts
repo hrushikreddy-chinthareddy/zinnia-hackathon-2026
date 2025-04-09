@@ -3,6 +3,8 @@
 import { CommunicationPreferenceChange } from '@zinnia/api-types/types/bpm';
 import { UpdateEDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
 import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 
 import { ApiResponse, bpmApiBaseUrl, ServerApi } from '@/services';
 import { BPMResponse } from '@/types/transactions';
@@ -13,6 +15,10 @@ import {
   returnErrorResponse,
   returnSuccessResponse,
 } from './utils';
+import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 /**
  * Updates the communication preferences through BPM API.
@@ -45,13 +51,13 @@ export const updatePreferencesByPlanCode = async ({
       newPreferencesData.deliveryOption ===
       UpdateEDeliveryPreferenceModel.deliveryOption.MAIL;
 
-    // Because these are processed after 8pm est, if a user tries to update
+    // Because these are processed after 3pm cst, if a user tries to update
     // there communication preference after that time and we set effectiveDate to
-    // their current day, the request will fail. So if after 8pm est, set effective
+    // their current day, the request will fail. So if after 3pm cst, set effective
     // day to next day
-    const easternTime = dayjs().tz('America/New_York');
+    const central = dayjs().tz('America/Chicago');
     let effectiveDate = dayjs();
-    if (easternTime.isAfter(easternTime.hour(20), 'hour')) {
+    if ((central.isAfter(central.hour(15)), 'hour')) {
       effectiveDate = effectiveDate.add(1, 'day');
     }
 
@@ -61,7 +67,7 @@ export const updatePreferencesByPlanCode = async ({
           ? CommunicationPreferenceChange.preferredCommunicationType.REGULARMAIL
           : CommunicationPreferenceChange.preferredCommunicationType.EMAIL,
       },
-      effectiveDate,
+      effectiveDate: dayjs(effectiveDate).format(ZAHARA_DATE_FORMAT),
     };
 
     const rawResponse = await ServerApi.post(url, JSON.stringify(reqBody), {
