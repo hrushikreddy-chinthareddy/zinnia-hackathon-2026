@@ -275,6 +275,7 @@
         "taskTitle": "Mes Tâches",
         "noTasksFoundTitle": "Votre liste de tâches est actuellement vide.",
         "noTasksMessage": "Cliquez sur « Réclamer une tâche » pour commencer.",
+        "noTasks": "Aucune tâche disponible pour votre profil pour le moment.",
         "claimTaskError": "Vous n'avez pas les autorisations nécessaires pour accéder à cette fonctionnalité. Veuillez contacter l'administrateur pour obtenir de l'aide.",
         "fetchTaskError": "Impossible de récupérer les tâches.",
         "unassignTask": "Annuler l'attribution d'une tâche",
