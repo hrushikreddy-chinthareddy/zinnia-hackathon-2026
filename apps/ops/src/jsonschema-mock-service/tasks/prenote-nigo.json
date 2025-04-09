@@ -142,16 +142,6 @@
                                             "type": "string",
                                             "title": "Surrender carrier contract number"
                                         },
-                                        "isEligible": {
-                                            "type": "boolean",
-                                            "enum": [true, false],
-                                            "enumNames": ["Yes", "No"],
-                                            "title": "Eligibility indicator"
-                                        },
-                                        "grossAmount": {
-                                            "type": "number",
-                                            "title": "Gross Amount"
-                                        },
                                         "deliveryMethod": {
                                             "type": "string",
                                             "enum": ["MAIL", "FAX"],
@@ -289,8 +279,6 @@
                         "issueResolved",
                         "surrenderCompanyName",
                         "surrenderContractNumber",
-                        "isEligible",
-                        "grossAmount",
                         "deliveryMethod",
                         "address",
                         "deliveryFaxNumber",
@@ -400,16 +388,6 @@
                     "surrenderContractNumber": {
                         "ui:widget": "text",
                         "ui:dataPath": ["details", "exchangeReplace", "surrenderContractNumber"]
-                    },
-                    "isEligible": {
-                        "ui:widget": "radio",
-                        "ui:dataPath": ["details", "exchangeReplace", "eligibilityIndicator"]
-                    },
-                    "grossAmount": {
-                        "ui:options": {
-                            "widget": "ValueWidget"
-                        },
-                        "ui:dataPath": ["details", "exchangeReplace", "grossAmount"]
                     },
                     "deliveryMethod": {
                         "ui:widget": "radio",
