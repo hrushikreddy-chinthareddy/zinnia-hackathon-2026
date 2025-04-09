@@ -108,7 +108,7 @@ export default function TaskSideSheet({ taskId }: { taskId: string }) {
                 <div className="flex flex-row items-center gap-1">
                     <Label label={t('sideSheet.suitability.createdLabel')} variant={LabelVariant.FieldLabel} className="w-[75px] py-2" />
                     <Typography variant={TypographyVariant.BodySm} className="py-2">
-                         {formattedCreated ? formatTimestamp(formattedCreated) : 'N/A'}
+                        {formattedCreated ? formatTimestamp(formattedCreated) : 'N/A'}
                     </Typography>
                 </div>
 

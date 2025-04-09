@@ -23,6 +23,7 @@ export enum TaskLabel {
     'Pending' = 'Pending',
     'Canceled' = 'Canceled',
     'InProgress' = 'In Progress',
+    'Closed' = 'Closed',
 }
 
 export type TaskInstance = {
@@ -87,6 +88,11 @@ export type TaskComment = {
     description?: string | null;
     noteId?: number | null;
     submissionDate?: string | null;
+    user?: string | null;
+    createdAt?: string | null;
+    note?: string | null;
+    title?: string | null;
+    date?: string | null;
 };
 
 export type AssignedTask<T = TaskStatus> = {

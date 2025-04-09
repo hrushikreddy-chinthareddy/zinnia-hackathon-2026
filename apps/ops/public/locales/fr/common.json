@@ -1451,29 +1451,15 @@
                 "premium source": "Source de Financement: {{label}}",
                 "re-illustration": "Nouvelle illustration: {{label}}"
             },
-            "reviewIssues": "Revoir {{taskType}} problèmes",
+            "reviewIssues": "Revoir problèmes",
             "suitabilityReview": "suitability",
             "noDataAvailable": "Aucune donnée disponible.",
             "noDocuments": "Aucun document disponible",
             "errorAdditionalDocuments": "Erreur lors de la récupération de documents supplémentaires.",
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
-            "suitabilityReviewIssues": "Revoir Suitability Problèmes",
-            "purchaseDocumentMatchingIssues": "Document de correspondance",
-            "agentNigo": "Réviser les problèmes d'agent",
-            "attachmentNigo": "Réviser les problèmes d'application",
-            "PaymentProcessingNigo": "Résoudre les problèmes de traitement des paiements",
-            "applicationNigo": "Réviser les problèmes d'agent",
-            "agentReview": "Valider l'agent",
-            "reviewOfac": "Réviser les problèmes d'OFAC",
-            "agentOnboardingNigo": "Réviser les problèmes d'onboarding",
             "standardDocumentMatching": "Document de correspondance",
             "toaNigo": "Examiner les problèmes de transfert",
-            "applicationReview": "Valider les détails de la candidature",
-            "appDataEntry": "Résoudre les problèmes de saisie des données de l'application",
-            "agentOnboardingReview": "Valider les problèmes d'onboarding",
-            "toaReview": "Examiner les problèmes de transfert",
-            "prenoteReview": "Réviser les problèmes de pré-notes",
-            "paymentProcessingReview": "Examiner la prime initiale"
+            "applicationReview": "Valider les détails de la candidature"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -3368,7 +3354,8 @@
             "tabs": {
                 "details": "Détails",
                 "history": "Histoire",
-                "documents": "Documents"
+                "documents": "Documents",
+                "comments": "Commentaires"
             },
             "status": {
                 "label": "Statut",
@@ -3386,6 +3373,7 @@
             "inProgress": "En cours",
             "pendinglabel": "En attente jusqu'au",
             "canceledLabel": "Annulé le",
+            "closedLabel": "Fermé le",
             "completedLabel": "Terminé le",
             "additionalDocuments": "Documents supplémentaires",
             "noAssignee": "Seul le responsable peut démarrer cette tâche",

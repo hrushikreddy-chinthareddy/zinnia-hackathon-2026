@@ -1454,26 +1454,12 @@
                 "premium source": "Funding Source: {{label}}",
                 "re-illustration": "Re-Illustration: {{label}}"
             },
-            "reviewIssues": "Review {{taskType}}",
+            "reviewIssues": "Review",
             "suitabilityReview": "suitability",
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
-            "suitabilityReviewIssues": "Review Suitability",
-            "purchaseDocumentMatchingIssues": "Match Document",
-            "agentNigo": "Review Agent Issues",
-            "attachmentNigo": "Review Application Issues",
-            "PaymentProcessingNigo": "Review Premium Issues",
-            "applicationNigo": "Review Application Issues",
-            "agentReview": "Validate Agent",
-            "reviewOfac": "Review OFAC issues",
-            "agentOnboardingNigo": "Review Onboarding Issues",
             "standardDocumentMatching": "Match Document",
             "toaNigo": "Review Transfer Issues",
-            "applicationReview": "Validate Application Details",
-            "appDataEntry": "New Business Data Entry",
-            "agentOnboardingReview": "Validate Onboarding Issues",
-            "toaReview": "Review Transfer Issues",
-            "prenoteReview": "Review Prenote Issues",
-            "paymentProcessingReview": "Review Initial Premium"
+            "applicationReview": "Validate Application Details"
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -3389,7 +3375,8 @@
             "tabs": {
                 "details": "Details",
                 "history": "History",
-                "documents": "Documents"
+                "documents": "Documents",
+                "comments": "Comments"
             },
             "status": {
                 "label": "Status",
@@ -3411,6 +3398,7 @@
             "pendinglabel": "Pending until",
             "canceledLabel": "Canceled on",
             "completedLabel": "Completed on",
+            "closedLabel": "Closed on",
             "additionalDocuments": "Additional Documents",
             "noAssignee": "Only the assignee can start this task",
             "startTask": "Start task",

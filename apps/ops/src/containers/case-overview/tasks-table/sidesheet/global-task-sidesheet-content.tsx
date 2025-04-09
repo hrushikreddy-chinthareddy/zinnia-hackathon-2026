@@ -2,6 +2,7 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Button, Icon, IconType, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { convertToCamelCase } from '@zinnia/utils';
+import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import router from 'next/router';
 import { useEffect, useState } from 'react';
@@ -9,6 +10,7 @@ import { useEffect, useState } from 'react';
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import CallLogCard from '@deps/components/card/card-call-log/card-call-log';
 import { formatTimestamp } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
@@ -22,7 +24,7 @@ import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-d
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatDateTime, toSentenceCase } from '@deps/helpers/string.helper';
 import { TaskSource } from '@deps/models/case/task';
-import { DocumentData, ManagementTask, TaskLabel, TaskSideSheetProps, TaskStatus } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskStatus, TaskLabel, DocumentData, TaskSideSheetProps, TaskComment } from '@deps/models/case/task-instance';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { claimTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
@@ -40,6 +42,7 @@ import { parseErrorInformation } from '@deps/utils/server-logging';
 export enum TabOptions {
     Details = 'Details',
     Documents = 'Documents',
+    Comments = 'Comments',
 }
 
 export interface DocumentItemProps {
@@ -60,7 +63,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     const [startLoader, setStartLoader] = useState(false);
     const [additionalLoader, setAdditionalLoader] = useState(false);
     const [errorClaimingTask, setErrorClaimingTask] = useState(false);
-    const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] = useState('')
+    const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] = useState('');
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
     const [timer] = useState(performance.now());
@@ -74,10 +77,10 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             displayName: doc.displayName
                 ? doc.displayName
                 : doc.documentName
-                    ? doc.documentName
-                    : doc.sourceFileName
-                        ? doc.sourceFileName
-                        : '',
+                ? doc.documentName
+                : doc.sourceFileName
+                ? doc.sourceFileName
+                : '',
             documentNumber: doc.documentNumber,
             fileType: doc.fileType || doc.documentSource || 'pdf',
             documentSource: DocumentTypeView.Case,
@@ -138,7 +141,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                         }
                     );
                     setErrorClaimingTask(false);
-                    setClaimingTaskErrorMessage('')
+                    setClaimingTaskErrorMessage('');
                     browserLogInfo('task-queue:handleClaimTask::Successfully claimed task', { taskId: taskId });
                 } else {
                     browserLogInfo('task-queue:handleClaimTask::An error occurred while claiming the task', {
@@ -146,7 +149,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                         status: response?.statusCode,
                     });
                     setErrorClaimingTask(true);
-                    setClaimingTaskErrorMessage(response?.message)
+                    setClaimingTaskErrorMessage(response?.message);
                 }
             } catch (e) {
                 browserLogError('task-queue:handleClaimTask::Error claiming task', {
@@ -155,7 +158,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     caseId: task.caseId,
                 });
                 setErrorClaimingTask(true);
-                setClaimingTaskErrorMessage(t('sideSheet.task.claimTaskError') as string)
+                setClaimingTaskErrorMessage(t('sideSheet.task.claimTaskError') as string);
                 return;
             } finally {
                 setClaimTaskLoader(false);
@@ -255,6 +258,11 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             badgeVariant = BadgeVariant.Success;
             badgeLabel = TaskLabel.Completed;
             break;
+        case TaskStatus.Closed:
+            badgeIcon = <CircleCheckIcon height={16} width={16} />;
+            badgeVariant = BadgeVariant.Success;
+            badgeLabel = TaskLabel.Closed;
+            break;
         case TaskStatus.Canceled:
             badgeIcon = <BanIcon height={16} width={16} />;
             badgeVariant = BadgeVariant.Inactive;
@@ -339,6 +347,44 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             },
         },
     ];
+
+    const renderTaskStatus = (status: TaskStatus) => {
+        const validTaskStatuses = [TaskStatus.Pending, TaskStatus.Canceled, TaskStatus.Completed, TaskStatus.Closed];
+
+        if (!validTaskStatuses.includes(status)) {
+            return null;
+        }
+
+        let label = '';
+        let timestamp = formattedUpdated ? formatTimestamp(formattedUpdated) : 'N/A';
+
+        switch (status) {
+            case TaskStatus.Pending:
+                label = t('sideSheet.task.pendinglabel');
+                timestamp = formattedPending ? formatTimestamp(formattedPending) : 'N/A';
+                break;
+            case TaskStatus.Canceled:
+                label = t('sideSheet.task.canceledLabel');
+                break;
+            case TaskStatus.Closed:
+                label = t('sideSheet.task.closedLabel');
+                break;
+            case TaskStatus.Completed:
+                label = t('sideSheet.task.completedLabel');
+                break;
+            default:
+                break;
+        }
+
+        return (
+            <>
+                <div className="col-span-1 text-[--color-base-text-text-secondary]">{label}</div>
+                <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                    {timestamp}
+                </Typography>
+            </>
+        );
+    };
     const renderDetails = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg mt-8">{t('sideSheet.task.tabs.details')}</label>
@@ -373,49 +419,29 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
                 {((task.status === TaskStatus.Pending && task.impededReason) ||
                     (task.status === TaskStatus.Canceled && task.cancellationReason)) && (
-                        <>
-                            <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
-                            <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                                <Content
-                                    truncate
-                                    details={statusReason}
-                                    variant={ContentVariant.BodySm}
-                                    popoverBody={statusReason}
-                                    popoverClassName="background-white w-full "
-                                    pii={true}
-                                />
-                            </Typography>
-                        </>
-                    )}
-                {(task.status === TaskStatus.Pending || task.status === TaskStatus.Canceled || task.status === TaskStatus.Completed) && (
                     <>
-                        <div className="col-span-1 text-[--color-base-text-text-secondary]">
-                            {task.status === TaskStatus.Pending
-                                ? t('sideSheet.task.pendinglabel')
-                                : task.status === TaskStatus.Canceled
-                                    ? t('sideSheet.task.canceledLabel')
-                                    : t('sideSheet.task.completedLabel')}
-                        </div>
+                        <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
                         <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                            {task.status === TaskStatus.Pending
-                                ? formattedPending
-                                    ? formatTimestamp(formattedPending)
-                                    : 'N/A'
-                                : formattedUpdated
-                                    ? formatTimestamp(formattedUpdated)
-                                    : 'N/A'}
+                            <Content
+                                truncate
+                                details={statusReason}
+                                variant={ContentVariant.BodySm}
+                                popoverBody={statusReason}
+                                popoverClassName="background-white w-full "
+                                pii={true}
+                            />
                         </Typography>
                     </>
                 )}
+
+                {renderTaskStatus(task.status)}
 
                 <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.assigneeLabel')} </div>
                 <div className="col-span-2">
                     <Typography variant={TypographyVariant.BodySm}>
                         {task.assignee ? task.assignee : task.prefferedAssignee ? task.prefferedAssignee : NoAssigneeComp}
                     </Typography>
-                    {errorClaimingTask ? (
-                        <AssistiveText variant={AssistiveTextVariant.Error} text={claimingTaskErrorMessage} />
-                    ) : null}
+                    {errorClaimingTask ? <AssistiveText variant={AssistiveTextVariant.Error} text={claimingTaskErrorMessage} /> : null}
                 </div>
 
                 <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.newCreatedLabel')} </div>
@@ -522,6 +548,37 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
         </div>
     );
 
+    const noCommentsAvailable = !task.data || !task.data?.notes || task.data?.notes?.length === 0;
+    const descendingByDateComments = task.data?.notes?.sort((a: TaskComment, b: TaskComment) => {
+        return dayjs(a.submissionDate).isBefore(b.submissionDate) ? 1 : -1;
+    });
+
+    const renderComments = (
+        <>
+            {task.data?.notes && (
+                <div className="w-full">
+                    {descendingByDateComments.map((note: TaskComment, index: number) => {
+                        const summary = [note.commentSubCategory, note.commentDetail, note.description, note.comment, note.note, note.title]
+                            .filter(Boolean)
+                            .join('. ');
+
+                        return (
+                            <CallLogCard
+                                key={index}
+                                summary={summary || `${t('sideSheet.suitability.comments.noSummaryAvailable')} Note id: ${note.noteId}`}
+                                tag={note.commentCategory ?? undefined}
+                                isSecondaryPage
+                                className="px-0 py-4"
+                                createdAt={note.submissionDate || note.createdAt || note.date || undefined}
+                                callerName={note.user || note.createBy || undefined}
+                            />
+                        );
+                    })}
+                </div>
+            )}
+        </>
+    );
+
     const renderTabContent = (
         <>
             <TabContent className="flex px-10  w-full flex-col items-center" value={TabOptions.Details}>
@@ -530,6 +587,11 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             <TabContent className="flex px-10  w-full flex-col items-center" value={TabOptions.Documents}>
                 {renderDocuments}
             </TabContent>
+            {!noCommentsAvailable && (
+                <TabContent className="flex px-10  w-full flex-col items-center" value={TabOptions.Comments}>
+                    {renderComments}
+                </TabContent>
+            )}
         </>
     );
 
@@ -539,6 +601,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 <TabList className="!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8">
                     <TabTrigger value={TabOptions.Details}>{t('sideSheet.task.tabs.details') ?? ''}</TabTrigger>
                     <TabTrigger value={TabOptions.Documents}>{t('sideSheet.task.tabs.documents') ?? ''}</TabTrigger>
+                    {!noCommentsAvailable && <TabTrigger value={TabOptions.Comments}>{t('sideSheet.task.tabs.comments') ?? ''}</TabTrigger>}
                 </TabList>
                 {loading ? (
                     <div className="flex justify-center items-center h-screen">

@@ -2,7 +2,6 @@ import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
-import TaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/task-sidesheet-content';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
 import { Statuses } from '@deps/models/case/case';
@@ -37,35 +36,12 @@ export const SupportedTaskMap = [
 export function Task({ task }: { task: TaskView }) {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
-    const TaskTitle: Record<string, string> = {
-        [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReviewIssues'),
-        [TaskType.PURCHASE_DOCUMENT_MATCHING]: t('caseOverview.tabs.purchaseDocumentMatchingIssues'),
-        [TaskType.Agent_Nigo]: t('caseOverview.tabs.agentNigo'),
-        [TaskType.Attachment_Nigo]: t('caseOverview.tabs.attachmentNigo'),
-        [TaskType.PremiumNigo]: t('caseOverview.tabs.PaymentProcessingNigo'),
-        [TaskType.Application_Nigo]: t('caseOverview.tabs.applicationNigo'),
-        [TaskType.Agent_Review]: t('caseOverview.tabs.agentReview'),
-        [TaskType.Review_Ofac]: t('caseOverview.tabs.reviewOfac'),
-        [TaskType.Agent_Onboarding_Nigo]: t('caseOverview.tabs.agentOnboardingNigo'),
-        [TaskType.AppDataEntry]: t('caseOverview.tabs.appDataEntry'),
-        [TaskType.Agent_Onboarding_Review]: t('caseOverview.tabs.agentOnboardingReview'),
-        [TaskType.TOA_Review]: t('caseOverview.tabs.toaReview'),
-        [TaskType.Prenote_Review]: t('caseOverview.tabs.prenoteReview'),
-        [TaskType.Payment_Processing_Review]: t('caseOverview.tabs.paymentProcessingReview'),
-    };
-
-    const TaskTypeMap: Record<string, string> = {
-        [TaskType.SuitabilityReview]: t('caseOverview.tabs.suitabilityReview'),
-    };
 
     const handleClick = (task: TaskView) => {
         sideSheet.changeSideSheetContent(
             `${task.taskName ? `${t('sideSheet.task.taskHeading')}: ${task.taskName}` : t('sideSheet.task.taskHeading')}`,
-            SupportedTaskMap.includes(task.description as TaskType) ? (
-                <GlobalTaskSideSheet taskId={task.id} taskDescription={task.description} />
-            ) : (
-                <TaskSideSheet taskId={task.id} />
-            )
+
+            <GlobalTaskSideSheet taskId={task.id} taskDescription={task.description} />
         );
         sideSheet.handleOpen(true);
     };
@@ -95,11 +71,7 @@ export function Task({ task }: { task: TaskView }) {
                     <Content
                         contentClassName="min-w-max"
                         variant={ContentVariant.BodySm}
-                        details={
-                            task.taskName
-                                ? task.taskName
-                                : (t('caseOverview.tabs.reviewIssues', { taskType: TaskTypeMap[task.description] }) as string)
-                        }
+                        details={task.taskName ? task.taskName : (t('caseOverview.tabs.reviewIssues') as string)}
                     />
 
                     <Content className="min-w-max" variant={ContentVariant.BodySm} details={dateString} />
