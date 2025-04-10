@@ -9,3 +9,8 @@ export interface TaskHandler<RequestPayload, ResponseData> {
     getPayload: (task: any) => RequestPayload;
     transformResponse: (response: ResponseData, metadata: any) => void;
 }
+
+export interface ReviewPayload {
+    category: string[];
+    businessProcess: string;
+}

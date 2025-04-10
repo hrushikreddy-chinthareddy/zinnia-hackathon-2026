@@ -9,6 +9,12 @@ const variantMap: { [key: string]: AssistiveTextVariant } = {
     info: AssistiveTextVariant.Info,
 };
 
+type FormContextOptions = {
+    keyName: string;
+    listName: string;
+    parseKey?: string;
+};
+
 const getVariant = (value: string): AssistiveTextVariant => {
     return variantMap[value.toLowerCase()] || AssistiveTextVariant.Info;
 };
@@ -18,17 +24,21 @@ export default function TextListTemplate(props: ArrayFieldTemplateProps): JSX.El
     const keyName = uiSchema?.['ui:options']?.keyName;
     const listType = (uiSchema?.['ui:options']?.type as string) || 'error';
     const hasBg = uiSchema?.['ui:options']?.hasBg;
-    let list = [];
     const { title } = props;
+    const formContextOptions: FormContextOptions = uiSchema?.['ui:options']?.formContext as FormContextOptions;
+
+    let list: string[] = [];
 
     if (typeof keyName === 'string') {
         list = formData.map((item: { [key: string]: any }) => item[keyName]) ?? [];
     }
-    const formContextOptions: any = uiSchema?.['ui:options']?.formContext;
+
     if (list.length === 0 && formContextOptions) {
         if (props.formContext[formContextOptions?.keyName][formContextOptions?.listName]) {
             const data = props.formContext[formContextOptions?.keyName][formContextOptions?.listName];
-            list = data;
+            const parseKey: string = formContextOptions?.parseKey ?? '';
+
+            list = parseKey ? data.map((item: string) => JSON.parse(item)[parseKey]) : data;
         }
     }
 

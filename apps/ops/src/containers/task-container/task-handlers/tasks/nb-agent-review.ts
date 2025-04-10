@@ -1,18 +1,8 @@
 import { NigoSearch } from '@deps/queries/api/nigo-search';
+import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
+import { TaskHandler, ReviewPayload } from '../types';
 
-import { TaskHandler } from '../types';
-
-// Define expected payload and response types
-interface AgentReviewPayload {
-    category: string[];
-    businessProcess: string;
-}
-
-interface NigoExceptionResponse {
-    reason: string;
-}
-
-const agentReviewHandler: TaskHandler<AgentReviewPayload, NigoExceptionResponse[]> = {
+const agentReviewHandler: TaskHandler<ReviewPayload, NigoExceptionResponse[]> = {
     api: NigoSearch,
 
     getPayload: () => ({
@@ -23,15 +13,15 @@ const agentReviewHandler: TaskHandler<AgentReviewPayload, NigoExceptionResponse[
     transformResponse: (response, metadata) => {
         if (!response || response.length === 0) return;
 
-        const reasonList = Array.from(new Set(response.map(item => item.reason)));
+        const reasonList = Array.from(new Set(response.map(item => item)));
 
         if (metadata[0]?.formSchema?.definitions) {
-            metadata[0].formSchema.definitions.declineReason = { enum: reasonList };
+            metadata[0].formSchema.definitions.declineReason = { enum: reasonList.map(reason => JSON.stringify(reason)) };
         }
 
         metadata[0].uiSchema.declineReason['ui:options'].enumOptions = reasonList.map(reason => ({
-            label: reason,
-            value: reason,
+            label: reason.detailedReason,
+            value: JSON.stringify(reason),
         }));
     },
 };

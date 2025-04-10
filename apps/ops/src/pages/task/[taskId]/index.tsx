@@ -3,7 +3,6 @@ import { convertToCamelCase } from '@zinnia/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import NoNavLayout from '@deps/components/no-nav-layout';
-import { buildCaseLink } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { getNigoExceptions } from '@deps/containers/task-container/components/steps/nigo-details/nigo-details.helper';
 import TaskContainer from '@deps/containers/task-container/task-container';
@@ -214,7 +213,7 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
 
-                const taskInfoLink = context?.req?.headers?.referer  ? new URL(context.req.headers.referer)?.pathname : "/home"
+                const taskInfoLink = context?.req?.headers?.referer ? new URL(context.req.headers.referer)?.pathname : '/home';
 
                 //transform schema options with api
                 await applyDynamicOptions(task, accessToken, currentTaskMetadata);
