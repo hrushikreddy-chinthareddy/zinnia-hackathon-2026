@@ -50,7 +50,7 @@ function SideSheetTask({ task }: { task: TaskView }) {
     };
     return (
         <div className={`flex flex-row items-center justify-start ${task.description ? 'gap-1' : ''} `}>
-            <Content variant={ContentVariant.BodySm} details={task.description} />
+            <Content variant={ContentVariant.BodySm} details={task.taskName || task.description} />
             <Button mode="link" size="small" onClick={() => openSideSheet()}>
                 {t('caseOverview.sidesheet.viewTask')}
             </Button>
