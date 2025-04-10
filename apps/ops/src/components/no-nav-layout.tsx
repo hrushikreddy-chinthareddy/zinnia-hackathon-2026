@@ -1,14 +1,9 @@
 import clsx from 'clsx';
-import { useTranslation } from 'next-i18next';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import styles from '@deps/components/NoNavLayout.module.css';
-import { TranslationFiles } from '@deps/config/translations';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getMainNavItems } from '@deps/helpers/main-nav.helper';
 import { NavBar } from '@deps/navigation/nav-bar';
-import { NavBarLinkProps } from '@deps/navigation/nav-bar-link/nav-bar-link';
 interface NoNavLayoutProps {
     children: React.ReactNode;
     displayTopNavBar?: boolean;
@@ -17,20 +12,7 @@ interface NoNavLayoutProps {
 }
 
 const NoNavLayout: React.FC<NoNavLayoutProps> = ({ fullHeight, children, displayTopNavBar = true, size }: NoNavLayoutProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
-    const permissions = usePermissionsContext();
-    const { featureFlags } = useOptimizely();
-    const [navItems, setNavItems] = useState<NavBarLinkProps[]>([]);
-
-    useEffect(() => {
-        const fetchNavItems = async () => {
-            const mainNavItems = await getMainNavItems(t, permissions, featureFlags);
-            setNavItems(mainNavItems);
-        };
-        if (permissions && featureFlags) {
-            fetchNavItems();
-        }
-    }, [permissions, featureFlags, t]);
+    const navItems = getMainNavItems();
 
     return (
         <div className={`${fullHeight ? 'h-full' : ''}`}>

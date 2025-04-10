@@ -15,7 +15,7 @@ interface FindKeyValueSearchProps {
 
 export const FindKeyValueSearch = ({ isNavDrawerOpen, keyValues, planCode, policyNumber }: FindKeyValueSearchProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { useSuspense: false });
-    const perms = usePermissionsContext();
+    const { sessionId, partyId } = usePermissionsContext();
 
     const searchClasses = clsx(
         'mt-4 flex w-full items-center sm:pl-14',
@@ -33,8 +33,8 @@ export const FindKeyValueSearch = ({ isNavDrawerOpen, keyValues, planCode, polic
                 values={keyValues}
                 errorMessageLink={`/policies/${planCode}/${policyNumber}/policy/policy-details`}
                 group={true}
-                sessionId={perms.getSessionId()}
-                userPartyId={perms.getUserPartyId()}
+                sessionId={sessionId}
+                userPartyId={partyId}
             />
         </div>
     );

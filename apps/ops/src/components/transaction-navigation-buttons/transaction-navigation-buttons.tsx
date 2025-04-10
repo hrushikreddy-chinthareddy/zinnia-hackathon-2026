@@ -7,7 +7,12 @@ import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { SegmentTrackedEventName, TransactionCancelClickedEvent, TransactionClickProps, TransactionContinueClickedEvent } from '@deps/types/segment-analytics';
+import {
+    SegmentTrackedEventName,
+    TransactionCancelClickedEvent,
+    TransactionClickProps,
+    TransactionContinueClickedEvent,
+} from '@deps/types/segment-analytics';
 
 export enum ParentPage {
     CreateCase = 'create-case',
@@ -49,7 +54,7 @@ const TransactionNavigationButtons = ({
     trackEventProps,
 }: TransactionNavigationButtonsProps) => {
     const { t } = useTranslation();
-    const perms = usePermissionsContext();
+    const { sessionId, partyId } = usePermissionsContext();
     const router = useRouter();
 
     const submitLbl = isSubmit ? (submitLabel?.length ? submitLabel : t('general.submitPayment')) : t('general.continue');
@@ -60,24 +65,24 @@ const TransactionNavigationButtons = ({
     const onContinueClick = useCallback(() => {
         if (trackEventProps) {
             segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
-                session_id: perms.getSessionId(),
-                userId: perms.getUserPartyId(),
-                ...trackEventProps
+                session_id: sessionId,
+                userId: partyId,
+                ...trackEventProps,
             });
         }
         handleContinue();
-    }, [trackEventProps, perms, handleContinue]);
+    }, [trackEventProps, sessionId, partyId, handleContinue]);
 
     const onCancelClick = useCallback(() => {
         if (trackEventProps) {
             segmentAnalyticsTrackEvent<TransactionCancelClickedEvent>(SegmentTrackedEventName.TransactionCancelClicked, {
-                session_id: perms.getSessionId(),
-                userId: perms.getUserPartyId(),
-                ...trackEventProps
+                session_id: sessionId,
+                userId: partyId,
+                ...trackEventProps,
             });
         }
         router.push(link);
-    }, [trackEventProps, perms, link, router]);
+    }, [trackEventProps, sessionId, partyId, link, router]);
 
     return (
         <div className={clsx('flex flex-row justify-start gap-6', className)}>

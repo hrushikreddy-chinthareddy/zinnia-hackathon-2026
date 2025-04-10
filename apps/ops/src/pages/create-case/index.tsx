@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { useQuery } from '@tanstack/react-query';
 import { TabGroup, TabList, TabTrigger, TabContent, Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { getCookie, setCookie } from 'cookies-next';
 import dayjs from 'dayjs';
@@ -6,7 +7,7 @@ import isBetween from 'dayjs/plugin/isBetween';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import xss from 'xss';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
@@ -34,6 +35,7 @@ import { docTypes } from '@deps/models/case/helpers';
 import { UserPermission } from '@deps/models/user-profile';
 import createCaseFromDocumentNumber from '@deps/operations/cases/caseOperations';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
+import { getCarriersListQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { ReactComponent as ProgressIcon } from '@deps/styles/elements/icons/illustrations/check-progress.svg';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { browserLogInfo } from '@deps/utils/browser-logging';
@@ -42,6 +44,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 
 interface CaseCreatePageProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
@@ -90,10 +93,8 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     };
     router.events.on('routeChangeStart', handleRouteChange);
     router.events.on('routeChangeComplete', handleRouteComplete);
-    const permissions = usePermissionsContext();
+    const { partyId } = usePermissionsContext();
     const [caseType, setCaseType] = useState<CaseType>(CaseType.Renewal);
-    const [clientId, setClientId] = useState<string>('');
-    const [clientIds, setClientIds] = useState([] as string[]);
     const [documentNumber, setDocumentNumber] = useState<string>('');
     const [policyNumber, setPolicyNumber] = useState<string>('');
     const [caseId, setCaseId] = useState<string>('');
@@ -104,25 +105,27 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const shouldShowReg60Case = featureFlagDecisions?.[FEATURE_FLAGS.REG_60];
     const [searchByOption, setSearchByOption] = useState(SearchKeys.DocumentNumber);
 
-    useEffect(() => {
-        const fetchPermittedClientIds = async () => {
-            const permittedClientIds = await permissions.getClientIds(UserPermission.AllowReadOtpRenewals);
-            setClientIds(permittedClientIds);
-        };
-        fetchPermittedClientIds();
-    }, [permissions]);
+    const { data: permittedClientIds } = useQuery({
+        queryKey: ['permittedClientIds', partyId],
+        queryFn: () => getCarriersListQuery(UserPermission.AllowReadOtpRenewals, partyId),
+        enabled: !!partyId,
+        initialData: [],
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+        initialDataUpdatedAt: Date.now() - FIFTEEN_MINUTES_IN_MS,
+    });
 
-    useEffect(() => {
+    const initialClientId = useMemo(() => {
         const cookieClientId = getCookie(OTP_FORM_CLIENT_COOKIE);
-
-        if (cookieClientId && clientIds.includes(cookieClientId as string)) {
-            setClientId(cookieClientId as string);
-        } else if (clientIds.length === 1 || (!clientIds.includes(clientId) && clientIds.length > 1)) {
-            setClientId(clientIds[0]);
+        if (cookieClientId && permittedClientIds.includes(cookieClientId as string)) {
+            return cookieClientId as string;
+        } else if (permittedClientIds.length === 1 || (!permittedClientIds.includes('') && permittedClientIds.length > 1)) {
+            return permittedClientIds[0];
         } else {
-            setClientId('');
+            return '';
         }
-    }, [clientIds]);
+    }, [permittedClientIds]);
+
+    const [clientId, setClientId] = useState(initialClientId);
 
     useEffect(() => {
         if (getCookie(OTP_FORM_TYPE_COOKIE)) {
@@ -198,7 +201,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
             console.error('createDocument:: No documentNumber from getDocument', { documentNumber, docType, clientId });
             setErrorMessage(
                 t(
-                    clientIds.length < 2
+                    permittedClientIds.length < 2
                         ? 'caseRenewal.caseCreate.invalidDocumentError'
                         : 'caseRenewal.caseCreate.invalidDocumentOrClientId'
                 ) as string
@@ -299,7 +302,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                 console.error('handleSearch:: No documentNumber from getDocument', { documentNumber, docType, clientId });
                 setErrorMessage(
                     t(
-                        clientIds.length < 2
+                        permittedClientIds.length < 2
                             ? 'caseRenewal.caseCreate.invalidDocumentError'
                             : 'caseRenewal.caseCreate.invalidDocumentOrClientId'
                     ) as string
@@ -339,7 +342,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                     caseType={caseType}
                     onCaseTypeChange={onCaseTypeChange}
                     clientId={clientId}
-                    clientIds={clientIds}
+                    clientIds={permittedClientIds}
                     documentNumber={documentNumber}
                     setDocumentNumber={setDocumentNumber}
                     policyNumber={policyNumber}
@@ -428,16 +431,16 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                             </div>
                             <div className="mt-4">
                                 <SelectSimple
-                                    disabled={clientIds.length < 2}
+                                    disabled={permittedClientIds.length < 2}
                                     onChange={setClientId}
                                     label={t('caseRenewal.caseCreate.client') as string}
-                                    options={clientIds.map(cId => {
+                                    options={permittedClientIds.map(cId => {
                                         return { label: `${getCarrierNameByClientId(cId) || cId}`, value: cId.toLowerCase() };
                                     })}
                                     placeholder={t('caseRenewal.caseCreate.selectAClient') as string}
                                     size={FieldSize.Small}
                                     value={clientId}
-                                    variant={clientIds.length < 2 ? FieldVariant.Inactive : FieldVariant.Default}
+                                    variant={permittedClientIds.length < 2 ? FieldVariant.Inactive : FieldVariant.Default}
                                 />
                             </div>
                             <div className="mt-4">

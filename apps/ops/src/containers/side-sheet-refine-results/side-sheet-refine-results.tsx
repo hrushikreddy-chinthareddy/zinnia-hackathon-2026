@@ -41,7 +41,7 @@ export default function SideSheetRefineResults({
     authorizedCarriers,
 }: SideSheetRefineResultsProps) {
     const { t } = useTranslation();
-    const perms = usePermissionsContext();
+    const { sessionId, partyId } = usePermissionsContext();
 
     const carrierFilterItems = authorizedCarriers.map((carrierCode: string) => {
         const valueAndDisplay = getCarrierNameByClientId(carrierCode) || carrierCode.toUpperCase();
@@ -332,10 +332,10 @@ export default function SideSheetRefineResults({
 
         segmentAnalyticsTrackEvent<FilterClickedEvent>(SegmentTrackedEventName.FilterApplied, {
             selectedItemName: JSON.stringify(selectedFilters),
-            session_id: perms.getSessionId(),
-            userId: perms.getUserPartyId(),
+            session_id: sessionId,
+            userId: partyId,
         });
-    }, [additionalFilters, perms, closeSideSheet, setCaseManagementFilters, t]);
+    }, [additionalFilters, sessionId, partyId, closeSideSheet, setCaseManagementFilters, t]);
 
     const handleReset = () => {
         setCaseManagementFilters(prevFilters => ({ ...prevFilters, offset: 0, additionalFilters: initialAdditionalFilters }));

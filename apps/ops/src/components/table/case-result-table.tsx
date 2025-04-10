@@ -83,7 +83,7 @@ interface CaseTableRowProps {
 const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const router = useRouter();
-    const perms = usePermissionsContext();
+    const { sessionId, partyId } = usePermissionsContext();
     const getValidFullName = (owner: PartyInstance) => {
         let fullName = owner?.fullName;
 
@@ -138,8 +138,8 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const loadCaseDetails = (href: string) => {
         segmentAnalyticsTrackEvent<CaseClickedEvent>(SegmentTrackedEventName.CaseClicked, {
             caseId: singleCase.id,
-            session_id: perms.getSessionId(),
-            userId: perms.getUserPartyId(),
+            session_id: sessionId,
+            userId: partyId,
         });
 
         router.push(href);

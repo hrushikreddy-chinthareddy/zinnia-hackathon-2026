@@ -1,7 +1,9 @@
-import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import { ReactNode, createContext, useContext } from 'react';
 
 import { getFeatureFlags } from '@deps/queries/api/optimizely';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+import { useQuery } from '@tanstack/react-query';
+import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 
 interface OptimizelyData {
     featureFlags: FeatureFlags;
@@ -19,25 +21,19 @@ export const useOptimizely = () => {
 };
 
 export const OptimizelyProvider = ({ children }: OptimizelyProviderProps) => {
-    const [featureFlags, setFeatureFlags] = useState<FeatureFlags>({});
-    // Suppressing the rendering of the children to prevent a flicker for any features.
-    const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        const getFlags = async () => {
-            // If optimizely takes longer than 500ms, force loading state to false, and we'll deal with the flags coming in later
-            setTimeout(() => {
-                setLoading(false);
-            }, 500);
-            const flags = await getFeatureFlags();
-            setFeatureFlags(flags);
-            setLoading(false);
-        };
+    const { data: featureFlags, isLoading: loading } = useQuery({
+        queryKey: ['featureFlags'],
+        queryFn: () => getFlags(),
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+    });
 
-        getFlags();
-    }, []);
+    const getFlags = async () => {
+        const flags = await getFeatureFlags();
+        return flags;
+    };
 
     return (
-        <OptimizelyDataContext.Provider value={{ featureFlags, areFlagsLoading: loading }}>
+        <OptimizelyDataContext.Provider value={{ featureFlags: featureFlags || {}, areFlagsLoading: loading }}>
             {!loading && children}
         </OptimizelyDataContext.Provider>
     );

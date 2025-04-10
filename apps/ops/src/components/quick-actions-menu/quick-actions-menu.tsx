@@ -54,9 +54,8 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(function 
 });
 
 const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, isLoading }: TranslateProps & QuickActionsMenuProps) => {
-    const permissions = usePermissionsContext();
-    const sessionId = permissions.getSessionId();
-    const userPartyId = permissions.getUserPartyId();
+    const { sessionId, partyId: userPartyId } = usePermissionsContext();
+
     const { featureFlags } = useOptimizely();
 
     const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
@@ -141,15 +140,17 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
                                 trackClick('New Loan', `/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`);
                             }}
                         />
-                        {loanPaymentEnabled && (<MenuContextualItem
-                            disabled={!eligibilityCheck?.eligibleLoanPayment as boolean}
-                            content={t('transactions.loanPayment')}
-                            href={`/policies/${planCode}/${policyNumber}/policy/loans/loan-payment/`}
-                            icon={<PaymentIcon height={20} width={20} />}
-                            onClick={() => {
-                                trackClick('Loan Payment', `/policies/${planCode}/${policyNumber}/policy/loans/loan-payment/`);
-                            }}
-                        />)}
+                        {loanPaymentEnabled && (
+                            <MenuContextualItem
+                                disabled={!eligibilityCheck?.eligibleLoanPayment as boolean}
+                                content={t('transactions.loanPayment')}
+                                href={`/policies/${planCode}/${policyNumber}/policy/loans/loan-payment/`}
+                                icon={<PaymentIcon height={20} width={20} />}
+                                onClick={() => {
+                                    trackClick('Loan Payment', `/policies/${planCode}/${policyNumber}/policy/loans/loan-payment/`);
+                                }}
+                            />
+                        )}
                     </>
                 )}
             </MenuContextualLabel>

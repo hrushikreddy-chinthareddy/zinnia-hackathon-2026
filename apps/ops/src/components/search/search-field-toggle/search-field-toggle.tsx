@@ -46,7 +46,7 @@ export const SearchFieldContainer = ({ handleChange, activeLabels, onClear, valu
             inputRef.current.value = '';
         }
     };
-    const hasValue = !!inputRef.current?.value;
+    const hasValue = !!inputValue;
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.target.value = e.target.value.replace(/[^0-9-]/g, '');

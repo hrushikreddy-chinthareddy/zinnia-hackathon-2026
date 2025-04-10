@@ -61,7 +61,7 @@ const getStageStatusIconTooltip = (stage: TransformedStage, t: TFunction): React
 
 const Stage = React.forwardRef(({ stage }: { stage: TransformedStage }, forwardedRef: ForwardedRef<HTMLButtonElement>) => {
     const { t } = useTranslation();
-    const perms = usePermissionsContext();
+    const { sessionId, partyId } = usePermissionsContext();
     const [isOpen, setIsOpen] = useState(false);
 
     const handleStateChange = (state: boolean) => {
@@ -69,8 +69,8 @@ const Stage = React.forwardRef(({ stage }: { stage: TransformedStage }, forwarde
 
         segmentAnalyticsTrackEvent<CaseStageAccordionClickedEvent>(SegmentTrackedEventName.CaseStageAccordionClicked, {
             caseId: stage.parentCase.caseRaw.id,
-            session_id: perms.getSessionId(),
-            userId: perms.getUserPartyId(),
+            session_id: sessionId,
+            userId: partyId,
             isOpen: state,
             stageId: stage.id,
             stageName: stage.name,

@@ -29,7 +29,6 @@ interface ApplicationDataProviderProps {
 
 const ApplicationComponentWrapper = ({ children }: Omit<ApplicationDataProviderProps, 'pageProps'>) => {
     const [isMounted, setIsMounted] = useState(false);
-
     const router = useRouter();
 
     useEffect(() => {

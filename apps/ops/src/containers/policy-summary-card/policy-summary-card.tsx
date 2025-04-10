@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
-import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { PropsWithChildren, ReactNode, useContext, useMemo, useState } from 'react';
 
 import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -54,7 +54,8 @@ import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { getCasesQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
-import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
+import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT, FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -135,9 +136,8 @@ const getPolicyHighlighter = ({ firstName, lastName, policyNumber, ssn }: Search
 const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
     const { searchValue } = useContext(DashboardContext);
-    const perms = usePermissionsContext();
+    const { partyId: userPartyId, sessionId } = usePermissionsContext();
 
-    const userPartyId = perms.getUserPartyId();
     const { carrierId, marketingName, planCode, planName, policyNumber, policyStatus, productType } = policy;
     const totalMinRequiredAmount = getTotalMinRequiredAmount(policy);
     const globalValuesData = useMemo(() => policyDataToGlobalValues(policy, t), [policy, t]);
@@ -188,7 +188,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                             links={quickLinks(t, policy)}
                             planCode={planCode}
                             policyNumber={policyNumber}
-                            sessionId={perms.getSessionId()}
+                            sessionId={sessionId}
                         />
                     </div>
                 </div>
@@ -200,7 +200,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
 
 const KeyValuesBar: React.FC<KeyValuesBarProps> = ({ policy }) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
-    const perms = usePermissionsContext();
+    const { partyId: userPartyId, sessionId } = usePermissionsContext();
     const searchableDetailsDto = generatePolicyAnnuityDetailsDto(policy);
     const colDefFunction = policy.product?.lineOfBusiness === LineOfBusiness.LIFE ? PolicyDetailsViewInfo : AnnuityDetailsViewInfo;
     const searchableDetailsData = fillColDefs<PolicyViewDetailsDto | AnnuityViewDetailsDto>(
@@ -224,8 +224,8 @@ const KeyValuesBar: React.FC<KeyValuesBarProps> = ({ policy }) => {
                     errorMessageLink={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`}
                     group={true}
                     dropUp
-                    sessionId={perms.getSessionId()}
-                    userPartyId={perms.getUserPartyId()}
+                    sessionId={sessionId}
+                    userPartyId={userPartyId}
                 />
             </div>
         </div>
@@ -489,20 +489,16 @@ const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
     const { searchValue } = useContext(DashboardContext);
     const { owner } = policy;
+    const { partyId } = usePermissionsContext();
 
-    const perms = usePermissionsContext();
-    const [canEditPolicy, setCanEditPolicy] = useState(false);
     const sideSheet = useSideSheetContext();
 
-    useEffect(() => {
-        const getCanEditPolicy = async () => {
-            if (policy) {
-                const flag = await perms.canEditPolicy(UserPermission.AllowEditPolicy, policy.planCode, policy.policyNumber);
-                setCanEditPolicy(flag);
-            }
-        };
-        getCanEditPolicy();
-    }, [perms, policy]);
+    const { data: canEditPolicy } = useQuery({
+        queryKey: ['canEditPolicy', policy.policyNumber, policy.planCode, partyId],
+        queryFn: () => hasPermissionQuery(UserPermission.AllowEditPolicy, `policy:${policy.policyNumber}_${policy.planCode}`, partyId),
+        placeholderData: previousData => previousData,
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+    });
 
     const emails = owner?.bestAvailableEmail ? [owner?.bestAvailableEmail] : undefined;
     const emailTypeKey = owner?.bestAvailableEmail?.emailType?.toLocaleLowerCase() ?? EmailType.PERSONAL.toLocaleLowerCase();

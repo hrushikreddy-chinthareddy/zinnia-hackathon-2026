@@ -26,16 +26,16 @@ export default function DocumentPreviewer({
     variant,
 }: DocumentPreviewerProps & { children: React.ReactNode }) {
     const { t } = useTranslation();
-    const perms = usePermissionsContext();
+    const { sessionId, partyId } = usePermissionsContext();
 
-    const trackDocumentPreview  = () => {   
+    const trackDocumentPreview = () => {
         segmentAnalyticsTrackEvent<CaseDocumentClickedEvent>(SegmentTrackedEventName.CaseDocumentClicked, {
-            session_id: perms.getSessionId(),
-            userId: perms.getUserPartyId(),
+            session_id: sessionId,
+            userId: partyId,
             type: 'Preview',
             documentId,
         });
-    }
+    };
 
     return (
         <NavElement

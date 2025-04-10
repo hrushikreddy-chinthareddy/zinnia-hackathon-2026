@@ -35,7 +35,9 @@ import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { PolicyAllOfPartiesItem, Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
+import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { getPolicyQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
+import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchResponse } from '@deps/types/search';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
@@ -55,8 +57,8 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
     const router = useRouter();
     const { query } = router;
     const { id, slug, planCode } = query;
+    const { partyId } = usePermissionsContext();
 
-    const perms = usePermissionsContext();
     const { policySearchFilters } = useContext(PolicySearchFiltersContext);
     const { searchValue, limit, offset } = policySearchFilters;
     const queryClient = useQueryClient();
@@ -86,9 +88,10 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
     });
 
     const { data: canEditPolicy } = useQuery({
-        queryKey: ['canEditPolicy', id, planCode],
-        queryFn: () => perms.canEditPolicy(UserPermission.AllowEditPolicy, planCode, id as string),
+        queryKey: ['canEditPolicy', id, planCode, partyId],
+        queryFn: () => hasPermissionQuery(UserPermission.AllowEditPolicy, `policy:${id}_${planCode}`, partyId),
         placeholderData: previousData => previousData,
+        staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
     if (loading) {

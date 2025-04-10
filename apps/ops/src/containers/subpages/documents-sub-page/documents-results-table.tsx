@@ -45,7 +45,7 @@ type DocumentsResultsTableProps = {
 const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource | MetadataSearchResponse; carrierCode: string }) => {
     const { t } = useTranslation();
     const docId = doc.documentId || ((doc as DocumentWithSource).documentID as string);
-    const perms = usePermissionsContext();
+    const { sessionId, partyId } = usePermissionsContext();
     const [loading, download] = useDocumentDownload(
         docId,
         (doc as DocumentWithSource).documentSource || (doc as MetadataSearchResponse).documentClassification,
@@ -54,16 +54,16 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource | Metadata
         doc.fileType
     );
 
-    const downloadDocument  = () => {   
+    const downloadDocument = () => {
         download();
 
         segmentAnalyticsTrackEvent<CaseDocumentClickedEvent>(SegmentTrackedEventName.CaseDocumentClicked, {
-            session_id: perms.getSessionId(),
-            userId: perms.getUserPartyId(),
+            session_id: sessionId,
+            userId: partyId,
             type: 'Download',
             documentId: docId,
         });
-    }
+    };
 
     return (
         <NavElement

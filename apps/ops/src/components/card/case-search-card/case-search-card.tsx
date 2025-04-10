@@ -66,7 +66,7 @@ export default function CaseSearchCard({
 }: CaseSearchCardProps) {
     const { t } = useTranslation();
     const router = useRouter();
-    const perms = usePermissionsContext();
+    const { sessionId, partyId } = usePermissionsContext();
 
     const imageSrc = getCarrierLogoByClientId(carrier);
 
@@ -94,8 +94,8 @@ export default function CaseSearchCard({
     const loadCaseDetails = (href: string) => {
         segmentAnalyticsTrackEvent<CaseClickedEvent>(SegmentTrackedEventName.CaseClicked, {
             caseId: id,
-            session_id: perms.getSessionId(),
-            userId: perms.getUserPartyId(),
+            session_id: sessionId,
+            userId: partyId,
         });
 
         router.push(href);

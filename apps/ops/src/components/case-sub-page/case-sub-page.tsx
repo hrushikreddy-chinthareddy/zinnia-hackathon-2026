@@ -27,14 +27,14 @@ export default function CaseSubPage({
     handleTabChange: (val: string) => void;
 }) {
     const { t } = useTranslation();
-    const perms = usePermissionsContext();
+    const { sessionId, partyId } = usePermissionsContext();
     const { loadingCallLogs, callLogs, callLogsStatusCode } = useCaseActivityContext();
 
     const trackTabClick = (tab: string) => () => {
         segmentAnalyticsTrackEvent<CaseTabClickedEvent>(SegmentTrackedEventName.CaseDetailsTabClicked, {
             caseId: caseDetails.id,
-            session_id: perms.getSessionId(),
-            userId: perms.getUserPartyId(),
+            session_id: sessionId,
+            userId: partyId,
             tabName: tab,
         });
     };

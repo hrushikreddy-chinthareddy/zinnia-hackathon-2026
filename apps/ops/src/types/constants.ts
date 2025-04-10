@@ -48,3 +48,5 @@ export const PolicyActivityTabValues: { [key: string]: string } = {
 // DEPU-2749 https://zinnia.atlassian.net/browse/DEPU-2749
 export const HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 = true;
 export const NODE_ENV_PRODUCTION = 'production';
+
+export const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;

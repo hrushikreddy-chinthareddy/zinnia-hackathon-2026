@@ -10,7 +10,12 @@ import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { ReactComponent as ClockIcon } from '@deps/styles/elements/icons/icons_outlined/clock.svg';
-import { SegmentTrackedEventName, TransactionCancelClickedEvent, TransactionClickProps, TransactionContinueClickedEvent } from '@deps/types/segment-analytics';
+import {
+    SegmentTrackedEventName,
+    TransactionCancelClickedEvent,
+    TransactionClickProps,
+    TransactionContinueClickedEvent,
+} from '@deps/types/segment-analytics';
 
 export interface TransactionCtaProps extends TransactionClickProps {
     className?: string;
@@ -28,7 +33,7 @@ export interface TransactionCtaProps extends TransactionClickProps {
 
 const TransactionCta = ({ className, mainCta, secondaryCta, stopLoading, trackEventProps }: TransactionCtaProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'transactions.transactionCta' });
-    const perms = usePermissionsContext();
+    const { sessionId, partyId } = usePermissionsContext();
 
     const [assistiveTextMessageIndex, setAssistiveTextMessageIndex] = useState(-1);
     const [intervalId, setIntervalId] = useState<NodeJS.Timeout>();
@@ -58,20 +63,20 @@ const TransactionCta = ({ className, mainCta, secondaryCta, stopLoading, trackEv
         }
 
         segmentAnalyticsTrackEvent<TransactionCancelClickedEvent>(SegmentTrackedEventName.TransactionCancelClicked, {
-            session_id: perms.getSessionId(),
-            userId: perms.getUserPartyId(),
-            ...trackEventProps
+            session_id: sessionId,
+            userId: partyId,
+            ...trackEventProps,
         });
-    }, [trackEventProps, segmentAnalyticsTrackEvent]);
+    }, [trackEventProps, sessionId, partyId]);
 
     const onContinueClick = useCallback(() => {
         startInterval();
 
         if (trackEventProps) {
             segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
-                session_id: perms.getSessionId(),
-                userId: perms.getUserPartyId(),
-                ...trackEventProps
+                session_id: sessionId,
+                userId: partyId,
+                ...trackEventProps,
             });
         }
         mainCta.onClick();
