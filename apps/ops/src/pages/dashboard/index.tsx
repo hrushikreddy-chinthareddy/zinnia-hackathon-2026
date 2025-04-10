@@ -26,17 +26,24 @@ import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/ut
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './Dashboard.module.css';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 export interface CarrierListItem {
     [key: string]: string;
+}
+
+interface DashboardPageProps extends SegmentTrackedPageProps {
+    authorizedCarriers: string[];
+    brokerDealersSSR: DashboardResponseData[];
 }
 
 const DashboardPage = ({
     authorizedCarriers,
     brokerDealersSSR,
-}: {
-    authorizedCarriers: string[];
-    brokerDealersSSR: DashboardResponseData[];
-}) => {
+    user,
+}: DashboardPageProps) => {
+    useSegmentPageTracker(user, SegmentPageName.Dashboard);
+
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const {
         isIntersecting: carrierHeaderIsIntersecting,
@@ -129,6 +136,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     locale,
                     authorizedCarriers,
                     brokerDealersSSR: filteredBrokerDealers,
+                    user,
                     ...translations,
                 },
             };

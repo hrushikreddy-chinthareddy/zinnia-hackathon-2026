@@ -29,6 +29,7 @@ export enum SegmentPageName {
     SendTaxForms = 'Send Tax Forms',
     SswCase = 'SSW Case',
     WithdrawalCase = 'Withdrawal Case',
+    Dashboard = 'Dashboard',
 }
 
 export enum SegmentTrackedEventName {
