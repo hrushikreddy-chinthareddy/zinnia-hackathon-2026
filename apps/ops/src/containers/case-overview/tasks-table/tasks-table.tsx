@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 import { CASE_OVERVIEW_TEXT, CaseOverviewNavDrawerContext } from '@deps/contexts/CaseOverviewNavDrawer';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -10,7 +10,7 @@ import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ReactComponent as OpenIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as ClosedIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
-import TaskSideSheet from './sidesheet/task-sidesheet-content';
+import GlobalTaskSideSheet from './sidesheet/global-task-sidesheet-content';
 
 interface TasksTableProps {
     caseId: string;
@@ -25,7 +25,7 @@ const TaskStatusMap: Record<TaskStatus, string> = {
     [TaskStatus.InProgress]: 'INPROGRESS',
     [TaskStatus.Canceled]: 'CANCELED',
     [TaskStatus.Pending]: 'IMPEDED',
-}
+};
 
 const statusOrderHelper: Record<string, number> = {
     [TaskStatus.Open]: 0,
@@ -91,7 +91,7 @@ export default function TasksTable({ tasks, caseId }: TasksTableProps) {
 
     const isCaseOverview = selectedNavItem === CASE_OVERVIEW_TEXT;
     const handleClick = (task: ManagementTask) => {
-        sideSheet.changeSideSheetContent(task.taskName, <TaskSideSheet taskId={task.id} />);
+        sideSheet.changeSideSheetContent(task.taskName, <GlobalTaskSideSheet taskId={task.id} />);
         sideSheet.handleOpen(true);
     };
 

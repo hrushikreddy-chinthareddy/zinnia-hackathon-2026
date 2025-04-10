@@ -5,7 +5,7 @@ import { formatTimestamp, TransformedStep } from '@deps/components/case-sub-page
 import { ExceptionView, TaskView, GroupedExceptions } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import TaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/task-sidesheet-content';
+import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { Statuses } from '@deps/models/case/case';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
@@ -46,7 +46,7 @@ function SideSheetTask({ task }: { task: TaskView }) {
     const { t } = useTranslation();
     const sidesheet = useSideSheetContext();
     const openSideSheet = () => {
-        sidesheet.openSecondarySideSheet(task.description, <TaskSideSheet taskId={task.id} />);
+        sidesheet.openSecondarySideSheet(task.description, <GlobalTaskSideSheet taskId={task.id} />);
     };
     return (
         <div className={`flex flex-row items-center justify-start ${task.description ? 'gap-1' : ''} `}>

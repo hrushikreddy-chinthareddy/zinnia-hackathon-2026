@@ -5,7 +5,11 @@ import { ManagementTask } from '@deps/models/case/task-instance';
 
 import TasksTable from './tasks-table';
 
-jest.mock('@deps/utils/server-logging');
+jest.mock('@deps/utils/server-logging', () => ({
+    withPageAuthAndLogging: jest.fn(() => ({
+        getServerSideProps: jest.fn(),
+    })),
+}));
 
 const tasks = [
     {
