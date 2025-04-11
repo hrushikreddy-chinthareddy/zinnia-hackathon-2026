@@ -312,7 +312,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 onClear={handleClear}
             />
         );
-    }, [caseManagementFilters.searchValue, caseManagementFilters.toggleValue, handleClear, handleSearch, handleToggle]);
+    }, [caseManagementFilters, handleClear, handleSearch, handleToggle]);
 
     const paginationControls = useMemo(() => {
         const goToPage = (pageNumber: number) => {

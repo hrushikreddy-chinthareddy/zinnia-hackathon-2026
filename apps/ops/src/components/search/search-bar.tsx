@@ -2,10 +2,9 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
-import { ChangeEvent, HTMLAttributes, useCallback, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, HTMLAttributes, useCallback, useEffect, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
@@ -23,6 +22,7 @@ interface SearchBarProps extends Omit<HTMLAttributes<HTMLInputElement>, 'onToggl
     onToggle?: (value: PolicySearchKeys) => void;
     onClear?: (searchField: PolicySearchKeys | undefined) => void;
     formClasses?: string;
+    handleError?: (bool: boolean) => void;
 }
 
 const SearchBar = ({
@@ -33,8 +33,8 @@ const SearchBar = ({
     onToggle,
     onClear,
     className,
+    handleError,
 }: SearchBarProps) => {
-    const { setShowFieldErrorMessage, setPolicySearchFilters, policySearchFilters } = useContext(PolicySearchFiltersContext);
     const { t } = useTranslation(TranslationFiles.COMMON);
     const getToggleLabel = useCallback(
         (targetVal: string) => {
@@ -75,7 +75,7 @@ const SearchBar = ({
     };
 
     const handleNewValue = (e: ChangeEvent<HTMLInputElement>, value: string, key: PolicySearchKeys) => {
-        setShowFieldErrorMessage(false); // reset field error message on change
+        handleError?.(false); // reset field error message on change
         if (activeLabels?.value != 'firmName') {
             value = (value || '').trim();
         }
@@ -88,14 +88,14 @@ const SearchBar = ({
                 value = activeToggleBtn;
             }
             setActiveToggleBtn(value as PolicySearchKeys);
-            setPolicySearchFilters({ ...policySearchFilters, toggleValue: value as PolicySearchKeys });
+
             setActiveLabels(getToggleLabel(value));
 
             if (onToggle) {
                 onToggle(value as PolicySearchKeys);
             }
         },
-        [activeToggleBtn, getToggleLabel, onToggle, policySearchFilters, setPolicySearchFilters]
+        [activeToggleBtn, getToggleLabel, onToggle]
     );
 
     const dropdownLabels = toggleLabels(t);

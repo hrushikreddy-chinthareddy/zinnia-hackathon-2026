@@ -93,6 +93,7 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         data: policyData,
         isFetching: policyDataFetching,
         error: policyDataError,
+        isPlaceholderData,
     } = useQuery({
         queryKey: ['policyData', searchValue, limit, offset],
         placeholderData: previousData => previousData,
@@ -135,6 +136,11 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         setPolicySearchFilters(newSearchValues);
     };
 
+    const onToggle = (value: PolicySearchKeys) => {
+        const newSearchValues: PolicySearchFilters = { ...policySearchFilters, toggleValue: value };
+        setPolicySearchFilters(newSearchValues);
+    };
+
     return (
         <DashboardContext.Provider value={{ searchValue: policySearchFilters.searchValue }}>
             <PageHead titleKey="policySearch" />
@@ -151,6 +157,8 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                         onClear={() => {
                             clearPolicySearchFilters();
                         }}
+                        onToggle={onToggle}
+                        handleError={setShowFieldErrorMessage}
                     />
                 </div>
 
@@ -173,7 +181,10 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                             })}
                     </>
                 </SearchResults>
-                {!!policyData?.total && <PaginationControls total={policyData.total} limit={limit} offset={offset} goToPage={goToPage} />}
+
+                {!isPlaceholderData && policyData && (
+                    <PaginationControls total={policyData.total} limit={limit} offset={offset} goToPage={goToPage} />
+                )}
             </NoNavLayout>
         </DashboardContext.Provider>
     );
