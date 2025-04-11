@@ -46,6 +46,27 @@ export const formatTimestamp = (timestamp: string): string => {
     }
     return time.tz(dayjs.tz.guess()).format('M/D/YYYY [at] h:mma z');
 };
+
+export const formatTimestampTooltip = (timestamp: string): string => {
+    const time = dayjs(timestamp, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+    if (!time.isValid()) {
+        return DEFAULT_ERROR_STRING;
+    }
+    return time.tz('America/New_York').format('MMM D , YYYY [at] h:mma z');
+};
+
+export const formatTimestampWithYearCheck = (timestamp: string): string => {
+    const time = dayjs(timestamp, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+    if (!time.isValid()) {
+        return DEFAULT_ERROR_STRING;
+    }
+    const currentYear = dayjs().year();
+    const formattedDate = time.format('MMM D');
+    const formattedWithYear = currentYear === time.year() ? formattedDate : `${formattedDate}, ${time.year()}`;
+
+    return formattedWithYear;
+};
+
 // creates a whole-number x% Complete string based on 2 numbers (complete and total)
 export const completionPercentageString = (complete: number, total: number, t: TFunction): string => {
     try {

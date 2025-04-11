@@ -1,4 +1,4 @@
-import { Accordion as AccordionRoot, AccordionItem, AccordionTrigger, AccordionContent, AccordionHeader } from '@radix-ui/react-accordion';
+import { AccordionContent, AccordionHeader, AccordionItem, Accordion as AccordionRoot, AccordionTrigger } from '@radix-ui/react-accordion';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ForwardedRef, ReactNode, useMemo, useState } from 'react';
 
@@ -19,7 +19,7 @@ import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { CaseStageAccordionClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import Exceptions from './exceptions';
-import { completionPercentageString, TransformedCase, formatTimestamp, TransformedStage, TransformedStep } from './progress-tab-helpers';
+import { completionPercentageString, formatTimestampTooltip, formatTimestampWithYearCheck, TransformedCase, TransformedStage, TransformedStep } from './progress-tab-helpers';
 import Steps from './steps';
 
 // Provides a status icon and tooltip for step and stage statuses
@@ -31,11 +31,11 @@ const getStageStatusIconTooltip = (stage: TransformedStage, t: TFunction): React
         case Statuses.Completed:
         case 'RESOLVED' as Statuses:
             icon = <CompletedIcon className="text-semantic-success" width={24} height={24} />;
-            tooltipBody = t('caseOverview.caseStatus.completed.statusTooltipWithDate', { date: formatTimestamp(stage.updatedAt) });
+            tooltipBody = t('caseOverview.caseStatus.completed.statusTooltipWithDate', { date: formatTimestampTooltip(stage.updatedAt) });
             break;
         case Statuses.InProgress:
             icon = <InProgressIcon className="text-semantic-info" width={24} height={24} />;
-            tooltipBody = t('caseOverview.caseStatus.inProgress.statusTooltipWithDate', { date: formatTimestamp(stage.updatedAt) });
+            tooltipBody = t('caseOverview.caseStatus.inProgress.statusTooltipWithDate', { date: formatTimestampTooltip(stage.updatedAt) });
             break;
         case Statuses.NotStarted:
             icon = <NotStartedIcon className="text-gray-300" width={24} height={24} />;
@@ -43,7 +43,7 @@ const getStageStatusIconTooltip = (stage: TransformedStage, t: TFunction): React
             break;
         case Statuses.Exception:
             icon = <ExceptionIcon className="text-semantic-error" width={24} height={24} />;
-            tooltipBody = t('caseOverview.caseStatus.exception.statusTooltipWithDate', { date: formatTimestamp(stage.updatedAt) });
+            tooltipBody = t('caseOverview.caseStatus.exception.statusTooltipWithDate', { date: formatTimestampTooltip(stage.updatedAt) });
             break;
         default:
             return DEFAULT_ERROR_STRING;
@@ -56,6 +56,42 @@ const getStageStatusIconTooltip = (stage: TransformedStage, t: TFunction): React
         );
     } else {
         return icon;
+    }
+};
+
+const getStageStatusContentTooltip = (stage: TransformedStage, t: TFunction): ReactNode => {
+    let content = null;
+    let tooltipBody = null;
+
+    switch (stage.status) {
+        case Statuses.Completed:
+        case 'RESOLVED' as Statuses:
+            content = t('caseOverview.caseStatus.completed.statusTooltipWithDate', { date: formatTimestampWithYearCheck(stage.updatedAt) });
+            tooltipBody = t('caseOverview.caseStatus.completed.statusTooltipWithDate', { date: formatTimestampTooltip(stage.updatedAt) });
+            break;
+        case Statuses.InProgress:
+            content = t('caseOverview.caseStatus.inProgress.statusTooltipWithDate', { date: formatTimestampWithYearCheck(stage.updatedAt) });
+            tooltipBody = t('caseOverview.caseStatus.inProgress.statusTooltipWithDate', { date: formatTimestampTooltip(stage.updatedAt) });
+            break;
+        case Statuses.NotStarted:
+            content = t('caseOverview.caseStatus.notStarted.statusTooltip');
+            tooltipBody = t('caseOverview.caseStatus.notStarted.statusTooltip');
+            break;
+        case Statuses.Exception:
+            content = t('caseOverview.caseStatus.exception.statusTooltipWithDate', { date: formatTimestampWithYearCheck(stage.updatedAt) });
+            tooltipBody = t('caseOverview.caseStatus.exception.statusTooltipWithDate', { date: formatTimestampTooltip(stage.updatedAt) });
+            break;
+        default:
+            return DEFAULT_ERROR_STRING;
+    }
+    if (tooltipBody) {
+        return (
+            <Tooltip body={tooltipBody} placement={PopoverPlacement.TopLeft}>
+                {content}
+            </Tooltip>
+        );
+    } else {
+        return content;
     }
 };
 
@@ -80,45 +116,28 @@ const Stage = React.forwardRef(({ stage }: { stage: TransformedStage }, forwarde
     return (
         <AccordionHeader>
             <AccordionTrigger
-                className={`inline-flex w-full items-center justify-between ${isOpen ? 'rounded-t-lg' : 'rounded-lg'} px-4  py-2`}
+                className={`flex flex-wrap w-full items-center justify-between ${isOpen ? 'rounded-t-lg' : 'rounded-lg'} px-4  py-2`}
                 onClick={() => handleStateChange(!isOpen)}
                 ref={forwardedRef}
             >
                 <>
-                    <div className="flex flex-col gap-1 lg:flex-row lg:gap-2">
-                        <div className="flex min-w-max items-center gap-2">
-                            <Tooltip
-                                placement={PopoverPlacement.TopRight}
-                                body={isOpen ? t('caseOverview.tabs.stageCollapseTooltip') : t('caseOverview.tabs.stageExpandTooltip')}
-                                isTabbable={false}
-                            >
-                                <ChevronDown
-                                    className={`chevron-down rotate-270 transition-transform duration-300 lg:mt-0 ${
-                                        isOpen ? 'rotate-0' : ''
+                    <div className="flex gap-2">
+                        <Tooltip
+                            placement={PopoverPlacement.TopRight}
+                            body={isOpen ? t('caseOverview.tabs.stageCollapseTooltip') : t('caseOverview.tabs.stageExpandTooltip')}
+                            isTabbable={false}
+                        >
+                            <ChevronDown
+                                className={`chevron-down rotate-270 transition-transform duration-300 lg:mt-0 ${isOpen ? 'rotate-0' : ''
                                     }`}
-                                    width={16}
-                                    height={16}
-                                />
-                            </Tooltip>
-                            <Typography variant={TypographyVariant.LabelMdAlt}>{stage.name}</Typography>
-                        </div>
-                        <div className="-mt-[1px] flex items-center gap-0.5 pl-6 lg:pl-0">
-                            <Typography className="text-gray-600" variant={TypographyVariant.BodySm}>
-                                {t('caseOverview.tabs.stepCount', { count: stage.totalSteps })}
-                            </Typography>
-                            {stage.nigoSteps !== 0 && (
-                                <Typography className="text-gray-600" variant={TypographyVariant.BodySm}>
-                                    {`· ${t('caseOverview.tabs.issueCount', { count: stage.nigoSteps })}`}
-                                </Typography>
-                            )}
-                        </div>
+                                width={16}
+                                height={16}
+                            />
+                        </Tooltip>
+                        <Typography className="break-words w-full" style={{ textAlign: 'left' }} variant={TypographyVariant.LabelMdAlt}>{stage.name}</Typography>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <Content
-                            className="text-gray-600"
-                            variant={ContentVariant.BodySm}
-                            details={completionPercentageString(stage.completedSteps, stage.totalSteps, t)}
-                        />
+                    <div className="flex items-center gap-2 pl-6">
+                        {getStageStatusContentTooltip(stage, t)}
                         {getStageStatusIconTooltip(stage, t)}
                     </div>
                 </>
