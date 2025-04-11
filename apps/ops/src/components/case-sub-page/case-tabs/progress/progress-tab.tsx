@@ -28,6 +28,7 @@ import {
     TransformedStep,
 } from './progress-tab-helpers';
 import Steps from './steps';
+import Tasks from './tasks';
 
 // Provides a status icon and tooltip for step and stage statuses
 const getStageStatusIconTooltip = (stage: TransformedStage, t: TFunction): ReactNode => {
@@ -244,15 +245,17 @@ export default function ProgressTab({ caseDetails }: { caseDetails: Case }) {
                 <div className="mt-6 flex flex-col gap-2">
                     <Stages stages={transformedCase.stages} />
                 </div>
-                {!!transformedCase.unmappedExceptions.length && (
+                {(!!transformedCase.unmappedExceptions.length || !!transformedCase.unmappedTasks.length) && (
                     <div className="mt-6 flex w-full flex-col">
                         <Typography variant={TypographyVariant.H3}>{t(`caseOverview.tabs.otherIssues`)}</Typography>
+
                         <div className="mt-3 flex flex-col gap-2">
                             <Exceptions
                                 exceptions={transformedCase.unmappedExceptions}
                                 unmapped={true}
                                 groupedExceptions={transformedCase.exceptionsGroupedByTask}
                             />
+                            <Tasks tasks={transformedCase.unmappedTasks} />
                         </div>
                     </div>
                 )}

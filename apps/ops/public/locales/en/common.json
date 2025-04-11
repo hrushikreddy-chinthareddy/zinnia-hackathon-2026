@@ -1421,7 +1421,7 @@
             "issueCount_one": "{{count}} issue",
             "issueCount_other": "{{count}} issues",
             "notes": "Notes",
-            "otherIssues": "Other Issues",
+            "otherIssues": "Outstanding Resolutions",
             "openSince": "Open since {{date}}",
             "percentComplete": "{{percent}} Complete",
             "postedOnBy": "Posted on {{date}} by",

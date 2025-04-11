@@ -1419,7 +1419,7 @@
             "issueCount_other": "{{count}} problemes",
             "notes": "Notes",
             "openSince": "Ouvrir depuis {{date}}",
-            "otherIssues": "Autres Problèmes",
+            "otherIssues": "Problèmes en suspens",
             "percentComplete": "{{percent}} Complet",
             "postedOnBy": "Posté le {{date}} par",
             "progress": "Progrès",

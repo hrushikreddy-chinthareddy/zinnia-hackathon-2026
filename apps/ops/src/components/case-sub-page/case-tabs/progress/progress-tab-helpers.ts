@@ -365,6 +365,7 @@ export class TransformedCase {
     totalSteps: number;
     // Exceptions that are not tied to any step
     unmappedExceptions: ExceptionView[] = [];
+    unmappedTasks: TaskView[] = [];
     unresolvedExceptionCount: number;
     exceptionsGroupedByTask: GroupedExceptions = {};
 
@@ -400,6 +401,31 @@ export class TransformedCase {
             }
             return acc;
         }, {} as { [key: string]: ExceptionInstance });
+
+        const isTaskMappedToStep = (taskId: string): boolean => {
+            return this.caseRaw?.stages?.some(stage => stage?.steps?.some(step => (step.mappedTasks || []).includes(taskId)));
+        };
+
+        const isTaskMappedToException = (taskId: string): boolean => {
+            return this.caseRaw?.exceptions?.some(exception => (exception.taskIdList || []).includes(taskId));
+        };
+
+        this.unmappedTasks = (caseDetails?.tasks || [])
+            .filter(task => {
+                const taskId = task.id;
+                return !isTaskMappedToStep(taskId) && !isTaskMappedToException(taskId);
+            })
+            .map(task => ({
+                id: task.id,
+                taskName: task.taskName,
+                description: task.label || task.taskType,
+                status: task.status,
+                createdAt: task.createdAt,
+                updatedAt: task.updatedAt,
+                hasParentException: false,
+                parentExceptionStatus: null,
+            }));
+
         this.processSubType = (caseDetails?.processSubType || caseDetails?.process)?.toLowerCase();
         this.process = caseDetails?.process || '';
         this.taskMap = caseDetails?.tasks?.reduce((acc, task) => {
