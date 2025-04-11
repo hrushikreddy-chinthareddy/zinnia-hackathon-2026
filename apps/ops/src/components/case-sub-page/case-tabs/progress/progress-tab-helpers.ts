@@ -17,8 +17,7 @@ import { MultiStepInstance, SingleStepInstance, StepInstance } from '@deps/model
 import { TaskInstance, TaskStatus } from '@deps/models/case/task-instance';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-import { GroupedExceptions , CaseAdditionalData, ExceptionView, TaskView } from './progress-tab-types';
-
+import { GroupedExceptions, CaseAdditionalData, ExceptionView, TaskView } from './progress-tab-types';
 
 export interface DocumentView extends DocumentInstance {
     previewDocProps: DocumentPreviewerProps;
@@ -52,7 +51,7 @@ export const formatTimestampTooltip = (timestamp: string): string => {
     if (!time.isValid()) {
         return DEFAULT_ERROR_STRING;
     }
-    return time.tz('America/New_York').format('MMM D , YYYY [at] h:mma z');
+    return time.tz(dayjs.tz.guess()).format('MMM D , YYYY [at] h:mma z');
 };
 
 export const formatTimestampWithYearCheck = (timestamp: string): string => {
