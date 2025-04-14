@@ -1,5 +1,6 @@
 import {
-  FieldDataActive,
+  FieldData,
+  FieldSize,
   FieldStatus,
   Label,
   Select,
@@ -29,9 +30,9 @@ export const CorporationFormFields = ({
 }: CorporationFormFieldsProps) => {
   return (
     <>
-      <FieldDataActive
+      <FieldData
         className={styles.formField}
-        fieldSize="small"
+        fieldSize={FieldSize.Small}
         label={<Label>Full name</Label>}
         {...register('fullName', {
           required: 'Full name is missing.',
@@ -40,9 +41,9 @@ export const CorporationFormFields = ({
         fieldStatus={errors.fullName ? FieldStatus.ERROR : FieldStatus.DEFAULT}
       />
 
-      <FieldDataActive
+      <FieldData
         style={{ width: '200px' }}
-        fieldSize="small"
+        fieldSize={FieldSize.Small}
         label={<Label>National Producer Number</Label>}
         {...register('nationalProducerNumber', {
           required: 'National producer number is missing.',
@@ -60,9 +61,9 @@ export const CorporationFormFields = ({
         }
       />
 
-      <FieldDataActive
+      <FieldData
         className={styles.formField}
-        fieldSize="small"
+        fieldSize={FieldSize.Small}
         label={<Label>Email</Label>}
         {...register('email', {
           required: 'Email is missing.',
@@ -83,7 +84,7 @@ export const CorporationFormFields = ({
           <div className={styles.formField}>
             <Select
               id="field-select-corporation-type"
-              fieldSize="small"
+              fieldSize={FieldSize.Small}
               label={
                 <Label labelFor="field-select-corporation-type">
                   Type of Corporation
@@ -113,7 +114,7 @@ export const CorporationFormFields = ({
           <div className={styles.formField}>
             <Select
               id="field-select-channel"
-              fieldSize="small"
+              fieldSize={FieldSize.Small}
               label={<Label labelFor="field-select-channel">Channel</Label>}
               placeholder="-- Select channel --"
               value={field.value}

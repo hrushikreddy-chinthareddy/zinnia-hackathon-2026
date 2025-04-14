@@ -1,12 +1,13 @@
 import clsx from 'clsx';
 import { default as styles } from './Search.module.css';
 import {
-  FieldDataActive,
+  FieldData,
   Icon,
   IconType,
   Select,
   Button,
   FieldStatus,
+  FieldSize,
 } from '@zinnia/bloom/components';
 import { SearchResult } from '../../types/search.types';
 import { ProducerType } from '../../types';
@@ -105,7 +106,7 @@ export const Search = () => {
               <Select
                 options={[{ textValue: 'NPN', value: 'npn' }]}
                 defaultValue="npn"
-                fieldSize="small"
+                fieldSize={FieldSize.Small}
                 disabled
               />
             </div>
@@ -119,10 +120,10 @@ export const Search = () => {
                       type={IconType.SEARCH}
                       className={clsx(styles.searchIcon)}
                     />
-                    <FieldDataActive
+                    <FieldData
                       placeholder="National Producer Number"
                       className={clsx(styles.inputField)}
-                      fieldSize="small"
+                      fieldSize={FieldSize.Small}
                       {...register('npn', {
                         required: true,
                         maxLength: 8,

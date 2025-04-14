@@ -1,6 +1,7 @@
 import {
   Button,
-  FieldDataActive,
+  FieldData,
+  FieldSize,
   FieldStatus,
   Icon,
   IconType,
@@ -49,18 +50,18 @@ export const HierarchyFormFields = ({
 
   return (
     <>
-      <FieldDataActive
+      <FieldData
         className={styles.producerLookupId}
         style={{ width: '200px' }}
-        fieldSize="small"
+        fieldSize={FieldSize.Small}
         label={<Label>Producer Lookup ID</Label>}
         {...register(`hierarchy.producerLookupId`)}
         value={watch('nationalProducerNumber') || ''}
         readOnly={true}
       />
-      <FieldDataActive
+      <FieldData
         style={{ width: '200px' }}
-        fieldSize="small"
+        fieldSize={FieldSize.Small}
         type="number"
         label={<Label>Level of producer</Label>}
         {...register(`hierarchy.level`, {
@@ -104,9 +105,9 @@ export const HierarchyFormFields = ({
         <div key={field.id} className={styles.hierarchyItem}>
           <div className={styles.hierarchyContainer}>
             <div className={styles.hierarchyRow}>
-              <FieldDataActive
+              <FieldData
                 style={{ width: '200px' }}
-                fieldSize="small"
+                fieldSize={FieldSize.Small}
                 label={<Label>Next Party in Hierarchy</Label>}
                 {...register(
                   `hierarchy.uplineProducersInformation.${index}.lookupId`
@@ -123,9 +124,9 @@ export const HierarchyFormFields = ({
               </Button>
             </div>
 
-            <FieldDataActive
+            <FieldData
               style={{ width: '200px' }}
-              fieldSize="small"
+              fieldSize={FieldSize.Small}
               label={<Label>Level</Label>}
               type="number"
               {...register(

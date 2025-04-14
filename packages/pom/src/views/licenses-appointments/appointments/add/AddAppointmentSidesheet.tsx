@@ -3,7 +3,8 @@ import {
   AssistiveText,
   AssistiveTextVariant,
   Button,
-  FieldDataActive,
+  FieldData,
+  FieldSize,
   FieldStatus,
   Icon,
   IconType,
@@ -106,7 +107,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
         render={({ field }) => (
           <Select
             id="field-select-carrier"
-            fieldSize="small"
+            fieldSize={FieldSize.Small}
             label={
               <Label labelFor="field-select-carrier">
                 {appointmentFieldLabels.carrier}
@@ -141,7 +142,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
           <div style={{ maxWidth: '100px', minWidth: '70px' }}>
             <Select
               id="field-select-state"
-              fieldSize="small"
+              fieldSize={FieldSize.Small}
               label={
                 <Label labelFor="field-select-state">
                   {appointmentFieldLabels.state}
@@ -179,7 +180,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
               id="radio-appointment-resident"
               groupLabel="Resident"
               onValueChange={field.onChange}
-              options={Object.values(YesNo).map((yesNo) => ({
+              options={Object.values(YesNo).map(yesNo => ({
                 ariaLabel: yesNo,
                 label: yesNo,
                 value: yesNo,
@@ -201,10 +202,10 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
         control={control}
         rules={{ required: 'License is missing.' }}
         render={({ field }) => (
-          <FieldDataActive
+          <FieldData
             style={{ width: '100px' }}
             id="field-input-license"
-            fieldSize="small"
+            fieldSize={FieldSize.Small}
             label={
               <Label labelFor="field-input-license">
                 {appointmentFieldLabels.licenseNumber}
@@ -228,7 +229,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
           <div style={{ maxWidth: '250px', minWidth: '150px' }}>
             <Select
               id="field-select-company"
-              fieldSize="small"
+              fieldSize={FieldSize.Small}
               label={
                 <Label labelFor="field-select-company">
                   {appointmentFieldLabels.company}
@@ -271,7 +272,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
                 </Label>
               }
               name="effectiveDate"
-              onDateSelect={(date) =>
+              onDateSelect={date =>
                 field.onChange(standardDateMonthDayYear(date))
               }
               fieldStatus={

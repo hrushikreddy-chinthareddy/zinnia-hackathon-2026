@@ -1,4 +1,9 @@
-import { FieldDataActive, FieldStatus, Label } from '@zinnia/bloom/components';
+import {
+  FieldData,
+  FieldSize,
+  FieldStatus,
+  Label,
+} from '@zinnia/bloom/components';
 import {
   Control,
   Controller,
@@ -24,9 +29,9 @@ export const IndividualFormFields = ({
   return (
     <>
       <div className={styles.individualNameFormFields}>
-        <FieldDataActive
+        <FieldData
           style={{ width: '200px' }}
-          fieldSize="small"
+          fieldSize={FieldSize.Small}
           label={<Label>First name</Label>}
           {...register('firstName', {
             required: 'First name is missing.',
@@ -36,9 +41,9 @@ export const IndividualFormFields = ({
             errors.firstName ? FieldStatus.ERROR : FieldStatus.DEFAULT
           }
         />
-        <FieldDataActive
+        <FieldData
           style={{ width: '200px' }}
-          fieldSize="small"
+          fieldSize={FieldSize.Small}
           label={<Label>Last name</Label>}
           {...register('lastName', {
             required: 'Last name is missing.',
@@ -50,9 +55,9 @@ export const IndividualFormFields = ({
         />
       </div>
 
-      <FieldDataActive
+      <FieldData
         style={{ width: '200px' }}
-        fieldSize="small"
+        fieldSize={FieldSize.Small}
         label={<Label>National Producer Number</Label>}
         type="number"
         {...register('nationalProducerNumber', {
@@ -100,9 +105,9 @@ export const IndividualFormFields = ({
         />
       </div>
 
-      <FieldDataActive
+      <FieldData
         className={styles.formField}
-        fieldSize="small"
+        fieldSize={FieldSize.Small}
         label={<Label>Email</Label>}
         {...register('email', {
           required: 'Email is missing.',

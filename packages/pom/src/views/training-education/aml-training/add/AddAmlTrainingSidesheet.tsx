@@ -1,7 +1,8 @@
 import { FC, useState } from 'react';
 import {
   Button,
-  FieldDataActive,
+  FieldData,
+  FieldSize,
   FieldStatus,
   Icon,
   IconType,
@@ -62,7 +63,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
         render={({ field }) => (
           <Select
             id="field-select-carrier"
-            fieldSize="small"
+            fieldSize={FieldSize.Small}
             label={
               <Label labelFor="field-select-carrier">
                 {amlTrainingFieldLabels.carrier}
@@ -97,7 +98,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
           <div style={{ width: '30%' }}>
             <Select
               id="field-select-vendor"
-              fieldSize="small"
+              fieldSize={FieldSize.Small}
               label={<Label labelFor="field-select-vendor">Vendor</Label>}
               value={field.value}
               onValueChange={field.onChange}
@@ -126,10 +127,10 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
         control={control}
         rules={{ required: 'Course number is missing.' }}
         render={({ field }) => (
-          <FieldDataActive
+          <FieldData
             style={{ width: '25%' }}
             id="field-input-course-number"
-            fieldSize="small"
+            fieldSize={FieldSize.Small}
             label={
               <Label labelFor="field-input-course-number">Course number</Label>
             }
@@ -148,10 +149,10 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
         control={control}
         rules={{ required: 'Course name is missing.' }}
         render={({ field }) => (
-          <FieldDataActive
+          <FieldData
             style={{ width: '30%' }}
             id="field-input-course-name"
-            fieldSize="small"
+            fieldSize={FieldSize.Small}
             label={
               <Label labelFor="field-input-course-name">Course name</Label>
             }
@@ -180,7 +181,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
                 </Label>
               }
               name="completionDate"
-              onDateSelect={(date) =>
+              onDateSelect={date =>
                 field.onChange(standardDateMonthDayYear(date))
               }
               fieldStatus={
@@ -209,7 +210,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
                 </Label>
               }
               name="expirationDate"
-              onDateSelect={(date) =>
+              onDateSelect={date =>
                 field.onChange(standardDateMonthDayYear(date))
               }
               fieldStatus={

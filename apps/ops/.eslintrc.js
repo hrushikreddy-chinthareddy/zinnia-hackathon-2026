@@ -18,7 +18,7 @@ module.exports = {
         browser: true,
         es2021: true,
     },
-    extends: ['@zinnia/eslint-config/next.js', 'plugin:@tanstack/eslint-plugin-query/recommended'],
+    extends: ['@zinnia/eslint-config/next', 'plugin:@tanstack/eslint-plugin-query/recommended'],
     overrides: [
         {
             files: ['**/*.stories.tsx'],
@@ -32,7 +32,6 @@ module.exports = {
         ecmaVersion: 'latest',
         sourceType: 'module',
     },
-
     rules: {
         '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true, varsIgnorePattern: '^_' }],
         '@typescript-eslint/no-explicit-any': 'off',

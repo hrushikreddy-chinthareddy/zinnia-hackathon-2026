@@ -48,7 +48,7 @@ NC='\033[0m' # Text Reset
 # > perf: A code change that improves performance
 # > refactor: A code change that neither fixes a bug nor adds a feature
 # > test: Adding missing tests or correcting existing tests
-BRANCH_TYPE_PATTERN="^(build|ci|docs|feat|fix|perf|refactor|test|bugfix)"
+BRANCH_TYPE_PATTERN="^(build|ci|chore|docs|feat|fix|perf|refactor|test|bugfix)"
 
 #  next we look for a valid ticket number
 # EX: [CUI-613] [DEPU-2749] [OA5946-5]

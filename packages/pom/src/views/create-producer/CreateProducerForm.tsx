@@ -1,6 +1,7 @@
 import {
   Button,
   ButtonGroup,
+  FieldSize,
   FieldStatus,
   Label,
   Link,
@@ -150,7 +151,7 @@ export const CreateProducerForm = () => {
                 <div className={styles.formField}>
                   <Select
                     id="field-select-carrier"
-                    fieldSize="small"
+                    fieldSize={FieldSize.Small}
                     label={
                       <Label labelFor="field-select-carrier">Carrier</Label>
                     }

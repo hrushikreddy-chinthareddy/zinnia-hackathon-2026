@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import {
   Button,
+  FieldSize,
   FieldStatus,
   Icon,
   IconType,
@@ -55,7 +56,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
         render={({ field }) => (
           <Select
             id="field-select-carrier"
-            fieldSize="small"
+            fieldSize={FieldSize.Small}
             label={<Label labelFor="field-select-carrier">Carrier</Label>}
             value={field.value}
             onValueChange={field.onChange}
@@ -86,7 +87,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
           <div style={{ width: '30%' }}>
             <Select
               id="field-select-product"
-              fieldSize="small"
+              fieldSize={FieldSize.Small}
               label={<Label labelFor="field-select-product">Product</Label>}
               value={field.value}
               onValueChange={field.onChange}

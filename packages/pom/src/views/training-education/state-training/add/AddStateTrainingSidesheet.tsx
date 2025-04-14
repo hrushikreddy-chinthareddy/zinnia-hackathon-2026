@@ -1,7 +1,8 @@
 import { FC, useState } from 'react';
 import {
   Button,
-  FieldDataActive,
+  FieldData,
+  FieldSize,
   FieldStatus,
   Icon,
   IconType,
@@ -66,7 +67,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
         render={({ field }) => (
           <Select
             id="field-select-vendor"
-            fieldSize="small"
+            fieldSize={FieldSize.Small}
             label={<Label labelFor="field-select-vendor">Vendor</Label>}
             value={field.value}
             onValueChange={field.onChange}
@@ -94,10 +95,10 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
         control={control}
         rules={{ required: 'Course number is missing.' }}
         render={({ field }) => (
-          <FieldDataActive
+          <FieldData
             style={{ width: '100px' }}
             id="field-input-courseNumber"
-            fieldSize="small"
+            fieldSize={FieldSize.Small}
             label={
               <Label labelFor="field-input-courseNumber">
                 {stateTrainingFieldLabels.courseNumber}
@@ -118,10 +119,10 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
         control={control}
         rules={{ required: 'Course name is missing.' }}
         render={({ field }) => (
-          <FieldDataActive
+          <FieldData
             style={{ width: '150px' }}
             id="field-input-courseName"
-            fieldSize="small"
+            fieldSize={FieldSize.Small}
             label={
               <Label labelFor="field-input-courseName">
                 {stateTrainingFieldLabels.courseName}
@@ -145,7 +146,7 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
           <div style={{ maxWidth: '100px', minWidth: '70px' }}>
             <Select
               id="field-select-state"
-              fieldSize="small"
+              fieldSize={FieldSize.Small}
               label={
                 <Label labelFor="field-select-state">
                   {stateTrainingFieldLabels.state}
@@ -178,10 +179,10 @@ const SideSheetContent: FC<SideSheetContentProps> = ({ onSideSheetClose }) => {
         control={control}
         rules={{ required: 'Hours is missing.' }}
         render={({ field }) => (
-          <FieldDataActive
+          <FieldData
             style={{ width: '100px' }}
             id="field-input-hours"
-            fieldSize="small"
+            fieldSize={FieldSize.Small}
             label={
               <Label labelFor="field-input-hours">
                 {stateTrainingFieldLabels.hours}
