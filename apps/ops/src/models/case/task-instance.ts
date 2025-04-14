@@ -40,6 +40,7 @@ export type TaskInstance = {
     status: TaskStatus;
     taskType: string;
     updatedAt: string;
+    queue?: string | null;
 };
 export type ManagementTask<T = TaskStatus> = {
     assignedTo?: any;

@@ -413,8 +413,9 @@ export class TransformedCase {
         this.unmappedTasks = (caseDetails?.tasks || [])
             .filter(task => {
                 const taskId = task.id;
-                return !isTaskMappedToStep(taskId) && !isTaskMappedToException(taskId);
+                return !isTaskMappedToStep(taskId) && !isTaskMappedToException(taskId) && task?.queue;
             })
+
             .map(task => ({
                 id: task.id,
                 taskName: task.taskName,
