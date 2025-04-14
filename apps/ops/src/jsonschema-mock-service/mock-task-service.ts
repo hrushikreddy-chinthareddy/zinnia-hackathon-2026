@@ -18,6 +18,22 @@ import prenoteNigoData from '@deps/jsonschema-mock-service/tasks-data/prenote-ni
 import toaReviewData from '@deps/jsonschema-mock-service/tasks-data/toa-review.json';
 import prenoteReviewData from '@deps/jsonschema-mock-service/tasks-data/prenote-review.json';
 
+import purchaseDocumentMatchingSchema from '@deps/jsonschema-mock-service/tasks/purchase-document-matching.json';
+import agentNigoSchema from '@deps/jsonschema-mock-service/tasks/agent-nigo.json';
+import applicationNigoSchema from '@deps/jsonschema-mock-service/tasks/application-nigo.json';
+import attachmentNigoSchema from '@deps/jsonschema-mock-service/tasks/attachment-nigo.json';
+import premiumNigoSchema from '@deps/jsonschema-mock-service/tasks/premium-nigo.json';
+import standardDocumentMatchingSchema from '@deps/jsonschema-mock-service/tasks/standard-document-matching.json';
+import toaNigoSchema from '@deps/jsonschema-mock-service/tasks/toa-nigo.json';
+import ofacReviewSchema from '@deps/jsonschema-mock-service/tasks/review-ofac.json';
+import prenoteNigoSchema from '@deps/jsonschema-mock-service/tasks/prenote-nigo.json';
+import toaReviewSchema from '@deps/jsonschema-mock-service/tasks/toa-review.json';
+import prenoteReviewSchema from '@deps/jsonschema-mock-service/tasks/prenote-review.json';
+import agentOnboardingNigoSchema from '@deps/jsonschema-mock-service/tasks/agent-onboarding-nigo.json';
+import agentOnboardingReviewSchema from '@deps/jsonschema-mock-service/tasks/agent-onboarding-review.json';
+import agentReviewSchema from '@deps/jsonschema-mock-service/tasks/agent-review.json';
+import appDataEntrySchema from '@deps/jsonschema-mock-service/tasks/nb_app_data_entry.json';
+
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 
@@ -27,6 +43,38 @@ export const getTaskFormMetadataSSRMock = async (taskType: TaskType): Promise<Fo
             return wellabeSuitabilitySchema as unknown as FormMetadata;
         case TaskType.SuitabilityReview:
             return wellabeSuitabilityReviewSchema as unknown as FormMetadata;
+        case TaskType.PURCHASE_DOCUMENT_MATCHING:
+            return purchaseDocumentMatchingSchema as unknown as FormMetadata;
+        case TaskType.Agent_Nigo:
+            return agentNigoSchema as unknown as FormMetadata;
+        case TaskType.Application_Nigo:
+            return applicationNigoSchema as unknown as FormMetadata;
+        case TaskType.PremiumNigo:
+            return premiumNigoSchema as unknown as FormMetadata;
+        case TaskType.Standard_Document_Matching:
+            return standardDocumentMatchingSchema as unknown as FormMetadata;
+        case TaskType.TOA_Nigo:
+            return toaNigoSchema as unknown as FormMetadata;
+        case TaskType.Agent_Onboarding_Nigo:
+            return agentOnboardingNigoSchema as unknown as FormMetadata;
+        case TaskType.Attachment_Nigo:
+            return attachmentNigoSchema as unknown as FormMetadata;
+        case TaskType.Agent_Review:
+            return agentReviewSchema as unknown as FormMetadata;
+        case TaskType.AppDataEntry:
+            return appDataEntrySchema as unknown as FormMetadata;
+        case TaskType.Agent_Onboarding_Review:
+            return agentOnboardingReviewSchema as unknown as FormMetadata;
+        case TaskType.Review_Ofac:
+            return ofacReviewSchema as unknown as FormMetadata;
+        case TaskType.Prenote_Nigo:
+            return prenoteNigoSchema as unknown as FormMetadata;
+        case TaskType.TOA_Review:
+            return toaReviewSchema as unknown as FormMetadata;
+        case TaskType.Prenote_Review:
+            return prenoteReviewSchema as unknown as FormMetadata;
+        case TaskType.Payment_Processing_Review:
+            return prenoteReviewSchema as unknown as FormMetadata;
         default:
             return null;
     }

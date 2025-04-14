@@ -72,6 +72,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const taskId = (query.taskId as string) || '';
             const taskTypeOverride = (query.taskTypeOverride as string) || '';
             const taskUserOverride = Boolean(query.taskUserOverride) || false;
+            const taskSchemaOverride = (query.taskSchemaOverride as string) || '';
 
             let accessToken;
             try {
@@ -100,6 +101,7 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             try {
                 const mockedTaskType = taskTypeOverride && !isProd() && taskTypeOverride;
+
                 const task = await getCaseTaskById(taskId, accessToken, loggingContext, mockedTaskType as TaskType);
 
                 if (!task) {
@@ -125,7 +127,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 }
-                if (!(!isProd() && (taskUserOverride || taskTypeOverride))) {
+                if (!(!isProd() && (taskUserOverride || taskTypeOverride || taskSchemaOverride))) {
                     if (
                         !(
                             user.email &&
@@ -185,7 +187,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     carrier: carrier?.toUpperCase(),
                     process: taskType,
                 };
-
+                const mockedSchema = taskSchemaOverride === 'true' && !isProd();
                 const [translations, caseDetails, nigoExceptionResponse, taskMetadata] = await Promise.all([
                     await serverSideTranslations(
                         locale,
@@ -195,7 +197,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ),
                     await getCaseDetailsSSR(caseId, accessToken as string, loggingContext),
                     await getNigoExceptions(nigoFilters, accessToken, loggingContext),
-                    await getTaskFormMetadata(carrier, taskType as TaskType, process as ProcessType, accessToken, loggingContext),
+                    await getTaskFormMetadata(
+                        carrier,
+                        taskType as TaskType,
+                        process as ProcessType,
+                        accessToken,
+                        loggingContext,
+                        mockedSchema
+                    ),
                 ]);
 
                 const correlationId = caseDetails?.correlationId;

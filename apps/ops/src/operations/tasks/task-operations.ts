@@ -70,8 +70,12 @@ export const getTaskFormMetadata = async (
     taskType: TaskType,
     processType: ProcessType | undefined,
     accessToken: string | undefined,
-    logCtx: LoggingContext
+    logCtx: LoggingContext,
+    taskSchemaOverride: boolean = false
 ) => {
+    if (taskSchemaOverride) {
+        return mockService.getTaskFormMetadataSSRMock(taskType);
+    }
     return getTaskFormMetadataSSR(clientId, taskType, processType, accessToken, logCtx);
 };
 export const getCaseTaskById = async (
