@@ -201,7 +201,7 @@ export const getTaxDocumentsV3 = async (
 ): Promise<ApiResponse<TaxFormsResponse200>> => {
   const { clientCode } = queryParams;
   const documentQueryParams = buildDocumentQueryParamsV3(queryParams);
-  const documentUrl = `${documentV3ApiBaseUrl}/documents/tax-forms?${documentQueryParams.toString()}`;
+  const documentUrl = `${documentV3ApiBaseUrl}/tax-forms?${documentQueryParams.toString()}`;
 
   if (isMockDocumentsRequestEnabled()) {
     return {

@@ -10,7 +10,7 @@ import { ApiResponse } from '@deps/types/api-response';
 import { baseAppUrl } from '../api-config';
 
 const baseUrl = baseAppUrl + '/api/document/v2/';
-const baseUrlV3 = baseAppUrl + '/api/document/v3/documents/';
+const baseUrlV3 = baseAppUrl + '/api/document/v3/';
 
 export const searchTaxForms = async (
     requestBody: SearchTaxFormRequestBody,

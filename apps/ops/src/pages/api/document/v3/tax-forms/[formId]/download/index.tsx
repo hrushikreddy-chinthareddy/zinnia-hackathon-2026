@@ -8,7 +8,7 @@ import { logCompliance, logError, logTrace, parseErrorInformation, withAuthAndLo
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-const baseUrl = `${apiServerBaseUrl}/document/v3/documents`;
+const baseUrl = `${apiServerBaseUrl}/document/v3`;
 
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<TaxformDownloadResponse | null>, loggingContext) => {
@@ -46,7 +46,7 @@ export default withAuthAndLogging(
             res.status((error as Response)?.status ?? 500).json(null);
         }
     },
-    { file: 'document/v3/documents/tax-forms/:formId/download', function: 'routeHandler' }
+    { file: 'document/v3/tax-forms/:formId/download', function: 'routeHandler' }
 );
 
 // Addresses NextJS error: API response for this route exceeds 4MB. API Routes are meant to respond quickly.
