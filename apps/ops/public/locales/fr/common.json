@@ -4954,6 +4954,7 @@
             "taskId": "ID de tâche",
             "taskName": "Nom de la tâche",
             "statusDuration": "Durée du statut",
+            "dateTime": "Date/Heure",
             "userId": "Utilisateur",
             "actions": "Actions"
         },
@@ -4966,6 +4967,9 @@
         "taskSubmittedAgo": "Soumis il y a {{updatedCount}} {{updatedUnit}}",
         "taskCompletedAgo": "Terminé il y a {{updatedCount}} {{updatedUnit}}",
         "taskCreatedAgo": "Créé il y a {{updatedCount}} {{updatedUnit}}",
+        "taskSubmittedOn": "Soumis le {{updatedDateTime}}",
+        "taskCompletedOn": "Terminé le {{updatedDateTime}}",
+        "taskCreatedOn": "Créé le {{updatedDateTime}}",
         "taskStatus": {
             "draft": "Nouveau",
             "pending": "En attente",

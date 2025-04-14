@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
-import { getSlug, toTitleCase } from '@deps/helpers/string.helper';
+import { getFormattedDateTime, getSlug, toTitleCase } from '@deps/helpers/string.helper';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 
@@ -34,6 +34,21 @@ export const getStatusDuration = (t: TFunction, date: string, taskStatus: string
     return statusDuration;
 };
 
+export const getStatusDateTime = (t: TFunction, date: string, taskStatus: string) => {
+    let statusDuration = '';
+    const updatedDateTime = date ? getFormattedDateTime(new Date(date) || '') : '-';
+
+    if (taskStatus === 'IN_PROGRESS' || taskStatus === 'INPROGRESS') {
+        statusDuration = t('tasksListing.taskSubmittedOn', { updatedDateTime });
+    } else if (taskStatus === 'COMPLETED') {
+        statusDuration = t('tasksListing.taskCompletedOn', { updatedDateTime });
+    } else if (taskStatus === 'PENDING' || taskStatus === 'NEW') {
+        statusDuration = t('tasksListing.taskCreatedOn', { updatedDateTime});
+    }
+
+    return statusDuration;
+};
+
 const getTaskStatusText = (t: TFunction, status: string) => {
     switch (status) {
         case CaseStatus.Draft:
@@ -50,15 +65,14 @@ const getTaskStatusText = (t: TFunction, status: string) => {
     }
 };
 export const toFormattedTask = (t: TFunction, task: Task, caseId: string, caseType: string, documentNumber: string, clientId: string) => {
-    const statusDuration = getStatusDuration(t, task.updatedDate, task.status);
-
     return {
         status: task.status,
         taskId: task.id,
         taskInfoLink: buildTaskLink(task.id, caseId, caseType, documentNumber, clientId),
         taskStatus: getTaskStatusText(t, task.status),
         taskName: task.taskName || '-',
-        statusDuration: statusDuration,
+        statusDuration: task?.updatedDate ? getStatusDuration(t, task.updatedDate, task.status) : '-',
+        taskDate: task?.updatedDate ? getStatusDateTime(t, task.updatedDate, task.status) : '-',
         userId: task.userId || '-'
     };
 };

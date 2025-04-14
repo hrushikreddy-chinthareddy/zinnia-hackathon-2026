@@ -17,6 +17,7 @@ export interface TaskTableRow {
     status: string;
     taskName: string;
     statusDuration: string;
+    taskDate: string;
     userId: string;
 }
 

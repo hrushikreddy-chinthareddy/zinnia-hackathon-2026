@@ -42,6 +42,7 @@ export default function TasksTable({
                         <TableHeaderCell><Label>{t('tasksListing.tableColumns.status')}</Label></TableHeaderCell>
                         <TableHeaderCell><Label>{t('tasksListing.tableColumns.taskId')}</Label></TableHeaderCell>
                         <TableHeaderCell><Label>{t('tasksListing.tableColumns.statusDuration')}</Label></TableHeaderCell>
+                        <TableHeaderCell><Label>{t('tasksListing.tableColumns.dateTime')}</Label></TableHeaderCell>
                         <TableHeaderCell><Label>{t('tasksListing.tableColumns.userId')}</Label></TableHeaderCell>
                         <TableHeaderCell><Label>{t('tasksListing.tableColumns.actions')}</Label></TableHeaderCell>
                     </TableRow>
@@ -55,6 +56,7 @@ export default function TasksTable({
                                 <TableCell className="typography-content-body-sm">{task.status}</TableCell>
                                 <TableCell className="typography-content-body-sm">{task.taskId}</TableCell>
                                 <TableCell className="typography-content-body-sm">{task.statusDuration}</TableCell>
+                                <TableCell className="typography-content-body-sm">{task.taskDate}</TableCell>
                                 <TableCell className="typography-content-body-sm">{task.userId}</TableCell>
                                 <TableCell className="typography-content-body-sm">
                                     <ActionCellRenderer data={task} actionParams={config.actionCellParams} />

@@ -181,6 +181,15 @@ export const formatDateForAriaLabel = (date: Date) => {
     return formatter.format(date);
 };
 
+export const getFormattedDateTime  = ( date: Date) => {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+        timeZone: 'CST',
+    });
+    return formatter.format(date);
+}
+
 // Format SSN return ****-**-1234
 export const formatSSN = (ssn?: string): string => {
     if (!ssn) return DEFAULT_ERROR_STRING;

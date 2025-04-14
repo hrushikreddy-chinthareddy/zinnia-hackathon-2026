@@ -4981,6 +4981,7 @@
             "taskId": "Task ID",
             "taskName": "Task Name",
             "statusDuration": "Status Duration",
+            "dateTime": "Date/Time",
             "userId": "User",
             "actions": "Actions"
         },
@@ -4993,6 +4994,9 @@
         "taskSubmittedAgo": "Submitted {{updatedCount}} {{updatedUnit}} ago",
         "taskCompletedAgo": "Completed {{updatedCount}} {{updatedUnit}} ago",
         "taskCreatedAgo": "Created {{updatedCount}} {{updatedUnit}} ago",
+        "taskSubmittedOn": "Submitted on {{updatedDateTime}}",
+        "taskCompletedOn": "Completed on {{updatedDateTime}}",
+        "taskCreatedOn": "Created on {{updatedDateTime}}",
         "taskStatus": {
             "draft": "New",
             "pending": "Pending",
