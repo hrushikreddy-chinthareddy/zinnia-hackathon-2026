@@ -16,7 +16,7 @@ export default withAuthAndLogging(
         const { formId, clientCode, contractNumber, fChar, taxYear } = req.query;
         const accessToken = (await getAccessToken(req, res)).accessToken;
 
-        const url = `${baseUrl}/taxForms/${formId}?clientCode=${clientCode}&contractNumber=${contractNumber}&fChar=${fChar}&taxYear=${taxYear}`;
+        const url = `${baseUrl}/tax-forms/${formId}/download?clientCode=${clientCode}&contractNumber=${contractNumber}&fChar=${fChar}&taxYear=${taxYear}`;
 
         logTrace('taxFormDownload::start', loggingContext);
         logCompliance('Tax Form Download Attempt', loggingContext);
@@ -37,7 +37,7 @@ export default withAuthAndLogging(
 
             res.json(data);
         } catch (error) {
-            logError('documents/taxForms/:formId:: error', {
+            logError('documents/tax-forms/:formId/download:: error', {
                 ...parseErrorInformation(error),
                 requestUrl: url,
                 duration: performance.now() - now,
@@ -46,7 +46,7 @@ export default withAuthAndLogging(
             res.status((error as Response)?.status ?? 500).json(null);
         }
     },
-    { file: 'document/v3/documents/taxForms/:formId', function: 'routeHandler' }
+    { file: 'document/v3/documents/tax-forms/:formId/download', function: 'routeHandler' }
 );
 
 // Addresses NextJS error: API response for this route exceeds 4MB. API Routes are meant to respond quickly.

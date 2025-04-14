@@ -18,7 +18,7 @@ export const searchTaxForms = async (
     signal?: AbortSignal
 ): Promise<ApiResponse<SearchTaxFormResponseBody>> => {
     try {
-        let url = `${useV3 ? baseUrlV3 : baseUrl}taxForms?contractNumber=${requestBody.contractNumber}&clientCode=${
+        let url = `${useV3 ? baseUrlV3 + 'tax-forms' : baseUrl + 'taxForms'}?contractNumber=${requestBody.contractNumber}&clientCode=${
             requestBody.clientCode
         }`;
 
@@ -77,7 +77,7 @@ export const downloadTaxFormById = async (
         const queryParams = `?clientCode=${optionalParams?.clientCode}&contractNumber=${optionalParams?.contractNumber}&fChar=${optionalParams?.fChar}&taxYear=${optionalParams?.taxYear}`;
 
         const url = useV3
-            ? `${baseUrlV3}/taxForms/${formId}${queryParams}`
+            ? `${baseUrlV3}/tax-forms/${formId}/download${queryParams}`
             : `${baseAppUrl}/api/documents/tax-form/${formId}/preview${queryParams}`;
 
         datadogLogs.logger.info('contactCenterDownloadTaxFormById', {

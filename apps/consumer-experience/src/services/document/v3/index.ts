@@ -201,7 +201,7 @@ export const getTaxDocumentsV3 = async (
 ): Promise<ApiResponse<TaxFormsResponse200>> => {
   const { clientCode } = queryParams;
   const documentQueryParams = buildDocumentQueryParamsV3(queryParams);
-  const documentUrl = `${documentV3ApiBaseUrl}/documents/taxForms?${documentQueryParams.toString()}`;
+  const documentUrl = `${documentV3ApiBaseUrl}/documents/tax-forms?${documentQueryParams.toString()}`;
 
   if (isMockDocumentsRequestEnabled()) {
     return {
@@ -253,7 +253,7 @@ export const getTaxDocumentDownloadV3 = async ({
     if (isMockDocumentRequestEnabled()) {
       return { data: mockDocumentResponse, error: null };
     }
-    const url = `${documentV3ApiBaseUrl}/taxForms/${formId}?clientCode=${carrierId}&fChar=${fChar}&contractNumber=${contractNumber}&taxYear=${taxYear}`;
+    const url = `${documentV3ApiBaseUrl}/tax-forms/${formId}/download?clientCode=${carrierId}&fChar=${fChar}&contractNumber=${contractNumber}&taxYear=${taxYear}`;
     const response = await ServerApi.get(url);
     if (!response.ok) {
       throw response;
