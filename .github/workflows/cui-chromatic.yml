@@ -10,7 +10,7 @@ on:
 
 jobs:
   chromatic:
-    uses: './build-chromatic.yml'
+    uses: './.github/workflows/build-chromatic.yml'
     with:
       project-name: Consumer Experience
       filter-path: consumer-experience
