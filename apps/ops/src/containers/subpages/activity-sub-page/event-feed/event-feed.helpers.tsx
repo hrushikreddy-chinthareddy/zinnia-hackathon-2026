@@ -1,14 +1,5 @@
-import { Dispatch, SetStateAction } from 'react';
-
 import { hasFilter } from '@deps/components/history/filters/filter.helpers';
-import {
-    EventFilterKeys,
-    EventFilters,
-    HistoryFilters,
-    PeopleFilters,
-    PolicyFilters,
-    TransactionFilters,
-} from '@deps/contexts/HistoryFiltersContext';
+import { EventFilterKeys, EventFilters, PeopleFilters, PolicyFilters, TransactionFilters } from '@deps/contexts/HistoryFiltersContext';
 import {
     allTransactions,
     allTransactionTypes,
@@ -16,21 +7,11 @@ import {
     peopleTransactions,
     policyTransactions,
 } from '@deps/helpers/transaction-types.helper';
-import { Policy, Transaction } from '@deps/models/policy/sor-policy';
-import { getPolicyTransactions } from '@deps/queries/api/policies';
+import { Transaction } from '@deps/models/policy/sor-policy';
 
 export interface Transactions {
     completed: Transaction[] | [];
     upcoming: Transaction[] | [];
-}
-
-interface GetTransactionsProps {
-    historyFilters: HistoryFilters;
-    policy: Policy;
-    setIsLoading: Dispatch<SetStateAction<boolean>>;
-    setTransactions: Dispatch<SetStateAction<Transaction[]>>;
-    sortField?: 'PROCESSDATE' | 'EFFECTIVEDATE' | 'REVERSALDATE';
-    sortOrder?: 'ASC' | 'DESC';
 }
 
 export const getEvents = (eventFilter?: EventFilters) => {
@@ -96,31 +77,4 @@ export const getEvents = (eventFilter?: EventFilters) => {
         default:
             return allTransactions.all;
     }
-};
-
-export const getTransactions = async ({
-    historyFilters,
-    policy,
-    setIsLoading,
-    setTransactions,
-    sortField = 'EFFECTIVEDATE',
-    sortOrder = 'DESC',
-}: GetTransactionsProps) => {
-    setIsLoading(true);
-    const { eventFilter, yearFilter, statusFilter } = historyFilters;
-    const transactionTypes = getEvents(eventFilter);
-
-    const results = await getPolicyTransactions({
-        transactionTypes: transactionTypes,
-        id: policy.policyNumber,
-        planCode: policy.product?.planCode,
-        sortField,
-        sortOrder,
-        status: statusFilter,
-        ...(hasFilter(yearFilter) && { year: yearFilter }),
-    });
-
-    setTransactions(results ?? []);
-
-    setIsLoading(false);
 };

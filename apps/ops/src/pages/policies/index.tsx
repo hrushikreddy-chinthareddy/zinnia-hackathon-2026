@@ -93,7 +93,6 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         data: policyData,
         isFetching: policyDataFetching,
         error: policyDataError,
-        isPlaceholderData,
     } = useQuery({
         queryKey: ['policyData', searchValue, limit, offset],
         placeholderData: previousData => previousData,
@@ -179,12 +178,9 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                             .map(p => {
                                 return <PolicyQuickView key={'policy_' + p.policyNumber} policy={p} />;
                             })}
+                        {policyData && <PaginationControls total={policyData.total} limit={limit} offset={offset} goToPage={goToPage} />}
                     </>
                 </SearchResults>
-
-                {!isPlaceholderData && policyData && (
-                    <PaginationControls total={policyData.total} limit={limit} offset={offset} goToPage={goToPage} />
-                )}
             </NoNavLayout>
         </DashboardContext.Provider>
     );

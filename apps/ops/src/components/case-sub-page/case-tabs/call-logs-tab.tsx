@@ -1,6 +1,8 @@
+import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType, Tag } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
+import { useContext } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import UnauthorizedCard from '@deps/components/card/card-unauthorized';
@@ -8,9 +10,10 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
-import { CallLog } from '@deps/models/case/call-log';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { getCallLogsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 export const NoSummaryCard = ({ content }: { content: string }) => (
     <div className="flex items-center gap-1 rounded-sm border border-dashed border-gray-100 bg-gray-50 p-4">
         <Icon type={IconType.PHONE} height={16} width={16} />
@@ -96,24 +99,29 @@ const CallLogCard = ({
 };
 
 interface CallLogsTabProps {
-    loadingCallLogs: boolean;
-    callLogs: CallLog[];
-    callLogsStatusCode: number | null;
+    queryLimit: number;
 }
 
-export default function CallLogsTab({ loadingCallLogs, callLogs, callLogsStatusCode }: CallLogsTabProps) {
+export default function CallLogsTab({ queryLimit = 10 }: CallLogsTabProps) {
     const { t } = useTranslation();
+    const { policy } = useContext(PolicyData);
+
+    const { data: callLogsData, isLoading: callLogsLoading } = useQuery({
+        queryKey: ['callLogs', policy.policyNumber, queryLimit],
+        queryFn: () => getCallLogsQuery(policy.policyNumber, queryLimit),
+        enabled: !!policy.policyNumber,
+    });
+
     return (
         <CardContainer>
             <div>
                 <Typography variant={TypographyVariant.H2}>{toTitleCase(`${t('caseOverview.tabs.call-logs')}`)}</Typography>
             </div>
-            {loadingCallLogs && (
+            {callLogsLoading ? (
                 <div className="p-8">
                     <PageLoader variant={PageLoaderVariant.Center} />
                 </div>
-            )}
-            {!loadingCallLogs && !callLogs.length && callLogsStatusCode !== StatusCode.Forbidden && (
+            ) : !callLogsData?.data.length && callLogsData?.status !== StatusCode.Forbidden ? (
                 <div className="flex justify-center">
                     <CardInfo
                         icon={<Icon type={IconType.PHONE} width={50} height={50} className="text-gray-300" />}
@@ -122,24 +130,25 @@ export default function CallLogsTab({ loadingCallLogs, callLogs, callLogsStatusC
                         className="mt-8"
                     />
                 </div>
+            ) : (
+                !!callLogsData?.data.length && (
+                    <>
+                        {callLogsData.data.map(({ callEntryID, callerName, callerType, createdDate, callType, callSummary, notes }) => (
+                            <CallLogCard
+                                key={`call-log-${callEntryID}`}
+                                callEntryId={callEntryID}
+                                callerName={callerName}
+                                callerRole={callerType}
+                                createdAt={createdDate}
+                                tag={callType}
+                                summary={callSummary}
+                                notes={notes}
+                            />
+                        ))}
+                    </>
+                )
             )}
-            {!loadingCallLogs && !!callLogs.length && (
-                <>
-                    {callLogs.map(({ callEntryID, callerName, callerType, createdDate, callType, callSummary, notes }) => (
-                        <CallLogCard
-                            key={`call-log-${callEntryID}`}
-                            callEntryId={callEntryID}
-                            callerName={callerName}
-                            callerRole={callerType}
-                            createdAt={createdDate}
-                            tag={callType}
-                            summary={callSummary}
-                            notes={notes}
-                        />
-                    ))}
-                </>
-            )}
-            {callLogsStatusCode === StatusCode.Forbidden && <UnauthorizedCard />}
+            {callLogsData?.status === StatusCode.Forbidden && <UnauthorizedCard />}
         </CardContainer>
     );
 }

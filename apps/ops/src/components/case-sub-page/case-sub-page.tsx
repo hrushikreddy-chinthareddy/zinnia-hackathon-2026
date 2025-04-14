@@ -2,7 +2,6 @@
 import { Icon, IconType, TabGroup, TabList, TabTrigger, TabContent } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
-import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { toTitleCase } from '@deps/helpers/string.helper';
@@ -28,7 +27,6 @@ export default function CaseSubPage({
 }) {
     const { t } = useTranslation();
     const { sessionId, partyId } = usePermissionsContext();
-    const { loadingCallLogs, callLogs, callLogsStatusCode } = useCaseActivityContext();
 
     const trackTabClick = (tab: string) => () => {
         segmentAnalyticsTrackEvent<CaseTabClickedEvent>(SegmentTrackedEventName.CaseDetailsTabClicked, {
@@ -70,7 +68,7 @@ export default function CaseSubPage({
                     <NotesTab />
                 </TabContent>
                 <TabContent className="w-full" value={CaseDetailsTabValues['call-logs']}>
-                    <CallLogsTab loadingCallLogs={loadingCallLogs} callLogs={callLogs} callLogsStatusCode={callLogsStatusCode} />
+                    <CallLogsTab queryLimit={100} />
                 </TabContent>
             </TabGroup>
         </div>
