@@ -60,6 +60,7 @@ RUN echo "NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY=${NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY}
 RUN echo "NEXT_PUBLIC_GIT_SHA=${NEXT_PUBLIC_GIT_SHA}" >> .env.production
 RUN echo "DATADOG_API_KEY=${DATADOG_API_KEY}" >> .env.production
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_OPTIONS=--max-old-space-size=4096
 
 RUN pnpm turbo run build --filter=ops
 # RUN pnpm run build-storybook --filter=ops
