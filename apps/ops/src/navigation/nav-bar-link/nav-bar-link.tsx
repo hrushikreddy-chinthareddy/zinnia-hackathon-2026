@@ -24,7 +24,7 @@ const NavBarLink: React.FC<NavBarLinkProps> = ({ label, link, icon = <></>, quer
     } ${borderBottomClass}`;
     const iconClassNames = `h-5 mr-1`;
 
-    if (queryParams !== undefined) {
+    if (queryParams && Object.keys(queryParams).length > 0) {
         link = `${link}${convertToQueryString(queryParams)}`;
     }
 

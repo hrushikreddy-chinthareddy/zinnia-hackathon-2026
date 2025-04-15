@@ -28,7 +28,7 @@ export const listCarriersPage = async (
         const val = checkPermissionsCookieForCarrierList(relation, ctx.req, ctx.res);
 
         if (val) {
-            val;
+            return val;
         }
 
         const user = await getUserData(ctx);
