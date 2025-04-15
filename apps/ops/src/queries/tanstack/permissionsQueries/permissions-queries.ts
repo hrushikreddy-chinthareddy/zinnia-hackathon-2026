@@ -4,7 +4,9 @@ import { UserPermission } from '@deps/models/user-profile';
 import { bulkCheckResponseClient, checkTuple, getCarrierList } from '@deps/queries/api/fga';
 import {
     checkPermissionsCookieForTuple,
+    addTupleToCookie,
     doesPermissionsHaveCarrierRelation,
+    addCarrierListToCookie,
     checkPermissionsCookieForCarrierList,
 } from '@deps/utils/permissionsCookie';
 
@@ -23,6 +25,10 @@ export const bulkCheckPermissionsQuery = async ({ tuples }: { tuples: FGA_Tuple[
     if (neededTuples.length) {
         const result = await bulkCheckResponseClient({ tuples: neededTuples });
         result?.data?.tuples?.forEach(tuple => {
+            // only store the tuple if the request was successful
+            if (!result.error) {
+                addTupleToCookie(tuple.relation, tuple.object, tuple.allowed);
+            }
             const index = checkedTuples.findIndex(t => t.relation === tuple.relation && t.object === tuple.object);
             if (index !== -1) {
                 checkedTuples[index].allowed = tuple.allowed;
@@ -69,7 +75,10 @@ export const hasPermissionQuery = async (relation: string, tupleObject: string, 
     if (result.error) {
         throw result.error;
     }
-
+    // only store the tuple if the request was successful
+    if (!result.error) {
+        addTupleToCookie(relation, tupleObject, !!result.data);
+    }
     return !!result.data;
 };
 
@@ -91,7 +100,10 @@ export const getCarriersListQuery = async (relation: string, partyId: string): P
     if (result.error) {
         throw result.error;
     }
-
+    // only add to cookie if the request was successful
+    if (!result.error) {
+        addCarrierListToCookie(relation, result.data ?? []);
+    }
     return result.data ?? [];
 };
 
