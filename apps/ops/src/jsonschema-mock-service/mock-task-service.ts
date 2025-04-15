@@ -15,6 +15,8 @@ import standardDocumentMatchingData from '@deps/jsonschema-mock-service/tasks-da
 import toaNigoData from '@deps/jsonschema-mock-service/tasks-data/toa-nigo.json';
 import ofacReviewData from '@deps/jsonschema-mock-service/tasks-data/ofac-review.json';
 import prenoteNigoData from '@deps/jsonschema-mock-service/tasks-data/prenote-nigo.json';
+import sendNigoCommunicationData from '@deps/jsonschema-mock-service/tasks-data/send-communication-nigo.json';
+import initiatePostissueTransactionData from '@deps/jsonschema-mock-service/tasks-data/initiate-postissue-transaction.json';
 import toaReviewData from '@deps/jsonschema-mock-service/tasks-data/toa-review.json';
 import prenoteReviewData from '@deps/jsonschema-mock-service/tasks-data/prenote-review.json';
 
@@ -112,6 +114,10 @@ export const getCaseTaskByIdSSRMock = async (taskType: TaskType): Promise<Manage
             return ofacReviewData as ManagementTask<TaskStatus>;
         case TaskType.Prenote_Nigo:
             return prenoteNigoData as ManagementTask<TaskStatus>;
+        case TaskType.Send_Nigo_Communication:
+            return sendNigoCommunicationData as ManagementTask<TaskStatus>;
+        case TaskType.Initiate_Postissue_Transaction:
+            return initiatePostissueTransactionData as ManagementTask<TaskStatus>;
         case TaskType.TOA_Review:
             return toaReviewData as ManagementTask<TaskStatus>;
         case TaskType.Prenote_Review:

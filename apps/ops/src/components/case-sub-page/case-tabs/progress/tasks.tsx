@@ -28,6 +28,8 @@ export const SupportedTaskMap = [
     TaskType.AppDataEntry,
     TaskType.Prenote_Nigo,
     TaskType.Agent_Onboarding_Review,
+    TaskType.Send_Nigo_Communication,
+    TaskType.Initiate_Postissue_Transaction,
     TaskType.TOA_Review,
     TaskType.Prenote_Review,
     TaskType.Payment_Processing_Review,

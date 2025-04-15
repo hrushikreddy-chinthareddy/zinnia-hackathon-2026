@@ -34,7 +34,18 @@ interface StartStepProps extends TransactionClickProps {
     isContinueDisabled?: boolean;
 }
 
-const StartStep = ({ parentPage, policy, processType, setState, state, title, subtitle, trackEventProps, isOnBaseUpdateAssistiveText = false, isContinueDisabled = false }: StartStepProps) => {
+const StartStep = ({
+    parentPage,
+    policy,
+    processType,
+    setState,
+    state,
+    title,
+    subtitle,
+    trackEventProps,
+    isOnBaseUpdateAssistiveText = false,
+    isContinueDisabled = false,
+}: StartStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
 
@@ -45,6 +56,11 @@ const StartStep = ({ parentPage, policy, processType, setState, state, title, su
 
     useEffect(() => {
         async function populateCaseSelect() {
+            const noDocument = {
+                documentNumber: t('workflows.start.processWithoutDocument'),
+                caseId: '',
+                value: PROCESS_WITHOUT_CASE_DOCUMENT,
+            };
             const response = await getCases({
                 limit: 25,
                 notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
@@ -53,22 +69,19 @@ const StartStep = ({ parentPage, policy, processType, setState, state, title, su
             });
 
             if (response && 'total' in response) {
-                const options: CaseDocumentOption[] = [
-                    { documentNumber: t('workflows.start.processWithoutDocument'), value: PROCESS_WITHOUT_CASE_DOCUMENT },
-                ];
-
-                response.data.forEach(caseDetails => {
+                const mappedCaseOptions: CaseDocumentOption[] = response.data.map(caseDetails => {
                     const documentNumber = getCaseIdentifierValue(caseDetails.identifiers, CaseIdentifier.DocumentNumber);
-                    const requestType = caseDetails.processSubType ?? caseDetails.process;
-                    documentNumber &&
-                        options.push({
-                            documentNumber,
-                            tag: requestType,
-                            value: caseDetails.id,
-                        });
+                    return {
+                        documentNumber: documentNumber || '',
+                        caseId: caseDetails.id,
+                        tag: `${caseDetails?.process || ''} - ${caseDetails?.processSubType || ''}`,
+                        value: caseDetails.id,
+                    };
                 });
-                setCaseOptions(options);
+                setCaseOptions([...mappedCaseOptions, noDocument]);
             } else {
+                // TODO MG: handle
+                setCaseOptions([noDocument]);
                 // TODO MG: ensure this doesnt blow up
                 throw new Error(response?.data?.err ? response.data.err : 'Error fetching cases');
             }
@@ -126,25 +139,32 @@ const StartStep = ({ parentPage, policy, processType, setState, state, title, su
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col">
-                    <Label className="mb-4" label={t('workflows.start.documentSelectionLabel')} sentenceCase={false} variant={LabelVariant.LabelLg} />
+                    <Label
+                        className="mb-4"
+                        label={t('workflows.start.documentSelectionLabel')}
+                        sentenceCase={false}
+                        variant={LabelVariant.LabelLg}
+                    />
                     <div className="grid max-w-[436px] gap-2">
-                        {caseOptions
-                            .sort((a, b) => a.documentNumber?.localeCompare(b.documentNumber))
-                            .map(option => (
-                                <CardCaseDocument
-                                    caseDocumentOption={option}
-                                    isSelected={state.caseId === option.value}
-                                    key={option.value}
-                                    onChange={() => handleSelection(option.value as string, option.documentNumber as string)}
-                                />
-                            ))}
+                        {caseOptions.map(option => (
+                            <CardCaseDocument
+                                caseDocumentOption={option}
+                                isSelected={state.caseId === option.value}
+                                key={option.value}
+                                onChange={() => handleSelection(option.value as string, option.documentNumber as string)}
+                            />
+                        ))}
                     </div>
                     {(selectedCaseId === PROCESS_WITHOUT_CASE_DOCUMENT || showSelectionError) && (
                         <div className="flex flex-col gap-2 mt-2">
                             {selectedCaseId === PROCESS_WITHOUT_CASE_DOCUMENT && (
                                 <AssistiveText
                                     variant={AssistiveTextVariant.Info}
-                                    text={isOnBaseUpdateAssistiveText ? t('workflows.start.processWithoutDocAssistiveTextWithOnBaseUpdate') : t('workflows.start.processWithoutDocAssistiveText')}
+                                    text={
+                                        isOnBaseUpdateAssistiveText
+                                            ? t('workflows.start.processWithoutDocAssistiveTextWithOnBaseUpdate')
+                                            : t('workflows.start.processWithoutDocAssistiveText')
+                                    }
                                 />
                             )}
                             {showSelectionError && (

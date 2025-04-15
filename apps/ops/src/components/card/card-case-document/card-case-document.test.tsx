@@ -23,6 +23,7 @@ jest.mock('next-i18next', () => ({
 describe('CardCaseDocument', () => {
     test('renders document number and tag', () => {
         const caseDocumentOption = {
+            caseId: 'CA0000403507',
             documentNumber: '12345-AB-67890',
             tag: 'Developer',
             value: '12345-AB-67890',
@@ -32,12 +33,14 @@ describe('CardCaseDocument', () => {
         expect(screen.getByText(caseDocumentOption.tag)).toBeInTheDocument();
         expect(screen.getByText('workflows.start.documentNumber')).toBeInTheDocument();
         expect(screen.getByText('12345-AB-67890')).toBeInTheDocument();
+        expect(screen.getByText('CA0000403507')).toBeInTheDocument();
     });
 
     test('renders proper copy for process without document', () => {
         const caseDocumentOption = {
             documentNumber: 'Process without document',
             value: PROCESS_WITHOUT_CASE_DOCUMENT,
+            caseId: '',
         };
 
         render(<CardCaseDocument caseDocumentOption={caseDocumentOption} isSelected={false} onChange={NOOP} />);

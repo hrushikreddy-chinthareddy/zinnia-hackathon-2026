@@ -17,7 +17,7 @@ const CardCaseDocument = ({ caseDocumentOption, isSelected, onChange }: CardCase
 
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const { documentNumber, tag, value } = caseDocumentOption;
+    const { documentNumber, caseId, tag, value } = caseDocumentOption;
 
     const isCaseDocument = value !== PROCESS_WITHOUT_CASE_DOCUMENT;
 
@@ -53,9 +53,14 @@ const CardCaseDocument = ({ caseDocumentOption, isSelected, onChange }: CardCase
 
             {tag && <Tag text={tag} />}
             <Typography variant={TypographyVariant.BodySmBold}>
+                {isCaseDocument && t('workflows.start.caseId')}
+                <span className={clsx({ 'font-normal': isCaseDocument })}>{caseId}</span>
+            </Typography>
+            {documentNumber && 
+            <Typography variant={TypographyVariant.BodySmBold}>
                 {isCaseDocument && t('workflows.start.documentNumber')}
                 <span className={clsx({ 'font-normal': isCaseDocument })}>{documentNumber}</span>
-            </Typography>
+            </Typography>}
         </label>
     );
 };

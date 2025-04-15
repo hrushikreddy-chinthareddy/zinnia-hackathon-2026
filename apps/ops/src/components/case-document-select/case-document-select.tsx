@@ -29,7 +29,8 @@ export interface CaseDocumentSelectProps {
 }
 
 export interface CaseDocumentOption {
-    documentNumber: string;
+    documentNumber?: string;
+    caseId: string;
     tag?: string;
     value: string;
 }
@@ -73,6 +74,7 @@ const getCaseDocumentOptions = async ({
 
     const noDocument = {
         documentNumber: t('transactions.caseDocumentSelect.processWithoutDocument'),
+        caseId:"",
         value: PROCESS_WITHOUT_CASE_DOCUMENT,
     };
 
@@ -87,10 +89,10 @@ const getCaseDocumentOptions = async ({
         const mappedCaseOptions = response.data
             .map(caseItem => {
                 const documentNumber = getCaseIdentifierValue(caseItem.identifiers, CaseIdentifier.DocumentNumber);
-                if (!documentNumber) return;
                 return {
-                    documentNumber,
-                    tag: caseItem.processSubType ?? caseItem.process,
+                    documentNumber: documentNumber||"",
+                    caseId: caseItem.id,
+                    tag: `${caseItem.process} - ${caseItem.processSubType}`,
                     value: caseItem.id,
                 };
             })

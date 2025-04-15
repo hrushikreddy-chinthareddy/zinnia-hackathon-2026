@@ -4936,6 +4936,7 @@
         "start": {
             "documentSelectionLabel": "Which document are you working from?",
             "documentNumber": "Document number: ",
+            "caseId": "Case id: ",
             "processWithoutDocument": "Process without a document",
             "processWithoutDocAssistiveText": "If you continue without a document selection, we can't update OnBase for you.",
             "processWithoutDocAssistiveTextWithOnBaseUpdate": "If you continue without a document selection, we can update OnBase for you.",
@@ -5392,6 +5393,15 @@
             "submitTask": "Submit"
         }
     },
+    "sendNigoCommunication": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Post Issue NIGO Review was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "nbToaReview": {
         "confirmStep": {
             "title": "Got It!",
@@ -5401,6 +5411,16 @@
             "submitTask": "Submit"
         }
     },
+    "initiatePostissueTransaction": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Post-Issue Transaction Data Entry Processing was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+
     "nbPrenoteReview": {
         "confirmStep": {
             "title": "Got It!",

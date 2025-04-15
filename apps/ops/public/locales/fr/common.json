@@ -4910,6 +4910,7 @@
         "start": {
             "documentSelectionLabel": "À partir de quel document travaillez-vous ?",
             "documentNumber": "Numéro de document: {{documentNumber}}",
+            "caseId": "Numéro du cas: ",
             "processWithoutDocument": "Processus sans document",
             "processWithoutDocAssistiveText": "Si vous continuez sans sélectionner de document, nous ne pouvons pas mettre à jour OnBase pour vous.",
             "processWithoutDocAssistiveTextWithOnBaseUpdate": "Si vous continuez sans sélection de document, nous pouvons mettre à jour OnBase pour vous.",
@@ -5382,6 +5383,24 @@
             "title": "Compris!",
             "subTitle": "Tâche : Valider que l'agent a été soumis.",
             "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "sendNigoCommunication": {
+        "confirmStep": {
+            "title": "C'est compris !",
+            "subTitle": "Tâche : Post Issue NIGO Review a été soumis.",
+            "cta": "Aller au dossier",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "initiatePostissueTransaction": {
+        "confirmStep": {
+            "title": "C'est fait !",
+            "subTitle": "Tâche : Traitement de saisie de données de transaction postérieure à la délivrance soumis.",
+            "cta": "Aller au dossier",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }

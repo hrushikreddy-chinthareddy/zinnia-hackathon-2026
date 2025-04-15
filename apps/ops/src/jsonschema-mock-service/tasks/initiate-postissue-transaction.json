@@ -1,0 +1,128 @@
+{
+    "formId": "12a36451-02b1-4c7b-a399-8cd40e564203",
+    "process": "Policy Update",
+    "carrier": "WELB",
+    "taskType": "INITIATE_POSTISSUE_TRANSACTION",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Post-Issue Transaction Data Entry Processing",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions"
+                        },
+                        "process": {
+                            "type": "string",
+                            "title": "process"
+                        }
+                    },
+                    "dependencies": {
+                        "process": {
+                            "if": {
+                                "properties": {
+                                    "process": {
+                                        "const": "Policy Update"
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "dataEntryForm": {
+                                        "type": "string",
+                                        "title": "Open Form for Data Entry",
+                                        "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/people?correlationId={{customData.correlationId}}"
+                                    }
+                                }
+                            },
+                            "else": {
+                                "if": {
+                                    "properties": {
+                                        "process": {
+                                            "enum": ["Withdrawal", "Full Surrender"]
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "dataEntryForm": {
+                                            "type": "string",
+                                            "title": "Open Form for Data Entry",
+                                            "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/policy/withdrawals/new-withdrawal?correlationId={{customData.correlationId}}"
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "if": {
+                                        "properties": {
+                                            "process": {
+                                                "enum": ["Systematic Program Update"]
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "dataEntryForm": {
+                                                "type": "string",
+                                                "title": "Open Form for Data Entry",
+                                                "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/policy/premiums/add-premium-autopay?correlationId={{customData.correlationId}}"
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "dataEntryForm": {
+                                                "type": "string",
+                                                "title": "Open Form for Data Entry",
+                                                "default": "/policies?isReset=true?correlationId={{customData.correlationId}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "props": {
+                            "description": "Click on the link below to access the submission form. Once the form opens, fill in all the required fields accurately. Review the entered information to ensure everything is correct. Review the entered information to ensure everything is correct. Click Submit to complete the transaction. You will receive a confirmation message upon successful submission"
+                        },
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "process": {
+                        "ui:widget": "hidden"
+                    },
+                    "dataEntryForm": {
+                        "ui:options": {
+                            "label": false,
+                            "type": "link",
+                            "omitValue": true
+                        },
+                        "ui:widget": "HyperLinkWidget"
+                    }
+                }
+            }
+        ]
+    }
+}

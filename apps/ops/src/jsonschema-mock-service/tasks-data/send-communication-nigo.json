@@ -1,0 +1,45 @@
+{
+    "id": "TA000000021764",
+    "caseId": "CA0000401338",
+    "source": "Zinnia.BPMTransactions",
+    "templateId": "55198920-b9b3-487b-945b-a2a6cb66d4ea",
+    "process": "Policy Update",
+    "carrier": "WELB",
+    "taskType": "SEND_NIGO_COMMUNICATION",
+    "taskName": "Post Issue NIGO Review",
+    "status": "NEW",
+    "data": {
+        "rules": [
+            {
+                "ruleName": "validateAddNewAddress",
+                "nmId": "BPM.NM.047",
+                "externalId": "7c7abcd5-b0cb-4cc7-8ed9-9409b8eab435"
+            }
+        ]
+    },
+    "mappedExceptions": ["EX000000012738"],
+    "mappedDocuments": [],
+    "queue": "policy_update",
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-03-19T12:28:29Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-03-19T12:28:29Z",
+    "identifiers": [
+        {
+            "identifier": "policyNumber",
+            "value": "ADA236179224"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA236179224"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000401338"
+        }
+    ],
+    "externalId": "e687d430-2d88-4204-b561-9ff59bc908ee"
+}
