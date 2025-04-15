@@ -21,7 +21,8 @@
     "./types/bpm": "./dist/generated-types/bpm/index.js",
     "./types/funds": "./dist/generated-types/funds/index.js",
     "./types/case": "./dist/generated-types/case/index.js",
-    "./types/preferences": "./dist/generated-types/preferences/index.js"
+    "./types/preferences": "./dist/generated-types/preferences/index.js",
+    "./types/partyreference": "./dist/generated-types/partyreference/index.js"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -54,6 +55,9 @@
       ],
       "./types/preferences": [
         "dist/generated-types/preferences/index.d.ts"
+      ],
+      "./types/partyreference": [
+        "dist/generated-types/partyreference/index.d.ts"
       ]
     }
   },
@@ -70,7 +74,8 @@
     "generate-types:funds": "npx openapi --input ./src/api-spec-funds.yaml --output ./src/generated-types/funds --exportCore false --exportServices false;",
     "generate-types:case": "npx openapi --input ./src/api-spec-case.yaml --output ./src/generated-types/case --exportCore false --exportServices false;",
     "generate-types:preferences": "npx openapi --input ./src/api-spec-preferences.yaml --output ./src/generated-types/preferences --exportCore false --exportServices false;",
-    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:documents-v3 && pnpm run generate-types:bpm && pnpm run generate-types:funds && pnpm run generate-types:case && pnpm run generate-types:preferences",
+    "generate-types:partyreference": "npx openapi --input ./src/api-spec-partyreference.json --output ./src/generated-types/partyreference --exportCore false --exportServices false;",
+    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:documents-v3 && pnpm run generate-types:bpm && pnpm run generate-types:funds && pnpm run generate-types:case && pnpm run generate-types:preferences && pnpm run generate-types:partyreference",
     "clean": "rm -rf ./dist"
   },
   "devDependencies": {

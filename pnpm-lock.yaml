@@ -402,6 +402,9 @@ importers:
       '@types/uuid':
         specifier: ^9.0.2
         version: 9.0.8
+      '@types/xml2js':
+        specifier: ^0.4.14
+        version: 0.4.14
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.18.1
         version: 6.21.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1)(typescript@5.6.3)
@@ -534,6 +537,9 @@ importers:
       uuid:
         specifier: ^9.0.0
         version: 9.0.1
+      xml2js:
+        specifier: ^0.6.2
+        version: 0.6.2
       xss:
         specifier: ^1.0.14
         version: 1.0.15
@@ -6601,6 +6607,9 @@ packages:
 
   '@types/webpack@5.28.5':
     resolution: {integrity: sha512-wR87cgvxj3p6D0Crt1r5avwqffqPXUkNlnQ1mjU93G7gCuFjufZR4I6j8cz5g1F1tTYpfOOFvly+cmIQwL9wvw==}
+
+  '@types/xml2js@0.4.14':
+    resolution: {integrity: sha512-4YnrRemBShWRO2QjvUin8ESA41rH+9nQGLUGZV/1IDhi3SL9OhdpNC/MrulTWuptXKwhx/aDxE7toV0f/ypIXQ==}
 
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
@@ -14205,6 +14214,10 @@ packages:
 
   xml2js@0.5.0:
     resolution: {integrity: sha512-drPFnkQJik/O+uPKpqSgr22mpuFHqKdbS835iAQrUC73L2F5WkboIRd63ai/2Yg6I1jzifPFKH2NTK+cfglkIA==}
+    engines: {node: '>=4.0.0'}
+
+  xml2js@0.6.2:
+    resolution: {integrity: sha512-T4rieHaC1EXcES0Kxxj4JWgaUQHDk+qwHcYOCFHfiwKz7tOVPLq7Hjq9dM1WCMhylqMEfP7hMcOIChvotiZegA==}
     engines: {node: '>=4.0.0'}
 
   xmlbuilder@11.0.1:
@@ -21950,6 +21963,10 @@ snapshots:
       - esbuild
       - uglify-js
       - webpack-cli
+
+  '@types/xml2js@0.4.14':
+    dependencies:
+      '@types/node': 20.17.19
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -31972,6 +31989,11 @@ snapshots:
   xml-name-validator@4.0.0: {}
 
   xml2js@0.5.0:
+    dependencies:
+      sax: 1.4.1
+      xmlbuilder: 11.0.1
+
+  xml2js@0.6.2:
     dependencies:
       sax: 1.4.1
       xmlbuilder: 11.0.1

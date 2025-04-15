@@ -1,13 +1,17 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { useQuery } from '@tanstack/react-query';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
-import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { storage } from '@deps/helpers/sessionStorage.helper';
 import { firstNameAndLastInitial } from '@deps/helpers/string.helper';
+import { UserContextMenuItem } from '@deps/pages/api/party/userContextMenu';
+import { baseAppUrl } from '@deps/queries/api-config';
 import { ReactComponent as SignOutIcon } from '@deps/styles/elements/icons/actions/logout.svg';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
@@ -17,15 +21,42 @@ interface NavBarButtonsProps {
 
 export const NavBarButtons = ({ onClick }: NavBarButtonsProps) => {
     const { user } = useUser();
-    const { isSuperAdmin } = usePermissionsContext();
     const { t } = useTranslation(TranslationFiles.COMMON);
-
-    const accessManagementHref = process.env.NEXT_PUBLIC_ACCESS_MANAGEMENT_URL || '';
 
     const borderBottomOpenStateClass =
         'group-data-[state=open]:border-b-3 group-data-[state=open]:[border-image-source:linear-gradient(90deg,rgb(255,198,000),rgb(255,117,000)_75.54%,rgb(255,24,34))] group-data-[state=open]:[border-image-slice:1]';
     const borderBottomClass = `border-transparent hover:border-b-gray-900 border-b-2 pb-0 ${borderBottomOpenStateClass}`;
     const fontWeightClass = 'font-[300] group-data-[state=open]:font-medium';
+
+    const {
+        isPending,
+        refetch,
+        data: menuItems,
+    } = useQuery({
+        queryKey: ['userContextMenu'],
+        queryFn: async () => {
+            const response = await fetch(`${baseAppUrl}/api/party/userContextMenu`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch context menu items');
+            }
+
+            const json = await response.json();
+            return json.data as UserContextMenuItem[];
+        },
+        enabled: false,
+    });
+
+    const onOpenChange = async (open: boolean) => {
+        if (open) {
+            await refetch();
+        }
+    };
 
     return (
         <div className="nav-bar__buttons mr-8 md:mr-14" onClick={onClick}>
@@ -44,6 +75,7 @@ export const NavBarButtons = ({ onClick }: NavBarButtonsProps) => {
 
             {user && (
                 <MenuContextual
+                    onOpenChange={onOpenChange}
                     trigger={
                         <div className={`flex items-center justify-center ${borderBottomClass}`}>
                             <p className={`mr-2 font-primary text-md text-secondary hover:text-secondary-dark ${fontWeightClass}`}>
@@ -66,13 +98,24 @@ export const NavBarButtons = ({ onClick }: NavBarButtonsProps) => {
                         icon={<SignOutIcon height={20} width={20} />}
                         content={t('auth.logout.text')}
                     />
-                    {isSuperAdmin && (
-                        <MenuContextualItem
-                            href={accessManagementHref}
-                            icon={<SignOutIcon height={20} width={20} />}
-                            content={t('site.navLinks.accessManagement.text')}
-                        />
-                    )}
+                    <>{isPending && <PageLoader variant={PageLoaderVariant.Center} />}</>
+                    <>
+                        {menuItems?.map((item, i) => (
+                            <MenuContextualItem
+                                key={i}
+                                href={item.href}
+                                openInNewTab={item.openInNewTab || false}
+                                icon={
+                                    <Icon
+                                        type={IconType[(item.icon || 'LOGOUT').toUpperCase() as keyof typeof IconType]}
+                                        height={20}
+                                        width={20}
+                                    />
+                                }
+                                content={item.content}
+                            />
+                        ))}
+                    </>
                 </MenuContextual>
             )}
         </div>

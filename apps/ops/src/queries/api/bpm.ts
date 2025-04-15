@@ -111,12 +111,14 @@ export const checkEligibilityLoanRepaymentOneTime = async (
         if (!totalLoanBalance || totalLoanBalance <= 0) {
             return {
                 status: TransactionResponseStatus.Failure,
-                validationResult: [{
-                    resolution: 'Total loan balance is 0',
-                    attribute: null,
-                    error: '',
-                    errorCode: ''
-                }]
+                validationResult: [
+                    {
+                        resolution: 'Total loan balance is 0',
+                        attribute: null,
+                        error: '',
+                        errorCode: '',
+                    },
+                ],
             };
         }
         const { data } = await client.post<TransactionResponse, AxiosResponse>(
@@ -142,12 +144,14 @@ export const checkEligibilityNewLoan = async (
         if (maxLoanValue === 0) {
             return {
                 status: TransactionResponseStatus.Failure,
-                validationResult: [{
-                    resolution: 'Maximum loan value is 0',
-                    attribute: null,
-                    error: '',
-                    errorCode: ''
-                }]
+                validationResult: [
+                    {
+                        resolution: 'Maximum loan value is 0',
+                        attribute: null,
+                        error: '',
+                        errorCode: '',
+                    },
+                ],
             };
         }
 
@@ -394,7 +398,10 @@ export const submitLoanPayment = async (
     query: LoanRepaymentOneTimeRequestQuery
 ): Promise<TransactionResponse> => {
     try {
-        const response = await client.post<LoanRepaymentOneTimeRequestQuery, AxiosResponse>(`${baseUrl}/policies/${planCode}/${policyNumber}/loanrepaymentonetime`, query);
+        const response = await client.post<LoanRepaymentOneTimeRequestQuery, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/loanrepaymentonetime`,
+            query
+        );
 
         return { status: response.status, data: response.data };
     } catch (error: any) {

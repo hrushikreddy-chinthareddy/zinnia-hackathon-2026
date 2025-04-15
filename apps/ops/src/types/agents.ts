@@ -111,7 +111,7 @@ export interface AgentData {
     }[];
     phones: AgentPhone[];
     // BPB - ToDo - type this when needed
-    appointments: unknown[];
+    appointments: Appointment[];
     hierarchy: {
         channel: string | undefined;
         channelDescription: string | undefined;
@@ -135,6 +135,42 @@ export interface AgentData {
     training: unknown[];
 }
 
+export interface LineOfAuthority {
+    id: string;
+    salesAppointmentId: string;
+    lineOfAuthorityTypeId: number;
+    type: string;
+    createDate: string;
+    createUserId: string;
+    modifyDate: string;
+    modifyUserId: string;
+}
+
+export interface Appointment {
+    appointmentDate: string;
+    assumeInXDayps: number;
+    createDate: string;
+    createUserId: string;
+    externalAppointmentId: string | null;
+    externalLicenseId: string | null;
+    id: string;
+    licenseId: string;
+    modifyUserId: string;
+    naicId: string | null;
+    niprId: string | null;
+    productCompanyId: string | null;
+    residentStateIndicator: boolean;
+    salesEntityId: string;
+    state: string;
+    stateFullName: string;
+    stateRequirementId: number;
+    status: string;
+    statusId: number;
+    terminationDate: string;
+    terminationReasonId: number | null;
+    trackEducationIndicator: boolean;
+    linesOfAuthority: LineOfAuthority[];
+}
 export interface AgentAddress {
     addressLine1: string | null;
     addressLine2: string | null;

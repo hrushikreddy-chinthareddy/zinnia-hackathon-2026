@@ -11,6 +11,7 @@ export default defineConfig((options: Options) => ({
     'src/generated-types/funds',
     'src/generated-types/case',
     'src/generated-types/preferences',
+    'src/generated-types/partyreference'
   ],
   clean: true,
   dts: true,
