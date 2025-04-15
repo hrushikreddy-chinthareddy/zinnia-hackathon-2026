@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { NigoEntryContext } from '@deps/contexts/NigoEntryContext';
 import { CallCenterElement, FormDetails } from '@deps/models/case/send-document';
-import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { FormComment, FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import { SelOptionType } from './steps/service-form-review/service-form-review';
 
@@ -25,6 +25,7 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
     const [document, setDocument] = useState<CallCenterElement<FormDetails, FormDetails>>({} as CallCenterElement<FormDetails, FormDetails>);
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
     const [submitFailed, setSubmitFailed] = useState(false);
+    const [formComment, setFormComment] = useState({} as FormComment);
 
     return (
         <NigoEntryContext.Provider
@@ -39,6 +40,7 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
                 document,
                 formErrors,
                 submitFailed,
+                formComment,
                 setFormData,
                 setSectionOption,
                 setDocumentIndexingInfo,
@@ -49,6 +51,7 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
                 setDocument,
                 setFormErrors,
                 setSubmitFailed,
+                setFormComment
             }}
         >
             {children}

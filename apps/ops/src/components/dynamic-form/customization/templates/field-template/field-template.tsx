@@ -1,7 +1,9 @@
 import { FieldTemplateProps, getUiOptions } from '@rjsf/utils';
 import { Divider, Label, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
+
 import styles from './field-template.module.css';
 
 export function FieldTemplate(props: FieldTemplateProps) {
@@ -9,6 +11,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
 
     const uiOptions = getUiOptions(uiSchema);
     const helpText = uiOptions.help;
+    const style = uiOptions?.style ?? '';
     let { displayLabel } = props;
 
     if (uiOptions.label === false) {
@@ -43,7 +46,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                         {displayLabel && (
                             <div className="mb-2">
                                 <Label labelFor={id} interactiveElements={[helpInformation]}>
-                                    <span className="text-md font-medium">{fieldLabel}</span>
+                                    <span className={clsx('text-md font-medium', style as string)}>{fieldLabel}</span>
                                 </Label>
                             </div>
                         )}

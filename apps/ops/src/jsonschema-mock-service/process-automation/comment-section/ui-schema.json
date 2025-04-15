@@ -1,0 +1,8 @@
+{
+    "ui:submitButtonOptions": {
+        "norender": true
+    },
+    "comment": {
+        "ui:style": "field-label text-gray-900"
+    }
+}

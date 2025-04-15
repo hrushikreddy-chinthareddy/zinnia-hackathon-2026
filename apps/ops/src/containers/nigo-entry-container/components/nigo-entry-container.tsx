@@ -205,6 +205,8 @@ const NigoEntryContainer = ({
                         clientCode={clientCode}
                         taskInfoLink={taskInfoLink}
                         document={documentData}
+                        nigoExceptions={nigoExceptions}
+                        nigoSubExceptions={nigoSubExceptions}
                     />
                 ),
                 screenReaderLabel: t('tabs.serviceFormReview'),

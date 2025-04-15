@@ -17,6 +17,8 @@ interface NigoDetailsProps {
 export const NigoDetails = ({nigoExceptions, nigoSubExceptions}: NigoDetailsProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.nigoDetails' });
     const { exceptions, setExceptions, messages, setMessages } = useNigoEntry();
+    const filteredNigoException = nigoExceptions?.find((nigoException: any) => nigoException.label === 'Case routed for manual processing');
+    const NIGO_EXCEPTION = filteredNigoException?.value;
 
     const onExceptionChange = (nmId: string, isChecked: boolean) => {
         setExceptions(prevState => {
@@ -48,6 +50,9 @@ export const NigoDetails = ({nigoExceptions, nigoSubExceptions}: NigoDetailsProp
             <div className="mb-5 grid auto-rows-fr grid-cols-1 gap-2 lg:grid-cols-3">
                 <div className="flex-1">
                     {nigoExceptions?.map((item: NigoException, index: Key) => {
+                        if (item.value === NIGO_EXCEPTION) {
+                            return;
+                        }
                         const subExceptions = nigoSubExceptions?.find((subItem: NigoSubException) => subItem.nmId === item.value)?.subExceptions;
                         return (
                             <div key={`{exception-${index}}`} className="mt-2">

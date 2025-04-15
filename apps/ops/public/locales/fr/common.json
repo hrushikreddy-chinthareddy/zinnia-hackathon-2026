@@ -5067,7 +5067,9 @@
             "formErrors": {
                 "formValidation": {
                     "noDocTypeToReindex": "Veuillez indiquer le type de document pour la réindexation",
-                    "noNotes": "Veuillez saisir des notes"
+                    "noNotes": "Veuillez saisir des notes",
+                    "noCategoryDetailsSelected": "Veuillez sélectionner les détails de la catégorie",
+                    "noComment": "Veuillez saisir des notes"
                 }
             },
             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."

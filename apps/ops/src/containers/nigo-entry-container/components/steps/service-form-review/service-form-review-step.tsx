@@ -8,22 +8,27 @@ import TransactionNavigationButtons, { ParentPage } from "@deps/components/trans
 import WorkflowCard from "@deps/components/workflows/workflow-card/workflow-card";
 import { TranslationFiles } from '@deps/config/translations';
 import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
+import { NigoSubException } from '@deps/containers/task-container/components/steps/nigo-details/nigo-details.types';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { isEmptyObject } from '@deps/helpers/objects.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { FormValidationErrors, NigoMessages } from '@deps/models/case/withdrawal/case';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import { SuggestedDocType } from './document-indexing-info';
 import { SelOptionType, ServiceFormReview } from './service-form-review';
 import { getFormData } from './service-form-review.helper';
 import { useNigoEntry } from '../../nigo-entry-provider';
 import { getCaseType } from '../form-entry/form-entry-step.helper';
+import { NigoException } from '../nigo-details/nigo-details.types';
+
 
 interface ServiceFormReviewStepProps {
     documentNumber: string;
@@ -32,20 +37,24 @@ interface ServiceFormReviewStepProps {
     clientCode: string;
     taskInfoLink: string;
     document: DocumentData;
+    nigoExceptions: NigoException[];
+    nigoSubExceptions: NigoSubException[];
 };
 
-export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, clientCode, document} : ServiceFormReviewStepProps ) => {
+export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, clientCode, document, nigoExceptions, nigoSubExceptions} : ServiceFormReviewStepProps ) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
     const { goToNext } = useWorkflow();
 
-    const { sectionOption, documentIndexingInfo, formErrors, setFormErrors, setSubmitFailed } = useNigoEntry();
+    const { sectionOption, documentIndexingInfo, formErrors, setFormErrors, setSubmitFailed, setMessages, messages } = useNigoEntry();
     const formState = useContext(FormDataContext);
 
-    const { formSource, setFormSource, setFormData, formSubtype, setFormReindexingData, setFormNigos } = formState;
+    const { formSource, setFormSource, setFormData, formSubtype, setFormReindexingData, setFormNigos, formNigos, formComment, setFormComment } = formState;
     const caseType = getCaseType(docType as string);
     const carrier = clientCode.toUpperCase();
     const [isLoading, setIsLoading] = useState(false);
     const [timer] = useState(performance.now());
+    const filteredNigoException = nigoExceptions?.find(nigoException => nigoException.label === 'Case routed for manual processing');
+    const NIGO_EXCEPTION = filteredNigoException?.value;
 
     const submit = useCallback(async () => {
         setIsLoading(true);
@@ -62,8 +71,18 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
             );
 
             if (successfulCaseUpdate && successfulCaseUpdate.id) {
+                browserLogInfo('ServiceFormReviewStep::submit::Successfully updated task', {
+                    caseId: formState.initialForm.caseId,
+                    taskId: formState.initialForm.taskId,
+                    id: successfulCaseUpdate.id
+                });
                 setSubmitFailed(false);
             } else {
+                browserLogInfo('ServiceFormReviewStep::submit::Failed to update task', {
+                    caseId: formState.initialForm.caseId,
+                    taskId: formState.initialForm.taskId,
+                    id: successfulCaseUpdate.id
+                });
                 setSubmitFailed(true);
             }
         } else {
@@ -75,25 +94,49 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
 
     const handleStepContinue = useCallback(async() => {
         const errors = {} as FormValidationErrors;
+        setFormErrors({});
         if (sectionOption === SelOptionType.DOC_INDEXING) {
             if (isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex)) {
                 errors['noDocTypeToReindex'] = t('formErrors.formValidation.noDocTypeToReindex');
-                setFormErrors(errors);
             }
-
             if (!isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex) && documentIndexingInfo?.docTypeToReindex === SuggestedDocType.OTHER && isNullEmptyOrUndefined(documentIndexingInfo?.notes)) {
                 errors['noNotes'] = t('formErrors.formValidation.noNotes');
-                setFormErrors(errors);
             }
         }
 
-        if (sectionOption === SelOptionType.DOC_INDEXING && Object.keys(errors).length === 0) {
-            await submit();
-            goToNext();
-        } else {
-            goToNext();
+        if (sectionOption === NIGO_EXCEPTION) {
+            if ( messages[NIGO_EXCEPTION] === undefined || isEmptyObject(messages[NIGO_EXCEPTION])) {
+                errors['noCategoryDetailsSelected'] = t('formErrors.formValidation.noCategoryDetailsSelected');
+            } else {
+                if (isNullEmptyOrUndefined(formComment?.comment)) {
+                    errors['noComment'] = t('formErrors.formValidation.noComment');
+                }
+            }
         }
-    }, [documentIndexingInfo, goToNext, sectionOption, setFormErrors, submit, t]);
+
+        setFormErrors(errors);
+        if (Object.keys(errors).length === 0) {
+            if ([SelOptionType.DOC_INDEXING, NIGO_EXCEPTION].includes(sectionOption)) {
+                await submit();
+                goToNext();
+            } else {
+                goToNext();
+            }
+        }
+    }, [documentIndexingInfo, goToNext, sectionOption, setFormErrors, submit, messages, formComment, t]);
+
+
+    useEffect(() => {
+        if (NIGO_EXCEPTION && Object.keys(formErrors).length === 0) {
+            const nigos: NigoMessages[] = [];
+            const obj = {
+                exceptionId: NIGO_EXCEPTION,
+                messages: !isEmptyObject(messages) ? Object.keys(messages[NIGO_EXCEPTION]) : []
+            };
+            nigos.push(obj);
+            setFormNigos({ nigos: nigos } );
+        }
+    }, [formErrors, messages, setFormNigos]);
 
     useEffect(() => {
         setFormSource({
@@ -132,13 +175,22 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
                 notes: documentIndexingInfo?.docTypeToReindex === SuggestedDocType.OTHER ? documentIndexingInfo?.notes : null
             }));
             setFormNigos(null);
+            setMessages([]);
+            setFormComment({comment: ''})
         } else if (sectionOption === SelOptionType.NIGO_ENTRY) {
             setFormReindexingData(null);
+            setMessages([]);
+            setFormComment({comment: ''})
+        } else if (sectionOption === NIGO_EXCEPTION) {
+            setFormReindexingData(null);
+            setFormNigos(null);
         } else {
             setFormReindexingData(null);
             setFormNigos(null);
+            setMessages([]);
+            setFormComment({comment: ''})
         }
-    }, [sectionOption, document, documentIndexingInfo]);
+    }, [sectionOption, document, documentIndexingInfo, NIGO_EXCEPTION]);
 
     return (
         <WorkflowCard
@@ -158,13 +210,15 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
                     <Loader />
                 </div>
             )}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col">
                 <div className="flex flex-col gap-1">
                     <ServiceFormReview
                         documentNumber={documentNumber}
                         clientCode={clientCode}
                         policyNumber={policyNumber as string}
                         docType={docType}
+                        nigoExpection={filteredNigoException}
+                        nigoSubExceptions={nigoSubExceptions}
                     />
                 </div>
                 <div className="flex flex-col gap-1">
@@ -173,6 +227,12 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
                     )}
                     {formErrors?.noNotes && (
                         <AssistiveText text={formErrors?.noNotes} variant={AssistiveTextVariant.Error} className="mt-2" />
+                    )}
+                    {formErrors?.noCategoryDetailsSelected && (
+                        <AssistiveText text={formErrors?.noCategoryDetailsSelected} variant={AssistiveTextVariant.Error} className="mt-2" />
+                    )}
+                    {formErrors?.noComment && (
+                        <AssistiveText text={formErrors?.noComment} variant={AssistiveTextVariant.Error} className="mt-2" />
                     )}
                 </div>
             </div>

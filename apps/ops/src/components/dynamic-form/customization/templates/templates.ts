@@ -11,9 +11,9 @@ import { FieldTemplate } from './field-template/field-template';
 import InstructionsTemplate from './instructions-template/instructions-template';
 import FileInfoTemplate from './object-field-template/file-info-template';
 import { ObjectFieldTemplate } from './object-field-template/object-field-template';
+import ObjectRowFieldTemplate from './object-field-template/object-row-template';
 import TextListTemplate from './text-list-template';
 import { TitleFieldTemplate } from './title-field-template/title-field-template';
-import ObjectRowFieldTemplate from './object-field-template/object-row-template';
 
 export function generateTemplates() {
     return {

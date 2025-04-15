@@ -8,13 +8,14 @@ import { TranslationFiles } from '@deps/config/translations';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 
 import { DocumentIndexingInfo } from './document-indexing-info';
+import { NigoOptionDetails } from './nigo-option-details';
 import { useGetPolicyTypeDocs } from './service-form-review.helper';
 import { useNigoEntry } from '../../nigo-entry-provider';
 
 export enum SelOptionType {
     DATA_ENTRY = "DATA_ENTRY",
     NIGO_ENTRY = "NIGO_ENTRY",
-    DOC_INDEXING = "DOC_INDEXING"
+    DOC_INDEXING = "DOC_INDEXING",
 };
 
 interface SetFormReviewProps {
@@ -22,12 +23,14 @@ interface SetFormReviewProps {
     clientCode: string;
     docType: string;
     documentNumber: string;
+    nigoExpection: any;
+    nigoSubExceptions: any;
 };
 
-export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentNumber }: SetFormReviewProps) => {
+export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentNumber, nigoExpection, nigoSubExceptions }: SetFormReviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
-
-    const { sectionOption, setSectionOption } = useNigoEntry();
+    const NIGO_EXCEPTION: SelOptionType = nigoExpection?.value;
+    const { sectionOption, setSectionOption, setExceptions } = useNigoEntry();
     const [loading, getPolicyDocs, workingDocument] = useGetPolicyTypeDocs(policyNumber, clientCode, docType, documentNumber);
     const { displayName } = workingDocument || {};
 
@@ -43,8 +46,18 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
         {
             label: t('options.incorrectDocIndexing'),
             value: SelOptionType.DOC_INDEXING
-        },
+        }
     ];
+
+    if (nigoExpection) {
+
+        sectionOptions.push(
+            {
+                label: nigoExpection.label,
+                value: nigoExpection.value
+            }
+        );
+    }
 
     useEffect(() => {
         getPolicyDocs();
@@ -52,6 +65,20 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
 
     const onOptionSelection = (value: SelOptionType) => {
         setSectionOption(value);
+        if (value === NIGO_EXCEPTION) {
+            setExceptions(prevState => {
+                let newState = [];
+                newState = [...prevState, value];
+                return newState;
+            });
+        } else {
+            setExceptions(prevState => {
+                let newState = [];
+                prevState.splice(prevState.indexOf(value), 1);
+                newState = prevState.filter((element: any) => element !== undefined);
+                return [...newState];
+            });
+        }
     };
 
     return (
@@ -84,6 +111,7 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                 )}
                 <Radio items={sectionOptions} label={''} onChange={event => onOptionSelection(event.target.value as SelOptionType)} value={sectionOption || SelOptionType.DATA_ENTRY} />
                 { sectionOption === SelOptionType.DOC_INDEXING && <DocumentIndexingInfo /> }
+                { sectionOption === NIGO_EXCEPTION && <NigoOptionDetails selNigoExpetion={nigoExpection.value} nigoSubExceptions={nigoSubExceptions} nigoExpetion={NIGO_EXCEPTION} /> }
             </div>
         </>
     );

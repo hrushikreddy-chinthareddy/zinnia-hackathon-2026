@@ -5095,7 +5095,9 @@
             "formErrors": {
                 "formValidation": {
                     "noDocTypeToReindex": "Please document type for re-indexing",
-                    "noNotes": "Please enter notes"
+                    "noNotes": "Please enter notes",
+                    "noCategoryDetailsSelected": "Please select a reason for manual processing.",
+                    "noComment": "Please enter notes"
                 }
             },
             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
