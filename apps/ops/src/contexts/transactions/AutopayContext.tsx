@@ -13,12 +13,13 @@ export const ACH = PaymentForm.ACH;
 
 type AutopayDynamicProps = {
     arrangementType?: ArrangementType;
+    isSetUp?: boolean;
     parentPage?: ParentPage;
     systematicProgramReason?: Reason;
-    translationKeyPrefix: string;   
+    translationKeyPrefix: string;
 }
 
-interface Autopay extends AmountType, PayorType, PaymentMethodType, ReverseInitiatorType, AutopayDynamicProps {
+export interface Autopay extends AmountType, PayorType, PaymentMethodType, ReverseInitiatorType, AutopayDynamicProps {
     caseId?: string;
 }
 
@@ -46,6 +47,7 @@ const defaultValue = {
         paymentAmount: '',
         validationResponse: undefined,
         reverseInitiator: false,
+        isSetUp: false,
     },
     setAutopay: () => {},
 };

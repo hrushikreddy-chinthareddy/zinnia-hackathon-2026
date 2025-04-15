@@ -38,17 +38,15 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
     const [showSelectionError, setShowSelectionError] = useState<boolean>(false);
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const { goToNext } = useWorkflow();
-    const { paymentAmount, effectiveDate, frequency, paymentAccountNumber, paymentBranchName, payorFullName, validationResponse } = autopay;
+    const { isSetUp, paymentAmount, effectiveDate, frequency, paymentAccountNumber, paymentBranchName, payorFullName, validationResponse } = autopay;
 
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
 
     const transactionType = useMemo(() => {
-        // TODO MG: these are prob wrong
         return parentPage === ParentPage.Premiums
             ? TransactionType.SUBSEQUENT_PREMIUM
-            // : isSetUp ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
-            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
-    }, [parentPage]);
+            : isSetUp ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+    }, [isSetUp, parentPage]);
 
     const handleContinue = async () => {
         if (!validationSucceeded && !isChecked) {

@@ -19,7 +19,6 @@ import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constan
 import { TransactionStep } from '@deps/types/segment-analytics';
 
 interface AmountProps {
-    isSetUp?: boolean;
     policy: Policy;
 }
 
@@ -40,9 +39,9 @@ type Errors = {
     paymentAmount?: string;
 };
 
-const Amount = ({ policy, isSetUp = false }: AmountProps) => {
+const Amount = ({ policy }: AmountProps) => {
     const { autopay, setAutopay } = useAutopay();
-    const { systematicProgramReason, parentPage, translationKeyPrefix } = autopay;
+    const { isSetUp, systematicProgramReason, parentPage, translationKeyPrefix } = autopay;
 
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.amount` });
     const [errors, setErrors] = useState<Errors>({});
@@ -58,8 +57,9 @@ const Amount = ({ policy, isSetUp = false }: AmountProps) => {
         }
         // TODO MG: nextMonthiversaryDate only for everly?
         // confirm nextProgramDate is right when updating autopayment
+        const isEverly = policy.carrierId === 'SBUL' || policy.carrierId === 'ELIC';
         const effectiveDate = isSetUp
-            ? policyDates?.nextMonthiversaryDate
+            ? isEverly ? policyDates?.nextMonthiversaryDate : dayjs()
             : systematicProgramData?.nextProgramDate;
 
         setAutopay(() => ({
@@ -69,13 +69,11 @@ const Amount = ({ policy, isSetUp = false }: AmountProps) => {
             initValues: true,
             paymentAmount: systematicProgramData?.amount ? String(systematicProgramData.amount) : '',
         }));
-    }, [autopay, setAutopay, systematicProgramData, policyDates?.nextMonthiversaryDate, isSetUp]);
+    }, [autopay, setAutopay, systematicProgramData, policyDates?.nextMonthiversaryDate, isSetUp, policy.carrierId]);
 
     const transactionType = useMemo(() => {
-        // TODO MG: these are prob wrong
         return parentPage === ParentPage.Premiums
             ? TransactionType.SUBSEQUENT_PREMIUM
-            // : isSetUp ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
             : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [parentPage]);
 

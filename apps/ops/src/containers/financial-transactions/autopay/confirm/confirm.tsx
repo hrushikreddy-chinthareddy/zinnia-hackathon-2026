@@ -1,18 +1,18 @@
-import dayjs from 'dayjs';
+import { SystematicProgram } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { v4 as uuidV4 } from 'uuid';
 
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { ACH, useAutopay } from '@deps/contexts/transactions/AutopayContext';
+import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { Statuses } from '@deps/models/case/case';
-import { AmountType, Policy } from '@deps/models/policy/sor-policy';
+import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitSystematicProgramUpdate } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
+import { buildSystematicProgramUpdateRequestBody } from '../autopay.helpers';
 
 interface ConfirmProps {
     policy: Policy;
@@ -21,16 +21,12 @@ interface ConfirmProps {
 const Confirm = ({ policy }: ConfirmProps) => {
     const { autopay } = useAutopay();
     const {
-        arrangementType, systematicProgramReason, parentPage, translationKeyPrefix,
+        parentPage,
+        translationKeyPrefix,
         paymentAmount,
         caseId,
-        frequency,
-        effectiveDate,
-        paymentBankId,
-        payorPartyId,
         payorFullName,
         validationResponse,
-        reverseInitiator,
     } = autopay;
 
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.confirm` });
@@ -43,38 +39,15 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const { policyNumber, product } = policy;
     const [newCaseId, setNewCaseId] = useState<string | undefined>(caseId);
 
-    const systematicProgram = useMemo(
-        () => policy.systematicPrograms?.find(sp => sp.reason === systematicProgramReason),
-        [policy.systematicPrograms, systematicProgramReason]
-    );
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
 
     const submit = useCallback(async () => {
         setIsLoading(true);
 
-        const effectiveDateFormatted = dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
+        const systematicProgram = policy.systematicPrograms?.find(sp => sp.reason === autopay.systematicProgramReason);
         const arrangementId = systematicProgram?.arrangementId || '';
-        const response = await submitSystematicProgramUpdate(product?.planCode, policyNumber, arrangementId, {
-            caseId: caseId || '',
-            correlationId: uuidV4(),
-            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
-            reverseInitiator: reverseInitiator,
-            systematicProgram: {
-                amount: Number(paymentAmount),
-                arrangementType: arrangementType,
-                paymentForm: ACH,
-                amountType: AmountType.AMOUNT,
-                frequency,
-                startDate: systematicProgram?.startDate,
-                endDate: systematicProgram?.endDate,
-                previousProgramDate: systematicProgram?.previousProgramDate,
-                nextProgramDate: effectiveDateFormatted,
-                party: {
-                    bankId: paymentBankId,
-                    partyId: payorPartyId,
-                },
-            },
-        });
+        const query = buildSystematicProgramUpdateRequestBody(autopay, systematicProgram as SystematicProgram);
+        const response = await submitSystematicProgramUpdate(product?.planCode, policyNumber, arrangementId, query);
 
         if (response.status !== StatusCode.Accepted) {
             setSubmitFailed(true);
@@ -86,7 +59,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         }
 
         setIsLoading(false);
-    }, [effectiveDate, systematicProgram?.arrangementId, systematicProgram?.startDate, systematicProgram?.endDate, systematicProgram?.previousProgramDate, product?.planCode, policyNumber, caseId, reverseInitiator, paymentAmount, arrangementType, frequency, paymentBankId, payorPartyId]);
+    }, [policy.systematicPrograms, policyNumber, product?.planCode]);
 
     useEffect(() => {
         submit();

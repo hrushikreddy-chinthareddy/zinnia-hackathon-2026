@@ -1,8 +1,6 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
-import dayjs from 'dayjs';
+import { SystematicProgram, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo } from 'react';
-import { v4 as uuidV4 } from 'uuid';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import PaymentStep, { PaymentStepSetState } from '@deps/components/workflows/payment-step/payment-step';
@@ -11,14 +9,14 @@ import StartStep, { StartStepSetState } from '@deps/components/workflows/start-s
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
-import { ACH, useAutopay } from '@deps/contexts/transactions/AutopayContext';
+import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { Processes } from '@deps/models/case/case';
-import { AmountType, ArrangementType, Policy, Reason } from '@deps/models/policy/sor-policy';
+import { ArrangementType, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { validateSystematicProgramUpdate } from '@deps/queries/api/bpm';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
 import Amount from './amount/amount';
+import { buildSystematicProgramUpdateRequestBody } from './autopay.helpers';
 import Confirm from './confirm/confirm';
 import ManageSummary from './summary/manage-summary';
 import SetUpSummary from './summary/set-up-summary';
@@ -50,41 +48,21 @@ const AutopayContainer = ({ arrangementType, policy, isSetUp = false, parentPage
             parentPage,
             systematicProgramReason,
             translationKeyPrefix,
+            isSetUp
         });
-    }, [arrangementType, autopay, parentPage, setAutopay, systematicProgramReason, translationKeyPrefix]);
+    }, [arrangementType, autopay, isSetUp, parentPage, setAutopay, systematicProgramReason, translationKeyPrefix]);
 
     const validateCall = async () => {
-        const effectiveDateFormatted = dayjs(autopay.effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
         const systematicProgram = policy.systematicPrograms?.find(sp => sp.reason === systematicProgramReason);
         const arrangementId = systematicProgram?.arrangementId || '';
 
-        const response = await validateSystematicProgramUpdate(policy.product?.planCode, policy.policyNumber || '', arrangementId, {
-            caseId: autopay.caseId || '',
-            correlationId: uuidV4(),
-            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
-            reverseInitiator: autopay.reverseInitiator,
-            systematicProgram: {
-                amount: Number(autopay.paymentAmount),
-                arrangementType: arrangementType,
-                paymentForm: ACH,
-                amountType: AmountType.AMOUNT,
-                frequency: autopay.frequency,
-                startDate: systematicProgram?.startDate,
-                endDate: systematicProgram?.endDate,
-                previousProgramDate: systematicProgram?.previousProgramDate,
-                nextProgramDate: effectiveDateFormatted,
-                party: {
-                    bankId: autopay.paymentBankId,
-                    partyId: autopay.payorPartyId,
-                },
-            },
-        });
+        const query = buildSystematicProgramUpdateRequestBody(autopay, systematicProgram as SystematicProgram);
+        const response = await validateSystematicProgramUpdate(policy.product?.planCode, policy.policyNumber || '', arrangementId, query);
 
         return response?.data;
     };
 
     const transactionType = useMemo(() => {
-        // TODO MG: these are prob wrong
         return parentPage === ParentPage.Premiums
             ? TransactionType.SUBSEQUENT_PREMIUM
             : isSetUp ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
@@ -111,7 +89,7 @@ const AutopayContainer = ({ arrangementType, policy, isSetUp = false, parentPage
         },
         {
             ariaLabel: amountLabel,
-            component: <Amount isSetUp={isSetUp} policy={policy} />,
+            component: <Amount policy={policy} />,
             screenReaderLabel: amountLabel,
             index: 1,
             text: amountLabel,
