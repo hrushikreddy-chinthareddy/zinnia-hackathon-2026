@@ -1,5 +1,6 @@
-import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
+import { NigoSearch } from '@deps/queries/api/nigo-search';
+
 import { TaskHandler, ReviewPayload } from '../types';
 
 const agentReviewHandler: TaskHandler<ReviewPayload, NigoExceptionResponse[]> = {

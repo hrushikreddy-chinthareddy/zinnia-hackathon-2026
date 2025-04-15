@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -11,13 +12,12 @@ import { useNewLoan } from '@deps/contexts/transactions/NewLoanContext';
 import { Processes } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { validateNewLoan } from '@deps/queries/api/bpm';
+import { TransactionStep } from '@deps/types/segment-analytics';
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
 import { buildNewLoanRequestBody } from './new-loan.helpers';
 import Summary from './summary/summary';
-import { TransactionType } from '@zinnia/api-types/types/sor';
-import { TransactionStep } from '@deps/types/segment-analytics';
 
 export type NewLoanContainerProps = {
     policy: Policy;

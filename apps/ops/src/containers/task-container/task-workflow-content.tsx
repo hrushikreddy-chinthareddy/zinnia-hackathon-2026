@@ -8,16 +8,14 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
 
 import { TaskDataContext } from './task-context';
-import GlobalTaskSideSheet from '../case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
+import GlobalTaskSideSheet from '../../components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
-
 
 type TaskPageProps = {
     steps: Step[];
     caseId: string;
     carrierId: string;
-
 };
 
 export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps) => {

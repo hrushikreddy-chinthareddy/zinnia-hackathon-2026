@@ -1,10 +1,11 @@
-import Select from '@deps/components/select/select';
-import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { FC, useMemo } from 'react';
-import { Statuses } from '@deps/models/case/case';
-import { FieldSize } from '@deps/components/fields/field';
+
+import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { CaseStatusType } from '@deps/components/dashboard/sections/active-aging/context/active-aging-context';
 import { caseStatusMap } from '@deps/components/dashboard/utils';
+import { FieldSize } from '@deps/components/fields/field';
+import Select from '@deps/components/select/select';
+import { Statuses } from '@deps/models/case/case';
 
 interface CaseStatusOption {
     label: string;

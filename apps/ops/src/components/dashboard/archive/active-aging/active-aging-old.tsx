@@ -12,7 +12,7 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
+import { getStartAndEndDates } from '@deps/containers/case-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';

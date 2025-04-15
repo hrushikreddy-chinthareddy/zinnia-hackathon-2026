@@ -3,7 +3,9 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
 import { TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
-import StepAdditionalData, { hasAdditionalDataSideSheet } from '@deps/containers/case-overview/step-overview/step-additional-data';
+import StepAdditionalData, {
+    hasAdditionalDataSideSheet,
+} from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/step-additional-data';
 import { AdditionalDataStepIds } from '@deps/models/case/additional-data-instance';
 
 import DocumentsTab from './tabs/documents-tab';

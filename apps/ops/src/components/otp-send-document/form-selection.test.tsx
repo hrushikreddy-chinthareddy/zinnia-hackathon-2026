@@ -1,14 +1,14 @@
 import '@testing-library/jest-dom';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 
+import { PermissionsProvider } from '@deps/contexts/PermissionsContext';
 import { defaultSendDocumentState, SendDocumentContext } from '@deps/contexts/SendDocumentContext';
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { SendDocumentFormParts } from '@deps/models/case/send-document';
 
 import FormSelection from './form-selection';
-import { PermissionsProvider } from '@deps/contexts/PermissionsContext';
-import { UserProvider } from '@auth0/nextjs-auth0/client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 window.HTMLElement.prototype.hasPointerCapture = jest.fn();

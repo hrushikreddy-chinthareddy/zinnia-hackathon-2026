@@ -1,6 +1,7 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { NavBarLinkProps } from '@deps/navigation/nav-bar-link/nav-bar-link';
 import { ReactComponent as CollectionIcon } from '@deps/styles/elements/icons/icons_outlined/collection.svg';
@@ -8,7 +9,6 @@ import { ReactComponent as DashboardIcon } from '@deps/styles/elements/icons/ico
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-duplicate.svg';
 import { ReactComponent as HomeIcon } from '@deps/styles/elements/icons/icons_outlined/house.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 
 export const getMainNavItems = (): NavBarLinkProps[] => {
     const {

@@ -6,7 +6,7 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
-import SideSheetAllocations from '@deps/containers/side-sheet-allocations/side-sheet-allocations';
+import SideSheetAllocations from '@deps/components/side-sheet/side-sheet-allocations/side-sheet-allocations';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helper';

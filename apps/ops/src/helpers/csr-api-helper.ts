@@ -3,9 +3,9 @@ import { AxiosResponse } from 'axios';
 import { ApiProps } from '@deps/models/case/task';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 
 import { replacePlaceholders } from './value-placement.helper';
-import { browserLogWarn } from '@deps/utils/browser-logging';
 const baseUrl = baseAppUrl + '/api/';
 export const csrApiHelper = async (props: ApiProps, formData: any) => {
     const { apiUrl, apiMethod, apiPayload, responseData, response } = props;
@@ -14,7 +14,7 @@ export const csrApiHelper = async (props: ApiProps, formData: any) => {
         try {
             const payload = replacePlaceholders(apiPayload, formData);
             const { data } = await client.post<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload);
-            let filteredApiData = responseData ? replacePlaceholders(responseData, data) : data;
+            const filteredApiData = responseData ? replacePlaceholders(responseData, data) : data;
 
             if (response) {
                 let filteredResponse: any;

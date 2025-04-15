@@ -13,10 +13,10 @@ import { updateTask } from '@deps/containers/task-container/task.helper';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-
-import { TaskForm } from './task-form';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+
+import { TaskForm } from './task-form';
 
 type TaskFormStepProps = {
     readonly?: boolean;

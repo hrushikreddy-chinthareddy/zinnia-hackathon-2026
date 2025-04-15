@@ -1,31 +1,35 @@
 import { TableRow, TableCell, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
 
+import Avatar from '@deps/components/avatar/avatar';
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
 import { SupportedTaskMap } from '@deps/components/case-sub-page/case-tabs/progress/tasks';
 import Content, { ContentVariant } from '@deps/components/content/content';
-import Avatar from '@deps/components/avatar/avatar';
 import Dropdown from '@deps/components/dropdown/Dropdown';
-import { getTaskStatus } from '@deps/components/tasks-listing/task-listing.helpers';
+import IconButton from '@deps/components/icon-button/icon-button';
 import { Loader } from '@deps/components/page-loader';
 import { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
-import IconButton from '@deps/components/icon-button/icon-button';
-import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
+import { getTaskStatus } from '@deps/components/tasks-listing/task-listing.helpers';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { ProcessesToCaseTypeMap } from '@deps/constants/case';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { getCaseIdentifierValue } from '@deps/helpers/case-management';
+import { toSentenceCase } from '@deps/helpers/string.helper';
+import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
+import { CaseIdentifier, Processes } from '@deps/models/case/case';
 import { ProcessType } from '@deps/models/case/enums';
 import { EarlyTaskType, TaskSource, TaskType } from '@deps/models/case/task';
 import { AssignedTask, ManagementTask, TaskStatus, UnassignedTask } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { claimTask, unassignTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
+import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
@@ -37,15 +41,10 @@ import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
-import { toSentenceCase } from '@deps/helpers/string.helper';
-import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { NO_ASSIGNEE } from './task-management-queue-container';
-
+import styles from './task-management-queue.module.css';
 import TaskQueueDrawer from './task-queue-drawer';
 
-import styles from './task-management-queue.module.css';
-import { CaseIdentifier, Processes } from '@deps/models/case/case';
-import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 
 type TaskQueueTableRowProps = {
     task: AssignedTask | UnassignedTask;

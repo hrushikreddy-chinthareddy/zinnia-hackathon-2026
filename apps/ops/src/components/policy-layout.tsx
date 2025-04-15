@@ -6,7 +6,7 @@ import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import NestedNavDrawer from '@deps/components/nested-nav-drawer/nested-nav-drawer';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import { getNavLinks, NestedSubLink } from '@deps/config/nav.config';
-import SideSheetProductDetails from '@deps/containers/side-sheet-product-details/side-sheet-product-details';
+import SideSheetProductDetails from '@deps/components/side-sheet/side-sheet-product-details/side-sheet-product-details';
 import ContentContainer from '@deps/containers/static-layout-elements/content-container';
 import { StaticContentProvider } from '@deps/contexts/LayoutContexts/StaticContentContext';
 import { StaticNestedNavDrawerProvider } from '@deps/contexts/LayoutContexts/StaticNestedNavDrawerContext';

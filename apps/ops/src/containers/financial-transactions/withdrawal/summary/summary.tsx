@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -23,7 +24,6 @@ import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, NUMERIC_DATE_FORMAT } from '
 import { TransactionStep } from '@deps/types/segment-analytics';
 
 import { getOwnersTaxJurisdictionState } from '../taxes/taxes.helpers';
-import { TransactionType } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
     policy: Policy;

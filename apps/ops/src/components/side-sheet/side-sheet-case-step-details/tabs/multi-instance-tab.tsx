@@ -5,7 +5,7 @@ import { formatTimestamp, TransformedStep } from '@deps/components/case-sub-page
 import { ExceptionView, TaskView, GroupedExceptions } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import GlobalTaskSideSheet from '@deps/containers/case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
+import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { Statuses } from '@deps/models/case/case';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';

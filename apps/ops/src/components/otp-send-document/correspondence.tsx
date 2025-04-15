@@ -14,6 +14,7 @@ import {
 import { CommunicationTypes, Confirm } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy, TransactionType } from '@deps/models/policy/sor-policy';
+import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 
@@ -22,7 +23,6 @@ import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive
 import { Loader } from '../page-loader';
 import { RadioItem } from '../radio/radio';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
-import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 
 const getDefaultCommunicationType = (communicationOptions?: RadioItem[]) => {
     if (!communicationOptions) return '';

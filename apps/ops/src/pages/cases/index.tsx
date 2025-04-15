@@ -49,7 +49,7 @@ import useCaseFilterQueryStore from './caseFilterQueryStore';
 import styles from './index.module.css';
 
 // Lazy Loaded Components
-const SideSheetRefineResults = dynamic(() => import('@deps/containers/side-sheet-refine-results/side-sheet-refine-results'));
+const SideSheetRefineResults = dynamic(() => import('@deps/components/side-sheet/side-sheet-refine-results/side-sheet-refine-results'));
 const ActiveFilters = dynamic(() => import('@deps/containers/active-filters/active-filters'));
 const SearchResultsErrorCard = dynamic(() => import('@deps/containers/search-results/search-results-error-card/search-results-error-card'));
 const PaginationControls = dynamic(() => import('@deps/components/pagination/pagination'));

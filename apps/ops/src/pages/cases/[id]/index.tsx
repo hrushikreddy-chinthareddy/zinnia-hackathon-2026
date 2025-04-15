@@ -5,7 +5,7 @@ import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
-import CaseOverviewRedesign from '@deps/containers/case-redesign-sub-page/index';
+import CaseOverview from '@deps/containers/case-sub-page/index';
 import { CaseActivityProvider } from '@deps/contexts/CaseActivityContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
@@ -35,7 +35,7 @@ const CaseDetailsPage = ({ caseDetails, id, tab, user }: CaseDetailsPageProps) =
         <CaseActivityProvider caseDetails={caseDetails}>
             <PageHead titleKey="caseOverview" />
             <NoNavLayout>
-                <CaseOverviewRedesign caseDetails={caseDetails} tab={tab} />
+                <CaseOverview caseDetails={caseDetails} tab={tab} />
             </NoNavLayout>
         </CaseActivityProvider>
     );

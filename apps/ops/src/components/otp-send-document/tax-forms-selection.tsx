@@ -11,13 +11,13 @@ import { TaxForm, TaxFormSelectionDetails } from '@deps/models/case/send-tax-for
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
+import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import { MultiselectOption } from '../autocomplete/autocomplete.types';
 import TaxFormsListing from './components/tax-forms-listing';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
-import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 
 export type StatementSelectionProps = {
     policy: Policy;

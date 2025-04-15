@@ -2,6 +2,16 @@ import wellabeSuitabilitySchema from '@deps/jsonschema-mock-service/carrier/well
 import wellabeSuitabilityData from '@deps/jsonschema-mock-service/carrier/wellabe/suitability/suitability.json';
 import wellabeSuitabilityReviewSchema from '@deps/jsonschema-mock-service/carrier/wellabe/suitability-review/suitability-review-schema.json';
 import wellabeSuitabilityReviewData from '@deps/jsonschema-mock-service/carrier/wellabe/suitability-review/suitability-review.json';
+import agentNigoSchema from '@deps/jsonschema-mock-service/tasks/agent-nigo.json';
+import agentOnboardingNigoSchema from '@deps/jsonschema-mock-service/tasks/agent-onboarding-nigo.json';
+import agentOnboardingReviewSchema from '@deps/jsonschema-mock-service/tasks/agent-onboarding-review.json';
+import agentReviewSchema from '@deps/jsonschema-mock-service/tasks/agent-review.json';
+import applicationNigoSchema from '@deps/jsonschema-mock-service/tasks/application-nigo.json';
+import attachmentNigoSchema from '@deps/jsonschema-mock-service/tasks/attachment-nigo.json';
+import appDataEntrySchema from '@deps/jsonschema-mock-service/tasks/nb_app_data_entry.json';
+import premiumNigoSchema from '@deps/jsonschema-mock-service/tasks/premium-nigo.json';
+import prenoteNigoSchema from '@deps/jsonschema-mock-service/tasks/prenote-nigo.json';
+import purchaseDocumentMatchingSchema from '@deps/jsonschema-mock-service/tasks/purchase-document-matching.json';
 import agentNigoData from '@deps/jsonschema-mock-service/tasks-data/agent-nigo.json';
 import agentOnboardingNigoData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-nigo.json';
 import agentOnboardingReviewData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-review.json';
@@ -20,22 +30,11 @@ import initiatePostissueTransactionData from '@deps/jsonschema-mock-service/task
 import toaReviewData from '@deps/jsonschema-mock-service/tasks-data/toa-review.json';
 import prenoteReviewData from '@deps/jsonschema-mock-service/tasks-data/prenote-review.json';
 
-import purchaseDocumentMatchingSchema from '@deps/jsonschema-mock-service/tasks/purchase-document-matching.json';
-import agentNigoSchema from '@deps/jsonschema-mock-service/tasks/agent-nigo.json';
-import applicationNigoSchema from '@deps/jsonschema-mock-service/tasks/application-nigo.json';
-import attachmentNigoSchema from '@deps/jsonschema-mock-service/tasks/attachment-nigo.json';
-import premiumNigoSchema from '@deps/jsonschema-mock-service/tasks/premium-nigo.json';
 import standardDocumentMatchingSchema from '@deps/jsonschema-mock-service/tasks/standard-document-matching.json';
 import toaNigoSchema from '@deps/jsonschema-mock-service/tasks/toa-nigo.json';
 import ofacReviewSchema from '@deps/jsonschema-mock-service/tasks/review-ofac.json';
-import prenoteNigoSchema from '@deps/jsonschema-mock-service/tasks/prenote-nigo.json';
 import toaReviewSchema from '@deps/jsonschema-mock-service/tasks/toa-review.json';
 import prenoteReviewSchema from '@deps/jsonschema-mock-service/tasks/prenote-review.json';
-import agentOnboardingNigoSchema from '@deps/jsonschema-mock-service/tasks/agent-onboarding-nigo.json';
-import agentOnboardingReviewSchema from '@deps/jsonschema-mock-service/tasks/agent-onboarding-review.json';
-import agentReviewSchema from '@deps/jsonschema-mock-service/tasks/agent-review.json';
-import appDataEntrySchema from '@deps/jsonschema-mock-service/tasks/nb_app_data_entry.json';
-
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 

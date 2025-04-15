@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { AvatarSize, getAvatarSizeClass, getInitials, BG_CLASS } from './avatar.helper';
-
 import style from './avatar.module.css';
 
 export interface AvatarProps {

@@ -16,18 +16,18 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helper';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardResponseData, fetchAgentsSSR } from '@deps/queries/api/dashboard';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { FgaRelation } from '@deps/types/fga';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './Dashboard.module.css';
-import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 export interface CarrierListItem {
     [key: string]: string;
 }

@@ -1,12 +1,12 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
-import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<ClaimNextTask | null>, logCtx) => {

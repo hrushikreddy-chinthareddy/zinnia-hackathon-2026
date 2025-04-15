@@ -37,6 +37,7 @@ import createCaseFromDocumentNumber from '@deps/operations/cases/caseOperations'
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { getCarriersListQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { ReactComponent as ProgressIcon } from '@deps/styles/elements/icons/illustrations/check-progress.svg';
+import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
@@ -44,7 +45,6 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 
 interface CaseCreatePageProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;

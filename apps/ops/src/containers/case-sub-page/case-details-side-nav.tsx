@@ -1,3 +1,4 @@
+import { toSentenceCase } from '@zinnia/utils';
 import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
 
@@ -9,7 +10,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { AdditionalDataInstance, CaseAdditionalDataKeys, CommunicationTypes } from '@deps/models/case/additional-data-instance';
 import { Processes } from '@deps/models/case/case';
 import { TransactionTypes } from '@deps/models/case/correspondence';
-import { toSentenceCase } from '@zinnia/utils';
 
 type CaseDetailsSideNavProps = {
     CaseAdditionalDetails: AdditionalDataInstance;

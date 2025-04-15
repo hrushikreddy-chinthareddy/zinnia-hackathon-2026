@@ -1,9 +1,9 @@
+import { useQuery } from '@tanstack/react-query';
 import { ReactNode, createContext, useContext } from 'react';
 
 import { getFeatureFlags } from '@deps/queries/api/optimizely';
-import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-import { useQuery } from '@tanstack/react-query';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 interface OptimizelyData {
     featureFlags: FeatureFlags;

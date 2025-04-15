@@ -1,5 +1,6 @@
-import { browserLogWarn } from '@deps/utils/browser-logging';
 import { UiSchema } from '@rjsf/utils/lib/types';
+
+import { browserLogWarn } from '@deps/utils/browser-logging';
 
 const getRefByPath = (root: any, path: string[]) => {
     let ref = root;

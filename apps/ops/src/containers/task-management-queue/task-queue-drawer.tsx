@@ -20,7 +20,7 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
 
-import GlobalTaskSideSheet from '../case-overview/tasks-table/sidesheet/global-task-sidesheet-content';
+import GlobalTaskSideSheet from '../../components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 
 dayjs.extend(utc);
 

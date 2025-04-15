@@ -9,7 +9,7 @@ import {
     TimeRangeData,
 } from '@deps/components/dashboard/sections/active-aging/utils';
 import { formatProcessFilter, createBaseQuery } from '@deps/components/dashboard/utils';
-import { getStartAndEndDates } from '@deps/containers/case-redesign-sub-page/case-helpers';
+import { getStartAndEndDates } from '@deps/containers/case-sub-page/case-helpers';
 import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';

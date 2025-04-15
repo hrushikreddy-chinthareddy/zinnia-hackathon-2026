@@ -9,7 +9,7 @@ import EmailCard from '@deps/containers/people-data-cards/email-card/email-card'
 import IdentificationCard from '@deps/containers/people-data-cards/identification-card/identification-card';
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import UnderwritingCard from '@deps/containers/people-data-cards/underwriting-card/underwriting-card';
-import { beneficiaryRoles } from '@deps/containers/side-sheet-allocations/side-sheet-allocations-helper';
+import { beneficiaryRoles } from '@deps/components/side-sheet/side-sheet-allocations/side-sheet-allocations-helper';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { findCoverageParticipant, getRiskClass, getSexAtBirth, getSubstandardRating } from '@deps/helpers/party-info-helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';

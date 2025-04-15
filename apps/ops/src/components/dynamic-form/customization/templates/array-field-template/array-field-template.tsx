@@ -8,11 +8,11 @@ import {
     RJSFSchema,
     StrictRJSFSchema,
 } from '@rjsf/utils';
-import { Table, TableBody } from '@zinnia/bloom/components';
+import { Table, TableBody , TableHeader, TableHeaderCell, TableRow } from '@zinnia/bloom/components';
 import React from 'react';
+
 import style from './array-field.module.css';
 
-import { TableHeader, TableHeaderCell, TableRow } from '@zinnia/bloom/components';
 function ArrayFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     props: ArrayFieldTemplateProps<T, S, F>
 ) {

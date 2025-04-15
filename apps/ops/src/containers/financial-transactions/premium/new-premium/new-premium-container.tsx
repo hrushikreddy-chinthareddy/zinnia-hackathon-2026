@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { v4 as uuidV4 } from 'uuid';
@@ -10,14 +11,12 @@ import Amount from '@deps/containers/financial-transactions/premium/new-premium/
 import Confirm from '@deps/containers/financial-transactions/premium/new-premium/confirm/confirm';
 import Summary from '@deps/containers/financial-transactions/premium/new-premium/summary/summary';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { Processes } from '@deps/models/case/case';
 import { PaymentForm, Policy } from '@deps/models/policy/sor-policy';
 import { validateOneTimePremium } from '@deps/queries/api/bpm';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-
-import WorkflowContainer from '../../../workflow-container/workflow-container';
-import { TransactionType } from '@zinnia/api-types/types/sor';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
 export type NewPremiumContainerProps = {

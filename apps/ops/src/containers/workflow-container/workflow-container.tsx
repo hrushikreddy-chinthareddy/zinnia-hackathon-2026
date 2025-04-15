@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import { PopoverPlacement } from '@deps/components/popover/popover';
-import SideSheetProductDetails from '@deps/containers/side-sheet-product-details/side-sheet-product-details';
+import SideSheetProductDetails from '@deps/components/side-sheet/side-sheet-product-details/side-sheet-product-details';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';

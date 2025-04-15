@@ -1,5 +1,4 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
-
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
@@ -13,6 +12,7 @@ import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
 import { PeopleRolesFilterContext } from '@deps/contexts/PeopleRolesFilter';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { isEndDated } from '@deps/helpers/date.helper';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
@@ -21,7 +21,6 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { PartyRole } from '@deps/models/policy/sor-policy';
 import { getAgentData } from '@deps/queries/api/agents';
-import { isEndDated } from '@deps/helpers/date.helper';
 
 import {
     NameTag,
@@ -32,7 +31,7 @@ import {
     normalizePartyRole,
 } from './people-sub-page.helpers';
 import PeoplePageHeaderContainer from '../page-header/people-page-header';
-import SideSheetAllocations from '../side-sheet-allocations/side-sheet-allocations';
+import SideSheetAllocations from '../../components/side-sheet/side-sheet-allocations/side-sheet-allocations';
 
 export interface CardActionData {
     filteredData: NameTag[];
