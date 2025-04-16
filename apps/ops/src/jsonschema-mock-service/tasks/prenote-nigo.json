@@ -183,7 +183,82 @@
                                             "type": "string",
                                             "title": "Fax number"
                                         }
-                                    }
+                                    },
+                                    "allOf": [
+                                        {
+                                          "if": {
+                                            "properties": {
+                                              "deliveryMethod": {
+                                                "const": "MAIL"
+                                              }
+                                            }
+                                          },
+                                          "then": {
+                                            "required": [
+                                                "address"
+                                            ],
+                                            "properties":{
+                                                "address":{
+                                                    "type":"object",
+                                                    "required": [
+                                                    "addressLine1",
+                                                    "city",
+                                                    "state",
+                                                    "zip",
+                                                    "zip4"
+                                                ],
+                                                "properties":{
+                                                    "addressLine1": {
+                                                        "type": "string",
+                                                        "title": "Address",
+                                                        "minLength": 1
+                                                    },
+                                                    "addressLine2": {
+                                                        "type": "string",
+                                                        "title": "Address 2"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "title": "City",
+                                                        "minLength": 1
+                                                    },
+                                                    "state": {
+                                                        "type": "string",
+                                                        "title": "State",
+                                                        "$ref": "#/definitions/stateEnum",
+                                                        "minLength": 1
+                                                    },
+                                                    "zip": {
+                                                        "type": "string",
+                                                        "title": "Zip",
+                                                        "minLength": 1
+                                                    },
+                                                    "zip4": {
+                                                        "type": "string",
+                                                        "title": "Zip+4",
+                                                        "minLength": 1
+                                                    }
+                                                }
+                                                }
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "if": {
+                                            "properties": {
+                                              "deliveryMethod": {
+                                                "const": "FAX",
+                                                "minLength": 1
+                                              }
+                                            }
+                                          },
+                                          "then": {
+                                            "required": [
+                                              "deliveryFaxNumber"
+                                            ]
+                                          }
+                                        }
+                                      ]
                                 },
                                 {
                                     "properties": {
@@ -402,7 +477,8 @@
                             "ui:widget": "text",
                             "ui:options": {
                                 "width": 100
-                            }
+                            },
+                            "ui:hideError": true
                         },
                         "addressLine2": {
                             "ui:widget": "text",
@@ -414,25 +490,29 @@
                             "ui:widget": "text",
                             "ui:options": {
                                 "width": 60
-                            }
+                            },
+                            "ui:hideError": true
                         },
                         "state": {
                             "ui:widget": "select",
                             "ui:options": {
                                 "width": 40
-                            }
+                            },
+                            "ui:hideError": true
                         },
                         "zip": {
                             "ui:widget": "text",
                             "ui:options": {
                                 "width": 25
-                            }
+                            },
+                            "ui:hideError": true
                         },
                         "zip4": {
                             "ui:widget": "text",
                             "ui:options": {
                                 "width": 25
-                            }
+                            },
+                            "ui:hideError": true
                         },
                         "ui:dataPath": ["details", "exchangeReplace", "address"]
                     },
@@ -442,7 +522,8 @@
                             "label": true,
                             "width": 100
                         },
-                        "ui:dataPath": ["details", "exchangeReplace", "deliveryFaxNumber"]
+                        "ui:dataPath": ["details", "exchangeReplace", "deliveryFaxNumber"],
+                        "ui:hideError": true
                     },
                     "documentList": {
                         "inline": true,

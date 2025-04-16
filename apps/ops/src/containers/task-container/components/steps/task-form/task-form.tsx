@@ -145,10 +145,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             const hasDataPathFields = Object.keys(uiSchema).some(field => uiSchema[field]?.['ui:dataPath']);
 
             if (!hasDataPathFields) {
-                setTask(ogTask => ({
+                setTask(ogTask => ({                 
                     ...ogTask,
                     data: event.formData,
-                }));
+                    }));
                 return;
             }
 
