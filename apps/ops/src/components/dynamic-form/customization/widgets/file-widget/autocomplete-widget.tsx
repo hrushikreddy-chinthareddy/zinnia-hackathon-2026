@@ -11,6 +11,7 @@ import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helper';
 
 import style from './file-widget.module.css';
 export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -113,25 +114,30 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
         };
     }, []);
 
-    const handleDocumentSelection = (document: MetadataSearchResponse) => {
+    const handleDocumentSelection = async (document: MetadataSearchResponse) => {
         setError(false);
 
         const attachments = [...(formContext?.customData?.attachments || [])];
         const isAlreadySelected = attachments.some(attachment => attachment.documentId === document.documentId);
 
         if (!isAlreadySelected) {
-            attachments.push({
+            const attachment = {
                 documentId: document?.documentId || '',
                 docCategory: document?.documentCategory,
                 documentType: document?.documentType,
                 documentExt: document?.fileType,
                 documentName: document?.displayName || '',
-            });
+            };
+            attachments.push(attachment);
+
             if (Array.isArray(attachments) && attachments.length >= 1 && uiSchema?.['ui:options']?.singleDocument == true) {
                 formContext?.setCustomData && formContext.setCustomData({ attachments: attachments.slice(-1) });
             } else {
                 formContext?.setCustomData && formContext.setCustomData({ attachments: attachments });
             }
+
+            const task = formContext?.customData?.task;
+            return await attachFilesToMappedDocuments(attachment, task, formContext?.correlationId || '');
         } else {
             setError(true);
         }

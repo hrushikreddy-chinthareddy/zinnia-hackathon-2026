@@ -10,11 +10,8 @@ import {
 } from '@rjsf/utils';
 
 import SelectComponent from '@deps/components/select/select';
-import { csrApiHelper } from '@deps/helpers/csr-api-helper';
-import { ApiProps, ApiResponseTypes } from '@deps/models/case/task';
-import { baseAppUrl } from '@deps/queries/api-config';
-
-const baseUrl = baseAppUrl + '/api/';
+import { csrApiHelper, parseJsonValue } from '@deps/helpers/csr-api-helper';
+import { ApiProps, ApiResponseTypes, EventType, TaskEventProps } from '@deps/models/case/task';
 
 function getValue(
     isSelected: boolean,
@@ -62,8 +59,9 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 
     const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
-    const { props } = getUiOptions<T, S, F>(uiSchema);
+    const { props, events } = getUiOptions<T, S, F>(uiSchema);
     const apiProps = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
+    const eventProps = typeof events === 'object' ? (events as TaskEventProps[]) : ([] as TaskEventProps[]);
 
     const _onChange = (value: string, _displaytext: string, isSelected: boolean = false) => {
         if (!isSelected && Array.isArray(selectedIndexes)) {
@@ -78,13 +76,26 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     const _onChangeSingle = async (value: string) => {
         const newValue = getValue(false, value, enumOptions, selectedIndexes, multiple);
 
+        eventProps?.forEach(eventProp => {
+            if (eventProp?.taskEventType == EventType.onChange) {
+                const parsedValue = parseJsonValue(value);
+                formData?.setCustomData &&
+                    formData.setCustomData({
+                        [eventProp?.dataKey]: parsedValue[eventProp?.responseData] ?? parsedValue,
+                    });
+            }
+        });
+
         if (!apiProps.apiUrl) return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
         await fetchDetails(value, newValue);
     };
 
     async function fetchDetails(value: string, newValue?: any) {
         onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
-        csrApiHelper(apiProps, { ...formContext?.customData, value }).then(response => {
+
+        const parsedValue = parseJsonValue(value);
+
+        csrApiHelper(apiProps, { ...formContext?.customData, value: parsedValue }, true).then(response => {
             if (apiProps.responseType === ApiResponseTypes.FormData) {
                 formData?.setCustomData && formData.setCustomData({ [apiProps?.dataKey]: response });
             } else {

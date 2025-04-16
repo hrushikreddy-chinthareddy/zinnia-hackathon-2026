@@ -1,6 +1,11 @@
-import { TaskType } from '@deps/models/case/task';
+import { normalizeFormData } from '@deps/containers/task-container/components/steps/task-form/task-form.utils';
+import { updateTask } from '@deps/containers/task-container/task.helper';
+import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { MatchingCase, PotentialMatches } from '@deps/models/case/task/doc-matching-payment';
-import { ManagementTask } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+
+import { browserLogError } from '../browser-logging';
+import { parseErrorInformation } from '../server-logging';
 
 export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTask) => {
     let updateTask = { ...task };
@@ -117,4 +122,39 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
         default:
             return task;
     }
+};
+
+/**
+ * Cleans form data by removing properties marked for omission in the UI schema
+ */
+
+export const cleanForm = (formData: any, taskMetadata: FormMetadata) => {
+    const finalFormData = normalizeFormData(formData);
+    const iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
+    iterableProperties.forEach(property => {
+        if ((taskMetadata.uiSchema?.[property]?.['ui:options'] || {})?.omitValue) {
+            finalFormData.data ? delete finalFormData.data[property] : delete finalFormData[property];
+        }
+    });
+    return finalFormData;
+};
+
+export const attachFilesToMappedDocuments = async (attachment: any, task: ManagementTask, correlationId: string): Promise<boolean> => {
+    try {
+        await updateTask(
+            {
+                ...task,
+                mappedDocuments: [...(task.mappedDocuments || []), attachment],
+            },
+            correlationId,
+            TaskStatus.InProgress
+        );
+    } catch (error) {
+        browserLogError('updateTask::Error updating mapped documents to task', {
+            ...parseErrorInformation(error),
+            taskId: task.id,
+        });
+        return false;
+    }
+    return true;
 };

@@ -1,0 +1,161 @@
+{
+    "formId": "8030e3a6-5311-467f-b96c-9d1749e1eeea",
+    "process": "Suitability",
+    "carrier": "null",
+    "taskType": "UI_UPLOAD_DOCUMENT",
+    "formSchema": {
+        "type": "object",
+        "definitions": {
+            "docCategoryEnum": {
+                "enum": []
+            },
+            "documentTypeEnum": {
+                "enum": ["_"]
+            },
+            "formNumberEnum": {
+                "enum": ["_"]
+            }
+        },
+        "properties": {
+            "docCategory": {
+                "type": "string",
+                "title": "Category",
+                "$ref": "#/definitions/docCategoryEnum"
+            },
+            "documentTypeSelect": {
+                "type": "string",
+                "title": "Type",
+                "$ref": "#/definitions/documentTypeEnum"
+            },
+            "formNumberSelect": {
+                "type": "string",
+                "title": "Form number",
+                "$ref": "#/definitions/formNumberEnum"
+            },
+            "zinniaLiveCaseId": {
+                "type": "string",
+                "default": "{{customData.caseId}}"
+            },
+            "correlationId": {
+                "type": "string",
+                "default": "{{customData.correlationId}}"
+            },
+            "parentCarrierCode": {
+                "type": "string",
+                "default": "{{customData.carrier}}"
+            },
+            "docClassification": {
+                "type": "string",
+                "default": "INBOUND"
+            },
+            "docAccessLevel": {
+                "type": "string",
+                "title": "Restriction",
+                "enumNames": ["Restricted", "Un-restricted"],
+                "enum": ["CARRIER_ONLY", "CLIENT_COPY"]
+            }
+        },
+        "required": ["docCategory", "documentType", "docAccessLevel"]
+    },
+    "uiSchema": {
+        "ui:submitButtonOptions": {
+            "props": {
+                "disabled": false,
+                "className": "btn btn-info"
+            },
+            "norender": false,
+            "submitText": "Upload"
+        },
+        "options": {
+            "ui:label": false,
+            "ui:props": {
+                "apiUrl": "case/v1/refdata/DOCUMENT_CATEGORY",
+                "apiMethod": "get",
+                "dataKey": "docCategoryEnum",
+                "responseType": "schema",
+                "response": {
+                    "enum": "key",
+                    "enumNames": "value"
+                }
+            }
+        },
+        "zinniaLiveCaseId": {
+            "ui:widget": "hidden"
+        },
+        "correlationId": {
+            "ui:widget": "hidden"
+        },
+        "parentCarrierCode": {
+            "ui:widget": "hidden"
+        },
+        "docClassification": {
+            "ui:widget": "hidden"
+        },
+        "docCategory": {
+            "ui:placeholder": "Select a category",
+            "ui:props": {
+                "apiUrl": "case/v1/refdata/DOCUMENT_TYPE?",
+                "apiMethod": "get",
+                "apiPayload": {
+                    "parentKey": "{{value}}"
+                },
+                "dataKey": "documentTypeEnum",
+                "responseType": "schema",
+                "response": {
+                    "enum": "",
+                    "enumNames": "value"
+                }
+            }
+        },
+        "documentTypeSelect": {
+            "ui:placeholder": "Select a type",
+            "ui:events": [
+                {
+                    "taskEventType": "onChange",
+                    "dataKey": "documentType",
+                    "responseType": "formData",
+                    "responseData": "value"
+                }
+            ],
+            "ui:props": {
+                "apiUrl": "case/v1/refdata/DOCUMENT_NAME?",
+                "apiMethod": "get",
+                "apiPayload": {
+                    "parentKey": "{{value.key}}"
+                },
+                "dataKey": "formNumberEnum",
+                "responseType": "schema",
+                "response": {
+                    "enum": "",
+                    "enumNames": "key"
+                }
+            },
+            "ui:options": {
+                "omitValue": true
+            }
+        },
+        "formNumberSelect": {
+            "ui:placeholder": "Select a form number",
+            "ui:events": [
+                {
+                    "taskEventType": "onChange",
+                    "dataKey": "documentTypeDescription",
+                    "responseType": "formData",
+                    "responseData": "value"
+                },
+                {
+                    "taskEventType": "onChange",
+                    "dataKey": "formNumber",
+                    "responseType": "formData",
+                    "responseData": "key"
+                }
+            ],
+            "ui:options": {
+                "omitValue": true
+            }
+        },
+        "docAccessLevel": {
+            "ui:placeholder": "Select"
+        }
+    }
+}

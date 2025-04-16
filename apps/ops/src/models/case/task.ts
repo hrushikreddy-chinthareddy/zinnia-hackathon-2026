@@ -178,6 +178,17 @@ export type ApiProps = {
     responseType: ApiResponseTypes;
 };
 
+export enum EventType {
+    onChange = 'onChange',
+    onBlur = 'onBlur',
+}
+
+export type TaskEventProps = {
+    taskEventType: EventType;
+    responseData: string;
+    dataKey: string;
+    responseType: ApiResponseTypes;
+};
 export enum DataFormattingTypes {
     SSN = 'ssn',
     Date = 'date',

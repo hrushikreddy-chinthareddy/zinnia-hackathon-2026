@@ -733,7 +733,8 @@
         "approved": "Approved",
         "unapproved": "Unapproved",
         "submit": "Submit",
-        "uploadDocument": "Upload Document"
+        "uploadDocument": "Upload Document",
+        "fileUploaded": "File uploaded successfully"
     },
     "dashboard": {
         "h1": "Policy Search",

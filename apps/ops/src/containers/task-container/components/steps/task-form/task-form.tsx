@@ -5,11 +5,7 @@ import React, { ForwardedRef, useCallback, useContext, useEffect, useMemo, useSt
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TranslationFiles } from '@deps/config/translations';
-import {
-    getUpdatedTaskFromFormData,
-    extractFormData,
-    normalizeFormData,
-} from '@deps/containers/task-container/components/steps/task-form/task-form.utils';
+import { getUpdatedTaskFromFormData, extractFormData } from '@deps/containers/task-container/components/steps/task-form/task-form.utils';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helper';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
@@ -19,7 +15,7 @@ import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
-import { buildTaskPayload } from '@deps/utils/tasks/task-payload-helper';
+import { buildTaskPayload, cleanForm } from '@deps/utils/tasks/task-payload-helper';
 
 type TaskFormProps = {
     readonly: boolean;
@@ -126,21 +122,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         }
     };
 
-    /**
-     * Cleans form data by removing properties marked for omission in the UI schema
-     */
-
-    const cleanForm = (formData: any) => {
-        const finalFormData = normalizeFormData(formData);
-        const iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
-        iterableProperties.forEach(property => {
-            if (taskMetadata.uiSchema?.[property]?.['ui:options']?.omitValue) {
-                delete finalFormData.data[property];
-            }
-        });
-        return finalFormData;
-    };
-
     const handleSubmit = useCallback(async () => {
         if (!isSubmit) {
             await fetchData();
@@ -148,7 +129,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             return;
         }
 
-        const taskPayload = buildTaskPayload(cleanForm(task), initialTask);
+        const taskPayload = buildTaskPayload(cleanForm(task, taskMetadata), initialTask);
         const success = await updateTask(taskPayload, correlationId);
 
         removeFromCache('getTaskInstance', { taskId: task.id });
@@ -269,7 +250,11 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onChange={handleChange}
             onSubmit={handleSubmit}
             readonly={readonly}
-            formContext={{ customData: { ...formContext, ...task.data }, setCustomData: setFormContext, updateSchema: updateSchemaHandler }}
+            formContext={{
+                customData: { ...formContext, ...task.data, task },
+                setCustomData: setFormContext,
+                updateSchema: updateSchemaHandler,
+            }}
         ></DynamicForm>
     );
 });

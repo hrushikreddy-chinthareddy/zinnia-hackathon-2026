@@ -26,11 +26,16 @@ import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 
 const baseUrl = baseAppUrl + '/api/';
+const INTERVAL = 3000;
+
+import { browserLogError } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
+import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helper';
 
 import FileAttachmentComponent from './file-attachment.component';
 import style from './file-widget.module.css';
 
-import { Loader } from '@zinnia/bloom/components';
+import { Loader, Toast, ToastVariant } from '@zinnia/bloom/components';
 
 function addNameToDataURL(dataURL: string, name: string) {
     if (dataURL === null) {
@@ -149,11 +154,12 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     const { props, showFiles } = getUiOptions<T, S, F>(uiSchema);
 
     const { apiUrl, apiMethod } = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
+    const [success, setSuccess] = useState<boolean>(false);
 
     const onSubmit = (data: any, files: any) => {
         const attachments = [...(formContext?.customData?.attachments || [])];
 
-        const uploadPromises = Object.keys(files).map(key => {
+        const uploadPromises = Object.keys(files).map(async (key: string) => {
             const { blob, name } = dataURItoBlob(files[key]);
             const processedData = replacePlaceholders(data, formContext ?? {});
             const metaData = {
@@ -162,24 +168,36 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                 fileType: blob.type,
             };
-            return uploadDocumentV2(metaData, files[key], formContext?.correlationId || '').then(response => {
+            try {
+                const response = await uploadDocumentV2(metaData, files[key], formContext?.correlationId || '');
+
                 if (response?.documentId) {
                     const attachment = {
                         documentId: response.documentId,
                         documentCategory: metaData?.docCategory,
                         documentType: metaData?.documentType,
                         documentExt: metaData?.fileType,
-                        documentName: name || '',
+                        documentName: metaData?.documentTypeDescription || name || '',
                     };
                     attachments.push(attachment);
+
+                    const task = formContext?.customData?.task;
+                    return await attachFilesToMappedDocuments(attachment, task, formContext?.correlationId || '');
                 }
-            });
+                return null;
+            } catch (error) {
+                browserLogError('FileWidget: Error uploading document:', {
+                    ...parseErrorInformation(error),
+                });
+                return false;
+            }
         });
 
         Promise.allSettled(uploadPromises).then(results => {
             if (formContext?.setCustomData) {
                 formContext.setCustomData({ attachments: attachments });
             }
+            setSuccess(true);
             sideSheet.onClose();
         });
     };
@@ -259,6 +277,15 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         [attachmentSchema, multiple, onChange, value, onSubmit, options.filePreview]
     );
 
+    useEffect(() => {
+        if (success) {
+            const timer = setTimeout(() => {
+                setSuccess(false);
+            }, INTERVAL);
+            return () => clearTimeout(timer);
+        }
+    }, [success]);
+
     const rmFile = useCallback(
         (index: number) => {
             if (multiple) {
@@ -300,6 +327,13 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                     preview={options.filePreview}
                     options={options}
                 />
+            )}
+            {success && (
+                <div className="fixed bottom-4 right-10 z-50">
+                    <button onClick={() => setSuccess(false)} type="button">
+                        <Toast variant={ToastVariant.Success}>{t('fileUploaded')}</Toast>
+                    </button>
+                </div>
             )}
         </>
     );

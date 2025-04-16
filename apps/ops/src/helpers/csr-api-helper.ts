@@ -7,26 +7,36 @@ import { browserLogWarn } from '@deps/utils/browser-logging';
 
 import { replacePlaceholders } from './value-placement.helper';
 const baseUrl = baseAppUrl + '/api/';
-export const csrApiHelper = async (props: ApiProps, formData: any) => {
+
+export function parseJsonValue(value: string) {
+    try {
+        return JSON.parse(value);
+    } catch (e) {
+        return value;
+    }
+}
+export const csrApiHelper = async (props: ApiProps, formData: any, strigify = false) => {
     const { apiUrl, apiMethod, apiPayload, responseData, response } = props;
 
     if (apiMethod === 'post') {
         try {
             const payload = replacePlaceholders(apiPayload, formData);
-            const { data } = await client.post<any, AxiosResponse<any>>(`${baseUrl}${apiUrl}`, payload);
+            const url = replacePlaceholders(apiUrl, formData);
+            const { data } = await client.post<any, AxiosResponse<any>>(`${baseUrl}${url}`, payload);
             const filteredApiData = responseData ? replacePlaceholders(responseData, data) : data;
 
             if (response) {
-                let filteredResponse: any;
+                let filteredResponse: any = filteredApiData;
                 if (typeof filteredApiData == 'string') {
                     try {
-                        const parsedData = JSON.parse(filteredApiData);
+                        const parsedData = parseJsonValue(filteredApiData);
                         filteredResponse = parsedData.filter(Boolean);
                     } catch (e) {
                         filteredResponse = filteredApiData;
                         browserLogWarn('Error parsing JSON:', { data: filteredApiData, e });
                     }
                 }
+
                 const mapDataToKeys: Record<string, any> = {};
                 Object.keys(response).forEach(key => {
                     mapDataToKeys[key] = filteredResponse?.map((item: any) => {
@@ -45,15 +55,17 @@ export const csrApiHelper = async (props: ApiProps, formData: any) => {
     if (apiMethod === 'get') {
         try {
             const queryString = new URLSearchParams(replacePlaceholders(apiPayload, formData)).toString();
-            const url = queryString ? apiUrl + queryString : apiUrl;
-            const { data } = await client.get<any, AxiosResponse<any>>(`${baseUrl}${url}`);
+            const url = replacePlaceholders(apiUrl, formData);
+            const dataUrl = url + (queryString ?? '');
+            const { data } = await client.get<any, AxiosResponse<any>>(`${baseUrl}${dataUrl}`);
             const filteredApiData = responseData ? replacePlaceholders(responseData, data) : data;
 
             if (response) {
                 const mapDataToKeys: Record<string, any> = {};
                 Object.keys(response).forEach(key => {
                     mapDataToKeys[key] = filteredApiData?.map((item: any) => {
-                        return item[(response as any)?.[key]] != undefined ? item[(response as any)?.[key]] : item;
+                        const filteredItem = item[(response as any)?.[key]];
+                        return filteredItem ? filteredItem : strigify ? JSON.stringify(item) : item;
                     });
                 });
                 return mapDataToKeys;

@@ -814,7 +814,8 @@
         "approved": "Approuvé",
         "unapproved": "Désapprouvé",
         "submit": "Soumettre",
-        "uploadDocument": "Uploader un document"
+        "uploadDocument": "Uploader un document",
+        "fileUploaded": "Fichier téléchargé avec succès"
     },
     "dashboard": {
         "h1": "Recherche de politique",

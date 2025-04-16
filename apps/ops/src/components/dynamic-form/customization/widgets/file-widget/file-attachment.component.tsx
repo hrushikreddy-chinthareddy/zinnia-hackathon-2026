@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { FormMetadata } from '@deps/models/case/task';
+import { cleanForm } from '@deps/utils/tasks/task-payload-helper';
 
 export type FileAttachmentComponentProps = {
     schema: FormMetadata;
@@ -11,6 +12,7 @@ export type FileAttachmentComponentProps = {
     onClose: () => void;
     onSubmit: (data: any) => void;
 };
+
 const FileAttachmentComponent = ({ schema, formData, onSubmit, onClose }: FileAttachmentComponentProps) => {
     const [currentFormData, setCurrentFormData] = useState(formData);
     const [currentSchema, setCurrentSchema] = useState(schema);
@@ -39,8 +41,10 @@ const FileAttachmentComponent = ({ schema, formData, onSubmit, onClose }: FileAt
                 },
             },
         }));
-        onSubmit(currentFormData);
-    }, [currentFormData, onSubmit]);
+        const payload = cleanForm(currentFormData, currentSchema);
+
+        onSubmit(payload);
+    }, [currentFormData, currentSchema, onSubmit]);
 
     const updateSchemaHandler = (dynamicData: any) => {
         Object.keys(dynamicData).forEach(key => {
