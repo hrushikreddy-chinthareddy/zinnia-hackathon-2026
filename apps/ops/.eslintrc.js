@@ -18,7 +18,7 @@ module.exports = {
         browser: true,
         es2021: true,
     },
-    extends: ['@zinnia/eslint-config/next', 'plugin:@tanstack/eslint-plugin-query/recommended'],
+    extends: ['@zinnia/eslint-config/next', 'plugin:@next/next/recommended', 'plugin:@tanstack/eslint-plugin-query/recommended'],
     overrides: [
         {
             files: ['**/*.stories.tsx'],

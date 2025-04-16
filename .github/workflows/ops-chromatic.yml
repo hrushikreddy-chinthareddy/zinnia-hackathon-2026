@@ -2,11 +2,11 @@ name: 'Chromatic OPS'
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'apps/consumer-experience/**'
-    branches-ignore:
-      - 'dependabot/**'
+  # push:
+  # paths:
+  # - 'apps/consumer-experience/**'
+  # branches-ignore:
+  # - 'dependabot/**'
 
 jobs:
   chromatic:

@@ -68,6 +68,7 @@ describe('Autocomplete Component', () => {
         const onChange = jest.fn();
 
         const { getByRole } = render(<Autocomplete label="Autoselect Label" options={options} value="asc" onChange={onChange} />);
+
         // Open the dropdown menu
         await userEvent.click(getByRole('combobox'));
 
@@ -78,39 +79,39 @@ describe('Autocomplete Component', () => {
             expect(onChange).toHaveBeenCalledWith('option2');
         });
     });
+});
 
-    it('renders the Autocomplete component as disabled', async () => {
-        render(<Autocomplete label="Autoselect Label" options={options} value="" onChange={() => {}} disabled />);
+it('renders the Autocomplete component as disabled', async () => {
+    render(<Autocomplete label="Autoselect Label" options={options} value="" onChange={() => {}} disabled />);
 
-        waitFor(() => {
-            expect(screen.getByRole('button')).toBeDisabled();
-        });
+    waitFor(() => {
+        expect(screen.getByRole('button')).toBeDisabled();
     });
+});
 
-    it('opens the menu when the select is clicked', async () => {
-        render(<Autocomplete label="Autoselect Label" options={options} value="option1" onChange={() => {}} />);
+it('opens the menu when the select is clicked', async () => {
+    render(<Autocomplete label="Autoselect Label" options={options} value="option1" onChange={() => {}} />);
 
-        expect(screen.queryByText('Option 2', { ignore: 'option' })).toBeNull();
+    expect(screen.queryByText('Option 2', { ignore: 'option' })).toBeNull();
 
-        userEvent.click(screen.getByText('Option 1', { ignore: 'option' }));
+    userEvent.click(screen.getByText('Option 1', { ignore: 'option' }));
 
-        const option2 = await screen.findByText('Option 2', { ignore: 'option' });
-        expect(option2).toBeVisible();
-    });
+    const option2 = await screen.findByText('Option 2', { ignore: 'option' });
+    expect(option2).toBeVisible();
+});
 
-    it('should close the menu when an option is selected', async () => {
-        // Render the Autocomplete component
-        const { getByRole } = render(<Autocomplete options={options} value="" onChange={() => {}} placeholder="Select an option" />);
+it('should close the menu when an option is selected', async () => {
+    // Render the Autocomplete component
+    const { getByRole } = render(<Autocomplete options={options} value="" onChange={() => {}} placeholder="Select an option" />);
 
-        // Open the dropdown menu
-        await userEvent.click(getByRole('combobox'));
+    // Open the dropdown menu
+    await userEvent.click(getByRole('combobox'));
 
-        const option2 = screen.getByText('Option 2');
-        expect(option2).toBeInTheDocument();
-        userEvent.click(option2);
+    const option2 = screen.getByText('Option 2');
+    expect(option2).toBeInTheDocument();
+    await userEvent.click(option2);
 
-        waitFor(() => {
-            expect(screen.queryByText('Option 1', { ignore: 'option' })).toBeNull();
-        });
+    waitFor(() => {
+        expect(screen.queryByText('Option 1', { ignore: 'option' })).toBeNull();
     });
 });

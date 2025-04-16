@@ -10,7 +10,6 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:import/recommended',
     'plugin:storybook/recommended',
-    'next/typescript',
     'prettier',
     'plugin:@typescript-eslint/recommended',
     'turbo',

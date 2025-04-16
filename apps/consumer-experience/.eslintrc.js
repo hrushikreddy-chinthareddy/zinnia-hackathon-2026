@@ -10,7 +10,7 @@ module.exports = {
       }
     }
   },
-  extends: ['@zinnia/eslint-config/next.js'],
+  extends: ['@zinnia/eslint-config/next', 'plugin:@next/next/recommended'],
   overrides: [
     {
       files: ['**/*.stories.tsx', '*.js?(x)', '*.ts?(x)'],
