@@ -42,9 +42,10 @@ import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { NO_ASSIGNEE } from './task-management-queue-container';
-import styles from './task-management-queue.module.css';
 import TaskQueueDrawer from './task-queue-drawer';
+import { isProd } from '@deps/utils/environment.helper';
 
+import styles from './task-management-queue.module.css';
 
 type TaskQueueTableRowProps = {
     task: AssignedTask | UnassignedTask;
@@ -59,6 +60,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
     const router = useRouter();
     const [timer] = useState(performance.now());
     const policyNumber = getCaseIdentifierValue(task.identifiers, CaseIdentifier.PolicyNumber);
+    const documentNumber = getCaseIdentifierValue(task.identifiers, CaseIdentifier.DocumentNumber);
 
     const [loader, setLoader] = useState(false);
     const { taskName, taskType, createdAt, status, carrier, assignee, process } = task;
@@ -304,6 +306,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
             <TableCell>
                 <Content details={toSentenceCase(taskName)} variant={ContentVariant.BodySm} />
                 <Content className={styles.fadedText} details={toSentenceCase(process)} variant={ContentVariant.BodySm} />
+                {!isProd() && <Content details={`${t('documentNumber')} ${documentNumber || '-'}`} variant={ContentVariant.BodySm} />}
             </TableCell>
             <TableCell>
                 {SupportedTaskMap.includes(task?.taskType as TaskType) ? (
