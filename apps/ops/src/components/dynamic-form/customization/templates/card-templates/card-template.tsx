@@ -139,7 +139,7 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
                     <div className="flex items-center text-sm font-normal text-gray-300">
                         <PiiWrapper>
                             {subtitle?.field?.[0] && subtitle?.field[0]?.title ? subtitle?.field[0].title + ': ' : ''}{' '}
-                            {subtitle?.field?.[0] && formatValueByDataType(subtitle?.field?.[0]?.dataType, subtitle?.value)}
+                            {subtitle?.field?.[0] && formatValueByDataType(subtitle?.field?.[0]?.dataType, subtitle?.value || '--')}
                         </PiiWrapper>
                     </div>
                 </div>
