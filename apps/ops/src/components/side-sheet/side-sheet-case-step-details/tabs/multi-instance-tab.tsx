@@ -1,7 +1,7 @@
 import { Button } from '@zinnia/bloom/components';
 import { useTranslation, TFunction } from 'next-i18next';
 
-import { formatTimestamp, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
+import { formatTimestamp, formatTimestampTooltip, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import { ExceptionView, TaskView, GroupedExceptions } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -19,12 +19,12 @@ const getStepStatusText = (step: TransformedStep, t: TFunction): { icon: React.R
         case Statuses.Completed:
         case 'RESOLVED' as Statuses:
             return {
-                text: t('caseOverview.caseStatus.completed.statusTooltipWithDate', { date: formatTimestamp(step.updatedAt) }),
+                text: t('caseOverview.caseStatus.completed.statusTooltipWithDate', { date: formatTimestampTooltip(step.updatedAt) }),
                 icon: <CompletedIcon className="text-semantic-success" width={16} height={16} />,
             };
         case Statuses.InProgress:
             return {
-                text: t('caseOverview.caseStatus.inProgress.statusTooltipWithDate', { date: formatTimestamp(step.updatedAt) }),
+                text: t('caseOverview.caseStatus.inProgress.statusTooltipWithDate', { date: formatTimestampTooltip(step.updatedAt) }),
                 icon: <InProgressIcon className="text-semantic-info" width={16} height={16} />,
             };
         case Statuses.NotStarted:
@@ -34,7 +34,7 @@ const getStepStatusText = (step: TransformedStep, t: TFunction): { icon: React.R
             };
         case Statuses.Exception:
             return {
-                text: t('caseOverview.caseStatus.exception.statusTooltipWithDate', { date: formatTimestamp(step.updatedAt) }),
+                text: t('caseOverview.caseStatus.exception.statusTooltipWithDate', { date: formatTimestampTooltip(step.updatedAt) }),
                 icon: <ExceptionIcon className="text-semantic-error" width={16} height={16} />,
             };
         default:

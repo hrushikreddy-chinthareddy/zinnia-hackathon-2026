@@ -51,7 +51,9 @@ export const formatTimestampTooltip = (timestamp: string): string => {
     if (!time.isValid()) {
         return DEFAULT_ERROR_STRING;
     }
-    return time.tz(dayjs.tz.guess()).format('MMM D , YYYY [at] h:mma z');
+    const timeZoneAbbr = time.tz(dayjs.tz.guess()).format('z');
+    const displayAbbr = timeZoneAbbr === 'GMT+5:30' ? 'IST' : timeZoneAbbr;
+    return time.tz(dayjs.tz.guess()).format(`MMM D, YYYY [at] h:mma [${displayAbbr}]`);
 };
 
 export const formatTimestampWithYearCheck = (timestamp: string): string => {
