@@ -217,22 +217,17 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            // Create a permissions object to pass to the page, strongly typed using the enum.
-            const permissions = {
-                [UserPermission.AllowReadPolicyAdmin]: false,
-            };
+            const [allowReadPolicyAdminPermissionPromise, isAdvisorsExcelPromise] = await Promise.allSettled([
+                doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin, loggingContext),
+                checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext),
+            ]);
 
-            // We can use the enum to access the permissions object.
-            permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadPolicyAdmin,
-                loggingContext
-            );
+            const isAdvisorsExcel = isAdvisorsExcelPromise.status === 'fulfilled' ? isAdvisorsExcelPromise.value : false;
+            const allowReadPolicyAdminPermission =
+                allowReadPolicyAdminPermissionPromise.status === 'fulfilled' ? allowReadPolicyAdminPermissionPromise.value : false;
 
-            const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
-
-            // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
-            if (!isAdvisorsExcel && !permissions[UserPermission.AllowReadPolicyAdmin]) {
+            // If the user can't read Policy Admin and is not Advisor Excel, redirect to 403 Forbidden.
+            if (!isAdvisorsExcel && !allowReadPolicyAdminPermission) {
                 return {
                     redirect: {
                         destination: '/403',
