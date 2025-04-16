@@ -1,49 +1,44 @@
-import { getCookie, setCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 
-import { DEFAULT_PERMISSIONS_COOKIE, PERMISSIONS_COOKIE_NAME, PermissionsCookie } from '@deps/types/permissionsCookie';
-
-import { isHttpsEnvironment } from '../environment.helper';
-import { logWarn } from '../server-logging';
-
-const permissionsCookieOptions = {
-    maxAge: 60 * 5, // 5 mins
-    path: '/',
-    sameSite: 'lax',
-    httpOnly: true,
-    secure: isHttpsEnvironment(),
-};
+import { PERMISSIONS_COOKIE_NAME, PermissionsCookie } from '@deps/types/permissionsCookie';
 
 export const addTupleToCookie = (relation: string, tupleObject: string, result: boolean, req?: any, res?: any) => {
-    try {
-        const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res }) ?? DEFAULT_PERMISSIONS_COOKIE;
-        const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
-        if (!permissions.tuples?.[relation]) {
-            permissions.tuples[relation] = {};
-        }
-        permissions.tuples[relation][tupleObject] = result;
-        setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), {
-            req,
-            res,
-            ...permissionsCookieOptions,
-        });
-    } catch (error) {
-        logWarn('addTupleToCookie::An error occurred while adding tuple to cookie');
-    }
+    return;
+    // try {
+    //     const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res }) ?? DEFAULT_PERMISSIONS_COOKIE;
+    //     const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
+    //     if (!permissions.tuples?.[relation]) {
+    //         permissions.tuples[relation] = {};
+    //     }
+    //     permissions.tuples[relation][tupleObject] = result;
+    //     setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), {
+    //         req,
+    //         res,
+    //         maxAge: 60 * 60 * 24,
+    //         path: '/',
+    //         secure: isHttpsEnvironment(),
+    //     });
+    // } catch (error) {
+    //     logWarn('addTupleToCookie::An error occurred while adding tuple to cookie', error);
+    // }
 };
 
 export const addCarrierListToCookie = (relation: string, carrierList: string[], req?: any, res?: any) => {
-    try {
-        const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res }) ?? DEFAULT_PERMISSIONS_COOKIE;
-        const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
-        permissions.carriers[relation] = carrierList;
-        setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), {
-            req,
-            res,
-            ...permissionsCookieOptions,
-        });
-    } catch (error) {
-        logWarn('addCarrierListToCookie::An error occurred while adding carrier list to cookie');
-    }
+    return;
+    // try {
+    //     const permissionsCookie = getCookie(PERMISSIONS_COOKIE_NAME, { req, res }) ?? DEFAULT_PERMISSIONS_COOKIE;
+    //     const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
+    //     permissions.carriers[relation] = carrierList;
+    //     setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), {
+    //         req,
+    //         res,
+    //         maxAge: 60 * 60 * 24,
+    //         path: '/',
+    //         secure: isHttpsEnvironment(),
+    //     });
+    // } catch (error) {
+    //     logWarn('addCarrierListToCookie::An error occurred while adding carrier list to cookie', error);
+    // }
 };
 
 export const doesPermissionsHaveCarrierRelation = (relation: string, carrier: string, req?: any, res?: any): boolean => {
