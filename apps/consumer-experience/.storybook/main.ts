@@ -11,7 +11,7 @@ const config: StorybookConfig = {
     getAbsolutePath('@storybook/addon-onboarding'),
     getAbsolutePath('@storybook/addon-interactions'),
     getAbsolutePath('@storybook/addon-a11y'),
-    '@chromatic-com/storybook',
+    getAbsolutePath("@chromatic-com/storybook"),
   ],
 
   framework: {

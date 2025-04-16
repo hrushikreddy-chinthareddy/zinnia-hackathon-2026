@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+  padding: var(--measure-dimension-padding-2xl);
+  border-radius: var(--measure-dimension-radius-sm);
+  border-width: var(--measure-dimension-radius-xs);
+  border-style: solid;
+  border-color: var(--color-base-border-border-subtle);
+  background: var(--color-base-surface-surface-primary);
+}
+
+.chevron {
+  color: var(--color-base-icon-icon-action);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+}
+
+.header {
+  display: flex;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  gap: var(--measure-dimension-gap-sm);
+
+  &[data-state='open'] {
+    .chevron {
+      transform: rotate(180deg);
+    }
+  }
+}
