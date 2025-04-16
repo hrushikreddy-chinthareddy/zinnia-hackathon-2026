@@ -204,3 +204,12 @@ export interface AddressFormFields {
     zipCode?: string;
     defaultAddress?: boolean;
 }
+export interface ExceptionRef {
+    carrier: string;
+
+    process: string;
+    subProcess: string;
+    subNmIdDetail: string;
+
+    subNmId: string;
+}

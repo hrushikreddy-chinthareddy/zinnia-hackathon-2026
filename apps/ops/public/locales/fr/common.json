@@ -5166,6 +5166,7 @@
                 "allSectionsAreComplete": "Toutes les sections sont complètes et prêtes pour la saisie des données.",
                 "missingDetails": "Toutes les sections ne sont pas complètes."
             },
+            "selectException": "Sélectionner des exceptions",
             "view": "Voir",
             "documentId": "ID du document",
             "submit": "Soumettre",

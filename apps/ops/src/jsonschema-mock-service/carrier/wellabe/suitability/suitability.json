@@ -9,151 +9,164 @@
     "taskName": "Suitability Data Entry",
     "status": "INPROGRESS",
     "data": {
-        "financialObjectives": {
-            "purchaseReason": ["PASS_TO_BENEFICIARIES"]
-        },
-        "adminClient": null,
-        "suitabilityId": "4ab47991-90ec-437a-976d-d4a5bd194ed4",
-        "policyData": {
-            "productType": "SecureWell 7 Year MYGA",
-            "qualPlanType": "QUALIFIED",
-            "annualPaymentAmt": null,
-            "lineOfBusiness": null,
-            "productCode": "WBFDAV07"
-        },
-        "policyNumber": "ADA2501312",
-        "emailId": null,
-        "californiaResidentQuestions": null,
-        "fiscalData": {
-            "annualIncome": "100000",
-            "netWorth": "100000000",
-            "liquidNetWorth": "1000000",
-            "sourceOfIncome": ["CHECKING_SAVING_ACCOUNT"],
-            "totalAssets": "10",
-            "totalDebt": "0",
-            "annualExpenses": "0",
-            "sourceOfFunds": ["LIFETIME_INCOME"],
-            "federalTaxBand": "10",
-            "surrPeriodMaterialChangeExp": "NO"
-        },
-        "transmittingCompanyIdentifier": null,
-        "requestId": null,
-        "additionalInfo": {
-            "currentResidenceOption": "FAMILY_RESIDENCE"
-        },
-        "correlationId": "5cd17f1b-d49f-4491-9d6c-d520a770e31c",
-        "financialExperience": {
-            "rateChangeAcknowledgment": "NO",
-            "totalAnnuityValue": "0",
-            "financialProducts": {
-                "assetsDistribution": [],
-                "totalAsset": []
-            }
-        },
-        "liquidityOptions": {
-            "fundsAccessExplanation": "NO",
-            "futureDistributionMethods": [],
-            "benefitAnnuityQuestions": {
-                "planForIncomeDecreaseAfter10Years": []
-            }
-        },
-        "transmittingCompanyName": null,
-        "submittedBy": null,
-        "clientId": "WELB",
-        "userId": null,
-        "receivingCompanyName": null,
-        "investmentRiskInfo": {
-            "riskTolerance": "MODERATE_CONSERVATIVE"
-        },
-        "agentAcknowledgment": {
-            "maApplicationQuestionnaire": {
-                "soldPoliciesToApplicant": "NO"
-            }
-        },
-        "signatureInfo": [
-            {
-                "signatureRoleCode": "AGENT",
-                "signatureDate": "2025-04-01"
-            }
-        ],
-        "parties": [
-            {
-                "partyType": "PERSON",
-                "roleType": "OWNER",
-                "fullName": "Abhigyan A Anand",
-                "person": {
-                    "firstName": "Abhigyan",
-                    "middleName": "A",
-                    "lastName": "Anand",
-                    "age": "50",
-                    "martialStatus": "MARRIED",
-                    "birthCountry": "AF",
-                    "birthJurisdictionState": "AK",
-                    "gender": "MALE",
-                    "birthDate": null
-                },
-                "govtIdInfo": [
-                    {
-                        "govtId": "902502021",
-                        "govtIdType": "SSN",
-                        "govtIdExpDate": "2025-04-27"
-                    }
-                ],
-                "addresses": [
-                    {
-                        "addressType": "RESIDENCE",
-                        "line1": "8725 HORNADY DRIVE",
-                        "line2": "address 2",
-                        "city": "INDIANAPOLIS",
-                        "state": "IN",
-                        "country": "AL",
-                        "zip": "46239"
-                    }
-                ],
-                "employment": {
-                    "employmentStatus": "DISABLED",
-                    "disabilityExplanation": "disabled"
+        "details": {
+            "financialObjectives": {
+                "purchaseReason": ["PASS_TO_BENEFICIARIES"]
+            },
+            "adminClient": null,
+            "suitabilityId": "4ab47991-90ec-437a-976d-d4a5bd194ed4",
+            "policyData": {
+                "productType": "SecureWell 7 Year MYGA",
+                "qualPlanType": "QUALIFIED",
+                "annualPaymentAmt": null,
+                "lineOfBusiness": null,
+                "productCode": "WBFDAV07"
+            },
+            "policyNumber": "ADA2501312",
+            "emailId": null,
+            "californiaResidentQuestions": null,
+            "fiscalData": {
+                "annualIncome": "100000",
+                "netWorth": "100000000",
+                "liquidNetWorth": "1000000",
+                "sourceOfIncome": ["CHECKING_SAVING_ACCOUNT"],
+                "totalAssets": "10",
+                "totalDebt": "0",
+                "annualExpenses": "0",
+                "sourceOfFunds": ["LIFETIME_INCOME"],
+                "federalTaxBand": "10",
+                "surrPeriodMaterialChangeExp": "NO"
+            },
+            "transmittingCompanyIdentifier": null,
+            "requestId": null,
+            "additionalInfo": {
+                "currentResidenceOption": "FAMILY_RESIDENCE"
+            },
+            "correlationId": "5cd17f1b-d49f-4491-9d6c-d520a770e31c",
+            "financialExperience": {
+                "rateChangeAcknowledgment": "NO",
+                "totalAnnuityValue": "0",
+                "financialProducts": {
+                    "assetsDistribution": [
+                        {
+                            "productType": "",
+                            "qualificationType": "",
+                            "amount": ""
+                        }
+                    ],
+                    "totalAsset": []
                 }
             },
-            {
-                "partyType": "PERSON",
-                "roleType": "AGENT",
-                "fullName": "John B Doe",
-                "person": {
-                    "firstName": "John",
-                    "middleName": "B",
-                    "lastName": "Doe",
-                    "age": "50",
-                    "martialStatus": "MARRIED",
-                    "birthCountry": "FJ",
-                    "birthJurisdictionState": "AE",
-                    "gender": null,
-                    "birthDate": null
+            "liquidityOptions": {
+                "fundsAccessExplanation": "NO",
+                "futureDistributionMethods": [
+                    {
+                        "distributionMethods": "",
+                        "optedYears": ""
+                    }
+                ],
+                "benefitAnnuityQuestions": {
+                    "planForIncomeDecreaseAfter10Years": []
+                }
+            },
+            "transmittingCompanyName": null,
+            "submittedBy": null,
+            "clientId": "WELB",
+            "userId": null,
+            "receivingCompanyName": null,
+            "investmentRiskInfo": {
+                "riskTolerance": "MODERATE_CONSERVATIVE"
+            },
+            "agentAcknowledgment": {
+                "maApplicationQuestionnaire": {
+                    "soldPoliciesToApplicant": "NO"
+                }
+            },
+            "signatureInfo": [
+                {
+                    "signatureRoleCode": "AGENT",
+                    "signatureDate": "2025-04-01"
+                }
+            ],
+            "parties": [
+                {
+                    "partyType": "PERSON",
+                    "roleType": "OWNER",
+                    "fullName": "Abhigyan A Anand",
+                    "person": {
+                        "firstName": "Abhigyan",
+                        "middleName": "A",
+                        "lastName": "Anand",
+                        "age": "50",
+                        "martialStatus": "MARRIED",
+                        "birthCountry": "AF",
+                        "birthJurisdictionState": "AK",
+                        "gender": "MALE",
+                        "birthDate": null
+                    },
+                    "govtIdInfo": [
+                        {
+                            "govtId": "902502021",
+                            "govtIdType": "SSN",
+                            "govtIdExpDate": "2025-04-27"
+                        }
+                    ],
+                    "addresses": [
+                        {
+                            "addressType": "RESIDENCE",
+                            "line1": "8725 HORNADY DRIVE",
+                            "line2": "address 2",
+                            "city": "INDIANAPOLIS",
+                            "state": "IN",
+                            "country": "AL",
+                            "zip": "46239"
+                        }
+                    ],
+                    "employment": {
+                        "employmentStatus": "DISABLED",
+                        "disabilityExplanation": "disabled"
+                    }
                 },
-                "govtIdInfo": [
-                    {
-                        "govtId": "902502021",
-                        "govtIdType": "SSN",
-                        "govtIdExpDate": "2025-04-01"
-                    }
-                ],
-                "addresses": [
-                    {
-                        "addressType": "RESIDENCE",
-                        "line1": "987 1st St",
-                        "line2": "987 1st St",
-                        "city": "Test",
-                        "state": "WI",
-                        "country": "BW",
-                        "zip": "53001"
-                    }
-                ],
-                "employment": null
+                {
+                    "partyType": "PERSON",
+                    "roleType": "AGENT",
+                    "fullName": "John B Doe",
+                    "person": {
+                        "firstName": "John",
+                        "middleName": "B",
+                        "lastName": "Doe",
+                        "age": "50",
+                        "martialStatus": "MARRIED",
+                        "birthCountry": "FJ",
+                        "birthJurisdictionState": "AE",
+                        "gender": null,
+                        "birthDate": null
+                    },
+                    "govtIdInfo": [
+                        {
+                            "govtId": "902502021",
+                            "govtIdType": "SSN",
+                            "govtIdExpDate": "2025-04-01"
+                        }
+                    ],
+                    "addresses": [
+                        {
+                            "addressType": "RESIDENCE",
+                            "line1": "987 1st St",
+                            "line2": "987 1st St",
+                            "city": "Test",
+                            "state": "WI",
+                            "country": "BW",
+                            "zip": "53001"
+                        }
+                    ],
+                    "employment": null
+                }
+            ],
+            "applicationId": "WELLANI041120254278560002",
+            "applicationInfo": {
+                "replacementInd": "NO"
             }
-        ],
-        "applicationId": "WELLANI041120254278560002",
-        "applicationInfo": {
-            "replacementInd": "NO"
         }
     },
     "mappedExceptions": [],
