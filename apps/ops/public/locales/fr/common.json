@@ -1116,7 +1116,7 @@
             "underwritingEvaluation.underwritingDecisionAdverse": "Recevoir la décision de souscription",
             "userDecision.acceptedOffer": "Recevoir la décision d'offre",
             "userDecision.rejectedOffer": "Recevoir la décision d'offre",
-            "userDecision.expireOffer": "Recevoir la décision d'offre",
+            "userDecision.expireOffer": "Recevoir offre expiration avis",
             "userDecision.requestedOfferAmendment": "Recevoir la décision d'offre"
         },
         "stepDescriptions": {
