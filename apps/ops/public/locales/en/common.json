@@ -3545,6 +3545,7 @@
             "writingagent": "Writing Agent",
             "commissionagent": "Commission Agent",
             "secondaryAssignee": "Secondary Assignee",
+            "thirdPartyDesignee": "Third Party Designee",
             "annuitant": "Annuitant",
             "jointOwner": "Joint Owner",
             "assignee": "Assignee",

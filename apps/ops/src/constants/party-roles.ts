@@ -9,6 +9,7 @@ export enum TitleCasedPartyRole {
     Primary = 'Primary',
     RiderInsured = 'Rider Insured',
     SecondaryAssignee = 'Secondary assignee',
+    ThirdPartyDesignee = 'Third Party Designee',
     JointOwner = 'Joint Owner',
 }
 

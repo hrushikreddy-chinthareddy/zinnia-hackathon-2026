@@ -47,7 +47,7 @@ export const convertToChipText = (text: string | undefined, t: TFunction) => {
         case PartyRoleChipToText.CommissionAgent:
             return t('chipFilter.partyRole.commissionagent');
         case PartyRoleChipToText.ThirdPartyDesignee:
-            return t('chipFilter.partyRole.secondaryAssignee');
+            return t('chipFilter.partyRole.thirdPartyDesignee');
         case PartyRoleChipToText.Annuitant:
             return t('chipFilter.partyRole.annuitant');
         case PartyRoleChipToText.PrimaryOwner:

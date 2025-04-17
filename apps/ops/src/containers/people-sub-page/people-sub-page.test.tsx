@@ -1,8 +1,16 @@
-import { partyRoleOrder, TitleCasedPartyRole } from '@deps/constants/party-roles';
+import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+import { TFunction } from 'next-i18next';
+
+import { PartyRoleChipToText, partyRoleOrder, TitleCasedPartyRole } from '@deps/constants/party-roles';
 import { PartyRole, PartyType, PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
 
-import { combineNameAndRoles } from './people-sub-page.helpers';
+import { combineNameAndRoles, convertToChipText } from './people-sub-page.helpers';
 
+jest.mock('next-i18next', () => ({
+    useTranslation: () => ({
+        t: (key: string) => key,
+    }),
+}));
 
 describe('combineNameAndRoles', () => {
     const mockPolicyPartiesArr: PolicyAllOfPartiesItem[] = [
@@ -15,12 +23,12 @@ describe('combineNameAndRoles', () => {
         {
             partyId: '2',
             partyType: PartyType.TRUST,
-            fullName: 'Example Trust'
+            fullName: 'Example Trust',
         },
         {
             partyId: '3',
             partyType: PartyType.ORGANIZATION,
-            organizationCode: 'ORGCODE'
+            organizationCode: 'ORGCODE',
         },
     ];
 
@@ -28,22 +36,22 @@ describe('combineNameAndRoles', () => {
         {
             partyId: '1',
             partyRole: PartyRole.COVERAGEINSURED,
-            partyRoleId: 1
+            partyRoleId: 1,
         },
         {
             partyId: '1',
             partyRole: PartyRole.ASSIGNEE,
-            partyRoleId: 2
+            partyRoleId: 2,
         },
         {
             partyId: '2',
             partyRole: PartyRole.ASSIGNEE,
-            partyRoleId: 2
+            partyRoleId: 2,
         },
         {
             partyId: '3',
             partyRole: PartyRole.COVERAGEINSURED,
-            partyRoleId: 1
+            partyRoleId: 1,
         },
     ];
 
@@ -69,7 +77,7 @@ describe('combineNameAndRoles', () => {
                 lastName: 'Doe',
                 tags: [{ text: TitleCasedPartyRole.Assignee }, { text: TitleCasedPartyRole.RiderInsured }],
                 partyRoles: [PartyRole.COVERAGEINSURED, PartyRole.ASSIGNEE],
-                partyRoleIds: [ 1, 2],
+                partyRoleIds: [1, 2],
             },
             {
                 partyId: '2',
@@ -109,11 +117,7 @@ describe('combineNameAndRoles', () => {
     });
 
     it('should return an array with one item if policyPartiesArr and partyRolesArr have the same length of 1', () => {
-        const result = combineNameAndRoles(
-            [mockPolicyPartiesArr[0]],
-            [mockPartyRolesArr[0]],
-            mockTFunction
-        );
+        const result = combineNameAndRoles([mockPolicyPartiesArr[0]], [mockPartyRolesArr[0]], mockTFunction);
 
         expect(result).toEqual([
             {
@@ -123,8 +127,36 @@ describe('combineNameAndRoles', () => {
                 lastName: 'Doe',
                 tags: [{ text: TitleCasedPartyRole.RiderInsured }],
                 partyRoles: [PartyRole.COVERAGEINSURED],
-                partyRoleIds: [1]
+                partyRoleIds: [1],
             },
         ]);
+    });
+});
+
+describe('convertToChipText', () => {
+    it('returns DEFAULT_ERROR_STRING for empty or undefined input', () => {
+        expect(convertToChipText('', {} as TFunction)).toBe(DEFAULT_ERROR_STRING);
+        expect(convertToChipText(undefined, {} as TFunction)).toBe(DEFAULT_ERROR_STRING);
+    });
+
+    it('returns translation for known party role', () => {
+        const t = jest.fn().mockImplementation((key: string) => key);
+        expect(convertToChipText(PartyRoleChipToText.Insured, t)).toBe('chipFilter.partyRole.insured');
+        expect(convertToChipText(PartyRoleChipToText.Payee, t)).toBe('chipFilter.partyRole.payee');
+        expect(convertToChipText(PartyRoleChipToText.ThirdPartyDesignee, t)).toBe('chipFilter.partyRole.thirdPartyDesignee');
+
+        // Add more test cases for other party roles
+    });
+
+    it('returns original input for unknown party role', () => {
+        const t = jest.fn().mockImplementation((key: string) => key);
+        expect(convertToChipText('unknown', t)).toBe('unknown');
+    });
+
+    it('matches party role regardless of case', () => {
+        const t = jest.fn().mockImplementation((key: string) => key);
+        expect(convertToChipText(PartyRoleChipToText.Insured.toUpperCase(), t)).toBe('chipFilter.partyRole.insured');
+        expect(convertToChipText(PartyRoleChipToText.Payee.toLowerCase(), t)).toBe('chipFilter.partyRole.payee');
+        expect(convertToChipText(PartyRoleChipToText.ThirdPartyDesignee.toLowerCase(), t)).toBe('chipFilter.partyRole.thirdPartyDesignee');
     });
 });
