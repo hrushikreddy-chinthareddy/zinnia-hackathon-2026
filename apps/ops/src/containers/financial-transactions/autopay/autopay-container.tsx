@@ -30,7 +30,14 @@ export type AutopayContainerProps = {
     translationKeyPrefix: string;
 };
 
-const AutopayContainer = ({ arrangementType, policy, isSetUp = false, parentPage, systematicProgramReason, translationKeyPrefix }: AutopayContainerProps) => {
+const AutopayContainer = ({
+    arrangementType,
+    policy,
+    isSetUp = false,
+    parentPage,
+    systematicProgramReason,
+    translationKeyPrefix,
+}: AutopayContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: translationKeyPrefix });
     const { autopay, setAutopay } = useAutopay();
 
@@ -42,15 +49,15 @@ const AutopayContainer = ({ arrangementType, policy, isSetUp = false, parentPage
     const confirmLabel = t('confirm.label');
 
     useEffect(() => {
-        setAutopay({
-            ...autopay,
+        setAutopay(prevState => ({
+            ...prevState,
             arrangementType,
             parentPage,
             systematicProgramReason,
             translationKeyPrefix,
-            isSetUp
-        });
-    }, [arrangementType, autopay, isSetUp, parentPage, setAutopay, systematicProgramReason, translationKeyPrefix]);
+            isSetUp,
+        }));
+    }, [arrangementType, isSetUp, parentPage, setAutopay, systematicProgramReason, translationKeyPrefix]);
 
     const validateCall = async () => {
         const systematicProgram = policy.systematicPrograms?.find(sp => sp.reason === systematicProgramReason);
@@ -65,7 +72,9 @@ const AutopayContainer = ({ arrangementType, policy, isSetUp = false, parentPage
     const transactionType = useMemo(() => {
         return parentPage === ParentPage.Premiums
             ? TransactionType.SUBSEQUENT_PREMIUM
-            : isSetUp ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+            : isSetUp
+            ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP
+            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [isSetUp, parentPage]);
 
     const steps: Step[] = [
@@ -78,7 +87,7 @@ const AutopayContainer = ({ arrangementType, policy, isSetUp = false, parentPage
                     processType={Processes.SSW}
                     setState={setAutopay as StartStepSetState}
                     state={autopay}
-                    subtitle={!isSetUp && parentPage === ParentPage.Premiums ? t('start.subtitleManage') as string : undefined}
+                    subtitle={!isSetUp && parentPage === ParentPage.Premiums ? (t('start.subtitleManage') as string) : undefined}
                     title={isSetUp ? t('start.titleStart') : t('start.titleManage')}
                     trackEventProps={{ type: transactionType, step: TransactionStep.Start }}
                 />

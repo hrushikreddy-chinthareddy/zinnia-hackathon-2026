@@ -1,12 +1,12 @@
-import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
-import { useMemo } from "react";
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { useMemo } from 'react';
 
-import CardInfo from "@deps/components/card/card-info/card-info";
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
-import { PiiWrapper } from "@deps/components/pii/PiiWrapper";
-import { TranslationFiles } from "@deps/config/translations";
-import { numberFormatify } from "@deps/helpers/numbers.helper";
+import CardInfo from '@deps/components/card/card-info/card-info';
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import { TranslationFiles } from '@deps/config/translations';
+import { numberFormatify } from '@deps/helpers/numbers.helper';
 
 interface ConfirmProps {
     amount: number;
@@ -25,7 +25,9 @@ const ConfirmCard = ({ amount, caseId, isNigo, parentPage, payorPayeeName, type 
         if (isNigo) {
             return (
                 <>
-                    <PiiWrapper className="font-bold">{payorPayeeName}'s {numberFormatify(amount)} </PiiWrapper>
+                    <PiiWrapper className="font-bold">
+                        {payorPayeeName}'s {numberFormatify(amount)}{' '}
+                    </PiiWrapper>
                     <span className="font-bold">{type}</span>
                     {t('subtitle.wasReceivedNigo')}
                 </>
@@ -47,12 +49,16 @@ const ConfirmCard = ({ amount, caseId, isNigo, parentPage, payorPayeeName, type 
 
     return (
         <CardInfo
-            cta={caseId ? {
-                action: () => {
-                    router.push(`/cases/${caseId}/progress`);
-                },
-                text: t('cta'),
-            } : undefined}
+            cta={
+                caseId
+                    ? {
+                          action: () => {
+                              router.push(`/cases/${caseId}/progress`);
+                          },
+                          text: t('cta'),
+                      }
+                    : undefined
+            }
             secondaryCta={
                 <NavElement
                     aria-label={t('secondaryCta') as string}
@@ -68,6 +74,6 @@ const ConfirmCard = ({ amount, caseId, isNigo, parentPage, payorPayeeName, type 
             title={t('title')}
         />
     );
-}
+};
 
 export default ConfirmCard;

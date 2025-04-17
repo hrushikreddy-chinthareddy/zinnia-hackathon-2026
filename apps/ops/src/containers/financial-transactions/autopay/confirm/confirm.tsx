@@ -1,6 +1,6 @@
 import { SystematicProgram } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
@@ -20,14 +20,7 @@ interface ConfirmProps {
 
 const Confirm = ({ policy }: ConfirmProps) => {
     const { autopay } = useAutopay();
-    const {
-        parentPage,
-        translationKeyPrefix,
-        paymentAmount,
-        caseId,
-        payorFullName,
-        validationResponse,
-    } = autopay;
+    const { parentPage, translationKeyPrefix, paymentAmount, caseId, payorFullName, validationResponse } = autopay;
 
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.confirm` });
     const { t: defaultT } = useTranslation();
@@ -41,7 +34,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
 
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
 
-    const submit = useCallback(async () => {
+    const submit = async () => {
         setIsLoading(true);
 
         const systematicProgram = policy.systematicPrograms?.find(sp => sp.reason === autopay.systematicProgramReason);
@@ -59,11 +52,11 @@ const Confirm = ({ policy }: ConfirmProps) => {
         }
 
         setIsLoading(false);
-    }, [policy.systematicPrograms, policyNumber, product?.planCode]);
+    };
 
     useEffect(() => {
         submit();
-    }, [submit]);
+    }, []);
 
     if (isLoading) {
         return (
