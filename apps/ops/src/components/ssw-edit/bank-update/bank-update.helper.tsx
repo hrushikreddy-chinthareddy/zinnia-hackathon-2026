@@ -62,9 +62,10 @@ export const accountTypeOptions = (t: TFunction) => [
 
 const isVoidCheckFieldApplicable = (clientCode: string) => {
     switch (clientCode) {
-        //TODO:  DEPU-4170 DEPU-4370 DEPU-4379
-        // case Carrier.DLIC:
-        //     return false;
+        case Carrier.DLIC:
+            return false;
+        case Carrier.USAA:
+            return false;
         case Carrier.GLCO:
             return false;
         case Carrier.ULPC:
@@ -76,9 +77,10 @@ const isVoidCheckFieldApplicable = (clientCode: string) => {
 
 const isSecurityRequirementsFieldApplicable = (clientCode: string) => {
     switch (clientCode) {
-        //TODO:  DEPU-4170 DEPU-4370 DEPU-4379
-        // case Carrier.DLIC:
-        //     return false;
+        case Carrier.DLIC:
+            return false;
+        case Carrier.USAA:
+            return false;
         case Carrier.GLCO:
             return false;
         case Carrier.ULPC:
