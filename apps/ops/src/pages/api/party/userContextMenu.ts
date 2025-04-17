@@ -1,9 +1,9 @@
 import { getAccessToken, getSession } from '@auth0/nextjs-auth0';
 import { PartyReferenceDataModel } from '@zinnia/api-types/types/partyreference';
 import { IconType } from '@zinnia/bloom/components';
-import { checkIsSuperAdminSsr } from '@zinnia/utils';
 import { AxiosResponse } from 'axios';
 
+import { checkTupleApi } from '@deps/queries/api/server/fga/checkTuple';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { isWellabeAgent } from '@deps/utils/agent-helper';
@@ -46,7 +46,7 @@ export default withAuthAndLogging(
                     },
                     loggingContext
                 ),
-                await checkIsSuperAdminSsr({ partyId, accessToken }),
+                await checkTupleApi(req, res, 'party', 'role:zinnia_super_admin', loggingContext),
             ]);
 
             // Carrier check for wellabe agents
@@ -89,7 +89,7 @@ export default withAuthAndLogging(
             } else {
                 if (isSuperAdmin.value) {
                     responseData.push({
-                        href: process.env.NEXT_PUBLIC_ACCESS_MANAGEMENT_URL as string,
+                        href: process.env.ACCESS_MANAGEMENT_URL as string,
                         content: 'Access Management',
                         icon: IconType.SHIELD,
                     });

@@ -19,9 +19,10 @@ export const isWellabeAgent = (partyRefData: PartyReferenceDataModel): boolean =
  * @returns An array of aliases that represent the agents for the given carrier
  */
 export const findCarrierAgents = (partyRefData: PartyReferenceDataModel, carrier: string): AliasModel[] => {
-    const agents = partyRefData.alias.filter(v => {
-        return v.carrier?.toLowerCase() === carrier.toLowerCase() && v.partyRoles?.includes('PRIMARYSERVICINGAGENT');
-    });
+    const agents =
+        partyRefData.alias?.filter(v => {
+            return v.carrier?.toLowerCase() === carrier.toLowerCase() && v.partyRoles?.includes('PRIMARYSERVICINGAGENT');
+        }) || [];
 
     return agents;
 };

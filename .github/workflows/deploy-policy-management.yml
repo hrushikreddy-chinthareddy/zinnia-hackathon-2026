@@ -49,7 +49,6 @@ jobs:
             ${{ env.ECR_REGISTRY }}/${{ vars.ECR_REPOSITORY_POLICY_MANAGEMENT }}:${{ env.IMAGE_TAG }}
             ${{ env.ECR_REGISTRY }}/${{ vars.ECR_REPOSITORY_POLICY_MANAGEMENT }}:latest
           build-args: |
-            NEXT_PUBLIC_ACCESS_MANAGEMENT_URL=${{ vars.NEXT_PUBLIC_ACCESS_MANAGEMENT_URL }}
             NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL_OPS }}
             NEXT_PUBLIC_BASE_URL=${{ vars.NEXT_PUBLIC_BASE_URL_OPS }}
             NEXT_PUBLIC_SE2_BACKEND_URL=${{ vars.NEXT_PUBLIC_SE2_BACKEND_URL_OPS }}

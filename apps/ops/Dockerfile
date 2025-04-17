@@ -28,7 +28,6 @@ RUN pnpm i
 # Build the project
 COPY --from=builder /app/out/full/ .
 
-ARG NEXT_PUBLIC_ACCESS_MANAGEMENT_URL
 ARG NEXT_PUBLIC_BACKEND_URL
 ARG NEXT_PUBLIC_BASE_URL
 ARG NEXT_PUBLIC_SE2_BACKEND_URL
@@ -45,7 +44,6 @@ ARG DATADOG_API_KEY
 
 # Save the public enviroment variables NEXTjs requires for the frontend.
 # THESE SHOULD NOT BE SECRETS
-RUN echo "NEXT_PUBLIC_ACCESS_MANAGEMENT_URL=${NEXT_PUBLIC_ACCESS_MANAGEMENT_URL}" >> .env.production
 RUN echo "NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}" >> .env.production
 RUN echo "NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}" >> .env.production
 RUN echo "NEXT_PUBLIC_SE2_BACKEND_URL=${NEXT_PUBLIC_SE2_BACKEND_URL}" >> .env.production
