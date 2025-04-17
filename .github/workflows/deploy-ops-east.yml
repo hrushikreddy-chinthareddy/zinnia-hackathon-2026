@@ -61,7 +61,6 @@ jobs:
             NEXT_PUBLIC_GOOGLEANALYTICS_ENV=${{ vars.NEXT_PUBLIC_GOOGLEANALYTICS_ENV }}
             NEXT_PUBLIC_GIT_SHA=${{ github.sha }}
             NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY=${{ vars.NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY }}
-            NEXT_PUBLIC_DATA_API_BASE_URL=${{ vars.NEXT_PUBLIC_DATA_API_BASE_URL }}
           secrets: |
             "npmtoken=${{ secrets.GITHUB_TOKEN }}"
             "DATADOG_API_KEY=${{ secrets.DATADOG_API_KEY }}"
