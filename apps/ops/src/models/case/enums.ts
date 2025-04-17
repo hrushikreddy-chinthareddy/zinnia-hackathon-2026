@@ -23,6 +23,7 @@ export enum SswUpdateOption {
     RMD_UPDATE = 'RMD Update',
     EFT_DRAW_UPDATE = 'EFT Draw Update',
     NEW = 'New',
+    WITHHOLDING_UPDATE = 'Withholding Update',
 }
 export enum ContributionType {
     Contribution = 'Contribution',

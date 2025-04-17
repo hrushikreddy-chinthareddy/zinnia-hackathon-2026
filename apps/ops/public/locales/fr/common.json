@@ -2222,6 +2222,20 @@
             "bankUpdate": {
                 "title": "Détails bancaires"
             },
+            "withholdingUpdate": {
+                "title": "Mise à jour de la retenue",
+                "back": "Retour à la création de tâche",
+                "submit": "Soumettre",
+                "cancel": "Annuler",
+                "successTitle": "Succès",
+                "submitted": "Soumis!",
+                "failed": "Quelque chose s'est mal passé",
+                "successMessage": "La demande de mise à jour de la retenue a été soumise.",
+                "errorMessage": "Une erreur s'est produite lors de la soumission de cette tâche. Veuillez réessayer.",
+                "formValidation": {
+                    "signaturePresentOptionMustBeSelected": "L'option de présence de signature doit être sélectionnée"
+                }
+            },
             "cancel": "Annuler",
             "cancelConfirm": "Revenir à la création du dossier effacera votre brouillon. Êtes-vous sûr de vouloir revenir à la création du dossier ?",
             "cancelError": "Une erreur s'est produite lors de l'annulation de cette tâche. Veuillez réessayer.",

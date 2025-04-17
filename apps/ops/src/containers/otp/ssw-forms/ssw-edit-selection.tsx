@@ -29,6 +29,10 @@ export const sswUpdateOptions = (t: TFunction) => [
         label: t('sswUpdateOptions.eftDrawUpdate'),
         value: SswUpdateOption.EFT_DRAW_UPDATE,
     },
+    {
+        label: t('sswUpdateOptions.withholdingUpdate'),
+        value: SswUpdateOption.WITHHOLDING_UPDATE,
+    },
 ];
 
 const SswEditSelection = () => {
@@ -58,6 +62,11 @@ const SswEditSelection = () => {
             case SswUpdateOption.EFT_DRAW_UPDATE: {
                 setLoading(true);
                 router.push(`/ssw-edit/ssw-update?taskId=${initialForm?.taskId}&programType=EFT`);
+                break;
+            }
+            case SswUpdateOption.WITHHOLDING_UPDATE: {
+                setLoading(true);
+                router.push(`/ssw-edit/withholding-update?taskId=${initialForm?.taskId}`);
                 break;
             }
         }

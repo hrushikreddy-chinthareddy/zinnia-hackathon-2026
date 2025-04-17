@@ -2235,6 +2235,17 @@
             "bankUpdate": {
                 "title": "Bank Details"
             },
+            "withholdingUpdate": {
+                "title": "Withholding Update",
+                "back": "Back to create task",
+                "submit": "Submit",
+                "cancel": "Cancel",
+                "successTitle": "Success ",
+                "submitted": "Submitted!",
+                "failed": "Something went wrong",
+                "successMessage": "Withholding Update Request has been submitted.",
+                "errorMessage": "An error occurred while submitting this task. Please try again."
+            },
             "cancel": "Cancel",
             "cancelConfirm": "Returning to create case will delete your draft. OK to return to create case?",
             "cancelError": "An error occurred while cancelling this task. Please try again.",
@@ -2437,7 +2448,11 @@
                 "rmdUpdate": "RMD Update",
                 "sswUpdate": "SSW Update",
                 "bankUpdate": "Bank Update",
-                "eftDrawUpdate": "EFT Draw Update"
+                "eftDrawUpdate": "EFT Draw Update",
+                "withholdingUpdate": "Withholding Update",
+                "formValidation": {
+                    "signaturePresentOptionMustBeSelected": "Signature present option must be selected"
+                }
             },
             "sswRequest": "SSW Request"
         }
