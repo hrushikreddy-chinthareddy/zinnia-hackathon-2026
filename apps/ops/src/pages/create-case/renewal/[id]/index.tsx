@@ -25,13 +25,14 @@ import { deStringifyTrueFalseNull } from '@deps/helpers/string.helper';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
 import { ActiveRenewalCase, Carrier } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeRenewalTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
-import { searchPolicySSR } from '@deps/queries/api/policies';
+import { getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
@@ -42,7 +43,6 @@ import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLoggi
 
 import { ERROR_CODES } from '../../error';
 
-
 interface RenewalCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
     form: ActiveRenewalCase;
@@ -52,6 +52,7 @@ interface RenewalCaseProps extends SegmentTrackedPageProps {
     clientId: string;
     caseId: string;
     planCode: string;
+    parties: LifeCadParty[];
 };
 
 const DefaultSidebarContent = {
@@ -69,7 +70,7 @@ const getFormComponentMap = (): Record<string, React.ReactNode> => ({
     [Carrier.DLIC]: <DlicRenewalForm />,
 });
 
-export default function RenewalCase({ document, form, featureFlagDecisions, user, caseId, userId, planCode }: RenewalCaseProps) {
+export default function RenewalCase({ document, form, featureFlagDecisions, user, caseId, userId, planCode, parties }: RenewalCaseProps) {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const router = useRouter();
     const { clientId, clientIdOverride, action } = router.query;
@@ -166,7 +167,7 @@ export default function RenewalCase({ document, form, featureFlagDecisions, user
                             <form className="rounded bg-white p-4 text-gray-900 md:p-6 lg:p-8">
                                 <RenewalFormProvider
                                     initialForm={form}
-                                    parties={[]}
+                                    parties={parties}
                                     form={form}
                                     userId={userId}
                                     document={document}
@@ -302,11 +303,16 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
 
+                const parties = document?.contract
+                ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
+                : [];
+
                 return {
                     props: {
                         ...translations,
                         document,
                         form,
+                        parties: Array.isArray(parties) ? parties : [],
                         locale,
                         featureFlagDecisions,
                         user,
