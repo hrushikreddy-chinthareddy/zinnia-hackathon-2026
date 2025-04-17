@@ -1549,6 +1549,9 @@
             }
         },
         "request": {
+            "formTitles": {
+                "standard": "{{carrier}} Renewal Request"
+            },
             "callReceivedDate": "Call received date",
             "callReceivedDateError": "Call received date is required",
             "callValidation": "Call Validation",
@@ -2278,7 +2281,7 @@
             }
         },
         "sidebar": {
-            "contractStatusCode": "Policy Status",
+            "contractStatusCode": "Policy status",
             "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Case",
             "abbreviatedContractId": "Cont.",
@@ -2287,9 +2290,9 @@
             "abbreviatedIssueDate": "Issue.",
             "abbreviatedOwnerName": "Own.",
             "abbreviatedAnnuitantName": "Ann.",
-            "abbreviatedContractValue": "Ctr Val.",
+            "abbreviatedContractValue": "Ctr val.",
             "qualType": "Qualification type",
-            "contractValue": "Contract Value",
+            "contractValue": "Contract value",
             "issueDate": "Issue date",
             "contractId": "Contract id",
             "ownerName": "Owner Name",
@@ -5067,7 +5070,7 @@
             "title": "Submitted!",
             "subTitle": "Your request has been sent for processing.",
             "subTitleReindexing": "This document will be re-indexed. The existing case had been cancelled.",
-            "cta": "Go to case management",
+            "cta": "Go to TransactionOps Suite",
             "secondaryCta": "Close",
             "submitNigo": "Submit NIGO details",
             "submitTask": "Submit task details"
@@ -5133,7 +5136,8 @@
                 "oft": "{{carrier}} Outgoing Funds Transfer Request",
                 "ssw": "{{carrier}} Systematic Withdrawal Request",
                 "rmd": "{{carrier}} Required Minimum Distribution Request",
-                "defaultTitle": "Form Entry"
+                "defaultTitle": "Form Entry",
+                "renewal": "{{carrier}} Renewal Request"
             }
         }
     },

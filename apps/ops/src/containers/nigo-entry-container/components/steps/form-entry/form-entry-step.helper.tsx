@@ -9,6 +9,9 @@ import RSLNOftWithdrawalForm from '@deps/containers/otp/oft-forms/rsln/rsln-oft-
 import SbgcOftWithdrawalForm from '@deps/containers/otp/oft-forms/sbgc/sbgc-oft-form';
 import UlpcOftWithdrawalForm from '@deps/containers/otp/oft-forms/ulpc/ulpc-oft-form';
 import UsaaOftWithdrawalForm from '@deps/containers/otp/oft-forms/usaa/usaa-oft-form';
+import DlicRenewalForm from '@deps/containers/otp/renewal-forms/dlic-form';
+import MassRenewalForm from '@deps/containers/otp/renewal-forms/mass-mutual-form';
+import SbgcRenewalForm from '@deps/containers/otp/renewal-forms/sbgc-form';
 import DlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/dlic/dlic-rmd-form';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
 import GdmnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/gdmn/gdmn-rmd-form';
@@ -109,6 +112,13 @@ const getSSWFormComponentMap = (qualType: QualTypes | '', planCode?: string): Re
     [Carrier.DLIC]: <DlicSSWForm planCode={planCode} />,
 });
 
+
+const getRenewalFormComponentMap = (): Record<string, React.ReactNode> => ({
+    [Carrier.SBGC]: <SbgcRenewalForm />,
+    [Carrier.MASS]: <MassRenewalForm />,
+    [Carrier.DLIC]: <DlicRenewalForm />,
+});
+
 export const getFormParts = (caseType: CaseType, clientCode: string, qualType: QualTypes | '', planCode: string = '') => {
     let formParts;
     switch (caseType) {
@@ -123,6 +133,9 @@ export const getFormParts = (caseType: CaseType, clientCode: string, qualType: Q
             break;
         case CaseType.Rmd:
             formParts = determineFormToRender(clientCode, getRMDFormComponentMap(qualType));
+            break;
+        case CaseType.Renewal:
+            formParts = determineFormToRender(clientCode, getRenewalFormComponentMap());
             break;
     }
     return formParts;

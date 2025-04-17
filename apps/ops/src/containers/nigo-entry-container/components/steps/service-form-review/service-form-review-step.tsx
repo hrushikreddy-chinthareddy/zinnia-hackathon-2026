@@ -50,7 +50,7 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
 
     const { formSource, setFormSource, setFormData, formSubtype, setFormReindexingData, setFormNigos, formNigos, formComment, setFormComment } = formState;
     const caseType = getCaseType(docType as string);
-    const carrier = clientCode.toUpperCase();
+    const carrier = clientCode?.toUpperCase();
     const [isLoading, setIsLoading] = useState(false);
     const [timer] = useState(performance.now());
     const filteredNigoException = nigoExceptions?.find(nigoException => nigoException.label === 'Case routed for manual processing');

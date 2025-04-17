@@ -47,7 +47,10 @@ export default function MassRenewalForm() {
             {planCode === '723' ? (
                 <RenewalPeriodMultiSection isFormStateReadOnly={isFormStateReadOnly} options={transList} planCode={planCode} />
             ) : (
-                <RenewalPeriodSingleSection isFormStateReadOnly={isFormStateReadOnly} options={periodRadioItems} />
+                <RenewalPeriodSingleSection
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    options={periodRadioItems}
+                />
             )}
             <hr className="my-4 h-0.5 border-none bg-gray-100 px-4" />
             {channel === Channel.Phone && <CallReceiveDate isFormStateReadOnly={isFormStateReadOnly} />}

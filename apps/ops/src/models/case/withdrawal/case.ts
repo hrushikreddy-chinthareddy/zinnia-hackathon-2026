@@ -4,7 +4,8 @@ import { RelationshipToCoveredPerson } from '@deps/containers/otp/ssw-forms/sbgc
 import { WithdrawalTaskStatus } from '@deps/contexts/OtpWithdrawalFormContext';
 
 import { SignatureValidationTypeWithdrawal } from '../renewal/signature-validation';
-import { TaskType } from '../task';
+import { RenewalsFormData, TaskType } from '../task';
+import { TaskStatus } from '../task-instance';
 
 // Form data as it comes back from the get digital form API
 export interface DigitalFormWithdrawal {
@@ -169,6 +170,18 @@ export interface ActiveWithdrawalCase extends DigitalFormWithdrawal {
     caseId: string;
     createdDate: string; // ISO Date String,
     data: ActiveWithdrawalCaseData;
+    source: string;
+    taskId: string;
+    updatedDate: string; // ISO Date String
+}
+
+export interface ActiveRenewalCase {
+    caseId: string;
+    taskType: TaskType;
+    taskName: string;
+    carrier: string;
+    status: TaskStatus;
+    data: RenewalsFormData;
     source: string;
     taskId: string;
     updatedDate: string; // ISO Date String

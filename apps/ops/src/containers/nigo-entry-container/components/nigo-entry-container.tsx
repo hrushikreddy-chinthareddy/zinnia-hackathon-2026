@@ -216,7 +216,7 @@ const NigoEntryContainer = ({
             {
                 ariaLabel: t('tabs.formEntry'),
                 isVisible: () => sectionOption === SelOptionType.DATA_ENTRY,
-                component: <FormEntryStep document={documentData} clientCode={clientCode} docType={docType} planCode={policy?.product?.planCode || planCode}/>,
+                component: <FormEntryStep document={documentData} clientCode={clientCode} docType={docType} planCode={policy?.product?.planCode || planCode} />,
                 screenReaderLabel: t('tabs.formEntry'),
                 index: 1,
                 text: t('tabs.formEntry'),
@@ -248,7 +248,7 @@ const NigoEntryContainer = ({
                 text: t('tabs.confirm'),
             },
         ],
-        [availableFormsTransactions, clientCode, docType, documentData, documentNumber, nigoExceptions, nigoSubExceptions, policy, sectionOption, t, taskInfoLink]
+        [availableFormsTransactions, clientCode, docType, documentData, documentNumber, nigoExceptions, nigoSubExceptions, planCode, policy, policyNumber, sectionOption, t, taskInfoLink]
     );
 
     const filteredSteps: Step[] = useMemo(

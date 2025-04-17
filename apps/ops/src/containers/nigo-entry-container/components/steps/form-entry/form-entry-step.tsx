@@ -1,6 +1,8 @@
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
-// TODO MG: why are we using next/navigation instead of next/router here?
-import { useRouter } from 'next/navigation';
+import { DEFAULT_DATE_FORMAT } from '@zinnia/utils';
+import dayjs from 'dayjs';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useState } from 'react';
 
@@ -11,18 +13,24 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
+import { OWNER_TYPES } from '@deps/containers/otp/renewal-forms/components/renewal-form-helper';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
 import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
 import { DiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
+import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
+import { CaseType } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
+import { Channel } from '@deps/models/case/renewal/case-renewal';
+import { CreateTaskBody, RenewalsFormData, TaskSource, OwnerInformation } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { updateTask } from '@deps/queries/api/v2/task';
+import { DEFAULT_EXTENDED_DAY_DATE_FORMAT, DEFAULT_EXTENDED_MONTH_DATE_FORMAT, DEFAULT_EXTENDED_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -42,18 +50,32 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
     const { t: withdrawalTxt } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const { goToNext } = useWorkflow();
     const { qualType } = useAccountInfo(document.contract, clientCode);
+    const { user } = useUser();
     const caseType = getCaseType(docType as string);
     const formState = useContext(FormDataContext);
+    const {
+            channel,
+            renewalRequestSignDate,
+            subsequentTargetFunds,
+            formValidator: renewalFormValidator,
+            setFormErrors: renewalSetFormErrors,
+            ownerInformation,
+            transOption,
+            document: renewalDocument,
+            initialForm: renewalInitialForm,
+            contractValue
+        } = useContext(RenewalFormDataContext);
+    const { areDiaryNotesViewed } = useContext(DiaryNotesContext);
     const shouldShowNewExperience = formState.featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const isFormStateReadOnly = shouldShowNewExperience ? formState.isFormStateReadOnly : false;
     const [timer] = useState(performance.now());
-    const { areDiaryNotesViewed } = useContext(DiaryNotesContext);
+
     const { setSubmitFailed } = useNigoEntry();
 
     const formParts = getFormParts(caseType, clientCode, qualType, planCode);
     const [taskApiError, setTaskApiError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const carrier = clientCode.toUpperCase();
+    const carrier = clientCode?.toUpperCase();
     const carrierMappedText = CarrierToCarrierTitleMap[carrier];
     const carrierTitle = carrierMappedText ? carrierMappedText : carrier;
 
@@ -69,7 +91,7 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
         router.push(`/create-case/error?errorCode=${ERROR_CODES.WITHDRAWAL_FORM_CREATION}`);
     }
 
-    const validateForm = () => {
+    const validateOTPForm = () => {
         const {
             formValidator,
             setFormErrors,
@@ -115,30 +137,130 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
         return Object.keys(errors).length === 0;
     };
 
-    const submit = useCallback(async () => {
-        setIsLoading(true);
-        if (
-            TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 &&
-            formState.initialForm.status !== TaskStatus.Completed
-        ) {
-            const successfulCaseUpdate = await updateTask(
-                formState.initialForm.caseId,
-                formState.initialForm.taskId,
-                buildFormV2(TaskStatus.Completed, document, formState),
-                timer
-            );
+    const validateRenewalForm = () => {
+        const errors = renewalFormValidator({
+            ownerInformation,
+            subsequentTargetFunds,
+            renewalRequestSignDate,
+            channel,
+        });
 
-            if (successfulCaseUpdate && successfulCaseUpdate.id) {
-                setSubmitFailed(false);
+        renewalSetFormErrors({ ...errors });
+        return Object.keys(errors).length === 0; // Returns true if no error
+    };
+
+    const validateForm = () => {
+        if (caseType === CaseType.Renewal) {
+            return validateRenewalForm();
+        } else {
+            return validateOTPForm();
+        }
+    };
+
+    const getRenewalFormDataPayload = (ownerInfo: OwnerInformation[], contractVal: string | number | null, transactionOption: string | null, email: string, renewalDoc: DocumentData) => {
+        const updatedOwnerInformation = ownerInfo?.map(owner => {
+            if (OWNER_TYPES.includes(owner.type)) {
+                return {
+                    ...owner,
+                    signature: {
+                        ...owner?.signature,
+                        ...(channel === Channel.Phone && { signDate: renewalRequestSignDate }), // CMW-13965 updaing Call Received Date in signDate
+                    },
+                };
+            }
+            return owner;
+        });
+
+        const funds = subsequentTargetFunds?.map(item => {
+            return {
+                fundName: item.fundName,
+                value: item.value,
+                fundCode: item?.fundCode,
+                divisionCode: item?.divisionCode,
+            };
+        });
+
+        return {
+            channel,
+            clientCode: clientCode.toUpperCase(),
+            contractNum: renewalDoc?.contract,
+            documentNumber: renewalDoc?.documentNumber,
+            contractValue: typeof contractVal === 'string' ? null : contractVal,
+            documentReceivedDate: dayjs(renewalDoc?.documentDate, [
+                DEFAULT_DATE_FORMAT,
+                DEFAULT_EXTENDED_DAY_DATE_FORMAT,
+                DEFAULT_EXTENDED_MONTH_DATE_FORMAT,
+                DEFAULT_EXTENDED_DATE_FORMAT,
+            ]).format(ZAHARA_API_DATE_FORMAT),
+            goodOrderDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+            lob: renewalDoc?.lob,
+            onbaseCaseId: renewalDoc?.caseId,
+            ownerInformation: updatedOwnerInformation,
+            productName: renewalDoc?.productName,
+            renewalRequestSignDate, // need to handle it for FormType
+            source: 'SupportTool',
+            subsequentGuaranteePeriod: null,
+            subsequentTargetFunds: funds || null,
+            taskType: 'RenewalTransfer',
+            transOption: transactionOption,
+            userId: email ?? '',
+        }
+    };
+
+    const buildRenewalFormV2 = (
+        status: TaskStatus,
+    ): CreateTaskBody<TaskStatus, RenewalsFormData> => {
+        return {
+            source: TaskSource.ZinniaTaskManagement,
+            taskType: renewalInitialForm.taskType,
+            status,
+            data: getRenewalFormDataPayload(ownerInformation, contractValue, transOption, user?.email ?? '', renewalDocument),
+        };
+    };
+
+    const submit = useCallback(async () => {
+
+        setIsLoading(true);
+        if (caseType === CaseType.Renewal) {
+            if (renewalInitialForm.status !== TaskStatus.Completed) {
+                const successfulCaseUpdate = await updateTask(
+                    renewalInitialForm.caseId,
+                    renewalInitialForm.taskId,
+                    buildRenewalFormV2(TaskStatus.Completed),
+                    timer
+                );
+                if (successfulCaseUpdate && successfulCaseUpdate.id) {
+                    setSubmitFailed(false);
+                } else {
+                    setSubmitFailed(true);
+                }
             } else {
-                setSubmitFailed(true);
+                setSubmitFailed(false);
             }
         } else {
-            setSubmitFailed(false);
+            if (
+                TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 &&
+                formState.initialForm.status !== TaskStatus.Completed
+            ) {
+                const successfulCaseUpdate = await updateTask(
+                    formState.initialForm.caseId,
+                    formState.initialForm.taskId,
+                    buildFormV2(TaskStatus.Completed, document, formState),
+                    timer
+                );
+
+                if (successfulCaseUpdate && successfulCaseUpdate.id) {
+                    setSubmitFailed(false);
+                } else {
+                    setSubmitFailed(true);
+                }
+            } else {
+                setSubmitFailed(false);
+            }
         }
 
         setIsLoading(false);
-    }, [document, formState, setSubmitFailed, timer]);
+    }, [document, formState, setSubmitFailed, timer, renewalInitialForm, caseType]);
 
     const handleFormSubmit = async () => {
         setIsLoading(true);
@@ -172,7 +294,7 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
                     </div>
                 )}
                 {formParts}
-                <NoteSection />
+                {caseType !== CaseType.Renewal && <NoteSection /> }
                 <FormErrors t={withdrawalTxt} taskApiError={taskApiError}></FormErrors>
                 <div className="my-2">
                     {!areDiaryNotesViewed && !isFormStateReadOnly && (

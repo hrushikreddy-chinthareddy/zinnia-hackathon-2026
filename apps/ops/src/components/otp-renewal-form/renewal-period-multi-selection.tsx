@@ -21,7 +21,7 @@ interface RenewalPeriodMultiSectionProps {
 }
 
 export default function RenewalPeriodMultiSection({ options, isFormStateReadOnly, planCode }: RenewalPeriodMultiSectionProps) {
-    const { setSubsequentTargetFunds, transOption, formErrors, caseDocument } = useContext(RenewalFormDataContext);
+    const { setSubsequentTargetFunds, transOption, formErrors, document } = useContext(RenewalFormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
     const router = useRouter();
 
@@ -37,8 +37,8 @@ export default function RenewalPeriodMultiSection({ options, isFormStateReadOnly
                 setFundAllocations([]);
 
                 const fundsList = await getProductFunds({
-                    contractNumber: caseDocument?.contract,
-                    clientCode: caseDocument?.processCompanyCode,
+                    contractNumber: document?.contract,
+                    clientCode: document?.processCompanyCode,
                     planCode: planCode,
                 });
 

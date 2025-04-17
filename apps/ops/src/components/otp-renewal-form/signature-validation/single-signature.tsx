@@ -10,7 +10,7 @@ import SelectSimple from '@deps/components/select/select';
 import { SignPresent, SignatureValidationType } from '@deps/models/case/renewal/signature-validation';
 import { Signature } from '@deps/models/case/task';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 export interface SignatureFieldConfig {
     fieldName: SignatureFields;
@@ -26,16 +26,16 @@ export enum SignatureFields {
 }
 
 // set errors
-
 export function useSignatureFields(signature: Signature, errors: FormValidationErrors) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
     const [signType, setSignType] = useState<SignatureValidationType>(
         signature?.type === 'Primary' ? SignatureValidationType.Owner : (signature?.type as SignatureValidationType)
     );
-    const [signDate, setSignDate] = useState<string>('');
-    const [signPresent, setSignPresent] = useState<SignPresent>(SignPresent.Unselected);
+    const signDt = signature?.signDate ? dayjs(signature?.signDate, ZAHARA_API_DATE_FORMAT).format(NUMERIC_DATE_FORMAT) : '';
+    const [signDate, setSignDate] = useState<string>(signDt || '');
+    const [signPresent, setSignPresent] = useState<SignPresent>(signature?.signaturePresent as SignPresent|| SignPresent.Unselected);
     const [name, setName] = useState<string>(signature?.name || ''); //get name from parent
-    const [currentSignature, setCurrentSignature] = useState<Signature>({} as Signature);
+    const [currentSignature, setCurrentSignature] = useState<Signature>(signature || {} as Signature);
     const [signTitle, setSignTitle] = useState<string>(signature?.title || '');
 
     useEffect(() => {
