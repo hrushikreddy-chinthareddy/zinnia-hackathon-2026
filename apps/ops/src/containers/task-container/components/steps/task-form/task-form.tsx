@@ -128,8 +128,9 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onSubmit('');
             return;
         }
-
+        
         const taskPayload = buildTaskPayload(cleanForm(task, taskMetadata), initialTask);
+
         const success = await updateTask(taskPayload, correlationId);
 
         removeFromCache('getTaskInstance', { taskId: task.id });
