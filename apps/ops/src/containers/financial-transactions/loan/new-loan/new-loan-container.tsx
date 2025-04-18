@@ -1,32 +1,38 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import PayeesStep, { PayeesStepSetState } from '@deps/components/workflows/payees-step/payees-step';
-import PaymentStep, { PaymentStepSetState } from '@deps/components/workflows/payment-step/payment-step';
+import PaymentStep from '@deps/components/workflows/payment-step/payment-step';
+import PaymentStepMoneyOut from '@deps/components/workflows/payment-step/payment-step-money-out';
+import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
 import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useNewLoan } from '@deps/contexts/transactions/NewLoanContext';
 import { Processes } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
+import { Policy as PolicyOld } from '@deps/models/policy/sor-policy';
 import { validateNewLoan } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
 import { buildNewLoanRequestBody } from './new-loan.helpers';
 import Summary from './summary/summary';
 
-export type NewLoanContainerProps = {
+type NewLoanContainerProps = {
     policy: Policy;
 };
 
 const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'newLoan' });
     const { newLoan, setNewLoan } = useNewLoan();
+    const { featureFlags } = useOptimizely();
 
+    const wireCheckPaymentsEnabled = featureFlags[FEATURE_FLAGS.NEW_LOAN_WIRE_CHECK_PAYMENTS];
     const startLabel = t('start.label');
     const amountLabel = t('amount.label');
     const payeeLabel = t('payee.label');
@@ -35,7 +41,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
     const confirmLabel = t('confirm.label');
 
     const validateCall = () => {
-        const query = buildNewLoanRequestBody(newLoan);
+        const query = buildNewLoanRequestBody(newLoan, wireCheckPaymentsEnabled);
 
         return validateNewLoan(policy.product?.planCode, policy.policyNumber, query);
     };
@@ -46,7 +52,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
             component: (
                 <StartStep
                     parentPage={ParentPage.Loans}
-                    policy={policy}
+                    policy={policy as PolicyOld}
                     processType={Processes.Loan}
                     setState={setNewLoan as StartStepSetState}
                     state={newLoan}
@@ -84,14 +90,24 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
         {
             ariaLabel: paymentLabel,
             component: (
-                <PaymentStep
-                    parentPage={ParentPage.Loans}
-                    policy={policy}
-                    setState={setNewLoan as PaymentStepSetState}
-                    state={newLoan}
-                    validateTransaction={validateCall}
-                    trackEventProps={{ type: TransactionType.NEW_LOAN, step: TransactionStep.Payment }}
-                />
+                wireCheckPaymentsEnabled
+                    ? (
+                        <PaymentStepMoneyOut
+                            parentPage={ParentPage.Loans}
+                            policy={policy}
+                            setState={setNewLoan as PaymentStepSetState}
+                            state={newLoan}
+                            validateTransaction={validateCall}
+                        />
+                    ) : (
+                        <PaymentStep
+                            parentPage={ParentPage.Loans}
+                            policy={policy}
+                            setState={setNewLoan as PaymentStepSetState}
+                            state={newLoan}
+                            validateTransaction={validateCall}
+                        />
+                    )
             ),
             screenReaderLabel: paymentLabel,
             index: 3,
@@ -113,7 +129,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
         },
     ];
 
-    return <WorkflowContainer policy={policy} steps={steps} />;
+    return <WorkflowContainer policy={policy as PolicyOld} steps={steps} />;
 };
 
 export default NewLoanContainer;

@@ -31,7 +31,6 @@ const ApiErrorCard = ({ leaveRoute, submit }: ApiErrorCardProps) => {
                 secondaryCta={
                     <NavElement
                         aria-label={t('leaveTransaction') as string}
-                        // TODO MG: not working - updates url but page doesnt navigate
                         onClick={() => router.push(leaveRoute)}
                         size={NavElementSize.Small}
                         type={NavElementType.Button}

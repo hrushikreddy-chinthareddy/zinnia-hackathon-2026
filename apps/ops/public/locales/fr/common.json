@@ -4936,15 +4936,31 @@
             "missingSelection": "Sélectionnez un document (ou continuez sans) pour continuer."
         },
         "paymentStep": {
-            "add": "Ajouter de nouveaux détails bancaires",
-            "error": "Sélectionnez un compte bancaire pour effectuer ce paiement.",
-            "heading": "Méthode de paiement",
-            "label": "Sélectionnez le compte de paiement",
+            "addAddress": "Ajouter de nouveaux détails d'adresse",
+            "addBank": "Ajouter de nouvelles coordonnées bancaires",
+            "addressDetailsLabel": "Détails de l'adresse",
+            "addressError": "Sélectionnez une adresse pour effectuer ce paiement.",
+            "bankError": "Sélectionnez un compte bancaire pour effectuer ce paiement.",
+            "paymentMethodError": "Sélectionnez un mode de paiement pour effectuer ce paiement.",
+            "heading": "Mode de paiement",
+            "label": "Sélectionner le compte de paiement",
+            "moneyOutLabel": "Où devons-nous envoyer le paiement?",
             "bankDataCard": {
                 "accountNumber": "Numéro de compte",
                 "endingIn": "Se terminant par "
             },
-            "fieldLabel": "Coordonnées bancaires"
+            "fieldLabel": "Coordonnées bancaires",
+            "paymentMethod": {
+                "ach": "ACH",
+                "check": "Chèque",
+                "fboFfc": {
+                    "label": "FBO/FFC (si disponible)",
+                    "tooltipTitle": "FBO/FFC",
+                    "tooltipBody": "FFC signifie \"Pour crédit ultérieur\" et FBO signifie \"Au bénéfice de\"."
+                },
+                "label": "Mode de paiement",
+                "wire": "Virement"
+            }
         },
         "payeesStep": {
             "add": "Ajouter une nouvelle personne ou entité",

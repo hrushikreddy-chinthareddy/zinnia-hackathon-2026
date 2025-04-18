@@ -1,18 +1,16 @@
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
-import { getOwnersTaxJurisdictionState } from '@deps/containers/financial-transactions/withdrawal/taxes/taxes.helpers';
 import { forcePositiveNumber, numberFormatify } from '@deps/helpers/numbers.helper';
 import { convertKebabedDateString, toSentenceCase } from '@deps/helpers/string.helper';
 import { getRequestedWithheldTaxesDisplay, getTaxWithheldByType } from '@deps/helpers/tax-withholdings.helper';
+import { getOwnersTaxJurisdictionState } from '@deps/helpers/transactions/taxes.helper';
 import {
     AddressType,
     AllocationOption,
     AmountType,
     DisbursementType,
     FullSurrenderQuoteResponse,
-    PartialWithdrawalOneTimeQuoteResponse,
-    PaymentForm,
     Policy,
     TaxWithholdingType,
     Transaction,
@@ -273,7 +271,7 @@ const getWithdrawalDetailsValues = (transaction: Transaction, t: TFunction, quot
 const callWithdrawalQuote = async (policy: Policy, transaction: Transaction, bankId?: string): Promise<WithdrawalQuoteResponse> => {
     const { caseId, correlationId, payeeOrBeneficiaries, taxWithholdingInstructions, transactionAmounts, transactionType } =
         transaction ?? {};
-    const { disbursementType, requestedAmount } = transactionAmounts ?? {};
+    const { disbursementType, requestedAmount, disbursementPaymentForm } = transactionAmounts ?? {};
 
     const baseRequestBody = {
         caseId: caseId,
@@ -287,19 +285,18 @@ const callWithdrawalQuote = async (policy: Policy, transaction: Transaction, ban
         transactionAmounts: {
             amountType: AmountType.AMOUNT,
             disbursementType: disbursementType,
-            disbursementPaymentForm: PaymentForm.ACH,
+            disbursementPaymentForm,
             requestedAmount: Number(requestedAmount),
         },
     };
     const requestBody = {
         ...baseRequestBody,
-        // TODO: update once we support multiple payees
         payeeOrBeneficiary: [
             {
                 allocationPercentage: payeeOrBeneficiaries?.[0]?.allocationPercentage,
                 bankId,
                 partyId: payeeOrBeneficiaries?.[0]?.partyId,
-                paymentForm: PaymentForm.ACH,
+                paymentForm: payeeOrBeneficiaries?.[0]?.paymentForm,
             },
         ],
     };
@@ -435,37 +432,4 @@ const getChargesWithoutTaxes = (charges?: TransactionChargesItem[]): number => {
         const amount = charge.chargeAmount;
         return acc + (typeof amount === 'number' ? amount : 0);
     }, 0);
-};
-
-const getWithdrawalTotalPayment = (
-    transaction: Transaction,
-    quote?: FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse
-): number => {
-    const { charges, transactionAmounts, transactionType } = transaction;
-    const { appliedAmount, disbursementType } = transactionAmounts ?? {};
-
-    const taxWithheldAmounts = quote ? quote?.taxWithheldAmounts : transaction?.taxWithheldAmounts;
-    const federalTaxWithheld =
-        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.FEDERAL)?.[0]?.withheldAmount || 0;
-    const stateTaxWithheld =
-        taxWithheldAmounts?.filter(item => item.taxWithholdingType === TaxWithholdingType.STATE)?.[0]?.withheldAmount || 0;
-    const totalChargesWithoutTaxes = getChargesWithoutTaxes(charges as TransactionChargesItem[]);
-
-    let withdrawalAmount;
-
-    if (quote?.transactionAmounts?.appliedAmount) {
-        withdrawalAmount = quote?.transactionAmounts?.appliedAmount
-            ? Math.abs(quote?.transactionAmounts?.appliedAmount)
-            : quote?.transactionAmounts?.appliedAmount;
-    } else {
-        withdrawalAmount = appliedAmount || 0;
-    }
-
-    if (status === TransactionStatus.Pending && transactionType === TransactionType.FullSurrender) {
-        return Number(quote?.payeeOrBeneficiary?.[0].disbursementAmount);
-    }
-
-    return disbursementType === DisbursementType.NET
-        ? withdrawalAmount + totalChargesWithoutTaxes + federalTaxWithheld + stateTaxWithheld
-        : withdrawalAmount - totalChargesWithoutTaxes - federalTaxWithheld - stateTaxWithheld;
 };

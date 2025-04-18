@@ -1,3 +1,5 @@
+import { FilingStatus } from '@zinnia/api-types/types/bpm';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
@@ -10,7 +12,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { buildFullNameFromParty, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { FilingStatus, PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
 

@@ -1,3 +1,4 @@
+import { DisbursementType } from '@zinnia/api-types/types/bpm';
 import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
@@ -15,7 +16,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { WithdrawalType, useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { DisbursementType } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { TransactionStep } from '@deps/types/segment-analytics';

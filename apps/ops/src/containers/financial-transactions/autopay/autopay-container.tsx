@@ -3,7 +3,8 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo } from 'react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import PaymentStep, { PaymentStepSetState } from '@deps/components/workflows/payment-step/payment-step';
+import PaymentStep from '@deps/components/workflows/payment-step/payment-step';
+import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
 import PayorStep, { PayorStepSetState } from '@deps/components/workflows/payor-step/payor-step';
 import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
 import { TranslationFiles } from '@deps/config/translations';

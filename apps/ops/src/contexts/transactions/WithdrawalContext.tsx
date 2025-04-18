@@ -1,15 +1,12 @@
+import { DisbursementType, FilingStatus, TaxWithholdingType } from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react';
 
 import { PayeesType } from '@deps/components/workflows/payees-step/payees-step';
-import { PaymentMethodType } from '@deps/components/workflows/payment-step/payment-step';
+import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
 import { AmountType } from '@deps/containers/financial-transactions/withdrawal/amount/amount';
 import { TaxesType } from '@deps/containers/financial-transactions/withdrawal/taxes/taxes';
-import { DisbursementType, FilingStatus, PaymentForm, TaxWithholdingType } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-
-// ACH is the only supported payment type for MVP
-export const ACH = PaymentForm.ACH;
 
 export enum WithdrawalType {
     Surrender = 'surrender',
@@ -32,8 +29,10 @@ const defaultValue = {
         caseId: undefined,
         disbursementType: DisbursementType.GROSS,
         effectiveDate: dayjs().format(NUMERIC_DATE_FORMAT),
+        fboFcc: undefined,
         nextPaymentDate: dayjs().format(NUMERIC_DATE_FORMAT),
         paymentAccountNumber: '',
+        paymentAddressId: '',
         paymentBankId: '',
         paymentBranchName: '',
         paymentAmount: '',

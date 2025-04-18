@@ -80,9 +80,8 @@ const StartStep = ({
                 });
                 setCaseOptions([...mappedCaseOptions, noDocument]);
             } else {
-                // TODO MG: handle
                 setCaseOptions([noDocument]);
-                // TODO MG: ensure this doesnt blow up
+
                 throw new Error(response?.data?.err ? response.data.err : 'Error fetching cases');
             }
         }

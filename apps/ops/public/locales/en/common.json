@@ -4964,15 +4964,31 @@
             "missingSelection": "Select a document (or proceed without) to continue."
         },
         "paymentStep": {
-            "add": "Add new banking details",
-            "error": "Select a bank account to make this payment.",
+            "addAddress": "Add new address details",
+            "addBank": "Add new banking details",
+            "addressDetailsLabel": "Address details",
+            "addressError": "Select an address to make this payment.",
+            "bankError": "Select a bank account to make this payment.",
+            "paymentMethodError": "Select a payment method to make this payment.",
             "heading": "Payment Method",
             "label": "Select payment account",
+            "moneyOutLabel": "Where should we send the payment?",
             "bankDataCard": {
                 "accountNumber": "Account number",
                 "endingIn": "Ending in "
             },
-            "fieldLabel": "Banking details"
+            "fieldLabel": "Banking details",
+            "paymentMethod": {
+                "ach": "ACH",
+                "check": "Check",
+                "fboFfc": {
+                    "label": "FBO/FFC (if available)",
+                    "tooltipTitle": "FBO/FFC",
+                    "tooltipBody": "FFC stands for \"For Further Credit\" and FBO stands for \"For Benefit Of\"."
+                },
+                "label":"Payment method",
+                "wire": "Wire"
+            }
         },
         "payeesStep": {
             "add": "Add new person or entity",

@@ -1,6 +1,7 @@
+import { TaxRateToUse, TaxWithholdingInstructions, TaxWithholdingType } from '@zinnia/api-types/types/bpm';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { PartyRole, Policy, TaxRateToUse, TaxWithholdingInstructions, TaxWithholdingType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 export interface Errors {

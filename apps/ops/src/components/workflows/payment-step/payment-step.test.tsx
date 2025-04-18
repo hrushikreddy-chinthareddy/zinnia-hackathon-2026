@@ -3,7 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { Policy } from '@deps/models/policy/sor-policy';
 
-import PaymentStep, { PaymentState } from './payment-step';
+import PaymentStep from './payment-step';
+import { PaymentState } from './types';
 
 jest.mock('@deps/contexts/WorkflowContainerContext', () => ({
     useWorkflow: jest.fn().mockReturnValue({

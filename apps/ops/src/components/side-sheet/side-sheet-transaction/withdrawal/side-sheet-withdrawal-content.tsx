@@ -123,7 +123,7 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
                 <div className="mt-4">
                     <table role="table" className="w-full rounded-lg">
                         {/* Hardcoded table caption
-                        TODO MG: This will need to be updated/cleared through Amelia for a11y purposes */}
+                        TODO MG: need transalations */}
                         <caption className="hidden">
                             Payee details table of withdrawal transaction stating whom received the percentage and dollar amount of the
                             withdrawn amount.

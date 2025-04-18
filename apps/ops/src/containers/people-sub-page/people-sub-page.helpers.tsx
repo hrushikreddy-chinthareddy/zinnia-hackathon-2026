@@ -18,7 +18,6 @@ interface RoleCountItem {
 }
 
 // TODO MG: move this somewhere more generic
-// Switch case for chip text translation values
 export const convertToChipText = (text: string | undefined, t: TFunction) => {
     if (text === '' || text == null) return DEFAULT_ERROR_STRING;
 

@@ -1,15 +1,17 @@
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Statuses } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { submitFreeLookCancel, TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { submitFreeLookCancel } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { buildFreeLookCancelRequestBody } from '../free-look-cancel.helper';
 
@@ -20,6 +22,9 @@ interface ConfirmProps {
 const Confirm = ({ policy }: ConfirmProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'cancelFreeLook.confirm' });
     const { t: defaultT } = useTranslation();
+    const { featureFlags } = useOptimizely();
+
+    const wireCheckPaymentsEnabled = featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
 
     const { withdrawal } = useWithdrawal();
     const [submitFailed, setSubmitFailed] = useState(false);
@@ -27,13 +32,8 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const [newCaseId, setNewCaseId] = useState<string | undefined>(withdrawal.caseId);
     const [isLoading, setIsLoading] = useState(true);
 
-    const validationSucceeded = useMemo(
-        () => withdrawal.validationResponse?.status === TransactionResponseStatus.Success,
-        [withdrawal.validationResponse]
-    );
-
     const submit = useCallback(async () => {
-        const requestBody = buildFreeLookCancelRequestBody(withdrawal);
+        const requestBody = buildFreeLookCancelRequestBody(withdrawal, wireCheckPaymentsEnabled);
         const response = await submitFreeLookCancel(policy.product?.planCode, policy.policyNumber, requestBody);
 
         if (![StatusCode.Accepted, StatusCode.Okay].includes(response.status as StatusCode)) {
@@ -76,7 +76,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             <ConfirmCard
                 caseId={newCaseId}
-                isNigo={!validationSucceeded || submitNigo}
+                isNigo={submitNigo}
                 parentPage={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/withdrawals`}
                 amount={withdrawal.amount}
                 payorPayeeName={withdrawal.payeeFullName}

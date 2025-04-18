@@ -91,7 +91,6 @@ const AddressDataCard = ({
 
     const isSelected = address.addressId === selectedId;
     const selectedClass = clsx(
-        ' w-min',
         {
             'border-primary hover:border-primary ': isSelected,
         },

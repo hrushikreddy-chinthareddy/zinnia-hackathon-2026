@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -5,11 +6,12 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useNewLoan } from '@deps/contexts/transactions/NewLoanContext';
 import { Statuses } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { submitNewLoan, TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { buildNewLoanRequestBody } from '../new-loan.helpers';
 
@@ -20,6 +22,9 @@ interface ConfirmProps {
 const Confirm = ({ policy }: ConfirmProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'newLoan.confirm' });
     const { t: defaultT } = useTranslation();
+    const { featureFlags } = useOptimizely();
+
+    const wireCheckPaymentsEnabled = featureFlags[FEATURE_FLAGS.NEW_LOAN_WIRE_CHECK_PAYMENTS];
 
     const { newLoan } = useNewLoan();
     const [submitFailed, setSubmitFailed] = useState(false);
@@ -33,7 +38,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
     );
 
     const submit = useCallback(async () => {
-        const requestBody = buildNewLoanRequestBody(newLoan);
+        const requestBody = buildNewLoanRequestBody(newLoan, wireCheckPaymentsEnabled);
         const response = await submitNewLoan(policy.product?.planCode, policy.policyNumber, requestBody);
 
         if (response.status !== StatusCode.Accepted) {
@@ -46,7 +51,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         }
 
         setIsLoading(false);
-    }, [policy.policyNumber, policy.product?.planCode, newLoan]);
+    }, [newLoan, wireCheckPaymentsEnabled, policy.product?.planCode, policy.policyNumber]);
 
     useEffect(() => {
         submit();

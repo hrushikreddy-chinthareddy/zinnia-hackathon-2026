@@ -1,14 +1,11 @@
-import { DisbursementType, FilingStatus, PaymentForm, TaxWithholdingInstructions, TaxWithholdingType } from '@zinnia/api-types/types/sor';
+import { DisbursementType, FilingStatus, TaxWithholdingInstructions, TaxWithholdingType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react';
 
 import { PayeesType } from '@deps/components/workflows/payees-step/payees-step';
-import { PaymentMethodType } from '@deps/components/workflows/payment-step/payment-step';
 import { AmountType } from '@deps/containers/financial-transactions/loan/new-loan/amount/amount';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-
-// ACH is the only supported payment type for MVP
-export const ACH = PaymentForm.ACH;
+import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
 
 export interface NewLoan extends AmountType, PayeesType, PaymentMethodType {
     caseId?: string;

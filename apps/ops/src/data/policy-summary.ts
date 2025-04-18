@@ -52,7 +52,6 @@ export const toPolicySummaryColDto = (policy: Policy, t?: TFunction): PolicySumm
     );
 
     const accountNumber = payorBankDetails?.accountNumber?.substring(payorBankDetails?.accountNumber.length - 4);
-    // TODO MG: move this to a more shared spot so were not doing it here and in the policy details map
     const fixedCostPeriodLeft =
         !isNullEmptyOrUndefined(fixedCostPeriod as number) && !isNullEmptyOrUndefined(policyYear as number)
             ? t && t('temporal.timeLeft', { timespan: translateYearOrYears((fixedCostPeriod as number) - Number(policyYear), t) })

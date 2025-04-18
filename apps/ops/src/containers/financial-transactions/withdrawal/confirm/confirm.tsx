@@ -1,3 +1,5 @@
+import { FullSurrenderRequest, PartialWithdrawalOneTimeRequest } from '@zinnia/api-types/types/bpm';
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -6,11 +8,12 @@ import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { buildWithdrawalsRequestBody } from '@deps/containers/financial-transactions/withdrawal/withdrawals.helpers';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { WithdrawalType, useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Statuses } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitFullSurrenderWithdrawal, submitPartialWithdrawalOneTime } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface ConfirmProps {
     policy: Policy;
@@ -19,6 +22,9 @@ interface ConfirmProps {
 const Confirm = ({ policy }: ConfirmProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'withdrawals.confirm' });
     const { t: defaultT } = useTranslation();
+    const { featureFlags } = useOptimizely();
+
+    const wireCheckPaymentsEnabled = featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
 
     const { withdrawal } = useWithdrawal();
     const [submitFailed, setSubmitFailed] = useState(false);
@@ -33,11 +39,11 @@ const Confirm = ({ policy }: ConfirmProps) => {
     );
 
     const submit = useCallback(async () => {
-        const requestBody = buildWithdrawalsRequestBody(withdrawal);
+        const requestBody = buildWithdrawalsRequestBody(withdrawal, wireCheckPaymentsEnabled);
         const response =
             withdrawal.type === WithdrawalType.Surrender
-                ? await submitFullSurrenderWithdrawal(policy.product?.planCode, policy.policyNumber, requestBody)
-                : await submitPartialWithdrawalOneTime(policy.product?.planCode, policy.policyNumber, requestBody);
+                ? await submitFullSurrenderWithdrawal(policy.product?.planCode, policy.policyNumber, requestBody as FullSurrenderRequest)
+                : await submitPartialWithdrawalOneTime(policy.product?.planCode, policy.policyNumber, requestBody as PartialWithdrawalOneTimeRequest);
 
         if (response.status !== StatusCode.Accepted) {
             setSubmitFailed(true);
@@ -49,7 +55,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         }
 
         setIsLoading(false);
-    }, [policy.policyNumber, policy.product?.planCode, withdrawal]);
+    }, [policy.policyNumber, policy.product?.planCode, wireCheckPaymentsEnabled, withdrawal]);
 
     useEffect(() => {
         submit();

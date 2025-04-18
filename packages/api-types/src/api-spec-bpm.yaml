@@ -1,9 +1,12 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
-  title: Zinnia Business Process Management Service
-  description: Enterprise business process management API for transactions. Handles validation and posting of transactions to Zinnia's Systems of Record.
+  title: Zinnia Policy Transactions API.
+  description: >-
+    Enterprise API for enforcing policy transactions and validations. This API
+    provides a comprehensive interface for - Policy transaction validation and
+    processing - Financial and non-financial transaction management - Policy
+    party management and updates - Systematic program management
   version: 0.1.0
-  contact: {}
 servers:
   - url: https://qa.api.zinnia.io
     description: QA Environment
@@ -63,8 +66,7 @@ paths:
         '500':
           description: Internal server error. Please check server logs for more details.
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/onetimepremium:
     post:
       tags:
@@ -99,8 +101,7 @@ paths:
         '500':
           description: Internal server error. Please check server logs for more details.
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/onetimepremium/eligibilitycheck:
     post:
       tags:
@@ -141,8 +142,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/systematicprograms/{arrangementId}/validation:
     post:
       tags:
@@ -164,7 +164,9 @@ paths:
           in: path
           required: true
           example: Arr_1
-          description: arrangementId is the unique id for the systematic programs available in the policy
+          description: >-
+            arrangementId is the unique id for the systematic programs available
+            in the policy
           schema:
             type: string
       requestBody:
@@ -192,12 +194,10 @@ paths:
               examples:
                 failure:
                   $ref: '#/components/examples/failureTransactionResponse'
-
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/systematicprograms/{arrangementId}:
     post:
       tags:
@@ -219,7 +219,9 @@ paths:
           in: path
           required: true
           example: Arr_1
-          description: arrangementId is the unique id for the systematic programs available in the policy
+          description: >-
+            arrangementId is the unique id for the systematic programs available
+            in the policy
           schema:
             type: string
       requestBody:
@@ -238,8 +240,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/systematicprograms/{arrangementId}/eligibilitycheck:
     post:
       tags:
@@ -261,7 +262,9 @@ paths:
           in: path
           required: true
           example: Arr_1
-          description: arrangementId is the unique id for the systematic programs available in the policy
+          description: >-
+            arrangementId is the unique id for the systematic programs available
+            in the policy
           schema:
             type: string
       responses:
@@ -286,13 +289,12 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/address/{addressId}:
     put:
       tags:
         - Non Financial Transactions
-      summary: End Date address if endDate is current data else End Date address and create new address bases on request
+      summary: Address Change Request
       operationId: updateAddress
       parameters:
         - name: planCode
@@ -311,14 +313,18 @@ paths:
           required: true
           schema:
             type: string
-          description: PartyId for which address need to be updated it be avaible under SOR Policy Details
+          description: >-
+            PartyId for which address need to be updated it be avaible under SOR
+            Policy Details
         - name: addressId
           in: path
           required: true
           schema:
             type: integer
             format: int32
-          description: AddressId for which address need to be updated it be avaible under SOR Policy Details
+          description: >-
+            AddressId for which address need to be updated it be avaible under
+            SOR Policy Details
       requestBody:
         required: true
         content:
@@ -344,8 +350,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/address:
     post:
       tags:
@@ -381,7 +386,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionAcceptedResponse'
-
         '400':
           description: Rules and Transaction Failure
           content:
@@ -394,8 +398,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/emailaddress:
     post:
       tags:
@@ -431,7 +434,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionAcceptedResponse'
-
         '400':
           description: Request failed due to rules failure.
           content:
@@ -444,13 +446,12 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/emailaddress/{emailId}:
     put:
       tags:
         - Non Financial Transactions
-      summary: End Date email address if endDate is current data else End Date address and create new email address bases on request
+      summary: Email Address Change Request
       operationId: updateemailAddress
       parameters:
         - name: planCode
@@ -469,7 +470,9 @@ paths:
           required: true
           schema:
             type: string
-          description: PartyId for which address need to be updated it be avaible under SOR Policy Details
+          description: >-
+            PartyId for which address need to be updated it be avaible under SOR
+            Policy Details
         - name: emailId
           in: path
           required: true
@@ -500,8 +503,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/phone:
     post:
       tags:
@@ -537,7 +539,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionAcceptedResponse'
-
         '400':
           description: Request failed due to rules failure.
           content:
@@ -550,13 +551,12 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/phone/{phoneId}:
     put:
       tags:
         - Non Financial Transactions
-      summary: End Date Phone Number if endDate is current data else End Date Phone Number and create new Phone Number bases on request
+      summary: Phone Number Change Request
       operationId: updatePhone
       parameters:
         - name: planCode
@@ -575,7 +575,9 @@ paths:
           required: true
           schema:
             type: string
-          description: PartyId for which address need to be updated it be avaible under SOR Policy Details
+          description: >-
+            PartyId for which address need to be updated it be avaible under SOR
+            Policy Details
         - name: phoneId
           in: path
           required: true
@@ -606,8 +608,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/bankaccount:
     post:
       tags:
@@ -643,7 +644,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionAcceptedResponse'
-
         '400':
           description: Request failed due to rules failure.
           content:
@@ -656,13 +656,12 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/bankaccount/{bankId}:
     put:
       tags:
         - Non Financial Transactions
-      summary: End Date Bank Account if endDate is current data else End Date Bank Account and Add new Bank Account bases on request
+      summary: Bank Account Change Request
       operationId: updateBankAccount
       parameters:
         - name: planCode
@@ -681,7 +680,9 @@ paths:
           required: true
           schema:
             type: string
-          description: PartyId for which Bank Account need to be updated it be avaible under SOR Policy Details
+          description: >-
+            PartyId for which Bank Account need to be updated it be avaible
+            under SOR Policy Details
         - name: bankId
           in: path
           required: true
@@ -712,8 +713,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/communicationpreference:
     post:
       tags:
@@ -737,7 +737,9 @@ paths:
           required: true
           schema:
             type: string
-          description: PartyId for which communication Preference need to be updated it be avaible under SOR Policy Details
+          description: >-
+            PartyId for which communication Preference need to be updated it be
+            avaible under SOR Policy Details
       requestBody:
         required: true
         content:
@@ -763,8 +765,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/partyname:
     post:
       tags:
@@ -788,7 +789,9 @@ paths:
           required: true
           schema:
             type: string
-          description: PartyId for which party name need to be updated it be avaible under SOR Policy Details
+          description: >-
+            PartyId for which party name need to be updated it be avaible under
+            SOR Policy Details
       requestBody:
         required: true
         content:
@@ -814,13 +817,16 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyRole}:
     post:
       tags:
         - Non Financial Transactions
-      summary: Add Payee/Payor/Owner/ThirdPartyDesignee/PrimaryBeneficiary/ContingentBeneficiary based on the request
+      summary: Party Add request
+      description: >-
+        Add
+        Payee/Payor/Owner/ThirdPartyDesignee/PrimaryBeneficiary/ContingentBeneficiary
+        based on the request
       operationId: addParty
       parameters:
         - name: planCode
@@ -837,7 +843,10 @@ paths:
           in: path
           required: true
           example: Payee
-          description: Party for which details are being entered. Possible values are - Owner, Payor, Payee, PrimaryBeneficiary, ContingentBeneficiary, ThirdPartyDesignee
+          description: >-
+            Party for which details are being entered. Possible values are -
+            Owner, Payor, Payee, PrimaryBeneficiary, ContingentBeneficiary,
+            ThirdPartyDesignee
           schema:
             type: string
             enum:
@@ -872,13 +881,16 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/{partyRole}:
     put:
       tags:
         - Non Financial Transactions
-      summary: Update(End date) Payee/Payor/Owner/TPD/Beneficiary and Add new Payee/Payor/Owner/ThirdPartyDesignee/PrimaryBeneficiary/ContingentBeneficiary based on the request
+      summary: Party Change request
+      description: >-
+        Update(End date) Payee/Payor/Owner/TPD/Beneficiary and Add new
+        Payee/Payor/Owner/ThirdPartyDesignee/PrimaryBeneficiary/ContingentBeneficiary
+        based on the request
       operationId: updateParty
       parameters:
         - name: planCode
@@ -900,7 +912,10 @@ paths:
           in: path
           required: true
           example: Owner
-          description: Party for which details are being entered. Possible values are - Owner, Payor, Payee, PrimaryBeneficiary, ContingentBeneficiary, ThirdPartyDesignee
+          description: >-
+            Party for which details are being entered. Possible values are -
+            Owner, Payor, Payee, PrimaryBeneficiary, ContingentBeneficiary,
+            ThirdPartyDesignee
           schema:
             type: string
             enum:
@@ -978,8 +993,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/partialwithdrawalonetime/eligibilitycheck:
     post:
       tags:
@@ -1024,8 +1038,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server log
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/partialwithdrawalonetime/validation:
     post:
       tags:
@@ -1071,8 +1084,7 @@ paths:
         '500':
           description: Internal server error. Please check server logs for more details.
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/partialwithdrawalonetime:
     post:
       tags:
@@ -1106,9 +1118,7 @@ paths:
         '500':
           description: Internal server error. Please check server logs for more details.
       security:
-        - Auth0:
-            - write:policy
-
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/fullsurrender/eligibilitycheck:
     post:
       tags:
@@ -1154,8 +1164,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server log
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/fullsurrender/validation:
     post:
       tags:
@@ -1201,8 +1210,7 @@ paths:
         '500':
           description: Internal server error. Please check server logs for more details.
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/fullsurrender:
     post:
       tags:
@@ -1236,9 +1244,7 @@ paths:
         '500':
           description: Internal server error. Please check server logs for more details.
       security:
-        - Auth0:
-            - write:policy
-
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/newloan/eligibilitycheck:
     post:
       tags:
@@ -1278,8 +1284,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server log
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/newloan/validation:
     post:
       tags:
@@ -1325,8 +1330,7 @@ paths:
         '500':
           description: Internal server error. Please check server logs for more details.
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/newloan:
     post:
       tags:
@@ -1360,9 +1364,7 @@ paths:
         '500':
           description: Internal server error. Please check server logs for more details.
       security:
-        - Auth0:
-            - write:policy
-
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/systematicprograms/validation:
     post:
       tags:
@@ -1405,12 +1407,10 @@ paths:
               examples:
                 failure:
                   $ref: '#/components/examples/failureTransactionResponse'
-
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/systematicprograms:
     post:
       tags:
@@ -1444,13 +1444,12 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/systematicprograms/eligibilitycheck:
     post:
       tags:
         - Financial Transactions
-      summary: EligibilityCheck Systematic Program  Transaction
+      summary: Eligibility Check Systematic Program Transaction
       operationId: systematicProgrameligibilitycheck
       parameters:
         - name: planCode
@@ -1463,7 +1462,6 @@ paths:
           required: true
           schema:
             type: string
-
       responses:
         '200':
           description: Eligibility Check Success Response
@@ -1486,9 +1484,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - read:policy
-
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/loanrepaymentonetime/validation:
     post:
       tags:
@@ -1531,17 +1527,15 @@ paths:
               examples:
                 failure:
                   $ref: '#/components/examples/failureTransactionResponse'
-
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - read:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/loanrepaymentonetime:
     post:
       tags:
         - Financial Transactions
-      summary: Submit loan Repymayment OneTime Transaction
+      summary: Submit loan Repayment OneTime Transaction
       operationId: loanrepaymentonetime
       parameters:
         - name: planCode
@@ -1570,13 +1564,12 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - write:policy
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/loanrepaymentonetime/eligibilitycheck:
     post:
       tags:
         - Financial Transactions
-      summary: EligibilityCheck Loan Repayment OneTimeTr ansaction
+      summary: EligibilityCheck Loan Repayment OneTime Transaction
       operationId: loanrepaymentonetimeeligibilitycheck
       parameters:
         - name: planCode
@@ -1589,7 +1582,6 @@ paths:
           required: true
           schema:
             type: string
-
       responses:
         '200':
           description: Eligibility Check Success Response
@@ -1612,9 +1604,7 @@ paths:
         '500':
           description: Unexpected error occured, please check server logs
       security:
-        - Auth0:
-            - read:policy
-
+        - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/canceltransaction:
     post:
       tags:
@@ -1648,9 +1638,618 @@ paths:
         '500':
           description: Internal server error. Please check server logs for more details.
       security:
-        - Auth0:
-            - write:policy
-
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/freelookcancellation:
+    post:
+      tags:
+        - Non Financial Transactions
+      summary: Freelook cancellation request
+      description: >-
+        If freelook endDate is less than or equal to policy effective Date,
+        cancel the policy based on the request
+      operationId: freelookcancellation
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Policy Number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FreeLookCancellationRequest'
+      responses:
+        '202':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionAcceptedResponse'
+        '500':
+          description: Unexpected error occured, please check server logs
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/reverserecreate:
+    post:
+      tags:
+        - Financial Transactions
+      summary: Request to reverse and recreate
+      operationId: reverserecreate
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Policy Number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReverseRecreateRequest'
+      responses:
+        '202':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionAcceptedResponse'
+        '500':
+          description: Unexpected error occured, please check server logs
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/deliverydatesetup/eligibilitycheck:
+    post:
+      tags:
+        - Non Financial Transactions
+      summary: Eligibility Check to Set Delivery Date
+      operationId: setDeliveryDateEligibilityCheck
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetDeliveryDateEligibilityRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                success:
+                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                failure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+        '500':
+          description: Unexpected error occured, please check server log
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/deliverydatesetup:
+    post:
+      tags:
+        - Non Financial Transactions
+      summary: Set Delivery Date Transaction
+      operationId: setDeliveryDate
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetDeliveryDateRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionAcceptedResponse'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                failure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+        '500':
+          description: Unexpected error occured, please check server log
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/edeliveryenrollment:
+    post:
+      tags:
+        - Non Financial Transactions
+      summary: EDelivery Enrollment
+      operationId: EDeliveryEnrollment
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/EDeliveryEnrollmentRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionAcceptedResponse'
+        '400':
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/TransactionFailureResponse'
+                  - $ref: '#/components/schemas/ValidationResponse'
+              examples:
+                businessRuleFailure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+                valdiationFailure:
+                  $ref: '#/components/examples/validationFailureResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/initialpremium/eligibilitycheck:
+    post:
+      tags:
+        - Non Financial Transactions
+      summary: Eligibility Check For Initial Premium
+      operationId: initialPremiumEligibility
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                success:
+                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                failure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+        '500':
+          description: Unexpected error occured, please check server log
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/initialpremium/validation:
+    post:
+      tags:
+        - Non Financial Transactions
+      summary: Validation Check For Initial Premium
+      operationId: initialPremiumValidation
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitialPremiumRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                success:
+                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                failure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+        '500':
+          description: Unexpected error occured, please check server log
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/initialpremium:
+    post:
+      tags:
+        - Non Financial Transactions
+      summary: Initial Premium Transaction
+      operationId: initialPremium
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitialPremiumRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                success:
+                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                failure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+        '500':
+          description: Unexpected error occured, please check server log
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/fundallocations/eligibilitycheck:
+    post:
+      tags:
+        - Financial Transactions
+      summary: Eligibility Check For Fund Allocation
+      operationId: fundAllocationEligibility
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                success:
+                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                failure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+        '500':
+          description: Unexpected error occured, please check server log
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/fundallocations/validation:
+    post:
+      tags:
+        - Financial Transactions
+      summary: Validation Check For Fund Allocation
+      operationId: fundAllocationValidation
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FundAllocationChangeRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                success:
+                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                failure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+        '500':
+          description: Unexpected error occured, please check server log
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/fundallocations:
+    post:
+      tags:
+        - Financial Transactions
+      summary: Fund Allocation Transaction
+      operationId: fundAllocation
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FundAllocationChangeRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                success:
+                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                failure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+        '500':
+          description: Unexpected error occured, please check server log
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/fundtransfer/eligibilitycheck:
+    post:
+      tags:
+        - Financial Transactions
+      summary: Eligibility Check For Fund Transfer
+      operationId: fundTransferEligibility
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                success:
+                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                failure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+        '500':
+          description: Unexpected error occured, please check server log
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/fundtransfer/validation:
+    post:
+      tags:
+        - Financial Transactions
+      summary: Validation Check For Fund Transfer
+      operationId: fundTransferValidation
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FundTransferRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                success:
+                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                failure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+        '500':
+          description: Unexpected error occured, please check server log
+      security:
+        - Auth0: []
+  /bpm/v1/policies/{planCode}/{policyNumber}/fundtransfer:
+    post:
+      tags:
+        - Financial Transactions
+      summary: Fund Transfer Transaction
+      operationId: fundTransfer
+      parameters:
+        - name: planCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: policyNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FundTransferRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                success:
+                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                failure:
+                  $ref: '#/components/examples/failureTransactionResponse'
+        '500':
+          description: Unexpected error occured, please check server log
+      security:
+        - Auth0: []
 components:
   schemas:
     LoanRepaymentOneTimeRequest:
@@ -1681,7 +2280,9 @@ components:
           description: Zinnia Live Case ID
         override:
           type: boolean
-          description: BPM will have to override the rules if this variable is marked as true
+          description: >-
+            BPM will have to override the rules if this variable is marked as
+            true
     PartialWithdrawalOneTimeRequest:
       type: object
       allOf:
@@ -1693,7 +2294,9 @@ components:
           description: Zinnia Live Case ID
         override:
           type: boolean
-          description: BPM will have to override the rules if this variable is marked as true
+          description: >-
+            BPM will have to override the rules if this variable is marked as
+            true
     OneTimePremiumRequest:
       type: object
       allOf:
@@ -1705,7 +2308,9 @@ components:
           description: Zinnia Live Case ID
         override:
           type: boolean
-          description: BPM will have to override the rules if this variable is marked as 'true'
+          description: >-
+            BPM will have to override the rules if this variable is marked as
+            'true'
     SystematicProgramUpdateRequest:
       type: object
       allOf:
@@ -1726,20 +2331,413 @@ components:
           description: Zinnia Live Case ID
         deleteRequest:
           type: boolean
-          description: Flag for delete or update request. If flag==true then Delete Request else Update Request
+          description: >-
+            Flag for delete or update request. If flag==true then Delete Request
+            else Update Request
           default: false
+    AdhocDisbursementParty:
+      type: object
+      properties:
+        partyRole:
+          $ref: '#/components/schemas/PartyRole'
+        partyId:
+          type: string
+          description: Pending Review by Product Team
+          example: Party_PI_1
+        paymentForm:
+          $ref: '#/components/schemas/PaymentForm'
+        allocationPercentage:
+          type: number
+          format: double
+          description: >-
+            At Policy Level for Each Applicable Fund (Everly there is only one
+            Fixed) Therefore this be 100%
+          example: 100
+        bankId:
+          type: string
+          example: Bank_1
+          description: Comes in Acord 103
+        addressId:
+          type: string
+          example: '1'
+          description: Address Id
+        forBenefitOfOrForFurtherCredit:
+          type: string
+          example: TBD
+          description: >-
+            FBO - For Benefit Of, FFC - For Further Credit. To notate a second
+            beneficiary or to designate a person or organization when funds are
+            disbursed out.
+    SetDeliveryDateEligibilityRequest:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          example: 864e43a0-2c2f-4a11-9d7f-69ed40115066
+        taxId:
+          type: string
+          example: '666911019'
+        documentType:
+          type: string
+          example: POLPG
+    SetDeliveryDateRequest:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/SetDeliveryDateEligibilityRequest'
+      properties:
+        acknowledgementDate:
+          type: string
+          format: date-time
+        reverseInitiator:
+          type: boolean
+          description: >-
+            Property to isolate source transaction(s) that initiated the
+            reversal
+    EDeliveryEnrollmentRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: preferenceId  (should be null for preference creation)
+          example: e22cd4aee27d34c9b7c748d50e558b41
+        carrierId:
+          type: string
+          description: carrier id for policy
+          example: CARRIERID_1
+        deliveryOption:
+          type: string
+          enum:
+            - EMAIL
+            - FAX
+            - MAIL
+          description: Delivery Options - Applicable values EMAIL/FAX/MAIL
+          example: EMAIL
+        email:
+          type: string
+          example: abc.def@gmail.com
+          description: User's email
+        effectiveFrom:
+          type: string
+          format: date-time
+          description: >-
+            Date (with pattern "yyyy-MM-dd'T'HH:mm:ss'Z'") when the preference
+            will be effective, default value is '2999-12-31T00:00:00.000Z'
+        effectiveTo:
+          type: string
+          format: date-time
+          description: >-
+            Date (with pattern "yyyy-MM-dd'T'HH:mm:ss'Z'") when the preference
+            will stop being effective
+        documentType:
+          type: string
+          enum:
+            - NWB
+            - ANST
+            - CONF
+            - TAX
+            - AGNT
+            - POLPG
+          description: Type of document
+          example: AGNT
+        partyId:
+          type: string
+          description: Unique reference id of the party
+          example: f22de4bff27e45d9a7c859e61f668c50
+        acknowledgedByPartyId:
+          type: string
+          description: >-
+            Party that initiated the acknowledgment (i.e. an agent, if not the
+            party referred to by partyId)
+          example: f22de4bff27e45d9a7c859e61f668c50
+      required:
+        - carrierId
+        - deliveryOption
+        - effectiveFrom
+        - documentType
+        - partyId
+        - acknowledgedByPartyId
+    InitialPremiumRequest:
+      type: object
+      properties:
+        caseId:
+          type: string
+          example: CaseAU0000002202312181421
+          description: Zinnia Live Case ID
+        correlationId:
+          type: string
+          example: 864e43a0-2c2f-4a11-9d7f-69ed40115066
+          description: The unique ID to track transaction request across all systems
+        effectiveDate:
+          type: string
+          format: date
+          example: '2023-01-01T00:00:00.000Z'
+          description: >-
+            Date when the transaction was originally scheduled or expected to
+            happen. It can be a non-business day
+        reverseInitiator:
+          type: boolean
+          default: false
+          description: >-
+            Property to isolate source transaction(s) that initiated the
+            reversal
+        transactionReason:
+          type: string
+          description: Optional Reason for this transaction
+        transactionAmounts:
+          $ref: '#/components/schemas/TransactionAmounts'
+        fundAllocation:
+          $ref: '#/components/schemas/FundAllocation'
+        exchange:
+          $ref: '#/components/schemas/TransactionExchange'
+        taxBasis:
+          $ref: '#/components/schemas/TransactionTaxBasis'
+        payor:
+          type: object
+          properties:
+            partyId:
+              type: string
+              example: Party_PI_1
+              description: Impacted Party in the event of financial transaction
+            paymentForm:
+              $ref: '#/components/schemas/PaymentForm'
+            bankId:
+              type: string
+              example: Bank_1
+              description: Comes in Acord 103
+            partyRole:
+              type: string
+              description: Party Role
+    FundAllocationChangeRequest:
+      type: object
+      properties:
+        caseId:
+          type: string
+          example: CaseAU0000002202312181421
+          description: Zinnia Live Case ID
+        correlationid:
+          type: string
+          example: 657b717b7dcf554abf9ef067
+        effectiveDate:
+          type: string
+          format: date
+          example: '2023-01-01T00:00:00.000Z'
+          description: >-
+            Date when the transaction was originally scheduled or expected to
+            happen. It can be a non-business day
+        reverseInitiator:
+          type: boolean
+          description: >-
+            Property to isolate source transaction(s) that initiated the
+            reversal
+        allocation:
+          $ref: '#/components/schemas/FundAllocation'
+    InvestmentType:
+      type: string
+      enum:
+        - INVESTMENTFUND
+        - INVESTMENTMODEL
+      description: TBD
+    TransactionExchange:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+          description: Unique number given to an exchange/transfer.
+          example: EX0000001
+        exchangeDescription:
+          $ref: '#/components/schemas/ExchangeDescription'
+        exchangeDate:
+          type: string
+          format: date
+          description: The date on which 1035 Exchange occurs
+          example: '2023-01-01T00:00:00.000Z'
+        lineOfBusiness:
+          $ref: '#/components/schemas/LineOfBusiness'
+        exchangeAmount:
+          type: number
+          format: double
+          description: Total Dollar received in 1035 Exchange
+          example: 161.81698
+        qualificationType:
+          $ref: '#/components/schemas/QualificationType'
+        costBasis:
+          type: number
+          format: double
+          description: Original cost basis of the policy being exchanged - previous Policy
+          example: 161.81698
+        modifiedEndowmentContractStatus:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: >-
+            Indicates if the original policy being exchanged is classified as
+            modifiedEndowment contract status
+        outstandingLoanRolloverAmount:
+          type: number
+          format: double
+          description: >-
+            The amount of any outstanding loan against the original policy that
+            will be rolled over into the new policy during the 1035 exchange
+          example: 161.81698
+    TransactionTaxBasis:
+      type: object
+      properties:
+        currentContributionAmount:
+          type: number
+          format: double
+          description: >-
+            Only for Qualified IRA - normally entered by Ops. It has to do with
+            contribution year.  People can submit IRA payment for the 2024 tax
+            year up until April 15, 2025 If they were to send in, say $10,000,
+            in March and say that $5,000 was 2024 and $5,000 is 2025, we'd load
+            $5,000 as a current year contribution and $5,000 as a prior year
+            contribution
+          example: 161.81698
+        currentTaxYear:
+          type: number
+          format: int32
+          description: The tax year for which the current contribution is being reported.
+          example: 1
+        priorContributionAmount:
+          type: number
+          format: double
+          description: Only for Qualified IRA - normally entered by Ops
+          example: 161.81698
+        priorTaxYear:
+          type: number
+          format: int32
+          description: Current Tax Year - Default to
+          example: 1
+        preTaxEquityAndFiscalResponsibilityActBasis:
+          type: number
+          format: double
+          description: >-
+            Cost basis established before August 14, 1982. This type of cost
+            basis will be withdrawn from an annuity before any gain (taxable
+            amount) is withdrawn
+          example: 161.81698
+        postTaxEquityAndFiscalResponsibilityActBasis:
+          type: number
+          format: double
+          description: >-
+            Cost basis established on or after August 14, 1982. This type of
+            cost basis is not withdrawn from an annuity until all gain has been
+            withdrawn
+          example: 161.81698
+        postTechnicalAndMiscellaneousRevenueActAmount:
+          type: number
+          format: double
+          description: Applies to 403b Qual type
+          example: 161.81698
+    FundAllocation:
+      type: object
+      properties:
+        investmentType:
+          $ref: '#/components/schemas/InvestmentType'
+        modelId:
+          type: string
+          description: The corresponding Model Id of the elected model
+          example: TBD
+        fundAllocationsInvestments:
+          type: array
+          items:
+            type: object
+            properties:
+              fundId:
+                type: string
+                description: TBD
+                example: FundAccount1
+              allocationPercentage:
+                type: number
+                format: double
+                description: >-
+                  At Policy Level for Each Applicable Fund (Everly there is only
+                  one Fixed) Therefore this be 100%
+                example: 100
+              startDate:
+                type: string
+                format: date
+                description: TBD
+                example: '2024-01-01T00:00:00.000Z'
+        allocationOption:
+          $ref: '#/components/schemas/AllocationOption'
+    ExchangeDescription:
+      type: string
+      enum:
+        - DEFAULT
+        - EXTERNAL1035
+        - INTERNAL1035
+        - EXTERNALDIRECTTRANSFER
+        - INTERNALDIRECTTRANSFER
+        - EXTERNALROLLOVERQUALIFIED
+        - INTERNALROLLOVERQUALIFIED
+        - EXTERNALROTHROLLOVER
+        - INTERNALROTHROLLOVER
+        - EXTERNALROTHDIRECTTRANSFER
+        - INTERNALROTHDIRECTTRANSFER
+        - BENEFITPROCEEDS
+        - CASHCONTRIBUTIONS
+        - EXTERNAL1035PARTIAL
+        - INTERNAL1035PARTIAL
+        - BIRTHORADOPTIONREPAYMENT
+      description: Indicates the type of exchange being conducted
+    LineOfBusiness:
+      type: string
+      enum:
+        - LIFE
+        - ANNUITY
+      description: Line of business annuity or life
+    QualificationType:
+      type: string
+      enum:
+        - INDIVIDUALRETIREMENTACCOUNTREGULAR
+        - INDIVIDUALRETIREMENTACCOUNTSPOUSAL
+        - INDIVIDUALRETIREMENTACCOUNTROLLOVER
+        - ROTHINDIVIDUALRETIREMENTACCOUNT
+        - CUSTODIALINDIVIDUALRETIREMENTACCOUNT
+        - CUSTODIALROTHINDIVIDUALRETIREMENTACCOUNT
+        - CUSTODIALROLLOVERINDIVIDUALRETIREMENTACCOUNT
+        - QUALIFIED
+        - NONQUALIFIED
+      description: The type of transaction added and processed
+    loanInterestType:
+      type: string
+      enum:
+        - FIXED
+        - INDEXED
+        - VARIABLE
+        - ADJUSTABLE
+      description: >-
+        Loan Interest Type - Selected by user from dropdown values, default to
+        Fixed
     TransactionAcceptedResponse:
       type: object
       properties:
         correlationId:
           type: string
+          example: 3a2a3435-2089-4b81-9959-e0d569ccf4f0
           description: Unique identifier which used by every system to trace the request
         caseId:
           type: string
+          example: CA0000369469
           description: Zinnia Live Case ID
         caseStatus:
           type: string
+          example: IN_PROGRESS
           description: Zinnia Live Case Status
+    TransactionFailureResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        validationResult:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
     TransactionResponse:
       type: object
       properties:
@@ -1759,16 +2757,16 @@ components:
       properties:
         errorCode:
           type: string
-          example: 'BPM.NM.002'
-          description: 'This is the NIGO id generated by BPM system'
+          example: BPM.NM.002
+          description: This is the NIGO id generated by BPM system
         attribute:
           type: string
         error:
           type: string
-          description: 'This is the error generated by BPM system'
+          description: This is the error generated by BPM system
         resolution:
           type: string
-          description: 'Resolution generated by BPM system to resolve the error'
+          description: Resolution generated by BPM system to resolve the error
     EmailChangeRequest:
       type: object
       allOf:
@@ -1780,7 +2778,9 @@ components:
           description: Zinnia Live Case ID
         deleteRequest:
           type: boolean
-          description: Flag for delete or update request. If flag==true then Delete Request else Update Request
+          description: >-
+            Flag for delete or update request. If flag==true then Delete Request
+            else Update Request
           default: false
     PhoneChangeRequest:
       type: object
@@ -1793,7 +2793,9 @@ components:
           description: Zinnia Live Case ID
         deleteRequest:
           type: boolean
-          description: Flag for delete or update request. If flag==true then Delete Request else Update Request
+          description: >-
+            Flag for delete or update request. If flag==true then Delete Request
+            else Update Request
           default: false
     BankAccountChangeRequest:
       type: object
@@ -1806,7 +2808,9 @@ components:
           description: Zinnia Live Case ID
         deleteRequest:
           type: boolean
-          description: Flag for delete or update request. If flag==true then Delete Request else Update Request
+          description: >-
+            Flag for delete or update request. If flag==true then Delete Request
+            else Update Request
           default: false
     CommunicationPreferenceChangeRequest:
       type: object
@@ -1837,7 +2841,9 @@ components:
           description: Zinnia Live Case ID
         deleteRequest:
           type: boolean
-          description: Flag for delete or update request. If flag==true then Delete Request else Update Request
+          description: >-
+            Flag for delete or update request. If flag==true then Delete Request
+            else Update Request
           default: false
     CancelTransactionRequest:
       type: object
@@ -1848,8 +2854,24 @@ components:
           type: string
           example: CaseAU0000002202312181421
           description: Zinnia Live Case ID
-      # System of Record Schemas
-      # System of Record OneTimePremium
+    FreeLookCancellationRequest:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/FreeLookCancellation'
+      properties:
+        caseId:
+          type: string
+          example: CaseAU0000002202312181421
+          description: Zinnia Live Case ID
+    ReverseRecreateRequest:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ReverseRecreate'
+      properties:
+        caseId:
+          type: string
+          example: CaseAU0000002202312181421
+          description: Zinnia Live Case ID
     CancelTransaction:
       type: object
       properties:
@@ -1873,11 +2895,15 @@ components:
         effectiveDate:
           type: string
           format: date
-          example: 2023-01-01
-          description: Date when the transaction was originally scheduled or expected to happen. It can be a non-business day
+          example: '2023-01-01T00:00:00.000Z'
+          description: >-
+            Date when the transaction was originally scheduled or expected to
+            happen. It can be a non-business day
         reverseInitiator:
           type: boolean
-          description: Property to isolate source transaction(s) that initiated the reversal
+          description: >-
+            Property to isolate source transaction(s) that initiated the
+            reversal
         transactionAmounts:
           type: object
           properties:
@@ -1901,7 +2927,6 @@ components:
             bankId:
               type: string
               description: Comes in Acord 103
-    #Zahara SystematicProgramUpdate
     LoanRepaymentOneTime:
       type: object
       properties:
@@ -1912,11 +2937,14 @@ components:
         effectiveDate:
           type: string
           format: date
-          example: '2023-01-01'
-          description: 'Date (with pattern "yyyy-mm-dd") when the transaction was originally scheduled or expected to happen, can be a non-business day'
+          description: >-
+            Date (with pattern "yyyy-mm-dd") when the transaction was originally
+            scheduled or expected to happen, can be a non-business day
         reverseInitiator:
           type: boolean
-          description: Property to isolate source transaction(s) that initiated the reversal
+          description: >-
+            Property to isolate source transaction(s) that initiated the
+            reversal
         transactionAmounts:
           type: object
           properties:
@@ -1941,11 +2969,14 @@ components:
         effectiveDate:
           type: string
           format: date
-          example: '2023-01-01'
-          description: 'Date (with pattern "yyyy-mm-dd") when the transaction was originally scheduled or expected to happen, can be a non-business day'
+          description: >-
+            Date (with pattern "yyyy-mm-dd") when the transaction was originally
+            scheduled or expected to happen, can be a non-business day
         reverseInitiator:
           type: boolean
-          description: Property to isolate source transaction(s) that initiated the reversal
+          description: >-
+            Property to isolate source transaction(s) that initiated the
+            reversal
         transactionAmounts:
           $ref: '#/components/schemas/AdhocTransactionAmount'
         fundAllocation:
@@ -1969,14 +3000,19 @@ components:
         effectiveDate:
           type: string
           format: date
-          example: '2023-01-01'
-          description: 'Date (with pattern "yyyy-mm-dd") when the transaction was originally scheduled or expected to happen, can be a non-business day'
+          description: >-
+            Date (with pattern "yyyy-mm-dd") when the transaction was originally
+            scheduled or expected to happen, can be a non-business day
         reverseInitiator:
           type: boolean
-          description: Property to isolate source transaction(s) that initiated the reversal
+          description: >-
+            Property to isolate source transaction(s) that initiated the
+            reversal
         override:
           type: boolean
-          description: BPM will have to override the rules if this variable is marked as true
+          description: >-
+            BPM will have to override the rules if this variable is marked as
+            true
         taxWithholdingInstructions:
           type: array
           items:
@@ -1985,13 +3021,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PayeeOrBeneficiary'
+        parties:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdhocDisbursementParty'
         transactionAmounts:
-          $ref: '#/components/schemas/FullSurrenderActual.TransactionAmounts'
+          $ref: '#/components/schemas/FullSurrenderActualTransactionAmounts'
         charges:
           type: array
           items:
             $ref: '#/components/schemas/Charge'
-    FullSurrenderActual.TransactionAmounts:
+    FullSurrenderActualTransactionAmounts:
       type: object
       properties:
         amountType:
@@ -2036,6 +3076,10 @@ components:
                 type: number
               bankId:
                 type: string
+        parties:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdhocDisbursementParty'
         charges:
           type: array
           items:
@@ -2064,7 +3108,9 @@ components:
         allocationPercentage:
           type: number
           format: double
-          description: At Policy Level for Each Applicable Fund (Everly there is only one Fixed) Therefore this be 100%
+          description: >-
+            At Policy Level for Each Applicable Fund (Everly there is only one
+            Fixed) Therefore this be 100%
           example: 100
         bankId:
           type: string
@@ -2079,9 +3125,16 @@ components:
       type: string
       enum:
         - PRORATA
+        - DOLLAR
+        - SPECIFYPERCENTAGE
         - SPECIFIEDFUNDS
         - SPECIFIEDSEGMENTS
         - DEFAULT
+        - PECKINGORDER
+        - EARNINGSONLY
+      description: >-
+        Defines the format of how the funds are removed, i.e. dollar,
+        percentage, pro-rata, etc.
     Charge:
       type: object
       properties:
@@ -2092,7 +3145,7 @@ components:
         chargeWaiverReason:
           type: string
           description: Set by System based on policy data if Waive Indicator is yes.
-          example: 100
+          example: '100'
     ChargeWaiverIndicator:
       type: string
       enum:
@@ -2142,20 +3195,41 @@ components:
         - $ref: '#/components/schemas/AdhocTransactionAmount'
         - type: object
           properties:
+            requestedAmount:
+              type: number
+              format: double
+              description: The initial premium amount (deposit amount) paid by the party.
+              example: 100
+            amountType:
+              $ref: '#/components/schemas/AmountType'
+            disbursementType:
+              $ref: '#/components/schemas/DisbursementType'
+            disbursementPaymentForm:
+              $ref: '#/components/schemas/DisbursementPaymentForm'
+            loanType:
+              $ref: '#/components/schemas/LoanType'
+            loanInterestType:
+              $ref: '#/components/schemas/loanInterestType'
             paymentAmount:
               type: number
               format: double
-              description: The initial premium amount (deposit amount) drafted to proceed with the payment
+              description: >-
+                The initial premium amount (deposit amount) drafted to proceed
+                with the payment
               example: 100
             appliedAmount:
               type: number
               format: double
-              description: The initial premium amount that is actually applied to the policy.
+              description: >-
+                The initial premium amount that is actually applied to the
+                policy.
               example: 100
             calculatedAmount:
               type: number
               format: double
-              description: The amount calculated by the LPS if the issuance transaction outcome fails
+              description: >-
+                The amount calculated by the LPS if the issuance transaction
+                outcome fails
               example: 100
             totalChargeAmount:
               type: number
@@ -2165,7 +3239,9 @@ components:
             taxableAmount:
               type: number
               format: double
-              description: 'Taxable amount for Transaction. Even If Payee selects Not To Withhold, this will be populated if there was Gain distributed.'
+              description: >-
+                Taxable amount for Transaction. Even If Payee selects Not To
+                Withhold, this will be populated if there was Gain distributed.
               example: 100
             deathClaimPayoutPreSupplementalSecurityIncome:
               type: number
@@ -2210,7 +3286,9 @@ components:
             - INDEXED
             - VARIABLE
             - ADJUSTABLE
-          description: Loan Interest Type - Selected by user from dropdown values, default to Fixed
+          description: >-
+            Loan Interest Type - Selected by user from dropdown values, default
+            to Fixed
     AdhocParty:
       allOf:
         - $ref: '#/components/schemas/BaseAdhocParty'
@@ -2226,11 +3304,27 @@ components:
         - MAX
         - FREEWITHDRAWALAMOUNT
         - WITHDRAWALUNTILBASIS
-      description: Amount Type selected by user. Following is dropdown list 1. Amount -- If selected user should be able to enter Amount for Transaction Amount field 2. Percent -- If selected user should be able to enter Percentage for Transaction Amount field 3. Max -- If selected user should NOT be able to enter Amount. Auto calculated using Maximum Withdrawal Amount. 4. Free Withdrawal Amount -- If selected user should NOT be able to enter Amount. Auto calcualted using Free Withdrawal Amount. 5. Withdraw Until Basis ---- If selected user should NOT be able to enter Amount. Auto calcualted using Cost Basis.
+        - EARNINGSONLY
+        - PRORATA
+      description: >-
+        Amount Type selected by user. Following is dropdown list 1. Amount -- If
+        selected user should be able to enter Amount for Transaction Amount
+        field 2. Percent -- If selected user should be able to enter Percentage
+        for Transaction Amount field 3. Max -- If selected user should NOT be
+        able to enter Amount. Auto calculated using Maximum Withdrawal Amount.
+        4. Free Withdrawal Amount -- If selected user should NOT be able to
+        enter Amount. Auto calcualted using Free Withdrawal Amount. 5. Withdraw
+        Until Basis ---- If selected user should NOT be able to enter Amount.
+        Auto calcualted using Cost Basis.
     LoanType:
       type: string
-      # TODO: need to add the real type here
-      # $ref: '#/components/schemas/LoanType'
+      enum:
+        - PREFERRED
+        - NONPREFERREDSTANDARDLOAN
+        - INDEXLOAN
+      description: >-
+        Loan Types - Selected by user from dropdown values, default to
+        Non-Preferred Standard Loan
     DisbursementType:
       type: string
       enum:
@@ -2239,10 +3333,16 @@ components:
         - NETNET
       description: The type of amount for  withdrawal such as Gross or Net
     DisbursementPaymentForm:
-      ## TODO: need to add the real type here
-      # $ref: '#/components/schemas/DisbursementPaymentForm'
       type: string
-
+      enum:
+        - DTCC
+        - EFT
+        - ACH
+        - CHECK
+        - WIRE
+      description: >-
+        The type of disbursement method such as DTCC,EFT or credit card.Default
+        EFT.
     TaxWithholdingInstructions:
       type: object
       properties:
@@ -2310,12 +3410,15 @@ components:
         effectiveDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
-          description: Date (with pattern "yyyy-mm-dd") when the transaction was originally scheduled or expected to happen, can be a non-business day
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
+          description: >-
+            Date (with pattern "yyyy-mm-dd") when the transaction was originally
+            scheduled or expected to happen, can be a non-business day
         reverseInitiator:
           type: boolean
-          description: Property to isolate source transaction(s) that initiated the reversal
+          description: >-
+            Property to isolate source transaction(s) that initiated the
+            reversal
         systematicProgram:
           $ref: '#/components/schemas/AdhocSystematicProgram'
     AdhocSystematicProgram:
@@ -2337,31 +3440,34 @@ components:
         startDate:
           type: string
           format: date
-          example: '2023-01-01'
           description: Date (with pattern "yyyy-mm-dd")
         endDate:
           type: string
           format: date
-          example: '2023-01-01'
           description: Date (with pattern "yyyy-mm-dd")
         previousProgramDate:
           type: string
           format: date
-          example: '2023-01-01'
           description: Date (with pattern "yyyy-mm-dd")
         nextProgramDate:
           type: string
           format: date
-          example: '2023-01-01'
           description: Date (with pattern "yyyy-mm-dd")
         party:
           $ref: '#/components/schemas/BaseAdhocParty'
+        parties:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdhocDisbursementParty'
     PaymentForm:
       type: string
       enum:
         - DTCC
         - CREDITCARD
         - ACH
+        - CHECK
+        - WIRE
+        - EXCHANGE
       description: Mode of payment
     ArrangementType:
       type: string
@@ -2369,8 +3475,9 @@ components:
         - PAYMENT
         - WITHDRAWAL
         - LOANREPAYMENT
+        - REQUIREDMINIMUMDISTRIBUTION
+        - PAYOUT
       description: The type of payment such as fixed or flexible
-
     Frequency:
       type: string
       enum:
@@ -2403,18 +3510,21 @@ components:
         preferredAddressIndicator:
           type: string
           enum:
-            - YES
-            - NO
-          description: Indicates whether the address being added should be set as default or not. Yes - address being entered is default.
+            - 'YES'
+            - 'NO'
+          description: >-
+            Indicates whether the address being added should be set as default
+            or not. Yes - address being entered is default.
         reverseInitiator:
           type: boolean
-          description: Property to isolate source transaction(s) that initiated the reversal
+          description: >-
+            Property to isolate source transaction(s) that initiated the
+            reversal
           default: false
         effectiveDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         address:
           type: object
@@ -2422,15 +3532,16 @@ components:
             startDate:
               type: string
               format: date
-              pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-              example: 2023-01-01
+              pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
               description: Date (with pattern "yyyy-mm-dd")
             endDate:
               type: string
               format: date
-              pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-              example: 2023-01-01
-              description: Date Format "yyyy-mm-dd".If provided by the user, the system will apply an end date to the address, ensuring that a new address is not generated.
+              pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
+              description: >-
+                Date Format "yyyy-mm-dd".If provided by the user, the system
+                will apply an end date to the address, ensuring that a new
+                address is not generated.
             addressType:
               type: string
               enum:
@@ -2540,7 +3651,7 @@ components:
                 - GB
                 - DK
                 - SE
-                - NO
+                - 'NO'
                 - PL
                 - DE
                 - PE
@@ -2784,8 +3895,7 @@ components:
         effectiveDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         email:
           $ref: '#/components/schemas/Email'
@@ -2795,15 +3905,16 @@ components:
         startDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         endDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
-          description: Date Format "yyyy-mm-dd".If provided by the user, the system will apply an end date to the emailaddress, ensuring that a new emailaddress is not generated.
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
+          description: >-
+            Date Format "yyyy-mm-dd".If provided by the user, the system will
+            apply an end date to the emailaddress, ensuring that a new
+            emailaddress is not generated.
         emailType:
           type: string
           enum:
@@ -2815,7 +3926,10 @@ components:
         emailAddress:
           type: string
           example: will.smith@gmail.com
-          description: Type of the email. PERSONAL for personal emails, BUSINESS for business emails, CUSTOMERSERVICE for customer service emails, OTHER for any other type of emails.
+          description: >-
+            Type of the email. PERSONAL for personal emails, BUSINESS for
+            business emails, CUSTOMERSERVICE for customer service emails, OTHER
+            for any other type of emails.
     PhoneChange:
       type: object
       properties:
@@ -2826,8 +3940,7 @@ components:
         effectiveDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         phone:
           type: object
@@ -2835,15 +3948,16 @@ components:
             startDate:
               type: string
               format: date
-              pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-              example: 2023-01-01
+              pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
               description: Date (with pattern "yyyy-mm-dd")
             endDate:
               type: string
               format: date
-              pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-              example: 2023-01-01
-              description: Date Format "yyyy-mm-dd".If provided by the user, the system will apply an end date to the phone number, ensuring that a new phone number is not generated.
+              pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
+              description: >-
+                Date Format "yyyy-mm-dd".If provided by the user, the system
+                will apply an end date to the phone number, ensuring that a new
+                phone number is not generated.
             phoneType:
               type: string
               enum:
@@ -2890,8 +4004,7 @@ components:
         effectiveDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         bankAccount:
           type: object
@@ -2899,14 +4012,12 @@ components:
             startDate:
               type: string
               format: date
-              pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-              example: 2023-01-01
+              pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
               description: Date (with pattern "yyyy-mm-dd")
             endDate:
               type: string
               format: date
-              pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-              example: 2023-01-01
+              pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
               description: Date (with pattern "yyyy-mm-dd")
             nameOnAccount:
               type: string
@@ -3062,7 +4173,7 @@ components:
             - GB
             - DK
             - SE
-            - NO
+            - 'NO'
             - PL
             - DE
             - PE
@@ -3306,8 +4417,7 @@ components:
         effectiveDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         communicationPreference:
           type: object
@@ -3325,7 +4435,9 @@ components:
               description: Communication Preference Type
             text:
               type: string
-              example: in-person meetings or video call id https://company.us/j/1234567890
+              example: >-
+                in-person meetings or video call id
+                https://company.us/j/1234567890
               description: If type OTHER, then provide further info using text.
     PartyNameChange:
       type: object
@@ -3337,8 +4449,7 @@ components:
         effectiveDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         partyName:
           allOf:
@@ -3397,8 +4508,7 @@ components:
         effectiveDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date the Party was added to the Policy
         customerId:
           type: string
@@ -3438,25 +4548,27 @@ components:
         startDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         endDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         partyId:
           type: string
-          description: Party ID at Policy Level that comes in from External source (for Everly it will be Acord 103)
+          description: >-
+            Party ID at Policy Level that comes in from External source (for
+            Everly it will be Acord 103)
           example: Party_PB_Primary_Bene_1
         partyType:
           type: string
           enum:
             - Individual
             - Organization
-          description: Defines Party type example individual or Organization. For Insured this should always be Individual
+          description: >-
+            Defines Party type example individual or Organization. For Insured
+            this should always be Individual
         firstName:
           type: string
           description: The first name of the party
@@ -3471,7 +4583,9 @@ components:
           example: Bates
         fullName:
           type: string
-          description: Fullname of the party. Available only when PartyType is Trust/Organization
+          description: >-
+            Fullname of the party. Available only when PartyType is
+            Trust/Organization
           example: Karen Anne Bates
         prefix:
           type: string
@@ -3500,8 +4614,7 @@ components:
         dateOfBirth:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Party date of birth (with pattern "yyyy-mm-dd")
         attainedAge:
           type: number
@@ -3537,12 +4650,11 @@ components:
             - ESTATE
             - TRUST
             - CORPORATION
-          description: 'Type of Organization Structure (Partnership, corporation etc)'
+          description: Type of Organization Structure (Partnership, corporation etc)
         trustDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: The trust agreement issued date to the party
         trustTitle:
           type: string
@@ -3562,7 +4674,7 @@ components:
             - TEXT
             - NONE
             - OTHER
-          description: 'The preference of communication such as phone, email or mail'
+          description: The preference of communication such as phone, email or mail
         text:
           type: string
           example: in-person or video call id https://company.us/j/1234567890
@@ -3570,9 +4682,11 @@ components:
         preferredAddressIndicator:
           type: string
           enum:
-            - YES
-            - NO
-          description: Indicates whether the address being added should be set as default or not. Yes - address being entered is default.
+            - 'YES'
+            - 'NO'
+          description: >-
+            Indicates whether the address being added should be set as default
+            or not. Yes - address being entered is default.
         formerName:
           $ref: '#/components/schemas/FormerName'
         identifications:
@@ -3605,7 +4719,7 @@ components:
             $ref: '#/components/schemas/TaxWithholding'
     Country:
       type: string
-      enum: &COUNTRIES
+      enum:
         - US
         - CA
         - RU
@@ -3624,7 +4738,7 @@ components:
         - GB
         - DK
         - SE
-        - NO
+        - 'NO'
         - PL
         - DE
         - PE
@@ -3860,7 +4974,7 @@ components:
       description: Abbreviated names for countries
     State:
       type: string
-      enum: &STATES
+      enum:
         - AL
         - AK
         - AZ
@@ -3941,14 +5055,12 @@ components:
         startDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         endDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         addressType:
           type: string
@@ -3993,14 +5105,12 @@ components:
         startDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: '2023-01-01'
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         endDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: '2023-01-01'
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         phoneType:
           type: string
@@ -4044,14 +5154,12 @@ components:
         startDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         endDate:
           type: string
           format: date
-          pattern: '([0-9]{4})-([0-9]{2})-([0-9]{2})'
-          example: 2023-01-01
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         nameOnAccount:
           type: string
@@ -4100,12 +5208,12 @@ components:
       properties:
         partyPolicyId:
           type: string
-          example: 'Party_OW_3'
+          example: Party_OW_3
           description: party policy id
         allocationPercentage:
           type: number
           format: double
-          example: 10.0
+          example: 10
           description: TBD
     TaxWithholding:
       type: object
@@ -4155,6 +5263,259 @@ components:
           type: string
           description: TBD, but applies only for PartyType - Owner,Payee
           example: USA_WY
+    FreeLookCancellation:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          example: 657b717b7dcf554abf9ef067
+          description: The unique ID to track transaction request across all systems
+        effectiveDate:
+          type: string
+          format: date
+          pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
+          description: Date (with pattern "yyyy-mm-dd")
+        transactionAmounts:
+          type: object
+          properties:
+            disbursementType:
+              $ref: '#/components/schemas/DisbursementType'
+            disbursementPaymentForm:
+              $ref: '#/components/schemas/DisbursementPaymentForm'
+        payeeOrBeneficiary:
+          type: object
+          properties:
+            partyId:
+              type: string
+              description: Pending Review by Product Team
+              example: Party_PI_1
+            paymentForm:
+              $ref: '#/components/schemas/PaymentForm'
+            allocationPercentage:
+              type: number
+              format: double
+              description: >-
+                At Policy Level for Each Applicable Fund (Everly there is only
+                one Fixed) Therefore this be 100%
+              example: 100
+            bankId:
+              type: string
+              example: Bank_1
+              description: Comes in Acord 103
+        parties:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdhocDisbursementParty'
+        reverseInitiator:
+          type: boolean
+          description: >-
+            Property to isolate source transaction(s) that initiated the
+            reversal
+    ReverseRecreate:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          example: 657b717b7dcf554abf9ef067
+          description: The unique ID to track transaction request across all Systems
+        corrections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Correction'
+        noRecreateTransactions:
+          type: boolean
+          description: To recreate trnsaction again or not
+          example: false
+    Correction:
+      type: object
+      properties:
+        transactionId:
+          type: string
+          example: '377'
+        amount:
+          type: number
+          format: double
+          description: amount you need to correct
+          example: 5
+    SuccessResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 201
+        timestamp:
+          type: string
+          format: date-time
+        message:
+          type: string
+          example: Request Submitted Successfully
+    ValidationResult:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          example: EM.035
+        error:
+          type: string
+          example: 1.) Add Transmittal Task. 2.) Pend Case 5 days.
+        resolution:
+          type: string
+          example: >-
+            Transmittal to licensing - agent needs to complete product training
+            and LOB updated
+    ValidationResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 400
+        timestamp:
+          type: string
+          format: date-time
+        errorId:
+          type: string
+          example: a4a57ed0-2c1b-4922-9959-3b85dd8a96d3
+        message:
+          type: string
+          example: JSON Valdiation fails with error
+        error:
+          type: array
+          items:
+            type: string
+            example: Mandatory attribute label missing
+    ResourceNotFoundResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 404
+        timestamp:
+          type: string
+          format: date-time
+        errorId:
+          type: string
+          example: a4a57ed0-2c1b-4922-9959-3b85dd8a96d3
+        message:
+          type: string
+          example: Resource not found
+        error:
+          type: array
+          items:
+            type: string
+            example: Resource not found for provided input
+    AccessDeniedResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 403
+        timestamp:
+          type: integer
+          format: int64
+          example: 1681395423438
+        errorId:
+          type: string
+          example: 0286d47a-7ad9-499c-8ca0-8f6634d236a3
+        message:
+          type: string
+          example: 'User is not authorized for the carrier : CarrierName_1'
+    ServerErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 500
+        timestamp:
+          type: integer
+          format: int64
+          example: 1681395423438
+        errorId:
+          type: string
+          example: 0286d47a-7ad9-499c-8ca0-8f6634d236a3
+        message:
+          type: string
+          example: Failed to process request
+    FundTransferRequest:
+      type: object
+      properties:
+        caseId:
+          type: string
+          example: CaseAU0000002202312181421
+          description: Zinnia Live Case ID
+        correlationId:
+          type: string
+        effectiveDate:
+          type: string
+          format: date
+        reverseInitiator:
+          type: boolean
+          default: false
+        transactionAmounts:
+          type: object
+          properties:
+            amountType:
+              $ref: '#/components/schemas/AmountType'
+        fundAllocation:
+          type: object
+          properties:
+            allocationOption:
+              $ref: '#/components/schemas/AllocationOption'
+        funds:
+          type: object
+          properties:
+            transferFrom:
+              type: array
+              items:
+                $ref: '#/components/schemas/AdhocFundTransferFromFund'
+            transferTo:
+              type: array
+              items:
+                $ref: '#/components/schemas/AdhocFundTransferToFund'
+    AdhocFundTransferFromFund:
+      type: object
+      properties:
+        fundId:
+          type: string
+        requestedAmount:
+          type: number
+          format: double
+          example: 124.124213
+        fundSegments:
+          type: array
+          items:
+            allOf:
+              - type: object
+                properties:
+                  segmentId:
+                    type: string
+              - $ref: '#/components/schemas/AdhocFundTransferFundSegment'
+    AdhocFundTransferFundSegment:
+      type: object
+      properties:
+        segmentId:
+          type: string
+        requestedAmount:
+          type: number
+          format: double
+          example: 124.124213
+    AdhocFundTransferToFund:
+      type: object
+      properties:
+        fundId:
+          type: string
+        requestedAmount:
+          type: number
+          format: double
+          example: 124.124213
+        fundSegments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdhocFundTransferFundSegment'
   examples:
     successTransactionResponse:
       value:
@@ -4166,7 +5527,7 @@ components:
             correlationId: 657b717dcf55411abf9ef067
             transactionAmounts:
               requestedAmount: 25
-              calculatedAmount:
+              calculatedAmount: null
               appliedAmount: 25
             policy:
               id: 659fdafc075b950b7bd00feb
@@ -4183,37 +5544,37 @@ components:
               planCode: SBFIXUL1
               glPlanCode: V2201
               holdingForm: INDIVIDUAL
-              renewable:
+              renewable: null
               qualificationType: NONQUALIFIED
               policyTerm: 20
               policyYear: 1
               monthOfYear: 1
               policyNumber: BPM0000001
               policyStatus: ACTIVE
-              nonforfeitureOption:
+              nonforfeitureOption: null
               issueType: FULLUNDERWRITING
               residenceState: VT
               issueState: VT
               premiumFrequency: MONTHLY
               currency: USD
-              policyStartDate: '2023-12-27'
-              applicationDate: '2023-12-27'
-              issueDate: '2023-12-27'
+              policyStartDate: '2023-12-27T00:00:00.000Z'
+              applicationDate: '2023-12-27T00:00:00.000Z'
+              issueDate: '2023-12-27T00:00:00.000Z'
               effectiveDate: '2024-01-11T00:00:00.000Z'
-              contestabilityStartDate: '2023-12-27'
-              contestabilityEndDate: '2025-12-26'
-              policyDeliveryDate: '2023-12-27'
-              previousPolicyAnniversaryDate: '2023-12-27'
-              previousPolicyMonthiversaryDate: '2023-12-27'
-              nextAnniversaryDate: '2024-12-27'
-              maturityDate: '2125-12-26'
-              policyTerminationDate:
-              dateOfDeath:
-              initialPaymentExpiryDate: '2024-01-10'
-              nextMonthivesaryDate: '2024-01-27'
+              contestabilityStartDate: '2023-12-27T00:00:00.000Z'
+              contestabilityEndDate: '2025-12-26T00:00:00.000Z'
+              policyDeliveryDate: '2023-12-27T00:00:00.000Z'
+              previousPolicyAnniversaryDate: '2023-12-27T00:00:00.000Z'
+              previousPolicyMonthiversaryDate: '2023-12-27T00:00:00.000Z'
+              nextAnniversaryDate: '2024-12-27T00:00:00.000Z'
+              maturityDate: '2125-12-26T00:00:00.000Z'
+              policyTerminationDate: null
+              dateOfDeath: null
+              initialPaymentExpiryDate: '2024-01-10T00:00:00.000Z'
+              nextMonthivesaryDate: '2024-01-27T00:00:00.000Z'
               costBasis: 105
-              costBasisDate: '2024-11-04'
-              conversionDate:
+              costBasisDate: '2024-11-04T00:00:00.000Z'
+              conversionDate: null
               policyValues:
                 beginningAcctValue: 35.759837
                 endingAcctValue: 60.759837
@@ -4225,11 +5586,11 @@ components:
                 netAmountAtRisk: 499920
                 initialPremiumRequestAmount: 80
                 initialPremiumAppliedAmount: 80
-                initialPaymentAmountReceivedDate: '2023-12-27'
+                initialPaymentAmountReceivedDate: '2023-12-27T00:00:00.000Z'
                 cumulativePremSinceIssue: 105
                 totalYTDPremiumAmount: 105
                 mecAuthorization: false
-                projectedLapseIndicator:
+                projectedLapseIndicator: null
                 policyGainAmount: 0
               loanValues:
                 totalLoanBalance: 0
@@ -4238,56 +5599,56 @@ components:
                 maxLoanAmount: 60.759837
                 minLoanAmount: 0
                 totalLoanAccruedInterest: 0
-                lastLoanInterestDueDate:
+                lastLoanInterestDueDate: null
                 totalNumberOfLoan: 0
                 loanInterestMethod: ARREARS
                 totalYTDLoanTaken: 0
-                loanRepaymentType:
+                loanRepaymentType: null
                 minLoanRepayment: 1
               withDrawalValues:
                 totalWithdrawalAmount: 0
-                freeWithdrawalAmount:
+                freeWithdrawalAmount: null
                 minWithdrawalAmount: 1
                 maxWithdrawalAmount: 60.759837
-                annualWithLimNoCovDecrease:
+                annualWithLimNoCovDecrease: null
                 maxWithdrawalRequestDuringVestingPeriod: 1
                 maxWithdrawalRequestAfterVestingPeriod: 12
                 totalYTDWithdrawalTaken: 0
                 numberOfWithdrawal: 0
-                withdrawalAllowedStartDate: '2023-12-27'
+                withdrawalAllowedStartDate: '2023-12-27T00:00:00.000Z'
               testValues:
-                guidelinePremiumTestDate: '2024-11-04'
+                guidelinePremiumTestDate: '2024-11-04T00:00:00.000Z'
                 definitionOfLifeInsurance: GPT
                 guidelineSinglePremium: 68933.997746
                 guidelineLevelPremium: 5122.813261
                 amountExcessToGuideline: 0
                 totalGuidelineLevelPremiumSinceIssue: 5122.813261
-                mecTestDate: '2024-11-04'
+                mecTestDate: '2024-11-04T00:00:00.000Z'
                 amountExcessToMEC: 0
-                mecStatusDate:
+                mecStatusDate: null
                 mecStatus: false
                 sevenPayTestBasis: 185
                 sevenPayPremium: 25074.702628
-                sevenPayStartDate: '2023-12-27'
-                sevenPayPeriod: '2030-12-26'
+                sevenPayStartDate: '2023-12-27T00:00:00.000Z'
+                sevenPayPeriod: '2030-12-26T00:00:00.000Z'
                 sevenPayLimit: 25074.702628
                 yearInPeriod: 1
               timestamp: '2024-01-11T12:11:40.723Z'
               deathBenefit:
                 deathBenefitOption: LEVEL
-                dboEffectiveDate: '2023-12-27'
-                dboChangedEffectiveDate:
+                dboEffectiveDate: '2023-12-27T00:00:00.000Z'
+                dboChangedEffectiveDate: null
                 deathBenefitAgeGuarantee: 38
               coverage:
-                id:
-                policyDetailsId:
-                ledgerDocId:
+                id: null
+                policyDetailsId: null
+                ledgerDocId: null
                 timestamp: '2024-01-11T12:11:40.731Z'
                 totalCoverageAmount: 500000
                 cumGrossDeathBenefitAmount: 500000
                 minCoverageAmount: 10000
                 maxCoverageAmount: 10000000
-                coverageChangeEffectiveDate: '2024-12-27'
+                coverageChangeEffectiveDate: '2024-12-27T00:00:00.000Z'
                 coverageBand: BAND3
                 maxAnnualCoverageChangeAllowedPerPolicy: 1
                 minCoverageDecreaseAmount: 10000
@@ -4310,12 +5671,12 @@ components:
                     grossDeathBenefitAmount: 500000
                     lowDeathBenefitAmount: 500000
                     coverageChangeAmount: 0
-                    coverageEffectiveDate: '2023-12-27'
-                    coverageChangeEffectiveDate:
-                    coverageTerminationDate:
+                    coverageEffectiveDate: '2023-12-27T00:00:00.000Z'
+                    coverageChangeEffectiveDate: null
+                    coverageTerminationDate: null
                     unitOfCoverage: 500
                     valuePerUnitOfCoverage: 1000
-                    premiumFrequency:
+                    premiumFrequency: null
                     guidelineSinglePremium: 68933.997746
                     guidelineLevelPremium: 5122.813261
                     sevenPayPremium: 25074.702628
@@ -4325,304 +5686,304 @@ components:
                         riskClass: Standard Tobacco
                         subStandardRating: None
                         flatExtra:
-                          - flatExtraType:
+                          - flatExtraType: null
                             flatExtraDuration: 0
                             flatExtraAmount: 0
-                            flatExtraStartDate:
+                            flatExtraStartDate: null
                   - coverageID: Rider_SBLCHR
                     coverageType: RIDER
                     coverageName: Chronic Illness Accelerated Death Benefit Rider
                     productCode: SBLCHR
-                    currentAmount:
-                    orignalCoverageAmount:
-                    minCoverageAmount:
-                    maxCoverageAmount:
-                    grossDeathBenefitAmount:
-                    lowDeathBenefitAmount:
+                    currentAmount: null
+                    orignalCoverageAmount: null
+                    minCoverageAmount: null
+                    maxCoverageAmount: null
+                    grossDeathBenefitAmount: null
+                    lowDeathBenefitAmount: null
                     coverageChangeAmount: 0
-                    coverageEffectiveDate: '2023-12-27'
-                    coverageChangeEffectiveDate:
-                    coverageTerminationDate: '2125-12-26'
-                    unitOfCoverage:
-                    valuePerUnitOfCoverage:
-                    premiumFrequency:
-                    guidelineSinglePremium:
-                    guidelineLevelPremium:
-                    sevenPayPremium:
+                    coverageEffectiveDate: '2023-12-27T00:00:00.000Z'
+                    coverageChangeEffectiveDate: null
+                    coverageTerminationDate: '2125-12-26T00:00:00.000Z'
+                    unitOfCoverage: null
+                    valuePerUnitOfCoverage: null
+                    premiumFrequency: null
+                    guidelineSinglePremium: null
+                    guidelineLevelPremium: null
+                    sevenPayPremium: null
                     coverageParticipants:
                       - partyID: Party_PI_1
                         issueAge: 18
-                        riskClass:
-                        subStandardRating:
+                        riskClass: null
+                        subStandardRating: null
                         flatExtra: []
                   - coverageID: Rider_SBLCRI
                     coverageType: RIDER
                     coverageName: Critical Illness Accelerated Death Benefit Rider
                     productCode: SBLCRI
-                    currentAmount:
-                    orignalCoverageAmount:
-                    minCoverageAmount:
-                    maxCoverageAmount:
-                    grossDeathBenefitAmount:
-                    lowDeathBenefitAmount:
+                    currentAmount: null
+                    orignalCoverageAmount: null
+                    minCoverageAmount: null
+                    maxCoverageAmount: null
+                    grossDeathBenefitAmount: null
+                    lowDeathBenefitAmount: null
                     coverageChangeAmount: 0
-                    coverageEffectiveDate: '2023-12-27'
-                    coverageChangeEffectiveDate:
-                    coverageTerminationDate: '2125-12-26'
-                    unitOfCoverage:
-                    valuePerUnitOfCoverage:
-                    premiumFrequency:
-                    guidelineSinglePremium:
-                    guidelineLevelPremium:
-                    sevenPayPremium:
+                    coverageEffectiveDate: '2023-12-27T00:00:00.000Z'
+                    coverageChangeEffectiveDate: null
+                    coverageTerminationDate: '2125-12-26T00:00:00.000Z'
+                    unitOfCoverage: null
+                    valuePerUnitOfCoverage: null
+                    premiumFrequency: null
+                    guidelineSinglePremium: null
+                    guidelineLevelPremium: null
+                    sevenPayPremium: null
                     coverageParticipants:
                       - partyID: Party_PI_1
                         issueAge: 18
-                        riskClass:
-                        subStandardRating:
+                        riskClass: null
+                        subStandardRating: null
                         flatExtra: []
                   - coverageID: Rider_SBLTRM
                     coverageType: RIDER
                     coverageName: Terminal Illness Accelerated Death Benefit Rider
                     productCode: SBLTRM
-                    currentAmount:
-                    orignalCoverageAmount:
-                    minCoverageAmount:
-                    maxCoverageAmount:
-                    grossDeathBenefitAmount:
-                    lowDeathBenefitAmount:
+                    currentAmount: null
+                    orignalCoverageAmount: null
+                    minCoverageAmount: null
+                    maxCoverageAmount: null
+                    grossDeathBenefitAmount: null
+                    lowDeathBenefitAmount: null
                     coverageChangeAmount: 0
-                    coverageEffectiveDate: '2023-12-27'
-                    coverageChangeEffectiveDate:
-                    coverageTerminationDate: '2125-12-26'
-                    unitOfCoverage:
-                    valuePerUnitOfCoverage:
-                    premiumFrequency:
-                    guidelineSinglePremium:
-                    guidelineLevelPremium:
-                    sevenPayPremium:
+                    coverageEffectiveDate: '2023-12-27T00:00:00.000Z'
+                    coverageChangeEffectiveDate: null
+                    coverageTerminationDate: '2125-12-26T00:00:00.000Z'
+                    unitOfCoverage: null
+                    valuePerUnitOfCoverage: null
+                    premiumFrequency: null
+                    guidelineSinglePremium: null
+                    guidelineLevelPremium: null
+                    sevenPayPremium: null
                     coverageParticipants:
                       - partyID: Party_PI_1
                         issueAge: 18
-                        riskClass:
-                        subStandardRating:
+                        riskClass: null
+                        subStandardRating: null
                         flatExtra: []
                   - coverageID: Rider_OPR
                     coverageType: RIDER
                     coverageName: Overloan Protection Rider
                     productCode: SBLOPR
-                    currentAmount:
-                    orignalCoverageAmount:
-                    minCoverageAmount:
-                    maxCoverageAmount:
-                    grossDeathBenefitAmount:
-                    lowDeathBenefitAmount:
+                    currentAmount: null
+                    orignalCoverageAmount: null
+                    minCoverageAmount: null
+                    maxCoverageAmount: null
+                    grossDeathBenefitAmount: null
+                    lowDeathBenefitAmount: null
                     coverageChangeAmount: 0
-                    coverageEffectiveDate: '2023-12-27'
-                    coverageChangeEffectiveDate:
-                    coverageTerminationDate: '2125-12-26'
-                    unitOfCoverage:
-                    valuePerUnitOfCoverage:
-                    premiumFrequency:
-                    guidelineSinglePremium:
-                    guidelineLevelPremium:
-                    sevenPayPremium:
+                    coverageEffectiveDate: '2023-12-27T00:00:00.000Z'
+                    coverageChangeEffectiveDate: null
+                    coverageTerminationDate: '2125-12-26T00:00:00.000Z'
+                    unitOfCoverage: null
+                    valuePerUnitOfCoverage: null
+                    premiumFrequency: null
+                    guidelineSinglePremium: null
+                    guidelineLevelPremium: null
+                    sevenPayPremium: null
                     coverageParticipants:
                       - partyID: Party_PI_1
                         issueAge: 18
-                        riskClass:
-                        subStandardRating:
+                        riskClass: null
+                        subStandardRating: null
                         flatExtra: []
                 version: 1
               riders:
-                - id:
-                  policyDetailsId:
-                  ledgerDocId:
+                - id: null
+                  policyDetailsId: null
+                  ledgerDocId: null
                   timestamp: '2024-01-11T12:11:40.729Z'
                   type: RIDER
                   riderName: Chronic Illness Accelerated Death Benefit Rider
                   riderElected: ELECTED
                   riderCode: SBLCHR
-                  effectiveDate: '2023-12-27'
-                  terminationDate: '2125-12-26'
+                  effectiveDate: '2023-12-27T00:00:00.000Z'
+                  terminationDate: '2125-12-26T00:00:00.000Z'
                   status: ACTIVE
                   coverageID: Rider_SBLCHR
-                  amount:
+                  amount: null
                   riderParticipant:
                     - insuredID: Party_PI_1
                       insuredAgeAtIssue: 18
                   charge:
-                    chargeID:
-                    value:
-                    effectiveRate:
-                    nextEvaluationDate:
-                  riderExerciseCharge:
+                    chargeID: null
+                    value: null
+                    effectiveRate: null
+                    nextEvaluationDate: null
+                  riderExerciseCharge: null
                   maxChronicIllnessBenefitPct: 50
                   maxPeriodicPaymentPeriod: 120
-                  claimStatus:
-                  riderExerciseChargeRate:
-                  nextEvaluationDate:
-                  riderPaymentDate:
-                  riderPaymentAmount:
-                  paymentMode:
-                  paymentOption:
-                  maxCriticalIllnessBenefitPct:
-                  t1MaxCriticalIllnessBenefitPct:
-                  t1MaxCriticalIllnessBenefitAmount:
-                  t2MaxCriticalIllnessBenefitPct:
-                  t2MaxCriticalIllnessBenefitAmount:
-                  t1CriticalRiderPaymentDate:
-                  t1CriticalRiderPaymentAmount:
-                  t2CriticalRiderPaymentDate:
-                  t2CriticalRiderPaymentAmount:
-                  terminalRiderPaymentAmount:
+                  claimStatus: null
+                  riderExerciseChargeRate: null
+                  nextEvaluationDate: null
+                  riderPaymentDate: null
+                  riderPaymentAmount: null
+                  paymentMode: null
+                  paymentOption: null
+                  maxCriticalIllnessBenefitPct: null
+                  t1MaxCriticalIllnessBenefitPct: null
+                  t1MaxCriticalIllnessBenefitAmount: null
+                  t2MaxCriticalIllnessBenefitPct: null
+                  t2MaxCriticalIllnessBenefitAmount: null
+                  t1CriticalRiderPaymentDate: null
+                  t1CriticalRiderPaymentAmount: null
+                  t2CriticalRiderPaymentDate: null
+                  t2CriticalRiderPaymentAmount: null
+                  terminalRiderPaymentAmount: null
                   version: 1
-                - id:
-                  policyDetailsId:
-                  ledgerDocId:
+                - id: null
+                  policyDetailsId: null
+                  ledgerDocId: null
                   timestamp: '2024-01-11T12:11:40.729Z'
                   type: RIDER
                   riderName: Critical Illness Accelerated Death Benefit Rider
                   riderElected: ELECTED
                   riderCode: SBLCRI
-                  effectiveDate: '2023-12-27'
-                  terminationDate: '2125-12-26'
+                  effectiveDate: '2023-12-27T00:00:00.000Z'
+                  terminationDate: '2125-12-26T00:00:00.000Z'
                   status: ACTIVE
                   coverageID: Rider_SBLCRI
-                  amount:
+                  amount: null
                   riderParticipant:
                     - insuredID: Party_PI_1
                       insuredAgeAtIssue: 18
                   charge:
-                    chargeID:
-                    value:
-                    effectiveRate:
-                    nextEvaluationDate:
-                  riderExerciseCharge:
-                  maxChronicIllnessBenefitPct:
-                  maxPeriodicPaymentPeriod:
-                  claimStatus:
-                  riderExerciseChargeRate:
-                  nextEvaluationDate:
-                  riderPaymentDate:
-                  riderPaymentAmount:
-                  paymentMode:
-                  paymentOption:
+                    chargeID: null
+                    value: null
+                    effectiveRate: null
+                    nextEvaluationDate: null
+                  riderExerciseCharge: null
+                  maxChronicIllnessBenefitPct: null
+                  maxPeriodicPaymentPeriod: null
+                  claimStatus: null
+                  riderExerciseChargeRate: null
+                  nextEvaluationDate: null
+                  riderPaymentDate: null
+                  riderPaymentAmount: null
+                  paymentMode: null
+                  paymentOption: null
                   maxCriticalIllnessBenefitPct: 50
                   t1MaxCriticalIllnessBenefitPct: 5
                   t1MaxCriticalIllnessBenefitAmount: 5000
                   t2MaxCriticalIllnessBenefitPct: 50
                   t2MaxCriticalIllnessBenefitAmount: 500000
-                  t1CriticalRiderPaymentDate:
-                  t1CriticalRiderPaymentAmount:
-                  t2CriticalRiderPaymentDate:
-                  t2CriticalRiderPaymentAmount:
-                  terminalRiderPaymentAmount:
+                  t1CriticalRiderPaymentDate: null
+                  t1CriticalRiderPaymentAmount: null
+                  t2CriticalRiderPaymentDate: null
+                  t2CriticalRiderPaymentAmount: null
+                  terminalRiderPaymentAmount: null
                   version: 1
-                - id:
-                  policyDetailsId:
-                  ledgerDocId:
+                - id: null
+                  policyDetailsId: null
+                  ledgerDocId: null
                   timestamp: '2024-01-11T12:11:40.729Z'
                   type: RIDER
                   riderName: Overloan Protection Rider
                   riderElected: ELECTED
                   riderCode: SBLOPR
-                  effectiveDate: '2023-12-27'
-                  terminationDate: '2125-12-26'
+                  effectiveDate: '2023-12-27T00:00:00.000Z'
+                  terminationDate: '2125-12-26T00:00:00.000Z'
                   status: ACTIVE
                   coverageID: Rider_SBLOPR
-                  amount:
+                  amount: null
                   riderParticipant:
                     - insuredID: Party_PI_1
                       insuredAgeAtIssue: 18
                   charge:
-                    chargeID:
-                    value:
-                    effectiveRate:
-                    nextEvaluationDate:
-                  riderExerciseCharge:
-                  maxChronicIllnessBenefitPct:
-                  maxPeriodicPaymentPeriod:
-                  claimStatus:
-                  riderExerciseChargeRate:
-                  nextEvaluationDate:
-                  riderPaymentDate:
-                  riderPaymentAmount:
-                  paymentMode:
-                  paymentOption:
-                  maxCriticalIllnessBenefitPct:
-                  t1MaxCriticalIllnessBenefitPct:
-                  t1MaxCriticalIllnessBenefitAmount:
-                  t2MaxCriticalIllnessBenefitPct:
-                  t2MaxCriticalIllnessBenefitAmount:
-                  t1CriticalRiderPaymentDate:
-                  t1CriticalRiderPaymentAmount:
-                  t2CriticalRiderPaymentDate:
-                  t2CriticalRiderPaymentAmount:
-                  terminalRiderPaymentAmount:
+                    chargeID: null
+                    value: null
+                    effectiveRate: null
+                    nextEvaluationDate: null
+                  riderExerciseCharge: null
+                  maxChronicIllnessBenefitPct: null
+                  maxPeriodicPaymentPeriod: null
+                  claimStatus: null
+                  riderExerciseChargeRate: null
+                  nextEvaluationDate: null
+                  riderPaymentDate: null
+                  riderPaymentAmount: null
+                  paymentMode: null
+                  paymentOption: null
+                  maxCriticalIllnessBenefitPct: null
+                  t1MaxCriticalIllnessBenefitPct: null
+                  t1MaxCriticalIllnessBenefitAmount: null
+                  t2MaxCriticalIllnessBenefitPct: null
+                  t2MaxCriticalIllnessBenefitAmount: null
+                  t1CriticalRiderPaymentDate: null
+                  t1CriticalRiderPaymentAmount: null
+                  t2CriticalRiderPaymentDate: null
+                  t2CriticalRiderPaymentAmount: null
+                  terminalRiderPaymentAmount: null
                   version: 1
-                - id:
-                  policyDetailsId:
-                  ledgerDocId:
+                - id: null
+                  policyDetailsId: null
+                  ledgerDocId: null
                   timestamp: '2024-01-11T12:11:40.729Z'
                   type: RIDER
                   riderName: Terminal Illness Accelerated Death Benefit Rider
                   riderElected: ELECTED
                   riderCode: SBLTRM
-                  effectiveDate: '2023-12-27'
-                  terminationDate: '2125-12-26'
+                  effectiveDate: '2023-12-27T00:00:00.000Z'
+                  terminationDate: '2125-12-26T00:00:00.000Z'
                   status: ACTIVE
                   coverageID: Rider_SBLTRM
-                  amount:
+                  amount: null
                   riderParticipant:
                     - insuredID: Party_PI_1
                       insuredAgeAtIssue: 18
                   charge:
-                    chargeID:
-                    value:
-                    effectiveRate:
-                    nextEvaluationDate:
-                  riderExerciseCharge:
-                  maxChronicIllnessBenefitPct:
-                  maxPeriodicPaymentPeriod:
-                  claimStatus:
-                  riderExerciseChargeRate:
-                  nextEvaluationDate:
-                  riderPaymentDate:
-                  riderPaymentAmount:
-                  paymentMode:
-                  paymentOption:
-                  maxCriticalIllnessBenefitPct:
-                  t1MaxCriticalIllnessBenefitPct:
-                  t1MaxCriticalIllnessBenefitAmount:
-                  t2MaxCriticalIllnessBenefitPct:
-                  t2MaxCriticalIllnessBenefitAmount:
-                  t1CriticalRiderPaymentDate:
-                  t1CriticalRiderPaymentAmount:
-                  t2CriticalRiderPaymentDate:
-                  t2CriticalRiderPaymentAmount:
-                  terminalRiderPaymentAmount:
+                    chargeID: null
+                    value: null
+                    effectiveRate: null
+                    nextEvaluationDate: null
+                  riderExerciseCharge: null
+                  maxChronicIllnessBenefitPct: null
+                  maxPeriodicPaymentPeriod: null
+                  claimStatus: null
+                  riderExerciseChargeRate: null
+                  nextEvaluationDate: null
+                  riderPaymentDate: null
+                  riderPaymentAmount: null
+                  paymentMode: null
+                  paymentOption: null
+                  maxCriticalIllnessBenefitPct: null
+                  t1MaxCriticalIllnessBenefitPct: null
+                  t1MaxCriticalIllnessBenefitAmount: null
+                  t2MaxCriticalIllnessBenefitPct: null
+                  t2MaxCriticalIllnessBenefitAmount: null
+                  t1CriticalRiderPaymentDate: null
+                  t1CriticalRiderPaymentAmount: null
+                  t2CriticalRiderPaymentDate: null
+                  t2CriticalRiderPaymentAmount: null
+                  terminalRiderPaymentAmount: null
                   version: 1
               systematicPrograms:
-                - id:
-                  policyDetailsId:
-                  ledgerDocId:
+                - id: null
+                  policyDetailsId: null
+                  ledgerDocId: null
                   timestamp: '2024-01-11T12:11:40.730Z'
                   arrType: PAYMENT
                   arrangementID: Arr_1
                   allocationOptionType: DOLLAR
                   reason: PREMIUMREASON
-                  numberOfOccurrence:
-                  loanRepaymentType:
-                  disbursementType:
+                  numberOfOccurrence: null
+                  loanRepaymentType: null
+                  disbursementType: null
                   status: ACTIVE
                   paymentForm: EFT
                   frequency: MONTHLY
-                  requestedDate: '2023-12-27'
-                  startDate: '2024-01-27'
-                  endDate: '2043-11-27'
-                  lastActivityDate: '2023-12-27'
-                  nextActivityDate: '2024-01-27'
+                  requestedDate: '2023-12-27T00:00:00.000Z'
+                  startDate: '2024-01-27T00:00:00.000Z'
+                  endDate: '2043-11-27T00:00:00.000Z'
+                  lastActivityDate: '2023-12-27T00:00:00.000Z'
+                  nextActivityDate: '2024-01-27T00:00:00.000Z'
                   amountType: AMOUNT
                   amount: 80
                   payors:
@@ -4630,111 +5991,111 @@ components:
                       partyID: Party_PI_1
                       bankId: Bank_1
                       percentage: 100
-                  payees:
+                  payees: null
                   version: 1
               policyFeatures:
-                - id:
-                  policyDetailsId:
-                  ledgerDocId:
+                - id: null
+                  policyDetailsId: null
+                  ledgerDocId: null
                   timestamp: '2024-01-11T12:11:40.733Z'
                   featureType: freeLook
-                  startDate:
-                  endDate: '2024-01-26'
-                  status:
+                  startDate: null
+                  endDate: '2024-01-26T00:00:00.000Z'
+                  status: null
                   period: 30
-                  effectiveDate:
-                  totalRequiredAmount:
-                  totalMinRequiredAmount:
-                  paymentAmount:
-                  totalPaymentAmount:
-                  uwDecision:
-                  approvalDate:
+                  effectiveDate: null
+                  totalRequiredAmount: null
+                  totalMinRequiredAmount: null
+                  paymentAmount: null
+                  totalPaymentAmount: null
+                  uwDecision: null
+                  approvalDate: null
                   version: 1
-                - id:
-                  policyDetailsId:
-                  ledgerDocId:
+                - id: null
+                  policyDetailsId: null
+                  ledgerDocId: null
                   timestamp: '2024-01-11T12:11:40.733Z'
                   featureType: lapseAssessment
-                  startDate:
-                  endDate:
+                  startDate: null
+                  endDate: null
                   status: false
-                  period:
-                  effectiveDate:
-                  totalRequiredAmount:
-                  totalMinRequiredAmount:
-                  paymentAmount:
-                  totalPaymentAmount:
-                  uwDecision:
-                  approvalDate:
+                  period: null
+                  effectiveDate: null
+                  totalRequiredAmount: null
+                  totalMinRequiredAmount: null
+                  paymentAmount: null
+                  totalPaymentAmount: null
+                  uwDecision: null
+                  approvalDate: null
                   version: 1
-                - id:
-                  policyDetailsId:
-                  ledgerDocId:
+                - id: null
+                  policyDetailsId: null
+                  ledgerDocId: null
                   timestamp: '2024-01-11T12:11:40.733Z'
                   featureType: lapseProtection
-                  startDate: '2023-12-27'
-                  endDate: '2043-12-26'
-                  status:
+                  startDate: '2023-12-27T00:00:00.000Z'
+                  endDate: '2043-12-26T00:00:00.000Z'
+                  status: null
                   period: 20
-                  effectiveDate:
-                  totalRequiredAmount:
-                  totalMinRequiredAmount:
+                  effectiveDate: null
+                  totalRequiredAmount: null
+                  totalMinRequiredAmount: null
                   paymentAmount: 51.78
                   totalPaymentAmount: 51.78
-                  uwDecision:
-                  approvalDate:
+                  uwDecision: null
+                  approvalDate: null
                   version: 1
-                - id:
-                  policyDetailsId:
-                  ledgerDocId:
+                - id: null
+                  policyDetailsId: null
+                  ledgerDocId: null
                   timestamp: '2024-01-11T12:11:40.733Z'
                   featureType: reinstatement
-                  startDate:
-                  endDate:
-                  status:
-                  period:
-                  effectiveDate:
-                  totalRequiredAmount:
-                  totalMinRequiredAmount:
-                  paymentAmount:
-                  totalPaymentAmount:
-                  uwDecision:
-                  approvalDate:
+                  startDate: null
+                  endDate: null
+                  status: null
+                  period: null
+                  effectiveDate: null
+                  totalRequiredAmount: null
+                  totalMinRequiredAmount: null
+                  paymentAmount: null
+                  totalPaymentAmount: null
+                  uwDecision: null
+                  approvalDate: null
                   version: 1
               allocation:
-                id:
-                policyDetailsId:
-                ledgerDocId:
+                id: null
+                policyDetailsId: null
+                ledgerDocId: null
                 timestamp: '2024-01-11T12:11:40.732Z'
                 investmentType: INVESTMENTFUND
-                modelName:
-                modelID:
+                modelName: null
+                modelID: null
                 fundAllocationsInvestments:
                   - fundID: FundAccount1
                     fundName: Everly Fixed Fund UL2
-                    fundAccountType:
+                    fundAccountType: null
                     allocPercent: 100
-                    startDate: '2023-12-27'
-                    endDate:
+                    startDate: '2023-12-27T00:00:00.000Z'
+                    endDate: null
                 funds:
-                  - fundAccountType:
+                  - fundAccountType: null
                     fundID: FundAccount1
                     fundName: Fixed Fund
                     glFundCode: V2201
                     totalFundValue: 60.759837
                     fundSegments:
                       - segmentID: '1'
-                        fundID:
+                        fundID: null
                         originalDepositAmount: 80
-                        originalDepositDate: '2023-12-27'
-                        depositDate: '2024-11-04'
+                        originalDepositDate: '2023-12-27T00:00:00.000Z'
+                        depositDate: '2024-11-04T00:00:00.000Z'
                         depositAmount: 25
                         currentAmount: 60.759837
-                        renewalDate:
-                        numberOfUnits:
-                        sweepAccountID:
-                        startDate: '2023-12-27'
-                        endDate:
+                        renewalDate: null
+                        numberOfUnits: null
+                        sweepAccountID: null
+                        startDate: '2023-12-27T00:00:00.000Z'
+                        endDate: null
                 matchSegment:
                   segmentID: Match1
                   matchAccountValue: 1.05129
@@ -4743,41 +6104,56 @@ components:
                   maxLifeTimeVestingAmount: 500
                   maxAnnVestingAmount: 500
                   minPaymentsForMatch: 0
-                  matchVestingDate: '2034-12-26'
+                  matchVestingDate: '2034-12-26T00:00:00.000Z'
                   glFundCode: V2201
                   vestingPeriod: 10
                 loanSegments: []
                 version: 1
               version: 40
-          error:
+          error: null
     failureTransactionResponse:
       value:
         status: failure
         validationResult:
           - errorCode: BPM.NM.005
-            attribute:
+            attribute: null
             error: Amount request is invalid.
-            resolution: Please check the One Time Premium Amount and submit the request again.
+            resolution: >-
+              Please check the One Time Premium Amount and submit the request
+              again.
           - errorCode: BPM.NM.003
-            attribute:
-            error: Party information does not match with information in the Zahara system.
-            resolution: Please validate the party information and submit the request again.
+            attribute: null
+            error: >-
+              Party information does not match with information in the Zahara
+              system.
+            resolution: >-
+              Please validate the party information and submit the request
+              again.
+    validationFailureResponse:
+      value:
+        statusCode: 400
+        timestamp: '2024-10-08T13:23:10.124Z'
+        errorId: a4a57ed0-2c1b-4922-9959-3b85dd8a96d3
+        message: JSON Valdiation fails with error
+        error:
+          - attribute can not be null
+          - attribute should be in proper format
     successTransactionResponsewithoutQuote:
       value:
         status: success
   securitySchemes:
     Auth0:
       type: openIdConnect
-      openIdConnectUrl: { { openIdConnectUrl } }
+      openIdConnectUrl: https://login.qa.zinnia.com/.well-known/openid-configuration
       x-kong-security-openid-connect:
         config:
           run_on_preflight: true
           scopes_claim:
-            - { { scopeClaimUrl } }
+            - https://qa.api.zinnia.io/permissions
           audience_claim:
             - aud
           audience_required:
-            - { { audienceRequiredUrl } }
+            - https://qa.api.zinnia.io
           client_id:
             - client_id
           auth_methods:

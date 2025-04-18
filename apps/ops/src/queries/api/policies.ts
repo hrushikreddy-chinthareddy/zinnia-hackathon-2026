@@ -642,7 +642,6 @@ enum WithdrawalQuoteEndpointType {
     PartialWithdrawalOneTime = 'partialwithdrawalonetime',
 }
 
-// TODO MG: remove any for actual types
 export const policyWithdrawalQuote = async (
     planCode: string | undefined,
     policyNumber?: string,

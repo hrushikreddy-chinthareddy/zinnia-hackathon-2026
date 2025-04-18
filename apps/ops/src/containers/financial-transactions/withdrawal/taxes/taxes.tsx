@@ -1,4 +1,5 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { TaxWithholdingInstructions, TaxWithholdingType } from '@zinnia/api-types/types/bpm';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import xss from 'xss';
@@ -14,7 +15,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useWithdrawal, WithdrawalType } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { Policy, TaxWithholdingInstructions, TaxWithholdingType } from '@deps/models/policy/sor-policy';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
 import {
@@ -23,7 +23,7 @@ import {
     getOwnersTaxJurisdictionState,
     mapTaxWithholdingInstructionsFromViewModel,
     mapTaxWithholdingInstructionsToViewModel,
-} from './taxes.helpers';
+} from './taxes.helper';
 
 export type TaxesType = {
     taxWithholdingInstructions: TaxWithholdingInstructions[];

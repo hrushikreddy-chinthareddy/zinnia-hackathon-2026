@@ -2,7 +2,7 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import { PolicyFeature, PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-// TODO MG: share with new premium
+
 export const isDateAllowed = (dayjsDate: Dayjs, startDate?: Dayjs, endDate?: Dayjs) => {
     const formattedDate = dayjs(dayjsDate, ZAHARA_API_DATE_FORMAT);
     const isStartDate = formattedDate.isSame(startDate, 'day');

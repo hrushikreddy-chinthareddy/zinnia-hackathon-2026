@@ -1,15 +1,13 @@
+import { FreeLookCancellationRequest, FullSurrenderRequest, PartialWithdrawalOneTimeRequest } from '@zinnia/api-types/types/bpm';
 import { LoanRepaymentOneTimeRequest, NewLoanRequest } from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
 import {
-    FreeLookCancellationRequest,
     FullSurrenderQuoteResponse,
-    FullSurrenderRequest,
     OneTimePremiumRequest,
     PartialWithdrawalOneTimeQuoteResponse,
-    PartialWithdrawalOneTimeRequest,
     SystematicProgramUpdateRequest,
 } from '@deps/models/policy/sor-policy';
 import { baseAppUrl } from '@deps/queries/api-config';
@@ -17,6 +15,10 @@ import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
+
+export interface NewLoanRequestQuery extends NewLoanRequest {
+    caseId: string;
+}
 
 export interface LoanRepaymentOneTimeRequestQuery extends LoanRepaymentOneTimeRequest {
     caseId: string;
@@ -27,18 +29,6 @@ export interface OneTimePremiumRequestQuery extends OneTimePremiumRequest {
 }
 
 export interface SystematicProgramUpdateRequestQuery extends SystematicProgramUpdateRequest {
-    caseId: string;
-}
-
-export interface FreeLookCancellationRequestQuery extends FreeLookCancellationRequest {
-    caseId?: string;
-}
-
-export interface FullSurrenderWithdrawalRequestQuery extends FullSurrenderRequest {
-    caseId: string;
-}
-
-export interface PartialWithdrawalOneTimeRequestQuery extends PartialWithdrawalOneTimeRequest {
     caseId: string;
 }
 
@@ -226,10 +216,10 @@ export const checkEligibilitySystematicPrograms = async (
 export const validateFullSurrenderWithdrawal = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
-    query: FullSurrenderWithdrawalRequestQuery
+    query: FullSurrenderRequest
 ): Promise<TransactionResponse> => {
     try {
-        const { data } = await client.post<FullSurrenderWithdrawalRequestQuery, AxiosResponse>(
+        const { data } = await client.post<FullSurrenderRequest, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender/validation`,
             query
         );
@@ -302,10 +292,10 @@ export const validateOneTimePremium = async (
 export const validatePartialWithdrawalOneTime = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
-    query: PartialWithdrawalOneTimeRequestQuery
+    query: PartialWithdrawalOneTimeRequest
 ): Promise<TransactionResponse> => {
     try {
-        const { data } = await client.post<PartialWithdrawalOneTimeRequestQuery, AxiosResponse>(
+        const { data } = await client.post<PartialWithdrawalOneTimeRequest, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/partialwithdrawalonetime/validation`,
             query
         );
@@ -341,10 +331,10 @@ export const validateSystematicProgramUpdate = async (
 export const submitFreeLookCancel = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
-    query: FreeLookCancellationRequestQuery
+    query: FreeLookCancellationRequest
 ): Promise<TransactionResponse> => {
     try {
-        const response = await client.post<FreeLookCancellationRequestQuery, AxiosResponse>(
+        const response = await client.post<FreeLookCancellationRequest, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation`,
             query
         );
@@ -359,10 +349,10 @@ export const submitFreeLookCancel = async (
 export const submitFullSurrenderWithdrawal = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
-    query: FullSurrenderWithdrawalRequestQuery
+    query: FullSurrenderRequest
 ): Promise<TransactionResponse> => {
     try {
-        const response = await client.post<FullSurrenderWithdrawalRequestQuery, AxiosResponse>(
+        const response = await client.post<FullSurrenderRequest, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender`,
             query
         );
@@ -429,10 +419,10 @@ export const submitNewLoan = async (
 export const submitPartialWithdrawalOneTime = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
-    query: PartialWithdrawalOneTimeRequestQuery
+    query: PartialWithdrawalOneTimeRequest
 ): Promise<TransactionResponse> => {
     try {
-        const response = await client.post<PartialWithdrawalOneTimeRequestQuery, AxiosResponse>(
+        const response = await client.post<PartialWithdrawalOneTimeRequest, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/partialwithdrawalonetime`,
             query
         );

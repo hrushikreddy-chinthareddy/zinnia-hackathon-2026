@@ -1,4 +1,5 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { DisbursementType, TaxWithholdingType } from '@zinnia/api-types/types/bpm';
+import { DisbursementPaymentForm, Policy, TaxWithheldAmount, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -12,18 +13,18 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
-import { ACH, useWithdrawal, WithdrawalType } from '@deps/contexts/transactions/WithdrawalContext';
+import { useWithdrawal, WithdrawalType } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { toTitleCase } from '@deps/helpers/string.helper';
-import { getRequestedWithheldTaxesDisplay, getReturnedWithheldTaxesDisplay } from '@deps/helpers/tax-withholdings.helper';
-import { DisbursementType, Policy, TaxWithholdingType } from '@deps/models/policy/sor-policy';
+import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helper';
+import { getRequestedWithheldTaxesDisplay, getReturnedWithheldTaxesDisplay } from '@deps/helpers/transactions/tax-withholdings.helper';
+import { Address } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
-import { getOwnersTaxJurisdictionState } from '../taxes/taxes.helpers';
+import { getOwnersTaxJurisdictionState } from '../taxes/taxes.helper';
 
 interface SummaryProps {
     policy: Policy;
@@ -42,10 +43,13 @@ const Summary = ({ policy }: SummaryProps) => {
         disbursementType,
         effectiveDate,
         paymentAccountNumber,
+        paymentAddress,
         paymentBranchName,
         payeeFullName,
         taxWithholdingInstructions,
         validationResponse,
+        paymentForm,
+        fboFfc,
     } = withdrawal;
 
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
@@ -55,7 +59,6 @@ const Summary = ({ policy }: SummaryProps) => {
         ? numberFormatify(Math.abs(validationResponse?.quoteResponse?.transactionAmounts?.appliedAmount))
         : numberFormatify(validationResponse?.quoteResponse?.transactionAmounts?.appliedAmount);
 
-    // TODO MG: move this to shared spot or pass down as prop
     const transactionType = useMemo(() => {
         return withdrawal.type === WithdrawalType.Surrender
             ? TransactionType.FULL_SURRENDER
@@ -81,7 +84,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     {validationSucceeded ? t('status200subtitle') : t('status400subtitle')}
                 </Typography>
                 <div className="mb-8 flex w-full flex-row gap-8">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-2">
                         <Label
                             variant={LabelVariant.FieldLabel}
                             label={t('effectiveDate')}
@@ -93,7 +96,7 @@ const Summary = ({ policy }: SummaryProps) => {
                         </Typography>
                     </div>
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-2">
                         <Label
                             variant={LabelVariant.FieldLabel}
                             label={t('requestedWithdrawal')}
@@ -107,7 +110,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     </div>
 
                     {disbursementType === DisbursementType.NET && (
-                        <div className="flex flex-col">
+                        <div className="flex flex-col gap-2">
                             <Label
                                 variant={LabelVariant.FieldLabel}
                                 label={t('actualWithdrawalAmount')}
@@ -118,7 +121,7 @@ const Summary = ({ policy }: SummaryProps) => {
                         </div>
                     )}
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-2">
                         <Label
                             variant={LabelVariant.FieldLabel}
                             label={t('totalPayment')}
@@ -129,12 +132,12 @@ const Summary = ({ policy }: SummaryProps) => {
                     </div>
                 </div>
                 <div className="flex w-full flex-row gap-8">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-2">
                         <Label variant={LabelVariant.FieldLabel} label={t('withdrawalType')} />
                         <Typography variant={TypographyVariant.BodyParagraph}>{toTitleCase(withdrawal.type)}</Typography>
                     </div>
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-2">
                         <Label
                             variant={LabelVariant.FieldLabel}
                             label={t('fundDisbursementType')}
@@ -147,14 +150,13 @@ const Summary = ({ policy }: SummaryProps) => {
             </CardContainer>
 
             <CardContainer containerClassNames="border-b-2 border-gray-100">
-                <div className="mb-4 flex flex-row items-center">
-                    <UserIcon className="mr-2 text-primary" height={24} role="presentation" width={24} />
-                    <Typography variant={TypographyVariant.H2}>{t('taxes')}</Typography>
-                </div>
+                <Typography variant={TypographyVariant.H2} className="mb-4">
+                    {t('taxes')}
+                </Typography>
 
-                <div className="flex gap-8 lg:ml-8">
+                <div className="flex gap-8">
                     <div className="flex gap-8">
-                        <div className="flex flex-col">
+                        <div className="flex flex-col gap-2">
                             <Label
                                 variant={LabelVariant.FieldLabel}
                                 label={t('federalTaxes')}
@@ -171,7 +173,7 @@ const Summary = ({ policy }: SummaryProps) => {
                         </div>
                     </div>
                     <div className="flex gap-8">
-                        <div className="flex flex-col">
+                        <div className="flex flex-col gap-2">
                             <Label
                                 variant={LabelVariant.FieldLabel}
                                 label={t('stateTaxes', { state: ownerTaxState })}
@@ -191,35 +193,35 @@ const Summary = ({ policy }: SummaryProps) => {
                 </div>
             </CardContainer>
             <CardContainer>
-                <div className="mb-4 flex flex-row items-center">
-                    <UserIcon className="mr-2 text-primary" height={24} width={24} />
-                    <Typography variant={TypographyVariant.H2} className="mr-5">
-                        {t('payee')}
-                    </Typography>
-                </div>
+                <Typography variant={TypographyVariant.H2} className="mb-4">
+                    {t('payee')}
+                </Typography>
                 <PayeeSummaryCard
+                    address={paymentAddress as Address}
                     accountNumber={paymentAccountNumber}
                     branchName={paymentBranchName}
-                    classNames="max-w-[524px] lg:ml-8"
+                    classNames="max-w-[524px]"
                     disbursementType={validationResponse?.quoteResponse?.transactionAmounts?.disbursementType}
                     payeeName={payeeFullName}
-                    paymentType={ACH}
+                    paymentType={getDisbursementPaymentForm(paymentForm) as DisbursementPaymentForm}
                     ownerTaxState={ownerTaxState}
                     requestedAmountDollarAmount={numberFormatify(amount)}
+                    // TODO MG: confirm this comment is valid
                     // Hardcoded for MVP - get back null usually (should that be 100?)
                     totalAllocationAmount={totalPayment}
                     federalTaxDollarAmount={getReturnedWithheldTaxesDisplay(
-                        validationResponse?.quoteResponse?.taxWithheldAmounts || [],
+                        (validationResponse?.quoteResponse?.taxWithheldAmounts as TaxWithheldAmount[]) || [],
                         TaxWithholdingType.FEDERAL,
                         DEFAULT_ERROR_STRING
                     )}
                     stateTaxDollarAmount={getReturnedWithheldTaxesDisplay(
-                        validationResponse?.quoteResponse?.taxWithheldAmounts || [],
+                        (validationResponse?.quoteResponse?.taxWithheldAmounts as TaxWithheldAmount[]) || [],
                         TaxWithholdingType.STATE,
                         DEFAULT_ERROR_STRING
                     )}
                     // Hardcoded for MVP but should write a function to default to these values when charges is null
                     withdrawalChargeDollarAmount="$0.00"
+                    fboFfc={fboFfc}
                 />
 
                 {!validationSucceeded && (

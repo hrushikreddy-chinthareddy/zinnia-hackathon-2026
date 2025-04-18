@@ -1,4 +1,5 @@
 import { datadogRum } from '@datadog/browser-rum';
+import { Party } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
@@ -47,7 +48,7 @@ export const buildFullName = (firstName?: string, middleName?: string, lastName?
     return `${first}${space}${middle} ${last} ${suffixString}`;
 };
 
-export const buildFullNameFromParty = (party?: PolicyAllOfPartiesItem | null) => {
+export const buildFullNameFromParty = (party?: PolicyAllOfPartiesItem | Party | null) => {
     if (!party) return DEFAULT_ERROR_STRING;
 
     if (party.fullName) return party.fullName;

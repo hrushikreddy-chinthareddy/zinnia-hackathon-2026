@@ -1,18 +1,23 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { FullSurrenderRequest, PartialWithdrawalOneTimeRequest } from '@zinnia/api-types/types/bpm';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import PayeesStep, { PayeesStepSetState } from '@deps/components/workflows/payees-step/payees-step';
-import PaymentStep, { PaymentStepSetState } from '@deps/components/workflows/payment-step/payment-step';
+import PaymentStep from '@deps/components/workflows/payment-step/payment-step';
+import PaymentStepMoneyOut from '@deps/components/workflows/payment-step/payment-step-money-out';
+import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
 import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { WithdrawalType, useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Processes } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
+import { Policy as PolicyOld } from '@deps/models/policy/sor-policy';
 import { validateFullSurrenderWithdrawal, validatePartialWithdrawalOneTime } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
@@ -21,12 +26,15 @@ import Taxes from './taxes/taxes';
 import { buildWithdrawalsRequestBody } from './withdrawals.helpers';
 
 export type WithdrawalContainerProps = {
-    policy: Policy;
+    policy: PolicyOld;
 };
 
 const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
     const { t } = useTranslation();
     const { withdrawal, setWithdrawal } = useWithdrawal();
+    const { featureFlags } = useOptimizely();
+
+    const wireCheckPaymentsEnabled = featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
 
     const startLabel = t('withdrawals.start.label');
     const amountLabel = t('withdrawals.amount.label');
@@ -43,11 +51,11 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
     }, [withdrawal.type]);
 
     const validateCall = () => {
-        const query = buildWithdrawalsRequestBody(withdrawal);
+        const query = buildWithdrawalsRequestBody(withdrawal, wireCheckPaymentsEnabled);
 
         return withdrawal.type === WithdrawalType.Surrender
-            ? validateFullSurrenderWithdrawal(policy.product?.planCode, policy.policyNumber, query)
-            : validatePartialWithdrawalOneTime(policy.product?.planCode, policy.policyNumber, query);
+            ? validateFullSurrenderWithdrawal(policy.product?.planCode, policy.policyNumber, query as FullSurrenderRequest)
+            : validatePartialWithdrawalOneTime(policy.product?.planCode, policy.policyNumber, query as PartialWithdrawalOneTimeRequest);
     };
 
     const steps: Step[] = [
@@ -78,7 +86,7 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
         },
         {
             ariaLabel: taxesLabel,
-            component: <Taxes policy={policy} />,
+            component: <Taxes policy={policy as Policy} />,
             screenReaderLabel: taxesLabel,
             index: 2,
             text: taxesLabel,
@@ -88,7 +96,7 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
             component: (
                 <PayeesStep
                     parentPage={ParentPage.Withdrawals}
-                    policy={policy}
+                    policy={policy as Policy}
                     setState={setWithdrawal as PayeesStepSetState}
                     state={withdrawal}
                     trackEventProps={{ type: transactionType, step: TransactionStep.Payees }}
@@ -101,14 +109,24 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
         {
             ariaLabel: paymentLabel,
             component: (
-                <PaymentStep
-                    parentPage={ParentPage.Withdrawals}
-                    policy={policy}
-                    setState={setWithdrawal as PaymentStepSetState}
-                    state={withdrawal}
-                    validateTransaction={validateCall}
-                    trackEventProps={{ type: transactionType, step: TransactionStep.Payment }}
-                />
+                wireCheckPaymentsEnabled
+                    ? (
+                        <PaymentStepMoneyOut
+                            parentPage={ParentPage.Withdrawals}
+                            policy={policy}
+                            setState={setWithdrawal as PaymentStepSetState}
+                            state={withdrawal}
+                            validateTransaction={validateCall}
+                        />
+                    ) : (
+                        <PaymentStep
+                            parentPage={ParentPage.Withdrawals}
+                            policy={policy}
+                            setState={setWithdrawal as PaymentStepSetState}
+                            state={withdrawal}
+                            validateTransaction={validateCall}
+                        />
+                    )
             ),
             screenReaderLabel: paymentLabel,
             index: 4,
@@ -116,14 +134,14 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
         },
         {
             ariaLabel: summaryLabel,
-            component: <Summary policy={policy} />,
+            component: <Summary policy={policy as Policy} />,
             screenReaderLabel: summaryLabel,
             index: 5,
             text: summaryLabel,
         },
         {
             ariaLabel: confirmLabel,
-            component: <Confirm policy={policy} />,
+            component: <Confirm policy={policy as Policy} />,
             screenReaderLabel: confirmLabel,
             index: 6,
             text: confirmLabel,

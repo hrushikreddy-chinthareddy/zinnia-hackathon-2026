@@ -1,24 +1,31 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import EffectiveDate from '@deps/components/workflows/effective-date-step/effective-date-step';
 import PayeesStep, { PayeesStepSetState } from '@deps/components/workflows/payees-step/payees-step';
-import PaymentStep, { PaymentStepSetState } from '@deps/components/workflows/payment-step/payment-step';
+import PaymentStep from '@deps/components/workflows/payment-step/payment-step';
+import PaymentStepMoneyOut from '@deps/components/workflows/payment-step/payment-step-money-out';
+import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
 import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Processes } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
+import { Policy as PolicyOld } from '@deps/models/policy/sor-policy';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import Confirm from './confirm/confirm';
 import Summary from './summary/summary';
 
-const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
+const FreeLookCancelContainer = ({ policy }: { policy: PolicyOld }) => {
     const { t } = useTranslation();
     const { withdrawal, setWithdrawal } = useWithdrawal();
+    const { featureFlags } = useOptimizely();
+
+    const wireCheckPaymentsEnabled = featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
 
     const startLabel = t('cancelFreeLook.start.label');
     const dateLabel = t('cancelFreeLook.date.label');
@@ -63,7 +70,7 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
             component: (
                 <PayeesStep
                     parentPage={ParentPage.Withdrawals}
-                    policy={policy}
+                    policy={policy as Policy}
                     setState={setWithdrawal as PayeesStepSetState}
                     state={withdrawal}
                     trackEventProps={{ type: TransactionType.FREE_LOOK_CANCELLATION, step: TransactionStep.Payees }}
@@ -76,14 +83,22 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
         {
             ariaLabel: paymentLabel,
             component: (
-                <PaymentStep
-                    parentPage={ParentPage.Withdrawals}
-                    policy={policy}
-                    setState={setWithdrawal as PaymentStepSetState}
-                    state={withdrawal}
-                    subtitle={t('withdrawals.payment.title') as string}
-                    trackEventProps={{ type: TransactionType.FREE_LOOK_CANCELLATION, step: TransactionStep.Payment }}
-                />
+                wireCheckPaymentsEnabled
+                    ? (
+                        <PaymentStepMoneyOut
+                            parentPage={ParentPage.Withdrawals}
+                            policy={policy}
+                            setState={setWithdrawal as PaymentStepSetState}
+                            state={withdrawal}
+                        />
+                    ) : (
+                        <PaymentStep
+                            parentPage={ParentPage.Withdrawals}
+                            policy={policy}
+                            setState={setWithdrawal as PaymentStepSetState}
+                            state={withdrawal}
+                        />
+                    )
             ),
             screenReaderLabel: paymentLabel,
             index: 3,

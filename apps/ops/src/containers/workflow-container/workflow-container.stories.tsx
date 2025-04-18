@@ -6,12 +6,13 @@ import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { Processes } from '@deps/models/case/case';
 
 import WorkflowContainer from './workflow-container';
-import PaymentStep, { PaymentStepSetState } from '../../components/workflows/payment-step/payment-step';
+import PaymentStep from '../../components/workflows/payment-step/payment-step';
 import PayorStep, { PayorStepSetState } from '../../components/workflows/payor-step/payor-step';
 import StartStep, { StartStepSetState } from '../../components/workflows/start-step/start-step';
 import Confirm from '../financial-transactions/premium/new-premium/confirm/confirm';
 import Summary from '../financial-transactions/premium/new-premium/summary/summary';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
 
 export default {
     title: 'Containers/WorkflowContainer',

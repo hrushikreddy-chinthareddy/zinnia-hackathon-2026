@@ -1,4 +1,4 @@
-import { DisbursementType, TransactionType } from '@zinnia/api-types/types/sor';
+import { DisbursementType, Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
@@ -19,11 +19,8 @@ import { useNewLoan } from '@deps/contexts/transactions/NewLoanContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-
-import { NewLoanContainerProps } from '../new-loan-container';
 
 export type AmountType = {
     amount: number;
@@ -33,6 +30,11 @@ export type AmountType = {
     loanAmount?: string;
     loanCustomAmount?: string;
 };
+
+interface AmountProps {
+    policy: Policy;
+}
+
 
 const getRadioItems = (
     t: TFunction,
@@ -95,7 +97,7 @@ const getRadioItems = (
     ].filter(Boolean) as RadioItem[];
 };
 
-const Amount = ({ policy }: NewLoanContainerProps) => {
+const Amount = ({ policy }: AmountProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'newLoan.amount' });
     const { goToNext } = useWorkflow();
     const { newLoan, setNewLoan } = useNewLoan();

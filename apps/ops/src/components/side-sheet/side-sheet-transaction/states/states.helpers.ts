@@ -7,7 +7,7 @@ import { ViewState } from '../non-financial-transactions/states/states.helpers';
 
 // TODO MG: share with non financial transactions (ViewState as well)
 interface HandleResponse {
-    // TODO CB - better type
+    // TODO MG response type from spec
     response: any;
     setViewState: Dispatch<SetStateAction<ViewState>>;
     setValidationResults: Dispatch<SetStateAction<ValidationResult[]>>;

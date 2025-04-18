@@ -20,6 +20,7 @@ const WorkflowCard = ({ children, title, subtitle, footerContent, className }: W
             {!!subtitle && <Typography variant={TypographyVariant.Body}>{subtitle}</Typography>}
         </div>
         <div>{children}</div>
+        {/* TODO MG: remove this padding top */}
         {!!footerContent && <div className="pt-4">{footerContent}</div>}
     </div>
 );

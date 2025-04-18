@@ -1,8 +1,9 @@
-import { Tag, TagVariant, TooltipPlacement } from '@zinnia/bloom/components';
+import { Label, Tag, TagVariant, TooltipPlacement } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
+import DotContainer from '@deps/components/dot-container/dot-container';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import PopoverOnTruncate from '@deps/components/popover-on-truncate/popover-on-truncate';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -40,7 +41,9 @@ interface PaymentProps {
     accountNumber?: string;
     address?: Address;
     branchName?: string;
+    // TODO MG: allow PaymentForm or DisbursementPaymentForm?
     paymentType: DisbursementPaymentForm;
+    fboFfc?: string;
 }
 
 interface TranslationProps {
@@ -124,6 +127,9 @@ const PayeeName = ({ beneficiaryColor, index, payeeName }: PayeeNameProps) => {
 
 const PaymentInfo = ({ accountNumber, address, branchName, paymentType, t }: PaymentProps & TranslationProps) => {
     switch (paymentType) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        case 'WIRE':// case DisbursementPaymentForm.WIRE:
         case DisbursementPaymentForm.EFT:
         case DisbursementPaymentForm.ACH:
             return (
@@ -161,22 +167,35 @@ const PaymentInfo = ({ accountNumber, address, branchName, paymentType, t }: Pay
     }
 };
 
-const PaymentMethod = ({ accountNumber, address, branchName, paymentType, t }: PaymentProps & TranslationProps) => {
-    return (
-        <div className="flex flex-col">
-            <Typography className="mb-4" variant={TypographyVariant.H4}>
-                {t('payeeSummaryCard.paymentMethod')}
-            </Typography>
-            {!!paymentType && (
-                <div className="flex items-center gap-4">
-                    <span className="pointer-events-none inline-flex uppercase">
+const PaymentMethod = ({ accountNumber, address, branchName, paymentType, t, fboFfc }: PaymentProps & TranslationProps) => {
+    if (!paymentType) return;
+    else {
+        return (
+            <>
+                <Typography className="mb-4" variant={TypographyVariant.H4}>
+                    {t('payeeSummaryCard.paymentMethod')}
+                </Typography>
+                <div className="flex flex-col gap-4">
+                    {fboFfc && (
+                        <DotContainer
+                            dotLeftSide={<Label>{t('workflows.paymentStep.paymentMethod.fboFfc.tooltipTitle')}</Label>}
+                            dotRightSide={<Typography variant={TypographyVariant.Body}>{fboFfc}</Typography>}
+                        />
+                    )}
+                    <div className="flex gap-4">
                         <Tag isSelected={false} variant={TagVariant.White} text={getPaymentType(paymentType, t) ?? DEFAULT_ERROR_STRING} />
-                    </span>
-                    <PaymentInfo t={t} accountNumber={accountNumber} address={address} branchName={branchName} paymentType={paymentType} />
+                        <PaymentInfo
+                            t={t}
+                            accountNumber={accountNumber}
+                            address={address}
+                            branchName={branchName}
+                            paymentType={paymentType}
+                        />
+                    </div>
                 </div>
-            )}
-        </div>
-    );
+            </>
+        );
+    }
 };
 
 const PayeeSummaryCard = ({
@@ -200,6 +219,7 @@ const PayeeSummaryCard = ({
     withdrawalChargePercentage,
     disbursementType,
     ownerTaxState,
+    fboFfc,
 }: PayeeSummaryCardProps) => {
     const { t } = useTranslation();
     const containerClasses = clsx(
@@ -244,6 +264,7 @@ const PayeeSummaryCard = ({
                     t={t}
                     branchName={branchName?.toLocaleUpperCase() ?? DEFAULT_ERROR_STRING}
                     paymentType={paymentType}
+                    fboFfc={fboFfc}
                 />
             </div>
         </div>

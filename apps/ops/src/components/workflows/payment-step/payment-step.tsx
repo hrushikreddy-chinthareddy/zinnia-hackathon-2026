@@ -1,58 +1,32 @@
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
-import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helper';
 import { ArrangementType, Policy } from '@deps/models/policy/sor-policy';
-import { TransactionResponse } from '@deps/queries/api/bpm';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
-import { TransactionClickProps } from '@deps/types/segment-analytics';
 
+import { PaymentMethodType, PaymentStepProps } from './types';
 import WorkflowCard from '../workflow-card/workflow-card';
-
-export type PaymentMethodType = {
-    paymentAccountNumber?: string;
-    paymentBankId?: string;
-    paymentBranchName?: string;
-    validationResponse?: TransactionResponse;
-};
-
-export interface PaymentState extends PaymentMethodType {
-    effectiveDate: string;
-    payeePartyId?: string;
-    paymentAmount: number | string;
-    payorPartyId?: string;
-}
-
-export type PaymentStepSetState = Dispatch<SetStateAction<PaymentState>>;
-
-interface PaymentStepProps extends TransactionClickProps {
-    parentPage: ParentPage;
-    policy: Policy;
-    setState: PaymentStepSetState;
-    state: PaymentState;
-    subtitle?: string;
-    validateTransaction?: () => Promise<TransactionResponse>;
-}
 
 const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTransaction, trackEventProps }: PaymentStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
     const router = useRouter();
 
-    const { policyNumber, product, systematicPrograms } = policy;
+    const { parties, policyNumber, product, systematicPrograms } = policy as Policy;
     const { paymentBankId, paymentAccountNumber: currentPaymentAccountNumber, payeePartyId, payorPartyId } = state;
     const [formError, setFormError] = useState(false);
 
     const payPartyId = payeePartyId || payorPartyId;
-    const party = policy?.parties?.find(party => party.partyId === payPartyId);
+    const party = parties?.find(party => party.partyId === payPartyId);
+
     const paymentProgram = systematicPrograms?.find(program => program.arrangementType === ArrangementType.PAYMENT);
     const programBankId = paymentProgram?.party?.find(party => party.partyId === payPartyId);
     const bankDetails = useMemo(() => {
@@ -165,7 +139,7 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
                                 className="flex cursor-not-allowed items-center justify-center gap-1 rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-8 text-gray-300"
                             >
                                 <AddIcon height={24} width={24} />
-                                <p className="font-primary text-base font-semibold">{t('workflows.paymentStep.add')}</p>
+                                <p className="font-primary text-base font-semibold">{t('workflows.paymentStep.addBank')}</p>
                             </div>
                         </div>
                     </div>
@@ -173,7 +147,7 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
                 {formError && (
                     <AssistiveText
                         className="col-span-full"
-                        text={t('workflows.paymentStep.error')}
+                        text={t('workflows.paymentStep.bankError')}
                         variant={AssistiveTextVariant.Error}
                     />
                 )}

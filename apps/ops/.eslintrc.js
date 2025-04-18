@@ -12,6 +12,13 @@ module.exports = {
         react: {
             version: 'detect',
         },
+        "import/resolver": {
+            alias: {
+                map: [
+                    ['@/', './src'],
+                ]
+            }
+        },
     },
     root: true,
     env: {

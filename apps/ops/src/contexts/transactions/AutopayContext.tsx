@@ -2,11 +2,11 @@ import dayjs from 'dayjs';
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import { PaymentMethodType } from '@deps/components/workflows/payment-step/payment-step';
 import { PayorType } from '@deps/components/workflows/payor-step/payor-step';
 import { AmountType, ReverseInitiatorType } from '@deps/containers/financial-transactions/autopay/amount/amount';
 import { ArrangementType, Frequency, PaymentForm, Reason } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
 
 // ACH is the only supported payment type for MVP
 export const ACH = PaymentForm.ACH;

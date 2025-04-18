@@ -149,5 +149,7 @@ export enum FEATURE_FLAGS {
     PREMIUM_SET_OR_CANCEL_AUTOPAY = 'premium_set_or_cancel_autopay',
     DASHBOARD_SECTION_TAB_VIEW = 'dashboard_section_tab_view',
     LOAN_CANCEL_AUTOPAY = 'loan_cancel_autopay',
+    NEW_LOAN_WIRE_CHECK_PAYMENTS = 'new_loan_wire_check_payments',
     COMMUNICATION_PREFERENCES = 'communication_preferences',
+    WITHDRAWAL_WIRE_CHECK_PAYMENTS = 'withdrawal_wire_check_payments',
 }
