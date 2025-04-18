@@ -8,7 +8,7 @@ import { TFunction } from 'next-i18next';
 import { DocumentPreviewerProps } from '@deps/components/document-viewer/document-previewer';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { percentFormatify } from '@deps/helpers/numbers.helper';
-import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase, toSentenceCase } from '@deps/helpers/string.helper';
 import { Case, Statuses } from '@deps/models/case/case';
 import { DocumentInstance } from '@deps/models/case/document-instance';
 import { ExceptionInstance, ExceptionStatuses } from '@deps/models/case/exception-instance';
@@ -219,7 +219,7 @@ export class TransformedStep {
             });
             return;
         }
-        this.name = this.parentStage.parentCase.t([`caseManagementApiKeys.steps.${this.id}`, toSentenceCase(this.stepRaw.label)], {
+        this.name = this.parentStage.parentCase.t([`caseManagementApiKeys.steps.${this.id}`, this.stepRaw.label], {
             subType: this.parentStage.parentCase.processSubType,
             process: this.parentStage.parentCase.process,
         });
@@ -249,7 +249,7 @@ export class TransformedStage {
         this.totalSteps = 0;
         this.id = stage.id;
         this.status = stage.stageStatus;
-        this.name = this.parentCase.t([`caseManagementApiKeys.stages.${this.id}`, toSentenceCase(stage.label)], {
+        this.name = this.parentCase.t([`caseManagementApiKeys.stages.${this.id}`, stage.label], {
             subType: this.parentCase.processSubType,
         });
         this.processSteps();
@@ -473,12 +473,15 @@ export class TransformedCase {
         };
     }
     // Builds an ExceptionView from an ExceptionInstance
-    private buildException(exception: ExceptionInstance): ExceptionView {
+    private buildException(exception: ExceptionInstance, isUnmapped?: boolean): ExceptionView {
         // Building up the exceptionReason to use if the nigoReason hasn't mapped the provided exceptionRefId or if the refId is missing
-        const exceptionReason = toSentenceCase(exception?.detailedReason ? exception?.detailedReason : exception?.reason);
+
+        const exceptionReason = exception?.detailedReason ? exception?.detailedReason : exception?.reason;
+        const finalExceptionReason = isUnmapped ? toSentenceCase(exceptionReason) : exceptionReason;
+
         const exceptionDescription = exception?.exceptionRefId
-            ? this.t(`caseManagementApiKeys.nigoReasons.${exception.exceptionRefId}`, exceptionReason)
-            : exceptionReason;
+            ? this.t(`caseManagementApiKeys.nigoReasons.${exception.exceptionRefId}`, finalExceptionReason)
+            : finalExceptionReason;
         const tasks: TaskView[] = (
             (exception.taskIdList || ([] as string[]))
                 .map(taskId => {
@@ -513,7 +516,7 @@ export class TransformedCase {
         this.unmappedExceptions = Object.keys(this.exceptionMap).reduce((acc, exceptionId) => {
             const exception = this.exceptionMap[exceptionId] as ExceptionInstance & { usedInStep: boolean };
             if (exception && !exception.usedInStep) {
-                acc.push(this.buildException(exception));
+                acc.push(this.buildException(exception, true));
             }
             return acc;
         }, [] as ExceptionView[]);
