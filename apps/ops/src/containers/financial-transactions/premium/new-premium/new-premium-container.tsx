@@ -1,7 +1,7 @@
 import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useTranslation } from 'next-i18next';
-import { v4 as uuidV4 } from 'uuid';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import PaymentStep, { PaymentStepSetState } from '@deps/components/workflows/payment-step/payment-step';
@@ -14,14 +14,17 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { Processes } from '@deps/models/case/case';
-import { PaymentForm, Policy } from '@deps/models/policy/sor-policy';
+import { Policy } from '@deps/models/policy/sor-policy';
 import { validateOneTimePremium } from '@deps/queries/api/bpm';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { buildNewPremiumRequestBody } from './new-premium.helpers';
 
 export type NewPremiumContainerProps = {
     policy: Policy;
 };
+
+dayjs.extend(utc);
 
 const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
     const { t } = useTranslation();
@@ -34,21 +37,11 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
     const summaryLabel = t('newPremium.summary.label');
     const confirmLabel = t('newPremium.confirm.label');
 
-    const validateCall = () =>
-        validateOneTimePremium(policy.product?.planCode, policy.policyNumber, {
-            caseId: premium.caseId || '',
-            correlationId: uuidV4(),
-            effectiveDate: dayjs(premium.effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT),
-            reverseInitiator: premium.reverseInitiator,
-            transactionAmounts: {
-                requestedAmount: Number(premium.paymentAmount),
-            },
-            payor: {
-                bankId: premium.paymentBankId,
-                partyId: premium.payorPartyId,
-                paymentForm: PaymentForm.ACH,
-            },
-        });
+    const validateCall = () => {
+        const query = buildNewPremiumRequestBody(premium);
+
+        return validateOneTimePremium(policy.product?.planCode, policy.policyNumber, query);
+    }
 
     const steps: Step[] = [
         {

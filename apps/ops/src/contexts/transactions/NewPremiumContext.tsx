@@ -10,7 +10,7 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 // ACH is the only supported payment type for MVP
 export const ACH = PaymentForm.ACH;
 
-interface Premium extends AmountType, PaymentMethodType, PayorType, ReverseInitiatorType {
+export interface Premium extends AmountType, PaymentMethodType, PayorType, ReverseInitiatorType {
     caseId?: string;
 }
 

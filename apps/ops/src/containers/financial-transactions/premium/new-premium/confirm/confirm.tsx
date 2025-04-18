@@ -1,18 +1,16 @@
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { v4 as uuidV4 } from 'uuid';
 
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { ACH, usePremium } from '@deps/contexts/transactions/NewPremiumContext';
+import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { Statuses } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitOneTimePremium } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { buildNewPremiumRequestBody } from '../new-premium.helpers';
 
 interface ConfirmProps {
     policy: Policy;
@@ -34,20 +32,9 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
 
     const submit = useCallback(async () => {
-        const response = await submitOneTimePremium(policy.product?.planCode, policy.policyNumber, {
-            caseId: caseId || '',
-            correlationId: uuidV4(),
-            effectiveDate: dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT),
-            reverseInitiator: reverseInitiator,
-            transactionAmounts: {
-                requestedAmount: Number(paymentAmount),
-            },
-            payor: {
-                bankId: paymentBankId,
-                partyId: payorPartyId,
-                paymentForm: ACH,
-            },
-        });
+        const query = buildNewPremiumRequestBody(premium);
+
+        const response = await submitOneTimePremium(policy.product?.planCode, policy.policyNumber, query);
 
         if (response.status !== StatusCode.Accepted) {
             setSubmitFailed(true);

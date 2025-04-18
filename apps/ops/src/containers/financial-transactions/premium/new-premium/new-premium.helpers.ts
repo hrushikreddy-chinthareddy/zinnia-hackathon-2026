@@ -1,0 +1,30 @@
+import dayjs from 'dayjs';
+import { v4 as uuidV4 } from 'uuid';
+
+import { Premium } from "@deps/contexts/transactions/NewPremiumContext";
+import { OneTimePremiumRequestQuery } from "@deps/queries/api/bpm";
+import { PaymentForm } from '@zinnia/api-types/types/bpm';
+import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+
+export const buildNewPremiumRequestBody = (premium: Premium): OneTimePremiumRequestQuery => {
+    const now = dayjs();
+    const effectiveDate = dayjs(premium.effectiveDate, NUMERIC_DATE_FORMAT)
+        .set('hour', now.get('hour'))
+        .set('minute', now.get('minute'))
+        .set('second', now.get('second'));
+
+    return {
+        caseId: premium.caseId || '',
+        correlationId: uuidV4(),
+        effectiveDate: dayjs(effectiveDate).utc().format(),
+        reverseInitiator: premium.reverseInitiator,
+        transactionAmounts: {
+            requestedAmount: Number(premium.paymentAmount),
+        },
+        payor: {
+            bankId: premium.paymentBankId,
+            partyId: premium.payorPartyId,
+            paymentForm: PaymentForm.ACH,
+        },
+    }
+}
