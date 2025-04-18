@@ -423,7 +423,15 @@
                                                 "properties": {
                                                     "annualIncome": {
                                                         "type": "string",
-                                                        "title": "Annual income"
+                                                        "title": "Annual income / Gross household income"
+                                                    },
+                                                    "annualExpenses": {
+                                                        "type": "string",
+                                                        "title": "Annual expenses / Household living expenses"
+                                                    },
+                                                    "disposableIncome": {
+                                                        "type": "object",
+                                                        "title": "Disposable income"
                                                     },
                                                     "netWorth": {
                                                         "type": "string",
@@ -479,10 +487,7 @@
                                                         "type": "string",
                                                         "title": "Total debt"
                                                     },
-                                                    "annualExpenses": {
-                                                        "type": "string",
-                                                        "title": "Annual expenses"
-                                                    },
+
                                                     "sourceOfFunds": {
                                                         "type": "array",
                                                         "title": "Source of funds",
@@ -503,7 +508,23 @@
                                                 "properties": {
                                                     "annualIncome": {
                                                         "type": "string",
-                                                        "title": "Annual income"
+                                                        "title": "Annual income / Gross household income"
+                                                    },
+                                                    "annualExpenses": {
+                                                        "type": "string",
+                                                        "title": "Annual expenses / Household living expenses"
+                                                    },
+                                                    "disposableIncome": {
+                                                        "title": "Disposable income",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "annualIncome": {
+                                                                "type": "string"
+                                                            },
+                                                            "annualExpenses": {
+                                                                "type": "string"
+                                                            }
+                                                        }
                                                     },
                                                     "netWorth": {
                                                         "type": "string",
@@ -535,10 +556,7 @@
                                                         "type": "string",
                                                         "title": "Total debt"
                                                     },
-                                                    "annualExpenses": {
-                                                        "type": "string",
-                                                        "title": "Annual expenses"
-                                                    },
+
                                                     "sourceOfFunds": {
                                                         "type": "array",
                                                         "title": "Source of funds",
@@ -578,7 +596,8 @@
                                                             "const": "OTHERS"
                                                         }
                                                     }
-                                                }
+                                                },
+                                                "required": ["sourceOfIncome"]
                                             },
                                             "then": {
                                                 "properties": {
@@ -802,11 +821,25 @@
                                                                 "title": "Product Details",
                                                                 "items": {
                                                                     "type": "object",
+                                                                    "required": ["productType", "companyName", "policyNumber", "issueDate"],
                                                                     "properties": {
                                                                         "productType": {
                                                                             "type": "string",
                                                                             "title": "Product type",
                                                                             "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
+                                                                        },
+                                                                        "companyName": {
+                                                                            "type": "string",
+                                                                            "title": "Company Name"
+                                                                        },
+                                                                        "policyNumber": {
+                                                                            "type": "string",
+                                                                            "title": "Policy Number"
+                                                                        },
+                                                                        "issueDate": {
+                                                                            "type": "string",
+                                                                            "format": "date",
+                                                                            "title": "Issue Date"
                                                                         }
                                                                     }
                                                                 }
@@ -857,11 +890,7 @@
                                             "type": "string",
                                             "title": "Current residence option"
                                         },
-                                        "assistedLivingFacilityInd": {
-                                            "type": "string",
-                                            "title": "Assisted living facility indicator",
-                                            "$ref": "#/definitions/assistedLivingFacilityIndEnum"
-                                        },
+
                                         "extraFundAvailable": {
                                             "type": "string",
                                             "title": "Extra fund available",
@@ -893,7 +922,7 @@
                                     },
                                     "required": [
                                         "currentResidenceOption",
-                                        "assistedLivingFacilityInd",
+
                                         "extraFundAvailable",
                                         "existingPoliciesSoldByAgent",
                                         "consideredOtherInsuranceNeeds",
@@ -1024,7 +1053,7 @@
                             "enum": ["MALE", "FEMALE", "TRANSGENDER", "OTHER"]
                         },
                         "martialStatusEnum": {
-                            "enum": ["SINGLE", "MARRIED", "DIVORCED", "WIDOWED", "UNKNOWN", "LEGALLY_SEPARATED"]
+                            "enum": ["SINGLE", "MARRIED", "DIVORCED", "WIDOWED"]
                         },
                         "stateEnum": {
                             "enum": [
@@ -1168,6 +1197,10 @@
                                 "ANNUITIES",
                                 "ANNUITY_SURRENDER_FREE",
                                 "REAL_STATE",
+                                "MUTUAL_FUNDS",
+                                "CERTIFICATE_OF_DEPOSITE",
+                                "ANNUITY_SURRENDER_FREE_ABOVEAGE",
+                                "ANNUITY_SURRENDER_FREE_UNDERAGE",
                                 "OTHERS"
                             ]
                         },
@@ -1303,9 +1336,7 @@
                                 "OTHERS"
                             ]
                         },
-                        "assistedLivingFacilityIndEnum": {
-                            "enum": ["YES", "NO"]
-                        },
+
                         "extraFundAvailableEnum": {
                             "enum": ["YES", "NO"]
                         },
@@ -1409,7 +1440,7 @@
                                     },
                                     "martialStatus": {
                                         "ui:options": {
-                                            "enumNames": ["Single", "Married", "Divorced", "Widowed", "Unknown", "Legally Seperated"]
+                                            "enumNames": ["Single", "Married", "Divorced", "Widowed"]
                                         }
                                     }
                                 },
@@ -1625,10 +1656,20 @@
                             "ui:options": {
                                 "classNames": "divider"
                             },
-                            "annualIncome": {
+                            "annualIncome": {},
+                            "annualExpenses": {},
+                            "disposableIncome": {
                                 "ui:options": {
-                                    "inline": true,
-                                    "widget": "ValueWidget"
+                                    "label": true,
+                                    "ObjectFieldTemplate": "DifferenceTemplate",
+                                    "formContext": {
+                                        "keyName": "customData",
+                                        "details": "details",
+                                        "mainObject": "fiscalData",
+                                        "minuend": "annualIncome",
+                                        "subtrahend": "annualExpenses"
+                                    },
+                                    "omitValue": true
                                 }
                             },
                             "netWorth": {
@@ -1700,11 +1741,7 @@
                                     "widget": "ValueWidget"
                                 }
                             },
-                            "annualExpenses": {
-                                "ui:options": {
-                                    "widget": "ValueWidget"
-                                }
-                            },
+
                             "sourceOfFunds": {
                                 "ui:options": {
                                     "label": true,
@@ -1769,6 +1806,10 @@
                                                     "Annuities",
                                                     "Annuity Surrender Free",
                                                     "Real State",
+                                                    "Mutual Fund",
+                                                    "Certificate of Deposits",
+                                                    "Annuities out of surrender charge period (if age 59 ½ or above)",
+                                                    "Annuities out of surrender charge period (if under age 59 ½)",
                                                     "Others"
                                                 ]
                                             }
@@ -1948,7 +1989,7 @@
                                 "classNames": "divider"
                             },
                             "currentResidenceOption": {},
-                            "assistedLivingFacilityInd": {},
+
                             "extraFundAvailable": {},
                             "existingPoliciesSoldByAgent": {},
                             "consideredOtherInsuranceNeeds": {},

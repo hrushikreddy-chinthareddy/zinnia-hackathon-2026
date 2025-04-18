@@ -8,6 +8,7 @@ import InstructionsTemplate from '../customization/templates/instructions-templa
 import FileInfoTemplate from '../customization/templates/object-field-template/file-info-template';
 import ObjectRowFieldTemplate from '../customization/templates/object-field-template/object-row-template';
 import TextListTemplate from '../customization/templates/text-list-template';
+import DifferenceTemplate from '../customization/templates/difference-template';
 
 export const UIArrayTemplateMap: Record<string, (props: ArrayFieldTemplateProps) => React.JSX.Element> = {
     ['ArrayFieldTemplate']: ArrayFieldTemplate,
@@ -21,6 +22,7 @@ export const UIObjectTemplateMap: Record<string, (props: any) => React.JSX.Eleme
     ['InstructionsTemplate']: InstructionsTemplate,
     ['AddressFieldTemplate']: AddressFieldTemplate,
     ['ObjectRowFieldTemplate']: ObjectRowFieldTemplate,
+    ['DifferenceTemplate']: DifferenceTemplate,
 };
 
 export const ApplyUITemplates = (uiSchema: UiSchema) => {
