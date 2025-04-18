@@ -1,0 +1,27 @@
+.additionalInfo {
+    padding: var(--measure-dimension-padding-lg) var(--measure-dimension-padding-2xl);
+    vertical-align: middle;
+    font-size: small;
+    gap: 1;
+}
+
+.icon {
+    margin-left: auto;
+    margin-right: 5px;
+}
+
+.success {
+    color: rgb(var(--color-semantic-success) / var(--tw-text-opacity, 1));
+}
+
+.error {
+    color: rgb(var(--color-semantic-error) / var(--tw-text-opacity, 1));
+}
+
+.warning {
+    color: rgb(var(--color-semantic-warning) / var(--tw-text-opacity, 1));
+}
+
+.pending {
+    color: rgb(var(--color-semantic-pending) / var(--tw-text-opacity, 1));
+}

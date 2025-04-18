@@ -50,7 +50,6 @@ export function FieldTemplate(props: FieldTemplateProps) {
                                 </Label>
                             </div>
                         )}
-                        {description}
                         {readonly && typeof formData === 'string' ? formData : children}
                         {!hideError && errors}
                     </div>

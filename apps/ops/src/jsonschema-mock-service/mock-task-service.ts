@@ -11,30 +11,31 @@ import attachmentNigoSchema from '@deps/jsonschema-mock-service/tasks/attachment
 import appDataEntrySchema from '@deps/jsonschema-mock-service/tasks/nb_app_data_entry.json';
 import premiumNigoSchema from '@deps/jsonschema-mock-service/tasks/premium-nigo.json';
 import prenoteNigoSchema from '@deps/jsonschema-mock-service/tasks/prenote-nigo.json';
+import prenoteReviewSchema from '@deps/jsonschema-mock-service/tasks/prenote-review.json';
 import purchaseDocumentMatchingSchema from '@deps/jsonschema-mock-service/tasks/purchase-document-matching.json';
+import returnPaymentSchema from '@deps/jsonschema-mock-service/tasks/return-payment.json';
+import ofacReviewSchema from '@deps/jsonschema-mock-service/tasks/review-ofac.json';
+import standardDocumentMatchingSchema from '@deps/jsonschema-mock-service/tasks/standard-document-matching.json';
+import toaNigoSchema from '@deps/jsonschema-mock-service/tasks/toa-nigo.json';
+import toaReviewSchema from '@deps/jsonschema-mock-service/tasks/toa-review.json';
 import agentNigoData from '@deps/jsonschema-mock-service/tasks-data/agent-nigo.json';
 import agentOnboardingNigoData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-nigo.json';
 import agentOnboardingReviewData from '@deps/jsonschema-mock-service/tasks-data/agent-onboarding-review.json';
-import appDataEnteyData from '@deps/jsonschema-mock-service/tasks-data/app-data-entry.json';
 import agentReviewData from '@deps/jsonschema-mock-service/tasks-data/agent-review.json';
+import appDataEnteyData from '@deps/jsonschema-mock-service/tasks-data/app-data-entry.json';
 import applicationNigoData from '@deps/jsonschema-mock-service/tasks-data/application-nigo.json';
 import attachmentNigoData from '@deps/jsonschema-mock-service/tasks-data/attachment-nigo.json';
+import initiatePostissueTransactionData from '@deps/jsonschema-mock-service/tasks-data/initiate-postissue-transaction.json';
+import ofacReviewData from '@deps/jsonschema-mock-service/tasks-data/ofac-review.json';
 import premiumNigoData from '@deps/jsonschema-mock-service/tasks-data/premium-nigo.json';
+import prenoteNigoData from '@deps/jsonschema-mock-service/tasks-data/prenote-nigo.json';
+import prenoteReviewData from '@deps/jsonschema-mock-service/tasks-data/prenote-review.json';
 import purchaseDocumentMatchingData from '@deps/jsonschema-mock-service/tasks-data/purchase-document-matching.json';
+import returnPaymentData from '@deps/jsonschema-mock-service/tasks-data/return-payment.json';
+import sendNigoCommunicationData from '@deps/jsonschema-mock-service/tasks-data/send-communication-nigo.json';
 import standardDocumentMatchingData from '@deps/jsonschema-mock-service/tasks-data/standard-document-matching.json';
 import toaNigoData from '@deps/jsonschema-mock-service/tasks-data/toa-nigo.json';
-import ofacReviewData from '@deps/jsonschema-mock-service/tasks-data/ofac-review.json';
-import prenoteNigoData from '@deps/jsonschema-mock-service/tasks-data/prenote-nigo.json';
-import sendNigoCommunicationData from '@deps/jsonschema-mock-service/tasks-data/send-communication-nigo.json';
-import initiatePostissueTransactionData from '@deps/jsonschema-mock-service/tasks-data/initiate-postissue-transaction.json';
 import toaReviewData from '@deps/jsonschema-mock-service/tasks-data/toa-review.json';
-import prenoteReviewData from '@deps/jsonschema-mock-service/tasks-data/prenote-review.json';
-
-import standardDocumentMatchingSchema from '@deps/jsonschema-mock-service/tasks/standard-document-matching.json';
-import toaNigoSchema from '@deps/jsonschema-mock-service/tasks/toa-nigo.json';
-import ofacReviewSchema from '@deps/jsonschema-mock-service/tasks/review-ofac.json';
-import toaReviewSchema from '@deps/jsonschema-mock-service/tasks/toa-review.json';
-import prenoteReviewSchema from '@deps/jsonschema-mock-service/tasks/prenote-review.json';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 
@@ -76,6 +77,8 @@ export const getTaskFormMetadataSSRMock = async (taskType: TaskType): Promise<Fo
             return prenoteReviewSchema as unknown as FormMetadata;
         case TaskType.Payment_Processing_Review:
             return prenoteReviewSchema as unknown as FormMetadata;
+        case TaskType.ReturnPayment:
+            return returnPaymentSchema as unknown as FormMetadata;
         default:
             return null;
     }
@@ -109,6 +112,8 @@ export const getCaseTaskByIdSSRMock = async (taskType: TaskType): Promise<Manage
             return appDataEnteyData as ManagementTask<TaskStatus>;
         case TaskType.Agent_Onboarding_Review:
             return agentOnboardingReviewData as ManagementTask<TaskStatus>;
+        case TaskType.ReturnPayment:
+            return returnPaymentData as ManagementTask<TaskStatus>;
         case TaskType.Review_Ofac:
             return ofacReviewData as ManagementTask<TaskStatus>;
         case TaskType.Prenote_Nigo:

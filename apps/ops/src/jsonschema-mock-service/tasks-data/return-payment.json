@@ -1,0 +1,98 @@
+{
+    "id": "TA000000021593",
+    "caseId": "CA0000399995",
+    "source": "BPM.AppProcessing",
+    "templateId": "671cc41f-74a1-4cc2-80fd-1d338e19af3e",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_PAYMENT_CANCEL",
+    "taskName": "Return Payment on App Withdrawal/ Rejection",
+    "status": "NEW",
+    "data": {
+        "details": {
+            "amount": "0.0",
+            "paymentRecord": [
+                {
+                    "paymentRecordId": "69350298-9ec1-4733-af41-89a6418d8488",
+                    "payment": {
+                        "id": "1",
+                        "paymentMethod": "WIRE",
+                        "netAmount": 15000.0,
+                        "grossAmount": 15000.0,
+                        "taxInfo": {
+                            "taxYear": "2025",
+                            "currentContribAmount": 0,
+                            "priorContribAmount": 0,
+                            "totalBasis": "0.0",
+                            "pretefraBasis": "0.0"
+                        },
+                        "currentAlloc": "YES",
+                        "moneySrcId": 0,
+                        "waivePremium": 0,
+                        "exchangeReplace": {
+                            "id": "1",
+                            "companyName": "$randomCompanyName",
+                            "address": {
+                                "city": "string",
+                                "state": "AA",
+                                "zip": "12342",
+                                "country": "USA",
+                                "addressLines": ["2417 Spinka Dale", "string", "string"]
+                            },
+                            "type": -101,
+                            "amountRequested": 15000.0,
+                            "signedDate": "03/17/2025",
+                            "sourcePolicyNumber": "0",
+                            "previousPlanType": "NONQUAL",
+                            "replacementIndicator": false,
+                            "costBasisUnknownInd": false,
+                            "applyRateLock": "YES",
+                            "replacementInd": 0,
+                            "erExchangeType": 0,
+                            "erUnknownCbIndn": 0,
+                            "originalCostBasis": "0"
+                        }
+                    },
+                    "paymentRecordStatus": "PAYMENT_LINKED"
+                }
+            ]
+        }
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "new_business",
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-03-17T11:37:21Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-03-17T11:37:21Z",
+    "identifiers": [
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2502542"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67d7fc835134020b1b4d2d8a"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000399995"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI011280282025031703"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "413566"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2502542"
+        }
+    ],
+    "externalId": "1be6ba99-59aa-4ca6-98b4-b35f41dec48f"
+}

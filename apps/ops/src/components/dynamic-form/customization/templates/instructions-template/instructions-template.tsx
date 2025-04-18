@@ -4,9 +4,8 @@ import clsx from 'clsx';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
 function InstructionsTemplate(props: ObjectFieldTemplateProps) {
-    const { title, uiSchema, formContext } = props;
+    const { title, uiSchema, formContext, description } = props;
 
-    const description = uiSchema?.props?.description;
     return (
         <div className={clsx('responsive-padding flex grow flex-col gap-2 bg-gray-50 my-4')}>
             <div className="flex flex-col gap-2">

@@ -27,7 +27,8 @@
                     "properties": {
                         "sectionHeader": {
                             "type": "object",
-                            "title": "Processing Instructions"
+                            "title": "Processing Instructions",
+                            "description": "Review supporting information and determine if the document can be matched to an existing case. Search all cases and review any suggested potential matches. Confirm the matching Case ID, if possible. If there's no existing case to match the document to, mark the task as pending and wait for the application to arrive."
                         },
                         "details": {
                             "type": "object",
@@ -154,9 +155,6 @@
                         "norender": true
                     },
                     "sectionHeader": {
-                        "props": {
-                            "description": "Review supporting information and determine if the document can be matched to an existing case. Search all cases and review any suggested potential matches. Confirm the matching Case ID, if possible. If there's no existing case to match the document to, mark the task as pending and wait for the application to arrive."
-                        },
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "InstructionsTemplate"
@@ -267,7 +265,8 @@
                     "properties": {
                         "sectionHeader": {
                             "type": "object",
-                            "title": "Processing Instructions"
+                            "title": "Processing Instructions",
+                            "description": "Match the received payment to the appropriate exchange record information."
                         },
                         "details": {
                             "type": "object",
@@ -348,9 +347,6 @@
                         "norender": true
                     },
                     "sectionHeader": {
-                        "props": {
-                            "description": "Match the received payment to the appropriate exchange record information."
-                        },
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "InstructionsTemplate"

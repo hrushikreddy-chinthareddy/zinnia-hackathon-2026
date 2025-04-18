@@ -5424,5 +5424,14 @@
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }
+    },
+    "nbPaymentCancel": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Le retour de paiement a été soumis.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }

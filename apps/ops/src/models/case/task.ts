@@ -29,6 +29,7 @@ export enum TaskType {
     Application_Review = 'NB_APPLICATION_REVIEW',
     Prenote_Nigo = 'NB_PRENOTE_NIGO',
     Agent_Onboarding_Review = 'AGENT_ONBOARDING_REVIEW',
+    ReturnPayment = 'NB_PAYMENT_CANCEL',
     Send_Nigo_Communication = 'SEND_NIGO_COMMUNICATION',
     Initiate_Postissue_Transaction = 'INITIATE_POSTISSUE_TRANSACTION',
     TOA_Review = 'NB_TOA_REVIEW',
@@ -215,4 +216,12 @@ export interface ExceptionRef {
     subNmIdDetail: string;
 
     subNmId: string;
+}
+
+export enum TaskFieldTypes {
+    Form = 'form',
+    AdditionalInfo = 'additionInfo',
+    Title = 'title',
+    Subtitle = 'subTitle',
+    hidden = 'hidden',
 }

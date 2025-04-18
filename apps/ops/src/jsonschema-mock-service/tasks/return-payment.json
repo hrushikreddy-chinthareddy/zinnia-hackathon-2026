@@ -1,0 +1,247 @@
+{
+    "formId": "0fc6f0a2-45f9-477b-b67f-d1135c5ac764",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_PAYMENT_CANCEL",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Return Payment",
+                "formSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Review the exchage record information to determine money was received & prorcess a refund for the amount shown."
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Details",
+                            "properties": {
+                                "amount": {
+                                    "type": "string",
+                                    "title": "Amount Received"
+                                },
+                                "paymentRecord": {
+                                    "type": "array",
+                                    "title": "Supporting information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "companyName": {
+                                                "type": "string",
+                                                "title": "Company Name",
+                                                "ui:field": "title",
+                                                "default": "{{payment.exchangeReplace.companyName}}"
+                                            },
+                                            "paymentMethod": {
+                                                "type": "string",
+                                                "title": "Payment Method",
+                                                "default": "{{payment.paymentMethod}}"
+                                            },
+                                            "address": {
+                                                "type": "string",
+                                                "title": "Address",
+                                                "default": "{{payment.exchangeReplace.address}}",
+                                                "dataType": "dirtyAddress"
+                                            },
+                                            "paymentRecordStatus": {
+                                                "type": "string",
+                                                "title": "Payment Record Status"
+                                            }
+                                        },
+                                        "dependencies": {
+                                            "paymentRecordStatus": {
+                                                "if": {
+                                                    "properties": {
+                                                        "paymentRecordStatus": {
+                                                            "enum": ["PAYMENT_LINKED", "PAYMENT_APPLIED"]
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "paymentIncluded": {
+                                                            "type": "string",
+                                                            "title": "Payment Included",
+                                                            "ui:field": "additionInfo"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "payment": {
+                                            "type": "object",
+                                            "title": "Company Name"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "title": "The payment has been returned"
+                        },
+                        "uploadDocuments": {
+                            "type": "object",
+                            "title": "Link or upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "upload",
+                                    "items": {
+                                        "title": "upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "required": ["issueResolved"]
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "accord": true,
+                        "ui:options": {
+                            "label": true
+                        },
+                        "amount": {
+                            "ui-widget": "ValueWidget",
+                            "ui:options": {
+                                "label": false,
+                                "inline": true,
+                                "dataType": "amount"
+                            }
+                        },
+                        "paymentRecord": {
+                            "props": {
+                                "readonly": true
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Detailed",
+                                    "additionalInfo": "paymentIncluded",
+                                    "additionalInfoType": "success",
+                                    "additionalInfoIcon": "CIRCLE_CHECKMARK",
+                                    "icon": "BANK",
+                                    "label": true,
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "sectionTitle": "Details",
+                                    "nobackground": true
+                                },
+                                "paymentRecordStatus": {
+                                    "ui:options": {
+                                        "label": false,
+                                        "widget": "hidden"
+                                    }
+                                },
+                                "paymentIncluded": {
+                                    "ui:options": {
+                                        "label": false,
+                                        "inline": true,
+                                        "type": "success",
+                                        "icon": "CIRCLE_CHECKMARK",
+                                        "omitValue": true
+                                    },
+                                    "ui-widget": "ValueWidget"
+                                }
+                            },
+                            "ui:options": {
+                                "addable": false
+                            }
+                        }
+                    },
+                    "issueResolved": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:hideError": true
+                    },
+                    "uploadDocuments": {
+                        "inline": true,
+                        "ui:options": {
+                            "label": true,
+                            "omitValue": true
+                        },
+                        "upload": {
+                            "ui:widget": "AutoCompleteWidget",
+                            "ui:placeholder": "Find existing documents...",
+                            "ui:options": {
+                                "label": false,
+                                "icon": "Search"
+                            }
+                        },
+                        "or": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "attachment": {
+                            "ui:options": {
+                                "label": false,
+                                "showFiles": false
+                            },
+                            "ui:props": {
+                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiMethod": "get"
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

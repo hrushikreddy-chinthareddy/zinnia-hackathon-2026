@@ -1,5 +1,6 @@
 import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { MetadataSearchResponse } from 'node_modules/@zinnia/api-types/dist/generated-types/documents-v3/models/MetadataSearchResponse';
@@ -16,13 +17,27 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { formatSSN } from '@deps/helpers/string.helper';
 import { formatDirtyAddress, replacePlaceholders } from '@deps/helpers/value-placement.helper';
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
-import { CardTypes, DataFormattingTypes } from '@deps/models/case/task';
+import { CardTypes, DataFormattingTypes, TaskFieldTypes } from '@deps/models/case/task';
 import loadingImage from '@deps/styles/images/loader.png';
 
-export function CardTemplate(props: ObjectFieldTemplateProps) {
-    const { formData, uiSchema, schema, formContext } = props;
+import style from './card-template.module.css';
 
+const getUiOptionsByField = (properties: Record<string, any>, fieldType: TaskFieldTypes) => {
+    return properties
+        ? Object.entries(properties)
+              .filter(([key, prop]: [string, any]) => !prop.__additional_property && (properties[key] as any)['ui:field'] === fieldType)
+              .map(([key, prop]: [string, any]) => ({ key, ...prop }))
+        : [];
+};
+
+export function CardTemplate(props: ObjectFieldTemplateProps) {
+    const { formData, uiSchema, schema, formContext, properties } = props;
+    const schemaProperties = schema?.properties;
     const { cardType, icon, sectionTitle } = getUiOptions(uiSchema);
+
+    const formFields = schemaProperties ? getUiOptionsByField(schemaProperties, TaskFieldTypes.Form) : [];
+
+    const additionalInfoFields = schemaProperties ? getUiOptionsByField(schemaProperties, TaskFieldTypes.AdditionalInfo) : [];
 
     return (
         <>
@@ -31,14 +46,65 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
                     {schema.title}
                 </Typography>
             )}
-            <SingleCard
-                cardType={cardType as CardTypes}
-                icon={icon as IconType}
-                data={formData}
-                properties={schema?.properties}
-                sectionTitle={(sectionTitle as string) ?? ''}
-                formData={formContext?.customData}
-            />
+            <div className="flex gap-2">
+                <SingleCard
+                    cardType={cardType as CardTypes}
+                    icon={icon as IconType}
+                    data={formData}
+                    properties={schema?.properties}
+                    sectionTitle={(sectionTitle as string) ?? ''}
+                    formData={formContext?.customData}
+                />
+
+                {additionalInfoFields.length > 0 && (
+                    <div className="flex flex-row">
+                        {additionalInfoFields
+                            .filter(element => {
+                                return !element.hidden;
+                            })
+                            .map(element => {
+                                const fieldContent = properties.find(item => item.name === element.key)?.content;
+                                const elementUiOptions = getUiOptions(fieldContent?.props?.uiSchema);
+
+                                return (
+                                    <div key={element.key}>
+                                        <div
+                                            className={clsx(style.additionalInfo, style[elementUiOptions?.type as string], 'flex flex-row')}
+                                        >
+                                            {elementUiOptions?.icon && (
+                                                <div className="mt-1">
+                                                    <Icon
+                                                        type={IconType[elementUiOptions?.icon as string as keyof typeof IconType]}
+                                                        height={20}
+                                                        width={20}
+                                                        className={style.icon}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {properties.find(item => item.name === element.key)?.content}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                    </div>
+                )}
+            </div>
+            {formFields?.length > 0 && (
+                <div className={`py-2`}>
+                    {formFields
+                        .filter(element => {
+                            return !element.hidden;
+                        })
+                        .map(element => {
+                            return (
+                                <div key={element.key} className={'property-wrapper flex flex-col'}>
+                                    {properties.find(item => item.name === element.key)?.content}
+                                </div>
+                            );
+                        })}
+                </div>
+            )}
         </>
     );
 }
@@ -74,7 +140,7 @@ const extractField = (
         .reduce((result, key) => {
             const fieldSchema = properties[key] || {};
             const defaultValue = replacePlaceholders(fieldSchema, data)?.default || '';
-            const fieldValue = data?.[key] !== undefined ? data[key] : defaultValue;
+            const fieldValue = data?.[key] !== undefined && data?.[key] !== fieldSchema?.default ? data[key] : defaultValue;
             if (fieldValue) {
                 result += (result ? separator : '') + fieldValue;
             }
@@ -116,7 +182,11 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
 
     const displayProperties = properties
         ? Object.entries(properties)
-              .filter(([_, prop]: [string, any]) => !prop.__additional_property)
+              .filter(
+                  ([key, prop]: [string, any]) =>
+                      !prop.__additional_property &&
+                      ![TaskFieldTypes.AdditionalInfo, TaskFieldTypes.hidden].includes((properties[key] as any)['ui:field'])
+              )
               .map(([key, prop]: [string, any]) => ({ key, ...prop }))
         : [];
 
@@ -158,7 +228,7 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
 
 export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
     return (
-        <CardContainer classNames={'w-full'} containerClassNames="w-full content-divider">
+        <CardContainer classNames={'w-full'} containerClassNames="w-full">
             <div className="flex flex-col w-full">
                 <Typography variant={TypographyVariant.H3} className="mb-3">
                     {sectionTitle}
@@ -169,7 +239,9 @@ export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
                             {schema?.title}:{' '}
                             {formatValueByDataType(
                                 schema?.dataType,
-                                details[schema.key] ?? replacePlaceholders(schema, details)?.default ?? '--'
+                                details[schema.key] && details[schema.key] !== schema.default
+                                    ? details[schema.key]
+                                    : replacePlaceholders(schema, details)?.default ?? '--'
                             )}
                         </Typography>
                     );

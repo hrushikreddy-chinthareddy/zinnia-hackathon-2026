@@ -5461,5 +5461,14 @@
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }
+    },
+    "nbPaymentCancel": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Return Payment was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     }
 }

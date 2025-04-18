@@ -69,6 +69,7 @@ export const TaskApiVersionMapper: Record<TaskType, ApiVersion> = {
     [TaskType.Application_Review]: ApiVersion.v2,
     [TaskType.Prenote_Nigo]: ApiVersion.v2,
     [TaskType.Agent_Onboarding_Review]: ApiVersion.v2,
+    [TaskType.ReturnPayment]: ApiVersion.v2,
     [TaskType.Send_Nigo_Communication]: ApiVersion.v2,
     [TaskType.Initiate_Postissue_Transaction]: ApiVersion.v2,
     [TaskType.TOA_Review]: ApiVersion.v2,
