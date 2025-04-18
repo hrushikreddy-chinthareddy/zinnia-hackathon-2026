@@ -1,4 +1,4 @@
-import { RenewalsFormData, TaskType } from '@deps/models/case/task';
+import { TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCase, ActiveWithdrawalCaseData } from '@deps/models/case/withdrawal/case';
 
@@ -25,20 +25,7 @@ export const mapTaskToActiveRenewalCaseTask = (data: ManagementTask<TaskStatus>,
         taskType: data.taskType as TaskType,
         updatedDate: data.updatedAt,
         createdDate: data.createdAt,
-        source: 'Zinnia.TaskManagement',
-        data: payload
-    }
-}
-
-export const mapTaskToCaseTask = (data: ManagementTask<TaskStatus>, payload: ActiveWithdrawalCaseData):  ActiveWithdrawalCase | RenewalsFormData => {
-    return {
-        taskId: data.id,
-        carrier: data.carrier,
-        caseId: data.caseId,
-        status: data.status,
-        taskType: data.taskType as TaskType,
-        updatedDate: data.updatedAt,
-        createdDate: data.createdAt,
+        createdByPartyId: data?.createdByPartyId,
         source: 'Zinnia.TaskManagement',
         data: payload
     }

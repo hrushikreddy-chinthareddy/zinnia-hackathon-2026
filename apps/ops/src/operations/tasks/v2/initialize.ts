@@ -255,10 +255,10 @@ export const initializeRenewalTaskSSR = async ({
                         const caseForm = await createTaskSSR<DigitalFormData>(caseId, accessToken, body, loggingContext);
                         if (!caseForm) {
                             logInfo('initializeRenewalTaskSSR::Failed to create a task', loggingContext);
-                            throw new Error(`initializeTaskV2::Unsuccessful postCaseTasksSSR response for ${taskType}`);
+                            throw new Error(`initializeRenewalTaskSSR::Failed to create a task ${taskType}`);
                         }
                         logInfo('initializeRenewalTaskSSR::Created task successfully', loggingContext);
-                        return mapTaskToActiveWithdrawalCaseTask(caseForm, { ...caseForm?.data, userId });
+                        return mapTaskToActiveRenewalCaseTask(caseForm, { ...caseForm?.data, userId });
                     }
                 }
             }
@@ -286,7 +286,6 @@ export const initializeRenewalTaskSSR = async ({
                     DEFAULT_EXTENDED_DATE_FORMAT,
                 ]).format(ZAHARA_API_DATE_FORMAT),
                 goodOrderDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
-
                 lob: document?.lob,
                 onbaseCaseId: document?.caseId,
                 ownerInformation: getOwnerInfo(owners),
@@ -304,10 +303,10 @@ export const initializeRenewalTaskSSR = async ({
         const data = await createTaskSSR<RenewalsFormData>(caseId, accessToken, task, loggingContext);
         if (!data) {
             logInfo('initializeRenewalTaskSSR::Failed to create a task', loggingContext);
-            throw new Error(`initializeRenewalTaskSSR::Unsuccessful postCaseTasksSSR response for Renewal`);
+            throw new Error(`initializeRenewalTaskSSR::Failed to create a task`);
         }
         logInfo('initializeRenewalTaskSSR::Created new task successfully', { ...loggingContext, taskId:  data.id});
-        return mapTaskToActiveWithdrawalCaseTask(data, { ...data?.data, userId });
+        return mapTaskToActiveRenewalCaseTask(data, { ...data?.data, userId });
     } catch (e) {
         logError('initializeRenewalTaskSSR::error', { ...parseErrorInformation(e), ...loggingContext });
         return null;
@@ -318,13 +317,6 @@ export const getPolicyPartyDetails = async (document: DocumentData, clientId: st
     let planCode = '';
 
     try {
-        /*const acctInfoResponse = await getPolicyAccountInfoSSR(
-            document.contract,
-            document.processCompanyCode,
-            accessToken,
-            loggingContext
-        );
-        planCode = acctInfoResponse?.PlanCode ?? '';*/
         const policies = await searchPolicySSR(document.contract, [clientId?.toUpperCase() as Carrier], accessToken, 1, 0, loggingContext);
         planCode = policies?.[0]?.planCode || '';
 

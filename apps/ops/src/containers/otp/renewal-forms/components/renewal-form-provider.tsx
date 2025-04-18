@@ -15,7 +15,6 @@ import { DEFAULT_TRANS_OPTION, getOwnerInfo } from './renewal-form-helper';
 
 interface RenewalFormProviderProps {
     children: React.ReactNode;
-    //caseDocument: DocumentData;
     document: DocumentData;
     parties: LifeCadParty[];
     userId: string;
@@ -29,9 +28,15 @@ interface RenewalFormProviderProps {
 const RenewalFormProvider = ({ children, parties, document, action, featureFlagDecisions, planCode, form }: RenewalFormProviderProps) => {
     const [channel, setChannel] = useState<Channel>(form?.data?.channel ?? Channel.Form);
     const owners = parties?.filter(party => party.SrcRoleType === 0) || [];
-    const ownerInfo = Array.isArray(form?.data?.ownerInformation) && form?.data?.ownerInformation.length > 0 ? form?.data?.ownerInformation : getOwnerInfo(owners);
-    const [ownerInformation, setOwnerInformation] = useState<OwnerInformation[]>(ownerInfo);
+    let ownerInfo;
 
+    if (form?.createdByPartyId !== 'SYSTEM') {
+        ownerInfo = Array.isArray(form?.data?.ownerInformation) && form?.data?.ownerInformation.length > 0 ? form?.data?.ownerInformation : getOwnerInfo(owners);
+    } else {
+        ownerInfo = form?.data?.ownerInformation ?? getOwnerInfo(owners);
+    }
+
+    const [ownerInformation, setOwnerInformation] = useState<OwnerInformation[]>(ownerInfo);
     const [transOption, setTransOption] = useState<string | null>(form?.data?.transOption || DEFAULT_TRANS_OPTION);
     const [subsequentTargetFunds, setSubsequentTargetFunds] = useState<TargetFundAllocation[] | null>(form?.data?.subsequentTargetFunds || null);
     const [renewalRequestSignDate, setRenewalRequestSignDate] = useState<string>(form?.data?.renewalRequestSignDate ?? '');

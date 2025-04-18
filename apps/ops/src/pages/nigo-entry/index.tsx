@@ -20,7 +20,7 @@ import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { UserPermission } from '@deps/models/user-profile';
-import { mapTaskToCaseTask } from '@deps/operations/tasks/v2/helpers';
+import { mapTaskToActiveRenewalCaseTask, mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
 import { searchCasesSSR } from '@deps/queries/api/cases';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
@@ -209,11 +209,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 const { documentNumber, contractNum, clientCode, lob } = activeForm?.data || {};
                 logInfo('nigo-entry::getCaseTaskByIdSSR task active form found', loggingContext);
 
-                //const form = mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name });
-                const form = mapTaskToCaseTask(activeForm, { ...activeForm?.data, userId: user?.name });
-
                 const caseType = ProcessesToCaseTypeMap[activeForm.process as Processes];
                 const docType = caseType ? docTypes[caseType] : null;
+
+                const form = caseType === CaseType.Renewal
+                    ? mapTaskToActiveRenewalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name })
+                    : mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name });
 
                 if (!caseType) {
                     logWarn('nigo-entry::Error getting case type', {
