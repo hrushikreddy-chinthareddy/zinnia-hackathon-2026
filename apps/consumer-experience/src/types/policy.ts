@@ -102,8 +102,8 @@ export type PolicyReferenceData = Pick<
 >;
 
 export interface CarrierPolicyDetails extends PolicyDetails {
+  endingAccountValue?: number | null;
   planCode: string;
-  totalFundValue?: number | null;
   totalCoverageAmount?: number | null;
   /**
    * Coverage amount for annuities

@@ -60,7 +60,7 @@ export const CoverageOverviewCard = ({
                 </Label>
               }
             >
-              {formatUSDollars(policy.totalFundValue)}
+              {formatUSDollars(policy.endingAccountValue)}
             </FieldData>
             {policy.lineOfBusiness === LineOfBusiness.LIFE && (
               <FieldData

@@ -90,7 +90,7 @@ export const transformPolicyReferenceData = (
     const policyDetails = transformPolicyForHeaderDetails(p);
     return {
       planCode: p?.product?.planCode || '',
-      totalFundValue: p?.allocation?.funds?.[0]?.totalFundValue,
+      endingAccountValue: p?.accountValues?.endingAccountValue,
       totalCoverageAmount: p?.coverage?.totalCoverageAmount,
       policyStartDate: p?.policyDates?.policyStartDate,
       // Date of last policy transaction, when policy value was last updated
