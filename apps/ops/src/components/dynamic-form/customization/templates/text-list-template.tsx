@@ -44,7 +44,7 @@ export default function TextListTemplate(props: ArrayFieldTemplateProps): JSX.El
 
     return list.length > 0 ? (
         <div className={`${hasBg ? 'bg-gray-50 w-2/4 p-4' : ''}`}>
-            {title && <Typography variant={TypographyVariant.BodySmBold}>{title as any}</Typography>}
+            {title && <Typography variant={TypographyVariant.BodyBold}>{title as string}</Typography>}
             <ul className="mt-3 ml-2">
                 {list.map((text: string, index: number) => (
                     <AssistiveText className="mb-2" key={index} text={text} variant={getVariant(listType)} />

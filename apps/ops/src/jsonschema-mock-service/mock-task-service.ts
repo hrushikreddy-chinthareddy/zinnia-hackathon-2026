@@ -7,6 +7,7 @@ import agentOnboardingNigoSchema from '@deps/jsonschema-mock-service/tasks/agent
 import agentOnboardingReviewSchema from '@deps/jsonschema-mock-service/tasks/agent-onboarding-review.json';
 import agentReviewSchema from '@deps/jsonschema-mock-service/tasks/agent-review.json';
 import applicationNigoSchema from '@deps/jsonschema-mock-service/tasks/application-nigo.json';
+import applicationReviewSchema from '@deps/jsonschema-mock-service/tasks/application-review.json';
 import attachmentNigoSchema from '@deps/jsonschema-mock-service/tasks/attachment-nigo.json';
 import appDataEntrySchema from '@deps/jsonschema-mock-service/tasks/nb_app_data_entry.json';
 import premiumNigoSchema from '@deps/jsonschema-mock-service/tasks/premium-nigo.json';
@@ -77,9 +78,9 @@ export const getTaskFormMetadataSSRMock = async (taskType: TaskType): Promise<Fo
             return prenoteReviewSchema as unknown as FormMetadata;
         case TaskType.Payment_Processing_Review:
             return prenoteReviewSchema as unknown as FormMetadata;
-        case TaskType.ReturnPayment:
+      case TaskType.ReturnPayment:
             return returnPaymentSchema as unknown as FormMetadata;
-        default:
+      default:
             return null;
     }
 };

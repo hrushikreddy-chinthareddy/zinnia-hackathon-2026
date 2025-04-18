@@ -41,7 +41,7 @@
 
                         "details": {
                             "type": "object",
-                            "title": "Details",
+                            "title": "Supporting Information",
                             "properties": {
                                 "paymentRecord": {
                                     "type": "object",
@@ -205,7 +205,7 @@
 
                     "details": {
                         "ui:options": {
-                            "label": false
+                            "label": true
                         },
                         "paymentRecord": {
                             "ui:options": {

@@ -4,9 +4,11 @@
 }
 
 .text {
-    font-family: var(--font-family-primary);
+    font-family: Lato;
+    font-size: 14px;
     font-style: normal;
-    font-size: var(--measure-font-sizing-font-size-font-size-x-large);
+    font-weight: 700;
+    line-height: 22px;
 }
 
 .container {

@@ -26,7 +26,15 @@ export function FieldTemplate(props: FieldTemplateProps) {
             {helpText}
         </Tooltip>
     );
-    const fieldLabel = label ? `${label} ${required ? '*' : ''}` : '';
+
+
+    const fieldLabel = label ? (
+        <span className={styles.labelRequired}>
+            {label}
+            {required && <span className={styles.requiredAsterisk}>{'\u00A0'}{'\u002A'} </span>}
+        </span>
+    ) : '';
+
     return (
         <>
             {uiOptions?.templateType === 'table' ? (

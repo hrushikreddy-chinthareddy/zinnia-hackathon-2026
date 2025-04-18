@@ -74,7 +74,7 @@
                                         "documentId": {
                                             "type": "string",
                                             "ui:field": "subTitle",
-                                            "placeholder": "Document ID"
+                                            "ui:placeholder": "Document ID: "
                                         },
                                         "documentSource": {
                                             "type": "string",

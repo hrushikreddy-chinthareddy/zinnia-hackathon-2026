@@ -7,3 +7,15 @@
     margin-bottom: var(--measure-dimension-z-space-2, 0.125rem);
     width: 100%;
 }
+
+.labelRequired {
+    font-family: Lato;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+}
+
+.requiredAsterisk {
+    color: #ff3300;
+}

@@ -41,10 +41,9 @@
                         },
                         "details": {
                             "type": "object",
-                            "title": "Details",
+                            "title": "Supporting Information",
                             "properties": {
                                 "documentDetails": {
-                                    "title": "Supporting Information",
                                     "type": "object",
                                     "properties": {
                                         "documentId": {
@@ -206,13 +205,13 @@
                     },
                     "details": {
                         "ui:options": {
-                            "label": false
+                            "label": true
                         },
                         "onwerDetails": {
                             "ui:options": {
                                 "cardType": "Detailed",
                                 "icon": "CIRCLE_USER",
-                                "label": true,
+                                "label": false,
                                 "ObjectFieldTemplate": "CardTemplate",
                                 "sectionTitle": "Details"
                             }

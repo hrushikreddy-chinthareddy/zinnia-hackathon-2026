@@ -40,10 +40,9 @@
                         },
                         "details": {
                             "type": "object",
-                            "title": "Details",
+                            "title": "Supporting Information",
                             "properties": {
                                 "agentDetails": {
-                                    "title": "Supporting Information",
                                     "type": "object",
                                     "properties": {
                                         "firstName": {
@@ -199,13 +198,13 @@
                     },
                     "details": {
                         "ui:options": {
-                            "label": false
+                            "label": true
                         },
                         "agentDetails": {
                             "ui:options": {
                                 "cardType": "Detailed",
                                 "icon": "CIRCLE_USER",
-                                "label": true,
+                                "label": false,
                                 "ObjectFieldTemplate": "CardTemplate",
                                 "key": "agentDetails",
                                 "sectionTitle": "Details"
