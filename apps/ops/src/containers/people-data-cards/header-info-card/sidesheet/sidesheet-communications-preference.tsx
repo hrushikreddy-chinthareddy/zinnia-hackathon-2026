@@ -107,7 +107,7 @@ export const SidesheetCommunicationsPreference = ({
             const emailId = value.split('-')[1];
             const email = emails.find(email => email.emailId === emailId);
             const newOption = {
-                contactType: PreferredCommunicationType.REGULARMAIL,
+                contactType: PreferredCommunicationType.EMAIL,
                 contactInfo: email,
             };
             setSelectedOption(newOption);
