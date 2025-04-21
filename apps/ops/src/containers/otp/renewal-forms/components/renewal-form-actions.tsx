@@ -4,16 +4,17 @@ import { useTranslation } from 'next-i18next';
 import { FormEvent, useContext, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
+import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
 import { DiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
 import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
 import { isLocalStorageEnabled } from '@deps/helpers/local-storage.hepler';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
-import { CreateTaskBody, RenewalsFormData, TaskSource } from '@deps/models/case/task';
+import { CreateTaskBody, RenewalsFormData, TaskType } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { updateTask } from '@deps/queries/api/v2/task';
+import { CaseStatus } from '@deps/models/case/withdrawal/case';
+import { createTask } from '@deps/queries/api/v1/task';
 import {
     DEFAULT_DATE_FORMAT,
     DEFAULT_EXTENDED_DATE_FORMAT,
@@ -34,15 +35,15 @@ const RenewalFormActions = ({ userId, clientId, caseId, setIsLoading }: RenewalF
     const { t } = useTranslation(TranslationFiles.COMMON);
     const router = useRouter();
     const { areDiaryNotesViewed } = useContext(DiaryNotesContext);
-    const [timer] = useState(performance.now());
+
     const [taskApiError, setTaskApiError] = useState('');
 
     const {
-        initialForm,
         channel,
         formErrors,
-        document,
+        caseDocument,
         contractValue,
+        currentFormState,
         renewalRequestSignDate,
         subsequentTargetFunds,
         transOption,
@@ -52,93 +53,79 @@ const RenewalFormActions = ({ userId, clientId, caseId, setIsLoading }: RenewalF
         isFormStateReadOnly,
     } = useContext(RenewalFormDataContext);
 
-    const getRenewalFormDataPayload = () => {
-        const updatedOwnerInformation = ownerInformation?.map(owner => {
-            if (OWNER_TYPES.includes(owner.type)) {
-                return {
-                    ...owner,
-                    signature: {
-                        ...owner?.signature,
-                        ...(channel === Channel.Phone && { signDate: renewalRequestSignDate }), // CMW-13965 updaing Call Received Date in signDate
-                    },
-                };
-            }
-            return owner;
-        });
-
-        const funds = subsequentTargetFunds?.map(item => {
-            return {
-                fundName: item.fundName,
-                value: item.value,
-                fundCode: item?.fundCode,
-                divisionCode: item?.divisionCode,
-            };
-        });
-
-        return {
-            channel,
-            clientCode: clientId.toUpperCase(),
-            contractNum: document?.contract,
-            documentNumber: document?.documentNumber,
-            contractValue: typeof contractValue === 'string' ? null : contractValue,
-            documentReceivedDate: dayjs(document?.documentDate, [
-                DEFAULT_DATE_FORMAT,
-                DEFAULT_EXTENDED_DAY_DATE_FORMAT,
-                DEFAULT_EXTENDED_MONTH_DATE_FORMAT,
-                DEFAULT_EXTENDED_DATE_FORMAT,
-            ]).format(ZAHARA_API_DATE_FORMAT),
-            goodOrderDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
-            lob: document?.lob,
-            onbaseCaseId: document?.caseId,
-            ownerInformation: updatedOwnerInformation,
-            productName: document?.productName,
-            renewalRequestSignDate, // need to handle it for FormType
-            source: 'SupportTool',
-            subsequentGuaranteePeriod: null,
-            subsequentTargetFunds: funds || null,
-            taskType: 'RenewalTransfer',
-            transOption,
-            userId,
-        }
-    };
-
-    const buildRenewalFormV2 = (
-        status: TaskStatus,
-    ): CreateTaskBody<TaskStatus, RenewalsFormData> => {
-        return {
-            source: TaskSource.ZinniaTaskManagement,
-            taskType: initialForm.taskType,
-            status,
-            data: getRenewalFormDataPayload(),
-        };
-    };
-
+    const isCancelActionDisabled = ![CaseStatus.Draft, CaseStatus.Pending, ''].includes(currentFormState as CaseStatus);
 
     const submitRenewalRequest = async (event: FormEvent): Promise<void> => {
         event.preventDefault();
-        setFormErrors({});
         setTaskApiError('');
-
 
         if (validateForm() && areDiaryNotesViewed) {
             setIsLoading(true);
 
-            const data = await updateTask(
-                initialForm.caseId,
-                initialForm.taskId,
-                buildRenewalFormV2(TaskStatus.Completed),
-                timer
-            );
-            if (data?.id) {
+            const updatedOwnerInformation = ownerInformation?.map(owner => {
+                if (OWNER_TYPES.includes(owner.type)) {
+                    return {
+                        ...owner,
+                        signature: {
+                            ...owner?.signature,
+                            ...(channel === Channel.Phone && { signDate: renewalRequestSignDate }), // CMW-13965 updaing Call Received Date in signDate
+                        },
+                    };
+                }
+                return owner;
+            });
+
+            const funds = subsequentTargetFunds?.map(item => {
+                return {
+                    fundName: item.fundName,
+                    value: item.value,
+                    fundCode: item?.fundCode,
+                    divisionCode: item?.divisionCode,
+                };
+            });
+
+            const task: CreateTaskBody<TaskStatus, RenewalsFormData> = {
+                taskType: TaskType.RENEWAL,
+                carrier: clientId,
+                data: {
+                    channel,
+                    clientCode: clientId,
+                    contractNum: caseDocument?.contract,
+                    documentNumber: caseDocument?.documentNumber,
+                    contractValue: typeof contractValue === 'string' ? null : contractValue,
+                    documentReceivedDate: dayjs(caseDocument?.documentDate, [
+                        DEFAULT_DATE_FORMAT,
+                        DEFAULT_EXTENDED_DAY_DATE_FORMAT,
+                        DEFAULT_EXTENDED_MONTH_DATE_FORMAT,
+                        DEFAULT_EXTENDED_DATE_FORMAT,
+                    ]).format(ZAHARA_API_DATE_FORMAT),
+                    goodOrderDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+                    lob: caseDocument?.lob,
+                    onbaseCaseId: caseDocument?.caseId,
+                    ownerInformation: updatedOwnerInformation,
+                    productName: caseDocument?.productName,
+                    renewalRequestSignDate, // need to handle it for FormType
+                    source: 'SupportTool',
+                    subsequentGuaranteePeriod: null,
+                    subsequentTargetFunds: funds || null,
+                    taskType: 'RenewalTransfer',
+                    transOption,
+                    userId,
+                },
+            };
+
+            const data = await createTask(caseId, task);
+
+            if (data?.taskId) {
                 if (isLocalStorageEnabled()) {
                     const successMessage = t('caseRenewal.request.createTaskSuccess', {
-                        contractNumber: document?.contract,
-                        documentNumber: document?.documentNumber,
+                        contractNumber: caseDocument?.contract,
+                        documentNumber: caseDocument?.documentNumber,
                     });
 
                     localStorage.setItem('otp-renewal-success', successMessage);
                 }
-                setIsLoading(false);
+
                 router.push(`/create-case`);
             } else {
                 // set api error
@@ -146,7 +133,6 @@ const RenewalFormActions = ({ userId, clientId, caseId, setIsLoading }: RenewalF
                 setIsLoading(false);
             }
         }
-
     };
 
     const validateForm = () => {
@@ -177,13 +163,7 @@ const RenewalFormActions = ({ userId, clientId, caseId, setIsLoading }: RenewalF
                 {Object.keys(formErrors) && <div className="flex flex-col">{renderErrors(Object.keys(formErrors))}</div>}
                 {taskApiError && <AssistiveText variant={AssistiveTextVariant.Error} text={taskApiError} className="mt-2" />}
                 <div className="flex flex-row self-center p-4">
-                    <Button className="mr-4"
-                        onClick={submitRenewalRequest}
-                        size={ButtonSize.Small}
-                        type={ButtonType.Primary}
-                        variant={isFormStateReadOnly ? ButtonVariant.Inactive : ButtonVariant.Default}
-                        disabled={isFormStateReadOnly}
-                        >
+                    <Button className="mr-4" onClick={submitRenewalRequest} size={ButtonSize.Small} type={ButtonType.Primary}>
                         {t('caseRenewal.request.submit')}
                     </Button>
                     <NavElement
@@ -192,7 +172,7 @@ const RenewalFormActions = ({ userId, clientId, caseId, setIsLoading }: RenewalF
                         size={NavElementSize.Small}
                         type={NavElementType.Button}
                         variant={NavElementVariant.Default}
-                        disabled={isFormStateReadOnly}
+                        disabled={isCancelActionDisabled}
                     >
                         {t('caseRenewal.request.cancel')}
                     </NavElement>

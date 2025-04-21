@@ -33,6 +33,7 @@ import { CaseType } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { UserPermission } from '@deps/models/user-profile';
+import createCaseFromDocumentNumber from '@deps/operations/cases/caseOperations';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { getCarriersListQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { ReactComponent as ProgressIcon } from '@deps/styles/elements/icons/illustrations/check-progress.svg';
@@ -226,7 +227,52 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
             setPolicyNumber(document.contract);
             setCaseId('');
         } else {
-            return;
+            browserLogInfo('create-case::Document contract is not present', {
+                caseType,
+                docType,
+                clientId,
+                documentNumber,
+                policyNumber: document.contract,
+            });
+            setPolicyNumber('');
+            setCaseId('');
+            const caseResult = await createCaseFromDocumentNumber(
+                document.documentNumber,
+                document.caseId,
+                document.contract,
+                caseType,
+                clientId
+            );
+
+            if (!caseResult.success) {
+                browserLogInfo('create-case:: No case id from createCase', {
+                    documentNumber: document.documentNumber,
+                    caseType,
+                    clientId,
+                });
+                setErrorMessage(t('caseRenewal.caseCreate.createError', { documentNumber: document.documentNumber }) as string);
+                setShowLoader(false);
+                return;
+            }
+            const caseData = caseResult.value;
+
+            browserLogInfo('create-case::Case is created', {
+                caseType,
+                docType,
+                clientId,
+                documentNumber,
+                policyNumber: document.contract,
+                caseId: caseData.id,
+            });
+
+            if (caseType === CaseType.Reg60) {
+                setCaseId(caseData.id);
+                setPolicyNumber(caseData.policyNumber);
+                setShowLoader(false);
+            } else {
+                const route = `${caseType.toLowerCase()}/${caseData.id}`;
+                router.push(`/create-case/${route}?doc=${document.documentNumber}&clientId=${clientId}`);
+            }
         }
     }
 

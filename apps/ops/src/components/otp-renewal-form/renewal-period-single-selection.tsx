@@ -13,15 +13,10 @@ interface RenewalPeriodSingleSectionProps {
     isFormStateReadOnly: boolean;
 }
 export default function RenewalPeriodSingleSection({ options, isFormStateReadOnly }: RenewalPeriodSingleSectionProps) {
-    const { setSubsequentTargetFunds, formErrors, subsequentTargetFunds } = useContext(RenewalFormDataContext);
+    const { setSubsequentTargetFunds, formErrors } = useContext(RenewalFormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
-
-    const [fundAllocations, setFundAllocations] = useState<TargetFundAllocation[]>(subsequentTargetFunds || []);
-
-    /*const setFundAllocation = (fundName: string, value: string) => {
-        setFundAllocations([{ fundName, value }]);
-        setSubsequentTargetFunds(fundAllocations);
-    };*/
+    
+    const [fundAllocations, setFundAllocations] = useState<TargetFundAllocation[]>([]);
 
     const setFundAllocation = (fundName: string, value: string) => {
         setFundAllocations([{ fundName, value }]);
@@ -47,6 +42,7 @@ export default function RenewalPeriodSingleSection({ options, isFormStateReadOnl
                         orientation={RadioOrientation.Horizontal}
                         value={fundAllocations?.[0]?.fundName || ''}
                         variant={isFormStateReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
+                        disabled={isFormStateReadOnly}
                     />
                 </div>
             </div>

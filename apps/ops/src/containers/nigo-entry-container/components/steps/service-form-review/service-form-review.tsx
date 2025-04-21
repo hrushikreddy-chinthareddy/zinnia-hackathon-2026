@@ -34,27 +34,20 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
     const [loading, getPolicyDocs, workingDocument] = useGetPolicyTypeDocs(policyNumber, clientCode, docType, documentNumber);
     const { displayName } = workingDocument || {};
 
-    const sectionOptions = docType === 'Exchange'
-        ? [
-            {
-                label: t('options.allSectionsAreComplete'),
-                value: SelOptionType.DATA_ENTRY
-            }
-        ]
-        : [
-            {
-                label: t('options.allSectionsAreComplete'),
-                value: SelOptionType.DATA_ENTRY
-            },
-            {
-                label: t('options.missingDetails'),
-                value:  SelOptionType.NIGO_ENTRY
-            },
-            {
-                label: t('options.incorrectDocIndexing'),
-                value: SelOptionType.DOC_INDEXING
-            },
-        ];
+    const sectionOptions = [
+        {
+            label: t('options.allSectionsAreComplete'),
+            value: SelOptionType.DATA_ENTRY
+        },
+        {
+            label: t('options.missingDetails'),
+            value:  SelOptionType.NIGO_ENTRY
+        },
+        {
+            label: t('options.incorrectDocIndexing'),
+            value: SelOptionType.DOC_INDEXING
+        }
+    ];
 
     if (nigoExpection) {
 

@@ -2,7 +2,7 @@ import { datadogLogs } from '@datadog/browser-logs';
 import { AxiosResponse } from 'axios';
 
 import { Reg60FormData } from '@deps/containers/otp/reg60-forms/reg60.types';
-import { CreateTaskBody, RenewalsFormData, TaskV2Payload } from '@deps/models/case/task';
+import { CreateTaskBody, TaskV2Payload } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCaseData } from '@deps/models/case/withdrawal/case';
 import { baseAppUrl, se2ApiServerUrl, se2ApiServerUrlV2 } from '@deps/queries/api-config';
@@ -136,14 +136,14 @@ export const searchTaskSSR = async (
 
 export const createTask = async (
     caseId: string,
-    payload: CreateTaskBody<TaskStatus, Reg60FormData | ActiveWithdrawalCaseData | RenewalsFormData>,
+    payload: CreateTaskBody<TaskStatus, Reg60FormData | ActiveWithdrawalCaseData>,
     entryDuration?: number
 ): Promise<any> => {
     try {
         const logTime = entryDuration ? performance.now() - entryDuration : 0;
         const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
         const url = `${baseCasesV2Url}/${caseId}/tasks`;
-        const { data } = await client.post<CreateTaskBody<TaskStatus, Reg60FormData | ActiveWithdrawalCaseData | RenewalsFormData>, AxiosResponse>(
+        const { data } = await client.post<CreateTaskBody<TaskStatus, Reg60FormData | ActiveWithdrawalCaseData>, AxiosResponse>(
             url,
             payload
         );

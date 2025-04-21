@@ -1549,9 +1549,6 @@
             }
         },
         "request": {
-            "formTitles": {
-                "standard": "{{carrier}} Renewal Request"
-            },
             "callReceivedDate": "Call received date",
             "callReceivedDateError": "Call received date is required",
             "callValidation": "Call Validation",
@@ -2281,7 +2278,7 @@
             }
         },
         "sidebar": {
-            "contractStatusCode": "Policy status",
+            "contractStatusCode": "Policy Status",
             "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Case",
             "abbreviatedContractId": "Cont.",
@@ -2290,9 +2287,9 @@
             "abbreviatedIssueDate": "Issue.",
             "abbreviatedOwnerName": "Own.",
             "abbreviatedAnnuitantName": "Ann.",
-            "abbreviatedContractValue": "Ctr val.",
+            "abbreviatedContractValue": "Ctr Val.",
             "qualType": "Qualification type",
-            "contractValue": "Contract value",
+            "contractValue": "Contract Value",
             "issueDate": "Issue date",
             "contractId": "Contract id",
             "ownerName": "Owner Name",
@@ -5087,7 +5084,7 @@
             "title": "Submitted!",
             "subTitle": "Your request has been sent for processing.",
             "subTitleReindexing": "This document will be re-indexed. The existing case had been cancelled.",
-            "cta": "Go to TransactionOps Suite",
+            "cta": "Go to case management",
             "secondaryCta": "Close",
             "submitNigo": "Submit NIGO details",
             "submitTask": "Submit task details"
@@ -5153,8 +5150,7 @@
                 "oft": "{{carrier}} Outgoing Funds Transfer Request",
                 "ssw": "{{carrier}} Systematic Withdrawal Request",
                 "rmd": "{{carrier}} Required Minimum Distribution Request",
-                "defaultTitle": "Form Entry",
-                "renewal": "{{carrier}} Renewal Request"
+                "defaultTitle": "Form Entry"
             }
         }
     },

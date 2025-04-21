@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 
 import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { FieldSize, FieldType } from '../fields/field';
 import FieldDateSelect, { DATE_PICKER_FORMAT } from '../fields/field-date-select/field-date-select';
@@ -17,9 +17,9 @@ interface CallReceiveDateProps {
 
 export default function CallReceiveDate({ isFormStateReadOnly }:CallReceiveDateProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
-    const { setRenewalRequestSignDate, channel, formErrors, renewalRequestSignDate } = useContext(RenewalFormDataContext);
-    const renewalRequestDt = renewalRequestSignDate ? dayjs(renewalRequestSignDate, ZAHARA_API_DATE_FORMAT).format(NUMERIC_DATE_FORMAT) : '';
-    const [date, setDate] = useState(renewalRequestDt || '');
+    const { setRenewalRequestSignDate, channel, formErrors } = useContext(RenewalFormDataContext);
+    const [date, setDate] = useState('');
+
 
     useEffect(() => {
         const selectedDate = date ? dayjs(date, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT) : '';

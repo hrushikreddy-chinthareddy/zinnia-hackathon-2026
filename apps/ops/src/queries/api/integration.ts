@@ -70,7 +70,7 @@ export const getProductFunds = async ({
             planCode,
             sourceSystem,
         });
-        console.log("Retrieved prouct funds", data)
+
         return data;
     } catch (e) {
         console.error('Error fetching product funds', e);
