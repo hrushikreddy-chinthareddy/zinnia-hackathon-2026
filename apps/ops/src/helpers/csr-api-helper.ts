@@ -15,6 +15,13 @@ export function parseJsonValue(value: string) {
         return value;
     }
 }
+
+export function isString(v: unknown) {
+    return typeof v === 'string';
+}
+
+export const stringifyValue = (v: unknown) => (typeof v === 'string' ? v : JSON.stringify(v));
+
 export const csrApiHelper = async (props: ApiProps, formData: any, strigify = false) => {
     const { apiUrl, apiMethod, apiPayload, responseData, response } = props;
 

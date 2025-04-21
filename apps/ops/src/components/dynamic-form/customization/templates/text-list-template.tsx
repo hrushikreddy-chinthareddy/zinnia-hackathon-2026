@@ -38,7 +38,7 @@ export default function TextListTemplate(props: ArrayFieldTemplateProps): JSX.El
             const data = props.formContext[formContextOptions?.keyName][formContextOptions?.listName];
             const parseKey: string = formContextOptions?.parseKey ?? '';
 
-            list = parseKey ? data.map((item: string) => JSON.parse(item)[parseKey]) : data;
+            list = parseKey ? data.map((item: string) => (typeof item !== 'object' ? JSON.parse(item)[parseKey] : item[parseKey])) : data;
         }
     }
 

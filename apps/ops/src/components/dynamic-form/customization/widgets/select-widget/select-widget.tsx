@@ -10,7 +10,7 @@ import {
 } from '@rjsf/utils';
 
 import SelectComponent from '@deps/components/select/select';
-import { csrApiHelper, parseJsonValue } from '@deps/helpers/csr-api-helper';
+import { csrApiHelper, parseJsonValue, isString, stringifyValue } from '@deps/helpers/csr-api-helper';
 import { ApiProps, ApiResponseTypes, EventType, TaskEventProps } from '@deps/models/case/task';
 
 function getValue(
@@ -105,7 +105,12 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     }
 
     const showPlaceholderOption = !multiple && schema.default === undefined;
-    let selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+    const normalizedValue = Array.isArray(value)
+        ? value.map(v => (isString(v) ? v : stringifyValue(v)))
+        : isString(value)
+        ? value
+        : stringifyValue(value);
+    let selectedIndexes = enumOptionsIndexForValue<S>(normalizedValue, enumOptions, multiple);
 
     const selectedValues = multiple
         ? enumOptions?.reduce((acc: { [key: string]: string }, option, index) => {
