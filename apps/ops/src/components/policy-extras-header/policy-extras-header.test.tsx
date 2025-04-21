@@ -44,7 +44,7 @@ describe('PolicyExtrasHeader', () => {
         it('meets design requirements', () => {
             renderComponent();
             const headerElement = screen.getByText(sentenceCaseHeaderText);
-            expect(headerElement).toHaveClass('font-semibold', 'font-primary');
+            expect(headerElement).toHaveClass('subtitle');
         });
     });
 

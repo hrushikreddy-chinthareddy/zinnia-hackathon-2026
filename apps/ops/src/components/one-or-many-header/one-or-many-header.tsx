@@ -14,7 +14,7 @@ export interface OneOrManyHeaderProps {
 
 const OneOrManyHeader = ({ entities, className }: OneOrManyHeaderProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const defaultClassName = 'text-gray-900 headline-1-d';
+    const defaultClassName = 'title';
     const ownerNameClassName = clsx(className, defaultClassName);
 
     if (entities.length === 0) {

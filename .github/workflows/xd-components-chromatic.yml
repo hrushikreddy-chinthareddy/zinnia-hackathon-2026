@@ -1,4 +1,4 @@
-name: 'Chromatic POM'
+name: 'Chromatic xd-components'
 
 on:
   workflow_dispatch:

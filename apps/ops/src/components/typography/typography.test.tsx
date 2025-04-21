@@ -52,6 +52,6 @@ describe('Typography', () => {
         const typography = getByText('Heading 2');
         expect(typography.tagName).toBe('H2');
         expect(typography.className).toContain('custom-class');
-        expect(typography.className).toContain('font-primary text-[12px] font-medium md:text-[14px] lg:text-[16px]');
+        expect(typography.className).toContain('typography-labels-label-alt');
     });
 });

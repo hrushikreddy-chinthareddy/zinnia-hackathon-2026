@@ -124,7 +124,7 @@ const SelectSearch = ({
         }
     }, [debouncedSearchValue]);
 
-    const mergedLabelClassNames = getLabelClasses(variant, `font-primary font-bold text-[12px] leading-4.5 ${labelClassNames}`);
+    const mergedLabelClassNames = getLabelClasses(variant, `field-label ${labelClassNames}`);
 
     const inputClassNames = getInputClasses(
         variant,

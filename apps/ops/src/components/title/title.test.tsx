@@ -8,8 +8,7 @@ describe('Title component', () => {
         const titleElement = getByText('Hello peeps!');
 
         expect(titleElement).toBeInTheDocument();
-        expect(titleElement).toHaveClass('font-primary text-[18px] text-gray-900');
-        expect(titleElement).toHaveClass('font-semibold');
+        expect(titleElement).toHaveClass('subtitle');
         expect(titleElement).not.toHaveClass('font-normal');
     });
 
@@ -18,9 +17,16 @@ describe('Title component', () => {
         const titleElement = getByText('Hello peeps!');
 
         expect(titleElement).toBeInTheDocument();
-        expect(titleElement).toHaveClass('font-primary text-[18px] text-gray-900');
-        expect(titleElement).toHaveClass('font-normal');
+        expect(titleElement).toHaveClass('subtitle-alt');
         expect(titleElement).not.toHaveClass('font-semibold');
+    });
+
+    it('renders the title with title variant', () => {
+        const { getByText } = render(<Title variant={TitleVariant.Title}>Hello peeps!</Title>);
+        const titleElement = getByText('Hello peeps!');
+
+        expect(titleElement).toBeInTheDocument();
+        expect(titleElement).toHaveClass('title');
     });
 
     it('renders the title with custom className', () => {
@@ -28,7 +34,7 @@ describe('Title component', () => {
         const titleElement = getByText('Hello peeps!');
 
         expect(titleElement).toBeInTheDocument();
-        expect(titleElement).toHaveClass('font-primary text-[18px] text-gray-900');
+        expect(titleElement).toHaveClass('subtitle');
         expect(titleElement).toHaveClass('custom-title');
     });
 });

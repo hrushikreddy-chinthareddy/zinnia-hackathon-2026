@@ -39,79 +39,79 @@ type TypographyData = {
 
 const typographyMapping: Record<TypographyVariant, TypographyData> = {
     [TypographyVariant.H1]: {
-        styles: 'font-primary text-[36px] font-medium leading-[44px]',
+        styles: 'headline-1',
         tag: 'h1',
     },
     [TypographyVariant.H2]: {
-        styles: 'font-primary text-[26px] font-medium leading-[32px]',
+        styles: 'headline-2',
         tag: 'h2',
     },
     [TypographyVariant.H2acc]: {
-        styles: 'font-primary text-[26px] font-bold leading-[32px]',
+        styles: 'headline-2-acc',
         tag: 'h2',
     },
     [TypographyVariant.H3]: {
-        styles: 'font-primary text-[22px] font-medium leading-[28px]',
+        styles: 'headline-3',
         tag: 'h3',
     },
     [TypographyVariant.H4]: {
-        styles: 'font-primary text-[18px] font-medium leading-[24px]',
+        styles: 'headline-4',
         tag: 'h4',
     },
     [TypographyVariant.Caption]: {
-        styles: 'font-primary text-content-caption text-gray-600',
+        styles: 'typography-content-caption',
         tag: 'label',
     },
     [TypographyVariant.Body]: {
-        styles: 'font-secondary text-[16px] font-normal leading-[24px]',
+        styles: 'typography-content-body',
         tag: 'p',
     },
     [TypographyVariant.BodySm]: {
-        styles: 'inline-flex font-secondary text-body-sm',
+        styles: 'typography-content-body-sm',
         tag: 'p',
     },
     [TypographyVariant.BodyBold]: {
-        styles: 'font-secondary text-[16px] font-bold leading-[24px]',
+        styles: 'typography-content-body-bold',
         tag: 'p',
     },
     [TypographyVariant.BodySmBold]: {
-        styles: 'font-secondary text-[14px] font-bold leading-[22px]',
+        styles: 'typography-content-body-sm-bold',
         tag: 'p',
     },
     [TypographyVariant.BodyParagraph]: {
-        styles: 'font-secondary text-[16px] font-normal leading-[28px]',
+        styles: 'typography-content-body-paragraph',
         tag: 'p',
     },
     [TypographyVariant.Value]: {
-        styles: 'font-primary text-content-value',
+        styles: 'typography-content-value',
         tag: 'span',
     },
     [TypographyVariant.FieldLabel]: {
-        styles: 'font-primary text-[12px] font-bold',
+        styles: 'typography-labels-field-label',
         tag: 'label',
     },
     [TypographyVariant.Label]: {
-        styles: 'font-primary text-[12px] font-semibold',
+        styles: 'typography-labels-label',
         tag: 'label',
     },
     [TypographyVariant.LabelMd]: {
-        styles: 'font-primary text-[14px] font-semibold',
+        styles: 'typography-labels-label-md',
         tag: 'label',
     },
     [TypographyVariant.LabelMdAlt]: {
-        styles: 'font-primary text-md font-medium',
+        styles: 'typography-labels-label-md-alt',
         tag: 'label',
     },
     [TypographyVariant.LabelLg]: {
-        styles: 'font-primary text-[16px] font-semibold',
+        styles: 'typography-labels-label-lg',
         tag: 'label',
     },
     [TypographyVariant.LabelLgAlt]: {
-        styles: 'font-primary text-[16px] font-medium',
+        styles: 'typography-labels-label-lg-alt',
         tag: 'label',
     },
     [TypographyVariant.LabelAlt]: {
-        styles: 'font-primary text-[12px] font-medium md:text-[14px] lg:text-[16px]',
+        styles: 'typography-labels-label-alt',
         tag: 'label',
     },
 };

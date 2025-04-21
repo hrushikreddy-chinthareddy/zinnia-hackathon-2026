@@ -3,45 +3,31 @@
 @tailwind utilities;
 
 @layer base {
-    /* h1 {
-        @apply font-primary text-[36px] font-medium normal-case leading-[44px] tracking-normal no-underline;
-    } */
+    h1 {
+        font: var(--typography-desktop-headline-1-d);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-mobile-headline-1-m);
+        }
+    }
     h2 {
-        @apply font-primary text-[26px] font-light normal-case leading-[32px] tracking-normal no-underline;
+        font: var(--typography-desktop-headline-2-d);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-mobile-headline-2-m);
+        }
     }
     h3 {
-        @apply font-primary text-[22px] font-medium normal-case leading-[30px] tracking-normal no-underline;
+        font: var(--typography-desktop-headline-3-d);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-mobile-headline-3-m);
+        }
     }
-    .caption-selected {
-        @apply font-primary text-sm font-semibold leading-4;
+    h4 {
+        font: var(--typography-desktop-headline-4-d);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-mobile-headlne-4-m);
+        }
     }
-    .headline-1-d {
-        @apply font-primary text-[36px] font-medium leading-[44px];
-    }
-    .headline-2-d {
-        @apply font-primary text-[26px] font-medium leading-8;
-    }
-    .headline-3-d {
-        @apply font-primary text-[22px] font-medium leading-7;
-    }
-    .headline-4-d {
-        @apply font-primary text-[18px] font-medium leading-6;
-    }
-    .field-label {
-        @apply font-primary text-sm font-bold leading-4.5;
-    }
-    .label-lg {
-        @apply font-primary text-[16px] font-semibold leading-6;
-    }
-    .label-md {
-        @apply font-primary text-[14px] font-semibold leading-[21px];
-    }
-    .body {
-        @apply font-secondary text-base font-normal;
-    }
-    .body-sm {
-        @apply font-secondary text-md font-normal leading-5.5;
-    }
+
     .default-focus {
         @apply focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[6px] focus-visible:outline-semantic-focus;
     }
@@ -122,15 +108,135 @@ body {
             padding: theme('spacing.8');
         }
     }
+
+    .caption-selected {
+        font: var(--typography-content-caption-selected);
+    }
+    .headline-1 {
+        font: var(--typography-desktop-headline-1-d);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-mobile-headline-1-m);
+        }
+    }
+    .headline-2 {
+        font: var(--typography-desktop-headline-2-d);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-mobile-headline-2-m);
+        }
+    }
+    .headline-2-acc {
+        font: var(--typography-desktop-headline-2-d);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-mobile-headline-2-m);
+        }
+    }
+    .headline-3 {
+        font: var(--typography-desktop-headline-3-d);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-mobile-headline-3-m);
+        }
+    }
+    .headline-4 {
+        font: var(--typography-desktop-headline-4-d);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-mobile-headlne-4-m);
+        }
+    }
+    .field-label {
+        font: var(--typography-labels-field-label);
+    }
+    .label-lg {
+        font: var(--typography-labels-label-lg);
+    }
+    .label-md {
+        font: var(--typography-labels-label-md);
+    }
+    .body {
+        font: var(--typography-content-body) !important;
+    }
+    .body-bold {
+        font: var(--typography-content-body-bold) !important;
+    }
+    .body-sm {
+        font: var(--typography-content-body-sm) !important;
+    }
+    .text-sm {
+        font: var(--typography-content-body-sm) !important;
+    }
+    .text-md {
+        font: var(--typography-content-body) !important;
+    }
+
+    .text-lg {
+        font: var(--typography-labels-label-lg) !important;
+    }
+
+    .text-xl {
+        font: var(--typography-desktop-headline-2-d) !important;
+        @media screen and (max-width: 768px) {
+            font: var(--typography-mobile-headline-2-m) !important;
+        }
+    }
+    .text-primary {
+        color: var(--color-primary-color-primary);
+    }
+    .title {
+        font: var(--typography-desktop-headline-1-d);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-mobile-headline-1-m);
+        }
+    }
+    .subtitle {
+        font: var(--typography-titles-subtitle);
+    }
+    .subtitle-alt {
+        font: var(--typography-titles-subtitle-alt);
+    }
+    .nav-links {
+        font: var(--typography-nav-links);
+    }
+    .nav-links-sm {
+        font: var(--typography-nav-links-sm);
+    }
+    .footer {
+        font: var(--typography-content-footer);
+    }
+    .footer-legal {
+        font: var(--typography-content-footer-legal);
+    }
+    .button-lg {
+        font: var(--typography-buttons-button-lg);
+    }
+    .button-sm {
+        font: var(--typography-buttons-button-sm);
+    }
+    .label-alt {
+        font: var(--typography-labels-label-lg-alt);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-labels-label-md-alt);
+        }
+        @media screen and (max-width: 500px) {
+            font: var(--typography-labels-label-sm-alt);
+        }
+    }
+    .label {
+        font: var(--typography-labels-label-lg);
+        @media screen and (max-width: 768px) {
+            font: var(--typography-labels-label-md);
+        }
+        @media screen and (max-width: 500px) {
+            font: var(--typography-labels-label-sm);
+        }
+    }
+    .content-body {
+        font: var(--typography-content-body);
+    }
+    .content-body-sm {
+        font: var(--typography-content-body-sm);
+    }
 }
 
 @layer components {
-    .content-body {
-        @apply content font-secondary text-base font-normal leading-[24px] tracking-normal no-underline;
-    }
-    .content-body-sm {
-        @apply font-secondary text-md font-normal leading-[22px] tracking-normal no-underline;
-    }
     .chip {
         @apply default-focus pointer-events-auto cursor-pointer rounded-full border-2 border-gray-200 bg-white px-4 py-0.5 font-primary text-md font-semibold leading-6 hover:border-primary hover:bg-primary-lightest active:border-primary active:bg-primary-lightest disabled:pointer-events-none disabled:cursor-auto disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-300 aria-checked:border-primary aria-checked:bg-primary-lighter;
     }
