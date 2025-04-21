@@ -55,6 +55,10 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
     const [timer] = useState(performance.now());
     const filteredNigoException = nigoExceptions?.find(nigoException => nigoException.label === 'Case routed for manual processing');
     const NIGO_EXCEPTION = filteredNigoException?.value;
+    const subExceptions = nigoSubExceptions?.find((subItem: NigoSubException) => subItem.nmId === NIGO_EXCEPTION)?.subExceptions;
+    const notesSubException = subExceptions?.find((item: any) => {
+        return item.label === 'Validation failed due to reason not listed.'
+    })?.value;
 
     const submit = useCallback(async () => {
         setIsLoading(true);
@@ -95,6 +99,7 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
     const handleStepContinue = useCallback(async() => {
         const errors = {} as FormValidationErrors;
         setFormErrors({});
+
         if (sectionOption === SelOptionType.DOC_INDEXING) {
             if (isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex)) {
                 errors['noDocTypeToReindex'] = t('formErrors.formValidation.noDocTypeToReindex');
@@ -108,8 +113,11 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
             if ( messages[NIGO_EXCEPTION] === undefined || isEmptyObject(messages[NIGO_EXCEPTION])) {
                 errors['noCategoryDetailsSelected'] = t('formErrors.formValidation.noCategoryDetailsSelected');
             } else {
-                if (isNullEmptyOrUndefined(formComment?.comment)) {
-                    errors['noComment'] = t('formErrors.formValidation.noComment');
+                const selectedMessage = messages[NIGO_EXCEPTION] ? Object.keys(messages[NIGO_EXCEPTION]) : [];
+                if (selectedMessage.includes(notesSubException as string)) {
+                    if (isNullEmptyOrUndefined(formComment?.comment)) {
+                        errors['noComment'] = t('formErrors.formValidation.noComment');
+                    }
                 }
             }
         }
@@ -127,7 +135,7 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
 
 
     useEffect(() => {
-        if (NIGO_EXCEPTION && Object.keys(formErrors).length === 0) {
+        if (sectionOption === NIGO_EXCEPTION && Object.keys(formErrors).length === 0) {
             const nigos: NigoMessages[] = [];
             const obj = {
                 exceptionId: NIGO_EXCEPTION,
@@ -135,6 +143,8 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
             };
             nigos.push(obj);
             setFormNigos({ nigos: nigos } );
+        } else {
+            setFormNigos(null);
         }
     }, [formErrors, messages, setFormNigos]);
 
@@ -178,6 +188,7 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
             setMessages([]);
             setFormComment({comment: ''})
         } else if (sectionOption === SelOptionType.NIGO_ENTRY) {
+            setFormNigos(null);
             setFormReindexingData(null);
             setMessages([]);
             setFormComment({comment: ''})
