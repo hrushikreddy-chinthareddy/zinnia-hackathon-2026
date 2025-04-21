@@ -114,7 +114,7 @@ export const PremiumsSubPage = () => {
         {
             text: t('startAutopay'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/add-premium-autopay`,
-            isDisabled: !premiumSetOrCancelAutopayEnabled || !isEligibleManageAutopay || upcomingPayment?.nextProgramDate,
+            isDisabled: !premiumSetOrCancelAutopayEnabled || upcomingPayment?.nextProgramDate,
         },
         {
             text: t('manageAutopay'),
