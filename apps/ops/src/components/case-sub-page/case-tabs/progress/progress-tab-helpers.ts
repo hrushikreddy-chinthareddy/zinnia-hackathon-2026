@@ -476,12 +476,13 @@ export class TransformedCase {
     private buildException(exception: ExceptionInstance, isUnmapped?: boolean): ExceptionView {
         // Building up the exceptionReason to use if the nigoReason hasn't mapped the provided exceptionRefId or if the refId is missing
 
-        const exceptionReason = exception?.detailedReason ? exception?.detailedReason : exception?.reason;
-        const finalExceptionReason = isUnmapped ? toSentenceCase(exceptionReason) : exceptionReason;
 
-        const exceptionDescription = exception?.exceptionRefId
-            ? this.t(`caseManagementApiKeys.nigoReasons.${exception.exceptionRefId}`, finalExceptionReason)
-            : finalExceptionReason;
+        const exceptionReason = exception?.reason ? isUnmapped ? toSentenceCase(exception?.reason) : exception?.reason: "";
+        const exceptionDetailedReason = exception?.detailedReason ? isUnmapped ? toSentenceCase(exception?.detailedReason) : exception?.detailedReason: "";
+        const exceptionDescription = exceptionDetailedReason ? exceptionDetailedReason : exception?.exceptionRefId
+            ? this.t(`caseManagementApiKeys.nigoReasons.${exception.exceptionRefId}`, exceptionReason)
+            : exceptionReason;
+
         const tasks: TaskView[] = (
             (exception.taskIdList || ([] as string[]))
                 .map(taskId => {
