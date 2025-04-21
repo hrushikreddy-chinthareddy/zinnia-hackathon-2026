@@ -49,6 +49,7 @@ const NigoEntryContainer = ({
 }: NigoEntryContainerContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry' });
     const { setTransactionType, setTransactionSubType, setDocument, sectionOption } = useNigoEntry();
+
     const [policy, setPolicy] = useState<Policy>();
     const [availableFormsTransactions, setAvailableFormsTransactions] = useState<AvailableFormsTransaction[]>([]);
     const [prevTransactionDetails, setPrevTransactionDetails] = useState<AdditionalDataInstance | null>(null);

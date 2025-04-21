@@ -94,12 +94,13 @@ const NigoEntry = ({
 
     const { issueState } = useAccountInfo(document?.contract, clientCode as string);
     return (
+
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
             { caseType === CaseType.Renewal
                 ? (
                     <RenewalFormProvider
                         initialForm={form}
-                        parties={Array.isArray(parties) ? parties : []}
+                        parties={[]}
                         form={form}
                         userId={''}
                         document={document}
@@ -110,7 +111,7 @@ const NigoEntry = ({
                         <NigoEntryProvider>
                             <NigoEntryContainer
                                 documentNumber={documentNumber}
-                                policyNumber={document?.contract}
+                                policyNumber={policyNumber}
                                 planCode={planCode}
                                 docType={docType}
                                 clientCode={clientCode}
@@ -302,7 +303,26 @@ export const getServerSideProps = withPageAuthAndLogging(
                     process: activeForm?.process,
                 };
 
-                const document = await getDocumentV2SSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken, loggingContext);
+                const [parties, document, searchCasesResponse, policies, nigoExceptionResponse] = await Promise.all([
+                    await getPolicyPartiesSSR(contractNum, clientCode, accessToken as string, loggingContext),
+                    await getDocumentV2SSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken, loggingContext),
+                    await searchCasesSSR(filters, accessToken, loggingContext),
+                    await searchPolicySSR(contractNum, [clientCode?.toUpperCase()], accessToken, 1, 0, loggingContext),
+                    await getNigoExceptions(nigoFilters, accessToken, loggingContext),
+                ]);
+
+                const planCode = policies?.[0]?.planCode || null;
+                const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
+                logInfo('nigo-entry::Retrieved parties, document, planCode, nigoExceptions and correspondence case search result', {
+                    taskId,
+                    documentNumber,
+                    documentType: docType,
+                    clientCode,
+                    contractNum,
+                    planCode,
+                    ...loggingContext,
+                });
+
                 if (!document) {
                     logWarn('nigoEntry::Error getting document', {
                         taskId,
@@ -319,34 +339,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 }
-                // Required for renewal
-                const docContract = document?.contract;
-
                 logInfo('nigo-entry::Retrieved document', {
                     taskId,
                     documentNumber,
                     documentType: docType,
                     clientCode,
-                    contractNum: contractNum ?? docContract,
-                    ...loggingContext,
-                });
-
-                const [parties, searchCasesResponse, policies, nigoExceptionResponse] = await Promise.all([
-                    await getPolicyPartiesSSR(contractNum ?? docContract, clientCode, accessToken as string, loggingContext),
-                    await searchCasesSSR(filters, accessToken, loggingContext),
-                    await searchPolicySSR(contractNum ?? docContract, [clientCode?.toUpperCase()], accessToken, 1, 0, loggingContext),
-                    await getNigoExceptions(nigoFilters, accessToken, loggingContext),
-                ]);
-
-                const planCode = policies?.[0]?.planCode || null;
-                const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
-                logInfo('nigo-entry::Retrieved parties, document, planCode, nigoExceptions and correspondence case search result', {
-                    taskId,
-                    documentNumber,
-                    documentType: docType,
-                    clientCode,
-                    contractNum: contractNum ?? docContract,
-                    planCode,
+                    contractNum,
                     ...loggingContext,
                 });
 
@@ -363,7 +361,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         docType: docType,
                         caseType,
                         planCode,
-                        policyNumber: contractNum ?? docContract,
+                        policyNumber: contractNum,
                         nigoExceptions,
                         nigoSubExceptions,
                         user,
