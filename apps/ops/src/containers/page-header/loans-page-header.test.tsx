@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, act } from '@testing-library/react';
 
 import { LoansTest } from '@deps/jest/constants/test-id-constants';
@@ -7,6 +8,7 @@ import * as BpmQueries from '@deps/queries/api/bpm';
 import * as ProductRateQueries from '@deps/queries/api/product-rate';
 
 import LoansPageHeaderContainer from './loans-page-header';
+const queryClient = new QueryClient()
 
 jest.mock('next/router', () => ({
     useRouter: jest.fn(() => ({
@@ -36,7 +38,11 @@ describe('verify correct labels and fields are present', () => {
     // TODO: DEPU-2242 update this unit test to reflect updates made to LoansPageHeaderContainer
     it('should contain correct h1 and loan transaction history texts', async () => {
         await act(async () => {
-            render(<LoansPageHeaderContainer loanCarryingBalance={true} policy={mockPolicy} />);
+            render(
+                <QueryClientProvider client={queryClient}>
+                    <LoansPageHeaderContainer loanCarryingBalance={true} policy={mockPolicy} />
+                </QueryClientProvider>
+            );
         });
 
         const allHeaders = screen.getAllByText('transactions.loans.header.loansTitle');
@@ -47,7 +53,11 @@ describe('verify correct labels and fields are present', () => {
     });
 
     it('should display the correct fields if a user has no outstanding loans', async () => {
-        render(<LoansPageHeaderContainer loanCarryingBalance={false} policy={mockPolicy} />);
+        render(
+            <QueryClientProvider client={queryClient}>
+                <LoansPageHeaderContainer loanCarryingBalance={false} policy={mockPolicy} />
+            </QueryClientProvider>
+        );
 
         await expect(
             screen.findByText('pageHeader.loans.fields.estimatedNetDeathBenefit', {
@@ -75,7 +85,11 @@ describe('verify correct labels and fields are present', () => {
             },
         };
 
-        render(<LoansPageHeaderContainer loanCarryingBalance={true} policy={modifiedMockPolicy} />);
+        render(
+            <QueryClientProvider client={queryClient}>
+                <LoansPageHeaderContainer loanCarryingBalance={true} policy={modifiedMockPolicy} />
+            </QueryClientProvider>
+        );
 
         expect(
             await screen.findByText('pageHeader.loans.fields.estimatedNetDeathBenefit', {
@@ -96,7 +110,7 @@ describe('verify correct labels and fields are present', () => {
 });
 
 // https://zinnia.atlassian.net/browse/DEPU-1936
-describe.skip('verify quick links render appropriately', () => {
+describe('verify quick links render appropriately', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -113,14 +127,18 @@ describe.skip('verify quick links render appropriately', () => {
             },
         };
 
-        render(<LoansPageHeaderContainer loanCarryingBalance={false} policy={modifiedMockPolicy} />);
+        render(
+            <QueryClientProvider client={queryClient}>
+                <LoansPageHeaderContainer loanCarryingBalance={false} policy={modifiedMockPolicy} />
+            </QueryClientProvider>
+        );
 
         const startLoanLink = await screen.findByTestId(LoansTest.START_LOAN_LINK);
 
         expect(startLoanLink).toBeInTheDocument();
     });
 
-    it.skip('should display a disabled start a loan link if a user does not meet the requirements', async () => {
+    it('should display a disabled start a loan link if a user does not meet the requirements', async () => {
         mockedLoanEligibility.mockResolvedValueOnce({ status: 500 });
         mockedInterestRate.mockResolvedValue(Promise.resolve(2));
         mockedCreditRate.mockResolvedValue(Promise.resolve(3));
@@ -128,7 +146,11 @@ describe.skip('verify quick links render appropriately', () => {
             ...mockPolicy,
         };
 
-        render(<LoansPageHeaderContainer loanCarryingBalance={true} policy={modifiedMockPolicy} />);
+        render(
+            <QueryClientProvider client={queryClient}>
+                <LoansPageHeaderContainer loanCarryingBalance={true} policy={modifiedMockPolicy} />
+            </QueryClientProvider>
+        );
 
         const startLoanDisabledLink = await screen.findByTestId(LoansTest.START_LOAN_LINK_DISABLED);
 

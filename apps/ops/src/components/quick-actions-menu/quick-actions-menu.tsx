@@ -1,6 +1,7 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
+import { skipToken, useQuery } from '@tanstack/react-query';
+import { Reason } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
-import Image from 'next/image';
 import { TFunction, useTranslation } from 'next-i18next';
 import React from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -13,6 +14,9 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { checkLoanRepaymentOneTimeEligibilityQuery, checkNewLoanEligibilityQuery, checkOneTimePremiumEligibilityQuery, checkPartialWithdrawalOneTimeEligibilityQuery, checkSystematicProgramsEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as PaymentIcon } from '@deps/styles/elements/icons/content/payment.svg';
 import { ReactComponent as AutopayIcon } from '@deps/styles/elements/icons/currency/autopay.svg';
@@ -22,7 +26,6 @@ import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/ico
 import { ReactComponent as DocumentReportIcon } from '@deps/styles/elements/icons/icons_outlined/document-report.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
 import { ReactComponent as TableIcon } from '@deps/styles/elements/icons/icons_outlined/table.svg';
-import loaderImage from '@deps/styles/images/loader-contrast.png';
 import { DropdownClickedEvent, PolicyClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -53,7 +56,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(function 
     );
 });
 
-const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, isLoading }: TranslateProps & QuickActionsMenuProps) => {
+const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuProps) => {
     const { sessionId, partyId: userPartyId } = usePermissionsContext();
 
     const { featureFlags } = useOptimizely();
@@ -62,6 +65,7 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
     const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
 
     const trackClick = (linkName: string, linkUrl: string) => {
+        // TODO MG: do we always want to call both of these?
         segmentAnalyticsTrackEvent<DropdownClickedEvent>(SegmentTrackedEventName.DropdownClicked, {
             dropdownName: 'Policy Quick Actions',
             selectedItemName: linkName,
@@ -69,7 +73,7 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
             userId: userPartyId,
         });
         segmentAnalyticsTrackEvent<PolicyClickedEvent>(SegmentTrackedEventName.PolicyClicked, {
-            contractNumber: policyNumber,
+            contractNumber: policy.policyNumber,
             linkName,
             linkUrl,
             session_id: sessionId,
@@ -77,111 +81,180 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
         });
     };
 
+    const premiumProgram = policy.systematicPrograms.getProgramsByReason(Reason.PREMIUM);
+
+    const {
+        data: systematicProgramsEligibility,
+    } = useQuery({
+        queryKey: ['checkSystematicProgramsEligibility', policy.planCode, policy.policyNumber, premiumProgram?.arrangementId],
+        queryFn: premiumProgram?.arrangementId
+            ? () => checkSystematicProgramsEligibilityQuery(policy.planCode as string, policy.policyNumber as string, premiumProgram?.arrangementId as string)
+            : skipToken,
+        placeholderData: previousData => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleManageAutopay: data?.status === TransactionResponseStatus.Success
+            }
+        }
+    });
+
+    const {
+        data: oneTimePremiumEligibility,
+    } = useQuery({
+        queryKey: ['checkOneTimePremiumEligibility', policy.planCode, policy.policyNumber],
+        queryFn: () => checkOneTimePremiumEligibilityQuery(policy.planCode as string, policy.policyNumber as string),
+        placeholderData: previousData => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleOneTimePremium: data?.status === TransactionResponseStatus.Success
+            }
+        }
+    });
+
+    const {
+        data: partialWithdrawalOneTimeEligibility,
+    } = useQuery({
+        queryKey: ['checkPartialWithdrawalOneTimeEligibility', policy.planCode, policy.policyNumber],
+        queryFn: () => checkPartialWithdrawalOneTimeEligibilityQuery(policy.planCode as string, policy.policyNumber as string),
+        placeholderData: previousData => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligiblePartialWithdrawalOneTime: data?.status === TransactionResponseStatus.Success
+            }
+        }
+    });
+
+    const {
+        data: newLoanEligibility,
+    } = useQuery({
+        queryKey: ['checkNewLoanEligibility', policy.planCode, policy.policyNumber, policy.loanValues?.maximumLoanAmount],
+        queryFn: () => checkNewLoanEligibilityQuery(policy.planCode as string, policy.policyNumber as string, policy.loanValues?.maximumLoanAmount),
+        placeholderData: previousData => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleNewLoan: data?.status === TransactionResponseStatus.Success
+            }
+        }
+    });
+
+    const {
+        data: loanRepaymentOneTimeEligibility,
+    } = useQuery({
+        queryKey: ['checkLoanRepaymentOneTimeEligibility', policy.planCode, policy.policyNumber, policy.loanValues?.totalLoanBalance],
+        queryFn: () => checkLoanRepaymentOneTimeEligibilityQuery(policy.planCode as string, policy.policyNumber as string, policy.loanValues?.totalLoanBalance),
+        placeholderData: previousData => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleLoanRepaymentOneTime: data?.status === TransactionResponseStatus.Success
+            }
+        }
+    });
+
     return (
         <>
             <MenuContextualLabel label={t('transactions.label')}>
-                {isLoading ? (
-                    <div className="h-[104px] w-[248px] content-center">
-                        <Image alt={t('site.loader')} height={30} src={loaderImage} width={30} className="mx-auto my-[0px] animate-spin" />
-                    </div>
-                ) : (
-                    <>
-                        {eligibilityCheck?.eligibleFreeLookCancel && freeLookEnabled && (
-                            <MenuContextualItem
-                                content={t('transactions.cancelPolicy')}
-                                href={`/policies/${planCode}/${policyNumber}/policy/freelook/cancel-freelook/`}
-                                icon={<CashIcon height={20} width={20} />}
-                                onClick={() => {
-                                    trackClick('Cancel Policy', `/policies/${planCode}/${policyNumber}/policy/freelook/cancel-freelook/`);
-                                }}
-                            />
-                        )}
+                <>
+                    {freeLookEnabled && policy.freeLookPeriodDetails.isInFreeLookPeriod && (
                         <MenuContextualItem
-                            disabled={!eligibilityCheck?.eligibleAutopay as boolean}
-                            content={t('transactions.managePremiumAutopay')}
-                            href={`/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay/`}
-                            icon={<AutopayIcon height={20} width={20} />}
-                            onClick={() => {
-                                trackClick(
-                                    'Manage Premium Autopay',
-                                    `/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay/`
-                                );
-                            }}
-                        />
-
-                        <MenuContextualItem
-                            disabled={!eligibilityCheck?.eligiblePremium as boolean}
-                            content={t('transactions.newPremium')}
-                            href={`/policies/${planCode}/${policyNumber}/policy/premiums/new-premium/`}
-                            icon={<PaymentIcon height={20} width={20} />}
-                            onClick={() => {
-                                trackClick('New Premium', `/policies/${planCode}/${policyNumber}/policy/premiums/new-premium/`);
-                            }}
-                        />
-
-                        <MenuContextualItem
-                            disabled={!eligibilityCheck?.eligibleWithdrawal as boolean}
-                            content={t('transactions.startAWithdrawal')}
-                            href={`/policies/${planCode}/${policyNumber}/policy/withdrawals/new-withdrawal/`}
+                            content={t('transactions.cancelPolicy')}
+                            href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`}
                             icon={<CashIcon height={20} width={20} />}
                             onClick={() => {
-                                trackClick(
-                                    'Start a Withdrawal',
-                                    `/policies/${planCode}/${policyNumber}/policy/withdrawals/new-withdrawal/`
-                                );
+                                trackClick('Cancel Policy', `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`);
                             }}
                         />
+                    )}
+
+                    <MenuContextualItem
+                        disabled={!systematicProgramsEligibility?.isEligibleManageAutopay}
+                        content={t('transactions.managePremiumAutopay')}
+                        href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/update-premium-autopay/`}
+                        icon={<AutopayIcon height={20} width={20} />}
+                        onClick={() => {
+                            trackClick(
+                                'Manage Premium Autopay',
+                                `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/update-premium-autopay/`
+                            );
+                        }}
+                    />
+
+                    <MenuContextualItem
+                        disabled={!oneTimePremiumEligibility?.isEligibleOneTimePremium}
+                        content={t('transactions.newPremium')}
+                        href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`}
+                        icon={<PaymentIcon height={20} width={20} />}
+                        onClick={() => {
+                            trackClick('New Premium', `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`);
+                        }}
+                    />
+
+                    <MenuContextualItem
+                        disabled={!partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime}
+                        content={t('transactions.startAWithdrawal')}
+                        href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/withdrawals/new-withdrawal/`}
+                        icon={<CashIcon height={20} width={20} />}
+                        onClick={() => {
+                            trackClick(
+                                'Start a Withdrawal',
+                                `/policies/${policy.planCode}/${policy.policyNumber}/policy/withdrawals/new-withdrawal/`
+                            );
+                        }}
+                    />
+                    <MenuContextualItem
+                        disabled={!newLoanEligibility?.isEligibleNewLoan}
+                        content={t('transactions.newLoan')}
+                        href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/new-loan/`}
+                        icon={<BankIcon height={20} width={20} />}
+                        onClick={() => {
+                            trackClick('New Loan', `/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/new-loan/`);
+                        }}
+                    />
+                    {loanPaymentEnabled && (
                         <MenuContextualItem
-                            disabled={!eligibilityCheck?.eligibleNewLoan as boolean}
-                            content={t('transactions.newLoan')}
-                            href={`/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`}
-                            icon={<BankIcon height={20} width={20} />}
+                            disabled={!loanRepaymentOneTimeEligibility?.isEligibleLoanRepaymentOneTime}
+                            content={t('transactions.loanPayment')}
+                            href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/loan-payment/`}
+                            icon={<PaymentIcon height={20} width={20} />}
                             onClick={() => {
-                                trackClick('New Loan', `/policies/${planCode}/${policyNumber}/policy/loans/new-loan/`);
+                                trackClick('Loan Payment', `/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/loan-payment/`);
                             }}
                         />
-                        {loanPaymentEnabled && (
-                            <MenuContextualItem
-                                disabled={!eligibilityCheck?.eligibleLoanPayment as boolean}
-                                content={t('transactions.loanPayment')}
-                                href={`/policies/${planCode}/${policyNumber}/policy/loans/loan-payment/`}
-                                icon={<PaymentIcon height={20} width={20} />}
-                                onClick={() => {
-                                    trackClick('Loan Payment', `/policies/${planCode}/${policyNumber}/policy/loans/loan-payment/`);
-                                }}
-                            />
-                        )}
-                    </>
-                )}
+                    )}
+                </>
             </MenuContextualLabel>
             <MenuContextualLabel label={t('documents.label')}>
                 <MenuContextualItem
                     content={t('documents.sendForms')}
-                    href={`/contact-center/send-document?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
+                    href={`/contact-center/send-document?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}&correlationId=${uuidV4()}`}
                     icon={<ClipboardIcon height={20} width={20} />}
                     onClick={() => {
-                        trackClick('Send Forms', `/contact-center/send-document?planCode=${planCode}&policyNumber=${policyNumber}`);
+                        trackClick('Send Forms', `/contact-center/send-document?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`);
                     }}
                     openInNewTab={true}
                 />
                 <MenuContextualItem
                     content={t('documents.sendStatements')}
-                    href={`/contact-center/send-correspondence?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
+                    href={`/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}&correlationId=${uuidV4()}`}
                     icon={<DocumentReportIcon height={20} width={20} />}
                     onClick={() => {
                         trackClick(
                             'Send Statements',
-                            `/contact-center/send-correspondence?planCode=${planCode}&policyNumber=${policyNumber}`
+                            `/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
                         );
                     }}
                     openInNewTab={true}
                 />
                 <MenuContextualItem
                     content={t('documents.sendTaxForms')}
-                    href={`/contact-center/send-taxform?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
+                    href={`/contact-center/send-taxform?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}&correlationId=${uuidV4()}`}
                     icon={<TableIcon height={20} width={20} />}
                     onClick={() => {
-                        trackClick('Send Tax Forms', `/contact-center/send-taxform?planCode=${planCode}&policyNumber=${policyNumber}`);
+                        trackClick('Send Tax Forms', `/contact-center/send-taxform?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`);
                     }}
                     openInNewTab={true}
                 />
@@ -191,21 +264,10 @@ const MenuContextualContent = ({ t, planCode, policyNumber, eligibilityCheck, is
 };
 
 export interface QuickActionsMenuProps {
-    planCode?: string;
-    policyNumber?: string;
-    eligibilityCheck?: {
-        eligibleAutopay: boolean | null;
-        eligibleLoanPayment: boolean | null;
-        eligibleNewLoan: boolean | null;
-        eligiblePremium: boolean | null;
-        eligibleWithdrawal: boolean | null;
-        eligibleFreeLookCancel: boolean;
-    };
-    isLoading?: boolean;
-    onOpenChange?: (open: boolean) => void;
+    policy: PolicyDetails;
 }
 
-const QuickActionsMenu = ({ planCode, policyNumber, eligibilityCheck, isLoading, onOpenChange }: QuickActionsMenuProps) => {
+const QuickActionsMenu = ({ policy }: QuickActionsMenuProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'quickActions',
     });
@@ -213,13 +275,10 @@ const QuickActionsMenu = ({ planCode, policyNumber, eligibilityCheck, isLoading,
     return (
         <>
             <div className="hidden md:block">
-                <MenuContextual trigger={<TextButton t={t} />} onOpenChange={onOpenChange}>
+                <MenuContextual trigger={<TextButton t={t} />}>
                     <MenuContextualContent
-                        planCode={planCode}
-                        policyNumber={policyNumber}
+                        policy={policy}
                         t={t}
-                        eligibilityCheck={eligibilityCheck}
-                        isLoading={isLoading}
                     />
                 </MenuContextual>
             </div>
@@ -228,12 +287,10 @@ const QuickActionsMenu = ({ planCode, policyNumber, eligibilityCheck, isLoading,
             <div className="md:hidden">
                 <ReactTooltip.Provider>
                     <ReactTooltip.Root>
-                        <MenuContextual trigger={<IconButton t={t} />} triggerAsChild={true} onOpenChange={onOpenChange}>
+                        <MenuContextual trigger={<IconButton t={t} />} triggerAsChild={true}>
                             <MenuContextualContent
-                                planCode={planCode}
-                                policyNumber={policyNumber}
+                                policy={policy}
                                 t={t}
-                                eligibilityCheck={eligibilityCheck}
                             />
                         </MenuContextual>
                         <ReactTooltip.Portal>

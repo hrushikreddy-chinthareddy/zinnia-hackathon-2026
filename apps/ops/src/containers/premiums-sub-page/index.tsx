@@ -1,5 +1,6 @@
+import { skipToken, useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useMemo } from 'react';
 
 import { FooterContent } from '@deps/components/card/card-section/card-section';
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
@@ -14,7 +15,8 @@ import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
 import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { ArrangementType, PolicyFeatureFeatureType, ProductType, Reason } from '@deps/models/policy/sor-policy';
-import { TransactionResponseStatus, checkEligibilityOneTimePremium, checkEligibilitySystematicPrograms } from '@deps/queries/api/bpm';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { checkOneTimePremiumEligibilityQuery, checkSystematicProgramsEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import PremiumsPageHeaderContainer from '../page-header/premiums-page-header';
@@ -28,12 +30,6 @@ export const PremiumsSubPage = () => {
     const sideSheet = useSideSheetContext();
     const { featureFlags } = useOptimizely();
     const premiumSetOrCancelAutopayEnabled = featureFlags[FEATURE_FLAGS.PREMIUM_SET_OR_CANCEL_AUTOPAY];
-
-    const [isEligibleManageAutopay, setIsEligibleManageAutopay] = useState(false);
-    const [ineligibleManageAutopayReason, setIneligibleManageAutopayReason] = useState('');
-
-    const [isEligibleNewPremium, setIsEligibleNewPremium] = useState(false);
-    const [ineligibleNewPremiumReason, setIneligibleNewPremiumReason] = useState('');
 
     const {
         accountValues,
@@ -61,38 +57,35 @@ export const PremiumsSubPage = () => {
 
     const isTerm = policy?.product?.productType === ('TERMLIFE' as ProductType);
 
-    useEffect(() => {
-        const checkManageAutopayEligibility = async () => {
-            const arrangementId = upcomingPayment?.arrangementId || '';
-
-            if (!arrangementId) {
-                setIsEligibleManageAutopay(true);
-
-                return;
+    const {
+        data: oneTimePremiumEligibility,
+    } = useQuery({
+        queryKey: ['checkOneTimePremiumEligibility', planCode, policyNumber],
+        queryFn: () => checkOneTimePremiumEligibilityQuery(planCode as string, policyNumber as string),
+        placeholderData: previousData => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleOneTimePremium: data?.status === TransactionResponseStatus.Success
             }
+        }
+    });
 
-            const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId);
-
-            if (manageAutopayEligibility?.status === TransactionResponseStatus.Success) {
-                setIsEligibleManageAutopay(true);
-            } else {
-                setIneligibleManageAutopayReason(formatValidationResult(manageAutopayEligibility?.validationResult));
+    const {
+        data: systematicProgramsEligibility,
+    } = useQuery({
+        queryKey: ['checkSystematicProgramsEligibility', planCode, policyNumber, upcomingPayment?.arrangementId],
+        queryFn: upcomingPayment?.arrangementId
+            ? () => checkSystematicProgramsEligibilityQuery(planCode as string, policyNumber as string, upcomingPayment?.arrangementId as string)
+            : skipToken,
+        placeholderData: previousData => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleManageAutopay: data?.status === TransactionResponseStatus.Success
             }
-        };
-
-        const checkOneTimeEligibility = async () => {
-            const oneTimeEligibility = await checkEligibilityOneTimePremium(planCode, policyNumber);
-
-            if (oneTimeEligibility?.status === TransactionResponseStatus.Success) {
-                setIsEligibleNewPremium(true);
-            } else {
-                setIneligibleNewPremiumReason(formatValidationResult(oneTimeEligibility?.validationResult));
-            }
-        };
-
-        checkManageAutopayEligibility();
-        checkOneTimeEligibility();
-    }, [planCode, policyNumber, upcomingPayment]);
+        }
+    });
 
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
@@ -119,20 +112,21 @@ export const PremiumsSubPage = () => {
         {
             text: t('manageAutopay'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay`,
-            isDisabled: !isEligibleManageAutopay || !upcomingPayment?.nextProgramDate,
-            tooltip: ineligibleManageAutopayReason,
+            isDisabled: !systematicProgramsEligibility?.isEligibleManageAutopay || !upcomingPayment?.nextProgramDate,
+            tooltip: formatValidationResult(systematicProgramsEligibility?.validationResult),
         },
         {
+            // TODO: avoid using # here
             href: '#',
-            isDisabled: !isEligibleManageAutopay || !premiumSetOrCancelAutopayEnabled || !upcomingPayment?.nextProgramDate,
+            isDisabled: !premiumSetOrCancelAutopayEnabled || !systematicProgramsEligibility?.isEligibleManageAutopay || !upcomingPayment?.nextProgramDate,
             text: t('cancelAutopay'),
             onClick: openCancelSideSheet
         },
         {
             text: t('oneTimePaymentText'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/new-premium`,
-            isDisabled: !isEligibleNewPremium,
-            tooltip: ineligibleNewPremiumReason,
+            isDisabled: !oneTimePremiumEligibility?.isEligibleOneTimePremium,
+            tooltip: formatValidationResult(oneTimePremiumEligibility?.validationResult),
         },
     ];
 

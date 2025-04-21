@@ -1,5 +1,6 @@
+import { skipToken, useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helper';
@@ -12,7 +13,8 @@ import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.h
 import { getFrequency } from '@deps/helpers/systematic-program.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { ArrangementType, Frequency, Policy, Reason } from '@deps/models/policy/sor-policy';
-import { checkEligibilityLoanRepaymentOneTime, checkEligibilitySystematicPrograms, TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { checkLoanRepaymentOneTimeEligibilityQuery, checkSystematicProgramsEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import LoanRulesCard from './cards/loan-rules-card';
@@ -30,13 +32,8 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     });
     const { t: defaultT } = useTranslation();
     const { featureFlags } = useOptimizely();
-    
-    const [isEligibleManageAutopay, setIsEligibleManageAutopay] = useState(false);
-    const [ineligibleManageAutopayReason, setIneligibleManageAutopayReason] = useState('');
     const sideSheet = useSideSheetContext();
 
-    const [isLoanRepaymentEligible, setIsLoanRepaymentEligible] = useState<boolean | null>(null);
-    const [loanRepaymentIneligibilityMessage, setLoanRepaymentIneligibilityMessage] = useState('');
     const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
     const loanCancelEnabled = featureFlags[FEATURE_FLAGS.LOAN_CANCEL_AUTOPAY];
 
@@ -61,37 +58,35 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const flatExtra = getFlatExtra(coverage);
     const addCharges = getAddCharges({ flatExtra, t });
 
-    useEffect(() => {
-
-        const checkManageAutopayEligibility = async () => {
-            const arrangementId = upcomingLoanRepayment?.arrangementId || '';
-
-            if (!arrangementId) {
-                setIsEligibleManageAutopay(true);
-
-                return;
+    const {
+        data: loanRepaymentOneTimeEligibility,
+    } = useQuery({
+        queryKey: ['checkLoanRepaymentOneTimeEligibility', planCode, policyNumber, policy.loanValues?.totalLoanBalance],
+        queryFn: () => checkLoanRepaymentOneTimeEligibilityQuery(planCode as string, policyNumber as string, policy.loanValues?.totalLoanBalance),
+        placeholderData: previousData => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleLoanRepaymentOneTime: data?.status === TransactionResponseStatus.Success
             }
+        }
+    });
 
-            const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId);
-
-            if (manageAutopayEligibility?.status === TransactionResponseStatus.Success) {
-                setIsEligibleManageAutopay(true);
-            } else {
-                setIneligibleManageAutopayReason(formatValidationResult(manageAutopayEligibility?.validationResult));
+    const {
+        data: systematicProgramsEligibility,
+    } = useQuery({
+        queryKey: ['checkSystematicProgramsEligibility', planCode, policyNumber, upcomingLoanRepayment?.arrangementId],
+        queryFn: upcomingLoanRepayment?.arrangementId
+            ? () => checkSystematicProgramsEligibilityQuery(planCode as string, policyNumber as string, upcomingLoanRepayment?.arrangementId as string)
+            : skipToken,
+        placeholderData: previousData => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleManageAutopay: data?.status === TransactionResponseStatus.Success
             }
-        };
-
-        const checkOneTimeRepaymentEligibility = async () => {
-            const eligibilityResponse = await checkEligibilityLoanRepaymentOneTime(planCode, policyNumber, policy.loanValues?.totalLoanBalance);
-            const eligible = eligibilityResponse.status === TransactionResponseStatus.Success;
-
-            setIsLoanRepaymentEligible(eligible);
-
-            !eligible && setLoanRepaymentIneligibilityMessage(formatValidationResult(eligibilityResponse?.validationResult));
-        };
-        checkManageAutopayEligibility();
-        checkOneTimeRepaymentEligibility();
-    }, [planCode, policy.loanValues?.totalLoanBalance, policyNumber, upcomingLoanRepayment?.arrangementId]);
+        }
+    });
 
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
@@ -141,8 +136,8 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                         {
                             href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/manage-loan-payment`,
                             text: t('manageAutopay'),
-                            isDisabled: !loanPaymentEnabled || !isEligibleManageAutopay || !upcomingLoanRepayment?.nextProgramDate,
-                            tooltip: !isEligibleManageAutopay ? ineligibleManageAutopayReason : undefined,
+                            isDisabled: !loanPaymentEnabled || !systematicProgramsEligibility?.isEligibleManageAutopay || !upcomingLoanRepayment?.nextProgramDate,
+                            tooltip: formatValidationResult(systematicProgramsEligibility?.validationResult)
                         },
                         {
                             href: '#',
@@ -153,8 +148,8 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                         {
                             href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/loan-payment`,
                             text: t('oneTimePaymentText'),
-                            isDisabled: !isLoanRepaymentEligible,
-                            tooltip: !isLoanRepaymentEligible ? loanRepaymentIneligibilityMessage : undefined,
+                            isDisabled: !loanRepaymentOneTimeEligibility?.isEligibleLoanRepaymentOneTime,
+                            tooltip: formatValidationResult(loanRepaymentOneTimeEligibility?.validationResult),
                         },
                     ]}
                     requestSubTypes={["Setup Loan Repayment", "Update Loan Repayment"]}

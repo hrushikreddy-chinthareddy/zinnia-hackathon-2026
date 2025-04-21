@@ -98,6 +98,7 @@ export const checkEligibilityLoanRepaymentOneTime = async (
     totalLoanBalance: number | undefined
 ): Promise<TransactionResponse> => {
     try {
+        // TODO MG: Temporary solution while BPM adds logic
         if (!totalLoanBalance || totalLoanBalance <= 0) {
             return {
                 status: TransactionResponseStatus.Failure,
@@ -130,7 +131,7 @@ export const checkEligibilityNewLoan = async (
     maxLoanValue: number | undefined
 ): Promise<TransactionResponse> => {
     try {
-        // Temporary solution while BPM adds logic
+        // TODO MG: Temporary solution while BPM adds logic
         if (maxLoanValue === 0) {
             return {
                 status: TransactionResponseStatus.Failure,

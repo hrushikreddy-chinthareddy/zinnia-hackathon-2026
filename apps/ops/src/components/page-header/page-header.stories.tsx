@@ -1,10 +1,8 @@
 import { Meta } from '@storybook/react';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { Tag } from '@zinnia/bloom/components';
 
 import WithdrawalsPageHeaderContainer from '@deps/containers/page-header/withdrawals-page-header';
 import { calculateAge, formatDate } from '@deps/helpers/string.helper';
-import { mapWithdrawalsSubPage } from '@deps/helpers/withdrawals.helper';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { ReactComponent as User } from '@deps/styles/elements/icons/actions/user.svg';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
@@ -243,19 +241,11 @@ export const HeaderWithPartyInfo = () => {
 };
 
 export const WithdrawalsPageHeader = () => {
-    const withdrawalEligibilityValues = {
-        ineligibleReason: '',
-        isEligible: false,
-        isLoading: true,
-    };
-    const withdrawalsValues = mapWithdrawalsSubPage({ isEligible: withdrawalEligibilityValues.isEligible, policy: mockPolicy as Policy });
     return (
         <WithdrawalsPageHeaderContainer
             breadcrumbText="Back to previous page"
             breadcrumbUrl="#"
             policyNumber={mockPolicy.policyNumber}
-            withdrawalEligibilityValues={withdrawalEligibilityValues}
-            withdrawalsValues={withdrawalsValues}
         />
     );
 };

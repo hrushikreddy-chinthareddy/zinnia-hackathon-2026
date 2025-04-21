@@ -186,8 +186,6 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                             userPartyId={userPartyId}
                             policy={policy}
                             links={quickLinks(t, policy)}
-                            planCode={planCode}
-                            policyNumber={policyNumber}
                             sessionId={sessionId}
                         />
                     </div>

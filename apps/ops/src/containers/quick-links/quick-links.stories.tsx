@@ -26,8 +26,6 @@ export const QuickLinksComponent = () => {
                     { name: 'Link 1', href: '#' },
                     { name: 'Link 2', href: '#' },
                 ]}
-                planCode="planCode"
-                policyNumber="123456"
                 sessionId="123"
                 userPartyId="userPartyId"
                 policy={{ isLife: true, freeLookPeriodDetails: { isInFreeLookPeriod: true } } as PolicyDetails}

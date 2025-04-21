@@ -1,3 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
+import { Policy as SorPolicy } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
@@ -10,11 +12,13 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PageHeader } from '@deps/components/page-header/page-header';
 import { PopoverPlacement } from '@deps/components/popover/popover';
-import { WithdrawalEligibilityValues } from '@deps/containers/withdrawals-sub-page/withdrawals-sub-page';
 import { useStaticNestedNavDrawerContext } from '@deps/contexts/LayoutContexts/StaticNestedNavDrawerContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
+import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { WithdrawalsValues } from '@deps/helpers/withdrawals.helper';
+import { mapWithdrawalsSubPage } from '@deps/helpers/withdrawals.helper';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { checkPartialWithdrawalOneTimeEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 interface WithdrawalsPageHeaderContainerProps {
@@ -23,21 +27,37 @@ interface WithdrawalsPageHeaderContainerProps {
     isNavDrawerOpen?: boolean;
     planCode?: string;
     policyNumber?: string;
-    withdrawalsValues?: WithdrawalsValues;
-    withdrawalEligibilityValues: WithdrawalEligibilityValues;
 }
 
 const WithdrawalsPageHeaderContainer = ({
     breadcrumbText,
     breadcrumbUrl,
-    withdrawalEligibilityValues,
     planCode,
     policyNumber,
-    withdrawalsValues,
 }: WithdrawalsPageHeaderContainerProps) => {
     const { t } = useTranslation();
     const { isNavDrawerOpen } = useStaticNestedNavDrawerContext();
     const { policyDetails } = useContext(PolicyData);
+
+    const {
+        data: partialWithdrawalOneTimeEligibility,
+        isLoading: isLoadingPartialWithdrawalOneTimeEligibility,
+    } = useQuery({
+        queryKey: ['checkPartialWithdrawalOneTimeEligibility', policyDetails.planCode, policyDetails.policyNumber],
+        queryFn: () => checkPartialWithdrawalOneTimeEligibilityQuery(policyDetails.planCode as string, policyDetails.policyNumber as string),
+        placeholderData: previousData => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligiblePartialWithdrawalOneTime: data?.status === TransactionResponseStatus.Success
+            }
+        }
+    });
+
+    const withdrawalsValues = mapWithdrawalsSubPage({
+        isEligible: partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime || false,
+        policy: policyDetails.policy as SorPolicy,
+    });
 
     const {
         amountEligibleForWithdrawal,
@@ -51,39 +71,19 @@ const WithdrawalsPageHeaderContainer = ({
         allTimeWithdrawalCount,
         freeWithdrawalAmount,
     } = withdrawalsValues ?? {};
-    const { ineligibleReason, isEligible, isLoading } = withdrawalEligibilityValues ?? {};
-
-    // https://zinnia.atlassian.net/browse/DEPU-1964
-    // const breadcrumbSiblingsClassNames = clsx('flex', { 'xs:hidden xl:flex': isNavDrawerOpen, 'xs:hidden lg:flex': !isNavDrawerOpen });
-    // const breadcrumbSiblings = (
-    //     <NavElement className={breadcrumbSiblingsClassNames} size={NavElementSize.Small} type={NavElementType.Link}>
-    //         {t('withdrawals.viewWithdrawalHistory')}
-    //     </NavElement>
-    // );
 
     const headerRowFlexClassNames = clsx('flex-col', { 'xs:gap-4 lg:gap-0': !isNavDrawerOpen, 'xs:gap-4 xl:gap-0': isNavDrawerOpen });
     const groupOneFlexClassNames = 'flex gap-4';
 
-    const headerTextSiblingsGroupOne = !isLoading && (
+    const headerTextSiblingsGroupOne = !isLoadingPartialWithdrawalOneTimeEligibility && (
         <BadgeWithTooltip
             className="mb-2 mt-2 self-center"
-            label={isEligible ? t('withdrawals.eligible') : t('withdrawals.ineligible')}
-            tooltip={isEligible ? t('withdrawals.eligibleForWithdrawalTooltip') : ineligibleReason}
+            label={partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime ? t('withdrawals.eligible') : t('withdrawals.ineligible')}
+            tooltip={partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime ? t('withdrawals.eligibleForWithdrawalTooltip') : formatValidationResult(partialWithdrawalOneTimeEligibility?.validationResult)}
             tooltipPlacement={PopoverPlacement.BottomRight}
-            variant={isEligible ? BadgeVariant.Positive : BadgeVariant.Negative}
+            variant={partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime ? BadgeVariant.Positive : BadgeVariant.Negative}
         />
     );
-
-    // https://zinnia.atlassian.net/browse/DEPU-1964
-    // const headerTextSiblingsGroupTwoClassNames = clsx('self-center', {
-    //     'lg:flex xl:hidden': isNavDrawerOpen,
-    //     'md:flex lg:hidden': !isNavDrawerOpen,
-    // });
-    // const headerTextSiblingsGroupTwo = (
-    //     <NavElement className={headerTextSiblingsGroupTwoClassNames} size={NavElementSize.Small} type={NavElementType.Link}>
-    //         {t('withdrawals.viewWithdrawalHistory')}
-    //     </NavElement>
-    // );
 
     const isPlural = allTimeWithdrawalCount !== 1;
     const withdrawalCaption = `${allTimeWithdrawalCount} ${
@@ -95,7 +95,7 @@ const WithdrawalsPageHeaderContainer = ({
             <div className="mt-4 w-fit">
                 <div className="flex flex-col gap-8 xl:flex-row">
                     <div className="flex flex-col gap-8 md:flex-row">
-                        {isEligible && (
+                        {partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime && (
                             <div className="w-[224px] xl:w-fit">
                                 <Label
                                     label={t('withdrawals.eligibleForWithdrawal')}
@@ -214,7 +214,7 @@ const WithdrawalsPageHeaderContainer = ({
             </div>
             <div className="mt-4 flex w-full flex-row items-center gap-8 bg-gray-50 px-8 py-4 align-middle">
                 <NavElement
-                    disabled={!isEligible}
+                    disabled={!partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime}
                     href={t('site.navLinks.transactions.withdrawalStart.href', { id: policyNumber, planCode }) || ''}
                     size={NavElementSize.Small}
                     type={NavElementType.Link}
@@ -233,7 +233,6 @@ const WithdrawalsPageHeaderContainer = ({
                     {t('withdrawals.surrenderPolicy')}
                 </NavElement>
                 {isStillInactive.withdrawalPageexchange1035.length ? (
-                    // https://zinnia.atlassian.net/browse/DEPU-1936
                     <TempNavInactive tooltipBody={isStillInactive.withdrawalPageexchange1035}>
                         {t('withdrawals.exchange1035')}
                     </TempNavInactive>
@@ -255,9 +254,7 @@ const WithdrawalsPageHeaderContainer = ({
             headerText={t('withdrawals.withdrawals') || ''}
             breadcrumbText={breadcrumbText}
             breadcrumbUrl={breadcrumbUrl}
-            // breadcrumbSiblings={breadcrumbSiblings} https://zinnia.atlassian.net/browse/DEPU-1964
             headerTextSiblingsGroupOne={headerTextSiblingsGroupOne}
-            // headerTextSiblingsGroupTwo={headerTextSiblingsGroupTwo}
             headerRowFlexClassNames={headerRowFlexClassNames}
             groupOneFlexClassNames={groupOneFlexClassNames}
             belowHeaderTextChildren={belowHeaderTextChildren}

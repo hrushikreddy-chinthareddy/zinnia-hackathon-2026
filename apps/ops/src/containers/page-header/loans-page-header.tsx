@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -16,8 +17,9 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { LoansTest } from '@deps/jest/constants/test-id-constants';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { checkEligibilityNewLoan, TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { getBorrowingInterestRate, getLoanInterestRate } from '@deps/queries/api/product-rate';
+import { checkNewLoanEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 interface LoansContainerProps {
@@ -29,9 +31,6 @@ interface LoansContainerProps {
 
 const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanCarryingBalance }: LoansContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-
-    const [isEligible, setIsEligible] = useState<boolean | null>(null);
-    const [ineligibilityMessage, setIneligibityMessage] = useState('');
 
     const [availableLoanInterestRate, setAvailableLoanInterestRate] = useState(t('general.loadingThing', { thing: t('general.rate') }));
     const [availableLoanCreditRate, setAvailableLoanCreditRate] = useState(t('general.loadingThing', { thing: t('general.rate') }));
@@ -50,18 +49,6 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
         getLoanRates();
     }, []);
 
-    useEffect(() => {
-        const checkEligibility = async () => {
-            const eligibilityResponse = await checkEligibilityNewLoan(policy.product?.planCode, policy.policyNumber, policy.loanValues?.maximumLoanAmount);
-            const eligible = eligibilityResponse.status === TransactionResponseStatus.Success;
-
-            setIsEligible(eligible);
-
-            !eligible && setIneligibityMessage(formatValidationResult(eligibilityResponse?.validationResult));
-        };
-        checkEligibility();
-    }, [policy.loanValues?.maximumLoanAmount, policy.policyNumber, policy.product?.planCode]);
-
     const { currency, loanValues, coverage } = policy;
     const currencyFormat: Intl.NumberFormatOptions = { style: 'currency', currency };
     const totalLoanBalanceValue = !isNullEmptyOrUndefined(loanValues?.totalLoanBalance)
@@ -76,15 +63,30 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
     const headerRowFlexClassNames = 'mb-4';
     const groupOneFlexClassNames = 'flex gap-4';
 
+    const {
+        data: newLoanEligibility,
+        isLoading: isLoadingNewLoanEligibility,
+    } = useQuery({
+        queryKey: ['checkNewLoanEligibility', policy.product?.planCode, policy.policyNumber, policy.loanValues?.maximumLoanAmount],
+        queryFn: () => checkNewLoanEligibilityQuery(policy.product?.planCode as string, policy.policyNumber as string, policy.loanValues?.maximumLoanAmount),
+        placeholderData: previousData => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleNewLoan: data?.status === TransactionResponseStatus.Success
+            }
+        }
+    });
+
     const headerTextSiblingsGroupOne = (
         <>
-            {isEligible !== null && (
+            {!isLoadingNewLoanEligibility && (
                 <BadgeWithTooltip
                     className="mb-2 mt-2 self-center"
-                    label={isEligible ? 'Eligible' : 'Ineligible'}
-                    variant={isEligible ? BadgeVariant.Positive : BadgeVariant.Negative}
+                    label={newLoanEligibility?.isEligibleNewLoan ? 'Eligible' : 'Ineligible'}
+                    variant={newLoanEligibility?.isEligibleNewLoan ? BadgeVariant.Positive : BadgeVariant.Negative}
                     tooltipPlacement={PopoverPlacement.BottomRight}
-                    tooltip={t(`transactions.loans.header.${isEligible ? 'eligiblePopover' : 'ineligiblePopover'}`) as string}
+                    tooltip={t(`transactions.loans.header.${newLoanEligibility?.isEligibleNewLoan ? 'eligiblePopover' : 'ineligiblePopover'}`) as string}
                 />
             )}
         </>
@@ -144,7 +146,7 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
                 )}
             </div>
             <div className="mt-8 bg-gray-50 px-8 py-4">
-                {isEligible ? (
+                {newLoanEligibility?.isEligibleNewLoan ? (
                     <NavElement
                         className="mr-5"
                         data-testid={LoansTest.START_LOAN_LINK}
@@ -155,7 +157,7 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
                         {t('transactions.loans.header.startLoan')}
                     </NavElement>
                 ) : (
-                    <Tooltip placement={PopoverPlacement.TopRight} body={ineligibilityMessage}>
+                    <Tooltip placement={PopoverPlacement.TopRight} body={formatValidationResult(newLoanEligibility?.validationResult)}>
                         <span
                             className="mr-8 cursor-not-allowed font-primary text-links-sm font-semibold text-gray-300"
                             data-testid={LoansTest.START_LOAN_LINK_DISABLED}
@@ -180,4 +182,5 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
         />
     );
 };
+
 export default LoansPageHeaderContainer;
