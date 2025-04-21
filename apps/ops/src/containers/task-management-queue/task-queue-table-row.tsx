@@ -247,24 +247,38 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
     }
 
     const handleAssignToMe = async (task: UnassignedTask) => {
+        let assignedTaskData = undefined;
+
         setErrorMessage('');
         setLoader(true);
         try {
-            const result = await claimTask(task?.id);
-            if (result.status === 200 && result?.data?.statusCode !== 400) {
-                handleStartTask(task?.id, task?.status, taskType);
+            const assignedTask = await claimTask(task?.id);
+            assignedTaskData = getTaskInstance({ taskId: assignedTask?.taskId });
+            if (!assignedTaskData) {
+                browserLogError('task-queue:handleAssignTask::Error assigning task', {
+                    taskId: task?.id,
+                    caseId: task?.caseId,
+                });
             } else {
-                setErrorMessage(t('assignTaskError') + 'An error occurred while unassigning the task');
+                browserLogInfo('task-queue:handleAssignTask::Successfully assigned task', {
+                    taskId: assignedTask?.id,
+                    caseId: assignedTask?.caseId,
+                });
+                handleStartTask(task?.id, task?.status, taskType);
             }
         } catch (e) {
-            setLoader(false);
-            setErrorMessage(t('assignTaskError') + 'An error occurred while unassigning the task');
-            browserLogError('task-queue:handleUnassignTask::Error un-assigning task', {
+            browserLogError('task-queue:handleAssignTask::Error assigning task', {
                 ...parseErrorInformation(e),
                 taskId: task?.id,
                 caseId: task?.caseId,
             });
             return;
+        } finally {
+            setLoader(false);
+
+            if (!assignedTaskData) {
+                setErrorMessage(t('assignTaskError') + 'An error occurred while assigning the task');
+            }
         }
     };
 
