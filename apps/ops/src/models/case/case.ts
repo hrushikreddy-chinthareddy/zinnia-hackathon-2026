@@ -90,6 +90,7 @@ export enum Processes {
     LoanRepaymentOneTime = 'Loan Repayment One Time',
     Suitability = 'Suitability',
     SuitabilityReview = 'Suitability Review',
+    FundTransfer = 'Fund Management',
 }
 
 export enum Actions {

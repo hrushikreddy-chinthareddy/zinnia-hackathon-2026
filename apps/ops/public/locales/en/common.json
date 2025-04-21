@@ -72,7 +72,8 @@
             "loanAutopay": "Loan Autopay",
             "loanPayment": "Loan Payment",
             "newLoan": "New Loan",
-            "activity": "Activity"
+            "activity": "Activity",
+            "fundTransfer": "Fund Transfer"
         },
         "navLinks": {
             "accessManagement": {
@@ -155,6 +156,10 @@
                 "loans": {
                     "text": "Loans",
                     "href": "/policies/{{planCode}}/{{id}}/policy/loans"
+                },
+                "funds": {
+                    "text": "Funds",
+                    "href": "/policies/{{planCode}}/{{id}}/policy/funds/new-fund-transfer"
                 },
                 "exchange1035": {
                     "text": "1035 Exchange",
@@ -2611,7 +2616,8 @@
                 "tooltipBody": "This is the amount currently invested in funds. It's often the same amount as the account value, but may differ if the owner has any outstanding loans from the policy.",
                 "caption": "Outstanding Loan: {{ loanValue }}"
             }
-        }
+        },
+        "transferFund": "Transfer fund value"
     },
     "policy": {
         "productType": {
@@ -4749,6 +4755,43 @@
             "type": "premium repayment autopay"
         }
     },
+    "fundTransfer": {
+        "start": {
+            "label": "Start",
+            "title": "Start a fund transfer",
+            "subtitle": "First up, let’s make sure we can keep track of this transaction in OnBase."
+        },
+        "transfer": {
+            "label": "Transfer",
+            "title": "Transfer",
+            "subtitle": "Reallocate funds here. Updates can be made by transferring a specific dollar amount or a percentage of funds into another investment option."
+        },
+        "summary": {
+            "label": "Summary",
+            "title": "Summary",
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "subtitle": "Looking good! Be sure to review all the transfers and resulting fund values before submitting.",
+            "effectiveDateLabel": "Effective date",
+            "validationStatusLabel": "Validation status",
+            "internal500Error": "Services are down, so we can’t continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
+            "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+            "internal500CTAlinkText": "Submit a help desk ticket",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
+            "transferedFrom": "Transferred From",
+            "transferedTo": "Transferred To",
+            "amount": "Amount",
+            "percentage": "Percentage",
+            "totalTransferAmount": "Total Transfer Amount",
+            "totalTransferPercent": "Total Transfer Percentage",
+            "activity": "Activity"
+        },
+        "confirm": {
+            "label": "Confirm",
+            "type": "fund transfer payment"
+        }
+    },
     "footnote": {
         "withProduct": "* Never seen these before? These fields reflect rules that are specific to {{productMarketingName}}'s {{productType}} product.",
         "default": "* Never seen these before? These fields reflect rules that are specific to this product."
@@ -4983,7 +5026,7 @@
                     "tooltipTitle": "FBO/FFC",
                     "tooltipBody": "FFC stands for \"For Further Credit\" and FBO stands for \"For Benefit Of\"."
                 },
-                "label":"Payment method",
+                "label": "Payment method",
                 "wire": "Wire"
             }
         },
@@ -5003,6 +5046,30 @@
             "popover": "This is the only qualified payor for this transaction.",
             "subLabel": "Select a payor",
             "title": "Payor"
+        },
+        "transferStep": {
+            "dateLabel": "Effective date",
+            "tranferType": "Transfer type",
+            "transferFrom": "Transfer from",
+            "transferTo": "Transfer to",
+            "percentage": "Percentage",
+            "dollarTransfer": "Dollar amount",
+            "selectFund": "Select fund",
+            "amount": "Amount",
+            "continue": "Continue",
+            "leaveTransaction": "Leave this transaction",
+            "percentageError": "Percentage is required.",
+            "amountError": "Amount is required.",
+            "effectiveDateError": "Effective date is required.",
+            "totalPercentError": "Total percent allocation must equal 100%.",
+            "totalAmountError": "Transfer amounts must be equal.",
+            "greaterAmountError": "Amount requested is greater than fund value.",
+            "fundIdRequired": "Fund is required.",
+            "amountLabel": "Amount",
+            "percentageLabel": "Percentage (whole numbers only)",
+            "addNewFund": "+ Select fund to transfer to",
+            "fundPlaceholder": "--Select fund--",
+            "available": "available"
         }
     },
     "tasksListing": {
@@ -5473,6 +5540,38 @@
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }
+    },
+    "fundAllocation": {
+        "submitted": "Submitted!",
+        "editAllocationNigoSummary1": "We submitted this request for ",
+        "editAllocationNigoSummary2": "NIGO processing.",
+        "close": "Close",
+        "nigoErrorTItle": "Hm, we found an issue.",
+        "nigoErrorDes": "Review the errors below.",
+        "availableFunds": "Available funds",
+        "allocation": "Allocation",
+        "total": "Total",
+        "errorResolution": "Error Resolution",
+        "checkBoxDes": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+        "submit": "Submit",
+        "cancel": "Cancel",
+        "validNumErr": "All inputs must be whole numbers.",
+        "allocationErr": "Allocations must equal 100%",
+        "effectivedate": "Effective date",
+        "selectdate": "Select date",
+        "effectiveDateError": "Effective date is required.",
+        "updateAllocations": "Update allocations",
+        "checkingInfo": "We're checking this policy's business rules...",
+        "requestTo": "request to",
+        "editAllocations": "edit allocations",
+        "editSuccessMsg": "was received. It should complete shortly unless there’s an issue. You can track the progress by viewing the case.",
+        "goToCase": "Go to case",
+        "systemErrorTitle": "Sorry, that didn’t work.",
+        "systemErrorDes1": "We couldn’t update fund allocations because the system is down. You can try updating again. If it’s still not working, ",
+        "systemErrorDes2": "submit a help desk ticket.",
+        "cancelAndClose": "Cancel and close",
+        "editAllocationsTitle": "Edit Allocations",
+        "successTitle": "Got it!"
     },
     "nbPaymentCancel": {
         "confirmStep": {

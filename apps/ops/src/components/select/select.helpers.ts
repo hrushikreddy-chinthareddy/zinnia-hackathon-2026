@@ -6,6 +6,7 @@ import { FieldProps, FieldSize } from '@deps/components/fields/field';
 export type SimpleOption = {
     value: string;
     label: string;
+    totalValue?: string | number;
     disabled?: boolean;
 };
 

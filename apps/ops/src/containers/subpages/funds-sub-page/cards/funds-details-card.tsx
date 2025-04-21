@@ -50,6 +50,7 @@ const FundsDetailsCard = ({ policy }: FundsDetailsCardProps) => {
                         title={t('electedFunds') as string}
                         titleTooltip={t('electedFundsTooltip') as string}
                         policy={policy}
+                        notElectedfunds={viewModel?.notElectedFunds}
                     />
                     <FundsCard
                         funds={viewModel?.notElectedFunds}

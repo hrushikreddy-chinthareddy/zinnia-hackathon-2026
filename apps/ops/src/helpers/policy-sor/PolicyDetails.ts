@@ -67,6 +67,7 @@ export class PolicyDetails {
     public riders?: Rider[];
     public surrenderValue: number | undefined;
     public systematicPrograms: SystematicPrograms;
+    public investmentType?: string;
 
     constructor(policy: Policy = {}) {
         this.policyRaw = policy;
@@ -114,6 +115,7 @@ export class PolicyDetails {
         this.surrenderValue = policy?.accountValues?.surrenderValue;
         this.product = policy?.product;
         this.riders = policy?.riders;
+        this.investmentType = policy?.allocation?.investmentType;
     }
 
     public get carrierName(): string | undefined {

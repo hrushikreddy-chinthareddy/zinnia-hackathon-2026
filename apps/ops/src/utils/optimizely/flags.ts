@@ -152,4 +152,6 @@ export enum FEATURE_FLAGS {
     NEW_LOAN_WIRE_CHECK_PAYMENTS = 'new_loan_wire_check_payments',
     COMMUNICATION_PREFERENCES = 'communication_preferences',
     WITHDRAWAL_WIRE_CHECK_PAYMENTS = 'withdrawal_wire_check_payments',
+    FUNDS_TRANSFER_TRANSACTION = 'funds_transfer_transaction',
+    FUND_ALLOCATION_TRANSACTION = 'fund_allocation_transaction',
 }

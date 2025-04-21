@@ -10,6 +10,7 @@ import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerC
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
+import { DEFAULT_STEP_WIDTH } from '@deps/types/constants';
 
 import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -17,9 +18,10 @@ import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar
 interface WorkflowContainerProps {
     policy: Policy;
     steps: Step[];
+    stepWidth?: number;
 }
 
-const WorkflowContent = ({ policy, steps }: WorkflowContainerProps) => {
+const WorkflowContent = ({ policy, steps, stepWidth = DEFAULT_STEP_WIDTH }: WorkflowContainerProps) => {
     const { t } = useTranslation();
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const sideSheet = useSideSheetContext();
@@ -64,16 +66,17 @@ const WorkflowContent = ({ policy, steps }: WorkflowContainerProps) => {
                 currentStepIndex={Number(currentStepIndex)}
                 onClick={handleClick}
                 steps={steps}
+                stepWidth={stepWidth}
             />
             <div className="flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">{steps[currentStepIndex].component}</div>
         </div>
     );
 };
 
-const WorkflowContainer = ({ policy, steps }: WorkflowContainerProps) => {
+const WorkflowContainer = ({ policy, steps, stepWidth }: WorkflowContainerProps) => {
     return (
         <WorkflowProvider>
-            <WorkflowContent policy={policy} steps={steps} />
+            <WorkflowContent policy={policy} steps={steps} stepWidth={stepWidth} />
         </WorkflowProvider>
     );
 };

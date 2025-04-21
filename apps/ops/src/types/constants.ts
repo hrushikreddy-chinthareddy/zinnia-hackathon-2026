@@ -50,3 +50,6 @@ export const HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 = true;
 export const NODE_ENV_PRODUCTION = 'production';
 
 export const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
+
+export const DEFAULT_STEP_WIDTH = 188;
+export const FUND_TRANSFER_STEP_WIDTH = 280;

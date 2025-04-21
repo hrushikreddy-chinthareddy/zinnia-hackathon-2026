@@ -972,6 +972,7 @@ export type TransactionErrorResponse = ErrorResponse & TransactionErrorResponseA
 export interface TransactionResponse {
     correlationId?: string;
     transactionId?: string;
+    status?: string;
 }
 
 export interface TransactionFundAllocation {

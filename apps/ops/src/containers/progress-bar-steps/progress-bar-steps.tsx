@@ -5,22 +5,23 @@ import { useEffect, useRef, useState } from 'react';
 import ProgressBarStepsItem, { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { scrollToElement } from '@deps/helpers/routing.helper';
 import { useWindowResize } from '@deps/hooks/useWindowResize';
-import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
+import { DEFAULT_STEP_WIDTH, SCREEN_BREAKPOINTS } from '@deps/types/constants';
 
 interface ProgressBarStepsProps {
     steps: Step[];
     currentStepIndex: number;
     onClick: (step: Step) => void;
     classNames?: string;
+    stepWidth?: number;
 }
 
-const ProgressBarSteps = ({ steps, currentStepIndex, onClick, classNames }: ProgressBarStepsProps) => {
+const ProgressBarSteps = ({ steps, currentStepIndex, onClick, classNames, stepWidth = DEFAULT_STEP_WIDTH }: ProgressBarStepsProps) => {
     const { t } = useTranslation();
 
     const [isMounted, setIsMounted] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const STEP_WIDTH = 188; // this is fixed width from Figma of each step
+    const STEP_WIDTH = stepWidth; // this is fixed width from Figma of each step
     const MARGIN = 64;
     const [isScrollable, setIsScrollable] = useState(false);
     const windowWidth = useWindowResize();

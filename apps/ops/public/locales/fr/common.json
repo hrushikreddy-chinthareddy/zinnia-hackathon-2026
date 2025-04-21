@@ -71,7 +71,8 @@
             "dashboard": "Statistiques du dossier",
             "loanAutopay": "Paiement automatique du prêt",
             "loanPayment": "Paiement de prêts",
-            "activity": "Activité"
+            "activity": "Activité",
+            "fundTransfer": "Transfert de fonds"
         },
         "navLinks": {
             "accessManagement": {
@@ -150,6 +151,10 @@
                 "loans": {
                     "text": "Prêts",
                     "href": "/policies/{{planCode}}/{{id}}/policy/loans"
+                },
+                "funds": {
+                    "text": "Fonds",
+                    "href": "/policies/{{planCode}}/{{id}}/policy/funds/new-fund-transfer"
                 },
                 "exchange1035": {
                     "text": "Échange 1035",
@@ -2592,7 +2597,8 @@
                 "tooltipBody": "Ceci est le montant de la valeur en espèces actuellement investi dans des fonds. C’est souvent le même montant que la valeur du compte, mais peut différer si le propriétaire a des prêts en cours sur la police.",
                 "caption": "Prêt en cours : {{ loanValue }}"
             }
-        }
+        },
+        "transferFund": "Transférer la valeur du fonds"
     },
     "policy": {
         "productType": {
@@ -4722,6 +4728,43 @@
             "type": "prélèvement automatique de remboursement de prime"
         }
     },
+    "fundTransfer": {
+        "start": {
+            "label": "Démarrer",
+            "title": "Démarrer un transfert de fonds",
+            "subtitle": "Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans OnBase."
+        },
+        "transfer": {
+            "label": "Transférer",
+            "title": "Transférer",
+            "subtitle": "Réallouer les fonds ici. Les mises à jour peuvent être apportées en transférant un montant en dollars spécifique ou un pourcentage de fonds dans une autre option d'investissement."
+        },
+        "summary": {
+            "label": "Résumé",
+            "title": "Résumé",
+            "status200subtitle": "Ça a l'air bien ! Assurez-vous de vérifier vos entrées avant de soumettre.",
+            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette politique. Consultez l'erreur ci-dessous.",
+            "subtitle": "Ça a l'air bien ! Assurez-vous de vérifier tous les transferts et les valeurs des fonds résultants avant de soumettre.",
+            "effectiveDateLabel": "Date d'effet",
+            "validationStatusLabel": "État de validation",
+            "internal500Error": "Les services sont en panne, nous ne pouvons donc pas continuer. Vous pouvez soumettre un ticket de help desk. Veuillez quitter cette transaction et réessayer plus tard.",
+            "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+            "internal500CTAlinkText": "Soumettre un ticket de help desk",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée effectue un suivi.",
+            "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO.",
+            "transferedFrom": "Transféré de",
+            "transferedTo": "Transféré à",
+            "amount": "Montant",
+            "percentage": "Pourcentage",
+            "totalTransferAmount": "Montant total du transfert",
+            "totalTransferPercent": "Pourcentage total du transfert",
+            "activity": "Activité"
+        },
+        "confirm": {
+            "label": "Confirm",
+            "type": "fund transfer payment"
+        }
+    },
     "footnote": {
         "withProduct": "* Vous n'avez jamais vu ceux-ci auparavant ? Ces champs reflètent les règles spécifiques au produit {{productType}} de {{productMarketingName}}.",
         "default": "* Vous n'avez jamais vu ceux-ci auparavant ? Ces champs reflètent les règles spécifiques à ce produit."
@@ -4975,6 +5018,30 @@
             "popover": "Il s'agit du seul payeur qualifié pour cette transaction.",
             "subLabel": "Sélectionner un payeur",
             "title": "Payeur"
+        },
+        "transferStep": {
+            "dateLabel": "Date d'effet",
+            "tranferType": "Type de transfert",
+            "transferFrom": "Transférer de",
+            "transferTo": "Transférer à",
+            "percentage": "Pourcentage",
+            "dollarTransfer": "Montant en dollars",
+            "selectFund": "Sélectionnez un fonds",
+            "amount": "Montant",
+            "continue": "Continuer",
+            "leaveTransaction": "Quitter cette transaction",
+            "percentageError": "Le pourcentage est requis.",
+            "amountError": "Le montant est requis.",
+            "effectiveDateError": "La date d'effet est requise.",
+            "totalPercentError": "L'allocation du pourcentage total doit être égale à 100%.",
+            "totalAmountError": "Les montants de transfert doivent être égaux.",
+            "greaterAmountError": "Le montant demandé est supérieur à la valeur du fonds.",
+            "fundIdRequired": "Le fonds est requis.",
+            "amountLabel": "Montant",
+            "percentageLabel": "Pourcentage (seulement des nombres entiers)",
+            "addNewFund": "+ Sélectionnez un fonds pour transférer à",
+            "fundPlaceholder": "--Sélectionnez un fonds--",
+            "available": "disponible"
         }
     },
     "tasksListing": {
@@ -5437,6 +5504,38 @@
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }
+    },
+    "fundAllocation": {
+        "submitted": "Soumis!",
+        "editAllocationNigoSummary1": "Nous avons soumis cette demande pour",
+        "editAllocationNigoSummary2": "Traitement NIGO.",
+        "close": "Fermer",
+        "nigoErrorTItle": "Hm, nous avons trouvé un problème.",
+        "nigoErrorDes": "Passez en revue les erreurs ci-dessous.",
+        "availableFunds": "Fonds disponibles",
+        "allocation": "Allocation",
+        "total": "Total",
+        "errorResolution": "Résolution d'erreur",
+        "checkBoxDes": "Soumettez avec des erreurs et créez une tâche NIGO pour que l'équipe appropriée puisse en assurer le suivi.",
+        "submit": "Soumettre",
+        "cancel": "Annuler",
+        "validNumErr": "Toutes les entrées doivent être des nombres entiers.",
+        "allocationErr": "Les allocations doivent être égales à 100 %",
+        "effectivedate": "Date d'entrée en vigueur",
+        "selectdate": "Sélectionnez une date",
+        "effectiveDateError": "La date d'entrée en vigueur est requise.",
+        "updateAllocations": "Mettre à jour les allocations",
+        "checkingInfo": "Nous vérifions les règles commerciales de cette politique...",
+        "requestTo": "demander à",
+        "editAllocations": "modifier les allocations",
+        "editSuccessMsg": "a été reçu. Le traitement devrait être terminé sous peu, sauf en cas de problème. Vous pouvez suivre l'avancement du traitement en consultant le dossier.",
+        "goToCase": "Aller au cas",
+        "systemErrorTitle": "Désolé, ça n’a pas fonctionné.",
+        "systemErrorDes1": "Nous n'avons pas pu mettre à jour les allocations de fonds en raison d'une panne du système. Vous pouvez réessayer. Si cela ne fonctionne toujours pas,",
+        "systemErrorDes2": "soumettre un ticket d'assistance.",
+        "cancelAndClose": "Annuler et fermer",
+        "editAllocationsTitle": "Modifier les allocations",
+        "successTitle": "J'ai compris!"
     },
     "nbPaymentCancel": {
         "confirmStep": {

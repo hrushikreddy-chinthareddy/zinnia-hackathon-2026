@@ -353,7 +353,10 @@ export const getFundDetailsViewModel = async (policy: PolicyDetails): Promise<Fu
         return map;
     }, {} as Record<string, FundAllocation>);
 
-    const { data: productFunds } = await getFundInformationByPlanCode(policy?.carrierId, policy?.planCode);
+
+    const planCode = policy?.planCode || policy?.product?.planCode;
+
+    const { data: productFunds } = await getFundInformationByPlanCode(policy?.carrierId, planCode);
     const productFundsInfoMap = await getProductFundsInfoMap(policy, productFunds?.funds);
 
     const [electedFunds, holdingFunds, notElectedFunds] = await Promise.all([

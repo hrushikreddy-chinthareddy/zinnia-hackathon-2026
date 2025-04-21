@@ -12,6 +12,7 @@ import { CaseIdentifier, Processes, Statuses } from '@deps/models/case/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { getCases } from '@deps/queries/api/cases';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
+import { browserLogError } from '@deps/utils/browser-logging';
 
 import WorkflowCard from '../workflow-card/workflow-card';
 
@@ -81,8 +82,7 @@ const StartStep = ({
                 setCaseOptions([...mappedCaseOptions, noDocument]);
             } else {
                 setCaseOptions([noDocument]);
-
-                throw new Error(response?.data?.err ? response.data.err : 'Error fetching cases');
+                browserLogError(response?.data?.err ? response.data.err : 'Error fetching cases');
             }
         }
 

@@ -120,6 +120,7 @@ export enum TransactionStep {
     Start = 'start',
     Summary = 'summary',
     Taxes = 'taxes',
+    Transfer = 'transfer',
 }
 
 export enum ContactCenterTransactionType {

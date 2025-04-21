@@ -6,7 +6,8 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helper';
+import { AmountType } from '@deps/models/funds/enums';
 
 interface ConfirmProps {
     amount: number;
@@ -15,11 +16,14 @@ interface ConfirmProps {
     payorPayeeName: string;
     type: string;
     isNigo: boolean;
+    amountType?: AmountType;
 }
 
-const ConfirmCard = ({ amount, caseId, isNigo, parentPage, payorPayeeName, type }: ConfirmProps) => {
+const ConfirmCard = ({ amount, caseId, isNigo, parentPage, payorPayeeName, type, amountType = AmountType.Amount }: ConfirmProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'financialTransaction.confirm' });
     const router = useRouter();
+
+    const amountToDisplay = amountType === AmountType.Amount ? numberFormatify(amount) : percentFormatify(amount, { isInteger: true });
 
     const subtitle = useMemo(() => {
         if (isNigo) {
@@ -41,11 +45,11 @@ const ConfirmCard = ({ amount, caseId, isNigo, parentPage, payorPayeeName, type 
                 {t('subtitle.requestFrom')}
                 <PiiWrapper className="font-bold">{payorPayeeName}</PiiWrapper>
                 {t('subtitle.for')}
-                <PiiWrapper className="font-bold">{numberFormatify(amount)}</PiiWrapper>
+                <PiiWrapper className="font-bold">{amountToDisplay}</PiiWrapper>
                 {t('subtitle.wasReceived')}
             </>
         );
-    }, [amount, isNigo, payorPayeeName, t, type]);
+    }, [amount, isNigo, payorPayeeName, t, type, amountToDisplay]);
 
     return (
         <CardInfo
