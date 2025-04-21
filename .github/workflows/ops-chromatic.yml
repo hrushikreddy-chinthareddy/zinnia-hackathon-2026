@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   # push:
   # paths:
-  # - 'apps/consumer-experience/**'
+  # - 'apps/ops/**'
   # branches-ignore:
   # - 'dependabot/**'
 

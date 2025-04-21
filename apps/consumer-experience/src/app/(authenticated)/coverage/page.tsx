@@ -1,6 +1,7 @@
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
+import { AnalyticsPageHeader } from '@/components/analytics/AnalyticsPageHeader';
 import { CarrierPicker } from '@/components/carrier-picker/CarrierPicker';
 import { CarrierPickerCookieOnly } from '@/components/carrier-picker/CarrierPickerCookieOnly';
 import { CoverageCard } from '@/components/coverage-card/CoverageCard';
@@ -38,10 +39,18 @@ export default async function Page({
   const { data: policyReferenceData, error } =
     await getMyPoliciesByCarrier(carrierIds);
 
+  const CoveragePageHeader = (
+    <AnalyticsPageHeader
+      className="typography-desktop-headline-1d"
+      analyticsProps={{}}
+      pageTitle={pageTitle}
+    />
+  );
+
   if (error || policyReferenceData?.length === 0) {
     return (
       <>
-        <h1 className="typography-desktop-headline-1d">Coverage</h1>
+        {CoveragePageHeader}
         <div className="card-container">
           <MockMessage />
           <NoDataAvailable
@@ -53,10 +62,11 @@ export default async function Page({
     );
   }
 
-  if (showPicker && policyReferenceData) {
-    return (
-      <div className="container">
-        <h1 className="typography-desktop-headline-1d">Coverage</h1>
+  let Body = <></>;
+
+  if (showPicker && !!policyReferenceData) {
+    Body = (
+      <>
         <div className="card-container">
           <p className="typography-content-body-sm">
             Select a policy below to get started.
@@ -71,18 +81,22 @@ export default async function Page({
           )}
         </div>
         <Footer />
+      </>
+    );
+  } else {
+    Body = (
+      <div className="card-container" style={{ paddingLeft: 0 }}>
+        {policyReferenceData?.map(p => {
+          return <CoverageCard key={p.policyNumber} policy={p} />;
+        })}
       </div>
     );
   }
 
   return (
     <div className="container">
-      <h1 className="typography-desktop-headline-1d">Coverage</h1>
-      <div className="card-container" style={{ paddingLeft: 0 }}>
-        {policyReferenceData?.map(p => {
-          return <CoverageCard key={p.policyNumber} policy={p} />;
-        })}
-      </div>
+      {CoveragePageHeader}
+      {Body}
     </div>
   );
 }

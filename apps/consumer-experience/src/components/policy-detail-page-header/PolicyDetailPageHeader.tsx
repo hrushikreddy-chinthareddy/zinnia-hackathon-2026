@@ -12,6 +12,7 @@ import {
   lastPathPart,
   lineOfBusinessPath,
 } from './utils';
+import { AnalyticsPageHeader } from '../analytics/AnalyticsPageHeader';
 import { ClientOnly } from '../client-only/ClientOnly';
 
 export const PolicyDetailPageHeader = () => {
@@ -35,7 +36,13 @@ export const PolicyDetailPageHeader = () => {
       <div>
         <Breadcrumbs />
         <div className={styles.headerContainer}>
-          <h1 className="typography-desktop-headline-1d">{pageTitle}</h1>
+          <AnalyticsPageHeader
+            pageTitle={pageTitle}
+            className="typography-desktop-headline-1d"
+            analyticsProps={{
+              policyNumber: params.policyNumber,
+            }}
+          />
           <HeaderPolicyDetails
             className={styles.policyDetails}
             planCode={params.planCode}

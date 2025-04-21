@@ -1,9 +1,10 @@
 import { saveAs } from 'file-saver';
 
+import { Button } from '@/components/button/Button';
 import { Footer } from '@/components/footer/Footer';
 
 import styles from './PdfPreviewer.module.css';
-import { Button } from '@/components/button/Button';
+import { AnalyticsPageHeader } from '../analytics/AnalyticsPageHeader';
 
 export default function PreviewUnsupported({
   fileName,
@@ -18,7 +19,13 @@ export default function PreviewUnsupported({
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <h1 className="typography-desktop-headline-1d">Documents</h1>
+        <AnalyticsPageHeader
+          pageTitle={'Documents'}
+          className="typography-desktop-headline-1d"
+          analyticsProps={{
+            documentUrl: url,
+          }}
+        />
         <div className={`card ${styles.cardContent}`}>
           <div>PDF Preview doesn't seem to be supported by this browser.</div>
           <div>
