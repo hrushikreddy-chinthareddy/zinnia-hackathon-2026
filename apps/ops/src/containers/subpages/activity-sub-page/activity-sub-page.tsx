@@ -45,7 +45,7 @@ const ActivitySubPage = () => {
                 </TabContent>
 
                 <TabContent value={PolicyActivityTabValues['call-logs']}>
-                    <CallLogsTab queryLimit={10} />
+                    <CallLogsTab policyNumber={policy.policyNumber} queryLimit={10} />
                 </TabContent>
             </TabGroup>
         </div>

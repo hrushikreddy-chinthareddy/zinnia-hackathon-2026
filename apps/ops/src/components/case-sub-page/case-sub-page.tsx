@@ -65,7 +65,7 @@ export default function CaseSubPage({
                     <DocumentsTab caseDetails={caseDetails} />
                 </TabContent>
                 <TabContent className="w-full" value={CaseDetailsTabValues.notes}>
-                    <NotesTab />
+                    <NotesTab caseDetails={caseDetails} />
                 </TabContent>
                 <TabContent className="w-full" value={CaseDetailsTabValues['call-logs']}>
                     <CallLogsTab queryLimit={100} />

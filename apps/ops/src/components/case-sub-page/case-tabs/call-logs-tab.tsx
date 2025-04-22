@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType, Tag } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useContext } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import UnauthorizedCard from '@deps/components/card/card-unauthorized';
@@ -10,7 +9,6 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getCallLogsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
@@ -99,17 +97,17 @@ const CallLogCard = ({
 };
 
 interface CallLogsTabProps {
+    policyNumber?: string;
     queryLimit: number;
 }
 
-export default function CallLogsTab({ queryLimit = 10 }: CallLogsTabProps) {
+export default function CallLogsTab({ policyNumber, queryLimit = 10 }: CallLogsTabProps) {
     const { t } = useTranslation();
-    const { policy } = useContext(PolicyData);
 
     const { data: callLogsData, isLoading: callLogsLoading } = useQuery({
-        queryKey: ['callLogs', policy.policyNumber, queryLimit],
-        queryFn: () => getCallLogsQuery(policy.policyNumber, queryLimit),
-        enabled: !!policy.policyNumber,
+        queryKey: ['callLogs', policyNumber, queryLimit],
+        queryFn: () => getCallLogsQuery(policyNumber, queryLimit),
+        enabled: !!policyNumber,
     });
 
     return (

@@ -11,7 +11,7 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { SearchRequest, V3DocumentWithSource } from '@deps/types/documents-v3';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-const buildV2SearchArgs = ({
+export const buildV2SearchArgs = ({
     searchBody,
     limit = 25,
     offset = 0,

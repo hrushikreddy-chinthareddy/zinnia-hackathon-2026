@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -22,7 +23,6 @@ import {
     CaseSearchAdditionalFilters,
     CaseSearchFilters,
     initialFilters,
-    CaseTableData,
 } from '@deps/contexts/CaseManagementFilters';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -35,10 +35,10 @@ import { storage } from '@deps/helpers/sessionStorage.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Statuses } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
-import { getCaseStats, getCases } from '@deps/queries/api/cases';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
-import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
+import { CaseStatsQuery } from '@deps/queries/cases';
+import { getCaseSearchQuery, postCaseStatsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
@@ -77,15 +77,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     useSegmentPageTracker(user, SegmentPageName.CaseManagementDashboard);
 
-    const [caseTableData, setCaseTableData] = useState<CaseTableData>({ cases: [], total: 0, loading: true, error: false });
-    const [caseTotals, setCaseTotals] = useState({
-        All: 0,
-        [Statuses.InProgress]: 0,
-        [Statuses.Exception]: 0,
-    });
-
     // Data Fetcher(s)
-    const fetchCaseStats = useCallback(async () => {
+    const caseStatsRequestObject = useMemo(() => {
         // We don't want to use the status filters when getting counts for the search results
         const { caseStatus, notInCaseStatus, ...additionalFilters } = getAdditionalFilters(caseManagementFilters.additionalFilters);
 
@@ -105,76 +98,45 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 ...advisorsExcelParams,
             };
         }
+        return caseStatsRequest;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+        caseManagementFilters.additionalFilters,
+        caseManagementFilters.searchValue,
+        isAdvisorsExcel,
+        enableAdditionalAdvisorsExcelCarriers,
+    ]);
 
-        try {
-            const response = await getCaseStats(caseStatsRequest);
+    const { data: caseTotals } = useQuery({
+        queryKey: ['caseStats', caseStatsRequestObject],
+        queryFn: () => postCaseStatsQuery(caseStatsRequestObject),
+        placeholderData: {
+            All: 0,
+            [Statuses.InProgress]: 0,
+            [Statuses.Exception]: 0,
+            [Statuses.NotStarted]: 0,
+            [Statuses.Completed]: 0,
+            [Statuses.Canceled]: 0,
+        },
+        enabled: loadedStoredFilters,
+        select: result => formatCaseTotals(result.count, result.stats[0]),
+    });
 
-            if ('stats' in response) {
-                const newResult = formatCaseTotals(response.count, response.stats[0]);
-
-                setCaseTotals(newResult);
-            } else {
-                throw new Error(response?.data?.err ? response.data.err : 'Error fetching case stats');
-            }
-        } catch (error) {
-            console.error(error);
-            setCaseTotals({
-                All: 0,
-                [Statuses.InProgress]: 0,
-                [Statuses.Exception]: 0,
-            });
-        } // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [caseManagementFilters.additionalFilters, caseManagementFilters.searchValue]); // for caseManagementFilters.toggleValue
-
-    const fetchCases = useCallback(async () => {
-        try {
-            const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
-
-            let additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
-
-            // DEPU-2835 - temporary work around for Advisor Excel
-            if (isAdvisorsExcel) {
-                const advisorsExcelParams = getAdvisorsExcelCaseParams(enableAdditionalAdvisorsExcelCarriers);
-
-                additionalFilters = {
-                    ...additionalFilters,
-                    ...advisorsExcelParams,
-                };
-            }
-
-            const updatedRequest: CaseSearchQuery = {
-                ...additionalFilters,
-                ...searchValueObject,
-                limit: limit,
-                offset: caseManagementFilters.offset,
-                sortDirection: caseManagementFilters.sortDirection,
-                sortBy: caseManagementFilters.sortBy || 'createdAt',
-            };
-            const response = await getCases(updatedRequest);
-
-            if (!response) {
-                throw new Error('Error fetching cases: No response');
-            }
-            // Check for error in fetch response
-            if ('total' in response) {
-                setCaseTableData({
-                    cases: response.data,
-                    total: response.total,
-                    loading: false,
-                    error: false,
-                });
-            } else {
-                throw new Error(response.data.err ? response.data.err : 'Error fetching cases');
-            }
-        } catch (error) {
-            console.error(error);
-            setCaseTableData({
-                cases: [],
-                total: 0,
-                loading: false,
-                error: true,
-            });
+    const searchValueObject = useMemo(() => {
+        const svo = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
+        let additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
+        if (isAdvisorsExcel) {
+            const advisorsExcelParams = getAdvisorsExcelCaseParams(enableAdditionalAdvisorsExcelCarriers);
+            additionalFilters = { ...additionalFilters, ...advisorsExcelParams };
         }
+        return {
+            ...svo,
+            ...additionalFilters,
+            limit,
+            offset: caseManagementFilters.offset,
+            sortDirection: caseManagementFilters.sortDirection,
+            sortBy: caseManagementFilters.sortBy || 'createdAt',
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         // for caseManagementFilters.toggleValue,
@@ -185,23 +147,18 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         caseManagementFilters.sortDirection,
         caseManagementFilters.sortBy,
         isAdvisorsExcel,
+        enableAdditionalAdvisorsExcelCarriers,
     ]);
 
-    // useEffect(s)
-    useEffect(() => {
-        // anytime the filters change, included loaded from storage
-        // set table data to show no data and loading state
-        setCaseTableData(prevTableData => ({ ...prevTableData, total: 0, loading: true, error: false }));
-
-        // Only after the page has mounted, set session storage filters and fetch
-        if (loadedStoredFilters) {
-            // Fetch cases
-            fetchCases();
-
-            // Fetch number of cases for Total, In Progress and Exception tiles
-            fetchCaseStats();
-        }
-    }, [loadedStoredFilters, fetchCaseStats, fetchCases]);
+    const {
+        data: caseSearchData,
+        isLoading: caseSearchLoading,
+        isError: caseSearchError,
+    } = useQuery({
+        queryKey: ['cases', searchValueObject],
+        queryFn: () => getCaseSearchQuery(searchValueObject),
+        enabled: loadedStoredFilters,
+    });
 
     useEffect(() => {
         if (loadedStoredFilters) {
@@ -324,37 +281,55 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             window.scrollTo(0, 0);
         };
 
-        return <PaginationControls total={caseTableData.total} limit={limit} offset={caseManagementFilters.offset} goToPage={goToPage} />;
-    }, [caseTableData.total, caseManagementFilters.offset, limit, setCaseManagementFilters]);
+        return (
+            <PaginationControls
+                total={caseSearchData?.total || 0}
+                limit={limit}
+                offset={caseManagementFilters.offset}
+                goToPage={goToPage}
+            />
+        );
+    }, [caseSearchData, caseManagementFilters.offset, limit, setCaseManagementFilters]);
 
     const tableContent = useMemo(() => {
-        const { cases, loading, error } = caseTableData;
-
-        if (loading) return <PageLoader variant={PageLoaderVariant.Center} />;
-        if (error) return <SearchResultsErrorCard />;
+        if (caseSearchLoading) return <PageLoader variant={PageLoaderVariant.Center} />;
+        if (caseSearchError) return <SearchResultsErrorCard />;
 
         return (
             <>
                 <CaseResultTable
-                    cases={cases}
+                    cases={caseSearchData?.data ?? []}
                     searchValues={caseManagementFilters.searchValue}
                     handleSort={handleCreatedBySort}
                     sortDirection={caseManagementFilters.sortDirection}
                 />
 
                 <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
-                    <Typography variant={TypographyVariant.BodySm} className={`mb-6 lg:mb-0 ${caseTableData.total < 1 ? 'hidden' : ''}`}>
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className={`mb-6 lg:mb-0 ${(caseSearchData?.total || 0) < 1 ? 'hidden' : ''}`}
+                    >
                         {t('policy.documents.xToYOfZ', {
                             x: caseManagementFilters.offset + 1,
-                            y: Math.min(caseManagementFilters.offset + limit, caseTableData.total),
-                            z: `${caseTableData.total.toLocaleString()}${caseTableData.total === 10000 ? '+' : ''}`,
+                            y: Math.min(caseManagementFilters.offset + limit, caseSearchData?.total || 0),
+                            z: `${caseSearchData?.total?.toLocaleString() ?? '0'}${caseSearchData?.total === 10000 ? '+' : ''}`,
                         })}
                     </Typography>
                     {paginationControls}
                 </div>
             </>
         );
-    }, [caseTableData, caseManagementFilters.searchValue, caseManagementFilters.sortDirection, handleCreatedBySort]);
+    }, [
+        caseSearchData,
+        caseSearchLoading,
+        caseSearchError,
+        caseManagementFilters.offset,
+        caseManagementFilters.searchValue,
+        caseManagementFilters.sortDirection,
+        handleCreatedBySort,
+        paginationControls,
+        t,
+    ]);
 
     // Sidesheet Support
     const sideSheet = useSideSheetContext();

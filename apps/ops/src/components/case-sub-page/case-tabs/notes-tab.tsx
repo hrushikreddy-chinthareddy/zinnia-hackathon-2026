@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
@@ -7,9 +8,10 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
+import { Case } from '@deps/models/case/case';
 import { NoteInstance } from '@deps/models/case/note-instance';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { getCaseNotesQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { ReactComponent as AnnotationsIcon } from '@deps/styles/elements/icons/communications/annotations.svg';
 import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -36,38 +38,67 @@ const NoteItem = ({ note }: { note: NoteInstance }) => {
     );
 };
 
-export default function NotesTab() {
+interface NotesTabContentProps {
+    isLoading: boolean;
+    caseNotes: NoteInstance[] | undefined;
+    isError: boolean;
+    statusCode: number | undefined;
+}
+const NotesTabContent = ({ isLoading, caseNotes, isError, statusCode }: NotesTabContentProps) => {
     const { t } = useTranslation();
-    const { caseNotes, loadingNotes, notesStatusCode } = useCaseActivityContext();
+
+    if (isLoading) {
+        return (
+            <div className="p-8">
+                <PageLoader variant={PageLoaderVariant.Center} />
+            </div>
+        );
+    }
+
+    if (statusCode === StatusCode.Forbidden) {
+        return <UnauthorizedCard />;
+    }
+
+    if (isError || !caseNotes?.length) {
+        return (
+            <div className="flex justify-center">
+                <CardInfo
+                    icon={<AnnotationsIcon width={50} height={50} className="text-gray-300" />}
+                    title={t('sideSheet.notesEmptyTitle')}
+                    subtitle={t('sideSheet.notesEmptyText')}
+                    className="mt-8"
+                />
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col">
+            {caseNotes?.map(note => (
+                <NoteItem key={note.id} note={note} />
+            ))}
+        </div>
+    );
+};
+
+interface NotesTabProps {
+    caseDetails: Case;
+    includeInternal?: boolean;
+}
+
+export default function NotesTab({ caseDetails, includeInternal = false }: NotesTabProps) {
+    const { t } = useTranslation();
+    const { data, isLoading } = useQuery({
+        queryKey: ['caseNotes', caseDetails?.id, includeInternal],
+        queryFn: () => getCaseNotesQuery(caseDetails?.id, includeInternal),
+    });
 
     return (
         <CardContainer>
             <div>
                 <Typography variant={TypographyVariant.H2}>{t(`caseOverview.tabs.notes`)}</Typography>
             </div>
-            {loadingNotes && (
-                <div className="p-8">
-                    <PageLoader variant={PageLoaderVariant.Center} />
-                </div>
-            )}
-            {!loadingNotes && !caseNotes?.length && notesStatusCode !== StatusCode.Forbidden && (
-                <div className="flex justify-center">
-                    <CardInfo
-                        icon={<AnnotationsIcon width={50} height={50} className="text-gray-300" />}
-                        title={t('sideSheet.notesEmptyTitle')}
-                        subtitle={t('sideSheet.notesEmptyText')}
-                        className="mt-8"
-                    />
-                </div>
-            )}
-            {!loadingNotes && !!caseNotes?.length && (
-                <div className="flex flex-col">
-                    {caseNotes.map(note => (
-                        <NoteItem key={note.id} note={note} />
-                    ))}
-                </div>
-            )}
-            {notesStatusCode === StatusCode.Forbidden && <UnauthorizedCard />}
+            <NotesTabContent isLoading={isLoading} caseNotes={data?.caseNotes} isError={false} statusCode={data?.statusCode} />
         </CardContainer>
     );
 }

@@ -1,6 +1,27 @@
+import { AxiosResponse } from 'axios';
+
 import { Statuses } from '@deps/models/case/case';
-import { getCases } from '@deps/queries/api/cases';
+import { getCaseDetails, getCases } from '@deps/queries/api/cases';
 import { getCaseCallLogs } from '@deps/queries/api/contracts';
+import { baseAppUrl } from '@deps/queries/api-config';
+import { client } from '@deps/queries/api-utils/client';
+import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
+import { CaseSearchErrorResponse, CaseSearchResponse } from '@deps/types/search';
+
+export const getCaseNotesQuery = async (caseId: string | undefined, includeInternal = false) => {
+    if (!caseId) {
+        throw 'No caseId provided';
+    }
+
+    const response = await client.get(`${baseAppUrl}/api/case/v1/cases/${caseId}/note?includeInternal=${includeInternal}`);
+    if (!response || !response.data) {
+        throw 'No data in response';
+    }
+    return {
+        caseNotes: response.data,
+        statusCode: response.status,
+    };
+};
 
 export const getCasesQuery = async (policyNumber?: string) => {
     if (!policyNumber) {
@@ -31,4 +52,48 @@ export const getCallLogsQuery = async (policyNumber?: string, limit = 10) => {
         data: results?.data?.items || [],
         status: results?.status,
     };
+};
+
+export const getCaseDetailsQuery = async (caseId: string) => {
+    if (!caseId) {
+        throw 'No caseId provided';
+    }
+
+    const response = await getCaseDetails(caseId);
+
+    if (!response) {
+        throw 'No data in response';
+    }
+
+    return response;
+};
+
+export const getCaseSearchQuery = async (caseSearchQuery?: CaseSearchQuery) => {
+    if (!caseSearchQuery) {
+        throw 'No caseSearchQuery provided';
+    }
+
+    const response = await getCases(caseSearchQuery);
+
+    if (!response) {
+        throw 'No data in response';
+    }
+
+    if ((response as CaseSearchErrorResponse)?.data?.err) {
+        throw 'Case search error';
+    }
+
+    return response as CaseSearchResponse;
+};
+
+export const postCaseStatsQuery = async (caseStatsQuery?: CaseStatsQuery) => {
+    if (!caseStatsQuery) {
+        throw 'No caseStatsQuery provided';
+    }
+    const result = await client.post<CaseStatsQuery, AxiosResponse>(`${baseAppUrl}/api/case/v1/cases/stats`, caseStatsQuery);
+    if (!result?.data?.stats) {
+        throw 'No data in response';
+    } else {
+        return result.data;
+    }
 };

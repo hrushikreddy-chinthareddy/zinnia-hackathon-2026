@@ -1,14 +1,15 @@
+import { useQuery } from '@tanstack/react-query';
 import { BadgeVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { getStatusDetails } from '@deps/components/case-list/components/case-status-tooltip';
 import CaseSubPage from '@deps/components/case-sub-page/case-sub-page';
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { Case } from '@deps/models/case/case';
-import { getCaseDetails } from '@deps/queries/api/cases';
 import { baseAppUrl } from '@deps/queries/api-config';
+import { getCaseDetailsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -25,29 +26,12 @@ const CaseRedesign = ({ caseDetails, tab }: CaseRedesignProps) => {
     const [tabVal, setTabVal] = useState(tab);
     const { featureFlags } = useOptimizely();
 
-    const [caseDetailsModel, setCaseDetailsModel] = useState(caseDetails);
-
-    useEffect(() => {
-        let caseRefreshInterval: NodeJS.Timer | undefined;
-        let caseRefreshTimeout: NodeJS.Timeout | undefined;
-        const isProgressPage = tabVal === CaseDetailsTabValues.progress;
-        // Only auto refresh if we are on the progress page. DEPU-2742
-        if (featureFlags[FEATURE_FLAGS.AUTO_REFRESH_CASE_DETAILS] && isProgressPage) {
-            caseRefreshInterval = setInterval(async () => {
-                const deets = await getCaseDetails(caseDetails.id);
-                deets && setCaseDetailsModel(deets);
-            }, 5000);
-
-            caseRefreshTimeout = setTimeout(() => {
-                clearInterval(caseRefreshInterval);
-            }, 1000 * 60 * 20);
-        }
-
-        return () => {
-            clearInterval(caseRefreshInterval);
-            clearTimeout(caseRefreshTimeout);
-        };
-    }, [caseDetails.id, featureFlags, tabVal]);
+    const { data: caseDetailsModel } = useQuery({
+        queryKey: ['caseDetails', caseDetails?.id],
+        queryFn: () => getCaseDetailsQuery(caseDetails?.id),
+        initialData: caseDetails,
+        refetchInterval: tabVal === CaseDetailsTabValues.progress && featureFlags[FEATURE_FLAGS.AUTO_REFRESH_CASE_DETAILS] ? 5000 : false,
+    });
 
     const handleTabChange = (val: string) => {
         // We do not want to send the user to a new page, just update the URL in response to a user action

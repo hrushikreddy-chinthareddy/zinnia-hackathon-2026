@@ -1,4 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import { useQuery } from '@tanstack/react-query';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useMemo, useState } from 'react';
@@ -11,9 +12,11 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import DocumentResultsPagination from '@deps/containers/subpages/documents-sub-page/documents-results-pagination';
 import DocumentsResultsTable from '@deps/containers/subpages/documents-sub-page/documents-results-table';
-import { useDocumentSearch } from '@deps/hooks/useDocumentSearch';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { Case } from '@deps/models/case/case';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 // try to get any documentIds associated with this case.
 // As we find more ways to associate documents with a case, we can add the ways to retrieve them here.
@@ -35,6 +38,7 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
     const limit = 25;
     const [caseOffset, setCaseOffset] = useState(0);
     const [policyOffset, setPolicyOffset] = useState(0);
+    const { featureFlags } = useOptimizely();
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
         if (!caseDetails?.id) {
             return null;
@@ -85,18 +89,23 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
         [limit, setPolicyOffset]
     );
 
-    const [caseDocuments, loadingCaseDocuments, totalCaseDocuments, caseDocumentsStatusCode] = useDocumentSearch(
-        caseDocumentSearchBody,
-        limit,
-        caseOffset
-    );
+    const {
+        data: { data: caseDocuments = [], status: caseDocumentsStatusCode, total: totalCaseDocuments = 0 } = {},
+        isLoading: loadingCaseDocuments,
+    } = useQuery({
+        queryKey: ['documentSearch', caseDocumentSearchBody, limit, caseOffset, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]],
+        queryFn: () => getDocumentSearchResultsQuery(caseDocumentSearchBody, limit, caseOffset, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]),
+    });
 
-    const [policyDocuments, loadingPolicyDocuments, totalPolicyDocuments, policyDocumentsStatusCode] = useDocumentSearch(
-        policyDocumentSearchBody,
-        limit,
-        policyOffset,
-        !policyDocumentSearchBody?.policyNumber
-    );
+    const {
+        data: { data: policyDocuments = [], status: policyDocumentsStatusCode, total: totalPolicyDocuments = 0 } = {},
+        isLoading: loadingPolicyDocuments,
+    } = useQuery({
+        queryKey: ['documentSearch', policyDocumentSearchBody, limit, policyOffset, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]],
+        queryFn: () =>
+            getDocumentSearchResultsQuery(policyDocumentSearchBody, limit, policyOffset, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]),
+        enabled: !!policyDocumentSearchBody?.policyNumber,
+    });
 
     return (
         <CardContainer>
