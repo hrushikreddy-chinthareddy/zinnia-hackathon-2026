@@ -23,8 +23,10 @@ export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<any | null>, logCtx) => {
         const now = performance.now();
         const accessToken = (await getAccessToken(req, res)).accessToken;
-        const idToken = await getSession(req, res);
-        const partyId = idToken?.user.partyId;
+        const session = await getSession(req, res);
+
+        const partyId = session?.user.partyId;
+
         const url = `${apiServerBaseUrl}/party/v1/parties/${partyId}/reference`;
         const loggingContext = { ...logCtx, url, partyId };
         const responseData: UserContextMenuItem[] = [];
@@ -48,7 +50,6 @@ export default withAuthAndLogging(
                 ),
                 await checkTupleApi(req, res, 'party', 'role:zinnia_super_admin', loggingContext),
             ]);
-
             // Carrier check for wellabe agents
             // if the user is a wellabe agent, then add the toppan merrill storefrontlink
             if (partyReference.status === 'rejected') {

@@ -74,7 +74,21 @@ export default handleAuth({
         const loggingContext = { ...logCtx, file: '[...auth0]', function: 'callback' } as LoggingContext;
         logTrace('callback ', loggingContext);
         try {
-            await handleCallback(req, res);
+            await handleCallback(req, res, {
+                // We dont need idToken or the permissions object in the cookie.
+                // Too reduce the size of the Auth0 Cookie, we can just remove these values.
+                // See: https://github.com/auth0/nextjs-auth0/issues/289#issuecomment-778229748
+                afterCallback(req, res, session) {
+                    const permissionsKey = `${process.env.NEXT_PUBLIC_SE2_BACKEND_URL}/permissions`;
+                    Object.assign(session.user, {
+                        [permissionsKey]: undefined,
+                    });
+
+                    session.idToken = undefined;
+
+                    return session;
+                },
+            });
         } catch (e) {
             logTrace('Callback failed.  Redirecting to login', { ...loggingContext, ...parseErrorInformation(e) });
             res.redirect('/');
