@@ -2,13 +2,15 @@ import { OneTimePremiumTransaction } from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
+import utc from 'dayjs/plugin/utc';
 
 import {
   getPremiumValidation,
   submitOneTimePremiumPayment,
 } from '@/services/bpm';
 import { PolicyRequestInputs } from '@/types/policy';
-import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
+
+dayjs.extend(utc);
 
 export async function POST(
   _request: NextRequest,
@@ -24,9 +26,7 @@ export async function POST(
     caseId: '',
     // TODO: add this to logging
     correlationId: uuidv4(),
-    effectiveDate: dayjs(paymentDetails.effectiveDate).format(
-      ZAHARA_DATE_FORMAT
-    ),
+    effectiveDate: dayjs(paymentDetails.effectiveDate).utc().format(),
     transactionAmounts: {
       requestedAmount: paymentDetails.paymentAmount,
     },

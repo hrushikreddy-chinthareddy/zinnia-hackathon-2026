@@ -57,7 +57,8 @@ export const PaymentSummary = ({
       bankId: state.payorBank?.bankId,
     };
 
-    // TODO: should i move this queries?
+    // TODO: this should go somewhere else, use patterns from
+    // non financial profile transactions
     const response = await ClientApi.post(
       `/api/bpm/${planCode}/${policyNumber}/onetimepremium`,
       JSON.stringify(ottpRequest),
