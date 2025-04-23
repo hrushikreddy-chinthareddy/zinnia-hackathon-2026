@@ -15,9 +15,9 @@ export const CommunicationPreferences = ({
   preferenceData: EDeliveryPreferenceModel[];
   profileData: PolicyProfile;
 }) => {
-  const communicationPreference = preferenceData.find(
-    (preference: EDeliveryPreferenceModel) => preference.documentType === 'NWB'
-  );
+  // Communication preferences come back from the preference management service as an array
+  // of every doc type. we assume that they are all set to the same deliveryType per BPM instruction
+  const communicationPreference = preferenceData?.[0];
 
   if (!communicationPreference) {
     return (
@@ -44,7 +44,10 @@ export const CommunicationPreferences = ({
           {deliveryOption === EDeliveryPreferenceModel.deliveryOption.MAIL &&
             ` to the mailing address`}
         </span>
-        <CommunicationPreferenceSidesheet profileData={profileData} />
+        <CommunicationPreferenceSidesheet
+          profileData={profileData}
+          currentPreference={communicationPreference}
+        />
       </div>
     </div>
   );

@@ -1,7 +1,10 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import { UpdateEDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
+import {
+  EDeliveryPreferenceModel,
+  UpdateEDeliveryPreferenceModel,
+} from '@zinnia/api-types/types/preferences';
 import { Button, Icon, IconType, SideSheet } from '@zinnia/bloom/components';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
@@ -20,8 +23,10 @@ import { Success } from '../transaction-steps/success/Success';
 
 export const CommunicationPreferenceSidesheet = ({
   profileData,
+  currentPreference,
 }: {
   profileData: PolicyProfile;
+  currentPreference: EDeliveryPreferenceModel;
 }) => {
   const { planCode, policyNumber } = useParams<{
     planCode: string;
@@ -101,6 +106,7 @@ export const CommunicationPreferenceSidesheet = ({
           onSubmit={handleSubmit}
           onCancel={handleCancel}
           emailOptions={filterItemsWithPastEndDate(profileData.emails)}
+          currentPreference={currentPreference}
           hasMailingAddress={!!mailingAddress}
         />
       )}

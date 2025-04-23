@@ -3,7 +3,6 @@ import { Label } from '@zinnia/bloom/components';
 
 import { AddressList } from '@/components/address-list/AddressList';
 import { BankList } from '@/components/bank-list/BankList';
-import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { CommunicationPreferences } from '@/components/communication-preferences/CommunicationPreferences';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Emails } from '@/components/person-data/Emails';
@@ -14,6 +13,8 @@ import { getPreferencesByPlanCode } from '@/services/preferences/v1/[partyId]/e-
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
+import { EDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
 
 export const ProfileView = async ({
   lineOfBusiness,
@@ -34,10 +35,16 @@ export const ProfileView = async ({
     flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT] || false;
   const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
 
-  const { data: preferencesData } = await getPreferencesByPlanCode({
-    planCode,
-    policyNumber,
-  });
+  let preferencesData = [] as EDeliveryPreferenceModel[];
+
+  if (showCommunicationPreferences) {
+    const { data } = await getPreferencesByPlanCode({
+      planCode,
+      policyNumber,
+    });
+
+    preferencesData = data;
+  }
 
   const addresses = () => {
     return (

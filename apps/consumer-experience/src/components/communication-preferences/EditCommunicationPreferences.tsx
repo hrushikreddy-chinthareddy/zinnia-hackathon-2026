@@ -15,6 +15,7 @@ import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 import clsx from 'clsx';
 
 interface EditCommunicationPreferencesProps {
+  currentPreference: EDeliveryPreferenceModel;
   emailOptions: Email[];
   hasMailingAddress: boolean;
   onSubmit: (data: UpdateEDeliveryPreferenceModel) => void;
@@ -22,6 +23,7 @@ interface EditCommunicationPreferencesProps {
 }
 
 export const EditCommunicationPreferences = ({
+  currentPreference,
   emailOptions,
   onSubmit,
   hasMailingAddress,
@@ -36,7 +38,7 @@ export const EditCommunicationPreferences = ({
     register,
   } = useForm<UpdateEDeliveryPreferenceModel>({
     defaultValues: {
-      deliveryOption: EDeliveryPreferenceModel.deliveryOption.EMAIL,
+      deliveryOption: currentPreference.deliveryOption,
     },
   });
 
@@ -112,7 +114,9 @@ export const EditCommunicationPreferences = ({
                   name="email"
                   id={`${index}-${email.emailAddress}`}
                   value={email.emailAddress}
-                  defaultChecked={email === email.emailAddress}
+                  defaultChecked={
+                    email.emailAddress === currentPreference.email
+                  }
                 />
               </label>
             ))}

@@ -1,3 +1,4 @@
+'use client';
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { HTMLAttributes, ReactNode } from 'react';
 
