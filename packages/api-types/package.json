@@ -22,7 +22,8 @@
     "./types/funds": "./dist/generated-types/funds/index.js",
     "./types/case": "./dist/generated-types/case/index.js",
     "./types/preferences": "./dist/generated-types/preferences/index.js",
-    "./types/partyreference": "./dist/generated-types/partyreference/index.js"
+    "./types/partyreference": "./dist/generated-types/partyreference/index.js",
+    "./types/transaction-store": "./dist/generated-types/transaction-store/index.js"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -53,6 +54,9 @@
       "./types/case": [
         "dist/generated-types/case/index.d.ts"
       ],
+      "./types/transaction-store": [
+        "dist/generated-types/transaction-store/index.d.ts"
+      ],
       "./types/preferences": [
         "dist/generated-types/preferences/index.d.ts"
       ],
@@ -73,9 +77,10 @@
     "generate-types:bpm": "npx openapi --input ./src/api-spec-bpm.yaml --output ./src/generated-types/bpm --exportCore false --exportServices false;",
     "generate-types:funds": "npx openapi --input ./src/api-spec-funds.yaml --output ./src/generated-types/funds --exportCore false --exportServices false;",
     "generate-types:case": "npx openapi --input ./src/api-spec-case.yaml --output ./src/generated-types/case --exportCore false --exportServices false;",
+    "generate-types:transaction-store": "npx openapi --input ./src/api-spec-transaction-store.yaml --output ./src/generated-types/transaction-store --exportCore false --exportServices false;",
     "generate-types:preferences": "npx openapi --input ./src/api-spec-preferences.yaml --output ./src/generated-types/preferences --exportCore false --exportServices false;",
     "generate-types:partyreference": "npx openapi --input ./src/api-spec-partyreference.json --output ./src/generated-types/partyreference --exportCore false --exportServices false;",
-    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:documents-v3 && pnpm run generate-types:bpm && pnpm run generate-types:funds && pnpm run generate-types:case && pnpm run generate-types:preferences && pnpm run generate-types:partyreference",
+    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:documents-v3 && pnpm run generate-types:bpm && pnpm run generate-types:funds && pnpm run generate-types:case && pnpm run generate-types:preferences && pnpm run generate-types:partyreference && pnpm run generate-types:transaction-store",
     "clean": "rm -rf ./dist"
   },
   "devDependencies": {

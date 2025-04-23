@@ -20,7 +20,8 @@ import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/
 
 import CaseDetailsSideNav from './case-details-side-nav';
 import { getSideNavData } from './case-helpers';
-import { Parties, PartiesProps } from './CaseSideNavParties';
+import { PartiesProps } from './CaseSideNavParties';
+import CaseSideNavTabs from './CaseSideNavTabs';
 import Transactions from './CaseSideNavTransactions';
 
 export interface CaseSideNavProps {
@@ -235,7 +236,7 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                     )}
                     <Transactions caseDetails={caseDetails} />
                 </div>
-                <Parties parties={data.parties} caseStatus={caseDetails.caseStatus} />
+                <CaseSideNavTabs caseDetails={caseDetails} sideNavData={data} />
             </div>
         </div>
     );

@@ -86,20 +86,20 @@ const RoleTags = ({ party }: { party: PartyInfo }) => {
     return (
         <>
             <Tag text={party.roles[0]} key={party.roles[0]} />
-            <div className="whitespace-nowrap self-end">{(party.roles.length > 1) ? '+ ' + (party.roles.length - 1) : ''}</div>
+            <div className="whitespace-nowrap self-end">{party.roles.length > 1 ? '+ ' + (party.roles.length - 1) : ''}</div>
         </>
     );
 };
 
 const AdditionalInfo = ({ party }: { party: PartyInfo }) => {
-    let infoString = "";
+    let infoString = '';
 
     if (party.fields) {
         if (party.fields.brokerDealer?.value) {
             infoString += party.fields.brokerDealer.value;
             //if both are true, seperate with a dot
             if (party.fields.ssn?.value) {
-                infoString += " &#183; "
+                infoString += ' &#183; ';
             }
         }
         if (party.fields.ssn?.value) {
@@ -107,11 +107,7 @@ const AdditionalInfo = ({ party }: { party: PartyInfo }) => {
         }
     }
 
-    return (
-        <PiiWrapper className={"body-sm text-[#676767]"}>
-            {infoString}
-        </PiiWrapper>
-    )
+    return <PiiWrapper className={'body-sm text-[#676767]'}>{infoString}</PiiWrapper>;
 };
 
 const PartyInformation = ({ party, ...rest }: { party: PartyInfo } & HTMLAttributes<HTMLLIElement>) => {
@@ -142,17 +138,20 @@ const PartyInformation = ({ party, ...rest }: { party: PartyInfo } & HTMLAttribu
 export const Parties = ({
     parties,
     caseStatus,
+    showTitle = true,
     ...rest
-}: { parties: PartiesProps | undefined; caseStatus: string } & HTMLAttributes<HTMLDivElement>) => {
+}: { parties: PartiesProps | undefined; caseStatus: string; showTitle?: boolean } & HTMLAttributes<HTMLDivElement>) => {
     const { t } = useTranslation();
     const { loadingPolicy } = useCaseActivityContext();
     const { owners = [], agents = [], brokers } = parties ?? {};
 
     return (
-        <div className="flex w-full flex-col p-4 rounded bg-white shadow-elevation-light-04" {...rest}>
-            <Title className="mb-2" variant={TitleVariant.SubTitle}>
-                {t('caseOverview.sidenav.people')}
-            </Title>
+        <div className="flex w-full flex-col" {...rest}>
+            {!!showTitle && (
+                <Title className="mb-2" variant={TitleVariant.SubTitle}>
+                    {t('caseOverview.sidenav.people')}
+                </Title>
+            )}
             {owners.length ? (
                 <ul className="flex w-full flex-col">
                     {owners.map(owner => (
@@ -160,12 +159,7 @@ export const Parties = ({
                     ))}
                 </ul>
             ) : (
-                <NoPartiesStatus
-                    caseStatus={caseStatus}
-                    partyType="owner"
-                    className="gap-md"
-                    spinLoader={loadingPolicy}
-                />
+                <NoPartiesStatus caseStatus={caseStatus} partyType="owner" className="gap-md" spinLoader={loadingPolicy} />
             )}
             {agents.length ? (
                 <ul className="flex w-full flex-col">

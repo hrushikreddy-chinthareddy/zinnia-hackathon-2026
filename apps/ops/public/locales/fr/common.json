@@ -1487,7 +1487,29 @@
             "unavailableAgentDetails": "Détails de l'agent indisponibles…",
             "unavailableDetailsSubtext": "Les données n'ont pas pu être récupérées avant le traitement {{status}}.",
             "unavailableOwnerDetails": "Détails du propriétaire indisponibles…",
-            "unavailablePolicyNumber": "Numéro de police indisponible…"
+            "unavailablePolicyNumber": "Numéro de police indisponible…",
+            "tabs": {
+                "people": "Personnes",
+                "errorGettingFundingSourceInfo": "Détails de la source de financement indisponibles...",
+                "errorGettingFundingSourceInfoCopy": "Les données n'ont pas pu être récupérées.",
+                "fundingSource": "Source de financement",
+                "fundingSourceDetails": "Détails de la source de financement",
+                "fundingSourceSideSheet": {
+                    "fundingDetails": "Détails du financement",
+                    "sourceType": "Type de source",
+                    "expectedAmount": "Montant attendu",
+                    "receivedAmount": "Montant reçu",
+                    "trackingNumber": "Numéro de suivi",
+                    "fundingCompany": "Entreprise de financement",
+                    "fundingContract": "Contrat de financement",
+                    "contractDetails": "Détails du contrat",
+                    "mailingAddress": "Adresse postale",
+                    "phoneNumber": "Numéro de téléphone",
+                    "faxNumber": "Numéro de fax"
+                },
+                "loadingFundingSource": "Récupération de la source de financement...",
+                "loadingFundingSourceCopy": "Nous effectuons des vérifications en cours. Vous le verrez ici dès qu'il sera disponible."
+            }
         },
         "sidesheet": {
             "additionalData": "Détails",

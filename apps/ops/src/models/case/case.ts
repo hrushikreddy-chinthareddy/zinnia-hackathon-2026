@@ -18,10 +18,21 @@ export enum CaseIdentifier {
     PolicyNumber = 'policyNumber',
 }
 
+// CaseAdditionalData doesn't exist on the spec yet, typing based off QA response
+export type CaseAdditionalData = {
+    dataType?: string;
+    entityType?: string;
+    label?: string;
+    id?: string;
+    source?: string;
+    value?: string;
+};
+
 export type Case = {
     additionalData: AdditionalDataInstance;
     applicationType?: string;
     carrier: string;
+    caseAdditionalData?: CaseAdditionalData[];
     caseStatus: Statuses;
     correlationId?: string;
     correspondenceDocs?: DocumentInstance[];

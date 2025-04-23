@@ -10,6 +10,7 @@ export default defineConfig((options: Options) => ({
     'src/generated-types/bpm',
     'src/generated-types/funds',
     'src/generated-types/case',
+    'src/generated-types/transaction-store',
     'src/generated-types/preferences',
     'src/generated-types/partyreference'
   ],

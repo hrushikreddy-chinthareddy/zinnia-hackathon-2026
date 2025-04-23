@@ -1487,7 +1487,29 @@
             "unavailableAgentDetails": "Agent details unavailable…",
             "unavailableDetailsSubtext": "Data couldn't be retrieved before processing was {{status}}.",
             "unavailableOwnerDetails": "Owner details unavailable…",
-            "unavailablePolicyNumber": "Policy number unavailable…"
+            "unavailablePolicyNumber": "Policy number unavailable…",
+            "tabs": {
+                "people": "People",
+                "errorGettingFundingSourceInfo": "Funding source details unavailable...",
+                "errorGettingFundingSourceInfoCopy": "Data couldn't be retrieved.",
+                "fundingSource": "Funding source",
+                "fundingSourceDetails": "funding source details",
+                "fundingSourceSideSheet": {
+                    "fundingDetails": "Funding Details",
+                    "sourceType": "Source type",
+                    "expectedAmount": "Expected amount",
+                    "receivedAmount": "Received amount",
+                    "trackingNumber": "Tracking number",
+                    "fundingCompany": "Funding company",
+                    "fundingContract": "Funding contract",
+                    "contractDetails": "Contract Details",
+                    "mailingAddress": "Mailing address",
+                    "phoneNumber": "Phone number",
+                    "faxNumber": "Fax number"
+                },
+                "loadingFundingSource": "Getting funding source...",
+                "loadingFundingSourceCopy": "We're doing ongoing checks.  You'll see it here once it's available."
+            }
         },
         "sidesheet": {
             "additionalData": "Details",
