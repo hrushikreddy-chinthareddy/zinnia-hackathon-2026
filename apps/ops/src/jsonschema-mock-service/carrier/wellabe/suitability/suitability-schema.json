@@ -659,6 +659,8 @@
                                                 "totalAsset": {
                                                     "type": "array",
                                                     "title": "Total Asset",
+                                                    "minItems": 1,
+                                                    "default": [{}],
                                                     "items": {
                                                         "type": "object",
                                                         "properties": {
@@ -676,7 +678,8 @@
                                                                 "type": "string",
                                                                 "title": "Amount"
                                                             }
-                                                        }
+                                                        },
+                                                        "required": ["assetType", "amount"]
                                                     }
                                                 }
                                             },
