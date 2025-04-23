@@ -202,12 +202,15 @@ export const SidesheetCommunicationsPreference = ({
         children: <EmailDetails condensed={true} email={role} />,
     }));
 
-    const addressRadioOptions = addresses.map(role => ({
-        label: role.addressType,
-        value: role.addressId,
-        type: NonFinancialTransactionIdKeys.Address,
-        children: <AddressDetails condensed={true} address={role} />,
-    }));
+    const preferredAddress = party?.preferredAddress;
+    const addressRadioOptions = preferredAddress
+        ? {
+              label: preferredAddress.addressType,
+              value: preferredAddress.addressId,
+              type: NonFinancialTransactionIdKeys.Address,
+              children: <AddressDetails condensed={true} address={preferredAddress} />,
+          }
+        : null;
 
     switch (viewState) {
         case ViewState.Loading:
@@ -307,20 +310,19 @@ export const SidesheetCommunicationsPreference = ({
                                     </RadioGroup.Item>
                                 ))}
                             </div>
-                            <div className="flex flex-col gap-md" role="group" id="comm-pref-address">
-                                <Label size="lg" labelFor="comm-pref-address">
-                                    <span className="typography-desktop-headline-4-d">{t('labels.address')}</span>
-                                </Label>
-                                {addressRadioOptions?.map(role => (
+                            {addressRadioOptions && (
+                                <div className="flex flex-col gap-md" role="group" id="comm-pref-address">
+                                    <Label size="lg" labelFor="comm-pref-address">
+                                        <span className="typography-desktop-headline-4-d">{t('labels.address')}</span>
+                                    </Label>
                                     <RadioGroup.Item
                                         className="hover:gray-300 border-2 text-start rounded p-4 border-border-light hover:border-border-hover data-[state=checked]:border-border-selected overflow-auto"
-                                        key={`people-chip-${role.label}`}
-                                        value={`addressId-${role.value}`}
+                                        value={`addressId-${addressRadioOptions.value}`}
                                     >
-                                        {role.children}
+                                        {addressRadioOptions.children}
                                     </RadioGroup.Item>
-                                ))}
-                            </div>
+                                </div>
+                            )}
                             {!!currentErrors?.address && (
                                 <AssistiveText variant={AssistiveTextVariant.Error} text={currentErrors.address} />
                             )}

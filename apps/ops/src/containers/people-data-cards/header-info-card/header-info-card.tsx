@@ -38,6 +38,9 @@ const CommunicationPreferenceField = ({ partyInfo, t, editable = true }: Communi
     const sidesheet = useSideSheetContext();
     const { policyDetails } = useContext(PolicyData);
     const currentParty = policyDetails.parties?.getPartyById(partyInfo?.partyId ?? '');
+    // We are setting the preferred communication type off of the enterprise api return rather than
+    // from preference management services here because the preference management endpoint requires
+    // the users auth partyId and we don't have access to that from ops
     const [contactValue, setContactValue] = useState(currentParty?.preferredCommunication);
 
     const displayValue = useMemo(() => {

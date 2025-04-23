@@ -12,6 +12,7 @@ export type SideSheetCommnunicationPreferenceProps = {
     policyNumber?: string;
     setPreferredCommunication: Dispatch<SetStateAction<Email | Address | undefined>>;
 };
+
 interface GetFormErrors {
     caseId?: string;
     isDelete?: boolean;
