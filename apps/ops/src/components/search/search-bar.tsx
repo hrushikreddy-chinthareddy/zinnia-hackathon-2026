@@ -127,6 +127,7 @@ const SearchBar = ({
                 <SearchFieldToggle activeLabels={activeLabels} handleChange={handleNewValue} values={values} onClear={onClear} />
             </div>
             <Button
+                className="md:mt-1"
                 mode="primary"
                 onClick={handleSearch}
                 data-testid="search-btn"

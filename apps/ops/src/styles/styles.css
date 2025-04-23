@@ -3,9 +3,11 @@
 @tailwind utilities;
 
 :root {
-    --color-secondary-color-primary: #ff7500;
-    --color-secondary-color-primary-lighter: #ffc899;
-    --bg-primary-lightest: #f5f5f5;
+    --color-secondary-color-primary: var(--color-primary-color-primary);
+    --color-secondary-color-primary-lighter: var(--color-primary-color-primary-lighter);
+    --color-secondary-color-primary-light: var(--color-primary-color-primary-light);
+    --color-secondary-color-primary-lightest: var(--color-primary-color-primary-lightest);
+    --bg-primary-lightest: var(--color-base-surface-surface-secondary);
 }
 
 @layer base {
@@ -198,11 +200,42 @@ body {
     .subtitle-alt {
         font: var(--typography-titles-subtitle-alt);
     }
-    .nav-links {
+
+    .nav-links,
+    .nav-links-sm,
+    .text-links,
+    .text-links-sm {
+        position: relative;
         font: var(--typography-nav-links);
+        color: var(--color-base-text-text-link);
+        text-decoration: none;
+        &:hover {
+            color: var(--color-states-hover-text-hover-text-link);
+        }
+        &:hover&::after {
+            content: '';
+            background-color: var(--color-states-hover-text-hover-text-link);
+            height: 2px;
+            left: 0;
+            position: absolute;
+            width: 100%;
+        }
     }
-    .nav-links-sm {
+    .nav-links,
+    .text-links {
+        font: var(--typography-nav-links);
+        &:hover::after {
+            text-underline-offset: 5px;
+            bottom: -2px;
+        }
+    }
+    .nav-links-sm,
+    .text-links-sm {
         font: var(--typography-nav-links-sm);
+        &:hover::after {
+            text-underline-offset: 2px;
+            bottom: 1px;
+        }
     }
     .footer {
         font: var(--typography-content-footer);

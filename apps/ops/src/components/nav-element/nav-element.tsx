@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { cloneElement } from 'react';
 
 import NavButton, { NavButtonProps } from './nav-button/nav-button';
@@ -28,19 +27,9 @@ export type NavElementProps = {
 
 export default function NavElement({ type, ...rest }: NavElementProps) {
     const { className, startIcon, ...newRest } = rest;
-    const commonHoverClass = 'hover:text-secondary-dark hover:font-semibold';
-
-    const startIconHoverClass =
-        'after:content-[" "] relative after:absolute after:-bottom-[2px] after:left-0 after:h-[2px] after:w-full hover:after:bg-secondary-dark';
-    const noStartIconHoverClass = 'hover:underline hover:decoration-2 hover:underline-offset-[5px]';
-
-    const hoverClass = clsx(commonHoverClass, {
-        [startIconHoverClass]: startIcon,
-        [noStartIconHoverClass]: !startIcon,
-    });
 
     const focusVisibleClass = 'default-focus focus-visible:rounded';
-    const stateClass = `${hoverClass} ${focusVisibleClass}`;
+    const stateClass = `${focusVisibleClass}`;
 
     const extraSmallSizeClass = 'text-sm leading-4.5';
     const smallSizeClass = 'text-links-sm';
@@ -63,9 +52,9 @@ export default function NavElement({ type, ...rest }: NavElementProps) {
             break;
     }
 
-    const defaultVariantClass = 'font-primary text-secondary font-semibold';
-    const inactiveVariantClass = 'font-primary text-gray-300 cursor-not-allowed';
-    const primaryVariantClass = 'font-primary rounded-none';
+    const defaultVariantClass = 'text-links';
+    const inactiveVariantClass = 'text-gray-300 cursor-not-allowed';
+    const primaryVariantClass = 'rounded-none';
     const secondaryVariantClass = 'font-secondary text-secondary font-normal';
     const textVariantClass = 'font-primary text-gray-900';
 

@@ -16,7 +16,13 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { checkLoanRepaymentOneTimeEligibilityQuery, checkNewLoanEligibilityQuery, checkOneTimePremiumEligibilityQuery, checkPartialWithdrawalOneTimeEligibilityQuery, checkSystematicProgramsEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import {
+    checkLoanRepaymentOneTimeEligibilityQuery,
+    checkNewLoanEligibilityQuery,
+    checkOneTimePremiumEligibilityQuery,
+    checkPartialWithdrawalOneTimeEligibilityQuery,
+    checkSystematicProgramsEligibilityQuery,
+} from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as PaymentIcon } from '@deps/styles/elements/icons/content/payment.svg';
 import { ReactComponent as AutopayIcon } from '@deps/styles/elements/icons/currency/autopay.svg';
@@ -36,9 +42,7 @@ interface TranslateProps {
 const TextButton = ({ t }: TranslateProps) => {
     return (
         <div className="items-center justify-center gap-1 text-secondary hover:text-secondary-dark md:flex">
-            <p className="whitespace-nowrap font-primary text-md font-semibold hover:underline hover:decoration-2 hover:underline-offset-[5px]">
-                {t('label')}
-            </p>
+            <p className="text-links">{t('label')}</p>
             <ChevronDown className="simple-transition text-secondary group-data-[state=open]:rotate-180" height={16} width={16} />
         </div>
     );
@@ -83,76 +87,77 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
 
     const premiumProgram = policy.systematicPrograms.getProgramsByReason(Reason.PREMIUM);
 
-    const {
-        data: systematicProgramsEligibility,
-    } = useQuery({
+    const { data: systematicProgramsEligibility } = useQuery({
         queryKey: ['checkSystematicProgramsEligibility', policy.planCode, policy.policyNumber, premiumProgram?.arrangementId],
         queryFn: premiumProgram?.arrangementId
-            ? () => checkSystematicProgramsEligibilityQuery(policy.planCode as string, policy.policyNumber as string, premiumProgram?.arrangementId as string)
+            ? () =>
+                  checkSystematicProgramsEligibilityQuery(
+                      policy.planCode as string,
+                      policy.policyNumber as string,
+                      premiumProgram?.arrangementId as string
+                  )
             : skipToken,
         placeholderData: previousData => previousData,
-        select: (data) => {
+        select: data => {
             return {
                 ...data,
-                isEligibleManageAutopay: data?.status === TransactionResponseStatus.Success
-            }
-        }
+                isEligibleManageAutopay: data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
-    const {
-        data: oneTimePremiumEligibility,
-    } = useQuery({
+    const { data: oneTimePremiumEligibility } = useQuery({
         queryKey: ['checkOneTimePremiumEligibility', policy.planCode, policy.policyNumber],
         queryFn: () => checkOneTimePremiumEligibilityQuery(policy.planCode as string, policy.policyNumber as string),
         placeholderData: previousData => previousData,
-        select: (data) => {
+        select: data => {
             return {
                 ...data,
-                isEligibleOneTimePremium: data?.status === TransactionResponseStatus.Success
-            }
-        }
+                isEligibleOneTimePremium: data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
-    const {
-        data: partialWithdrawalOneTimeEligibility,
-    } = useQuery({
+    const { data: partialWithdrawalOneTimeEligibility } = useQuery({
         queryKey: ['checkPartialWithdrawalOneTimeEligibility', policy.planCode, policy.policyNumber],
         queryFn: () => checkPartialWithdrawalOneTimeEligibilityQuery(policy.planCode as string, policy.policyNumber as string),
         placeholderData: previousData => previousData,
-        select: (data) => {
+        select: data => {
             return {
                 ...data,
-                isEligiblePartialWithdrawalOneTime: data?.status === TransactionResponseStatus.Success
-            }
-        }
+                isEligiblePartialWithdrawalOneTime: data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
-    const {
-        data: newLoanEligibility,
-    } = useQuery({
+    const { data: newLoanEligibility } = useQuery({
         queryKey: ['checkNewLoanEligibility', policy.planCode, policy.policyNumber, policy.loanValues?.maximumLoanAmount],
-        queryFn: () => checkNewLoanEligibilityQuery(policy.planCode as string, policy.policyNumber as string, policy.loanValues?.maximumLoanAmount),
+        queryFn: () =>
+            checkNewLoanEligibilityQuery(policy.planCode as string, policy.policyNumber as string, policy.loanValues?.maximumLoanAmount),
         placeholderData: previousData => previousData,
-        select: (data) => {
+        select: data => {
             return {
                 ...data,
-                isEligibleNewLoan: data?.status === TransactionResponseStatus.Success
-            }
-        }
+                isEligibleNewLoan: data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
-    const {
-        data: loanRepaymentOneTimeEligibility,
-    } = useQuery({
+    const { data: loanRepaymentOneTimeEligibility } = useQuery({
         queryKey: ['checkLoanRepaymentOneTimeEligibility', policy.planCode, policy.policyNumber, policy.loanValues?.totalLoanBalance],
-        queryFn: () => checkLoanRepaymentOneTimeEligibilityQuery(policy.planCode as string, policy.policyNumber as string, policy.loanValues?.totalLoanBalance),
+        queryFn: () =>
+            checkLoanRepaymentOneTimeEligibilityQuery(
+                policy.planCode as string,
+                policy.policyNumber as string,
+                policy.loanValues?.totalLoanBalance
+            ),
         placeholderData: previousData => previousData,
-        select: (data) => {
+        select: data => {
             return {
                 ...data,
-                isEligibleLoanRepaymentOneTime: data?.status === TransactionResponseStatus.Success
-            }
-        }
+                isEligibleLoanRepaymentOneTime: data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
     return (
@@ -165,7 +170,10 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                             href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`}
                             icon={<CashIcon height={20} width={20} />}
                             onClick={() => {
-                                trackClick('Cancel Policy', `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`);
+                                trackClick(
+                                    'Cancel Policy',
+                                    `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`
+                                );
                             }}
                         />
                     )}
@@ -221,7 +229,10 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                             href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/loan-payment/`}
                             icon={<PaymentIcon height={20} width={20} />}
                             onClick={() => {
-                                trackClick('Loan Payment', `/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/loan-payment/`);
+                                trackClick(
+                                    'Loan Payment',
+                                    `/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/loan-payment/`
+                                );
                             }}
                         />
                     )}
@@ -230,16 +241,23 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
             <MenuContextualLabel label={t('documents.label')}>
                 <MenuContextualItem
                     content={t('documents.sendForms')}
-                    href={`/contact-center/send-document?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}&correlationId=${uuidV4()}`}
+                    href={`/contact-center/send-document?planCode=${policy.planCode}&policyNumber=${
+                        policy.policyNumber
+                    }&correlationId=${uuidV4()}`}
                     icon={<ClipboardIcon height={20} width={20} />}
                     onClick={() => {
-                        trackClick('Send Forms', `/contact-center/send-document?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`);
+                        trackClick(
+                            'Send Forms',
+                            `/contact-center/send-document?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                        );
                     }}
                     openInNewTab={true}
                 />
                 <MenuContextualItem
                     content={t('documents.sendStatements')}
-                    href={`/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}&correlationId=${uuidV4()}`}
+                    href={`/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${
+                        policy.policyNumber
+                    }&correlationId=${uuidV4()}`}
                     icon={<DocumentReportIcon height={20} width={20} />}
                     onClick={() => {
                         trackClick(
@@ -251,10 +269,15 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                 />
                 <MenuContextualItem
                     content={t('documents.sendTaxForms')}
-                    href={`/contact-center/send-taxform?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}&correlationId=${uuidV4()}`}
+                    href={`/contact-center/send-taxform?planCode=${policy.planCode}&policyNumber=${
+                        policy.policyNumber
+                    }&correlationId=${uuidV4()}`}
                     icon={<TableIcon height={20} width={20} />}
                     onClick={() => {
-                        trackClick('Send Tax Forms', `/contact-center/send-taxform?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`);
+                        trackClick(
+                            'Send Tax Forms',
+                            `/contact-center/send-taxform?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                        );
                     }}
                     openInNewTab={true}
                 />
@@ -276,10 +299,7 @@ const QuickActionsMenu = ({ policy }: QuickActionsMenuProps) => {
         <>
             <div className="hidden md:block">
                 <MenuContextual trigger={<TextButton t={t} />}>
-                    <MenuContextualContent
-                        policy={policy}
-                        t={t}
-                    />
+                    <MenuContextualContent policy={policy} t={t} />
                 </MenuContextual>
             </div>
 
@@ -288,10 +308,7 @@ const QuickActionsMenu = ({ policy }: QuickActionsMenuProps) => {
                 <ReactTooltip.Provider>
                     <ReactTooltip.Root>
                         <MenuContextual trigger={<IconButton t={t} />} triggerAsChild={true}>
-                            <MenuContextualContent
-                                policy={policy}
-                                t={t}
-                            />
+                            <MenuContextualContent policy={policy} t={t} />
                         </MenuContextual>
                         <ReactTooltip.Portal>
                             <ReactTooltip.Content align="end" className="z-20 my-0.5" side="top">

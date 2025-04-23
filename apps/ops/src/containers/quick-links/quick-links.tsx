@@ -48,14 +48,14 @@ const QuickLinks = ({ links, policy, sessionId, userPartyId }: QuickLinksProps) 
     const [isAnnuity] = useState(policy.isAnnuity);
 
     return (
-        <div className="flex flex-wrap gap-x-8 gap-y-4 text-md" data-testid="quick-links">
+        <div className="flex flex-wrap gap-x-8 gap-y-4" data-testid="quick-links">
             {links.map(({ name, href, subLinks }) => {
                 if (subLinks) {
                     return (
                         <MenuContextual
                             key={name + href}
                             trigger={
-                                <Typography variant={TypographyVariant.BodySmBold} className="text-secondary ">
+                                <Typography className="block" variant={TypographyVariant.NavLinks}>
                                     {name}
                                     <Icon type={IconType.CHEVRON} height={16} width={16} className="ml-1" />
                                 </Typography>
@@ -69,8 +69,16 @@ const QuickLinks = ({ links, policy, sessionId, userPartyId }: QuickLinksProps) 
                                             href={subLink.href}
                                             key={subLink.name}
                                             onClick={() =>
-                                                trackClick(SegmentTrackedEventName.PolicyClicked, subLink.name, subLink.href, policy.policyNumber, sessionId, userPartyId)
-                                            } />
+                                                trackClick(
+                                                    SegmentTrackedEventName.PolicyClicked,
+                                                    subLink.name,
+                                                    subLink.href,
+                                                    policy.policyNumber,
+                                                    sessionId,
+                                                    userPartyId
+                                                )
+                                            }
+                                        />
                                     );
                                 })}
                             </MenuContextualLabel>
@@ -79,7 +87,7 @@ const QuickLinks = ({ links, policy, sessionId, userPartyId }: QuickLinksProps) 
                 } else {
                     return (
                         <NavElement
-                            className="font-primary text-md"
+                            className="nav-links"
                             data-testid={name}
                             href={href}
                             key={name + href}
@@ -98,9 +106,7 @@ const QuickLinks = ({ links, policy, sessionId, userPartyId }: QuickLinksProps) 
                 <>
                     <div className="hidden min-w-[2px] bg-gray-100 md:block" />
 
-                    <QuickActionsMenu
-                        policy={policy}
-                    />
+                    <QuickActionsMenu policy={policy} />
                 </>
             )}
         </div>

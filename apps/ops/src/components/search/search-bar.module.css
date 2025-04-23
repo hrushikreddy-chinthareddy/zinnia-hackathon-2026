@@ -9,6 +9,8 @@
         flex-direction: row;
         column-gap: var(--measure-dimension-gap-md);
         row-gap: var(--measure-dimension-gap-lg);
+        align-items: start;
+        vertical-align: middle;
     }
 }
 
@@ -18,7 +20,7 @@
     width: 100%;
 
     @media (min-width: 768px) {
-        align-items: stretch;
+        align-items: start;
         flex-direction: row;
         width: auto;
     }
@@ -33,6 +35,9 @@
     justify-content: space-between;
     padding: var(--measure-dimension-padding-lg) var(--measure-dimension-padding-2xl);
     width: 100%;
+    p {
+        line-height: 24px;
+    }
 
     &:focus-visible,
     &:focus,

@@ -80,12 +80,11 @@ const UpcomingPaymentCard = ({
                 headerContent={
                     <>
                         <div className="w-6">{icon}</div>
-                        <h2 className="font-primary text-hl-2">{title}</h2>
+                        <h2 className="headline-2">{title}</h2>
                     </>
                 }
                 footerContent={footerLinks}
             >
-
                 {hasUpcomingPayment ? (
                     <>
                         <ResponsiveFlex

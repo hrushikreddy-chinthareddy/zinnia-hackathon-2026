@@ -88,7 +88,7 @@ export const AnnuitizationSubPage = () => {
                         <div className="w-6">
                             <FeatureIcon width={24} height={24} className="text-primary" role="presentation" />
                         </div>
-                        <h2 className="font-primary text-hl-2">{t('details.header')}</h2>
+                        <h2 className="font-primary headline-2">{t('details.header')}</h2>
                     </>
                 }
             >

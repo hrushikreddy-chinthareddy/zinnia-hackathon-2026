@@ -93,7 +93,7 @@ module.exports = {
                 'label-md': 'var(--measure-font-sizing-type-tokens-label-md-font-size)',
                 'label-lg': 'var(--measure-font-sizing-type-tokens-label-lg-font-size)',
                 'links-sm': 'var(--measure-font-sizing-type-tokens-nav-sm-font-size)',
-                'body-sm': 'var(--measure-font-sizing-type-tokens-content-body-sm-font-size)',
+                'body-sm': 'var(--measure-font-sizing-font-size-font-size-x-small)',
             },
             lineHeight: {
                 4.5: '18px',

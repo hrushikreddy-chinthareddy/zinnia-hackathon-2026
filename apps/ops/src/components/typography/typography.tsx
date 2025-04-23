@@ -30,6 +30,8 @@ export enum TypographyVariant {
     LabelLg = 'label-lg',
     LabelLgAlt = 'label-lg-alt',
     LabelAlt = 'label-alt',
+    NavLinks = 'nav-links',
+    NavLinksSm = 'nav-links-sm',
 }
 
 type TypographyData = {
@@ -113,6 +115,14 @@ const typographyMapping: Record<TypographyVariant, TypographyData> = {
     [TypographyVariant.LabelAlt]: {
         styles: 'typography-labels-label-alt',
         tag: 'label',
+    },
+    [TypographyVariant.NavLinks]: {
+        styles: 'nav-links',
+        tag: 'a',
+    },
+    [TypographyVariant.NavLinksSm]: {
+        styles: 'nav-links-sm',
+        tag: 'a',
     },
 };
 
