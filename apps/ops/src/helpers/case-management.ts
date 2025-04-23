@@ -22,6 +22,7 @@ export const getSearchValueObject = (
         agentFirstName = '',
         agentLastName = '',
         firmName = '',
+        documentNumber = '',
     }: SearchViewQuery,
     toggleValue: PolicySearchKeys
 ): SearchViewQuery => {
@@ -38,6 +39,17 @@ export const getSearchValueObject = (
             };
         case 'caseId':
             return caseId ? { caseIds: [caseId] } : {};
+        case 'documentNumber':
+            return documentNumber
+                ? {
+                    identifiers: [
+                        {
+                            identifier: 'documentNumber',
+                            value: documentNumber,
+                        },
+                    ],
+                }
+                : {};
         case 'agentName':
             return {
                 ...(agentFirstName ? { agentFirstName } : {}),
@@ -47,6 +59,7 @@ export const getSearchValueObject = (
             return firmName.trim() ? { brokerDealerName: firmName.trim() } : {};
         default:
             return {};
+
     }
 };
 
@@ -222,6 +235,12 @@ export const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => {
             value: 'firmName',
             placeholder: t('dashboard.search.buttons.firmName') ?? '',
         },
+        {
+            label: t('caseManagementDashboard.case.documentNumber'),
+            value: 'documentNumber',
+            placeholder: t('dashboard.search.buttons.documentNumber') ?? '',
+
+        }
     ];
     return labels;
 };

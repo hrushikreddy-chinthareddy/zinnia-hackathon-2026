@@ -17,7 +17,9 @@ export type PolicySearchKeys =
     | 'firmName'
     | 'agentName'
     | 'agentFirstName'
-    | 'agentLastName';
+    | 'agentLastName'
+    | 'documentNumber';
+
 
 export interface PolicySearchResult {
     carrierId: string;
@@ -49,6 +51,7 @@ export interface SearchViewQuery {
     agentLastName?: string;
     brokerDealerName?: string;
     [key: string]: any; // used to loop over the object
+    documentNumber?: string;
 }
 
 export interface SearchParams {
@@ -86,6 +89,7 @@ export interface CaseSearchBody {
     caseResultDetail?: string;
     caseResult?: string;
     requestSubType?: string[];
+    documentNumber?: string;
 }
 
 export interface GeneralSearchResponse {

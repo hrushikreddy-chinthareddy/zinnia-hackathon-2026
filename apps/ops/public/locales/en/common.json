@@ -807,7 +807,8 @@
                 "lastName": "Last name",
                 "ownerName": "Owner name",
                 "agentName": "Agent name",
-                "firmName": "Firm name"
+                "firmName": "Firm name",
+                "documentNumber": "Document number"
             }
         },
         "quickSearch": {
@@ -920,7 +921,7 @@
             "agent": "Agent",
             "caseId": "Case ID",
             "case/ID": "Case/ID",
-            "documentNumber": "Document number",
+            "documentNumber": "Document",
             "viewCase": "View case",
             "viewCaseNumber": "View case details for case number {{caseNumber}}",
             "viewCaseDetails": "View case details",

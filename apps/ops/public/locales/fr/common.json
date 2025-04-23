@@ -888,7 +888,8 @@
                 "lastName": "Nom de famille",
                 "ownerName": "Nom du propriétaire",
                 "agentName": "Nom de l'agent",
-                "firmName": "Nom de l'entreprise"
+                "firmName": "Nom de l'entreprise",
+                "documentNumber": "Numéro de document"
             }
         },
         "quickSearch": {
@@ -917,7 +918,7 @@
             "agent": "Agent",
             "caseId": "ID du dossier",
             "case/ID": "Dossier/ID",
-            "documentNumber": "Numéro de document",
+            "documentNumber": "Document",
             "viewCase": "Afficher le cas",
             "viewCaseNumber": "Afficher les détails du cas numéro {{caseNumber}}",
             "viewCaseDetails": "Afficher les détails du cas",

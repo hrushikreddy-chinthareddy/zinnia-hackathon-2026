@@ -58,6 +58,7 @@ export type SearchSubmittedEvent = BaseSegmentEventProperties & {
     caseID?: string;
     agentName?: boolean;
     firmName?: string;
+    documentNumber?: boolean;
 };
 
 export type DropdownClickedEvent = BaseSegmentEventProperties & {
