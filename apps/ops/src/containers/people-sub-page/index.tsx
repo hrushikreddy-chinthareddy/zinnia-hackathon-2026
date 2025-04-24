@@ -1,5 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo, useState } from 'react';
@@ -15,12 +15,14 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { isEndDated } from '@deps/helpers/date.helper';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
+import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { sortByAndThenBy } from '@deps/helpers/sort.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { PartyRole } from '@deps/models/policy/sor-policy';
-import { getAgentPartiesDataQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
+import { getAgentDataQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
+import { AgentData } from '@deps/types/agents';
 
 import {
     NameTag,
@@ -97,10 +99,18 @@ export const PeopleSubPage: React.FC = () => {
     );
     const clientCode = policy?.carrierId;
 
-    const { data: agentData } = useQuery({
-        queryKey: ['agentData', agentParties, clientCode, policy?.policyNumber, policy?.product?.planCode],
-        queryFn: () => getAgentPartiesDataQuery(agentParties, clientCode, policy.policyNumber, policy.product?.planCode),
-        enabled: agentParties && agentParties.length > 0 && !!clientCode && !!policy.policyNumber && !!policy.product?.planCode,
+    const { data: agentData } = useQueries({
+        queries: agentParties?.map(agent => ({
+            queryKey: ['agentData', agent.partyId, clientCode, policy?.policyNumber, policy?.product?.planCode],
+            queryFn: () => getAgentDataQuery(agent?.partyId, clientCode, policy?.policyNumber, policy?.product?.planCode),
+            enabled: !!agent.partyId && !!clientCode && !!policy.policyNumber && !!policy.product?.planCode,
+            select: (data: AgentData | undefined) => (data ? new AgentParty(data, agent) : undefined),
+        })),
+        combine: results => {
+            return {
+                data: results.map(result => result.data),
+            };
+        },
     });
 
     const handleRadioClick = (value: string) => {
@@ -127,9 +137,9 @@ export const PeopleSubPage: React.FC = () => {
     // Add agent data if there is any
     if (agentData && agentData.length > 0) {
         filteredNameTags = filteredNameTags.map(tag => {
-            const isAgent = agentData.some(agent => agent.partyId === tag.partyId);
+            const isAgent = agentData.some(agent => agent?.partyId === tag.partyId);
             if (isAgent) {
-                const agent = agentData.find(agent => agent.partyId === tag.partyId);
+                const agent = agentData.find(agent => agent?.partyId === tag.partyId);
                 return agent?.party as NameTag;
             } else {
                 return tag;

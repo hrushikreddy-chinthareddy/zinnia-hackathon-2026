@@ -1,7 +1,5 @@
 import { hasCookie } from 'cookies-next';
 
-import { NameTag } from '@deps/containers/people-sub-page/people-sub-page.helpers';
-import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { getAgentData } from '@deps/queries/api/agents';
 import { fetchPolicy, searchPolicy } from '@deps/queries/api/policies';
 import { MOCK_COOKIE_KEY } from '@deps/queries/api-utils/serverClientUtils';
@@ -36,16 +34,15 @@ export const getPoliciesQuery = async (value: SearchViewQuery, limit: number, of
     return response;
 };
 
-export const getAgentPartiesDataQuery = async (agentParties: NameTag[], clientCode?: string, policyNumber?: string, planCode?: string) => {
-    const agentDataPromises = agentParties.map(agent =>
-        getAgentData({
-            clientCode,
-            id: agent.agentExternalId,
-            policyNumber,
-            planCode,
-        }).then(result => (result ? new AgentParty(result, agent) : null))
-    );
-
-    const results = await Promise.all(agentDataPromises);
-    return results.filter(agent => agent !== null);
+export const getAgentDataQuery = async (agentId?: string, clientCode?: string, policyNumber?: string, planCode?: string) => {
+    const result = getAgentData({
+        clientCode,
+        id: agentId,
+        policyNumber,
+        planCode,
+    });
+    if (!result) {
+        throw 'No agent data found';
+    }
+    return result;
 };
