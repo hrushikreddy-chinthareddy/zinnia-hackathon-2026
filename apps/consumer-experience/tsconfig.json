@@ -2,7 +2,11 @@
   "extends": "@zinnia/typescript-config/nextjs",
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@xd/*": ["../../packages/*"],
+      "@xd-components/*": ["../../packages/xd-components/src/*"],
+      "@xd/components/*": ["../../packages/xd-components/components/*"],
+      "@xd/hooks/*": ["../../packages/xd-components/hooks/*"]
     },
     "plugins": [
       {

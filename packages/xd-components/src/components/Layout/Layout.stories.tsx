@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { Layout } from './Layout';
+import { mockNavGroups } from '../../stories/mocks';
 
 const meta = {
   title: 'Example/Layout',
@@ -16,6 +17,8 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: <p>Some content</p>,
+    navGroups: mockNavGroups,
+    activeNavItem: 'home',
   },
 };
 export const WithLongContent: Story = {
@@ -34,5 +37,6 @@ export const WithLongContent: Story = {
         <p>Some content</p>
       </div>
     ),
+    navGroups: mockNavGroups,
   },
 };

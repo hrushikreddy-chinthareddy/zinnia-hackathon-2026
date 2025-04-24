@@ -16,11 +16,7 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "jsx": "preserve",
-        "incremental": true,
-        "baseUrl": ".",
-        "paths": {
-            "@deps/*": ["./src/*"]
-        }
+        "incremental": true
     },
     "types": ["node", "jest", "@testing-library/jest-dom"],
     "include": [

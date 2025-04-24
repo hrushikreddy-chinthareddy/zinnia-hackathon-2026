@@ -1,4 +1,7 @@
 /** @type {import("eslint").Linter.Config} */
+
+const path = require('path');
+
 module.exports = {
   root: true,
   settings: {
@@ -6,6 +9,10 @@ module.exports = {
       "alias": {
         map: [
           ['@/', './src'],
+          ['@xd-components', path.resolve(__dirname, 'packages/xd-components/src')],
+          ['@xd/components', path.resolve(__dirname, 'packages/xd-components/src/components')],
+          ['@xd/hooks', path.resolve(__dirname, 'packages/xd-components/src/hooks')],
+          ['@pom', path.resolve(__dirname, 'packages/pom/src')],
         ]
       }
     }

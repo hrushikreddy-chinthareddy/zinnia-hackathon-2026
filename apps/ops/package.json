@@ -63,6 +63,7 @@
         "@zinnia/api-types": "workspace:*",
         "@zinnia/bloom": "^5.4.0",
         "@zinnia/pom": "workspace:*",
+        "@zinnia/xd-components": "workspace:*",
         "@zinnia/utils": "workspace:*",
         "ag-grid-community": "29.2.0",
         "ag-grid-react": "29.2.0",

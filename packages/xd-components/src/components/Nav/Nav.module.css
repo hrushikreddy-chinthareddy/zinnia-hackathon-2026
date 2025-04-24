@@ -1,0 +1,212 @@
+.navContainer {
+  height: 100vmin;
+  background-color: var(--color-grayscale-color-50-gray);
+  display: flex;
+  flex-direction: column;
+  padding: var(--measure-dimension-z-space-2);
+  position: relative;
+  transition: 300ms ease-in-out;
+  text-wrap: nowrap;
+  width: 240px;
+
+  &.collapsed {
+    overflow: hidden;
+    width: 48px;
+  }
+}
+
+.toggleTarget {
+  position: absolute;
+  top: 0;
+  right: -8px;
+  width: 16px;
+  height: 100%;
+}
+
+.toggleButton {
+  justify-content: flex-end;
+  transform: rotate(90deg);
+  &:hover:not(:disabled):after {
+    content: none;
+  }
+}
+
+.logoRow {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-block-end: var(--measure-dimension-z-space-2);
+  padding-inline: var(--measure-dimension-z-space-1-5);
+  padding-block: var(--measure-dimension-z-space-2);
+}
+
+.zinniaLogo {
+  height: 24px;
+  min-width: 90px;
+}
+
+.logoSmall {
+  margin-block-end: var(--measure-dimension-z-space-2);
+  padding-inline: var(--measure-dimension-z-space-1);
+  padding-block: var(--measure-dimension-z-space-2);
+}
+
+.searchBar {
+  margin-block-end: var(--measure-dimension-z-space-4);
+  margin-block-start: var(--measure-dimension-z-space-2);
+}
+
+.searchInput {
+  border-radius: var(--measure-dimension-z-space-6);
+  border-width: var(--measure-dimension-stroke-xs);
+  /* padding + icon width + gap */
+  padding-inline-start: calc(
+    var(--measure-dimension-z-space-2) + var(--measure-dimension-z-space-4) +
+      var(--measure-dimension-z-space-3)
+  );
+  padding-block: var(--measure-dimension-z-space-1);
+  position: relative;
+
+  &::placeholder {
+    color: var(--color-grayscale-color-300-gray);
+  }
+
+  &:focus,
+  :focus-visible {
+    border-width: var(--measure-dimension-stroke-xs);
+  }
+}
+
+/* grabbing the parent of searchInput (aka the inputContainer) */
+div:has(> .searchInput)::before {
+  content: url(/search.svg);
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  height: 16px;
+  width: 16px;
+  z-index: 1;
+}
+
+.searchIcon {
+  padding: var(--measure-dimension-z-space-1-5);
+}
+
+.nav {
+  flex: 1;
+}
+
+.navList {
+  color: var(--color-base-text-text-secondary);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.navSection {
+  &:not(:last-of-type) {
+    border-bottom: var(--measure-dimension-stroke-xs) solid
+      var(--color-grayscale-color-100-gray);
+    margin-bottom: var(--measure-dimension-z-space-2);
+    padding-block-end: var(--measure-dimension-z-space-2);
+  }
+
+  &.alignEnd {
+    margin-top: auto;
+  }
+}
+
+/* remove the separation border from the second to last nav section if the last one is aligned to the end */
+.navList:has(.alignEnd) {
+  .navSection:nth-last-child(2) {
+    border-bottom: none;
+  }
+}
+
+.navSection__heading {
+  padding-block: var(--measure-dimension-z-space-1);
+  padding-inline: var(--measure-dimension-z-space-2);
+}
+
+.listItem {
+  list-style: none;
+}
+
+.navSection__heading,
+.listItem {
+  &,
+  & * {
+    transition: opacity 300ms ease-in-out;
+  }
+
+  &.hidden,
+  & .hidden {
+    opacity: 0;
+    width: 0;
+  }
+}
+
+.tooltip {
+  width: max-content;
+  display: none;
+}
+
+.tooltip.visible {
+  display: block;
+}
+
+.tooltipTrigger {
+  /* to do - double check that is is really doing what i want it to for a11y */
+  display: contents;
+  /* to do - i hate the way this animates from the center now */
+  width: 100%;
+}
+
+.navContainer.collapsed .tooltipTrigger {
+  display: flex;
+}
+
+.listItem__link {
+  display: flex;
+  align-items: center;
+  gap: var(--measure-dimension-z-space-2);
+  padding: var(--measure-dimension-z-space-1);
+  width: 100%;
+
+  &:has(.hidden) {
+    justify-content: center;
+    gap: 0;
+  }
+
+  &:hover {
+    background-color: var(--color-grayscale-color-white);
+    border-radius: var(--measure-dimension-z-space-1);
+  }
+
+  /* Actively selected navigation item */
+  &[aria-current='page'] {
+    background-color: var(--color-grayscale-color-white);
+    border-radius: var(--measure-dimension-z-space-1);
+    box-shadow:
+      0px 0.15px 0.45px 0px rgba(0, 0, 0, 0.11),
+      0px 0.8px 1.8px 0px rgba(0, 0, 0, 0.13);
+    color: var(--color-grayscale-color-900-gray);
+    svg {
+      color: var(--color-orange-color-500-orange);
+    }
+  }
+}
+
+.listItem__icon {
+  height: 20px;
+  width: 20px;
+}
+
+/* Since we're using max width it needs to be the change value (1024px) minus 1 */
+@media (max-width: 1023px) {
+  .toggleTarget {
+    display: none;
+  }
+}

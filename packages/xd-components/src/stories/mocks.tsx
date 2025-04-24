@@ -1,9 +1,7 @@
 import { IconType } from '@zinnia/bloom/components';
-import './App.css';
-import { Layout } from './components/Layout/Layout';
-import { NavGroup } from './components/Nav/Nav';
+import { NavGroup } from '../components/Nav/Nav.js';
 
-const navGroups: NavGroup[] = [
+export const mockNavGroups: NavGroup[] = [
   {
     items: [
       {
@@ -28,21 +26,3 @@ const navGroups: NavGroup[] = [
     alignEnd: true,
   },
 ];
-
-function App() {
-  return (
-    <>
-      <Layout navGroups={navGroups}>
-        <h1>Vite + React</h1>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
-      </Layout>
-    </>
-  );
-}
-
-export default App;
