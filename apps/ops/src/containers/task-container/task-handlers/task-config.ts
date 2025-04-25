@@ -10,5 +10,6 @@ export const allowedTaskTypes = new Set<TaskType>([
     TaskType.Prenote_Review,
     TaskType.Payment_Processing_Review,
     TaskType.Application_Review,
-    TaskType.Agent_Onboarding_Review
+    TaskType.Agent_Onboarding_Review,
+    TaskType.Background_Review
 ]);

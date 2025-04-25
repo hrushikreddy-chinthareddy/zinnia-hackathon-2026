@@ -10,6 +10,7 @@ import agentOnboardingReviewSchema from '@deps/jsonschema-mock-service/tasks/age
 import agentReviewSchema from '@deps/jsonschema-mock-service/tasks/agent-review.json';
 import applicationNigoSchema from '@deps/jsonschema-mock-service/tasks/application-nigo.json';
 import attachmentNigoSchema from '@deps/jsonschema-mock-service/tasks/attachment-nigo.json';
+import backgroundReviewSchema from '@deps/jsonschema-mock-service/tasks/background-review.json';
 import appDataEntrySchema from '@deps/jsonschema-mock-service/tasks/nb_app_data_entry.json';
 import premiumNigoSchema from '@deps/jsonschema-mock-service/tasks/premium-nigo.json';
 import prenoteNigoSchema from '@deps/jsonschema-mock-service/tasks/prenote-nigo.json';
@@ -27,6 +28,7 @@ import agentReviewData from '@deps/jsonschema-mock-service/tasks-data/agent-revi
 import appDataEnteyData from '@deps/jsonschema-mock-service/tasks-data/app-data-entry.json';
 import applicationNigoData from '@deps/jsonschema-mock-service/tasks-data/application-nigo.json';
 import attachmentNigoData from '@deps/jsonschema-mock-service/tasks-data/attachment-nigo.json';
+import backgroundReviewData from '@deps/jsonschema-mock-service/tasks-data/background-review.json';
 import initiatePostissueTransactionData from '@deps/jsonschema-mock-service/tasks-data/initiate-postissue-transaction.json';
 import ofacReviewData from '@deps/jsonschema-mock-service/tasks-data/ofac-review.json';
 import premiumNigoData from '@deps/jsonschema-mock-service/tasks-data/premium-nigo.json';
@@ -82,6 +84,8 @@ export const getTaskFormMetadataSSRMock = async (taskType: TaskType): Promise<Fo
             return returnPaymentSchema as unknown as FormMetadata;
         case TaskType.Suitaibility_DataEntry_Nigo_Review:
             return wellabeSuitabilityDataEntryReviewSchema as unknown as FormMetadata;
+        case TaskType.Background_Review:
+            return backgroundReviewSchema as unknown as FormMetadata;
         default:
             return null;
     }
@@ -133,7 +137,8 @@ export const getCaseTaskByIdSSRMock = async (taskType: TaskType): Promise<Manage
             return prenoteReviewData as ManagementTask<TaskStatus>; //change when proper task is there for payment processing
         case TaskType.Suitaibility_DataEntry_Nigo_Review:
             return wellabeSuitabilityDataEntryReviewData as ManagementTask<TaskStatus>;
-
+        case TaskType.Background_Review:
+                return backgroundReviewData as ManagementTask<TaskStatus>;
         default:
             return null;
     }

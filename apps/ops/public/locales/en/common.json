@@ -5613,5 +5613,14 @@
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }
+    },
+    "backgroundReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Validate Background Check was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     }
 }

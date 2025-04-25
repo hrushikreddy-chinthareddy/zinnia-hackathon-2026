@@ -5577,5 +5577,14 @@
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }
+    },
+    "backgroundReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Validation de la vérification des antécédents a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }

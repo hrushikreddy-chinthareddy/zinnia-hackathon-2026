@@ -1,0 +1,60 @@
+{
+  "id": "TA000000024951",
+  "caseId": "CA0000409248",
+  "source": "BPM.AgentOnboarding",
+  "templateId": "dc2e4619-a89d-484c-af91-a6a5c672e527",
+  "process": "Agent Onboarding",
+  "carrier": "WELB",
+  "taskType": "BACKGROUND_REVIEW",
+  "taskName": "Validate Background Check Results",
+  "status": "NEW",
+  "data": {
+      "backgroundRequestVendorUrl": "https://www.vendor.com/case123",
+      "details": {
+          "agentDetails": {
+              "agentNPN": "21439251",
+              "agentTaxId": "206590149",
+              "firstName": "Justin ",
+              "lastName": "Colvin"
+          }
+      },
+      "backgroundRequestId": "6724fc5c927d8acdbde88f24",
+      "backgroundRequestResult": "Fail",
+      "issuesList": [
+          {
+              "id": "29e03a11-ec64-4793-ab72-29a63d17d06c",
+              "nmid": "AO.EM.043",
+              "type": "Note",
+              "category": "Agent onboarding",
+              "reason": "",
+              "detailedReason": "",
+              "processingInstruction": "Background check has been completed and requires additional review. Please log into the vendor's website to review the action letters. Then select the appropriate NIGOs.",
+              "processingReason": "Agent's background check has an exception.",
+              "processingResolution": "Review background check results with agent."
+          }
+      ]
+  },
+  "mappedExceptions": [
+  ],
+  "mappedDocuments": [
+  ],
+  "queue": "distribution_and_compensation",
+  "escalated": false,
+  "createdBy": "SYSTEM",
+  "createdByPartyId": "SYSTEM",
+  "createdAt": "2025-04-17T06:31:57Z",
+  "updatedBy": "SYSTEM",
+  "updatedByPartyId": "SYSTEM",
+  "updatedAt": "2025-04-17T06:31:57Z",
+  "identifiers": [
+      {
+          "identifier": "agentTaxId",
+          "value": "206590149"
+      },
+      {
+          "identifier": "zlCaseId",
+          "value": "CA0000409248"
+      }
+  ],
+  "externalId": "7791e0a3-e150-4fcb-8c68-dba278b6cae4"
+}

@@ -1,0 +1,344 @@
+{
+    "formId": "ae8263a3-9fb2-4dfa-bf35-0dd707732da2",
+    "process": "Agent Onboarding",
+    "carrier": "WELB",
+    "taskType": "BACKGROUND_REVIEW",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Validate Background Check",
+                "formSchema": {
+                    "type": "object",
+                    "definitions": {
+                        "declineReason": {
+                            "enum": ["DEFAULT"]
+                        }
+                    },
+                    "properties": {
+                        "issuesList": {
+                            "type": "array",
+                            "title": "",
+                            "items": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "processingInstruction": {
+                                        "type": "string",
+                                        "title": "Processing Instructions"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
+                                    }
+                                }
+                            }
+                        },
+                        "detail": {
+                            "type": "object",
+                            "title": "Details"
+                        },
+                        "backgroundRequestResult": {
+                            "type": "string",
+                            "title": "Background check result :"
+                        },
+                        "backgroundRequestId": {
+                            "type": "string",
+                            "title": "Background check order ID :"
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting Informtion",
+                            "properties": {
+                                "agentDetails": {
+                                    "type": "object",
+                                    "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "First Name",
+                                            "ui:field": "title"
+                                        },
+                                        "agentNPN": {
+                                            "type": "string",
+                                            "title": "SSN",
+                                            "ui:field": "subTitle"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Last Name",
+                                            "ui:field": "title"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issuesResolved": {
+                            "type": "string",
+                            "title": "Can you proceed?",
+                            "enum": ["YES", "NO"]
+                        }
+                    },
+                    "dependencies": {
+                        "issuesResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issuesResolved": {
+                                            "enum": ["YES"]
+                                        },
+                                        "uploadDocuments": {
+                                            "type": "object",
+                                            "title": "Link or upload document",
+                                            "properties": {
+                                                "upload": {
+                                                    "type": "string"
+                                                },
+                                                "or": {
+                                                    "type": "string",
+                                                    "title": "or"
+                                                },
+                                                "attachment": {
+                                                    "type": "array",
+                                                    "title": "upload",
+                                                    "items": {
+                                                        "title": "upload",
+                                                        "type": "string",
+                                                        "format": "data-url"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "attachments": {
+                                            "type": "array",
+                                            "items": {
+                                                "documentName": {
+                                                    "title": "Name",
+                                                    "type": "string"
+                                                },
+                                                "documentId": {
+                                                    "title": "Document Id",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issuesResolved": {
+                                            "enum": ["NO"]
+                                        },
+                                        "declineReason": {
+                                            "title": "",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "$ref": "#/definitions/declineReason"
+                                            }
+                                        },
+                                        "reviewFailureReasonDisplay": {
+                                            "type": "array",
+                                            "title": "These issues will be created for the case:",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "uploadDocuments": {
+                                            "type": "object",
+                                            "title": "Link or upload document",
+                                            "properties": {
+                                                "upload": {
+                                                    "type": "string"
+                                                },
+                                                "or": {
+                                                    "type": "string",
+                                                    "title": "or"
+                                                },
+                                                "attachment": {
+                                                    "type": "array",
+                                                    "title": "upload",
+                                                    "items": {
+                                                        "title": "upload",
+                                                        "type": "string",
+                                                        "format": "data-url"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "attachments": {
+                                            "type": "array",
+                                            "items": {
+                                                "documentName": {
+                                                    "title": "Name",
+                                                    "type": "string"
+                                                },
+                                                "documentId": {
+                                                    "title": "Document Id",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "issuesList": {
+                        "ui:readonly": true,
+                        "ui:options": {
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                            },
+
+                            "processingInstruction": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "resolved": {
+                                "ui:options": {
+                                    "label": false
+                                }
+                            }
+                        }
+                    },
+                    "detail": {
+                        "ui:options": {
+                            "disabled": true
+                        }
+                    },
+                    "backgroundRequestResult": {
+                        "ui:options": {
+                            "label": false,
+                            "disabled": true,
+                            "inline": true
+                        }
+                    },
+                    "backgroundRequestId": {
+                        "ui:options": {
+                            "disabled": true,
+                            "inline": true,
+                            "label": false
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "agentDetails": {
+                            "ui:options": {
+                                "cardtype": "Detailed",
+                                "icon": "CIRCLE_USER",
+                                "label": false,
+                                "ObjectFieldTemplate": "CardTemplate",
+                                "key": "agentDetails"
+                            }
+                        }
+                    },
+                    "issuesResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true,
+                            "enumNames": [
+                                "Yes, I can proceed to the next step.",
+                                "No, there are one or more issues that need to be logged."
+                            ]
+                        }
+                    },
+                    "declineReason": {
+                        "ui:widget": "select",
+                        "ui:options": {
+                            "label": false,
+                            "enumOptions": [
+                                {
+                                    "label": "Default",
+                                    "value": "DEFAULT"
+                                }
+                            ]
+                        },
+                        "items": {
+                            "ui:options": {
+                                "label": "false"
+                            }
+                        },
+                        "ui:placeholder": "Select Issues"
+                    },
+                    "reviewFailureReasonDisplay": {
+                        "ui:options": {
+                            "label": true,
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "hasBg": true,
+                            "formContext": {
+                                "keyName": "customData",
+                                "listName": "declineReason"
+                            },
+                            "omitValue": true
+                        }
+                    },
+                    "uploadDocuments": {
+                        "inline": true,
+                        "ui:options": {
+                            "label": true,
+                            "omitValue": true
+                        },
+                        "upload": {
+                            "ui:widget": "AutoCompleteWidget",
+                            "ui:placeholder": "Find existing documents...",
+                            "ui:options": {
+                                "label": false,
+                                "icon": "Search"
+                            }
+                        },
+                        "or": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "attachment": {
+                            "ui:options": {
+                                "label": false,
+                                "showFiles": false
+                            },
+                            "ui:props": {
+                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiMethod": "get"
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

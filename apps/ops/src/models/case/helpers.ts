@@ -75,4 +75,5 @@ export const TaskApiVersionMapper: Record<TaskType, ApiVersion> = {
     [TaskType.Prenote_Review]: ApiVersion.v2,
     [TaskType.Payment_Processing_Review]: ApiVersion.v2,
     [TaskType.Suitaibility_DataEntry_Nigo_Review]: ApiVersion.v2,
+    [TaskType.Background_Review]: ApiVersion.v2,
 };
