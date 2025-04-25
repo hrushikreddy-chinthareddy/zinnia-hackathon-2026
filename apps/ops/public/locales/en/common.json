@@ -5600,7 +5600,16 @@
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Return Payment was submitted.",
-            "cta": "Go to incoming transfer ",
+            "cta": "Go to case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "suitabilityDataentryNigoReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Suitability Data Entry NIGO was submitted.",
+            "cta": "Go to case ",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }

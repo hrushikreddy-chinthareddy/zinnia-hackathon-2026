@@ -1,0 +1,88 @@
+{
+    "id": "TA000000025164",
+    "caseId": "CA0000409837",
+    "source": "BPM.Suitability",
+    "templateId": "ae778220-ec48-49ad-ab04-3369ba02bdea",
+    "process": "New Business",
+    "carrier": "SBGC",
+    "taskType": "SUITABILITY_DATAENTRY_NIGO_REVIEW",
+    "taskName": "Suitability Data Entry NIGO Review Task",
+    "status": "INPROGRESS",
+    "data": {
+        "issueResolved": false,
+        "details": {
+            "documentDetails": [
+                {
+                    "documentId": "6802279272985928833161ae",
+                    "documentSource": "EDS"
+                }
+            ]
+        },
+        "rules": [
+            {
+                "issue": "Missing information",
+                "applicationValue": "Missing party information",
+                "nmid": "SU.EM.048",
+                "externalId": "eb1764e3-e742-4d98-be19-d55f779b45b8"
+            },
+            {
+                "issue": "Missing information",
+                "applicationValue": "Missing signature(s)",
+                "nmid": "SU.EM.048",
+                "externalId": "fbc10541-558d-4476-a637-c4956bdd1b56"
+            },
+            {
+                "issue": "Missing information",
+                "applicationValue": "Missing product details",
+                "nmid": "SU.EM.048",
+                "externalId": "e1d60659-f4ba-45e7-9691-ce92e9b0802d"
+            },
+            {
+                "issue": "Missing information",
+                "applicationValue": "Missing financial information",
+                "nmid": "SU.EM.048",
+                "externalId": "43831ca7-560a-4f20-8ad9-a8b1351f5fb2"
+            }
+        ],
+        "nigos": ["EX000000019260", "EX000000019259", "EX000000019258", "EX000000019257"]
+    },
+    "mappedExceptions": ["EX000000019260", "EX000000019259", "EX000000019258", "EX000000019257"],
+    "mappedDocuments": [
+        {
+            "documentId": "6802279272985928833161ae",
+            "documentName": "Suitability Form 1",
+            "documentSource": "pdf",
+            "createdDate": null
+        }
+    ],
+    "queue": "suitability_data_entry",
+    "escalated": false,
+    "assignee": "Shrutika.Shinde@zinnia.com",
+    "assigneePartyId": "b34deea53b4c40898c18a38f53b1e0b8",
+    "assignedAt": "2025-04-18T12:28:00Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-04-18T12:27:09Z",
+    "updatedBy": "Shrutika.Shinde@zinnia.com",
+    "updatedByPartyId": "b34deea53b4c40898c18a38f53b1e0b8",
+    "updatedAt": "2025-04-18T12:28:04Z",
+    "identifiers": [
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2503970"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000409837"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2503970"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLAVI041120241125012726"
+        }
+    ],
+    "externalId": "4132b1b6-8a69-4ce8-b975-324c66446806"
+}

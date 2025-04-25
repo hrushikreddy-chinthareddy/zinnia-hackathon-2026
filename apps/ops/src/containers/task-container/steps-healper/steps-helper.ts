@@ -32,6 +32,7 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
         case TaskType.Application_Review:
         case TaskType.AppDataEntry:
         case TaskType.Agent_Onboarding_Review:
+        case TaskType.Suitaibility_DataEntry_Nigo_Review:
         case TaskType.ReturnPayment:
         case TaskType.Send_Nigo_Communication:
         case TaskType.Initiate_Postissue_Transaction:

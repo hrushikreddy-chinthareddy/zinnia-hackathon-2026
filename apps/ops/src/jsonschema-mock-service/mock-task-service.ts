@@ -2,12 +2,13 @@ import wellabeSuitabilitySchema from '@deps/jsonschema-mock-service/carrier/well
 import wellabeSuitabilityData from '@deps/jsonschema-mock-service/carrier/wellabe/suitability/suitability.json';
 import wellabeSuitabilityReviewSchema from '@deps/jsonschema-mock-service/carrier/wellabe/suitability-review/suitability-review-schema.json';
 import wellabeSuitabilityReviewData from '@deps/jsonschema-mock-service/carrier/wellabe/suitability-review/suitability-review.json';
+import wellabeSuitabilityDataEntryReviewData from '@deps/jsonschema-mock-service/carrier/wellabe/suitabilty-data-entry-nigo/suitability-data-entry-nigo-data.json';
+import wellabeSuitabilityDataEntryReviewSchema from '@deps/jsonschema-mock-service/carrier/wellabe/suitabilty-data-entry-nigo/suitability-data-entry-nigo.json';
 import agentNigoSchema from '@deps/jsonschema-mock-service/tasks/agent-nigo.json';
 import agentOnboardingNigoSchema from '@deps/jsonschema-mock-service/tasks/agent-onboarding-nigo.json';
 import agentOnboardingReviewSchema from '@deps/jsonschema-mock-service/tasks/agent-onboarding-review.json';
 import agentReviewSchema from '@deps/jsonschema-mock-service/tasks/agent-review.json';
 import applicationNigoSchema from '@deps/jsonschema-mock-service/tasks/application-nigo.json';
-import applicationReviewSchema from '@deps/jsonschema-mock-service/tasks/application-review.json';
 import attachmentNigoSchema from '@deps/jsonschema-mock-service/tasks/attachment-nigo.json';
 import appDataEntrySchema from '@deps/jsonschema-mock-service/tasks/nb_app_data_entry.json';
 import premiumNigoSchema from '@deps/jsonschema-mock-service/tasks/premium-nigo.json';
@@ -39,7 +40,6 @@ import toaNigoData from '@deps/jsonschema-mock-service/tasks-data/toa-nigo.json'
 import toaReviewData from '@deps/jsonschema-mock-service/tasks-data/toa-review.json';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
-
 export const getTaskFormMetadataSSRMock = async (taskType: TaskType): Promise<FormMetadata | null> => {
     switch (taskType) {
         case TaskType.SuitabilityDataEntry:
@@ -78,9 +78,11 @@ export const getTaskFormMetadataSSRMock = async (taskType: TaskType): Promise<Fo
             return prenoteReviewSchema as unknown as FormMetadata;
         case TaskType.Payment_Processing_Review:
             return prenoteReviewSchema as unknown as FormMetadata;
-      case TaskType.ReturnPayment:
+        case TaskType.ReturnPayment:
             return returnPaymentSchema as unknown as FormMetadata;
-      default:
+        case TaskType.Suitaibility_DataEntry_Nigo_Review:
+            return wellabeSuitabilityDataEntryReviewSchema as unknown as FormMetadata;
+        default:
             return null;
     }
 };
@@ -129,6 +131,9 @@ export const getCaseTaskByIdSSRMock = async (taskType: TaskType): Promise<Manage
             return prenoteReviewData as ManagementTask<TaskStatus>;
         case TaskType.Payment_Processing_Review:
             return prenoteReviewData as ManagementTask<TaskStatus>; //change when proper task is there for payment processing
+        case TaskType.Suitaibility_DataEntry_Nigo_Review:
+            return wellabeSuitabilityDataEntryReviewData as ManagementTask<TaskStatus>;
+
         default:
             return null;
     }

@@ -5562,9 +5562,18 @@
     },
     "nbPaymentCancel": {
         "confirmStep": {
-            "title": "Compris!",
+            "title": "C'est fait !",
             "subTitle": "Tâche : Le retour de paiement a été soumis.",
             "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "suitabilityDataentryNigoReview": {
+        "confirmStep": {
+            "title": "C'est fait !",
+            "subTitle": "Tâche : Le retour de paiement a été soumis.",
+            "cta": "Aller au cas",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }

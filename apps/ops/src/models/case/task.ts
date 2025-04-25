@@ -34,6 +34,7 @@ export enum TaskType {
     TOA_Review = 'NB_TOA_REVIEW',
     Prenote_Review = 'NB_PRENOTE_REVIEW',
     Payment_Processing_Review = 'NB_PAYMENT_PROCESSING_REVIEW',
+    Suitaibility_DataEntry_Nigo_Review = 'SUITABILITY_DATAENTRY_NIGO_REVIEW',
 }
 
 export enum EarlyTaskType {

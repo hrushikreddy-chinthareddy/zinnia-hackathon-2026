@@ -1,8 +1,7 @@
 {
-    "formId": "8f6c435b-9827-430f-b776-dd6101d1cfd3",
+    "formId": "c3539dce-e8f4-4a59-b516-1e8802af6018",
     "process": "New Business",
-    "carrier": "WELB",
-    "taskType": "NB_AGENT_NIGO",
+    "taskType": "SUITABILITY_DATAENTRY_NIGO_REVIEW",
     "formSchema": {
         "type": "object"
     },
@@ -12,28 +11,20 @@
     "schemaContent": {
         "tabSchemas": [
             {
-                "title": "Review Agent Issues",
+                "title": "Review Suitability Data Entry NIGO",
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "issuesList": {
+                        "rules": {
                             "type": "array",
                             "title": "",
                             "items": {
                                 "type": "object",
                                 "title": "",
                                 "properties": {
-                                    "processingReason": {
+                                    "applicationValue": {
                                         "type": "string",
                                         "title": "Issues"
-                                    },
-                                    "processingResolution": {
-                                        "type": "string",
-                                        "title": "Processing Instructions"
-                                    },
-                                    "resolved": {
-                                        "type": "boolean",
-                                        "title": "Resolved"
                                     }
                                 }
                             }
@@ -42,49 +33,36 @@
                             "type": "object",
                             "title": "Supporting Information",
                             "properties": {
-                                "agentDetails": {
-                                    "type": "object",
-                                    "properties": {
-                                        "firstName": {
-                                            "type": "string",
-                                            "title": "First Name",
-                                            "ui:field": "title"
-                                        },
-                                        "agentExternalId": {
-                                            "type": "string",
-                                            "title": "External Id",
-                                            "ui:field": "subTitle"
-                                        },
-                                        "taxId": {
-                                            "type": "string",
-                                            "title": "SSN",
-                                            "dataType": "ssn"
-                                        },
-                                        "lastName": {
-                                            "type": "string",
-                                            "title": "Last Name",
-                                            "ui:field": "title"
-                                        }
-                                    }
-                                },
-                                "agentDocument": {
-                                    "type": "object",
-                                    "properties": {
-                                        "documentName": {
-                                            "type": "string"
-                                        },
-                                        "documentId": {
-                                            "type": "string"
-                                        },
-                                        "documentSource": {
-                                            "type": "string"
-                                        },
-                                        "createdDate": {
-                                            "type": "string"
-                                        },
-                                        "carrier": {
-                                            "type": "string",
-                                            "default": "{{carrier}}"
+                                "documentDetails": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
                                         }
                                     }
                                 }
@@ -98,7 +76,7 @@
                         },
                         "uploadDocuments": {
                             "type": "object",
-                            "title": "Link or upload document",
+                            "title": "Link or Upload document",
                             "properties": {
                                 "upload": {
                                     "type": "string"
@@ -161,11 +139,11 @@
                     "required": ["issueResolved"]
                 },
                 "uiSchema": {
-                    "ui:order": ["issuesList", "details", "issueResolved", "declineReason", "reason", "uploadDocuments", "attachments"],
+                    "ui:order": ["rules", "details", "issueResolved", "declineReason", "reason", "uploadDocuments", "attachments"],
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "issuesList": {
+                    "rules": {
                         "ui:readonly": true,
                         "ui:options": {
                             "label": false
@@ -176,23 +154,11 @@
                                 "templateType": "table",
                                 "ObjectFieldTemplate": "ObjectRowFieldTemplate"
                             },
-                            "processingReason": {
+                            "applicationValue": {
                                 "ui-widget": "ValueWidget",
                                 "ui:options": {
                                     "label": false,
                                     "inline": true
-                                }
-                            },
-                            "processingResolution": {
-                                "ui-widget": "ValueWidget",
-                                "ui:options": {
-                                    "label": false,
-                                    "inline": true
-                                }
-                            },
-                            "resolved": {
-                                "ui:options": {
-                                    "label": false
                                 }
                             }
                         }
@@ -201,23 +167,30 @@
                         "ui:options": {
                             "label": true
                         },
-                        "agentDetails": {
+                        "documentDetails": {
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "documentType": {
+                                    "ui:widget": "text"
+                                }
+                            },
                             "ui:options": {
-                                "cardType": "Detailed",
-                                "icon": "CIRCLE_USER",
                                 "label": false,
-                                "ObjectFieldTemplate": "CardTemplate",
-                                "key": "agentDetails",
-                                "sectionTitle": "Details"
-                            }
-                        },
-                        "agentDocument": {
-                            "ui:options": {
-                                "canAdd": false,
-                                "label": false,
-                                "cardType": "Document",
-                                "icon": "DOCUMENT_TEXT",
-                                "ObjectFieldTemplate": "CardTemplate"
+                                "addable": false
                             }
                         }
                     },
@@ -270,7 +243,8 @@
                     "reason": {
                         "ui:options": {
                             "label": true,
-                            "ObjectFieldTemplate": "InstructionsTemplate"
+                            "ObjectFieldTemplate": "InstructionsTemplate",
+                            "omitValue": true
                         }
                     }
                 }
