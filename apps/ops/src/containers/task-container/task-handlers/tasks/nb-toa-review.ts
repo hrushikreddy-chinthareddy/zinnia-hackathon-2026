@@ -9,7 +9,7 @@ const toaReviewHandler: TaskHandler<ReviewPayload, NigoExceptionResponse[]> = {
     api: NigoSearch,
 
     getPayload: () => ({
-        category: ['Agent'],
+        category: ['Transfer'],
         businessProcess: 'New Business',
     }),
 
