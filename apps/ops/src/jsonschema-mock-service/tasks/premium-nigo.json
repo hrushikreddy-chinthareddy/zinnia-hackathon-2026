@@ -304,14 +304,12 @@
                     "effectiveAmount": {
                         "grossAmount": {
                             "ui:options": {
-                                "widget": "ValueWidget",
-                                "placeholder": "Gross amount"
+                                "widget": "ValueWidget"
                             }
                         },
                         "netAmount": {
                             "ui:options": {
-                                "widget": "ValueWidget",
-                                "placeholder": "Net amount"
+                                "widget": "ValueWidget"
                             }
                         }
                     }

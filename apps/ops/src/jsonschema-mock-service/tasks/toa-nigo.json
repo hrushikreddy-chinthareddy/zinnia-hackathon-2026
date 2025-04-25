@@ -135,14 +135,12 @@
                                         },
                                         "surrenderCompanyName": {
                                             "type": "string",
-                                            "title": "Surrender carrier name,"
+                                            "title": "Surrender carrier name"
                                         },
                                         "surrenderContractNumber": {
                                             "type": "string",
                                             "title": "Surrender carrier contract number"
                                         },
-
-
                                         "deliveryMethod": {
                                             "type": "string",
                                             "enum": ["MAIL", "FAX"],
@@ -158,7 +156,7 @@
                                                     "title": "Address"
                                                 },
                                                 "addressLine2": {
-                                                    "type": "string",
+                                                    "type": ["string", "null"],
                                                     "title": "Address 2"
                                                 },
                                                 "city": {
@@ -187,79 +185,70 @@
                                     },
                                     "allOf": [
                                         {
-                                          "if": {
-                                            "properties": {
-                                              "deliveryMethod": {
-                                                "const": "MAIL"
-                                              }
-                                            }
-                                          },
-                                          "then": {
-                                            "required": [
-                                                "address"
-                                            ],
-                                            "properties":{
-                                                "address":{
-                                                    "type":"object",
-                                                    "required": [
-                                                    "addressLine1",
-                                                    "city",
-                                                    "state",
-                                                    "zip",
-                                                    "zip4"
-                                                ],
-                                                "properties":{
-                                                    "addressLine1": {
-                                                        "type": "string",
-                                                        "title": "Address",
-                                                        "minLength": 1
-                                                    },
-                                                    "addressLine2": {
-                                                        "type": "string",
-                                                        "title": "Address 2"
-                                                    },
-                                                    "city": {
-                                                        "type": "string",
-                                                        "title": "City",
-                                                        "minLength": 1
-                                                    },
-                                                    "state": {
-                                                        "type": "string",
-                                                        "title": "State",
-                                                        "$ref": "#/definitions/stateEnum",
-                                                        "minLength": 1
-                                                    },
-                                                    "zip": {
-                                                        "type": "string",
-                                                        "title": "Zip",
-                                                        "minLength": 1
-                                                    },
-                                                    "zip4": {
-                                                        "type": "string",
-                                                        "title": "Zip+4",
-                                                        "minLength": 1
+                                            "if": {
+                                                "properties": {
+                                                    "deliveryMethod": {
+                                                        "const": "MAIL"
+                                                    }
+                                                },
+                                                "required": ["deliveryMethod"]
+                                            },
+                                            "then": {
+                                                "required": ["address"],
+                                                "properties": {
+                                                    "address": {
+                                                        "type": "object",
+                                                        "required": ["addressLine1", "city", "state", "zip"],
+                                                        "properties": {
+                                                            "addressLine1": {
+                                                                "type": "string",
+                                                                "title": "Address",
+                                                                "minLength": 1
+                                                            },
+                                                            "addressLine2": {
+                                                                "type": ["string", "null"],
+                                                                "title": "Address 2"
+                                                            },
+                                                            "city": {
+                                                                "type": "string",
+                                                                "title": "City",
+                                                                "minLength": 1
+                                                            },
+                                                            "state": {
+                                                                "type": "string",
+                                                                "title": "State",
+                                                                "$ref": "#/definitions/stateEnum",
+                                                                "minLength": 1
+                                                            },
+                                                            "zip": {
+                                                                "type": "string",
+                                                                "title": "Zip",
+                                                                "minLength": 1
+                                                            },
+                                                            "zip4": {
+                                                                "type": "string",
+                                                                "title": "Zip+4"
+                                                            }
+                                                        }
                                                     }
                                                 }
-                                                }
                                             }
-                                          }
                                         },
                                         {
-                                          "if": {
-                                            "properties": {
-                                              "deliveryMethod": {
-                                                "const": "FAX",
-                                                "minLength": 1
-                                              }
+                                            "if": {
+                                                "properties": {
+                                                    "deliveryMethod": {
+                                                        "const": "FAX",
+                                                        "minLength": 1
+                                                    }
+                                                },
+                                                "required": ["deliveryMethod"]
+                                            },
+                                            "then": {
+                                                "required": ["deliveryFaxNumber"]
                                             }
-                                          },
-                                          "then": {
-                                            "required": [
-                                              "deliveryFaxNumber"
-                                            ]
-                                          }
                                         }
-                                      ]
+                                    ]
                                 },
                                 {
                                     "properties": {
@@ -463,7 +452,6 @@
                         "ui:widget": "text",
                         "ui:dataPath": ["details", "exchangeReplace", "surrenderContractNumber"]
                     },
-
                     "deliveryMethod": {
                         "ui:widget": "radio",
                         "ui:dataPath": ["details", "exchangeReplace", "deliveryMethod"]
