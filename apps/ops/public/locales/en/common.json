@@ -5614,6 +5614,15 @@
             "submitTask": "Submit"
         }
     },
+    "backgroundNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Review Background Check Issues was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "backgroundReview": {
         "confirmStep": {
             "title": "Got It!",

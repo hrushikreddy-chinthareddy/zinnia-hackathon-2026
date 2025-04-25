@@ -293,7 +293,8 @@
                             "hasBg": true,
                             "formContext": {
                                 "keyName": "customData",
-                                "listName": "declineReason"
+                                "listName": "declineReason",
+                                "parseKey": "detailedReason"
                             },
                             "omitValue": true
                         }

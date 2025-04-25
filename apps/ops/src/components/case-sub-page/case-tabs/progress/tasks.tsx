@@ -35,6 +35,7 @@ export const SupportedTaskMap = [
     TaskType.Prenote_Review,
     TaskType.Payment_Processing_Review,
     TaskType.Suitaibility_DataEntry_Nigo_Review,
+    TaskType.Background_Nigo,
     TaskType.Background_Review
 ];
 

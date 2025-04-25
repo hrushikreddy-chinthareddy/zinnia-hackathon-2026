@@ -1,0 +1,296 @@
+{
+    "formId": "4b0b4c59-28a3-4de3-9d63-25a8d24522d1",
+    "process": "Agent Onboarding",
+    "carrier": "WELB",
+    "taskType": "BACKGROUND_NIGO",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Review Background Check Issues",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "issuesList": {
+                            "type": "array",
+                            "title": "",
+                            "items": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "processingInstruction": {
+                                        "type": "string",
+                                        "title": "Issues"
+                                    }
+                                }
+                            }
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting Information",
+                            "properties": {
+                                "agentDetails": {
+                                    "type": "object",
+                                    "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "First Name",
+                                            "ui:field": "title"
+                                        },
+                                        "agentNPN": {
+                                            "type": "string",
+                                            "title": "NPN:",
+                                            "ui:field": "subTitle"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Last Name",
+                                            "ui:field": "title"
+                                        }
+                                    }
+                                },
+                                "documents": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issuesResolved": {
+                            "type": "string",
+                            "enum": ["APPROVE", "DENY", "DISPUTE"],
+                            "title": "Background check decision"
+                        },
+                        "uploadDocuments": {
+                            "type": "object",
+                            "title": "Link or upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "upload",
+                                    "items": {
+                                        "title": "upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "dependencies": {
+                        "issuesResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issuesResolved": {
+                                            "enum": ["APPROVE"]
+                                        },
+                                        "approveReason": {
+                                            "type": "object",
+                                            "title": "",
+                                            "description": "Agreement to override the original background check results and approve the agent to be onboarded to sell your products."
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issuesResolved": {
+                                            "enum": ["DENY"]
+                                        },
+                                        "denyReason": {
+                                            "type": "object",
+                                            "title": "",
+                                            "description": "Agreement to retain the original background check results and deny the agent to be onboarded, not allowing to sell your products."
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issuesResolved": {
+                                            "enum": ["DISPUTE"]
+                                        },
+                                        "disputeReason": {
+                                            "type": "object",
+                                            "title": "",
+                                            "description": "You have verified that the agent will be disputing the background check results. This will allow the agent's onboarding to be on hold until the dispute is resolved."
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:order": [
+                        "issuesList",
+                        "details",
+                        "issuesResolved",
+                        "approveReason",
+                        "denyReason",
+                        "disputeReason",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "issuesList": {
+                        "ui:readonly": true,
+                        "ui:options": {
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                            },
+                            "processingInstruction": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            }
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "agentDetails": {
+                            "ui:options": {
+                                "cardtype": "Detailed",
+                                "icon": "CIRCLE_USER",
+                                "label": false,
+                                "ObjectFieldTemplate": "CardTemplate",
+                                "key": "agentDetails"
+                            }
+                        },
+                        "documents": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": false,
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                }
+                            }
+                        }
+                    },
+                    "issuesResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": "true",
+                            "enumNames": ["Approve", "Deny", "Dispute"]
+                        }
+                    },
+                    "approveReason": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "denyReason": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "disputeReason": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "uploadDocuments": {
+                        "inline": true,
+                        "ui:options": {
+                            "label": true,
+                            "omitValue": true
+                        },
+                        "upload": {
+                            "ui:widget": "AutoCompleteWidget",
+                            "ui:placeholder": "Find existing documents...",
+                            "ui:options": {
+                                "label": false,
+                                "icon": "Search"
+                            }
+                        },
+                        "or": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "attachment": {
+                            "ui:options": {
+                                "label": false,
+                                "showFiles": false
+                            },
+                            "ui:props": {
+                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiMethod": "get"
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

@@ -5578,6 +5578,15 @@
             "submitTask": "Soumettre"
         }
     },
+    "backgroundNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Révision des problèmes de vérification des antécédents a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
     "backgroundReview": {
         "confirmStep": {
             "title": "Compris!",
