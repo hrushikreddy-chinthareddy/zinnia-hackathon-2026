@@ -25,7 +25,7 @@ export const NavLink = ({
   return (
     <Component
       {...renderComponent?.props}
-      renderComponent={renderComponent}
+      {...(renderComponent ? { renderComponent: renderComponent } : {})}
       {...props}
     >
       {children}

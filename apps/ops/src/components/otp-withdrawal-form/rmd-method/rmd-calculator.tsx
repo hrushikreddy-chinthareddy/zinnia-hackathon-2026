@@ -1,3 +1,4 @@
+import useDebounce from '@xd/hooks/useDebounce';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState, useContext, ChangeEvent } from 'react';
@@ -15,7 +16,6 @@ import { RelationshipToInsured } from '@deps/models/policy/sor-policy';
 import { getVariableQuote } from '@deps/queries/api/policies';
 import { calculateRmd } from '@deps/queries/api/rmd-calculation';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import useDebounce from '@deps/utils/useDebounce';
 
 import { RMDMethodId, frequencyToValue } from './rmd-method';
 
@@ -96,7 +96,7 @@ export default function RMDCalculator({ isFormStateReadOnly }: RMDCalculatorProp
     const [annuitants, setAnnuitants] = useState<RmdParty[]>([]);
 
     useEffect(() => {
-        const annuitants = parties?.filter(party =>  [0, 3].includes(party.SrcRoleOptionId) && [-1, -2].includes(party.SrcRoleType)) || [];
+        const annuitants = parties?.filter(party => [0, 3].includes(party.SrcRoleOptionId) && [-1, -2].includes(party.SrcRoleType)) || [];
 
         const filteredAnnuitants = annuitants?.map(party => {
             const annuitant: RmdParty = {

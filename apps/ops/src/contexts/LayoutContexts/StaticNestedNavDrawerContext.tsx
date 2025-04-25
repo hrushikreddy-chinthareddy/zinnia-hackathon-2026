@@ -1,10 +1,10 @@
+import { debounce } from '@xd/hooks/useDebounce';
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { ParentKeys } from '@deps/config/nav.config';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
 import { storage } from '@deps/helpers/sessionStorage.helper';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
-import { debounce } from '@deps/utils/useDebounce';
 
 interface NestedNavDrawerContextProps {
     isNavDrawerOpen: boolean;

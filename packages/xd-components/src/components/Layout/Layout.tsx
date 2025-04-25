@@ -10,6 +10,7 @@ import {
 import { Nav, NavGroup } from '../Nav/Nav';
 import styles from './Layout.module.css';
 import { useWindowResize } from '../../hooks/useWindowResize';
+import zinniaLogo from '../../styles/icons/zinnia-logo.svg';
 
 interface LayoutType extends PropsWithChildren {
   navGroups: NavGroup[];
@@ -28,12 +29,12 @@ export const Layout = ({ navGroups, activeNavItem, children }: LayoutType) => {
   const sidesheetHeaderLabel = 'Site navigation';
 
   return (
-    <main className={styles.container}>
+    <div className={styles.container}>
       {isLargeScreen ? (
         // Above 1024px
         <>
           <Nav navGroups={navGroups} activeNavItem={activeNavItem} />
-          <section>{children}</section>
+          <main>{children}</main>
         </>
       ) : (
         // Below 1024px
@@ -57,7 +58,7 @@ export const Layout = ({ navGroups, activeNavItem, children }: LayoutType) => {
               activeNavItem={activeNavItem}
             />
           </SideSheet>
-          <main>
+          <>
             <section className={styles.layoutHeader}>
               <Button
                 className={styles.navMenuButton}
@@ -75,18 +76,13 @@ export const Layout = ({ navGroups, activeNavItem, children }: LayoutType) => {
                 />
               </Button>
               <div className={styles.zinniaLogo}>
-                <img
-                  src="/logos/zinnia-logo.svg"
-                  alt={imageAlt}
-                  height={24}
-                  width={90}
-                />
+                <img src={zinniaLogo} alt={imageAlt} height={24} width={90} />
               </div>
             </section>
-            {children}
-          </main>
+            <main>{children}</main>
+          </>
         </>
       )}
-    </main>
+    </div>
   );
 };

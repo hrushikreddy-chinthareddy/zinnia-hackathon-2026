@@ -1,3 +1,4 @@
+import useDebounce from '@xd/hooks/useDebounce';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { v4 as uuid4 } from 'uuid';
@@ -12,7 +13,6 @@ import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { ReactComponent as ChevronIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { DataDefinition } from '@deps/types/data';
 import { DropdownClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
-import useDebounce from '@deps/utils/useDebounce';
 
 import SelectSearchGroupContainer from './select-search-group-container/select-search-group-container';
 import { getInputClasses, getLabelClasses } from './select-search.helper';

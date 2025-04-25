@@ -1,24 +1,36 @@
 .navContainer {
+  --nav-expanded-width: 240px;
+
   height: 100vmin;
   background-color: var(--color-grayscale-color-50-gray);
-  display: flex;
-  flex-direction: column;
-  padding: var(--measure-dimension-z-space-2);
-  position: relative;
+  /* for the sake of the animation hiding text properly we're using a border instead of padding */
+  /* that way whatever is overflowing behind the border is hidden */
+  border: var(--measure-dimension-z-space-2) solid
+    var(--color-grayscale-color-50-gray);
+  position: sticky;
   transition: 300ms ease-in-out;
   text-wrap: nowrap;
-  width: 240px;
+  top: 0;
+  width: var(--nav-expanded-width);
 
   &.collapsed {
-    overflow: hidden;
     width: 48px;
   }
 }
 
+/* this is necessary because an element cannot effectively be overflow:hidden and position:relative */
+/* without it the toggleTarget button below gets clipped by the overflow completely */
+.navOverflowContainer {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .toggleTarget {
   position: absolute;
-  top: 0;
-  right: -8px;
+  top: -8px;
+  right: -16px;
   width: 16px;
   height: 100%;
 }
@@ -41,14 +53,12 @@
 }
 
 .zinniaLogo {
+  display: flex;
   height: 24px;
   min-width: 90px;
-}
-
-.logoSmall {
-  margin-block-end: var(--measure-dimension-z-space-2);
-  padding-inline: var(--measure-dimension-z-space-1);
-  padding-block: var(--measure-dimension-z-space-2);
+  & img {
+    height: 24px;
+  }
 }
 
 .searchBar {
@@ -79,7 +89,7 @@
 
 /* grabbing the parent of searchInput (aka the inputContainer) */
 div:has(> .searchInput)::before {
-  content: url(/search.svg);
+  content: url(../../styles/icons/search.svg);
   position: absolute;
   top: 6px;
   left: 8px;
@@ -94,6 +104,15 @@ div:has(> .searchInput)::before {
 
 .nav {
   flex: 1;
+  width: calc(var(--nav-expanded-width) - 16px);
+  transition: width 300ms ease-in-out;
+  transition-delay: 300ms;
+}
+
+.navContainer.collapsed .nav {
+  width: 100%;
+  transition: width 1ms;
+  transition-delay: 300ms;
 }
 
 .navList {
@@ -119,10 +138,8 @@ div:has(> .searchInput)::before {
 }
 
 /* remove the separation border from the second to last nav section if the last one is aligned to the end */
-.navList:has(.alignEnd) {
-  .navSection:nth-last-child(2) {
-    border-bottom: none;
-  }
+.navList:has(.alignEnd) .navSection:nth-last-child(2) {
+  border-bottom: none;
 }
 
 .navSection__heading {
@@ -134,17 +151,11 @@ div:has(> .searchInput)::before {
   list-style: none;
 }
 
-.navSection__heading,
-.listItem {
-  &,
-  & * {
-    transition: opacity 300ms ease-in-out;
-  }
+.navSection__heading {
+  transition: opacity 300ms ease-in-out;
 
-  &.hidden,
-  & .hidden {
+  &.hidden {
     opacity: 0;
-    width: 0;
   }
 }
 
@@ -160,7 +171,6 @@ div:has(> .searchInput)::before {
 .tooltipTrigger {
   /* to do - double check that is is really doing what i want it to for a11y */
   display: contents;
-  /* to do - i hate the way this animates from the center now */
   width: 100%;
 }
 
@@ -175,11 +185,6 @@ div:has(> .searchInput)::before {
   padding: var(--measure-dimension-z-space-1);
   width: 100%;
 
-  &:has(.hidden) {
-    justify-content: center;
-    gap: 0;
-  }
-
   &:hover {
     background-color: var(--color-grayscale-color-white);
     border-radius: var(--measure-dimension-z-space-1);
@@ -189,9 +194,7 @@ div:has(> .searchInput)::before {
   &[aria-current='page'] {
     background-color: var(--color-grayscale-color-white);
     border-radius: var(--measure-dimension-z-space-1);
-    box-shadow:
-      0px 0.15px 0.45px 0px rgba(0, 0, 0, 0.11),
-      0px 0.8px 1.8px 0px rgba(0, 0, 0, 0.13);
+    box-shadow: var(--shadow-elevation-elevation-light-xs);
     color: var(--color-grayscale-color-900-gray);
     svg {
       color: var(--color-orange-color-500-orange);
@@ -199,9 +202,9 @@ div:has(> .searchInput)::before {
   }
 }
 
-.listItem__icon {
-  height: 20px;
-  width: 20px;
+.listItem__iconContainer {
+  padding: var(--measure-dimension-z-space-0);
+  flex-shrink: 0;
 }
 
 /* Since we're using max width it needs to be the change value (1024px) minus 1 */

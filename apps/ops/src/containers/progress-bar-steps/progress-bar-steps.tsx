@@ -1,10 +1,10 @@
+import { useWindowResize } from '@xd/hooks/useWindowResize';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 
 import ProgressBarStepsItem, { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { scrollToElement } from '@deps/helpers/routing.helper';
-import { useWindowResize } from '@deps/hooks/useWindowResize';
 import { DEFAULT_STEP_WIDTH, SCREEN_BREAKPOINTS } from '@deps/types/constants';
 
 interface ProgressBarStepsProps {

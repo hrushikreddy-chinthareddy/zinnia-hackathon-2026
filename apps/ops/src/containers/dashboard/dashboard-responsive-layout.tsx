@@ -1,9 +1,9 @@
+import { useWindowResize } from '@xd/hooks/useWindowResize';
 import { PropsWithChildren } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { useIsClient } from '@deps/hooks/useIsClient';
-import { useWindowResize } from '@deps/hooks/useWindowResize';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import fullConfig from '@deps/utils/styles';
 

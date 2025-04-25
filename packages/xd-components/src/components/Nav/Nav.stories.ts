@@ -19,3 +19,11 @@ export const Default: Story = {
     activeNavItem: 'home',
   },
 };
+
+export const NoSearch: Story = {
+  args: {
+    navGroups: mockNavGroups,
+    activeNavItem: 'home',
+    displaySearch: false,
+  },
+};

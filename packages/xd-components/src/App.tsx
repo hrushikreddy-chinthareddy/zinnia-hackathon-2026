@@ -1,38 +1,11 @@
-import { IconType } from '@zinnia/bloom/components';
 import './App.css';
 import { Layout } from './components/Layout/Layout';
-import { NavGroup } from './components/Nav/Nav';
-
-const navGroups: NavGroup[] = [
-  {
-    items: [
-      {
-        id: 'home',
-        display: 'Home',
-        icon: IconType.BANK,
-        renderComponent: <article className="article-class">something</article>,
-      },
-      { id: 'tasks', display: 'Tasks', icon: IconType.BANK },
-      { id: 'cases', display: 'Cases', icon: IconType.BANK },
-    ],
-  },
-  {
-    heading: 'Producers',
-    items: [{ id: 'agents', display: 'Agents', icon: IconType.BANK }],
-  },
-  {
-    items: [
-      { id: 'manageAccess', display: 'Manage Access', icon: IconType.BANK },
-      { id: 'user', display: 'Jane Doe', icon: IconType.BANK },
-    ],
-    alignEnd: true,
-  },
-];
+import { mockNavGroups } from './stories/mocks';
 
 function App() {
   return (
     <>
-      <Layout navGroups={navGroups}>
+      <Layout navGroups={mockNavGroups}>
         <h1>Vite + React</h1>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR

@@ -21,6 +21,7 @@ export const Slot = ({ renderComponent, children, ...props }: SlotType) => {
       renderComponent,
       {
         ...props,
+        ...renderComponentProps,
         className: clsx(props.className, renderComponentProps.className),
       } as React.HtmlHTMLAttributes<HTMLElement>,
       children

@@ -113,14 +113,14 @@ const App = (props: AppProps) => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <main className={`${poppins.variable} ${lato.variable} relative`}>
+            <section className={`${poppins.variable} ${lato.variable} relative`}>
                 <UserProvider>
                     <AppHead />
                     <AppBody {...props} />
                     {process.env.NEXT_PUBLIC_GOOGLEANALYTICS_ENV === NODE_ENV_PRODUCTION && <GoogleAnalytics gaId="G-1NY7KTG7T3" />}
                 </UserProvider>
                 <SegmentAnalyticsScript />
-            </main>
+            </section>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );
