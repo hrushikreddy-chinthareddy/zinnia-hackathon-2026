@@ -6,7 +6,6 @@ import { useRef } from 'react';
 
 import { DashboardTabNav, DashboardTabs } from '@deps/components/dashboard/dashboard-nav-links';
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
-import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { ActiveApplications } from '@deps/containers/dashboard/active-applications/active-applications';
@@ -37,11 +36,7 @@ interface DashboardPageProps extends SegmentTrackedPageProps {
     brokerDealersSSR: DashboardResponseData[];
 }
 
-const DashboardPage = ({
-    authorizedCarriers,
-    brokerDealersSSR,
-    user,
-}: DashboardPageProps) => {
+const DashboardPage = ({ authorizedCarriers, brokerDealersSSR, user }: DashboardPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
 
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
@@ -57,27 +52,25 @@ const DashboardPage = ({
     return (
         <>
             <PageHead titleKey="dashboard" />
-            <NoNavLayout fullHeight={true} displayTopNavBar={true} size="large">
-                <DashboardResponsiveLayout>
-                    <FiltersHeader
-                        carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
-                        carrierHeaderEntry={carrierHeaderEntry}
-                        authorizedCarriers={authorizedCarriers}
-                        brokerDealersSSR={brokerDealersSSR}
-                        ref={carrierHeaderRef}
-                    />
-                    <DashboardTabNav>
-                        <div ref={tabContentRef} className={styles.tabContent}>
-                            <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
-                                <ActiveApplications />
-                            </TabContent>
-                            <TabContent value={DashboardTabs.CLOSED_TRANSACTIONS}>
-                                <ClosedTransactions />
-                            </TabContent>
-                        </div>
-                    </DashboardTabNav>
-                </DashboardResponsiveLayout>
-            </NoNavLayout>
+            <DashboardResponsiveLayout>
+                <FiltersHeader
+                    carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
+                    carrierHeaderEntry={carrierHeaderEntry}
+                    authorizedCarriers={authorizedCarriers}
+                    brokerDealersSSR={brokerDealersSSR}
+                    ref={carrierHeaderRef}
+                />
+                <DashboardTabNav>
+                    <div ref={tabContentRef} className={styles.tabContent}>
+                        <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
+                            <ActiveApplications />
+                        </TabContent>
+                        <TabContent value={DashboardTabs.CLOSED_TRANSACTIONS}>
+                            <ClosedTransactions />
+                        </TabContent>
+                    </div>
+                </DashboardTabNav>
+            </DashboardResponsiveLayout>
         </>
     );
 };

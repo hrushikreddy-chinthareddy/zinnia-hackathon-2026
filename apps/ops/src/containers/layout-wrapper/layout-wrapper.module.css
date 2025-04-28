@@ -1,0 +1,17 @@
+.bodyContainer {
+    min-height: 100vh;
+    background: white;
+    border-radius: 8px;
+    margin: 8px;
+    padding: 48px;
+    box-shadow: var(--shadow-elevation-elevation-light-sm);
+}
+
+@media screen and (max-width: 1024px) {
+    .bodyContainer {
+        box-shadow: none;
+        border-radius: 0;
+        margin: 0;
+        padding: 24px;
+    }
+}

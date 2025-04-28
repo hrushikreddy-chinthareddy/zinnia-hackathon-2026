@@ -19,6 +19,7 @@ export interface NavProps {
   navGroups: NavGroup[];
   activeNavItem?: string;
   displaySearch?: boolean;
+  onNavigationToggle?: (isExpanded: boolean) => void;
 }
 
 export interface NavGroup {
@@ -60,6 +61,7 @@ export const Nav = ({
   navGroups,
   activeNavItem,
   displaySearch = true,
+  onNavigationToggle,
 }: NavProps) => {
   const [isExpanded, setExpanded] = useState(true);
   const windowWidth = useWindowResize();
@@ -75,8 +77,16 @@ export const Nav = ({
     if (!isLargeScreen && !!toggleMethod) {
       toggleMethod();
     } else {
-      setExpanded(prevState => !prevState);
+      setExpanded(prevState => {
+        onNavigationToggle?.(!prevState);
+        return !prevState;
+      });
     }
+  };
+
+  const handleLogoClick = () => {
+    setExpanded(true);
+    onNavigationToggle?.(true);
   };
 
   return (
@@ -91,7 +101,7 @@ export const Nav = ({
         <button
           className={clsx(styles.toggleTarget)}
           aria-label={isExpanded ? collapseText : expandText}
-          onClick={() => setExpanded(prevState => !prevState)}
+          onClick={handleNavToggle}
           style={isExpanded ? { cursor: 'w-resize' } : { cursor: 'e-resize' }}
         ></button>
         <div className={styles.logoRow}>
@@ -99,7 +109,7 @@ export const Nav = ({
             {isExpanded ? (
               <img src={zinniaLogo} alt={imageAlt} height={24} width={24} />
             ) : (
-              <button onClick={() => setExpanded(true)} aria-label={expandText}>
+              <button onClick={handleLogoClick} aria-label={expandText}>
                 <img src={zinniaLogo} alt={imageAlt} height={24} width={24} />
               </button>
             )}

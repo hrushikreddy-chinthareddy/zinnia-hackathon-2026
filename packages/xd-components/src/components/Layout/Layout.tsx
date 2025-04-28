@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from 'react';
+import { FC, PropsWithChildren, useState } from 'react';
 
 import {
   Button,
@@ -15,9 +15,17 @@ import zinniaLogo from '../../styles/icons/zinnia-logo.svg';
 interface LayoutType extends PropsWithChildren {
   navGroups: NavGroup[];
   activeNavItem?: string;
+  displaySearch?: boolean;
+  onNavigationToggle?: (isExpanded: boolean) => void;
 }
 
-export const Layout = ({ navGroups, activeNavItem, children }: LayoutType) => {
+export const Layout: FC<LayoutType> = ({
+  navGroups,
+  activeNavItem,
+  displaySearch = true,
+  onNavigationToggle,
+  children,
+}) => {
   const [open, setOpen] = useState(false);
   const windowWidth = useWindowResize();
   const navChangeWidth = 1024;
@@ -28,20 +36,35 @@ export const Layout = ({ navGroups, activeNavItem, children }: LayoutType) => {
   const imageAlt = 'Zinnia Logo';
   const sidesheetHeaderLabel = 'Site navigation';
 
+  const handleCloseSidesheet = () => {
+    setOpen(false);
+    onNavigationToggle?.(false);
+  };
+
+  const handleOpenSidesheet = () => {
+    setOpen(true);
+    onNavigationToggle?.(true);
+  };
+
   return (
     <div className={styles.container}>
       {isLargeScreen ? (
         // Above 1024px
         <>
-          <Nav navGroups={navGroups} activeNavItem={activeNavItem} />
-          <main>{children}</main>
+          <Nav
+            navGroups={navGroups}
+            activeNavItem={activeNavItem}
+            displaySearch={displaySearch}
+            onNavigationToggle={onNavigationToggle}
+          />
+          <main className={styles.layoutMain}>{children}</main>
         </>
       ) : (
         // Below 1024px
         <>
           <SideSheet
             overrideOpen={open}
-            closeCallback={() => setOpen(false)}
+            closeCallback={handleCloseSidesheet}
             location={SideSheetLocation.Left}
             contentClassName={styles.sidesheetContent}
             overlayClassName={styles.sidesheetOverlay}
@@ -54,8 +77,10 @@ export const Layout = ({ navGroups, activeNavItem, children }: LayoutType) => {
             <Nav
               navGroups={navGroups}
               containerClassName={styles.layoutNav}
-              toggleMethod={() => setOpen(false)}
+              toggleMethod={handleCloseSidesheet}
               activeNavItem={activeNavItem}
+              displaySearch={displaySearch}
+              onNavigationToggle={onNavigationToggle}
             />
           </SideSheet>
           <>
@@ -64,7 +89,7 @@ export const Layout = ({ navGroups, activeNavItem, children }: LayoutType) => {
                 className={styles.navMenuButton}
                 size="small"
                 mode="link"
-                onClick={() => setOpen(true)}
+                onClick={handleOpenSidesheet}
                 aria-label={navMenuLabel}
               >
                 <Icon
@@ -79,7 +104,7 @@ export const Layout = ({ navGroups, activeNavItem, children }: LayoutType) => {
                 <img src={zinniaLogo} alt={imageAlt} height={24} width={90} />
               </div>
             </section>
-            <main>{children}</main>
+            <main className={styles.layoutMain}>{children}</main>
           </>
         </>
       )}

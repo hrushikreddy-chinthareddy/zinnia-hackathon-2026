@@ -77,7 +77,7 @@
         },
         "navLinks": {
             "accessManagement": {
-                "text": "Access Management"
+                "text": "Manage Access"
             },
             "caseManagement": {
                 "text": "Case Management",

@@ -8,7 +8,6 @@
 }
 
 .filtersHeader {
-    padding: var(--measure-dimension-gap-2xl);
     display: flex;
     gap: var(--measure-dimension-gap-lg);
     align-items: center;

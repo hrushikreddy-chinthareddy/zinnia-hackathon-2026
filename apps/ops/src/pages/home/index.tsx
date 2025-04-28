@@ -2,7 +2,6 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import NoNavLayout from '@deps/components/no-nav-layout';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import TaskManagementQueue from '@deps/containers/task-management-queue/task-management-queue-container';
@@ -26,7 +25,7 @@ type HomePageProps = {
 export default function Home({ featureFlagDecisions, additionalData }: HomePageProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
     return (
-        <NoNavLayout>
+        <>
             <Typography variant={TypographyVariant.H1} className="md:mb-5 mb-4">
                 {t('homeTitle')}
             </Typography>
@@ -36,7 +35,7 @@ export default function Home({ featureFlagDecisions, additionalData }: HomePageP
                 </Typography>
                 <TaskManagementQueue featureFlagDecisions={featureFlagDecisions} additionalData={additionalData} showClaimTask={false} />
             </div>
-        </NoNavLayout>
+        </>
     );
 }
 

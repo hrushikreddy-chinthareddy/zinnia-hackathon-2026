@@ -1,6 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
-import { TabGroup, TabList, TabTrigger, TabContent, Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
+import { TabGroup, TabList, TabTrigger, TabContent, Icon, IconType } from '@zinnia/bloom/components';
 import { getCookie, setCookie } from 'cookies-next';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -16,7 +16,6 @@ import CreateCaseForm from '@deps/components/create-case-form/create-case-form';
 import { SearchKeys } from '@deps/components/create-case-form/create-case-form.helper';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import { Loading } from '@deps/components/loading';
-import NoNavLayout from '@deps/components/no-nav-layout';
 import NotificationMessage from '@deps/components/notification-message/notification-message';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -373,29 +372,11 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     );
 
     dayjs.extend(isBetween);
-    const showPresidentialMourningBanner = () => {
-        const today = dayjs();
-        return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
-    };
 
     return (
-        <NoNavLayout fullHeight={true}>
+        <>
             {showLoader && <Loading />}
-            {showPresidentialMourningBanner() && (
-                <BannerAlert
-                    bodyText={
-                        <>
-                            In recognition of the National Day of Mourning following the death of former{' '}
-                            <strong>President Jimmy Carter</strong>, the stock market will be closed on <strong>January 9, 2025</strong>. As
-                            a result, contract values are as of close of business <strong>January 8, 2025</strong>. Any trades or other
-                            financial transactions submitted on <strong>January 9, 2025</strong> will be processed when the stock market
-                            reopens on <strong>January 10, 2025</strong>.
-                        </>
-                    }
-                    variant={BannerVariant.Warning}
-                    className="mb-8"
-                />
-            )}
+
             <div className="flex flex-col">
                 {!shouldShowNewExperience ? (
                     <div className="mb-4 w-[500px] self-center rounded bg-white shadow-sm">
@@ -489,7 +470,7 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                     </>
                 )}
             </div>
-        </NoNavLayout>
+        </>
     );
 };
 

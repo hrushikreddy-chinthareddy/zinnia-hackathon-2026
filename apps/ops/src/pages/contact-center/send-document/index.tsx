@@ -4,7 +4,6 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useMemo, useState } from 'react';
 
-import NoNavLayout from '@deps/components/no-nav-layout';
 import ConfirmComponent from '@deps/components/otp-send-document/confirm';
 import Correspondence from '@deps/components/otp-send-document/correspondence';
 import { generateCommunicationRequest } from '@deps/components/otp-send-document/correspondence.helper';
@@ -156,11 +155,9 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
     ];
 
     return (
-        <NoNavLayout fullHeight={true}>
-            <CorrespondenceProvider>
-                <TabGroupContainer steps={steps} policy={new PolicyDetails(policy)}></TabGroupContainer>
-            </CorrespondenceProvider>
-        </NoNavLayout>
+        <CorrespondenceProvider>
+            <TabGroupContainer steps={steps} policy={new PolicyDetails(policy)}></TabGroupContainer>
+        </CorrespondenceProvider>
     );
 };
 

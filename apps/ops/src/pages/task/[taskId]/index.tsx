@@ -2,7 +2,6 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import { convertToCamelCase } from '@zinnia/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import NoNavLayout from '@deps/components/no-nav-layout';
 import { TranslationFiles } from '@deps/config/translations';
 import { getNigoExceptions } from '@deps/containers/task-container/components/steps/nigo-details/nigo-details.helper';
 import TaskContainer from '@deps/containers/task-container/task-container';
@@ -47,20 +46,16 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     isContinueButtonEnabled,
 }: TaskPageProps) => {
     return (
-        <div>
-            <NoNavLayout fullHeight={true}>
-                <TaskProvider initialTask={task} correlationId={correlationId}>
-                    <TaskContainer
-                        taskInfoLink={taskInfoLink}
-                        nigoExceptions={nigoExceptions}
-                        nigoSubExceptions={nigoSubExceptions}
-                        taskMetadata={taskMetadata}
-                        isSaveAsDraftEnabled={isSaveAsDraftEnabled}
-                        isContinueButtonEnabled={isContinueButtonEnabled}
-                    />
-                </TaskProvider>
-            </NoNavLayout>
-        </div>
+        <TaskProvider initialTask={task} correlationId={correlationId}>
+            <TaskContainer
+                taskInfoLink={taskInfoLink}
+                nigoExceptions={nigoExceptions}
+                nigoSubExceptions={nigoSubExceptions}
+                taskMetadata={taskMetadata}
+                isSaveAsDraftEnabled={isSaveAsDraftEnabled}
+                isContinueButtonEnabled={isContinueButtonEnabled}
+            />
+        </TaskProvider>
     );
 };
 

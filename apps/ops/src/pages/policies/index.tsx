@@ -4,7 +4,6 @@ import { TFunction, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { createContext, useContext } from 'react';
 
-import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
 import PaginationControls from '@deps/components/pagination/pagination';
 import SearchBar, { SearchBarInitialValues } from '@deps/components/search/search-bar';
@@ -149,15 +148,20 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
     return (
         <DashboardContext.Provider value={{ searchValue: policySearchFilters.searchValue }}>
             <PageHead titleKey="policySearch" />
-            <NoNavLayout displayTopNavBar={false}>
+            <>
                 <h1 className="typography-desktop-headline-1-d">{t('dashboard.h1')}</h1>
                 <SearchBar
                     searchValue={policySearchFilters.searchValue}
                     onSearch={handleSearch}
                     toggleLabels={toggleLabels}
                     initialToggleValue={policySearchFilters.toggleValue}
-                    onClear={clearPolicySearchFilters}
+                    onClear={() => {
+                        clearPolicySearchFilters();
+                    }}
+                    onToggle={onToggle}
+                    handleError={setShowFieldErrorMessage}
                 />
+
                 <SearchResults
                     query={{
                         error: policyDataError,
@@ -175,11 +179,12 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                             .map(p => {
                                 return <PolicyQuickView key={'policy_' + p.policyNumber} policy={p} />;
                             })}
-                        {policyData && <PaginationControls total={policyData.total} limit={limit} offset={offset} goToPage={goToPage} />}
+                        {showPagination && (
+                            <PaginationControls total={policyData.total} limit={limit} offset={offset} goToPage={goToPage} />
+                        )}
                     </>
                 </SearchResults>
-                {showPagination && <PaginationControls total={policyData.total} limit={limit} offset={offset} goToPage={goToPage} />}
-            </NoNavLayout>
+            </>
         </DashboardContext.Provider>
     );
 };

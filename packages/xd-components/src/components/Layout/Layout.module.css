@@ -1,5 +1,6 @@
 .container {
   position: relative;
+  background-color: white;
 }
 
 .sidesheetContent {
@@ -35,5 +36,10 @@
 @media (min-width: 1024px) {
   .container {
     display: flex;
+    background-color: var(--color-grayscale-color-50-gray);
+  }
+
+  .layoutMain {
+    flex-grow: 1;
   }
 }

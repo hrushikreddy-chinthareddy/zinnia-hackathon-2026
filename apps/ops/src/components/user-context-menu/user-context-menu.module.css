@@ -1,0 +1,17 @@
+.contextTrigger {
+    display: flex;
+    align-items: center;
+    gap: var(--measure-dimension-z-space-2);
+    padding: var(--measure-dimension-z-space-1);
+    width: 100%;
+}
+
+.contextTrigger:hover {
+    background-color: var(--color-grayscale-color-white);
+    border-radius: var(--measure-dimension-z-space-1);
+}
+
+.icon {
+    padding: var(--measure-dimension-z-space-0);
+    flex-shrink: 0;
+}

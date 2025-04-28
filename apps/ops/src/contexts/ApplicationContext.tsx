@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import ErrorBoundary from '@deps/components/error-boundary/error-boundary';
-import StaticPolicyNavBar from '@deps/containers/static-policy-nav-bar/static-policy-nav-bar';
+import { LayoutWrapper } from '@deps/containers/layout-wrapper/layout-wrapper';
 import { storage } from '@deps/helpers/sessionStorage.helper';
 
 import { OptimizelyProvider } from './OptimizelyContext';
@@ -99,11 +99,11 @@ export const ApplicationDataProvider: React.FC<ApplicationDataProviderProps> = (
             <PermissionsProvider>
                 <ErrorBoundary>
                     <OptimizelyProvider>
-                        {/* This StaticPolicyNavBar must be here to render only once */}
-                        <StaticPolicyNavBar />
                         <SideSheetProvider>
                             <PolicySearchFiltersProvider>
-                                <ApplicationComponentWrapper>{children}</ApplicationComponentWrapper>
+                                <ApplicationComponentWrapper>
+                                    <LayoutWrapper>{children}</LayoutWrapper>
+                                </ApplicationComponentWrapper>
                             </PolicySearchFiltersProvider>
                         </SideSheetProvider>
                     </OptimizelyProvider>

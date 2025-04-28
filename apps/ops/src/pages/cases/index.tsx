@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import dynamic from 'next/dynamic';
@@ -9,7 +8,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import FilterButton from '@deps/components/filter-button/filter-button';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
-import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import SearchBar, { SearchBarInitialValues } from '@deps/components/search/search-bar';
@@ -347,84 +345,63 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     };
 
     dayjs.extend(isBetween);
-    const showPresidentialMourningBanner = () => {
-        const today = dayjs();
-        return today.isBetween('2025-01-08', '2025-01-10', 'day', '[]');
-    };
 
     // JSX
     return (
         <CaseManagementFiltersContext.Provider value={[caseManagementFilters, setCaseManagementFilters]}>
             <PageHead titleKey="caseManagement" />
-            <NoNavLayout fullHeight={true}>
-                {showPresidentialMourningBanner() && (
-                    <BannerAlert
-                        bodyText={
-                            <>
-                                In recognition of the National Day of Mourning following the death of former{' '}
-                                <strong>President Jimmy Carter</strong>, the stock market will be closed on <strong>January 9, 2025</strong>
-                                . As a result, contract values are as of close of business <strong>January 8, 2025</strong>. Any trades or
-                                other financial transactions submitted on <strong>January 9, 2025</strong> will be processed when the stock
-                                market reopens on <strong>January 10, 2025</strong>.
-                            </>
+            <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
+                {t('caseManagementDashboard.h1')}
+            </Typography>
+            <div className={styles.container}>
+                {searchBar}
+                <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <StatusFilter
+                        caseTotals={caseTotals}
+                        onChange={vals =>
+                            setCaseManagementFilters(prev => {
+                                const { notInCaseStatus = [] } = prev.additionalFilters;
+                                const nonConflictingNicsVals = notInCaseStatus.filter(val => !vals.includes(val)); // remove any values that are both in caseStatus and notInCaseStatus
+                                return {
+                                    ...prev,
+                                    additionalFilters: {
+                                        ...prev.additionalFilters,
+                                        caseStatus: vals,
+                                        notInCaseStatus: nonConflictingNicsVals,
+                                    },
+                                };
+                            })
                         }
-                        variant={BannerVariant.Warning}
-                        className="mb-8"
+                        sessionId={user.sid}
+                        userId={user.partyId}
+                        values={caseManagementFilters.additionalFilters.caseStatus}
                     />
-                )}
-                <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
-                    {t('caseManagementDashboard.h1')}
-                </Typography>
-                <div className={styles.container}>
-                    {searchBar}
-                    <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
-                        <StatusFilter
-                            caseTotals={caseTotals}
-                            onChange={vals =>
-                                setCaseManagementFilters(prev => {
-                                    const { notInCaseStatus = [] } = prev.additionalFilters;
-                                    const nonConflictingNicsVals = notInCaseStatus.filter(val => !vals.includes(val)); // remove any values that are both in caseStatus and notInCaseStatus
-                                    return {
-                                        ...prev,
-                                        additionalFilters: {
-                                            ...prev.additionalFilters,
-                                            caseStatus: vals,
-                                            notInCaseStatus: nonConflictingNicsVals,
-                                        },
-                                    };
-                                })
+                    <NavElement
+                        tabIndex={0}
+                        size={NavElementSize.Small}
+                        type={NavElementType.Button}
+                        startIcon={<FilterButton />}
+                        className="flex items-center whitespace-nowrap"
+                        aria-label={t('ariaLabel.openRefineResultsButton') as string}
+                        onClick={openRefineResultsSidesheet}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                openRefineResultsSidesheet();
                             }
-                            sessionId={user.sid}
-                            userId={user.partyId}
-                            values={caseManagementFilters.additionalFilters.caseStatus}
-                        />
-                        <NavElement
-                            tabIndex={0}
-                            size={NavElementSize.Small}
-                            type={NavElementType.Button}
-                            startIcon={<FilterButton />}
-                            className="flex items-center whitespace-nowrap"
-                            aria-label={t('ariaLabel.openRefineResultsButton') as string}
-                            onClick={openRefineResultsSidesheet}
-                            onKeyDown={e => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    openRefineResultsSidesheet();
-                                }
-                            }}
-                        >
-                            {t('caseManagementDashboard.addFilters')}
-                        </NavElement>
-                        <ActiveFilters
-                            authorizedCarriers={authorizedCarriers}
-                            filters={caseManagementFilters.additionalFilters}
-                            removeFilter={removeAdditionalFilter}
-                            onReset={resetAllFilters}
-                        />
-                    </div>
-                    {tableContent}
+                        }}
+                    >
+                        {t('caseManagementDashboard.addFilters')}
+                    </NavElement>
+                    <ActiveFilters
+                        authorizedCarriers={authorizedCarriers}
+                        filters={caseManagementFilters.additionalFilters}
+                        removeFilter={removeAdditionalFilter}
+                        onReset={resetAllFilters}
+                    />
                 </div>
-            </NoNavLayout>
+                {tableContent}
+            </div>
         </CaseManagementFiltersContext.Provider>
     );
 };

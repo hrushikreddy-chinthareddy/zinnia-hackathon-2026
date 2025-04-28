@@ -1,7 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
@@ -34,9 +33,8 @@ const CaseDetailsPage = ({ caseDetails, id, tab, user }: CaseDetailsPageProps) =
     return (
         <CaseActivityProvider caseDetails={caseDetails}>
             <PageHead titleKey="caseOverview" />
-            <NoNavLayout>
-                <CaseOverview caseDetails={caseDetails} tab={tab} />
-            </NoNavLayout>
+
+            <CaseOverview caseDetails={caseDetails} tab={tab} />
         </CaseActivityProvider>
     );
 };
