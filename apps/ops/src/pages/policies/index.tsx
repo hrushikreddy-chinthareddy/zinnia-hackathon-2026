@@ -8,7 +8,6 @@ import NoNavLayout from '@deps/components/no-nav-layout';
 import { PageHead } from '@deps/components/page-title';
 import PaginationControls from '@deps/components/pagination/pagination';
 import SearchBar, { SearchBarInitialValues } from '@deps/components/search/search-bar';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { PolicyQuickView } from '@deps/containers/policy-summary-card/policy-summary-card';
@@ -135,6 +134,13 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         setPolicySearchFilters(newSearchValues);
     };
 
+    const isIdle = Object.keys(policySearchFilters.searchValue).length === 0;
+    const showPagination =
+        !!policyData?.total &&
+        !!policyData?.results &&
+        policyData?.results?.length !== 0 &&
+        policyData?.total > policyData?.results?.length;
+
     const onToggle = (value: PolicySearchKeys) => {
         const newSearchValues: PolicySearchFilters = { ...policySearchFilters, toggleValue: value };
         setPolicySearchFilters(newSearchValues);
@@ -144,29 +150,20 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         <DashboardContext.Provider value={{ searchValue: policySearchFilters.searchValue }}>
             <PageHead titleKey="policySearch" />
             <NoNavLayout displayTopNavBar={false}>
-                <div className="flex flex-col items-center xl:items-start">
-                    <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
-                        {t('dashboard.h1')}
-                    </Typography>
-                    <SearchBar
-                        searchValue={policySearchFilters.searchValue}
-                        onSearch={handleSearch}
-                        toggleLabels={toggleLabels}
-                        initialToggleValue={policySearchFilters.toggleValue}
-                        onClear={() => {
-                            clearPolicySearchFilters();
-                        }}
-                        onToggle={onToggle}
-                        handleError={setShowFieldErrorMessage}
-                    />
-                </div>
-
+                <h1 className="typography-desktop-headline-1-d">{t('dashboard.h1')}</h1>
+                <SearchBar
+                    searchValue={policySearchFilters.searchValue}
+                    onSearch={handleSearch}
+                    toggleLabels={toggleLabels}
+                    initialToggleValue={policySearchFilters.toggleValue}
+                    onClear={clearPolicySearchFilters}
+                />
                 <SearchResults
                     query={{
                         error: policyDataError,
                         isEmpty: policyData?.results?.length === 0 || !policyData?.results,
                         isError: !!policyDataError,
-                        isIdle: Object.keys(policySearchFilters.searchValue).length === 0,
+                        isIdle,
                         isLoading: policyDataFetching,
                         isSuccess:
                             policyDataFetching === false && (!!policyData?.results || (!!policyData && policyData?.results?.length > 0)),
@@ -181,6 +178,7 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                         {policyData && <PaginationControls total={policyData.total} limit={limit} offset={offset} goToPage={goToPage} />}
                     </>
                 </SearchResults>
+                {showPagination && <PaginationControls total={policyData.total} limit={limit} offset={offset} goToPage={goToPage} />}
             </NoNavLayout>
         </DashboardContext.Provider>
     );

@@ -1,9 +1,9 @@
-import clsx from 'clsx';
 import { ReactNode } from 'react';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { JestProps } from '@deps/types/props';
+
+import { default as styles } from './card-info.module.css';
 
 export interface CardInfoProps extends JestProps {
     className?: string;
@@ -19,12 +19,10 @@ export interface CardInfoProps extends JestProps {
 
 const CardInfo = ({ className, cta, icon, secondaryCta, subtitle, title, 'data-testid': testId }: CardInfoProps) => {
     return (
-        <article className={clsx('flex max-w-[600px] flex-col items-center px-8', className)} data-testid={testId}>
+        <article className={`${styles.cardInfo} ${className}`} data-testid={testId}>
             {icon}
-            <Typography variant={TypographyVariant.H3} className="mt-1 text-center">
-                {title}
-            </Typography>
-            <p className="mt-1 text-center font-secondary text-base font-normal">{subtitle}</p>
+            <h3 className="typography-desktop-headline-3-d">{title}</h3>
+            <p>{subtitle}</p>
             {cta && (
                 <Button
                     aria-label={cta.text}

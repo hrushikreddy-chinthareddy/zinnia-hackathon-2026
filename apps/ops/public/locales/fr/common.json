@@ -49,7 +49,7 @@
             "caseManagement": "Gestion des Dossiers",
             "caseOverview": "Aperçu du Dossier",
             "contractExtras": "Options du Contrat",
-            "policySearch": "Recherche de Politique",
+            "policySearch": "Politiques",
             "policyDetails": "Détails de la Police",
             "policyExtras": "Options de Police",
             "coverage": "Couverture",
@@ -823,7 +823,7 @@
         "fileUploaded": "Fichier téléchargé avec succès"
     },
     "dashboard": {
-        "h1": "Recherche de politique",
+        "h1": "Politiques",
         "h2": "Résultats de la recherche",
         "productDetails": "Product Details",
         "search": {

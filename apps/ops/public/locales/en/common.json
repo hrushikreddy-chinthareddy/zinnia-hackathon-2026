@@ -49,7 +49,7 @@
             "caseManagement": "Case Management",
             "caseOverview": "Case Overview",
             "contractExtras": "Contract Extras",
-            "policySearch": "Policy Search",
+            "policySearch": "Policies",
             "policyDetails": "Policy Details",
             "policyExtras": "Policy Extras",
             "coverage": "Coverage",
@@ -742,7 +742,7 @@
         "fileUploaded": "File uploaded successfully"
     },
     "dashboard": {
-        "h1": "Policy Search",
+        "h1": "Policies",
         "h2": "Search Results",
         "productDetails": "Product Details",
         "search": {

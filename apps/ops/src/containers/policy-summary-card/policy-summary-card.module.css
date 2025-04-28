@@ -1,0 +1,19 @@
+.quickViewCard {
+    display: flex;
+    flex-direction: column;
+    padding: var(--measure-dimension-padding-4xl);
+    border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-subtle);
+    border-radius: var(--measure-dimenion-radius-md, 8px);
+    margin-bottom: var(--measure-dimension-margin-md);
+}
+
+.policyQuickColumns {
+    display: flex;
+    padding: var(--measure-dimension-padding-4xl) 0;
+}
+
+.bannerContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg);
+}

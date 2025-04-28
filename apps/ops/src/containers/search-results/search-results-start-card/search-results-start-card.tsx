@@ -4,11 +4,13 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import { TranslationFiles } from '@deps/config/translations';
 import { ReactComponent as StarsIcon } from '@deps/styles/elements/icons/icons_outlined/sparkles.svg';
 
+import { default as styles } from './../search-results.module.css';
+
 const SearchResultsStartCard = () => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
     return (
-        <div className="flex h-[500px] w-full items-center justify-center rounded border-2 border-dashed border-gray-200 bg-white shadow-sm">
+        <div className={styles.messageCard}>
             <CardInfo
                 icon={<StarsIcon className="text-primary" height={50} width={50} />}
                 title={t('dashboard.search.start.title')}

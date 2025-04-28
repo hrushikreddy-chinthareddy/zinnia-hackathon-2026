@@ -2,12 +2,13 @@ import { useTranslation } from 'next-i18next';
 import { ReactNode } from 'react';
 
 import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page-loader';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 
 import SearchResultsEmptyCard from './search-results-empty-card/search-results-empty-card';
 import SearchResultsErrorCard from './search-results-error-card/search-results-error-card';
 import SearchResultsStartCard from './search-results-start-card/search-results-start-card';
+
+import { default as styles } from './search-results.module.css';
 
 export interface QueryResult {
     error?: any;
@@ -28,15 +29,11 @@ const SearchResults = ({ query, children }: SearchResultsProps) => {
 
     const { t } = useTranslation(TranslationFiles.COMMON);
 
-    const header = (
-        <Typography className="mb-4 mt-12" variant={TypographyVariant.H2}>
-            {t('dashboard.h2')}
-        </Typography>
-    );
+    const header = <h2 className="typography-desktop-headline-2-d">{t('dashboard.h2')}</h2>;
 
     if (isLoading) {
         children = (
-            <div className="flex h-[500px] w-full items-center justify-center">
+            <div className={styles.loadingContainer}>
                 <PageLoader variant={PageLoaderVariant.Center} />
             </div>
         );
@@ -53,7 +50,7 @@ const SearchResults = ({ query, children }: SearchResultsProps) => {
     }
 
     return (
-        <div className="prose">
+        <div className={styles.searchResultsContainer}>
             {header}
             {children}
         </div>

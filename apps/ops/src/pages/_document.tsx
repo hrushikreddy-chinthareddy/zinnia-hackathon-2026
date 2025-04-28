@@ -16,7 +16,7 @@ const Document = ({ company }: DocumentContextProps) => {
             <Head>
                 <link rel="stylesheet" href={`/styles/themes/${company?.toLowerCase()}/theme.css`} />
             </Head>
-            <body className="bg-background">
+            <body>
                 <Main />
                 <NextScript />
             </body>

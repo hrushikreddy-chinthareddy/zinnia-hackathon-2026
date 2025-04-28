@@ -12,7 +12,6 @@ import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-
 import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PopoverPlacement } from '@deps/components/popover/popover';
-import ResponsivePadding from '@deps/components/responsive-padding/responsive-padding';
 import SelectSearch from '@deps/components/select-search/select-search';
 import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
 import {
@@ -70,6 +69,8 @@ import SideSheetEmail from '../people-data-cards/email-card/side-sheet/side-shee
 import { sortPhonesByType } from '../people-data-cards/phone-card/phone-card.helpers';
 import { SideSheetPhone } from '../people-data-cards/phone-card/side-sheet/side-sheet-phone';
 import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header/side-sheet-people-header';
+
+import { default as styles } from './policy-summary-card.module.css';
 
 interface SummaryCardProps extends PropsWithChildren {
     policy: Policy;
@@ -412,7 +413,7 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
     );
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className={styles.bannerContainer}>
             {showCaseBanner && (
                 <BannerAlert
                     variant={BannerVariant.Warning}
@@ -690,18 +691,14 @@ export const PolicyQuickView: React.FC<SummaryCardProps> = ({ policy }) => {
     });
 
     return (
-        <section data-testid={CardDetailsTest.CARD} className="mb-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
-            <ResponsivePadding>
-                <QuickViewHeader policy={policyDetails} />
-                <div data-testid={CardDetailsTest.CONTENT}>
-                    <StatusBanner policy={policyDetails} casesTotal={caseData && 'total' in caseData ? caseData.total : 0} />
-                    <div data-testid={CardColumnsTest.COLUMNS} className="my-4 md:my-6 lg:my-8 lg:flex">
-                        <OwnerInformation policy={policyDetails} />
-                        <QuickViewModule policy={policyDetails} />
-                    </div>
-                </div>
-                <KeyValuesBar policy={policy} />
-            </ResponsivePadding>
+        <section data-testid={CardDetailsTest.CARD} className={styles.quickViewCard}>
+            <QuickViewHeader policy={policyDetails} />
+            <StatusBanner policy={policyDetails} casesTotal={caseData && 'total' in caseData ? caseData.total : 0} />
+            <div data-testid={CardColumnsTest.COLUMNS} className={styles.policyQuickColumns}>
+                <OwnerInformation policy={policyDetails} />
+                <QuickViewModule policy={policyDetails} />
+            </div>
+            <KeyValuesBar policy={policy} />
         </section>
     );
 };
