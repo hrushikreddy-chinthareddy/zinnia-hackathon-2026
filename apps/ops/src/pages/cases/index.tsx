@@ -124,8 +124,11 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     const searchValueObject = useMemo(() => {
         const svo = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
-        const additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
-
+        let additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
+        if (isAdvisorsExcel) {
+            const advisorsExcelParams = getAdvisorsExcelCaseParams(enableAdditionalAdvisorsExcelCarriers);
+            additionalFilters = { ...additionalFilters, ...advisorsExcelParams };
+        }
         return {
             ...svo,
             ...additionalFilters,
@@ -143,6 +146,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         limit,
         caseManagementFilters.sortDirection,
         caseManagementFilters.sortBy,
+        isAdvisorsExcel,
         enableAdditionalAdvisorsExcelCarriers,
     ]);
 
@@ -151,8 +155,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         isLoading: caseSearchLoading,
         isError: caseSearchError,
     } = useQuery({
-        queryKey: ['cases', searchValueObject, featureFlags],
-        queryFn: () => getCaseSearchQuery(searchValueObject, featureFlags),
+        queryKey: ['cases', searchValueObject],
+        queryFn: () => getCaseSearchQuery(searchValueObject),
         enabled: loadedStoredFilters,
     });
 

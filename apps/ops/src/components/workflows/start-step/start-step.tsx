@@ -6,7 +6,6 @@ import CardCaseDocument from '@deps/components/card/card-case-document/card-case
 import { CaseDocumentOption, PROCESS_WITHOUT_CASE_DOCUMENT } from '@deps/components/case-document-select/case-document-select';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Processes, Statuses } from '@deps/models/case/case';
@@ -49,7 +48,6 @@ const StartStep = ({
     isContinueDisabled = false,
 }: StartStepProps) => {
     const { t } = useTranslation();
-    const { featureFlags } = useOptimizely();
     const { goToNext } = useWorkflow();
 
     const { policyNumber, product } = policy;
@@ -69,7 +67,7 @@ const StartStep = ({
                 notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
                 policyNumber: policyNumber,
                 process: [processType],
-            }, featureFlags);
+            });
 
             if (response && 'total' in response) {
                 const mappedCaseOptions: CaseDocumentOption[] = response.data.map(caseDetails => {

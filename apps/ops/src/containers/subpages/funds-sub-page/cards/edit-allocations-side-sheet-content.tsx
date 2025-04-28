@@ -1,34 +1,31 @@
-import dayjs from "dayjs";
-import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
-
-import AssistiveText, { AssistiveTextVariant } from "@deps/components/assistive-text/assistive-text";
-import { ButtonSize } from "@deps/components/button/button";
-import CardCaseDocument from "@deps/components/card/card-case-document/card-case-document";
-import { CaseDocumentOption, PROCESS_WITHOUT_CASE_DOCUMENT } from "@deps/components/case-document-select/case-document-select";
-import Field, { FieldFormat, FieldSize, FieldType, FieldVariant } from "@deps/components/fields/field";
-import FieldDateSelect from "@deps/components/fields/field-date-select/field-date-select";
-import { Label, LabelVariant } from "@deps/components/label/label";
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
-import SpinnerButton from "@deps/components/spinner-button/spinner-button";
-import Typography, { TypographyVariant } from "@deps/components/typography/typography";
-import { useOptimizely } from "@deps/contexts/OptimizelyContext";
-import { SideSheetContextProps } from "@deps/contexts/SideSheetContext";
-import { getCaseIdentifierValue } from "@deps/helpers/case-management";
-import { CaseIdentifier, Statuses } from "@deps/models/case/case";
-import { TransactionResponseStatus } from "@deps/queries/api/bpm";
-import { getCases } from "@deps/queries/api/cases";
-import { fundAllocation, validateFundAllocation } from "@deps/queries/api/fund-allocation";
-import { ReactComponent as ClockIcon } from '@deps/styles/elements/icons/icons_outlined/clock.svg';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from "@deps/types/constants";
-
+import { useTranslation } from "next-i18next";
 import { FundViewModel } from "../types";
-import { AllocationSuccessFlow } from "./allocation-success-flow";
-import { EditAllocationNigo } from "./edit-allocations-nigo";
-import { EditAllocationsNigoSuccess } from "./edit-allocations-nigo-success";
-import { EditAllocationSuccess } from "./edit-allocations-success";
+import FieldDateSelect from "@deps/components/fields/field-date-select/field-date-select";
+import Field, { FieldFormat, FieldSize, FieldType, FieldVariant } from "@deps/components/fields/field";
+import Typography, { TypographyVariant } from "@deps/components/typography/typography";
+import { ButtonSize } from "@deps/components/button/button";
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from "@deps/components/nav-element/nav-element";
+import { Label, LabelVariant } from "@deps/components/label/label";
+import { CaseDocumentOption, PROCESS_WITHOUT_CASE_DOCUMENT } from "@deps/components/case-document-select/case-document-select";
+import CardCaseDocument from "@deps/components/card/card-case-document/card-case-document";
+import AssistiveText, { AssistiveTextVariant } from "@deps/components/assistive-text/assistive-text";
+import { getCases } from "@deps/queries/api/cases";
+import { CaseIdentifier, Statuses } from "@deps/models/case/case";
+import { getCaseIdentifierValue } from "@deps/helpers/case-management";
+import { fundAllocation, validateFundAllocation } from "@deps/queries/api/fund-allocation";
+import dayjs from "dayjs";
+import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from "@deps/types/constants";
+import { SideSheetContextProps } from "@deps/contexts/SideSheetContext";
+import SpinnerButton from "@deps/components/spinner-button/spinner-button";
+import { ReactComponent as ClockIcon } from '@deps/styles/elements/icons/icons_outlined/clock.svg';
+import { v4 as uuidv4 } from 'uuid';
 import { EditAllocationsSystemDown } from "./edit-allocations-system-down";
+import { EditAllocationSuccess } from "./edit-allocations-success";
+import { EditAllocationsNigoSuccess } from "./edit-allocations-nigo-success";
+import { EditAllocationNigo } from "./edit-allocations-nigo";
+import { AllocationSuccessFlow } from "./allocation-success-flow";
+import { TransactionResponseStatus } from "@deps/queries/api/bpm";
 
 interface IEditAllocationsContent {
     funds?: FundViewModel[];
@@ -44,7 +41,6 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
     funds, policyNumber, notElectedfunds, planCode, sideSheet, investmentType, policyOwner
 }) => {
     const { t } = useTranslation();
-    const { featureFlags } = useOptimizely();
     const [caseOptions, setCaseOptions] = useState<CaseDocumentOption[]>([]);
     const numberFormat = { type: 'number' as FieldFormat, decimalPlaces: 2, format: '' };
     const [selectedCaseId, setSelectedCaseId] = useState<string | undefined>(policyNumber);
@@ -62,7 +58,6 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
     const [effectiveDateError, setEffectiveDateError] = useState(false)
     const [stopLoading, setStopLoading] = useState(true);
     const [successCaseId, setSuccessCaseId] = useState('')
-
     useEffect(() => {
         async function populateCaseSelect() {
             const noDocument = {
@@ -75,7 +70,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
                 notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
                 policyNumber: policyNumber,
                 process: ['Systematic Program Update'],
-            }, featureFlags);
+            });
 
             if (response && 'total' in response) {
                 const mappedCaseOptions: CaseDocumentOption[] = response.data.map(caseDetails => {
@@ -97,7 +92,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
         }
 
         populateCaseSelect();
-    }, [featureFlags, policyNumber, t]);
+    }, [policyNumber, t]);
 
     useEffect(() => {
         // Convert initial % strings to numbers

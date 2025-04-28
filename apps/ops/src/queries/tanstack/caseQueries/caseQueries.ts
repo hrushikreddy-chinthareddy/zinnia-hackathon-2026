@@ -7,7 +7,6 @@ import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
 import { CaseSearchErrorResponse, CaseSearchResponse } from '@deps/types/search';
-import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 export const getCaseNotesQuery = async (caseId: string | undefined, includeInternal = false) => {
     if (!caseId) {
@@ -24,7 +23,7 @@ export const getCaseNotesQuery = async (caseId: string | undefined, includeInter
     };
 };
 
-export const getCasesQuery = async (policyNumber?: string, featureFlags?: FeatureFlags) => {
+export const getCasesQuery = async (policyNumber?: string) => {
     if (!policyNumber) {
         throw 'No policy number provided';
     }
@@ -33,7 +32,7 @@ export const getCasesQuery = async (policyNumber?: string, featureFlags?: Featur
         limit: 5,
         notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
         policyNumber,
-    }, featureFlags as FeatureFlags);
+    });
 
     if (!response) {
         throw 'No data in response';
@@ -69,12 +68,12 @@ export const getCaseDetailsQuery = async (caseId: string) => {
     return response;
 };
 
-export const getCaseSearchQuery = async (caseSearchQuery?: CaseSearchQuery, featureFlags?: FeatureFlags) => {
+export const getCaseSearchQuery = async (caseSearchQuery?: CaseSearchQuery) => {
     if (!caseSearchQuery) {
         throw 'No caseSearchQuery provided';
     }
 
-    const response = await getCases(caseSearchQuery, featureFlags as FeatureFlags);
+    const response = await getCases(caseSearchQuery);
 
     if (!response) {
         throw 'No data in response';

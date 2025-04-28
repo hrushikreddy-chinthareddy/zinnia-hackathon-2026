@@ -682,11 +682,10 @@ const ActiveQuickView = ({ policy }: BasePolicyComponentArgs) => {
 
 export const PolicyQuickView: React.FC<SummaryCardProps> = ({ policy }) => {
     const policyDetails = new PolicyDetails(policy);
-    const { featureFlags } = useOptimizely();
 
     const { data: caseData } = useQuery({
-        queryKey: ['caseData', policyDetails.policyNumber, featureFlags],
-        queryFn: () => getCasesQuery(policyDetails.policyNumber, featureFlags),
+        queryKey: ['caseData', policyDetails.policyNumber],
+        queryFn: () => getCasesQuery(policyDetails.policyNumber),
         placeholderData: previousData => previousData,
     });
 

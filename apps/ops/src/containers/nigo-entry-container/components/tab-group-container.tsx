@@ -12,7 +12,6 @@ import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-s
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
 import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
@@ -38,7 +37,6 @@ type TabGroupContainerProps = {
     policyNumber: string;
     clientCode: string;
 };
-
 const TabGroupContent = ({
     steps,
     policy,
@@ -49,7 +47,6 @@ const TabGroupContent = ({
     policyNumber,
     clientCode
 }: TabGroupContainerProps) => {
-    const { featureFlags } = useOptimizely();
     const [caseTableData, setCaseTableData] = useState<CaseTableData>({ cases: [], total: 0, loading: true, error: false });
     const [offset, setOffset] = useState(0);
     const [error, setError] = useState<ErrorMessagePart[] | null>(null);
@@ -68,7 +65,7 @@ const TabGroupContent = ({
                 sortBy: 'createdAt',
             };
 
-            const response = await getCases(updatedRequest, featureFlags);
+            const response = await getCases(updatedRequest);
 
             if (!response) {
                 console.log('Error fetching cases: No data in response');

@@ -20,8 +20,6 @@ import { mockCaseDetails } from '@deps/services/mocks/case-details';
 import { CaseSearchBody, CaseSearchErrorResponse, CaseSearchResponse } from '@deps/types/search';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { caseSanitizer } from '@deps/utils/sanitizers';
 import { logError, LoggingContext, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -31,8 +29,6 @@ import { serverApi } from '../api-utils/serverApiClient';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const ssrCasesUrl = `${se2ApiServerUrl}/cases`;
-const baseSearchUrl = `${baseAppUrl}/api/enterprise-search/v1/search`;
-const ssrSearchUrl = `${se2ApiServerUrl}/enterprise-search/v1/search`;
 
 export type ReferenceDataQuery = {
     carrier?: string[];
@@ -84,12 +80,9 @@ export const createCase = async (query: CreateCaseBody): Promise<CreateCaseRespo
     }
 };
 
-export const getCases = async (query: CaseSearchBody, featureFlags: FeatureFlags): Promise<CaseSearchResponse | CaseSearchErrorResponse> => {
-    try {        
-        const searchUrl = featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH] 
-            ? baseSearchUrl
-            : `${baseCasesUrl}/search`;
-        const { data } = await client.post<CaseSearchBody, AxiosResponse>(searchUrl, query);
+export const getCases = async (query: CaseSearchBody): Promise<CaseSearchResponse | CaseSearchErrorResponse> => {
+    try {
+        const { data } = await client.post<CaseSearchBody, AxiosResponse>(`${baseCasesUrl}/search`, query);
 
         return data;
     } catch (error: any) {
@@ -329,14 +322,10 @@ export const getReferenceDataSSR = async (
 export const searchCasesSSR = async (
     formData: CaseSearchBody,
     accessToken: string | undefined,
-    loggingContext: LoggingContext,
-    featureFlags: FeatureFlags,
+    loggingContext: LoggingContext
 ): Promise<CaseSearchResponse | null> => {
     try {
-        const searchUrl = featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH] 
-            ? ssrSearchUrl
-            : `${ssrCasesUrl}/search`;
-
+        const searchUrl = `${ssrCasesUrl}/search`;
         logInfo('searchCasesSSR', { ...loggingContext, file: 'queries/api/cases', function: 'searchCasesSSR', url: searchUrl });
 
         const { data: searchResponse } = await serverApi.post<any>(
