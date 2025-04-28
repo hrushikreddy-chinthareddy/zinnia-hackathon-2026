@@ -155,8 +155,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         isLoading: caseSearchLoading,
         isError: caseSearchError,
     } = useQuery({
-        queryKey: ['cases', searchValueObject],
-        queryFn: () => getCaseSearchQuery(searchValueObject),
+        queryKey: ['cases', searchValueObject, featureFlags],
+        queryFn: () => getCaseSearchQuery(searchValueObject, featureFlags),
         enabled: loadedStoredFilters,
     });
 

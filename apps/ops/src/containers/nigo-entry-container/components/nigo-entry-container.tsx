@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { AdditionalDataInstance } from '@deps/models/case/additional-data-instance';
 import { Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
@@ -47,6 +48,7 @@ const NigoEntryContainer = ({
     nigoSubExceptions,
     taskInfoLink,
 }: NigoEntryContainerContainerProps) => {
+    const { featureFlags } = useOptimizely();
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry' });
     const { setTransactionType, setTransactionSubType, setDocument, sectionOption } = useNigoEntry();
 
@@ -116,7 +118,7 @@ const NigoEntryContainer = ({
             };
             let searchCasesResponse = null;
             try {
-                searchCasesResponse = await getCases(filters);
+                searchCasesResponse = await getCases(filters, featureFlags);
                 if (searchCasesResponse && 'total' in searchCasesResponse) {
                     const latestForm = searchCasesResponse?.data?.find(
                         item => item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()
@@ -137,7 +139,7 @@ const NigoEntryContainer = ({
         if (policyNumber && clientCode) {
             searchCases();
         }
-    }, [clientCode, docType, policyNumber]);
+    }, [clientCode, docType, featureFlags, planCode, policyNumber]);
 
     useEffect(() => {
         const initialize = async () => {

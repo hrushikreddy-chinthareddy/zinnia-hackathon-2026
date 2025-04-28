@@ -1,5 +1,6 @@
 import { useState, useCallback, Dispatch, SetStateAction, useEffect } from 'react';
 
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { isEmptyObject } from '@deps/helpers/objects.helper';
 import { Case } from '@deps/models/case/case';
 import { getCases } from '@deps/queries/api/cases';
@@ -15,7 +16,9 @@ type UseFetchCasesResult = {
     fetchCases: () => void;
 };
 
+// TODO MG: we should use this wherever were calling `getCases()` directly
 export const useFetchCases = (): UseFetchCasesResult => {
+    const { featureFlags } = useOptimizely();
     const [filters, setFilters] = useState<CaseSearchBody>({});
     const [total, setTotal] = useState<number | null>(null);
     const [cases, setCases] = useState<Case[] | null>(null);
@@ -33,7 +36,7 @@ export const useFetchCases = (): UseFetchCasesResult => {
         setLoading(true);
         setError(null);
         try {
-            const response = await getCases(filters);
+            const response = await getCases(filters, featureFlags);
             if ('total' in response) {
                 setCases(response.data);
                 setTotal(response.total);
@@ -47,7 +50,7 @@ export const useFetchCases = (): UseFetchCasesResult => {
         } finally {
             setLoading(false);
         }
-    }, [filters]);
+    }, [featureFlags, filters]);
 
     return { cases, total, loading, error, filters, fetchCases, setFilters };
 };
