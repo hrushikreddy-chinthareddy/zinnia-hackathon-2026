@@ -101,17 +101,20 @@ it('opens the menu when the select is clicked', async () => {
 });
 
 it('should close the menu when an option is selected', async () => {
+    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {}); // optional
+
     // Render the Autocomplete component
     const { getByRole } = render(<Autocomplete options={options} value="" onChange={() => {}} placeholder="Select an option" />);
 
     // Open the dropdown menu
     await userEvent.click(getByRole('combobox'));
 
-    const option2 = screen.getByText('Option 2');
+    const option2 = await screen.getByText('Option 2');
     expect(option2).toBeInTheDocument();
     await userEvent.click(option2);
 
     waitFor(() => {
         expect(screen.queryByText('Option 1', { ignore: 'option' })).toBeNull();
     });
+    consoleErrorMock.mockRestore();
 });
