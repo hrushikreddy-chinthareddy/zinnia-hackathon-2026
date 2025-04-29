@@ -701,11 +701,6 @@
                                                     "items": {
                                                         "type": "object",
                                                         "properties": {
-                                                            "qualificationType": {
-                                                                "type": "string",
-                                                                "title": "Qualification Type",
-                                                                "$ref": "#/definitions/financialProducts_totalAsset_qualificationTypeEnum"
-                                                            },
                                                             "assetType": {
                                                                 "type": "string",
                                                                 "title": "Asset Type",
@@ -899,66 +894,6 @@
                                     "type": "object",
                                     "title": "Agent Acknowledgment",
                                     "properties": {
-                                        "maApplicationQuestionnaire": {
-                                            "type": "object",
-                                            "title": "MA Application Questionnaire",
-                                            "properties": {
-                                                "soldPoliciesToApplicant": {
-                                                    "type": "string",
-                                                    "title": "Sold policies to applicant",
-                                                    "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum"
-                                                }
-                                            },
-                                            "dependencies": {
-                                                "soldPoliciesToApplicant": {
-                                                    "if": {
-                                                        "properties": {
-                                                            "soldPoliciesToApplicant": {
-                                                                "const": "YES"
-                                                            }
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "properties": {
-                                                            "productDetails": {
-                                                                "type": "array",
-                                                                "title": "Product Details",
-                                                                "items": {
-                                                                    "type": "object",
-                                                                    "required": [
-                                                                        "productType",
-                                                                        "companyName",
-                                                                        "policyNumber",
-                                                                        "issueDate"
-                                                                    ],
-                                                                    "properties": {
-                                                                        "productType": {
-                                                                            "type": "string",
-                                                                            "title": "Product type",
-                                                                            "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
-                                                                        },
-                                                                        "companyName": {
-                                                                            "type": "string",
-                                                                            "title": "Company Name"
-                                                                        },
-                                                                        "policyNumber": {
-                                                                            "type": "string",
-                                                                            "title": "Policy Number"
-                                                                        },
-                                                                        "issueDate": {
-                                                                            "type": "string",
-                                                                            "format": "date",
-                                                                            "title": "Issue Date"
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "required": ["soldPoliciesToApplicant"]
-                                        },
                                         "disclosureAcknowledgement": {
                                             "type": "object",
                                             "title": "Disclosure Acknowledgement",
@@ -1143,6 +1078,102 @@
                                                     "buyingForGovernmentBenefits",
                                                     "reverseMortgage"
                                                 ]
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "parties": {
+                                                "type": "array",
+                                                "contains": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "addresses": {
+                                                            "type": "array",
+                                                            "contains": {
+                                                                "type": "object",
+                                                                "required": [
+                                                                    "state"
+                                                                ],
+                                                                "properties": {
+                                                                    "state": {
+                                                                        "const": "MA"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "agentAcknowledgment": {
+                                                "properties": {
+                                                    "maApplicationQuestionnaire": {
+                                                        "type": "object",
+                                                        "title": "MA Application Questionnaire",
+                                                        "properties": {
+                                                            "soldPoliciesToApplicant": {
+                                                                "type": "string",
+                                                                "title": "Sold policies to applicant",
+                                                                "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicantEnum"
+                                                            }
+                                                        },
+                                                        "dependencies": {
+                                                            "soldPoliciesToApplicant": {
+                                                                "if": {
+                                                                    "properties": {
+                                                                        "soldPoliciesToApplicant": {
+                                                                            "const": "YES"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "then": {
+                                                                    "properties": {
+                                                                        "productDetails": {
+                                                                            "type": "array",
+                                                                            "title": "Product Details",
+                                                                            "items": {
+                                                                                "type": "object",
+                                                                                "required": [
+                                                                                    "productType",
+                                                                                    "companyName",
+                                                                                    "policyNumber",
+                                                                                    "issueDate"
+                                                                                ],
+                                                                                "properties": {
+                                                                                    "productType": {
+                                                                                        "type": "string",
+                                                                                        "title": "Product type",
+                                                                                        "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_productDetails_productTypeEnum"
+                                                                                    },
+                                                                                    "companyName": {
+                                                                                        "type": "string",
+                                                                                        "title": "Company Name"
+                                                                                    },
+                                                                                    "policyNumber": {
+                                                                                        "type": "string",
+                                                                                        "title": "Policy Number"
+                                                                                    },
+                                                                                    "issueDate": {
+                                                                                        "type": "string",
+                                                                                        "format": "date",
+                                                                                        "title": "Issue Date"
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": ["soldPoliciesToApplicant"]
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1396,12 +1427,6 @@
                                 "ANNUITY_SURRENDER_FREE",
                                 "ANNUITY_SURRENDER_FREE_UNDERAGE",
                                 "OTHERS"
-                            ]
-                        },
-                        "financialProducts_totalAsset_qualificationTypeEnum": {
-                            "enum": [
-                                "QUALIFIED",
-                                "NON_QUALIFIED"
                             ]
                         },
                         "financialProducts_totalAsset_assetTypeEnum": {
@@ -1888,7 +1913,7 @@
                             }
                         },
                         "applicationInfo": {
-                            "ui:order":["replacementInd", "replacementReason", "additionalInformation"],
+                            "ui:order": ["replacementInd", "replacementReason", "additionalInformation"],
                             "ui:options": {
                                 "expandable": true
                             },
@@ -2136,16 +2161,6 @@
                                             "minItems": 1,
                                             "label": false
                                         },
-                                        "qualificationType": {
-                                            "ui:widget": "radio",
-                                            "ui:options": {
-                                                "inline": true,
-                                                "enumNames": [
-                                                    "Qualified",
-                                                    "Nonqualified"
-                                                ]
-                                            }
-                                        },
                                         "assetType": {
                                             "ui:options": {
                                                 "enumNames": [
@@ -2262,6 +2277,7 @@
                             }
                         },
                         "agentAcknowledgment": {
+                            "ui:order": ["maApplicationQuestionnaire", "disclosureAcknowledgement"],
                             "ui:options": {
                                 "expandable": true
                             },
@@ -2336,9 +2352,17 @@
                             "ui:options": {
                                 "expandable": true
                             },
-                            "extraFundAvailable": {},
+                            "extraFundAvailable": {
+                                "ui:options": {
+                                    "enumNames": ["Yes", "No"]
+                                }
+                            },
                             "extraFundAvailableDetails": {},
-                            "resideInNursingHomeOrAssistedLiving": {},
+                            "resideInNursingHomeOrAssistedLiving": {
+                                "ui:options": {
+                                    "enumNames": ["Yes", "No"]
+                                }
+                            },
                             "noOfDependents": {},
                             "otherDependents": {}
                         },
