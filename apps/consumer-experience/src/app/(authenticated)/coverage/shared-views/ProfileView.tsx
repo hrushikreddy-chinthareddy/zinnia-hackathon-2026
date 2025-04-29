@@ -1,10 +1,12 @@
 import { Email, LineOfBusiness, Phone } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
+import AccordionDetails from '@/components/accordion-details/AccordionDetails';
 import { AddressList } from '@/components/address-list/AddressList';
 import { BankList } from '@/components/bank-list/BankList';
 import { CommunicationPreferences } from '@/components/communication-preferences/CommunicationPreferences';
 import { FieldData } from '@/components/field-data/FieldData';
+import { PartyList } from '@/components/party-list/PartyList';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
@@ -34,6 +36,7 @@ export const ProfileView = async ({
   const allowBankingChanges =
     flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT] || false;
   const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
+  const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
 
   let preferencesData = [] as EDeliveryPreferenceModel[];
 
@@ -108,6 +111,30 @@ export const ProfileView = async ({
     );
   };
 
+  const parties = () => {
+    const { parties } = profileData;
+
+    if (!parties) {
+      return null;
+    }
+
+    return (
+      <AccordionDetails
+        items={[
+          {
+            value: 'policy-parties',
+            trigger: (
+              <span className="typography-content-body-sm-bold">
+                People on this policy
+              </span>
+            ),
+            content: <PartyList parties={parties} />,
+          },
+        ]}
+      />
+    );
+  };
+
   return (
     <div>
       <CallForAssistance
@@ -126,6 +153,7 @@ export const ProfileView = async ({
               />
             </p>
           </FieldData>
+          {showParties && parties()}
         </div>
 
         {addresses()}

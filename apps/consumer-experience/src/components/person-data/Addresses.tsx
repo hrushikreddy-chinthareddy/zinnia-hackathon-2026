@@ -34,14 +34,17 @@ const AddressGroup = ({
   userOnlyHasOneAddress,
 }: {
   addresses: AddressInterface[];
-  preferredAddressIndicator: string;
+  preferredAddressIndicator?: string;
   showEditButton?: boolean;
   partyId: string;
   userOnlyHasOneAddress: boolean;
 }) => {
   return addresses?.map((address, index) => {
-    const mailingAddressText =
-      preferredAddressIndicator === address?.addressId ? 'Mailing address' : '';
+    const isPreferredAddress =
+      !!preferredAddressIndicator &&
+      preferredAddressIndicator === address?.addressId;
+
+    const mailingAddressText = isPreferredAddress ? 'Mailing address' : '';
 
     //Build out the addresses array by taking all the address lines and making sure we filter all the bad values out
     // there has to be a prettier and easier way of doing this
@@ -63,7 +66,7 @@ const AddressGroup = ({
       city: address.city,
       state: address.state as unknown as AddressChange.state,
       zipCode: address.zipCode,
-      defaultAddress: preferredAddressIndicator === address?.addressId,
+      defaultAddress: isPreferredAddress,
     };
 
     return (

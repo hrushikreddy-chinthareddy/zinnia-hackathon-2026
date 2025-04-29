@@ -36,6 +36,7 @@ import {
   PolicyFeatureDetail,
   CarrierPolicyDetails,
   PolicyWithAgent,
+  PolicyParty,
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
 import {
@@ -169,9 +170,33 @@ export const transformPolicyForHeaderDetails = (
   };
 };
 
+export const policyParties = (policy: Policy): PolicyParty[] => {
+  return (policy.parties || []).map(party => {
+    // Collect all roles for the party
+    const partyRoles = policy.partyRoles
+      ?.filter(role => role?.partyId === party?.partyId)
+      .map(role => role.partyRole)
+      // failsafe if a role in the party doesn't map to a the list of party roles in policy.partyRoles
+      .filter(role => role !== undefined);
+
+    return {
+      partyId: party.partyId,
+      firstName: party.firstName,
+      lastName: party.lastName,
+      fullName: party.fullName,
+      addresses: party.addresses,
+      emails: party.emails,
+      phones: party.phones,
+      partyRoles: partyRoles,
+      partyType: party.partyType,
+    };
+  });
+};
+
 export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
   const ownerInfo = policyOwner(policy);
   const bankDetails = allPolicyOwnerBanks(policy);
+  const parties = policyParties(policy);
 
   return {
     preferredAddressIndicator: ownerInfo?.preferredAddressIndicator || '',
@@ -184,6 +209,7 @@ export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
     bankDetails,
     emails: ownerInfo?.emails || [],
     phones: ownerInfo?.phones || [],
+    parties: parties || [],
   };
 };
 

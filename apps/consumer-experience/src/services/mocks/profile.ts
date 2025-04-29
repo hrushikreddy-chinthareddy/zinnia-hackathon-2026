@@ -4,6 +4,8 @@ import {
   AddressType,
   Country,
   EmailType,
+  PartyRole,
+  PartyType,
   PhoneType,
   State,
 } from '@zinnia/api-types/types/sor';
@@ -181,6 +183,19 @@ export const profileData: PolicyProfile = {
       appliesToPartyId: 'Party_PI_1',
       // recordId: 'Bank_1',
       // financialInstitutionPartyId: 'Bank_1',
+    },
+  ],
+  parties: [
+    {
+      partyId: '1',
+      firstName: 'Flora',
+      lastName: 'Williams',
+      fullName: 'Flora Williams',
+      addresses: [],
+      emails: [],
+      phones: [],
+      partyRoles: [PartyRole.JOINTOWNER],
+      partyType: PartyType.INDIVIDUAL,
     },
   ],
 };

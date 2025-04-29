@@ -42,6 +42,7 @@ describe('refetchHandler', () => {
         lastName: 'Schmo',
       },
       emails: [],
+      parties: [],
     };
 
     pollCount = { current: 0 };
@@ -161,6 +162,7 @@ describe('shouldStopPolling', () => {
         lastName: 'Schmo',
       },
       emails: [],
+      parties: [],
     };
 
     bpmAction = {

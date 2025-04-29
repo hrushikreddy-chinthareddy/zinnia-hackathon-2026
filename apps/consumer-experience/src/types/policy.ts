@@ -86,14 +86,27 @@ interface Person {
   lastName: string;
 }
 
+export interface PolicyParty {
+  partyId?: string;
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
+  addresses?: Address[];
+  emails?: Email[];
+  phones?: Phone[];
+  partyRoles?: PartyRole[];
+  partyType?: PartyType;
+}
+
 export interface PolicyProfile {
   preferredAddressIndicator: string;
-  name: Person;
+  name: { firstName?: string; lastName?: string; fullName?: string };
   partyId: string;
   addresses: Address[];
   phones: Phone[];
   emails: Email[];
   bankDetails: BankDetail[];
+  parties: PolicyParty[];
 }
 
 export type PolicyReferenceData = Pick<

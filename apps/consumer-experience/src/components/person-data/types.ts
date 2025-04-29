@@ -81,7 +81,7 @@ export interface EmailProps {
 
 export interface AddressProps {
   addresses: Address[];
-  preferredAddressIndicator: string;
+  preferredAddressIndicator?: string;
   partyId: string;
   allowAddressChanges?: boolean;
 }

@@ -21,7 +21,9 @@ export const AccordionTrigger = forwardRef<
       {...props}
       ref={forwardedRef}
     >
-      <Icon className={styles.chevron} type={IconType.CHEVRON} />
+      <div>
+        <Icon className={styles.chevron} type={IconType.CHEVRON} small />
+      </div>
       {children}
     </Accordion.Trigger>
   </Accordion.Header>
