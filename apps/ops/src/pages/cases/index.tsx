@@ -44,7 +44,6 @@ import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import useCaseFilterQueryStore from './caseFilterQueryStore';
-import styles from './index.module.css';
 
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(() => import('@deps/components/side-sheet/side-sheet-refine-results/side-sheet-refine-results'));
@@ -353,7 +352,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
                 {t('caseManagementDashboard.h1')}
             </Typography>
-            <div className={styles.container}>
+            <>
                 {searchBar}
                 <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
                     <StatusFilter
@@ -401,7 +400,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                     />
                 </div>
                 {tableContent}
-            </div>
+            </>
         </CaseManagementFiltersContext.Provider>
     );
 };

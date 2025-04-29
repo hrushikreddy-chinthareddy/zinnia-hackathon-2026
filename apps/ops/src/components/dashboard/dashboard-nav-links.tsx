@@ -33,7 +33,7 @@ export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
                         '--indicator-z-index': 2,
                     } as CSSProperties
                 }
-                className="!mb-0 w-full !border-b-0 bg-white px-8"
+                className="!mb-0 w-full !border-b-0 bg-white "
             >
                 <TabTrigger value={DashboardTabs.ACTIVE_APPLICATIONS}>
                     <Icon type={IconType.DOCUMENT_TEXT} width={24} height={24} className="hidden lg:block" />{' '}

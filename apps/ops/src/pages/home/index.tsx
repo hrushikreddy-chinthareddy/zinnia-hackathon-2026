@@ -29,12 +29,12 @@ export default function Home({ featureFlagDecisions, additionalData }: HomePageP
             <Typography variant={TypographyVariant.H1} className="md:mb-5 mb-4">
                 {t('homeTitle')}
             </Typography>
-            <div className="bg-white rounded-md shadow-md w-100 p-8 pb-4">
+            <>
                 <Typography className="mb-4" variant={TypographyVariant.H2}>
                     {t('taskTitle')}
                 </Typography>
                 <TaskManagementQueue featureFlagDecisions={featureFlagDecisions} additionalData={additionalData} showClaimTask={false} />
-            </div>
+            </>
         </>
     );
 }

@@ -1544,6 +1544,7 @@
     },
     "caseRenewal": {
         "caseCreate": {
+            "h1": "Transaction Ops Suite",
             "caseType": "Case type",
             "caseTypePlaceholder": "Select case type",
             "client": "Client",

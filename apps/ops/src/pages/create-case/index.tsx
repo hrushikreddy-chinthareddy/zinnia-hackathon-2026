@@ -407,8 +407,9 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                     </div>
                 ) : (
                     <>
+                        <h1 className="typography-desktop-headline-1-d">{t('caseRenewal.caseCreate.h1')}</h1>
                         <TabGroup defaultValue={activeTab} value={activeTab} activationMode="manual" onValueChange={handleTabChange}>
-                            <TabList className="!mb-0 w-full px-4 pt-4">
+                            <TabList className="!mb-0 w-full pt-4">
                                 <TabTrigger value={TabOptions.myTasks}>
                                     <ProgressIcon width={24} height={24} className="hidden lg:block" />{' '}
                                     {toTitleCase(t('caseRenewal.caseCreate.tabs.myTask') ?? '')}
