@@ -201,12 +201,12 @@ export const getCaseTasksByIdSSR = async (
 
 export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
     try {
-        const { data } = await client.post(`${baseAppUrl}/api/case/v1/tasks/assigned`);
+        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/assignments`);
         return data ?? [];
     } catch (error) {
         browserLogError('getAssignedTasks::Failed to retrieve unassigned tasks', {
             ...parseErrorInformation(error),
-            file: 'queries/v1/tasks/assigned',
+            file: 'queries/v1/tasks',
             function: 'getAssignedTasks',
         });
         return [];
@@ -304,12 +304,12 @@ export const claimTask = async (taskId: string): Promise<any> => {
 
 export const getUnassignedTasks = async (): Promise<UnassignedTask[] | []> => {
     try {
-        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/unassigned`);
+        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/unassignments`);
         return data ?? [];
     } catch (error) {
         browserLogError('getUnassignedTasks::', {
             ...parseErrorInformation(error),
-            file: 'queries/v1/tasks/unassigned',
+            file: 'queries/v1/tasks',
             function: 'getUnassignedTasks',
         });
         return [];

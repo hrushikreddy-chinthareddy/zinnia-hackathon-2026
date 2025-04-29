@@ -41,6 +41,7 @@ export type TaskInstance = {
     taskType: string;
     updatedAt: string;
     queue?: string | null;
+    description?: string;
 };
 export type ManagementTask<T = TaskStatus> = {
     assignedTo?: any;
@@ -107,6 +108,7 @@ export type AssignedTask<T = TaskStatus> = {
     carrier: string;
     taskType: string;
     taskName: string;
+    taskDetails?: string;
     status: T;
     queue: string;
     escalated: boolean;
@@ -138,6 +140,7 @@ export interface TaskSideSheetProps {
     type?: string;
     taskDescription?: string;
     taskName?: string;
+    onTaskClaimSuccess?: () => void;
 }
 
 export interface TaskQueueDrawerProps {
@@ -153,6 +156,7 @@ export type UnassignedTask<T = TaskStatus> = {
     id: string;
     caseId: string;
     process: string;
+    queue?: string;
     carrier: string;
     taskType: string;
     taskName: string;
@@ -160,4 +164,5 @@ export type UnassignedTask<T = TaskStatus> = {
     assignee?: string;
     createdAt: string;
     identifiers: IdentifierInstance[];
+    taskDetails?: string;
 };

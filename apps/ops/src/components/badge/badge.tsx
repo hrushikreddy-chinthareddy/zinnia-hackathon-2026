@@ -41,7 +41,7 @@ const Badge = ({ variant, rounded, label, icon, className }: BadgeProps): JSX.El
     return (
         <span
             data-testid={BadgeTest.Badge}
-            className={`align-center flex cursor-default border-2 font-primary text-sm font-semibold leading-4 ${variantClasses} ${roundedClasses}`}
+            className={`w-fit align-center flex cursor-default border-2 font-primary text-sm font-semibold leading-4 ${variantClasses} ${roundedClasses}`}
         >
             <span>{icon}</span>
             <span className="m-auto flex flex-shrink">{label}</span>

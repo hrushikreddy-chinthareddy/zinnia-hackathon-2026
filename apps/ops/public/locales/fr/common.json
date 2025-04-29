@@ -321,6 +321,7 @@
         "documentNumber": "Document: ",
         "caseID": "Cas/ID",
         "carrierPolicy": "Opérateur/Politique",
+        "policy": "Politique #:",
         "product": "Produit",
         "assignee": "Cessionnaire",
         "temporal": {
@@ -353,7 +354,12 @@
         "notePlaceholder": "Ajouter une note.",
         "addNote": "Ajouter une note",
         "errorSavingNote": "Une erreur s'est produite lors de l'enregistrement de la note. Veuillez réessayer.",
-        "notePostDate": "Publié le {{date}} par"
+        "notePostDate": "Publié le {{date}} par",
+        "sideSheet": {
+            "task": {
+                "heading": "Tâche"
+            }
+        }
     },
     "beneChange": {
         "tabs": {

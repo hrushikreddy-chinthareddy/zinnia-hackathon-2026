@@ -50,7 +50,7 @@ export interface DocumentItemProps {
     taskCarrier: string;
 }
 
-export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescription, taskName }: TaskSideSheetProps) {
+export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescription, taskName, onTaskClaimSuccess }: TaskSideSheetProps) {
     const { t } = useTranslation();
 
     const [loading, setLoading] = useState(true);
@@ -132,6 +132,9 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                         ...task,
                         assignee: user.email,
                     });
+                    if (onTaskClaimSuccess) {
+                        onTaskClaimSuccess();
+                    }
                     writeToCache(
                         'getTaskInstance',
                         { taskId },
@@ -167,10 +170,13 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     };
 
     const handleStart = async (taskId: string, taskStatus: TaskStatus) => {
+        const isTaskQueue = task?.queue;
+        const url = isTaskQueue ? `/task/${taskId}` : `/nigo-entry?taskId=${taskId}`;
+
         try {
             setStartLoader(true);
             if (taskStatus === TaskStatus.InProgress) {
-                await router.push(`/task/${taskId}`);
+                await router.push(url);
             } else {
                 // Fetch the task instance
                 const taskData = await getTaskInstance({ taskId });
@@ -188,7 +194,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 };
                 const response = await updateTask(taskData.caseId, taskData.id, body, timer);
                 if (response) {
-                    await router.push(`/task/${taskId}`);
+                    await router.push(url);
                     removeFromCache('getTaskInstance', { taskId: taskId });
                     return;
                 }

@@ -16,7 +16,7 @@ const TaskQueueTableHeader = () => {
                     <Content details={t('task') as string} variant={ContentVariant.BodySmBold} />
                 </TableHeaderCell>
                 <TableHeaderCell>
-                    <Content details={t('taskStatus') as string} variant={ContentVariant.BodySmBold} />
+                    <Content details={t('status') as string} variant={ContentVariant.BodySmBold} />
                 </TableHeaderCell>
                 <TableHeaderCell>
                     <Content details={t('carrierPolicy') as string} variant={ContentVariant.BodySmBold} />
@@ -26,9 +26,6 @@ const TaskQueueTableHeader = () => {
                 </TableHeaderCell>
                 <TableHeaderCell>
                     <Content details={t('created') as string} variant={ContentVariant.BodySmBold} />
-                </TableHeaderCell>
-                <TableHeaderCell colSpan={2}>
-                    <Content details={''} variant={ContentVariant.BodySmBold} />
                 </TableHeaderCell>
             </TableRow>
         </TableHeader>

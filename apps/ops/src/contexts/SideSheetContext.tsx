@@ -28,6 +28,7 @@ export const SideSheetProvider: React.FC<SideSheetProviderProps> = ({ children }
     const [location, setLocation] = useState<SideSheetLocation>(SideSheetLocation.Right);
     const [open, setOpen] = useState(false);
     const router = useRouter();
+    const { taskId, ...rest } = router.query;
     const [secondarySideSheetOpen, setSecondarySideSheetOpen] = useState(false);
     const [secondarySideSheetHeader, setSecondarySideSheetHeader] = useState<React.ReactNode>(null);
     const [secondarySideSheetContent, setSecondarySideSheetContent] = useState<React.ReactNode>(null);

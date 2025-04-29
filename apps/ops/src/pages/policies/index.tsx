@@ -2,7 +2,7 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
 import { TFunction, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 
 import { PageHead } from '@deps/components/page-title';
 import PaginationControls from '@deps/components/pagination/pagination';
@@ -27,6 +27,8 @@ import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+import { NextRouter, useRouter } from 'next/router';
+import { browserLogError } from '@deps/utils/browser-logging';
 
 const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
     {
@@ -74,6 +76,7 @@ interface PolicyManagementDashboardProps extends SegmentTrackedPageProps {}
 
 const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => {
     const { t } = useTranslation();
+    const router = useRouter();
 
     useSegmentPageTracker(user, SegmentPageName.PolicyManagementDashboard);
 
@@ -97,6 +100,31 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         queryFn: () => getPoliciesQuery(searchValue, limit, offset),
         enabled: Object.keys(searchValue).length > 0,
     });
+
+    useEffect(() => {
+        const { policyNumber } = router.query;
+        if (policyNumber && !policySearchFilters?.searchValue?.policyNumber) {
+            const newSearchValue = {
+                ...policySearchFilters.searchValue,
+                policyNumber: policyNumber as string,
+            };
+            setPolicySearchFilters({
+                ...policySearchFilters,
+                searchValue: newSearchValue,
+            });
+        }
+    }, [router.query.policyNumber, policySearchFilters]);
+
+    const removePolicyNumberFromQuery = async (router: NextRouter) => {
+        try {
+            if (router.query.policyNumber) {
+                const { policyNumber, ...rest } = router.query;
+                await router.replace({ pathname: router.pathname, query: rest }, undefined, { shallow: true });
+            }
+        } catch (error: any) {
+            browserLogError('Failed to remove policyNumber from query:', error);
+        }
+    };
 
     // Handlers
     const handleSearch = (value: SearchViewQuery) => {
@@ -155,7 +183,8 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                     onSearch={handleSearch}
                     toggleLabels={toggleLabels}
                     initialToggleValue={policySearchFilters.toggleValue}
-                    onClear={() => {
+                    onClear={async () => {
+                        await removePolicyNumberFromQuery(router);
                         clearPolicySearchFilters();
                     }}
                     onToggle={onToggle}

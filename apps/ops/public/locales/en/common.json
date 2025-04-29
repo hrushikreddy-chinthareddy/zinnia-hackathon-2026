@@ -872,6 +872,7 @@
         "documentNumber": "Document: ",
         "caseID": "Case/ID",
         "carrierPolicy": "Carrier/Policy",
+        "policy": "Policy #:",
         "ID": "ID:",
         "product": "Product",
         "assignee": "Assignee",
@@ -903,7 +904,12 @@
         "notePlaceholder": "Add a note.",
         "addNote": "Add note",
         "errorSavingNote": "Error occurred while saving note. Please try again",
-        "notePostDate": "Posted on {{date}} by"
+        "notePostDate": "Posted on {{date}} by",
+        "sideSheet": {
+            "task": {
+                "heading": "Task"
+            }
+        }
     },
     "caseManagementDashboard": {
         "h1": "Case Management",

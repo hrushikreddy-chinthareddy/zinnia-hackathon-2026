@@ -4,31 +4,25 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
+import NextLink from 'next/link';
 
 import Avatar from '@deps/components/avatar/avatar';
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
-import { SupportedTaskMap } from '@deps/components/case-sub-page/case-tabs/progress/tasks';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
 import IconButton from '@deps/components/icon-button/icon-button';
-import { Loader } from '@deps/components/page-loader';
-import { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
-import { getTaskStatus } from '@deps/components/tasks-listing/task-listing.helpers';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { ProcessesToCaseTypeMap } from '@deps/constants/case';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { toSentenceCase } from '@deps/helpers/string.helper';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
-import { CaseIdentifier, Processes } from '@deps/models/case/case';
-import { ProcessType } from '@deps/models/case/enums';
-import { EarlyTaskType, TaskSource, TaskType } from '@deps/models/case/task';
-import { AssignedTask, ManagementTask, TaskStatus, UnassignedTask } from '@deps/models/case/task-instance';
+import { CaseIdentifier } from '@deps/models/case/case';
+import { AssignedTask, TaskStatus, UnassignedTask } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
-import { claimTask, unassignTask } from '@deps/queries/api/v1/task';
-import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
+import { unassignTask } from '@deps/queries/api/v1/task';
+import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
@@ -38,7 +32,6 @@ import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
 import { getCarrierNameByClientId, getCarrierLogoByClientId } from '@deps/utils/carriers';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { NO_ASSIGNEE } from './task-management-queue-container';
@@ -46,6 +39,7 @@ import TaskQueueDrawer from './task-queue-drawer';
 import { isProd } from '@deps/utils/environment.helper';
 
 import styles from './task-management-queue.module.css';
+import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 
 type TaskQueueTableRowProps = {
     task: AssignedTask | UnassignedTask;
@@ -64,104 +58,8 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
 
     const [loader, setLoader] = useState(false);
     const { taskName, taskType, createdAt, status, carrier, assignee, process } = task;
-    const taskStatus = getTaskStatus(t, status);
     const carrierName = getCarrierNameByClientId(carrier) || carrier?.toUpperCase();
 
-    const handleStartTask = async (taskId: string, taskStatus: TaskStatus, taskType: string) => {
-        if (!loader) {
-            setLoader(true);
-        }
-        const newTask = !Object.values(EarlyTaskType).includes(taskType as EarlyTaskType);
-
-        const taskData = await getTaskInstance({ taskId: taskId });
-
-        const updateTaskStatus = async (taskData: ManagementTask) => {
-            try {
-                const body = { ...taskData, status: TaskStatus.InProgress, source: TaskSource.ZinniaTaskManagement };
-                const response = await updateTask(taskData.caseId, taskData.id, body, timer);
-
-                removeFromCache('getTaskInstance', { taskId: task.id });
-                if (response) {
-                    browserLogInfo('task-queue:handleStartTask::Successfully updated task in progress', {
-                        taskId: taskData.id,
-                        documentNumber: taskData?.data?.documentNumber,
-                        clientCode: taskData?.carrier,
-                        process: taskData?.process,
-                    });
-                    router.push(newTask ? `/task/${taskData.id}` : `/nigo-entry?taskId=${taskData.id}`);
-                    return;
-                }
-            } catch (e) {
-                setLoader(false);
-                browserLogError('task-queue:handleStartTask::Error updating task in progress', {
-                    ...parseErrorInformation(e),
-                    taskId: taskData?.id,
-                    caseId: taskData.caseId,
-                });
-                router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
-                return;
-            }
-        };
-
-        if (!taskData) {
-            browserLogInfo('task-queue:handleStartTask::handleStartTask::Error retrieving a task', {
-                taskId: taskId,
-                taskStatus: taskStatus,
-            });
-            router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
-            return;
-        }
-
-        try {
-            if (TaskStatus.InProgress) {
-                browserLogInfo('task-queue:handleStartTask::Task is in progress', {
-                    taskId: taskId,
-                    taskStatus: taskStatus,
-                });
-                router.push(newTask ? `/task/${taskId}` : `/nigo-entry?taskId=${taskId}`);
-                return;
-            }
-            if (TaskStatus.New && newTask) {
-                await updateTaskStatus(taskData);
-                return;
-            }
-        } catch (e) {
-            browserLogError('task-queue:handleStartTask::Error updating task status');
-        }
-
-        const caseType = ProcessesToCaseTypeMap[taskData.process as Processes];
-        if (!caseType) {
-            browserLogInfo('task-queue:handleStartTask::Error getting case type', {
-                taskId: taskData.id,
-                documentNumber: taskData?.data?.documentNumber,
-                clientCode: taskData?.carrier,
-                process: taskData?.process,
-            });
-            router.push(`/create-case/error?errorCode=${ERROR_CODES.CASE_TYPE_RETRIEVAL_ERROR}`);
-            return;
-        }
-
-        // If feature flag is not enabled, redirect to error page
-        if (
-            caseType.toUpperCase() !== 'RMD' &&
-            !isFormFeatureEnabled(
-                newTask ? (taskType as TaskType) : (caseType.toUpperCase() as ProcessType),
-                taskData?.carrier,
-                featureFlagDecisions
-            )
-        ) {
-            browserLogInfo('task-queue:handleStartTask::Feature flag not enabled', {
-                taskId: taskData.id,
-                documentNumber: taskData?.data?.documentNumber,
-                clientCode: taskData?.carrier,
-                process: taskData?.process,
-            });
-            router.push(`/403`);
-            return;
-        }
-
-        updateTaskStatus(taskData);
-    };
     const handleUnassignTask = async (taskId: string) => {
         const taskData = await getTaskInstance({ taskId: taskId });
 
@@ -214,6 +112,22 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
         sideSheet.changeSideSheetContent(t('updateTaskStatusDrawer.updateTaskStatus'), content);
         sideSheet.handleOpen(true);
     };
+
+    const handleTaskClaimSuccess = () => {
+        getTasks(true);
+    };
+
+    const openTaskSideSheet = () => {
+        if (task) {
+            const { taskName = '', id } = task;
+            sideSheet.changeSideSheetContent(
+                `${taskName ? `${t('sideSheet.task.heading')}: ${taskName}` : t('sideSheet.task.heading')}`,
+                <GlobalTaskSideSheet taskId={id} taskDescription={task?.taskDetails} onTaskClaimSuccess={handleTaskClaimSuccess} />
+            );
+            sideSheet.handleOpen(true);
+        }
+    };
+
     const statuses = [
         {
             label: 'Pending',
@@ -246,42 +160,6 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
             break;
     }
 
-    const handleAssignToMe = async (task: UnassignedTask) => {
-        let assignedTaskData = undefined;
-
-        setErrorMessage('');
-        setLoader(true);
-        try {
-            const assignedTask = await claimTask(task?.id);
-            assignedTaskData = getTaskInstance({ taskId: assignedTask?.taskId });
-            if (!assignedTaskData) {
-                browserLogError('task-queue:handleAssignTask::Error assigning task', {
-                    taskId: task?.id,
-                    caseId: task?.caseId,
-                });
-            } else {
-                browserLogInfo('task-queue:handleAssignTask::Successfully assigned task', {
-                    taskId: assignedTask?.id,
-                    caseId: assignedTask?.caseId,
-                });
-                handleStartTask(task?.id, task?.status, taskType);
-            }
-        } catch (e) {
-            browserLogError('task-queue:handleAssignTask::Error assigning task', {
-                ...parseErrorInformation(e),
-                taskId: task?.id,
-                caseId: task?.caseId,
-            });
-            return;
-        } finally {
-            setLoader(false);
-
-            if (!assignedTaskData) {
-                setErrorMessage(t('assignTaskError') + 'An error occurred while assigning the task');
-            }
-        }
-    };
-
     const hasAssignee = () => {
         return !assignee?.includes(NO_ASSIGNEE);
     };
@@ -294,64 +172,61 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
         return text;
     };
 
+    const handleLinkClick = (event: React.MouseEvent<HTMLAnchorElement> | undefined) => {
+        if (event) {
+            event.preventDefault();
+        }
+        openTaskSideSheet();
+    };
+
+    const handleLinkKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleLinkClick(undefined);
+        }
+    };
+
     return (
         <TableRow className={styles.row} key={`task_queue_row_${task.id}`}>
             <TableCell className={styles.taskLinkContainer}>
                 {/* This lives as a visibly hidden link instead of as a click handler on the table row for
                  acccessibility concerns. Nested interactive elements are not allowed */}
-                <Link
-                    onClick={() => (hasAssignee() ? handleStartTask(task?.id, task?.status, taskType) : handleAssignToMe(task))}
-                    onKeyDown={(event: React.KeyboardEvent) => {
-                        if (event.key === 'Enter') {
-                            event.preventDefault();
-                            hasAssignee() ? handleStartTask(task?.id, task?.status, taskType) : handleAssignToMe(task);
-                        }
-                    }}
-                    href={
-                        !Object.values(EarlyTaskType).includes(taskType as EarlyTaskType)
-                            ? `/task/${task?.id}`
-                            : `/nigo-entry?taskId=${task?.id}`
-                    }
-                    className={styles.taskLink}
-                >
+                <Link href="" onClick={handleLinkClick} onKeyDown={handleLinkKeyDown} className={styles.taskLink}>
                     {''}
                 </Link>
             </TableCell>
             <TableCell>
                 <Content details={toSentenceCase(taskName)} variant={ContentVariant.BodySm} />
                 <Content className={styles.fadedText} details={toSentenceCase(process)} variant={ContentVariant.BodySm} />
-                {!isProd() && <Content details={`${t('documentNumber')} ${documentNumber || '-'}`} variant={ContentVariant.BodySm} />}
+                {!isProd() && documentNumber && (
+                    <Content details={`${t('documentNumber')} ${documentNumber || '-'}`} variant={ContentVariant.BodySm} />
+                )}
             </TableCell>
             <TableCell>
-                {SupportedTaskMap.includes(task?.taskType as TaskType) ? (
-                    <>
-                        <div className="relative z-100">
-                            {task?.status === TaskStatus.InProgress && (
-                                <Dropdown
-                                    triggerIcon={
-                                        <div className="pb-1">
-                                            <Progress width={16} height={16} />
-                                        </div>
-                                    }
-                                    triggerLabel="In Progress"
-                                    options={statuses}
-                                />
-                            )}
-                        </div>
-                        {task?.status !== TaskStatus.InProgress && (
-                            <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
-                                <Badge
-                                    icon={badgeIcon}
-                                    variant={badgeVariant}
-                                    label={badgeLabel}
-                                    rounded={true}
-                                    className="flex gap-1 items-center"
-                                />
-                            </Typography>
+                {task?.status === TaskStatus.InProgress && task?.queue ? (
+                    <div className="relative z-100">
+                        {task?.status === TaskStatus.InProgress && (
+                            <Dropdown
+                                triggerIcon={
+                                    <div className="pb-1">
+                                        <Progress width={16} height={16} />
+                                    </div>
+                                }
+                                triggerLabel="In Progress"
+                                options={statuses}
+                            />
                         )}
-                    </>
+                    </div>
                 ) : (
-                    <Content details={taskStatus} variant={ContentVariant.BodySm} />
+                    <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 ">
+                        <Badge
+                            icon={badgeIcon}
+                            variant={badgeVariant}
+                            label={badgeLabel}
+                            rounded={true}
+                            className="flex gap-1 items-center"
+                        />
+                    </Typography>
                 )}
             </TableCell>
 
@@ -362,7 +237,21 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
                     </div>
                     <div>
                         <Content details={carrierName} variant={ContentVariant.BodySm} />
-                        <Content className="text-secondary" details={policyNumber || '-'} variant={ContentVariant.BodySm} />
+                        <div className="flex items-center min-w-0 w-full">
+                            <Typography className="flex-[1_1_auto] truncate" variant={TypographyVariant.BodySm}>
+                                {t('policy')}
+                            </Typography>
+                            {policyNumber ? (
+                                <NextLink
+                                    className={`${policyNumber && styles.policyView} text-secondary`}
+                                    href={`/policies?policyNumber=${policyNumber}`}
+                                >
+                                    {policyNumber}
+                                </NextLink>
+                            ) : (
+                                <Content className={'text-secondary pl-1'} details={'-'} variant={ContentVariant.BodySm} />
+                            )}
+                        </div>
                     </div>
                 </div>
             </TableCell>
@@ -410,32 +299,6 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
                 <Typography variant={TypographyVariant.BodySm} className={styles.fadedText}>
                     {getTimeText()}
                 </Typography>
-            </TableCell>
-            <TableCell colSpan={2}>
-                <div className="w-full text-center inline-block min-w-[150px] ">
-                    {loader ? (
-                        <div className="w-100 text-center">
-                            <Loader variant={PageLoaderVariant.Center} />
-                        </div>
-                    ) : (
-                        <div className="text-secondary hover:cursor-pointer">
-                            <Content
-                                role="button"
-                                tabIndex={0}
-                                onKeyDown={(event: React.KeyboardEvent) => {
-                                    if (event.key === 'Enter') {
-                                        event.preventDefault();
-                                        hasAssignee() ? handleStartTask(task?.id, task?.status, taskType) : handleAssignToMe(task);
-                                    }
-                                }}
-                                details={(hasAssignee() ? t('startTask') : t('assignTask')) as string}
-                                variant={ContentVariant.BodySmBold}
-                                onClick={() => (hasAssignee() ? handleStartTask(task?.id, task?.status, taskType) : handleAssignToMe(task))}
-                                className="mouse-pointer p-1"
-                            />
-                        </div>
-                    )}
-                </div>
             </TableCell>
         </TableRow>
     );
