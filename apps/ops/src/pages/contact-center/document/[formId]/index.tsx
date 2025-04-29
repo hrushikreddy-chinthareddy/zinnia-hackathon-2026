@@ -3,6 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
 import PageLoader from '@deps/components/page-loader/page-loader';
+import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
@@ -57,6 +58,13 @@ const FormViewer = ({ formId, user }: FormViewerProps) => {
     );
 };
 
+const FormViewerPage = (props: FormViewerProps) => (
+    <>
+        <PageHead titleKey="viewDocument" />
+        <FormViewer {...props} />
+    </>
+);
+
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
@@ -107,4 +115,4 @@ export const getServerSideProps = withPageAuthAndLogging(
     { file: 'contact-center/document/[formId]/index', function: 'getServerSideProps', page: 'contact-center/document/:formId' }
 );
 
-export default FormViewer;
+export default FormViewerPage;

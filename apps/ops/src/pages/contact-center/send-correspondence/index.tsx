@@ -8,6 +8,7 @@ import Confirm from '@deps/components/otp-send-document/confirm';
 import Correspondence from '@deps/components/otp-send-document/correspondence';
 import { generateCommunicationRequest } from '@deps/components/otp-send-document/correspondence.helper';
 import StatementSelection from '@deps/components/otp-send-document/statement-selection';
+import { PageHead } from '@deps/components/page-title';
 import { RadioItem } from '@deps/components/radio/radio';
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -148,9 +149,12 @@ const SendCorrespondence = ({
     ];
 
     return (
-        <CorrespondenceProvider>
-            <TabGroupContainer steps={steps} policy={new PolicyDetails(policy)}></TabGroupContainer>
-        </CorrespondenceProvider>
+        <>
+            <PageHead titleKey="sendStatement" />
+            <CorrespondenceProvider>
+                <TabGroupContainer steps={steps} policy={new PolicyDetails(policy)}></TabGroupContainer>
+            </CorrespondenceProvider>
+        </>
     );
 };
 

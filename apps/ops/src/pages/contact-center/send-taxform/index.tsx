@@ -10,6 +10,7 @@ import ConfirmComponent from '@deps/components/otp-send-document/confirm';
 import Correspondence from '@deps/components/otp-send-document/correspondence';
 import { generateCommunicationRequest } from '@deps/components/otp-send-document/correspondence.helper';
 import TaxFormsSelection from '@deps/components/otp-send-document/tax-forms-selection';
+import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import TabGroupContainer from '@deps/containers/tab-group-container/tab-group';
@@ -163,9 +164,12 @@ const SendTaxForms = ({
     ];
 
     return (
-        <CorrespondenceProvider>
-            <TabGroupContainer steps={steps} policy={new PolicyDetails(policy)}></TabGroupContainer>
-        </CorrespondenceProvider>
+        <>
+            <PageHead titleKey="sendTaxForm" />
+            <CorrespondenceProvider>
+                <TabGroupContainer steps={steps} policy={new PolicyDetails(policy)}></TabGroupContainer>
+            </CorrespondenceProvider>
+        </>
     );
 };
 
