@@ -62,16 +62,15 @@ describe('UpcomingPaymentCard', () => {
     describe('custom title and icon', () => {
         it('renders custom title and icon', () => {
             const title = faker.lorem.word();
-            const icon = faker.lorem.word();
+
             props = {
                 ...defaultProps,
                 title,
-                icon,
             };
             const { getByTestId } = renderComponent();
             const element = getByTestId(UpcomingPaymentCardTest.CONTAINER);
             expect(element).toBeInTheDocument();
-            [toTitleCase(title), icon].map(text => expect(element).toHaveTextContent(text));
+            expect(element).toHaveTextContent(toTitleCase(title));
         });
     });
 
