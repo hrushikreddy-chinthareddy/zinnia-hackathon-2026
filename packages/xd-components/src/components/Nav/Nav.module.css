@@ -181,6 +181,7 @@ div:has(> .searchInput)::before {
 .listItem__link {
   display: flex;
   align-items: center;
+  border: var(--measure-dimension-stroke-xs) solid transparent;
   gap: var(--measure-dimension-z-space-2);
   padding: var(--measure-dimension-z-space-1);
   width: 100%;
@@ -195,6 +196,7 @@ div:has(> .searchInput)::before {
     background-color: var(--color-grayscale-color-white);
     border-radius: var(--measure-dimension-z-space-1);
     box-shadow: var(--shadow-elevation-elevation-light-xs);
+    border-color: var(--color-grayscale-color-600-gray);
     color: var(--color-grayscale-color-900-gray);
     svg {
       color: var(--color-orange-color-500-orange);
