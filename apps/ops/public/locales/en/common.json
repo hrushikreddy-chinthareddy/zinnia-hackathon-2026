@@ -812,8 +812,8 @@
             }
         },
         "quickSearch": {
-            "label": "Find key values",
-            "placeholder": "e.g. Maturity date, Cost basis...",
+            "label": "Search key values",
+            "placeholder": "Start typing to find values...",
             "errorMessage": {
                 "question": "Not finding what you need?",
                 "navlink": "Browse this policy",
@@ -2633,7 +2633,7 @@
         "withdrawn": "Withdrawn"
     },
     "placeHolder": {
-        "globalSelectSearch": "e.g. Loan Payoff Amount, Cost Basis..."
+        "globalSelectSearch": "Start typing to find values..."
     },
     "funds": {
         "header": "$t(site.navLinks.funds.text)",
@@ -3326,7 +3326,7 @@
         }
     },
     "label": {
-        "findKeyValues": "Find key values"
+        "findKeyValues": "Search key values"
     },
     "temporal": {
         "month": "month",

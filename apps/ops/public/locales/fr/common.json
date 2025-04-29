@@ -899,8 +899,8 @@
             }
         },
         "quickSearch": {
-            "label": "Rechercher des Valeurs Clés",
-            "placeholder": "par exemple Date d'échéance, Base de coût...",
+            "label": "Trouver des valeurs clés",
+            "placeholder": "Commencez à taper pour trouver des valeurs...",
             "errorMessage": {
                 "question": "Tu ne trouves pas ce dont tu as besoin?",
                 "navlink": "Parcourir cette politique",
@@ -2614,7 +2614,7 @@
         "withdrawn": "Retiré"
     },
     "placeHolder": {
-        "globalSelectSearch": "par exemple. Montant du remboursement du prêt, coût de base..."
+        "globalSelectSearch": "Commencez à taper pour trouver des valeurs..."
     },
     "funds": {
         "header": "$t(site.navLinks.funds.text)",
@@ -3306,7 +3306,7 @@
         }
     },
     "label": {
-        "findKeyValues": "Rechercher des valeurs clés"
+        "findKeyValues": "Trouver des valeurs clés"
     },
     "temporal": {
         "month": "mois",
