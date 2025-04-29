@@ -3,7 +3,6 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import PolicyLayout from '@deps/components/policy-layout';
-import { getReRegNavLinks } from '@deps/config/nav.config';
 import { TranslationFiles } from '@deps/config/translations';
 import BeneChangeContainer from '@deps/containers/bene-change/bene-change-container';
 import { BeneChangeProvider } from '@deps/containers/bene-change/bene-change-provider';
@@ -46,14 +45,7 @@ const BeneChange = ({ policy, document, clientId, planCode, user }: AddressChang
     });
 
     return (
-        <PolicyLayout
-            showJointOwner={showJointOwner}
-            showLink={false}
-            navLinks={getReRegNavLinks(clientId, policy.policyNumber ?? '', t)}
-            hideSearch={true}
-            isFullHeight={true}
-            policyDetails={policy}
-        >
+        <PolicyLayout showJointOwner={showJointOwner} showLink={false} hideSearch={true} policyDetails={policy}>
             <div>
                 <BeneChangeProvider>
                     <BeneChangeContainer policy={policy} document={document} planCode={planCode} />
