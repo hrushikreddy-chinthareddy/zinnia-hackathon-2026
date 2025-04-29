@@ -14,7 +14,6 @@ import { isEndDated } from '@deps/helpers/date.helper';
 import { PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
-import { ReactComponent as LibraryIcon } from '@deps/styles/elements/icons/icons_outlined/library.svg';
 
 export interface BankCardProps {
     editable?: boolean;
@@ -51,7 +50,6 @@ export const BankCard = ({ editable = false, party, planCode, policyNumber }: Ba
     return (
         <CardContainer classNames="flex w-full flex-col text-gray-900 gap-4">
             <div className="flex items-center">
-                <LibraryIcon role="presentation" className="mr-2 text-primary" height={24} width={24} />
                 <Typography className="mr-5" variant={TypographyVariant.H2}>
                     {t('label')}
                 </Typography>
@@ -69,7 +67,7 @@ export const BankCard = ({ editable = false, party, planCode, policyNumber }: Ba
             </div>
 
             {currentBankAccounts?.length ? (
-                <div className="border-box flex w-full flex-col gap-2 lg:px-8">
+                <div className="border-box flex w-full flex-col gap-2">
                     <BankAccounts bankAccounts={currentBankAccounts} />
                 </div>
             ) : (

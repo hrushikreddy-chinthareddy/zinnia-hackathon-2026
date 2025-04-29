@@ -10,29 +10,25 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import PageHeader from '@deps/components/page-header/page-header';
 import { TranslationFiles } from '@deps/config/translations';
-import { useStaticNestedNavDrawerContext } from '@deps/contexts/LayoutContexts/StaticNestedNavDrawerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { Breadcrumb } from '@deps/hooks/useBreadcrumbs';
 import { Policy, PolicyFeatureFeatureType, PolicyStatus } from '@deps/models/policy/sor-policy';
 
 interface AnnuitizationPageHeaderProps {
-    breadcrumb: Breadcrumb | null;
     policy: Policy;
     policyDetails: PolicyDetails;
 }
 
-export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({ breadcrumb, policy, policyDetails }) => {
+export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({ policy, policyDetails }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'annuitization',
     });
-    const { isNavDrawerOpen } = useStaticNestedNavDrawerContext();
 
     const { features, policyStatus } = policyDetails;
     const { deathBenefit } = policy;
     const isPayoutStage = policyStatus === PolicyStatus.PAYOUT;
     const annuitizationFeature = features.getFirstFeatureByType('ANNUITIZATION' as PolicyFeatureFeatureType);
-    const headerRowFlexClassNames = clsx('flex-col', { 'xs:gap-4 lg:gap-0': !isNavDrawerOpen, 'xs:gap-4 xl:gap-0': isNavDrawerOpen });
+    const headerRowFlexClassNames = clsx('flex-col', 'xs:gap-4 lg:gap-0');
     const groupOneFlexClassNames = 'flex gap-4';
     const generateBadgeText = useCallback(
         (policyStatus: PolicyStatus | undefined) => {
@@ -116,8 +112,6 @@ export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({ brea
     return (
         <PageHeader
             headerText={t('title') as string}
-            breadcrumbText={breadcrumb?.text}
-            breadcrumbUrl={breadcrumb?.url}
             belowHeaderTextChildren={belowHeaderTextChildren}
             headerRowFlexClassNames={headerRowFlexClassNames}
             groupOneFlexClassNames={groupOneFlexClassNames}

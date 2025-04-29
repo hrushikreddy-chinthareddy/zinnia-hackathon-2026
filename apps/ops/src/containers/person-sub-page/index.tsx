@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
+import { beneficiaryRoles } from '@deps/components/side-sheet/side-sheet-allocations/side-sheet-allocations-helper';
 import PersonPageHeader from '@deps/containers/page-header/interior-people-page-header';
 import AddressCard from '@deps/containers/people-data-cards/address-card/address-card';
 import AllocationCard from '@deps/containers/people-data-cards/allocation-card/allocation-card';
@@ -9,10 +10,8 @@ import EmailCard from '@deps/containers/people-data-cards/email-card/email-card'
 import IdentificationCard from '@deps/containers/people-data-cards/identification-card/identification-card';
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import UnderwritingCard from '@deps/containers/people-data-cards/underwriting-card/underwriting-card';
-import { beneficiaryRoles } from '@deps/components/side-sheet/side-sheet-allocations/side-sheet-allocations-helper';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { findCoverageParticipant, getRiskClass, getSexAtBirth, getSubstandardRating } from '@deps/helpers/party-info-helper';
-import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { PartyRole } from '@deps/models/policy/sor-policy';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
@@ -27,7 +26,6 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
     const { policy, policyDetails } = useContext(PolicyData);
 
     const { t } = useTranslation();
-    const { breadcrumb } = useBreadcrumb();
 
     const { coverage, parties, partyRoles, policyNumber, product } = policy ?? {};
     const { planCode } = product ?? {};
@@ -61,8 +59,6 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
         return (
             <div className="shadow-elevation-light-04">
                 <PersonPageHeader
-                    breadcrumbText={breadcrumb?.text}
-                    breadcrumbUrl={breadcrumb?.url}
                     selectedPolicyParty={selectedPolicyParty}
                     selectedPolicyPartyRoles={selectedPolicyPartyRoles}
                     editable={editable}
@@ -71,7 +67,7 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
 
                 {beneficiaryRole && (
                     <>
-                        <hr className="h-0.5 border-none bg-gray-100" />
+                        <hr className="h-0.5 border-none bg-gray-200" />
                         <AllocationCard
                             allocation={selectedPolicyParty?.beneficiaryPercentage}
                             editable={editable}
@@ -83,10 +79,10 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
                     </>
                 )}
 
-                <hr className="h-0.5 border-none bg-gray-100" />
+                <hr className="h-0.5 border-none bg-gray-200" />
                 <IdentificationCard selectedPolicyParty={newSelectedPolicyParty} isAnnuity={policyDetails.isAnnuity} />
 
-                <hr className="h-0.5 border-none bg-gray-100" />
+                <hr className="h-0.5 border-none bg-gray-200" />
                 <PhoneCard
                     editable={editable}
                     party={selectedPolicyParty}
@@ -95,7 +91,7 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
                     policyNumber={policyNumber}
                 />
 
-                <hr className="h-0.5 border-none bg-gray-100" />
+                <hr className="h-0.5 border-none bg-gray-200" />
                 <EmailCard
                     editable={editable}
                     party={selectedPolicyParty}
@@ -104,7 +100,7 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
                     policyNumber={policyNumber}
                 />
 
-                <hr className="h-0.5 border-none bg-gray-100" />
+                <hr className="h-0.5 border-none bg-gray-200" />
                 <AddressCard
                     editable={editable}
                     party={selectedPolicyParty}
@@ -113,7 +109,7 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
                     policyNumber={policyNumber}
                 />
 
-                <hr className="h-0.5 border-none bg-gray-100" />
+                <hr className="h-0.5 border-none bg-gray-200" />
                 <BankCard
                     editable={editable}
                     party={selectedPolicyParty}
@@ -124,7 +120,7 @@ export const PersonSubPage = ({ partyId, editable = true }: PersonSubPageProps) 
 
                 {isInsured && (
                     <>
-                        <hr className="h-0.5 border-none bg-gray-100" />
+                        <hr className="h-0.5 border-none bg-gray-200" />
                         <UnderwritingCard
                             riskClass={getRiskClass(coverageParticipant?.riskClass)}
                             substandardRating={getSubstandardRating(coverageParticipant?.substandardRating, t)}

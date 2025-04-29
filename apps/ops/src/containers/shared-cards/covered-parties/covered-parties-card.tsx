@@ -9,7 +9,6 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { getRiskClass } from '@deps/helpers/party-info-helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { ReactComponent as ShieldHeart } from '@deps/styles/elements/icons/navigation/shield-heart.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
@@ -19,14 +18,9 @@ const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
     const { issueAge, riskClass } = policy.coverage.getCoverageParticipantByPartyId(partyId) || {};
 
     return (
-        <CardContainer containerClassNames="border-b-2 border-gray-100">
-            <div className="flex gap-2">
-                <ShieldHeart className="mt-1 flex-none text-primary" height={'24px'} role="presentation" width={'24px'} />
-                <div>
-                    <Typography variant={TypographyVariant.H2}>{t('insured')}</Typography>
-                </div>
-            </div>
-            <div className="mt-4 flex flex-col gap-8 sm:flex-row lg:ml-8">
+        <CardContainer containerClassNames="border-b-2 border-gray-200">
+            <Typography variant={TypographyVariant.H2}>{t('insured')}</Typography>
+            <div className="mt-4 flex flex-col gap-8 sm:flex-row">
                 <div className="flex flex-col gap-8 lg:flex-row">
                     <div>
                         <Label label={t('fullName')} variant={LabelVariant.FieldLabel} />
@@ -82,17 +76,12 @@ const AnnuitantCard = ({ policy }: { policy: PolicyDetails }) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.detailCards.coveredParty' });
 
     return (
-        <CardContainer containerClassNames="border-b-2 border-gray-100">
-            <div className="flex gap-2">
-                <ShieldHeart className="mt-1 flex-none text-primary" height={'24px'} role="presentation" width={'24px'} />
-                <div>
-                    <Typography variant={TypographyVariant.H2}>{t('annuitant')}</Typography>
-                </div>
-            </div>
+        <CardContainer containerClassNames="border-b-2 border-gray-200">
+            <Typography variant={TypographyVariant.H2}>{t('annuitant')}</Typography>
 
             <div className="mt-4 flex flex-col gap-2">
                 {policy.coveredPeople.map(({ partyId, ageInYears, fullName = DEFAULT_ERROR_STRING }) => (
-                    <div className="flex flex-col gap-8 md:flex-row lg:ml-8" key={partyId}>
+                    <div className="flex flex-col gap-8 md:flex-row" key={partyId}>
                         <div>
                             <Label label={t('fullName')} variant={LabelVariant.FieldLabel} />
                             <NavElement

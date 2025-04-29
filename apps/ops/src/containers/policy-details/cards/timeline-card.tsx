@@ -6,7 +6,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { ProductType } from '@deps/models/policy/sor-policy';
-import { ReactComponent as Calendar } from '@deps/styles/elements/icons/content/calendar.svg';
 
 import { mapPolicyTimelineValues } from '../policy-details.helper';
 import EverlyIul from './policy-timeline-details/everly-iul';
@@ -29,11 +28,8 @@ function PolicyTimelineCard({ policy }: BasePolicyComponentArgs) {
     const policyTimelineCardData = mapPolicyTimelineValues(policy, t);
 
     return (
-        <CardContainer containerClassNames="border-b-2 border-gray-100">
-            <div className="flex gap-2">
-                <Calendar className="mt-1 text-primary" role="presentation" width={'24px'} height={'24px'} />
-                <Typography variant={TypographyVariant.H2}>{t('policy.detailCards.policyTimeline.policyTimeline')}</Typography>
-            </div>
+        <CardContainer containerClassNames="border-b-2 border-gray-200">
+            <Typography variant={TypographyVariant.H2}>{t('policy.detailCards.policyTimeline.policyTimeline')}</Typography>
             {policy.productType === ProductType.INDEXEDUNIVERSALLIFE ? (
                 <EverlyIul policyTimelineCardData={policyTimelineCardData} productType={policy.productType} />
             ) : (
@@ -48,12 +44,9 @@ function ContractTimelineCard({ policy }: BasePolicyComponentArgs) {
     const { maturityDate, issueDate, policyAge } = mapPolicyTimelineValues(policy, t);
 
     return (
-        <CardContainer containerClassNames="border-b-2 border-gray-100">
-            <div className="flex gap-2">
-                <Calendar className="mt-1 text-primary" role="presentation" width={'24px'} height={'24px'} />
-                <Typography variant={TypographyVariant.H2}>{t(`${BASE_KEY}contractTimeline`)}</Typography>
-            </div>
-            <div className="mt-4 grid grid-cols-[repeat(2,max-content)] gap-8 sm:grid-cols-[repeat(3,max-content)] lg:ml-8">
+        <CardContainer containerClassNames="border-b-2 border-gray-200">
+            <Typography variant={TypographyVariant.H2}>{t(`${BASE_KEY}contractTimeline`)}</Typography>
+            <div className="mt-4 grid grid-cols-[repeat(2,max-content)] gap-8 sm:grid-cols-[repeat(3,max-content)]">
                 <div>
                     <Label label={t(`${BASE_KEY}ageOfContract`)} variant={LabelVariant.FieldLabel} />
                     <Content details={policyAge} variant={ContentVariant.BodySm} />

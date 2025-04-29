@@ -9,7 +9,6 @@ import WithdrawalRules from '@deps/containers/withdrawal-rules/withdrawal-rules'
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helper';
 import { TempAnnuityArrangementTypes } from '@deps/helpers/policy-sor/SystematicPrograms';
-import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { ArrangementType, Policy } from '@deps/models/policy/sor-policy';
 
 interface WithdrawalsSubPageProps {
@@ -18,7 +17,6 @@ interface WithdrawalsSubPageProps {
 
 const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'withdrawals.upcoming' });
-    const { breadcrumb } = useBreadcrumb();
     const { policyDetails } = useContext(PolicyData);
 
     const rmdPrograms = policyDetails.systematicPrograms.getProgramsByType(ArrangementType.REQUIREDMINIMUMDISTRIBUTION);
@@ -32,14 +30,9 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
         : policyDetails.systematicPrograms.getProgramsByType(TempAnnuityArrangementTypes.WITHDRAWAL);
 
     return (
-        <div className="rounded bg-gray-50 shadow-elevation-light-04">
-            <WithdrawalsPageHeaderContainer
-                breadcrumbText={breadcrumb?.text}
-                breadcrumbUrl={breadcrumb?.url}
-                planCode={policyDetails.planCode}
-                policyNumber={policyDetails.policyNumber}
-            />
-            <hr className="h-0.5 border-none bg-gray-100" />
+        <>
+            <WithdrawalsPageHeaderContainer planCode={policyDetails.planCode} policyNumber={policyDetails.policyNumber} />
+            <hr className="h-0.5 border-none bg-gray-200" />
             <WithdrawalRules policy={policy} policyDetails={policyDetails} />
 
             {policyDetails.isAnnuity && (
@@ -92,7 +85,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                     />
                 </>
             )}
-        </div>
+        </>
     );
 };
 

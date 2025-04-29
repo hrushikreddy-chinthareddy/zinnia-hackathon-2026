@@ -16,7 +16,6 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { convertKebabedDateString, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { LoanSegment } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CircleExclamationIcon } from '@deps/styles/elements/icons/circles/circle-exclamation.svg';
-import { ReactComponent as ShieldCheckIcon } from '@deps/styles/elements/icons/icons_outlined/shield-check.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import SideSheetLoanAdditionalInfo from './side-sheet-loan-additional-info';
@@ -62,7 +61,7 @@ const ActiveCard = ({ currency, lastLoanInterestDueDate, loanNumber, loanSegment
     return (
         <div
             className={clsx(
-                'relative flex flex-col flex-wrap items-start justify-between gap-x-8 gap-y-6 self-stretch overflow-hidden rounded-md border-2 border-gray-100 p-4 md:flex-row md:p-6 lg:ml-8 lg:p-8',
+                'relative flex flex-col flex-wrap items-start justify-between gap-x-8 gap-y-6 self-stretch overflow-hidden rounded-md border-2 border-gray-100 p-4 md:flex-row md:p-6 lg:p-8',
                 { 'pt-[44px]': totalActiveLoans > 1 }
             )}
         >
@@ -147,10 +146,7 @@ const OutstandingLoansCard = ({ currency, loanSegments = [], lastLoanInterestDue
     ));
     return (
         <CardContainer containerClassNames="rounded-b">
-            <div className="mb-4 flex gap-2">
-                <ShieldCheckIcon className="mt-1 text-primary" role="presentation" width={24} height={24} />
-                <Typography variant={TypographyVariant.H2}>{t('headline')}</Typography>
-            </div>
+            <Typography variant={TypographyVariant.H2}>{t('headline')}</Typography>
             <div className="flex flex-col gap-1">{activeCards.length ? activeCards : <InactiveCard t={t} />}</div>
         </CardContainer>
     );

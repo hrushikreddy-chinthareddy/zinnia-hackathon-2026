@@ -8,7 +8,7 @@ import PartyTag from '@deps/components/party/party-tag';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { calculateAgeNumber } from '@deps/helpers/age.helper';
-import { getHeaderIcon, getHeaderText, getPrefCommunicationType } from '@deps/helpers/party-info-helper';
+import { getHeaderText, getPrefCommunicationType } from '@deps/helpers/party-info-helper';
 import { orderObjectsByString } from '@deps/helpers/sort.helper';
 import { formatDate } from '@deps/helpers/string.helper';
 import { PartyRole, PartyStatus, PartyType, PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
@@ -125,7 +125,7 @@ const InteriorPeoplePageHeaderContainer = ({
     const tags = useMemo(() => selectedPolicyPartyRoles && getPartyRoles(selectedPolicyPartyRoles, t), [selectedPolicyPartyRoles, t]);
 
     const partyRoleTags = (
-        <div className="mt-1 flex xs:flex-col md:flex-row md:items-center md:align-middle lg:ml-8">
+        <div className="mt-1 flex xs:flex-col md:flex-row md:items-center md:align-middle">
             <div className="flex flex-wrap gap-1">
                 {tags?.map((tag: { text: string }) => (
                     <span key={tag.text} className="pointer-events-none">
@@ -158,7 +158,6 @@ const InteriorPeoplePageHeaderContainer = ({
     );
 
     // props
-    const icon = getHeaderIcon(selectedPolicyParty?.partyType);
     const headerText = getHeaderText(selectedPolicyParty);
     const headerTextSiblingsGroupOne = getPronouns(selectedPolicyParty?.partyType);
     const headerTextSiblingsGroupTwo = shouldShowEditCommunicationsPreferences ? (
@@ -179,7 +178,6 @@ const InteriorPeoplePageHeaderContainer = ({
         <PageHeader
             breadcrumbText={breadcrumbText}
             breadcrumbUrl={breadcrumbUrl}
-            icon={icon}
             headerText={headerText}
             headerTextSiblingsGroupOne={headerTextSiblingsGroupOne}
             headerTextSiblingsGroupTwo={headerTextSiblingsGroupTwo}

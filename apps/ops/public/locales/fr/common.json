@@ -73,6 +73,7 @@
             "loanPayment": "Paiement de prêts",
             "activity": "Activité",
             "fundTransfer": "Transfert de fonds",
+            "featuresAndRiders": "Caractéristiques et cavaliers",
             "sendDocument": "Envoyer un document",
             "sendStatement": "Envoyer un extrait de compte",
             "sendTaxForm": "Formulaire de taxes envoyé",
@@ -92,11 +93,11 @@
                 "text": "Gestion des accès"
             },
             "caseManagement": {
-                "text": "Gestion des dossiers",
+                "text": "Dossiers",
                 "link": "/cases"
             },
             "policySearch": {
-                "text": "Recherche de politique",
+                "text": "Politiques",
                 "link": "/policies",
                 "altText": "Police"
             },
@@ -922,7 +923,7 @@
         }
     },
     "caseManagementDashboard": {
-        "h1": "Gestion des dossiers",
+        "h1": "Dossiers",
         "h2": "Résultats de recherche",
         "case": {
             "createdAt": "Créé",
@@ -2821,6 +2822,7 @@
             "policyExtras": {
                 "contractExtras": "Options de contrat supplémentaires",
                 "policyExtras": "Options de police supplémentaires",
+                "featuresAndRiders": "Caractéristiques et cavaliers",
                 "filter": {
                     "label": "Filtrer par type :",
                     "Rider": "Avenants",

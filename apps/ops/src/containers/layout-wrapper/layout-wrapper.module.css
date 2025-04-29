@@ -1,10 +1,12 @@
 .bodyContainer {
-    min-height: 100vh;
-    background: white;
-    border-radius: 8px;
-    margin: 8px;
-    padding: 48px;
+    background: var(--color-grayscale-color-white);
     box-shadow: var(--shadow-elevation-elevation-light-sm);
+    border-radius: var(--measure-dimension-radius-md);
+    flex: 1;
+    max-width: 1440px;
+    margin: var(--measure-dimension-z-space-2);
+    min-height: 100vh;
+    padding: var(--measure-dimension-z-space-12);
 }
 
 @media screen and (max-width: 1024px) {
@@ -12,6 +14,6 @@
         box-shadow: none;
         border-radius: 0;
         margin: 0;
-        padding: 24px;
+        padding: var(--measure-dimension-z-space-6);
     }
 }

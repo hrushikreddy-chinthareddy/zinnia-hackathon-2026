@@ -93,12 +93,6 @@ export enum ModalTest {
     FRAME_CLOSE = 'modal-frame-close-test-id',
 }
 
-export enum NestedNavDrawerTest {
-    NESTED_NAV_PARENT_ITEM = 'nested-nav-parent-item-test-id',
-    START_ICON = 'nested-nav-start-icon-test-id',
-    END_ICON = 'nested-nav-end-icon-test-id',
-}
-
 export enum ProgressBarStepsTest {
     ClickContainer = 'click-container',
     ClickWrapper = 'click-wrapper',

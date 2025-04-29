@@ -3,6 +3,11 @@
   background-color: white;
 }
 
+.layoutMain {
+  display: flex;
+  flex: 1;
+}
+
 .sidesheetContent {
   border-top: none;
   width: max-content;
@@ -37,9 +42,5 @@
   .container {
     display: flex;
     background-color: var(--color-grayscale-color-50-gray);
-  }
-
-  .layoutMain {
-    flex-grow: 1;
   }
 }

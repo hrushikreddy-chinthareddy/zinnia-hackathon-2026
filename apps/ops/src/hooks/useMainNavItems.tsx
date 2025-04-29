@@ -52,28 +52,28 @@ export const useMainNavItems = (): NavGroup[] => {
     };
 
     const homeLink = {
-        id: homeLinkText,
+        id: homeLinkHref,
         display: homeLinkText,
         icon: IconType.HOUSE,
         renderComponent: <NavLink type={NavElementType.Link} href={homeLinkHref} onClick={() => handleAnalytics(homeLinkText)} />,
     };
 
     const caseLink = {
-        id: caseLinkText,
+        id: caseLinkHref,
         display: caseLinkText,
         icon: IconType.BRIEFCASE,
         renderComponent: <NavLink type={NavElementType.Link} href={caseLinkHref} onClick={() => handleAnalytics(caseLinkText)} />,
     };
 
     const policyLink = {
-        id: policySearchText,
+        id: policySearchHref,
         display: policySearchText,
-        icon: IconType.SHIELD_HEART,
+        icon: IconType.SHIELD_CHECKMARK,
         renderComponent: <NavLink type={NavElementType.Link} href={policySearchHref} onClick={() => handleAnalytics(policySearchText)} />,
     };
 
     const transactionOpsLink = {
-        id: transactionOpsSuiteText,
+        id: transactionOpsSuiteHref,
         display: transactionOpsSuiteText,
         icon: IconType.TICKET,
         renderComponent: (
@@ -82,7 +82,7 @@ export const useMainNavItems = (): NavGroup[] => {
     };
 
     const dashboardLink = {
-        id: dashboardText,
+        id: dashboardHref,
         display: dashboardText,
         icon: IconType.CHART_LINE,
         renderComponent: <NavLink type={NavElementType.Link} href={dashboardHref} onClick={() => handleAnalytics(dashboardText)} />,

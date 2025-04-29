@@ -1,8 +1,9 @@
 import { TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import CallLogsTab from '@deps/components/case-sub-page/case-tabs/call-logs-tab';
-import ActivityPageHeader from '@deps/containers/page-header/activity-page-header';
+import PageHeader from '@deps/components/page-header/page-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { PolicyActivityTabValues } from '@deps/types/constants';
@@ -11,6 +12,7 @@ import TransactionsTab from './transactions-tab';
 
 const ActivitySubPage = () => {
     const { policy } = useContext(PolicyData);
+    const { t } = useTranslation();
 
     const getInitialTabValue = () => {
         let initialTabVal = PolicyActivityTabValues.transactions;
@@ -34,7 +36,7 @@ const ActivitySubPage = () => {
 
     return (
         <div className="flex flex-col rounded bg-white">
-            <ActivityPageHeader />
+            <PageHeader headerText={t('pageHeader.activity.headerText') || ''} />
             <TabGroup defaultValue={tabVal} value={tabVal} onValueChange={handleTabChange} className="px-8">
                 <TabList>
                     <TabTrigger value={PolicyActivityTabValues.transactions}>Transactions</TabTrigger>

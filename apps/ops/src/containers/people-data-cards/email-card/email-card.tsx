@@ -13,7 +13,6 @@ import SideSheetPeopleHeader, {
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { Email } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
-import { ReactComponent as MailIcon } from '@deps/styles/elements/icons/communications/mail.svg';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 
 import { Emails, sortEmailsByType } from './email-card.helpers';
@@ -54,7 +53,7 @@ const EmailCard = ({ editable = false, infoOnly, party, planCode, policyNumber }
     };
 
     const EmailsBody = (
-        <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4 lg:pl-8">
+        <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4">
             <Emails editable={editable} emails={currentEmails} onEditClick={openSideSheet} showAdditional={showAdditional} />
         </div>
     );
@@ -65,7 +64,6 @@ const EmailCard = ({ editable = false, infoOnly, party, planCode, policyNumber }
         <CardContainer classNames="flex w-full flex-col items-start">
             <div className="flex w-full flex-col md:flex-row md:justify-between">
                 <div className="mb-4 flex items-center">
-                    <MailIcon role= "presentation" className="mr-2 text-primary" height={24} width={24} />
                     <Typography className="mr-5" variant={TypographyVariant.H2}>
                         {t('label')}
                     </Typography>

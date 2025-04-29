@@ -29,7 +29,6 @@ import PendingUpcomingBanner from './pending-upcoming-banner/pending-upcoming-ba
 
 const UpcomingPaymentCard = ({
     title,
-    icon = <PaymentIcon width={24} height={24} className="text-primary" role="presentation" />,
     inactiveText,
     inactiveHeaderText,
     inactiveIcon = <PaymentIcon width={50} height={50} className="text-gray-300" />,
@@ -77,12 +76,7 @@ const UpcomingPaymentCard = ({
             <CardSection
                 data-testid={UpcomingPaymentCardTest.CONTAINER}
                 className={className}
-                headerContent={
-                    <>
-                        <div className="w-6">{icon}</div>
-                        <h2 className="headline-2">{title}</h2>
-                    </>
-                }
+                headerContent={<h2 className="headline-2">{title}</h2>}
                 footerContent={footerLinks}
             >
                 {hasUpcomingPayment ? (

@@ -8,7 +8,6 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helper';
-import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkEligibilityFundTransfer } from '@deps/queries/api/fund-transfer';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -34,7 +33,6 @@ const FundsFirstGlanceCard = ({ policy }: BasePolicyComponentArgs) => {
 
     const [fundTransferEligibility, setFundTransferEligibility] = React.useState(false);
 
-    const { breadcrumb } = useBreadcrumb();
     const accountValue = policy.accountValue;
     const headerValues: HeaderValueProps = {
         account: {
@@ -79,8 +77,6 @@ const FundsFirstGlanceCard = ({ policy }: BasePolicyComponentArgs) => {
         <div id="iodif">
             <PageHeader
                 headerText={t('header') || ''}
-                breadcrumbText={breadcrumb?.text}
-                breadcrumbUrl={breadcrumb?.url}
                 belowHeaderTextChildren={
                     <>
                         <div className="mt-4 flex flex-row gap-8">

@@ -17,7 +17,6 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { Phone } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
-import { ReactComponent as PhoneIcon } from '@deps/styles/elements/icons/icons_outlined/phone.svg';
 
 interface OpenSideSheet {
     phone?: Phone;
@@ -52,7 +51,7 @@ const PhoneCard = ({ editable = false, infoOnly, party, planCode, policyNumber }
     };
 
     const PhonesBody = (
-        <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4 lg:pl-8">
+        <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4">
             <Phones onEditClick={openSideSheet} editable={editable} phones={currentPhones} showAdditional={showAdditional} />
         </div>
     );
@@ -63,7 +62,6 @@ const PhoneCard = ({ editable = false, infoOnly, party, planCode, policyNumber }
         <CardContainer classNames="flex w-full flex-col items-start">
             <div className="flex w-full flex-col md:flex-row md:justify-between">
                 <div className="mb-4 flex  items-center">
-                    <PhoneIcon role="presentation" className="mr-2 text-primary" height={24} width={24} />
                     <Typography className="mr-5" variant={TypographyVariant.H2}>
                         {t('label')}
                     </Typography>

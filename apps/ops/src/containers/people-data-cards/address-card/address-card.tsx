@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
-import NavElement, { NavElementType , NavElementVariant , NavElementSize } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementType, NavElementVariant, NavElementSize } from '@deps/components/nav-element/nav-element';
 import Toggle, { ToggleSize, ToggleVariant } from '@deps/components/toggle/toggle';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
@@ -17,7 +17,6 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { Address } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
-import { ReactComponent as LocationIcon } from '@deps/styles/elements/icons/navigation/location.svg';
 
 interface OpenSideSheet {
     address?: Address;
@@ -54,7 +53,7 @@ const AddressCard = ({ editable = false, infoOnly, party, planCode, policyNumber
     };
 
     const AddressesBody = (
-        <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4 lg:pl-8">
+        <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4">
             <Addresses
                 addresses={currentAddresses}
                 editable={editable}
@@ -72,7 +71,6 @@ const AddressCard = ({ editable = false, infoOnly, party, planCode, policyNumber
         <CardContainer classNames="flex w-full flex-col items-start">
             <div className="flex w-full flex-col md:flex-row md:justify-between">
                 <div className="mb-4 flex flex-row items-center">
-                    <LocationIcon role="presentation" className="mr-2 text-primary" height={24} width={24} />
                     <Typography className="mr-5" variant={TypographyVariant.H2}>
                         {t('label')}
                     </Typography>

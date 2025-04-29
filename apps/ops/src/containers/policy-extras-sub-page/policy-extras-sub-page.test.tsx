@@ -36,7 +36,7 @@ describe('Policy Extras Container', () => {
             );
 
             expect(screen.getByTestId('header-text')).toBeInTheDocument();
-            expect(screen.getByTestId('header-text')).toHaveTextContent('policyExtras');
+            expect(screen.getByTestId('header-text')).toHaveTextContent('featuresAndRiders');
         });
     });
 
@@ -103,7 +103,7 @@ describe('Policy Extras Helpers', () => {
                     { status: Status.PENDING },
                     { status: Status.ACTIVE },
                     { status: Status.ACTIVE },
-                    { riderElected: 'NOT ELECTED' } 
+                    { riderElected: 'NOT ELECTED' },
                 ] as Rider[],
                 // terminated, active, available, available, not elected
                 features: [
@@ -163,10 +163,10 @@ describe('Policy Extras Helpers', () => {
                 riders: [
                     { status: Status.TERMINATED },
                     { status: Status.TERMINATED },
-                    { status: Status.ACTIVE }, 
                     { status: Status.ACTIVE },
                     { status: Status.ACTIVE },
-                    { riderElected: 'NOT ELECTED' }
+                    { status: Status.ACTIVE },
+                    { riderElected: 'NOT ELECTED' },
                 ] as Rider[],
                 // terminated, terminated, available, available, available, not elected
                 features: [] as PolicyFeature[],
@@ -199,7 +199,7 @@ describe('Policy Extras Helpers', () => {
                 value: 'notElected',
                 quantity: 1,
                 disabled: false,
-            })
+            });
 
             expect(features).toEqual({
                 text: 'filter.Feature',

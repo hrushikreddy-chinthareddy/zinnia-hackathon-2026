@@ -5,7 +5,6 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import PageHeader from '@deps/components/page-header/page-header';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
-import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 
 import TransactionCard from '../policy-details/cards/transaction-card';
 import { buildTransactionCards } from '../policy-details/policy-details.helper';
@@ -14,7 +13,6 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'policy.detailCards.policyDetails',
     });
-    const { breadcrumb } = useBreadcrumb();
     const currencyFormat: Intl.NumberFormatOptions = { currency: policy.currency ?? 'USD', style: 'currency' };
     const { accountValue, costBasis, faceValue, surrenderValue } = policy;
     const transactionCards = buildTransactionCards(policy, t);
@@ -73,14 +71,7 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
         </>
     );
 
-    return (
-        <PageHeader
-            headerText={title}
-            breadcrumbText={breadcrumb?.text}
-            breadcrumbUrl={breadcrumb?.url}
-            belowHeaderTextChildren={belowHeaderTextChildren}
-        />
-    );
+    return <PageHeader headerText={title} belowHeaderTextChildren={belowHeaderTextChildren} />;
 };
 
 export default PolicyDetailsHeader;

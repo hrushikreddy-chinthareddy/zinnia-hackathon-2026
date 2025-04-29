@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
-import { TFunction, useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import { PropsWithChildren, ReactNode, useContext, useMemo, useState } from 'react';
 
 import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
@@ -13,6 +13,7 @@ import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import SelectSearch from '@deps/components/select-search/select-search';
+import SideSheetProductDetails from '@deps/components/side-sheet/side-sheet-product-details/side-sheet-product-details';
 import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
 import {
     AddressWithPending,
@@ -21,8 +22,7 @@ import {
 } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormattedAddress, sortAddressesByType } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
-import QuickLinks, { QuickLinksProps } from '@deps/containers/quick-links/quick-links';
-import SideSheetProductDetails from '@deps/components/side-sheet/side-sheet-product-details/side-sheet-product-details';
+import QuickLinks from '@deps/containers/quick-links/quick-links';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -69,6 +69,7 @@ import SideSheetEmail from '../people-data-cards/email-card/side-sheet/side-shee
 import { sortPhonesByType } from '../people-data-cards/phone-card/phone-card.helpers';
 import { SideSheetPhone } from '../people-data-cards/phone-card/side-sheet/side-sheet-phone';
 import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header/side-sheet-people-header';
+import { getPolicyQuickLinks } from '../quick-links/quick-links.helper';
 
 import { default as styles } from './policy-summary-card.module.css';
 
@@ -79,39 +80,6 @@ interface SummaryCardProps extends PropsWithChildren {
 interface KeyValuesBarProps {
     policy: Policy;
 }
-
-const quickLinks = (t: TFunction, policy: PolicyDetails): QuickLinksProps['links'] => {
-    const { policyNumber, planCode } = policy;
-
-    return [
-        {
-            href: t('site.navLinks.policyDetails.link', { id: policyNumber, planCode }),
-            name: t(policy.isLife ? 'site.navLinks.policyDetails.altText' : 'site.navLinks.contractDetails.altText'),
-        },
-        {
-            href: t('site.navLinks.people.link', { id: policyNumber, planCode }),
-            name: t('site.navLinks.people.text'),
-        },
-        {
-            href: t('site.navLinks.history.link', { id: policyNumber, planCode }),
-            name: t('pageHeader.activity.headerText'),
-            subLinks: [
-                {
-                    name: t(`site.navLinks.activity.subLinks.transactions.text`),
-                    href: t(`site.navLinks.activity.subLinks.transactions.link`, { id: policyNumber, planCode }),
-                },
-                {
-                    name: t(`site.navLinks.activity.subLinks.callLogs.text`),
-                    href: t(`site.navLinks.activity.subLinks.callLogs.link`, { id: policyNumber, planCode }),
-                },
-            ],
-        },
-        {
-            href: t('site.navLinks.documents.link', { id: policyNumber, planCode }),
-            name: t('site.navLinks.documents.text'),
-        },
-    ];
-};
 
 const getPolicyHighlighter = ({ firstName, lastName, policyNumber, ssn }: SearchViewQuery) => {
     if (!firstName && !lastName && !policyNumber && !ssn) return [];
@@ -186,7 +154,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                         <QuickLinks
                             userPartyId={userPartyId}
                             policy={policy}
-                            links={quickLinks(t, policy)}
+                            links={getPolicyQuickLinks(t, policy)}
                             sessionId={sessionId}
                         />
                     </div>

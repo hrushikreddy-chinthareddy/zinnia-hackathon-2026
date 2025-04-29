@@ -40,25 +40,4 @@ describe('MenuContextualItem', () => {
         const iconElement = screen.queryByRole('img');
         expect(iconElement).toBeInTheDocument();
     });
-
-    it('should not have href attribute if the link is not eligible', () => {
-        customRender(
-            <MenuContextualItem
-                content="Test Content"
-                href="https://example.com"
-                // eslint-disable-next-line @next/next/no-img-element
-                icon={<img height={20} width={20} src="icon.svg" alt="test icon" />}
-                disabled={true}
-            />
-        );
-
-        const linkElement = screen.getByText('Test Content');
-        expect(linkElement).toBeInTheDocument();
-        const anchorElement = linkElement.closest('a');
-        expect(anchorElement).toBeInTheDocument();
-        expect(anchorElement).not.toHaveAttribute('href');
-
-        const iconElement = screen.queryByRole('img');
-        expect(iconElement).toBeInTheDocument();
-    });
 });

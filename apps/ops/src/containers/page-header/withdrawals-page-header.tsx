@@ -12,7 +12,6 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PageHeader } from '@deps/components/page-header/page-header';
 import { PopoverPlacement } from '@deps/components/popover/popover';
-import { useStaticNestedNavDrawerContext } from '@deps/contexts/LayoutContexts/StaticNestedNavDrawerContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
@@ -29,29 +28,21 @@ interface WithdrawalsPageHeaderContainerProps {
     policyNumber?: string;
 }
 
-const WithdrawalsPageHeaderContainer = ({
-    breadcrumbText,
-    breadcrumbUrl,
-    planCode,
-    policyNumber,
-}: WithdrawalsPageHeaderContainerProps) => {
+const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCode, policyNumber }: WithdrawalsPageHeaderContainerProps) => {
     const { t } = useTranslation();
-    const { isNavDrawerOpen } = useStaticNestedNavDrawerContext();
     const { policyDetails } = useContext(PolicyData);
 
-    const {
-        data: partialWithdrawalOneTimeEligibility,
-        isLoading: isLoadingPartialWithdrawalOneTimeEligibility,
-    } = useQuery({
+    const { data: partialWithdrawalOneTimeEligibility, isLoading: isLoadingPartialWithdrawalOneTimeEligibility } = useQuery({
         queryKey: ['checkPartialWithdrawalOneTimeEligibility', policyDetails.planCode, policyDetails.policyNumber],
-        queryFn: () => checkPartialWithdrawalOneTimeEligibilityQuery(policyDetails.planCode as string, policyDetails.policyNumber as string),
+        queryFn: () =>
+            checkPartialWithdrawalOneTimeEligibilityQuery(policyDetails.planCode as string, policyDetails.policyNumber as string),
         placeholderData: previousData => previousData,
-        select: (data) => {
+        select: data => {
             return {
                 ...data,
-                isEligiblePartialWithdrawalOneTime: data?.status === TransactionResponseStatus.Success
-            }
-        }
+                isEligiblePartialWithdrawalOneTime: data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
     const withdrawalsValues = mapWithdrawalsSubPage({
@@ -72,16 +63,26 @@ const WithdrawalsPageHeaderContainer = ({
         freeWithdrawalAmount,
     } = withdrawalsValues ?? {};
 
-    const headerRowFlexClassNames = clsx('flex-col', { 'xs:gap-4 lg:gap-0': !isNavDrawerOpen, 'xs:gap-4 xl:gap-0': isNavDrawerOpen });
+    const headerRowFlexClassNames = clsx('flex-col', 'xs:gap-4 lg:gap-0');
     const groupOneFlexClassNames = 'flex gap-4';
 
     const headerTextSiblingsGroupOne = !isLoadingPartialWithdrawalOneTimeEligibility && (
         <BadgeWithTooltip
             className="mb-2 mt-2 self-center"
-            label={partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime ? t('withdrawals.eligible') : t('withdrawals.ineligible')}
-            tooltip={partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime ? t('withdrawals.eligibleForWithdrawalTooltip') : formatValidationResult(partialWithdrawalOneTimeEligibility?.validationResult)}
+            label={
+                partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime
+                    ? t('withdrawals.eligible')
+                    : t('withdrawals.ineligible')
+            }
+            tooltip={
+                partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime
+                    ? t('withdrawals.eligibleForWithdrawalTooltip')
+                    : formatValidationResult(partialWithdrawalOneTimeEligibility?.validationResult)
+            }
             tooltipPlacement={PopoverPlacement.BottomRight}
-            variant={partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime ? BadgeVariant.Positive : BadgeVariant.Negative}
+            variant={
+                partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime ? BadgeVariant.Positive : BadgeVariant.Negative
+            }
         />
     );
 

@@ -8,7 +8,6 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helper';
 import { LoanValues } from '@deps/models/policy/sor-policy';
-import { ReactComponent as CurrencyDollarsIcon } from '@deps/styles/elements/icons/icons_outlined/currency-dollar.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 export interface LoanRulesCardProps {
@@ -34,11 +33,8 @@ const LoanRulesCard = ({ currency, loanValues }: LoanRulesCardProps) => {
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100">
-            <div className="flex gap-2">
-                <CurrencyDollarsIcon className="mt-1 text-primary" role="presentation" width={24} height={24} />
-                <Typography variant={TypographyVariant.H2}>{t('headline')}</Typography>
-            </div>
-            <div className="mt-4 grid grid-cols-[repeat(2,minmax(min-content,max-content))] gap-x-8 gap-y-4 md:flex md:flex-wrap lg:ml-8">
+            <Typography variant={TypographyVariant.H2}>{t('headline')}</Typography>
+            <div className="mt-4 grid grid-cols-[repeat(2,minmax(min-content,max-content))] gap-x-8 gap-y-4 md:flex md:flex-wrap">
                 <div>
                     <Label label={t('minLoanAmt')} variant={LabelVariant.FieldLabel} />
                     <Content details={minimumLoanAmountValue} variant={ContentVariant.BodySm} />

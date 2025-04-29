@@ -8,7 +8,6 @@ import IdentificationCard from '@deps/containers/people-data-cards/identificatio
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import AgentParty from '@deps/helpers/policy-sor/AgentParty';
-import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { getAgentData } from '@deps/queries/api/agents';
 
 import AllocationCard from '../people-data-cards/allocation-card/allocation-card';
@@ -22,8 +21,6 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
     const [agentData, setAgentData] = useState<AgentParty>();
     const [isLoading, setIsLoading] = useState(true);
     const { policy, policyDetails } = useContext(PolicyData);
-
-    const { breadcrumb } = useBreadcrumb();
 
     const { parties, partyRoles, policyNumber, product } = policy ?? {};
     const { planCode } = product ?? {};
@@ -66,8 +63,6 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
             {!isLoading && agentData && (
                 <>
                     <PersonPageHeader
-                        breadcrumbText={breadcrumb?.text}
-                        breadcrumbUrl={breadcrumb?.url}
                         selectedPolicyParty={agentData?.party}
                         selectedPolicyPartyRoles={selectedPolicyPartyRoles}
                         editable={false}

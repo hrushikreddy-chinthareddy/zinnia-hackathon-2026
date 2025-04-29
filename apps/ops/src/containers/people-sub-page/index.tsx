@@ -19,7 +19,6 @@ import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { sortByAndThenBy } from '@deps/helpers/sort.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { PartyRole } from '@deps/models/policy/sor-policy';
 import { getAgentDataQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { AgentData } from '@deps/types/agents';
@@ -74,7 +73,6 @@ export const PeopleSubPage: React.FC = () => {
         [extractedParties, extractedPartyRoles, t]
     );
 
-    const { breadcrumb } = useBreadcrumb();
     const { peopleRolesFilter, setPeopleRolesFilter, clearPeopleRolesFilter } = useContext(PeopleRolesFilterContext);
     const [chipEntered, setChipEntered] = useState(false);
     const sideSheet = useSideSheetContext();
@@ -162,81 +160,75 @@ export const PeopleSubPage: React.FC = () => {
 
     return (
         <ChipEnterContext.Provider value={{ chipEntered, setChipEntered }}>
-            <div className="grow rounded bg-white shadow-elevation-light-04">
-                <PeoplePageHeaderContainer
-                    breadcrumbText={breadcrumb?.text}
-                    breadcrumbUrl={breadcrumb?.url}
-                    onClick={clearPeopleRolesFilter}
-                />
-                <hr className="h-0.5 border-none bg-gray-100" />
-                {filteredNameTags.length > 0 && (
-                    <div className="mx-4 my-6 flex flex-col gap-6 md:mx-6 lg:mx-8 lg:flex-row">
-                        <div className="lg:max-w-[308px]">
-                            <div className="field-label mb-2 text-gray-900">{t('people.filterByRole')}</div>
-                            <RadioGroup.Root
-                                className="flex flex-wrap gap-2"
-                                value={peopleRolesFilter.filterValue ?? 'All'}
-                                aria-label="chips"
-                                onValueChange={handleRadioClick}
-                            >
-                                <RadioGroup.Item className="chip" value="All">
-                                    All
+            <PeoplePageHeaderContainer onClick={clearPeopleRolesFilter} />
+            <hr className="h-0.5 border-none bg-gray-200" />
+            {filteredNameTags.length > 0 && (
+                <div className="mx-4 my-6 flex flex-col gap-6 md:mx-6 lg:mx-8 lg:flex-row">
+                    <div className="lg:max-w-[308px]">
+                        <div className="field-label mb-2 text-gray-900">{t('people.filterByRole')}</div>
+                        <RadioGroup.Root
+                            className="flex flex-wrap gap-2"
+                            value={peopleRolesFilter.filterValue ?? 'All'}
+                            aria-label="chips"
+                            onValueChange={handleRadioClick}
+                        >
+                            <RadioGroup.Item className="chip" value="All">
+                                All
+                            </RadioGroup.Item>
+                            {countedRoles.map(role => (
+                                <RadioGroup.Item className="chip" key={`people-chip-${role.value}`} value={role.value}>
+                                    {role.text} ({role.quantity})
                                 </RadioGroup.Item>
-                                {countedRoles.map(role => (
-                                    <RadioGroup.Item className="chip" key={`people-chip-${role.value}`} value={role.value}>
-                                        {role.text} ({role.quantity})
-                                    </RadioGroup.Item>
-                                ))}
-                            </RadioGroup.Root>
-                        </div>
-
-                        {isBeneficiarySelected && (
-                            <div className="w-full">
-                                <BeneficiaryCardContainer
-                                    title={t('people.primaryAllocation')}
-                                    peopleCardData={peopleCardData}
-                                    filteredData={beneficiaryDataByType(filteredNameTags, BeneficiaryType.PRIMARY)}
-                                    classNames="mb-10"
-                                    openAllocationSideSheet={openSidesheet}
-                                    type={BeneficiaryType.PRIMARY}
-                                />
-                                {beneficiaryDataByType(filteredNameTags, BeneficiaryType.CONTIGENT)?.length ? (
-                                    <BeneficiaryCardContainer
-                                        title={t('people.contingentAllocation')}
-                                        peopleCardData={peopleCardData}
-                                        filteredData={beneficiaryDataByType(filteredNameTags, BeneficiaryType.CONTIGENT)}
-                                        type={BeneficiaryType.CONTIGENT}
-                                        openAllocationSideSheet={openSidesheet}
-                                    />
-                                ) : null}
-                            </div>
-                        )}
-
-                        {isAgentSelected && (
-                            <div className="w-full">
-                                <BeneficiaryCardContainer
-                                    title={t('people.primaryAllocation')}
-                                    peopleCardData={peopleCardData}
-                                    filteredData={beneficiaryDataByType(filteredNameTags, BeneficiaryType.PRIMARY)}
-                                    classNames="mb-10"
-                                    type={BeneficiaryType.PRIMARY}
-                                />
-
-                                <BeneficiaryCardContainer
-                                    title={'Other'}
-                                    peopleCardData={peopleCardData}
-                                    filteredData={filteredNameTags.filter(fd => isNullEmptyOrUndefined(fd.beneficiaryPercentage || ''))}
-                                    showAllocationBar={false}
-                                />
-                            </div>
-                        )}
-
-                        {!isBeneficiarySelected && !isAgentSelected && (
-                            <PeopleCardContainer peopleCardData={peopleCardData} filteredData={filteredNameTags} />
-                        )}
+                            ))}
+                        </RadioGroup.Root>
                     </div>
-                )}
-            </div>
+
+                    {isBeneficiarySelected && (
+                        <div className="w-full">
+                            <BeneficiaryCardContainer
+                                title={t('people.primaryAllocation')}
+                                peopleCardData={peopleCardData}
+                                filteredData={beneficiaryDataByType(filteredNameTags, BeneficiaryType.PRIMARY)}
+                                classNames="mb-10"
+                                openAllocationSideSheet={openSidesheet}
+                                type={BeneficiaryType.PRIMARY}
+                            />
+                            {beneficiaryDataByType(filteredNameTags, BeneficiaryType.CONTIGENT)?.length ? (
+                                <BeneficiaryCardContainer
+                                    title={t('people.contingentAllocation')}
+                                    peopleCardData={peopleCardData}
+                                    filteredData={beneficiaryDataByType(filteredNameTags, BeneficiaryType.CONTIGENT)}
+                                    type={BeneficiaryType.CONTIGENT}
+                                    openAllocationSideSheet={openSidesheet}
+                                />
+                            ) : null}
+                        </div>
+                    )}
+
+                    {isAgentSelected && (
+                        <div className="w-full">
+                            <BeneficiaryCardContainer
+                                title={t('people.primaryAllocation')}
+                                peopleCardData={peopleCardData}
+                                filteredData={beneficiaryDataByType(filteredNameTags, BeneficiaryType.PRIMARY)}
+                                classNames="mb-10"
+                                type={BeneficiaryType.PRIMARY}
+                            />
+
+                            <BeneficiaryCardContainer
+                                title={'Other'}
+                                peopleCardData={peopleCardData}
+                                filteredData={filteredNameTags.filter(fd => isNullEmptyOrUndefined(fd.beneficiaryPercentage || ''))}
+                                showAllocationBar={false}
+                            />
+                        </div>
+                    )}
+
+                    {!isBeneficiarySelected && !isAgentSelected && (
+                        <PeopleCardContainer peopleCardData={peopleCardData} filteredData={filteredNameTags} />
+                    )}
+                </div>
+            )}
         </ChipEnterContext.Provider>
     );
 };

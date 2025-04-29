@@ -3,17 +3,16 @@ import { useContext } from 'react';
 
 import Label, { LabelVariant } from '@deps/components/label/label';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import SideSheetAllocations from '@deps/components/side-sheet/side-sheet-allocations/side-sheet-allocations';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
-import SideSheetAllocations from '@deps/components/side-sheet/side-sheet-allocations/side-sheet-allocations';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helper';
 import { safeString } from '@deps/helpers/string.helper';
 import { PartyType } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
-import { ReactComponent as ChartPieIcon } from '@deps/styles/elements/icons/icons_outlined/chart-pie.svg';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 
 export interface AllocationCardProps {
@@ -138,7 +137,6 @@ const AllocationCard = ({
         <CardContainer classNames={'flex w-full flex-col items-start text-gray-900'}>
             <div className="flex w-full flex-col">
                 <div className="mb-4 flex flex-row items-center">
-                    <ChartPieIcon height={24} className="mr-2 text-primary" role="presentation" />
                     <Typography variant={TypographyVariant.H2} className="mr-5">
                         {t('people.card.allocation.label')}
                     </Typography>

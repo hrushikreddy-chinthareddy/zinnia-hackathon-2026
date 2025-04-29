@@ -5,7 +5,6 @@ import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { useStaticNestedNavDrawerContext } from '@deps/contexts/LayoutContexts/StaticNestedNavDrawerContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
 import { ReactComponent as DocumentReportIcon } from '@deps/styles/elements/icons/files/document-report.svg';
 
@@ -19,38 +18,23 @@ interface MECCardProps {
 }
 
 interface GuidelineProps {
-    compare: number,
-    total: number
+    compare: number;
+    total: number;
 }
 
-const MECCard = ({
-    isMEC,
-    mecTestDate,
-    guideline,
-    sevenYearCard = {} as PremiumCardProps,
-}: MECCardProps) => {
+const MECCard = ({ isMEC, mecTestDate, guideline, sevenYearCard = {} as PremiumCardProps }: MECCardProps) => {
     const { t } = useTranslation();
-    const { isNavDrawerOpen } = useStaticNestedNavDrawerContext();
     const formattedTestDate = convertKebabedDateString(mecTestDate as string);
 
     const tooltipText = isMEC
         ? t('premium.mecCard.statusToolTipMecYes')
         : t('premium.mecCard.statusToolTipMecNo') + t('premium.mecCard.statusToolTipDate', { mecTestDate: formattedTestDate });
 
-    const articleClasses = clsx('rounded-b bg-white p-4 md:p-6', {
-        'lg:p-8': !isNavDrawerOpen,
-        'xl:p-8': isNavDrawerOpen,
-    });
+    const articleClasses = clsx('rounded-b bg-white p-4 md:p-6', 'lg:p-8');
 
-    const guidelinesContainerClasses = clsx('mt-4', {
-        'xl:pl-8': isNavDrawerOpen,
-        'lg:pl-8': !isNavDrawerOpen,
-    });
+    const guidelinesContainerClasses = clsx('mt-4', 'lg:pl-8');
 
-    const sevenContainerClasses = clsx('mt-8', {
-        'xl:pl-8': isNavDrawerOpen,
-        'lg:pl-8': !isNavDrawerOpen,
-    });
+    const sevenContainerClasses = clsx('mt-8', 'lg:pl-8');
 
     return (
         <article className={articleClasses}>
@@ -63,12 +47,12 @@ const MECCard = ({
                     amountProps={{
                         label: t('premium.mecCard.guidelineTests.amountRemaining.label'),
                         tooltipBody: t('premium.mecCard.guidelineTests.amountRemaining.tooltipBody'),
-                        tooltipTitle: t('premium.mecCard.guidelineTests.amountRemaining.label')
+                        tooltipTitle: t('premium.mecCard.guidelineTests.amountRemaining.label'),
                     }}
                     basisProps={{
                         label: t('premium.mecCard.guidelineTests.basis.label'),
                         tooltipBody: t('premium.mecCard.guidelineTests.basis.tooltipBody'),
-                        tooltipTitle: t('premium.mecCard.guidelineTests.basis.label')
+                        tooltipTitle: t('premium.mecCard.guidelineTests.basis.label'),
                     }}
                     compareValue={guideline?.compare || 0}
                     title={t('premium.mecCard.guidelineTests.title')}
@@ -76,7 +60,7 @@ const MECCard = ({
                     totalProps={{
                         label: t('premium.mecCard.guidelineTests.total.label'),
                         tooltipBody: t('premium.mecCard.guidelineTests.total.tooltipBody'),
-                        tooltipTitle: t('premium.mecCard.guidelineTests.total.label')
+                        tooltipTitle: t('premium.mecCard.guidelineTests.total.label'),
                     }}
                 />
             </div>

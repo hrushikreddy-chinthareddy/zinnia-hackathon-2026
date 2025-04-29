@@ -7,7 +7,7 @@ export type EmptyCardProps = {
 
 export default function EmptyCard({ text }: EmptyCardProps) {
     return (
-        <div className="border-box w-full lg:px-[30px]">
+        <div className="border-box w-full">
             <div className="w-full rounded border-2 border-dashed border-gray-100 bg-gray-50 p-8">
                 <AssistiveText
                     text={text}

@@ -7,20 +7,16 @@ import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 
 interface FindKeyValueSearchProps {
-    isNavDrawerOpen?: boolean;
     keyValues?: any;
     planCode?: string;
     policyNumber?: string;
 }
 
-export const FindKeyValueSearch = ({ isNavDrawerOpen, keyValues, planCode, policyNumber }: FindKeyValueSearchProps) => {
+export const FindKeyValueSearch = ({ keyValues, planCode, policyNumber }: FindKeyValueSearchProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { useSuspense: false });
     const { sessionId, partyId } = usePermissionsContext();
 
-    const searchClasses = clsx(
-        'mt-4 flex w-full items-center sm:pl-14',
-        isNavDrawerOpen ? 'lg:mt-4 lg:pl-14 xl:mt-0 xl:justify-end xl:pl-0' : 'lg:mt-0 lg:justify-end lg:pl-0'
-    );
+    const searchClasses = clsx('mt-4 flex w-full items-center sm:pl-14', 'lg:mt-0 lg:justify-end lg:pl-0');
 
     return (
         <div className={searchClasses}>

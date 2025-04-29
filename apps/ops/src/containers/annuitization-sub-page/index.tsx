@@ -17,15 +17,12 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
-import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { ArrangementType, PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, checkEligibilitySystematicPrograms } from '@deps/queries/api/bpm';
-import { ReactComponent as FeatureIcon } from '@deps/styles/elements/icons/currency/transaction.svg';
 
 import { AnnuitizationPageHeader } from './annuitization-page-header';
 
 export const AnnuitizationSubPage = () => {
-    const { breadcrumb } = useBreadcrumb();
     const { policyDetails, policy } = useContext(PolicyData);
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'annuitization',
@@ -68,8 +65,8 @@ export const AnnuitizationSubPage = () => {
     ];
 
     return (
-        <div className="rounded bg-gray-50 shadow-elevation-light-04">
-            <AnnuitizationPageHeader breadcrumb={breadcrumb} policy={policy} policyDetails={policyDetails} />
+        <>
+            <AnnuitizationPageHeader policy={policy} policyDetails={policyDetails} />
             <hr className="border-t-2 border-t-background" />
             <UpcomingPaymentCard
                 bankDetails={payeeBankDetails}
@@ -82,16 +79,7 @@ export const AnnuitizationSubPage = () => {
                 paymentDateText={(!!upcomingPayout?.nextProgramDate && t('upcoming.payoutDateText')) || undefined}
                 title={t('upcoming.title') as string}
             />
-            <CardSection
-                headerContent={
-                    <>
-                        <div className="w-6">
-                            <FeatureIcon width={24} height={24} className="text-primary" role="presentation" />
-                        </div>
-                        <h2 className="font-primary headline-2">{t('details.header')}</h2>
-                    </>
-                }
-            >
+            <CardSection headerContent={<h2 className="font-primary headline-2">{t('details.header')}</h2>}>
                 <ResponsiveFlex
                     layoutDirection={LayoutDirection.Horizontal}
                     horizontalResizing={HorizontalResizing.Hug}
@@ -109,7 +97,7 @@ export const AnnuitizationSubPage = () => {
                     <FieldData label={t('details.ytdPaymentAmount')}>{numberFormatify(annuitizationFeature?.totalPaymentAmount)}</FieldData>
                 </ResponsiveFlex>
             </CardSection>
-        </div>
+        </>
     );
 };
 

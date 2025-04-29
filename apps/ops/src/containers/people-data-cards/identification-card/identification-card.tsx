@@ -15,7 +15,6 @@ import { getStateName } from '@deps/helpers/states.helper';
 import { convertKebabedDateString, formatSSN, safeString } from '@deps/helpers/string.helper';
 import { PartyType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
-import { ReactComponent as FingerprintIcon } from '@deps/styles/elements/icons/icons_outlined/fingerprint.svg';
 
 export interface IdentificationCardProps {
     editable?: boolean;
@@ -60,7 +59,6 @@ const IdentificationCard = ({ editable = false, selectedPolicyParty, isAnnuity }
             <div className="flex w-full flex-col items-start">
                 <div className="flex w-full flex-col md:flex-row md:justify-between">
                     <div className="mb-4 flex flex-row items-center">
-                        <FingerprintIcon role="presentation" width={24} height={24} className="mr-2 text-primary" />
                         <Typography variant={TypographyVariant.H2} className="mr-5">
                             {t('heading')}
                         </Typography>
@@ -93,7 +91,7 @@ const IdentificationCard = ({ editable = false, selectedPolicyParty, isAnnuity }
                 {identifications?.length === 0 ? (
                     <EmptyCard text={t('empty')} />
                 ) : (
-                    <div className="grid grid-cols-[repeat(2,minmax(min-content,max-content))] gap-x-8 gap-y-4 md:flex md:flex-wrap lg:ml-8">
+                    <div className="grid grid-cols-[repeat(2,minmax(min-content,max-content))] gap-x-8 gap-y-4 md:flex md:flex-wrap">
                         {isIndividual && (
                             <>
                                 <FieldData label={t('options.socialSecurity')} sentenceCase={false}>

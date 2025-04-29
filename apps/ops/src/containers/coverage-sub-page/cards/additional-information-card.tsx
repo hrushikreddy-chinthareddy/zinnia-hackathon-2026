@@ -8,7 +8,6 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-import { ReactComponent as ClipboardList } from '@deps/styles/elements/icons/content/clipboard-list.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 const BASE_KEY = 'policy.detailCards.additionalInformation';
@@ -25,11 +24,8 @@ const AdditionalInformationCard = ({ policyDetails }: AdditionalInformationCardP
 
     return (
         <CardContainer containerClassNames="rounded-b">
-            <div className="flex gap-2">
-                <ClipboardList className="mt-1 text-primary" role="presentation" width={'24px'} height={'24px'} />
-                <Typography variant={TypographyVariant.H2}>{t(`${BASE_KEY}.additionalInformation`)}</Typography>
-            </div>
-            <div className="mt-4 flex flex-col gap-8 sm:flex-row lg:ml-8">
+            <Typography variant={TypographyVariant.H2}>{t(`${BASE_KEY}.additionalInformation`)}</Typography>
+            <div className="mt-4 flex flex-col gap-8 sm:flex-row">
                 {!policyDetails.isAnnuity && (
                     <div>
                         <div className="flex items-center gap-2">

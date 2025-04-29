@@ -11,7 +11,6 @@ import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatDate } from '@deps/helpers/string.helper';
 import { Policy } from '@deps/models/policy/sor-policy';
-import { ReactComponent as CurrencyDollarsIcon } from '@deps/styles/elements/icons/icons_outlined/currency-dollar.svg';
 import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 export type WithdrawalRulesProps = {
@@ -59,14 +58,13 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
     return (
         <CardContainer classNames="flex w-full flex-col items-start" containerClassNames="rounded-b">
             <div className="flex w-full flex-col">
-                <div className="mb-4 flex flex-row items-center">
-                    <CurrencyDollarsIcon width={24} height={24} className="mr-2 text-primary" role="presentation" />
+                <div className="mb-4">
                     <Typography variant={TypographyVariant.H2} className="mr-5">
                         {policyDetails.isAnnuity ? t('withdrawals.rmd.title') : t('withdrawals.rules.title')}
                     </Typography>
                 </div>
 
-                <div className="ml-8 flex flex-col gap-8 xl:flex-row">
+                <div className="flex flex-col gap-8 xl:flex-row">
                     {policyDetails.isAnnuity ? (
                         <>
                             <div className="flex flex-col gap-8 md:flex-row">

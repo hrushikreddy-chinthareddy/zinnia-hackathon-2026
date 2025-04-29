@@ -3,10 +3,10 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
 
 import PageHeader from '@deps/components/page-header/page-header';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import PolicyExtrasCards from '@deps/containers/policy-extras-cards/policy-extras-cards';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 
 import { calculaterFilterProps, ExtraFilters, FilterKeys } from './policy-extras-sub-page.helper';
 
@@ -16,7 +16,6 @@ const PolicyExtrasSubPage = () => {
     });
     const { policyDetails } = useContext(PolicyData);
 
-    const { breadcrumb } = useBreadcrumb();
     const [selectedChip, setSelectedChip] = useState<ExtraFilters>(ExtraFilters.All);
 
     const chips = calculaterFilterProps({ riders: policyDetails.riders, features: policyDetails.features.policyFeatures, t });
@@ -27,17 +26,15 @@ const PolicyExtrasSubPage = () => {
     };
 
     return (
-        <div className="rounded bg-white pb-4 text-gray-900 shadow-elevation-light-04">
-            <div className="rounded-t border-b-2 border-gray-100 bg-white text-gray-900">
-                <PageHeader
-                    headerText={t(policyDetails.isAnnuity ? 'contractExtras' : 'policyExtras') || ''}
-                    breadcrumbText={breadcrumb?.text}
-                    breadcrumbUrl={breadcrumb?.url}
-                />
+        <>
+            <div className="border-b-2 border-gray-200 text-gray-900">
+                <PageHeader headerText={t('featuresAndRiders') || ''} />
             </div>
             <CardContainer classNames="flex flex-col gap-4">
-                <div>
-                    <div className="field-label mb-2 text-gray-900">{t('filter.label')}</div>
+                <>
+                    <Typography variant={TypographyVariant.FieldLabel} className="text-gray-900">
+                        {t('filter.label')}
+                    </Typography>
                     <RadioGroup.Root
                         value={selectedChip}
                         aria-label="chips"
@@ -58,15 +55,10 @@ const PolicyExtrasSubPage = () => {
                             </RadioGroup.Item>
                         ))}
                     </RadioGroup.Root>
-                </div>
-                <div>
-                    <PolicyExtrasCards
-                        policyDetails={policyDetails}
-                        filterValues={selectedChip === ExtraFilters.All ? null : filterValues}
-                    />
-                </div>
+                </>
+                <PolicyExtrasCards policyDetails={policyDetails} filterValues={selectedChip === ExtraFilters.All ? null : filterValues} />
             </CardContainer>
-        </div>
+        </>
     );
 };
 

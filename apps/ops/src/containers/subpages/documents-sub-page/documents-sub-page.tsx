@@ -14,7 +14,6 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/Document
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { determineRange } from '@deps/helpers/numbers.helper';
-import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { useDocumentSearch } from '@deps/hooks/useDocumentSearch';
 import { PolicyDocument } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
@@ -221,7 +220,6 @@ const TaxDocs = ({
 
 export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
     const { t } = useTranslation();
-    const { breadcrumb } = useBreadcrumb();
 
     const [documentType, setDocumentType] = useState(DocumentTypeView.Policy as string);
 
@@ -238,13 +236,9 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
     };
 
     return (
-        <div className="h-full rounded bg-white text-gray-900 shadow-elevation-light-04">
-            <div className="flex self-stretch border-b-2 border-gray-100">
-                <PageHeader
-                    headerText={t('pageHeader.documents.headerText') as string}
-                    breadcrumbText={breadcrumb?.text}
-                    breadcrumbUrl={breadcrumb?.url}
-                />
+        <>
+            <div className="flex self-stretch border-b-2 border-gray-200">
+                <PageHeader headerText={t('pageHeader.documents.headerText') as string} />
             </div>
             <CardContainer>
                 <div className="max-w-[200px]">
@@ -285,6 +279,6 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                     <TaxDocs yearSelection={yearSelection} policy={policy} isFirstYearSelected={isFirstYearSelected} />
                 )}
             </CardContainer>
-        </div>
+        </>
     );
 }

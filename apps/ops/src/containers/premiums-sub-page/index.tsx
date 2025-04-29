@@ -13,17 +13,18 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
 import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helper';
-import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { ArrangementType, PolicyFeatureFeatureType, ProductType, Reason } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { checkOneTimePremiumEligibilityQuery, checkSystematicProgramsEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import {
+    checkOneTimePremiumEligibilityQuery,
+    checkSystematicProgramsEligibilityQuery,
+} from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import PremiumsPageHeaderContainer from '../page-header/premiums-page-header';
 import PolicyTestsCard from './cards/policy-tests-card/policy-tests-card';
 
 export const PremiumsSubPage = () => {
-    const { breadcrumb } = useBreadcrumb();
     const { policy, policyDetails } = useContext(PolicyData);
     const { t: tRoot } = useTranslation(TranslationFiles.COMMON);
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'premium.upcoming' });
@@ -57,48 +58,46 @@ export const PremiumsSubPage = () => {
 
     const isTerm = policy?.product?.productType === ('TERMLIFE' as ProductType);
 
-    const {
-        data: oneTimePremiumEligibility,
-    } = useQuery({
+    const { data: oneTimePremiumEligibility } = useQuery({
         queryKey: ['checkOneTimePremiumEligibility', planCode, policyNumber],
         queryFn: () => checkOneTimePremiumEligibilityQuery(planCode as string, policyNumber as string),
         placeholderData: previousData => previousData,
-        select: (data) => {
+        select: data => {
             return {
                 ...data,
-                isEligibleOneTimePremium: data?.status === TransactionResponseStatus.Success
-            }
-        }
+                isEligibleOneTimePremium: data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
-    const {
-        data: systematicProgramsEligibility,
-    } = useQuery({
+    const { data: systematicProgramsEligibility } = useQuery({
         queryKey: ['checkSystematicProgramsEligibility', planCode, policyNumber, upcomingPayment?.arrangementId],
         queryFn: upcomingPayment?.arrangementId
-            ? () => checkSystematicProgramsEligibilityQuery(planCode as string, policyNumber as string, upcomingPayment?.arrangementId as string)
+            ? () =>
+                  checkSystematicProgramsEligibilityQuery(
+                      planCode as string,
+                      policyNumber as string,
+                      upcomingPayment?.arrangementId as string
+                  )
             : skipToken,
         placeholderData: previousData => previousData,
-        select: (data) => {
+        select: data => {
             return {
                 ...data,
-                isEligibleManageAutopay: data?.status === TransactionResponseStatus.Success
-            }
-        }
+                isEligibleManageAutopay: data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
-            <Typography variant={TypographyVariant.H2}>
-                {t('cancelPremiumAutopayTitle')}
-            </Typography>,
+            <Typography variant={TypographyVariant.H2}>{t('cancelPremiumAutopayTitle')}</Typography>,
             <SideSheetCancelAutopay
                 arrangementType={ArrangementType.PAYMENT}
                 onCancel={() => sideSheet.handleOpen(false)}
                 policy={policy}
                 systematicProgramReason={Reason.PREMIUM}
             />
-            
         );
         sideSheet.handleOpen(true);
     };
@@ -118,9 +117,12 @@ export const PremiumsSubPage = () => {
         {
             // TODO: avoid using # here
             href: '#',
-            isDisabled: !premiumSetOrCancelAutopayEnabled || !systematicProgramsEligibility?.isEligibleManageAutopay || !upcomingPayment?.nextProgramDate,
+            isDisabled:
+                !premiumSetOrCancelAutopayEnabled ||
+                !systematicProgramsEligibility?.isEligibleManageAutopay ||
+                !upcomingPayment?.nextProgramDate,
             text: t('cancelAutopay'),
-            onClick: openCancelSideSheet
+            onClick: openCancelSideSheet,
         },
         {
             text: t('oneTimePaymentText'),
@@ -131,18 +133,14 @@ export const PremiumsSubPage = () => {
     ];
 
     return (
-        <div className="rounded bg-gray-50 shadow-elevation-light-04">
-            <div className="flex items-center rounded-t bg-white">
-                <PremiumsPageHeaderContainer
-                    breadcrumbText={breadcrumb?.text}
-                    breadcrumbUrl={breadcrumb?.url}
-                    costBasis={costBasis}
-                    currency={currency}
-                    policyValues={accountValues}
-                    policyStatus={policyStatus}
-                    pendingLapse={pendingLapse}
-                />
-            </div>
+        <>
+            <PremiumsPageHeaderContainer
+                costBasis={costBasis}
+                currency={currency}
+                policyValues={accountValues}
+                policyStatus={policyStatus}
+                pendingLapse={pendingLapse}
+            />
 
             <hr className="border-t-2 border-t-background" />
             <UpcomingPaymentCard
@@ -158,7 +156,7 @@ export const PremiumsSubPage = () => {
                         paymentType: t('paymentType.premium'),
                     }) || undefined
                 }
-                requestSubTypes={["Systematic Program Setup", "Systematic Program Update"]}
+                requestSubTypes={['Systematic Program Setup', 'Systematic Program Update']}
             />
 
             {!isTerm && !isAnnuity && (
@@ -167,7 +165,7 @@ export const PremiumsSubPage = () => {
                     <PolicyTestsCard policy={policy} />
                 </>
             )}
-        </div>
+        </>
     );
 };
 

@@ -8,7 +8,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertKebabedDateString } from '@deps/helpers/string.helper';
-import { ReactComponent as CalendarIcon } from '@deps/styles/elements/icons/content/calendar.svg';
 import {
     DEFAULT_DATE_FORMAT,
     DEFAULT_EXTENDED_DATE_FORMAT,
@@ -42,10 +41,7 @@ const ContestabilityCard: React.FC<ContestabilityCardProps> = ({ policyDetails }
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100">
             <div className="flex">
-                <CalendarIcon className="mr-2 mt-1 flex-none text-primary" height={'24px'} role="presentation" width={'24px'} />
-                <div>
-                    <Typography variant={TypographyVariant.H2}>{t(`${BASE_KEY}contestability`)}</Typography>
-                </div>
+                <Typography variant={TypographyVariant.H2}>{t(`${BASE_KEY}contestability`)}</Typography>
                 {endDate && (
                     <BadgeWithTooltip
                         className="ml-4 mt-0.5"

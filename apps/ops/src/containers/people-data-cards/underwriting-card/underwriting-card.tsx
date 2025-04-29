@@ -8,7 +8,6 @@ import Toggle, { ToggleSize, ToggleVariant } from '@deps/components/toggle/toggl
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
-import { ReactComponent as ShieldHeartIcon } from '@deps/styles/elements/icons/icons_outlined/shield-heart.svg';
 
 export interface UnderwritingCardProps {
     editable?: boolean;
@@ -113,7 +112,6 @@ export default function UnderwritingCard({ editable = false, ...props }: Underwr
         <CardContainer classNames="flex w-full flex-col items-start text-gray-900" containerClassNames="rounded-b">
             <div className="flex w-full flex-col md:flex-row md:justify-between">
                 <div className="mb-4 flex flex-row items-center">
-                    <ShieldHeartIcon width={24} height={24} className="mr-2 text-primary" role="presentation" />
                     <Typography variant={TypographyVariant.H2} className="mr-5">
                         {t('people.card.underwriting')}
                     </Typography>
@@ -141,7 +139,7 @@ export default function UnderwritingCard({ editable = false, ...props }: Underwr
                     </div>
                 )}
             </div>
-            <div className={`grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4 lg:pl-8 ${visibility}`}>
+            <div className={`grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4 ${visibility}`}>
                 <RiskClassInfo riskClass={props.riskClass} />
                 <SubstandardRatingInfo substandardRating={props.substandardRating} />
                 <ImpairmentInfo disabled={props.disabled} disabilityStartDate={props.disabilityStartDate} />

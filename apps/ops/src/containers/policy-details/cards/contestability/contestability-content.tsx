@@ -14,7 +14,7 @@ const ContestabilityContent: React.FC<ContestabilityContentCardProps> = ({ conte
     const { t } = useTranslation();
 
     return (
-        <table className="-mx-8 mt-4 border-separate border-spacing-x-8 lg:ml-0">
+        <table className="-mx-8 mt-4 border-separate border-spacing-x-8">
             <caption className="sr-only">{t(`${BASE_KEY}contestability`)}</caption>
             <thead>
                 <tr>

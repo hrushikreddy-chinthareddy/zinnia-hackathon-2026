@@ -71,7 +71,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
     const {
         data: policy,
         isLoading: loading,
-        isFetching: isFetching,
+        isFetching,
         error: error,
         refetch: refetchPolicy,
     } = useQuery({
@@ -95,11 +95,9 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
     });
 
     if (loading) {
-        // note: the loading policy hidden text is for our breadcrumb implementation to know that the page is still loading, and to wait to grab the breadcrumb title
         return (
             <PolicyLayout loading={true}>
                 <div className="flex h-[500px] w-full items-center justify-center">
-                    <h1 className="hidden">loading policy</h1>
                     <PageLoader variant={PageLoaderVariant.Center} />
                 </div>
             </PolicyLayout>

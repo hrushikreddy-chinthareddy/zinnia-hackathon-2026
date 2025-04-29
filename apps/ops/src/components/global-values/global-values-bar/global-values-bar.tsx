@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import PolicyInfo, { PolicyInfoProps } from '@deps/components/global-values/policy-info/policy-info';
 import { PolicyJointOwner, PolicyJointOwnerProps } from '@deps/components/global-values/policy-joint-owner/policy-joint-owner';
 import { PolicyOwner, PolicyOwnerProps } from '@deps/components/global-values/policy-owner/policy-owner';
@@ -8,7 +6,6 @@ import { DocumentInfo } from '../document-info';
 
 export interface GlobalValuesBarProps extends PolicyInfoProps, PolicyOwnerProps, PolicyJointOwnerProps {
     children?: React.ReactNode;
-    isNavDrawerOpen?: boolean;
     divider?: boolean;
     showJointOwner?: boolean;
     showLink?: boolean;
@@ -20,7 +17,6 @@ const GlobalValuesBar = ({
     carrierId,
     children,
     highlight,
-    isNavDrawerOpen,
     marketingName,
     openSideSheet,
     owner,
@@ -40,10 +36,8 @@ const GlobalValuesBar = ({
     showDocument = false,
     documentNumber,
 }: GlobalValuesBarProps) => {
-    const headerClasses = clsx('flex w-full flex-col pb-4 md:pb-6 lg:pb-8', isNavDrawerOpen ? 'lg:flex-col xl:flex-row' : 'lg:flex-row');
-
     return (
-        <div className={headerClasses}>
+        <div className={'flex w-full flex-col pb-4 md:pb-6 lg:pb-8 lg:flex-row'}>
             <div className="mr-0 flex flex-col md:flex-row">
                 <PolicyInfo
                     carrierId={carrierId}
@@ -73,12 +67,12 @@ const GlobalValuesBar = ({
                         <PolicyJointOwner jointOwner={jointOwner} planCode={planCode} policyNumber={policyNumber} showLink={showLink} />
                     </>
                 )}
-                {showDocument &&
+                {showDocument && (
                     <>
-                        {documentNumber && <div className="mx-4 flex w-0.5" /> }
+                        {documentNumber && <div className="mx-4 flex w-0.5" />}
                         <DocumentInfo documentNumber={documentNumber ?? ''} />
                     </>
-                }
+                )}
             </div>
             {children}
         </div>

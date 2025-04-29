@@ -11,10 +11,12 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
 import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helper';
 import { getFrequency } from '@deps/helpers/systematic-program.helper';
-import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { ArrangementType, Frequency, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { checkLoanRepaymentOneTimeEligibilityQuery, checkSystematicProgramsEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import {
+    checkLoanRepaymentOneTimeEligibilityQuery,
+    checkSystematicProgramsEligibilityQuery,
+} from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import LoanRulesCard from './cards/loan-rules-card';
@@ -26,7 +28,6 @@ interface LoansContainerProps {
 }
 
 export const LoansSubPage = ({ policy }: LoansContainerProps) => {
-    const { breadcrumb } = useBreadcrumb();
     const { t } = useTranslation(undefined, {
         keyPrefix: 'premium.upcoming',
     });
@@ -37,20 +38,14 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
     const loanCancelEnabled = featureFlags[FEATURE_FLAGS.LOAN_CANCEL_AUTOPAY];
 
-    const {
-        allocation,
-        coverage,
-        currency,
-        loanValues,
-        parties,
-        policyNumber,
-        product,
-        systematicPrograms,
-    } = policy;
+    const { allocation, coverage, currency, loanValues, parties, policyNumber, product, systematicPrograms } = policy;
     const { planCode } = product ?? {};
 
     const loanCarryingBalance = !!loanValues?.totalLoanBalance && loanValues?.totalLoanBalance > 0;
-    const upcomingLoanRepayment = useMemo(() => systematicPrograms?.find(({ reason }) => reason === Reason.LOANREPAYMENT), [systematicPrograms]);
+    const upcomingLoanRepayment = useMemo(
+        () => systematicPrograms?.find(({ reason }) => reason === Reason.LOANREPAYMENT),
+        [systematicPrograms]
+    );
 
     const payorParty = getParty(parties, upcomingLoanRepayment);
     const payorBankDetails = getBankDetails(payorParty, upcomingLoanRepayment);
@@ -58,61 +53,55 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const flatExtra = getFlatExtra(coverage);
     const addCharges = getAddCharges({ flatExtra, t });
 
-    const {
-        data: loanRepaymentOneTimeEligibility,
-    } = useQuery({
+    const { data: loanRepaymentOneTimeEligibility } = useQuery({
         queryKey: ['checkLoanRepaymentOneTimeEligibility', planCode, policyNumber, policy.loanValues?.totalLoanBalance],
-        queryFn: () => checkLoanRepaymentOneTimeEligibilityQuery(planCode as string, policyNumber as string, policy.loanValues?.totalLoanBalance),
+        queryFn: () =>
+            checkLoanRepaymentOneTimeEligibilityQuery(planCode as string, policyNumber as string, policy.loanValues?.totalLoanBalance),
         placeholderData: previousData => previousData,
-        select: (data) => {
+        select: data => {
             return {
                 ...data,
-                isEligibleLoanRepaymentOneTime: data?.status === TransactionResponseStatus.Success
-            }
-        }
+                isEligibleLoanRepaymentOneTime: data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
-    const {
-        data: systematicProgramsEligibility,
-    } = useQuery({
+    const { data: systematicProgramsEligibility } = useQuery({
         queryKey: ['checkSystematicProgramsEligibility', planCode, policyNumber, upcomingLoanRepayment?.arrangementId],
         queryFn: upcomingLoanRepayment?.arrangementId
-            ? () => checkSystematicProgramsEligibilityQuery(planCode as string, policyNumber as string, upcomingLoanRepayment?.arrangementId as string)
+            ? () =>
+                  checkSystematicProgramsEligibilityQuery(
+                      planCode as string,
+                      policyNumber as string,
+                      upcomingLoanRepayment?.arrangementId as string
+                  )
             : skipToken,
         placeholderData: previousData => previousData,
-        select: (data) => {
+        select: data => {
             return {
                 ...data,
-                isEligibleManageAutopay: data?.status === TransactionResponseStatus.Success
-            }
-        }
+                isEligibleManageAutopay: data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
-            <Typography variant={TypographyVariant.H2}>
-                {t('cancelLoanAutopayTitle')}
-            </Typography>,
+            <Typography variant={TypographyVariant.H2}>{t('cancelLoanAutopayTitle')}</Typography>,
             <SideSheetCancelAutopay
                 arrangementType={ArrangementType.LOANREPAYMENT}
                 onCancel={() => sideSheet.handleOpen(false)}
                 policy={policy}
                 systematicProgramReason={Reason.LOANREPAYMENT}
             />
-            
         );
         sideSheet.handleOpen(true);
     };
 
     return (
-        <div className="rounded shadow-elevation-light-04">
-            <LoansPageHeaderContainer
-                loanCarryingBalance={loanCarryingBalance}
-                policy={policy}
-                breadcrumbText={breadcrumb?.text}
-                breadcrumbUrl={breadcrumb?.url}
-            />
-            <hr className="h-0.5 border-none bg-gray-100" />
+        <>
+            <LoansPageHeaderContainer loanCarryingBalance={loanCarryingBalance} policy={policy} />
+            <hr className="h-0.5 border-none bg-gray-200" />
             {!!loanCarryingBalance && (
                 <UpcomingPaymentCard
                     className="content-divider"
@@ -136,14 +125,17 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                         {
                             href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/manage-loan-payment`,
                             text: t('manageAutopay'),
-                            isDisabled: !loanPaymentEnabled || !systematicProgramsEligibility?.isEligibleManageAutopay || !upcomingLoanRepayment?.nextProgramDate,
-                            tooltip: formatValidationResult(systematicProgramsEligibility?.validationResult)
+                            isDisabled:
+                                !loanPaymentEnabled ||
+                                !systematicProgramsEligibility?.isEligibleManageAutopay ||
+                                !upcomingLoanRepayment?.nextProgramDate,
+                            tooltip: formatValidationResult(systematicProgramsEligibility?.validationResult),
                         },
                         {
                             href: '#',
                             isDisabled: !loanCancelEnabled || !loanPaymentEnabled || !upcomingLoanRepayment?.nextProgramDate,
                             text: t('cancelAutopay'),
-                            onClick: openCancelSideSheet
+                            onClick: openCancelSideSheet,
                         },
                         {
                             href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/loan-payment`,
@@ -152,7 +144,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                             tooltip: formatValidationResult(loanRepaymentOneTimeEligibility?.validationResult),
                         },
                     ]}
-                    requestSubTypes={["Setup Loan Repayment", "Update Loan Repayment"]}
+                    requestSubTypes={['Setup Loan Repayment', 'Update Loan Repayment']}
                 />
             )}
             <LoanRulesCard currency={currency} loanValues={loanValues} />
@@ -161,7 +153,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                 lastLoanInterestDueDate={loanValues?.lastLoanInterestDueDate}
                 loanSegments={allocation?.loanSegments}
             />
-        </div>
+        </>
     );
 };
 

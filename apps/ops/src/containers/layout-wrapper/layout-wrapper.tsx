@@ -29,7 +29,7 @@ export const LayoutWrapper: React.FC<PropsWithChildren> = ({ children }) => {
     };
 
     return (
-        <Layout navGroups={navItems} displaySearch={false} onNavigationToggle={handleAnalytics}>
+        <Layout navGroups={navItems} displaySearch={false} onNavigationToggle={handleAnalytics} activeNavItem={path}>
             <div className={styles.bodyContainer}>{children}</div>
         </Layout>
     );

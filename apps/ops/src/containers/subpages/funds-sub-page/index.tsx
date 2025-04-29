@@ -10,9 +10,9 @@ interface FundsSubPageProps {
 
 export const FundsSubPage = ({ policy }: FundsSubPageProps) => {
     return (
-        <div className="flex grow flex-col rounded bg-white shadow-elevation-light-04">
+        <div className="flex grow flex-col">
             <FundsFirstGlance policy={policy} />
-            <hr className=" border-1 border-gray-100" />
+            <hr className=" border-1 border-gray-200" />
             {policy.isUniversalLife && <MatchCard policy={policy} />}
             <FundDetailsCard policy={policy} />
         </div>

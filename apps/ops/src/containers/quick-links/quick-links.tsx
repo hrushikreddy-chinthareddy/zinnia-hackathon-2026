@@ -1,4 +1,5 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { useState } from 'react';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
@@ -20,6 +21,7 @@ export interface QuickLinksProps extends QuickActionsMenuProps {
     policy: PolicyDetails;
     sessionId: string;
     userPartyId: string;
+    className?: string;
 }
 
 const trackClick = (
@@ -43,12 +45,12 @@ const trackClick = (
     });
 };
 
-const QuickLinks = ({ links, policy, sessionId, userPartyId }: QuickLinksProps) => {
+const QuickLinks = ({ links, policy, sessionId, userPartyId, className }: QuickLinksProps) => {
     const [isLife] = useState(policy.isLife);
     const [isAnnuity] = useState(policy.isAnnuity);
 
     return (
-        <div className="flex flex-wrap gap-x-8 gap-y-4" data-testid="quick-links">
+        <div className={clsx('flex flex-wrap gap-x-8 gap-y-4', className)} data-testid="quick-links">
             {links.map(({ name, href, subLinks }) => {
                 if (subLinks) {
                     return (

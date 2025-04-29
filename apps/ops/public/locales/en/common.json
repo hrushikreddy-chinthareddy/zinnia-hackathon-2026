@@ -74,6 +74,7 @@
             "newLoan": "New Loan",
             "activity": "Activity",
             "fundTransfer": "Fund Transfer",
+            "featuresAndRiders": "Features and Riders",
             "sendDocument": "Send Document",
             "sendStatement": "Send Statement",
             "sendTaxForm": "Send Tax Form",
@@ -93,7 +94,7 @@
                 "text": "Manage Access"
             },
             "caseManagement": {
-                "text": "Case Management",
+                "text": "Cases",
                 "link": "/cases"
             },
             "home": {
@@ -101,9 +102,9 @@
                 "link": "/home"
             },
             "policySearch": {
-                "text": "Policy Search",
+                "text": "Policies",
                 "link": "/policies",
-                "altText": "Policy"
+                "altText": "Policies"
             },
             "summary": {
                 "text": "Summary",
@@ -925,7 +926,7 @@
         }
     },
     "caseManagementDashboard": {
-        "h1": "Case Management",
+        "h1": "Cases",
         "h2": "Search Results",
         "case": {
             "createdAt": "Created",
@@ -2840,6 +2841,7 @@
             "policyExtras": {
                 "contractExtras": "Contract Extras",
                 "policyExtras": "Policy Extras",
+                "featuresAndRiders": "Features and Riders",
                 "filter": {
                     "label": "Filter by type:",
                     "Rider": "Riders",

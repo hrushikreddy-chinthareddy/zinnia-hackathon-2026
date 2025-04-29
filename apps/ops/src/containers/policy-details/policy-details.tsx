@@ -12,14 +12,14 @@ export const PolicyDetailsContainer = () => {
     const { policyDetails } = useContext(PolicyData);
 
     return (
-        <div className="rounded bg-white text-gray-900 shadow-elevation-light-04">
+        <>
             <PolicyDetailsHeaderCard policy={policyDetails} />
-            <hr className="border-b-2 border-gray-100" />
+            <hr className="border-t-2 border-gray-200" />
             <CoveredPartiesCard policy={policyDetails} />
             <TimelineCard policy={policyDetails} />
             <SalesChannelCard policy={policyDetails} />
             <ProductDetailsCard policy={policyDetails} />
-        </div>
+        </>
     );
 };
 
