@@ -4,6 +4,7 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
+import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
@@ -75,19 +76,22 @@ export default function CreateCaseErrorPage() {
     const translationKey = ERROR_KEYS[errorCode as string] || ERROR_KEYS.default;
 
     return (
-        <div className="flex h-[500px] w-full items-center justify-center rounded border-2 border-dashed border-semantic-warning bg-white shadow-sm">
-            <CardInfo
-                icon={<ErrorIcon className="text-semantic-warning" height={50} width={50} />}
-                title={t(`errorMessaging.${translationKey}.title`)}
-                subtitle={t(`errorMessaging.${translationKey}.subtitle`)}
-                cta={{
-                    action: () => {
-                        router.replace('/create-case');
-                    },
-                    text: t('backToCreateCase'),
-                }}
-            />
-        </div>
+        <>
+            <PageHead titleKey="createCaseError" />
+            <div className="flex h-[500px] w-full items-center justify-center rounded border-2 border-dashed border-semantic-warning bg-white shadow-sm">
+                <CardInfo
+                    icon={<ErrorIcon className="text-semantic-warning" height={50} width={50} />}
+                    title={t(`errorMessaging.${translationKey}.title`)}
+                    subtitle={t(`errorMessaging.${translationKey}.subtitle`)}
+                    cta={{
+                        action: () => {
+                            router.replace('/create-case');
+                        },
+                        text: t('backToCreateCase'),
+                    }}
+                />
+            </div>
+        </>
     );
 }
 

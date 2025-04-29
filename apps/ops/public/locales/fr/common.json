@@ -72,7 +72,16 @@
             "loanAutopay": "Paiement automatique du prêt",
             "loanPayment": "Paiement de prêts",
             "activity": "Activité",
-            "fundTransfer": "Transfert de fonds"
+            "fundTransfer": "Transfert de fonds",
+            "createCase": "Créer une nouvelle demande OTP",
+            "createCaseCreate": "Démarrer une nouvelle demande OTP",
+            "createCaseError": "Erreur de demande OTP",
+            "createCaseOft": "Traiter OFT - OTP",
+            "createCaseReg60": "Traiter NB Reg 60 - OTP",
+            "createCaseRenewal": "Traiter le renouvellement - OTP",
+            "createCaseRmd": "Traiter RMD - OTP",
+            "createCaseSsw": "Traiter retrait systématique - OTP",
+            "createCaseWithdrawal": "Traiter retrait - OTP"
         },
         "navLinks": {
             "accessManagement": {

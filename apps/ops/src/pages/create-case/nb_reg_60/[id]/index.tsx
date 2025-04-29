@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react';
 import OtpLayout from '@deps/components/otp-layout';
 import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormControls } from '@deps/containers/otp/reg60-forms/components/form-controls';
 import { FormErrors } from '@deps/containers/otp/reg60-forms/components/form-errors';
@@ -117,41 +118,44 @@ export default function Reg60({ document, form, transactionsHistory, user }: Cre
     });
 
     return (
-        <OtpLayout clientId={clientId as string} contractNumber={document?.contract}>
-            <div className={classes}>
-                <WithdrawalDrawer
-                    content={transactionDetail}
-                    setIsOpenOverride={setIsOpenOverride}
-                    shouldOverlay={shouldOverlay}
-                    isNavDrawerOpen={isNavDrawerOpen}
-                />
-                <div>
-                    {isLoading && (
-                        <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                            <PageLoader variant={PageLoaderVariant.Center} />
-                        </div>
-                    )}
-                    <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
-                        <form className="rounded bg-white p-4 text-gray-900 md:p-6 lg:p-8">
-                            <FormProvider form={form}>
-                                {
-                                    <>
-                                        {formParts}
-                                        <FormErrors taskApiError={taskApiError} />
-                                        <FormControls
-                                            document={document}
-                                            isLoading={isLoading}
-                                            setIsLoading={setIsLoading}
-                                            setTaskApiError={setTaskApiError}
-                                        ></FormControls>
-                                    </>
-                                }
-                            </FormProvider>
-                        </form>
-                    </article>
+        <>
+            <PageHead titleKey="createCaseReg60" />
+            <OtpLayout clientId={clientId as string} contractNumber={document?.contract}>
+                <div className={classes}>
+                    <WithdrawalDrawer
+                        content={transactionDetail}
+                        setIsOpenOverride={setIsOpenOverride}
+                        shouldOverlay={shouldOverlay}
+                        isNavDrawerOpen={isNavDrawerOpen}
+                    />
+                    <div>
+                        {isLoading && (
+                            <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
+                                <PageLoader variant={PageLoaderVariant.Center} />
+                            </div>
+                        )}
+                        <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
+                            <form className="rounded bg-white p-4 text-gray-900 md:p-6 lg:p-8">
+                                <FormProvider form={form}>
+                                    {
+                                        <>
+                                            {formParts}
+                                            <FormErrors taskApiError={taskApiError} />
+                                            <FormControls
+                                                document={document}
+                                                isLoading={isLoading}
+                                                setIsLoading={setIsLoading}
+                                                setTaskApiError={setTaskApiError}
+                                            ></FormControls>
+                                        </>
+                                    }
+                                </FormProvider>
+                            </form>
+                        </article>
+                    </div>
                 </div>
-            </div>
-        </OtpLayout>
+            </OtpLayout>
+        </>
     );
 }
 

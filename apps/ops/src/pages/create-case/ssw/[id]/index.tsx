@@ -56,6 +56,7 @@ import { RslnSSWForm } from '@deps/containers/otp/ssw-forms/rsln/rsln-ssw-form';
 import { PrdnSSWForm } from '@deps/containers/otp/ssw-forms/prdn/prdn-ssw-form';
 import { DlicSSWForm } from '@deps/containers/otp/ssw-forms/dlic/dlic-ssw-form';
 import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
+import { PageHead } from '@deps/components/page-title';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -177,54 +178,57 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     const formTitle = carrierTitle ? t('formTitles.standard', { carrier: carrierTitle }) : t(`formTitles.defaultTitle`);
 
     return (
-        <DiaryNotesProvider caseDetails={caseDetailsData}>
-            <OtpLayout contractNumber={document.contract} clientId={clientId as string}>
-                <div className={classes}>
-                    <WithdrawalDrawer
-                        content={transactionDetail}
-                        setIsOpenOverride={setIsOpenOverride}
-                        shouldOverlay={shouldOverlay}
-                        isNavDrawerOpen={isNavDrawerOpen}
-                    />
-                    <div>
-                        <header className="px-5 pt-2">
-                            <Typography variant={TypographyVariant.H1}>{formTitle}</Typography>
-                        </header>
-                        {loading && (
-                            <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                                <PageLoader variant={PageLoaderVariant.Center} />
-                            </div>
-                        )}
-                        <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
-                            <form className="rounded bg-white p-4 text-gray-900 md:p-6 lg:p-8">
-                                <FormProvider
-                                    form={form}
-                                    initialForm={initialForm}
-                                    issueState={issueState}
-                                    parties={parties}
-                                    featureFlagDecisions={featureFlagDecisions}
-                                >
-                                    {
-                                        <>
-                                            {formParts}
-                                            <NoteSection />
-                                            <FormErrors t={withdrawalTx} taskApiError={taskApiError}></FormErrors>
-                                            <FormControls
-                                                document={document}
-                                                t={withdrawalTx}
-                                                isLoading={loading}
-                                                setIsLoading={setLoading}
-                                                setTaskApiError={setTaskApiError}
-                                            ></FormControls>
-                                        </>
-                                    }
-                                </FormProvider>
-                            </form>
-                        </article>
+        <>
+            <PageHead titleKey="createCaseSsw" />
+            <DiaryNotesProvider caseDetails={caseDetailsData}>
+                <OtpLayout contractNumber={document.contract} clientId={clientId as string}>
+                    <div className={classes}>
+                        <WithdrawalDrawer
+                            content={transactionDetail}
+                            setIsOpenOverride={setIsOpenOverride}
+                            shouldOverlay={shouldOverlay}
+                            isNavDrawerOpen={isNavDrawerOpen}
+                        />
+                        <div>
+                            <header className="px-5 pt-2">
+                                <Typography variant={TypographyVariant.H1}>{formTitle}</Typography>
+                            </header>
+                            {loading && (
+                                <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
+                                    <PageLoader variant={PageLoaderVariant.Center} />
+                                </div>
+                            )}
+                            <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
+                                <form className="rounded bg-white p-4 text-gray-900 md:p-6 lg:p-8">
+                                    <FormProvider
+                                        form={form}
+                                        initialForm={initialForm}
+                                        issueState={issueState}
+                                        parties={parties}
+                                        featureFlagDecisions={featureFlagDecisions}
+                                    >
+                                        {
+                                            <>
+                                                {formParts}
+                                                <NoteSection />
+                                                <FormErrors t={withdrawalTx} taskApiError={taskApiError}></FormErrors>
+                                                <FormControls
+                                                    document={document}
+                                                    t={withdrawalTx}
+                                                    isLoading={loading}
+                                                    setIsLoading={setLoading}
+                                                    setTaskApiError={setTaskApiError}
+                                                ></FormControls>
+                                            </>
+                                        }
+                                    </FormProvider>
+                                </form>
+                            </article>
+                        </div>
                     </div>
-                </div>
-            </OtpLayout>
-        </DiaryNotesProvider>
+                </OtpLayout>
+            </DiaryNotesProvider>
+        </>
     );
 }
 

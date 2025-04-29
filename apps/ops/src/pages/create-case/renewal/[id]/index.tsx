@@ -8,6 +8,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import OtpLayout from '@deps/components/otp-layout';
 import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import { PageHead } from '@deps/components/page-title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import RenewalFormActions from '@deps/containers/otp/renewal-forms/components/renewal-form-actions';
@@ -53,7 +54,7 @@ interface RenewalCaseProps extends SegmentTrackedPageProps {
     caseId: string;
     planCode: string;
     parties: LifeCadParty[];
-};
+}
 
 const DefaultSidebarContent = {
     contractId: '',
@@ -127,7 +128,9 @@ export default function RenewalCase({ document, form, featureFlagDecisions, user
         'grid-cols-[350px,auto]': !shouldOverlay,
     });
 
-    const formTitle = t(`caseRenewal.request.formTitles.standard`, { carrier: getCarrierNameByClientId(clientForFormDetermination as string) });
+    const formTitle = t(`caseRenewal.request.formTitles.standard`, {
+        carrier: getCarrierNameByClientId(clientForFormDetermination as string),
+    });
 
     const caseDetailsData = {
         clientId: clientId as string,
@@ -145,45 +148,53 @@ export default function RenewalCase({ document, form, featureFlagDecisions, user
     }, [document, form, clientId]);
     // TODO: Create store and access store data from store. Wrapping OtpLayout with DiaryNotesProvider is not correct approach
     return (
-        <DiaryNotesProvider caseDetails={caseDetailsData}>
-            <OtpLayout contractNumber={document.contract} clientId={clientId as string}>
-                <div className={classes}>
-                    <WithdrawalDrawer
-                        content={transactionDetail}
-                        setIsOpenOverride={setIsOpenOverride}
-                        shouldOverlay={shouldOverlay}
-                        isNavDrawerOpen={isNavDrawerOpen}
-                    />
-                    <div>
-                        <header className="px-5 pt-2">
-                            <Typography variant={TypographyVariant.H1}>{formTitle}</Typography>
-                        </header>
-                        {isLoading && (
-                            <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                                <PageLoader variant={PageLoaderVariant.Center} />
-                            </div>
-                        )}
-                        <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
-                            <form className="rounded bg-white p-4 text-gray-900 md:p-6 lg:p-8">
-                                <RenewalFormProvider
-                                    initialForm={form}
-                                    parties={parties}
-                                    form={form}
-                                    userId={userId}
-                                    document={document}
-                                    action={action as string}
-                                    featureFlagDecisions={featureFlagDecisions}
-                                    planCode={planCode}
-                                >
-                                    {formParts}
-                                    <RenewalFormActions clientId={clientId as string} userId={userId} caseId={caseId} setIsLoading={setIsLoading} />
-                                </RenewalFormProvider>
-                            </form>
-                        </article>
+        <>
+            <PageHead titleKey="createCaseRenewal" />
+            <DiaryNotesProvider caseDetails={caseDetailsData}>
+                <OtpLayout contractNumber={document.contract} clientId={clientId as string}>
+                    <div className={classes}>
+                        <WithdrawalDrawer
+                            content={transactionDetail}
+                            setIsOpenOverride={setIsOpenOverride}
+                            shouldOverlay={shouldOverlay}
+                            isNavDrawerOpen={isNavDrawerOpen}
+                        />
+                        <div>
+                            <header className="px-5 pt-2">
+                                <Typography variant={TypographyVariant.H1}>{formTitle}</Typography>
+                            </header>
+                            {isLoading && (
+                                <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
+                                    <PageLoader variant={PageLoaderVariant.Center} />
+                                </div>
+                            )}
+                            <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
+                                <form className="rounded bg-white p-4 text-gray-900 md:p-6 lg:p-8">
+                                    <RenewalFormProvider
+                                        initialForm={form}
+                                        parties={parties}
+                                        form={form}
+                                        userId={userId}
+                                        document={document}
+                                        action={action as string}
+                                        featureFlagDecisions={featureFlagDecisions}
+                                        planCode={planCode}
+                                    >
+                                        {formParts}
+                                        <RenewalFormActions
+                                            clientId={clientId as string}
+                                            userId={userId}
+                                            caseId={caseId}
+                                            setIsLoading={setIsLoading}
+                                        />
+                                    </RenewalFormProvider>
+                                </form>
+                            </article>
+                        </div>
                     </div>
-                </div>
-            </OtpLayout>
-        </DiaryNotesProvider>
+                </OtpLayout>
+            </DiaryNotesProvider>
+        </>
     );
 }
 
@@ -270,7 +281,14 @@ export const getServerSideProps = withPageAuthAndLogging(
             );
             const planCode = acctInfoResponse?.PlanCode ?? '';
             */
-            const policies  = await searchPolicySSR(document.contract, [clientId?.toUpperCase() as Carrier], accessToken, 1, 0, loggingContext);
+            const policies = await searchPolicySSR(
+                document.contract,
+                [clientId?.toUpperCase() as Carrier],
+                accessToken,
+                1,
+                0,
+                loggingContext
+            );
             const planCode = policies?.[0]?.planCode || '';
             logInfo('create-case/renewal/:id::Retrieved plancode', { ...loggingContext, planCode });
 
@@ -287,7 +305,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     taskId: taskId,
                     action: action,
                     loggingContext,
-                    document
+                    document,
                 });
 
                 if (!form) {
@@ -304,8 +322,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                 }
 
                 const parties = document?.contract
-                ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
-                : [];
+                    ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
+                    : [];
 
                 return {
                     props: {
@@ -317,12 +335,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                         featureFlagDecisions,
                         user,
                         caseId: id,
-                        planCode: planCode
+                        planCode: planCode,
                     },
                 };
-
             } catch (error: any) {
-                const message = error?.message ? error.message  : `${ERROR_CODES.RENEWAL_FORM_CREATION}`;
+                const message = error?.message ? error.message : `${ERROR_CODES.RENEWAL_FORM_CREATION}`;
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${message}`,

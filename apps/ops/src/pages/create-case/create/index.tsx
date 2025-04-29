@@ -7,6 +7,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { ReactNode, useEffect, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
+import { PageHead } from '@deps/components/page-title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { CaseTypeToProcessesMap } from '@deps/constants/case';
@@ -183,34 +184,37 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
     };
 
     return (
-        <div className="flex flex-col">
-            <div className="mb-4 w-[600px] self-center rounded bg-white p-4 shadow-sm">
-                <div className="mb-4 flex flex-col border-b p-4">
-                    <Typography variant={TypographyVariant.H1} className="self-center font-primary text-xl font-light">
-                        {t('title')}
-                    </Typography>
+        <>
+            <PageHead titleKey="createCaseCreate" />
+            <div className="flex flex-col">
+                <div className="mb-4 w-[600px] self-center rounded bg-white p-4 shadow-sm">
+                    <div className="mb-4 flex flex-col border-b p-4">
+                        <Typography variant={TypographyVariant.H1} className="self-center font-primary text-xl font-light">
+                            {t('title')}
+                        </Typography>
+                    </div>
+                    <CardInfo
+                        icon={
+                            <div className={!isError ? 'transform-origin-center duration-2000 animate-spin ease-linear' : ''}>
+                                {cardProps.icon}
+                            </div>
+                        }
+                        title={cardProps.title}
+                        subtitle={cardProps.subtitle}
+                        cta={
+                            isError
+                                ? {
+                                      action: () => {
+                                          router.replace('/create-case');
+                                      },
+                                      text: t('errors.backToCreateCase'),
+                                  }
+                                : undefined
+                        }
+                    />
                 </div>
-                <CardInfo
-                    icon={
-                        <div className={!isError ? 'transform-origin-center duration-2000 animate-spin ease-linear' : ''}>
-                            {cardProps.icon}
-                        </div>
-                    }
-                    title={cardProps.title}
-                    subtitle={cardProps.subtitle}
-                    cta={
-                        isError
-                            ? {
-                                  action: () => {
-                                      router.replace('/create-case');
-                                  },
-                                  text: t('errors.backToCreateCase'),
-                              }
-                            : undefined
-                    }
-                />
             </div>
-        </div>
+        </>
     );
 }
 

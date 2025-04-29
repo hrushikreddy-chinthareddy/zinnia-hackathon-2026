@@ -73,7 +73,16 @@
             "loanPayment": "Loan Payment",
             "newLoan": "New Loan",
             "activity": "Activity",
-            "fundTransfer": "Fund Transfer"
+            "fundTransfer": "Fund Transfer",
+            "createCase": "Create New OTP Request",
+            "createCaseCreate": "Start New OTP Request",
+            "createCaseError": "OTP Request Error",
+            "createCaseOft": "Process OFT - OTP",
+            "createCaseReg60": "Process NB Reg 60- OTP",
+            "createCaseRenewal": "Process Renewal - OTP",
+            "createCaseRmd": "Process RMD - OTP",
+            "createCaseSsw": "Process Systematic Withdrawal - OTP",
+            "createCaseWithdrawal": "Process Withdrawal - OTP"
         },
         "navLinks": {
             "accessManagement": {

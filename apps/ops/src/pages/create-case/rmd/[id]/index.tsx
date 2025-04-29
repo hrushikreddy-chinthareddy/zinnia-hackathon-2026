@@ -9,6 +9,7 @@ import OtpLayout from '@deps/components/otp-layout';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import { PageHead } from '@deps/components/page-title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import DlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/dlic/dlic-rmd-form';
@@ -185,53 +186,56 @@ export default function RmdCase({ document, form, featureFlagDecisions, parties,
     const formTitle = t(`formTitles.rmd`);
     // TODO: Create store and access store data from store. Wrapping OtpLayout with DiaryNotesProvider is not correct approach
     return (
-        <DiaryNotesProvider caseDetails={caseDetailsData}>
-            <OtpLayout contractNumber={document.contract} clientId={clientId as string}>
-                <div className={classes}>
-                    <WithdrawalDrawer
-                        content={transactionDetail}
-                        setIsOpenOverride={setIsOpenOverride}
-                        shouldOverlay={shouldOverlay}
-                        isNavDrawerOpen={isNavDrawerOpen}
-                    />
-                    <div>
-                        <header className="px-5 pt-2">
-                            <Typography variant={TypographyVariant.H1}>{formTitle}</Typography>
-                        </header>
-                        {isLoading && (
-                            <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                                <PageLoader variant={PageLoaderVariant.Center} />
-                            </div>
-                        )}
-                        <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
-                            <form className="rounded bg-white p-4 text-gray-900 md:p-6 lg:p-8">
-                                <FormProvider
-                                    form={form}
-                                    initialForm={initialForm}
-                                    issueState={issueState}
-                                    featureFlagDecisions={featureFlagDecisions}
-                                    parties={parties}
-                                >
-                                    {
-                                        <>
-                                            {formParts}
-                                            <NoteSection />
-                                            <FormErrors t={t} taskApiError={taskApiError}></FormErrors>
-                                            <FormControls
-                                                document={document}
-                                                t={t}
-                                                setIsLoading={setIsLoading}
-                                                setTaskApiError={setTaskApiError}
-                                            ></FormControls>
-                                        </>
-                                    }
-                                </FormProvider>
-                            </form>
-                        </article>
+        <>
+            <PageHead titleKey="createCaseRmd" />
+            <DiaryNotesProvider caseDetails={caseDetailsData}>
+                <OtpLayout contractNumber={document.contract} clientId={clientId as string}>
+                    <div className={classes}>
+                        <WithdrawalDrawer
+                            content={transactionDetail}
+                            setIsOpenOverride={setIsOpenOverride}
+                            shouldOverlay={shouldOverlay}
+                            isNavDrawerOpen={isNavDrawerOpen}
+                        />
+                        <div>
+                            <header className="px-5 pt-2">
+                                <Typography variant={TypographyVariant.H1}>{formTitle}</Typography>
+                            </header>
+                            {isLoading && (
+                                <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
+                                    <PageLoader variant={PageLoaderVariant.Center} />
+                                </div>
+                            )}
+                            <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
+                                <form className="rounded bg-white p-4 text-gray-900 md:p-6 lg:p-8">
+                                    <FormProvider
+                                        form={form}
+                                        initialForm={initialForm}
+                                        issueState={issueState}
+                                        featureFlagDecisions={featureFlagDecisions}
+                                        parties={parties}
+                                    >
+                                        {
+                                            <>
+                                                {formParts}
+                                                <NoteSection />
+                                                <FormErrors t={t} taskApiError={taskApiError}></FormErrors>
+                                                <FormControls
+                                                    document={document}
+                                                    t={t}
+                                                    setIsLoading={setIsLoading}
+                                                    setTaskApiError={setTaskApiError}
+                                                ></FormControls>
+                                            </>
+                                        }
+                                    </FormProvider>
+                                </form>
+                            </article>
+                        </div>
                     </div>
-                </div>
-            </OtpLayout>
-        </DiaryNotesProvider>
+                </OtpLayout>
+            </DiaryNotesProvider>
+        </>
     );
 }
 

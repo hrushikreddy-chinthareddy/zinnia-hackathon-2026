@@ -43,6 +43,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+import { PageHead } from '@deps/components/page-title';
 
 interface CaseCreatePageProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
@@ -329,8 +330,8 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
 
     return (
         <>
+            <PageHead titleKey="createCase" />
             {showLoader && <Loading />}
-
             <div className="flex flex-col">
                 {!shouldShowNewExperience ? (
                     <div className="mb-4 w-[500px] self-center rounded bg-white shadow-sm">
