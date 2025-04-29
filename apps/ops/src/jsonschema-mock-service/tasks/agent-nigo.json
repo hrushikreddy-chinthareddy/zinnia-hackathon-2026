@@ -53,7 +53,8 @@
                                         "agentExternalId": {
                                             "type": "string",
                                             "title": "External Id",
-                                            "ui:field": "subTitle"
+                                            "ui:field": "subTitle",
+                                            "dataType": "ssn"
                                         },
                                         "taxId": {
                                             "type": "string",

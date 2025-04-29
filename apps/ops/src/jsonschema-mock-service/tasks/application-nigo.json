@@ -53,7 +53,8 @@
                                         "ssn": {
                                             "type": "string",
                                             "title": "SSN",
-                                            "ui:field": "subTitle"
+                                            "ui:field": "subTitle",
+                                            "dataType": "ssn"
                                         },
                                         "lastName": {
                                             "type": "string",

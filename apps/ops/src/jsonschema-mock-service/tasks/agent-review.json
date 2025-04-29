@@ -58,7 +58,8 @@
                                         },
                                         "externalId": {
                                             "title": "External Id",
-                                            "type": "string"
+                                            "type": "string",
+                                            "dataType": "ssn"
                                         },
                                         "taxId": {
                                             "title": "Tax Id",
