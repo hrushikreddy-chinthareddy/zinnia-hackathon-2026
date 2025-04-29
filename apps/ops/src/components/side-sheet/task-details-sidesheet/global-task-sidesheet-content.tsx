@@ -1,7 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Button, Icon, IconType, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
-import { convertToCamelCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -22,8 +21,8 @@ import { DocumentsLimit } from '@deps/constants/case';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { formatDateTime, toSentenceCase } from '@deps/helpers/string.helper';
-import { TaskSource } from '@deps/models/case/task';
+import { formatDateTime } from '@deps/helpers/string.helper';
+import { EarlyTaskType, TaskSource } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus, TaskLabel, DocumentData, TaskSideSheetProps, TaskComment } from '@deps/models/case/task-instance';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { claimTask } from '@deps/queries/api/v1/task';
@@ -170,8 +169,8 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     };
 
     const handleStart = async (taskId: string, taskStatus: TaskStatus) => {
-        const isTaskQueue = task?.queue;
-        const url = isTaskQueue ? `/task/${taskId}` : `/nigo-entry?taskId=${taskId}`;
+        const openNigoEntry = Object.values(EarlyTaskType).includes(task?.taskType as EarlyTaskType);
+        const url = openNigoEntry ? `/nigo-entry?taskId=${taskId}` : `/task/${taskId}`;
 
         try {
             setStartLoader(true);
@@ -246,7 +245,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     const statusReason = task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason;
 
     const details = task.taskDetails;
-
 
     let badgeIcon, badgeVariant, badgeLabel;
 
