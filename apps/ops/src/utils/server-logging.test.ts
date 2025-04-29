@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
-import pino from './pino-server';
+import pino, { complianceLogger } from './pino-server';
 import {
     logError,
     logWarn,
@@ -14,13 +14,21 @@ import {
     withPageAuthAndLogging,
 } from './server-logging';
 
-jest.mock('@deps/utils/pino-server', () => ({
-    trace: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    compliance: jest.fn(),
-}));
+jest.mock('@deps/utils/pino-server', () => {
+    return {
+        __esModule: true,
+        default: {
+            trace: jest.fn(),
+            info: jest.fn(),
+            warn: jest.fn(),
+            error: jest.fn(),
+            compliance: jest.fn(),
+        },
+        complianceLogger: {
+            compliance: jest.fn(),
+        },
+    };
+});
 jest.mock('@auth0/nextjs-auth0', () => ({
     getSession: jest.fn(() => ({ user: { sid: 'sid', sub: 'sub', name: 'name', email: 'email', partyId: 'partyId' } })),
     withApiAuthRequired: jest.fn(handler => handler),
@@ -72,8 +80,8 @@ describe('server-logging', () => {
     describe('logCompliance', () => {
         it('should use the appropriate pino method to log and attach isCompliance: true', () => {
             logCompliance('trace', mockLoggingContext);
-            expect(pino.compliance).toHaveBeenCalled();
-            expect((pino.compliance as jest.Mock).mock.calls[0][0].isCompliance).toBe(true);
+            expect(complianceLogger.compliance).toHaveBeenCalled();
+            expect((complianceLogger.compliance as jest.Mock).mock.calls[0][0].isCompliance).toBe(true);
         });
     });
     describe('logErrorWithoutContext', () => {

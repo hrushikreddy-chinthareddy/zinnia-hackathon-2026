@@ -13,7 +13,7 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { UserProfile } from '@deps/models/user-profile';
 
-import pino from './pino-server';
+import pino, { complianceLogger } from './pino-server';
 
 type UserInfo = {
     sessionId: string;
@@ -81,7 +81,7 @@ type WithPageAuthAndLogging = (
 ) => ReturnType<WithPageAuthRequired>;
 
 export const logCompliance: LoggingFunction = (message, serializableValues) => {
-    pino.compliance({ ...(serializableValues || {}), isCompliance: true }, message);
+    complianceLogger.compliance({ ...(serializableValues || {}), isCompliance: true }, message);
 };
 
 export const logFatal: LoggingFunction = (message, serializableValues) => {

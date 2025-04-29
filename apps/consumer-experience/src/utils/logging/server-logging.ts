@@ -1,6 +1,6 @@
 import { Session } from '@/types/auth';
 
-import pino from './pino-server';
+import pino, { complianceLogger } from './pino-server';
 
 type LoggingFunction = (message: string, serializableValues: any) => void;
 
@@ -16,7 +16,10 @@ export const logCompliance: LoggingFunction = (
   message,
   serializableValues = {}
 ) => {
-  pino.compliance({ serializableValues, isCompliance: true }, message);
+  complianceLogger.compliance(
+    { serializableValues, isCompliance: true },
+    message
+  );
 };
 
 export const logFatal: LoggingFunction = (message, serializableValues = {}) => {
