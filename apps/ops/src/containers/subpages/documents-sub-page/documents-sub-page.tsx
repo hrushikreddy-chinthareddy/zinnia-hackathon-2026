@@ -1,4 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import { useQuery } from '@tanstack/react-query';
 import { SearchRequest, TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -14,12 +15,12 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/Document
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { determineRange } from '@deps/helpers/numbers.helper';
-import { useDocumentSearch } from '@deps/hooks/useDocumentSearch';
 import { PolicyDocument } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -57,6 +58,7 @@ const NormalDocs = ({
     isFirstYearSelected: boolean;
 }) => {
     const { t } = useTranslation();
+    const { featureFlags } = useOptimizely();
     const limit = 25;
     const [offset, setOffset] = useState(0);
 
@@ -93,39 +95,45 @@ const NormalDocs = ({
 
     useEffect(() => {
         setOffset(0);
-    }, [yearSelection]);
+    }, [yearSelection, documentType]);
 
-    const [results, loading, total, status] = useDocumentSearch(searchParams, limit, offset);
+    const { data: { data: policyDocuments = [], status, total: totalPolicyDocuments = 0 } = {}, isLoading } = useQuery({
+        queryKey: ['documentSearch', searchParams, limit, offset, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]],
+        queryFn: () => getDocumentSearchResultsQuery(searchParams, limit, offset, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]),
+        enabled: !!policy?.policyNumber,
+    });
+
+    if (status === StatusCode.Forbidden) {
+        return <UnauthorizedCard />;
+    }
+    if (isLoading) {
+        return (
+            <div className="mx-auto flex items-center justify-center gap-2">
+                <EventsLoader message={t('policy.documents.loadingDocuments')} />
+            </div>
+        );
+    }
 
     return (
         <>
-            {status === StatusCode.Forbidden ? (
-                <UnauthorizedCard />
+            {isLoading ? (
+                <EventsLoader message={t('policy.documents.loadingDocuments')} />
             ) : (
-                <>
-                    {!loading && (
-                        <DocumentsResultsTable
-                            carrierCode={policy.carrierId ?? ''}
-                            documentType={documentType as DocumentTypeView}
-                            policyNumber={policy.policyNumber ?? ''}
-                            results={results ?? []}
-                        />
-                    )}
-                    {loading && (
-                        <div className="mx-auto flex items-center justify-center gap-2">
-                            <EventsLoader message={t('policy.documents.loadingDocuments')} />
-                        </div>
-                    )}
-                    <DocumentResultsPagination
-                        goToPage={goToPage}
-                        loading={loading}
-                        limit={limit}
-                        total={total}
-                        offset={offset}
-                        className="pb-[120px] lg:pb-0"
-                    />
-                </>
+                <DocumentsResultsTable
+                    carrierCode={policy.carrierId ?? ''}
+                    documentType={documentType as DocumentTypeView}
+                    policyNumber={policy.policyNumber ?? ''}
+                    results={policyDocuments ?? []}
+                />
             )}
+            <DocumentResultsPagination
+                goToPage={goToPage}
+                loading={isLoading}
+                limit={limit}
+                total={totalPolicyDocuments}
+                offset={offset}
+                className="pb-[120px] lg:pb-0"
+            />
         </>
     );
 };
@@ -184,7 +192,7 @@ const TaxDocs = ({
     const paginatedDocs =
         useMemo(() => {
             return docs?.slice(offset, offset + limit);
-        }, [docs, offset, loading, total, status]) ?? [];
+        }, [docs, offset]) ?? [];
 
     return (
         <>

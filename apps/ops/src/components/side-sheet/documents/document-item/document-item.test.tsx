@@ -8,6 +8,10 @@ const unsupportedDocument = mockDocuments[mockDocuments.length - 1];
 const supportedDocument = mockDocuments[0];
 
 jest.mock('@deps/utils/server-logging');
+jest.mock('@deps/hooks/useDocumentDownload', () => ({
+    useDocumentDownload: jest.fn(() => [false, jest.fn()]),
+    isPreviewSupported: jest.requireActual('@deps/hooks/useDocumentDownload').isPreviewSupported,
+}));
 
 describe('SideSheetDocumentItem', () => {
     it('renders text for unsupported document types', () => {

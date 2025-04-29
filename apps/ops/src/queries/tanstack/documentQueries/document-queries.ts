@@ -1,13 +1,81 @@
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { SearchRequest as DocsSearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
-import { buildV2SearchArgs } from '@deps/hooks/useDocumentSearch';
 import { PolicyDocumentApiRequest } from '@deps/models/case/document';
+import { downloadDocumentV2 } from '@deps/queries/api/client/documents/v2/download';
 import { getDocumentsV2 } from '@deps/queries/api/client/documents/v2/search';
+import { downloadDocumentV3 } from '@deps/queries/api/client/documents/v3/download';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
+import { DocumentApiRequestInputs } from '@deps/queries/api/documents';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
-import { V3DocumentWithSource } from '@deps/types/documents-v3';
+import { SearchRequest, V3DocumentWithSource } from '@deps/types/documents-v3';
+import { b64ToBlob } from '@deps/utils/blob';
+
+const buildV2SearchArgs = ({
+    searchBody,
+    limit = 25,
+    offset = 0,
+}: {
+    searchBody: SearchRequest;
+    limit?: number;
+    offset?: number;
+}): DocumentApiRequestInputs => {
+    return {
+        source: searchBody.documentClassification?.toLowerCase() === 'inbound' ? DocumentTypeView.Policy : DocumentTypeView.Correspondence,
+        clientCode: searchBody?.parentCarrierCode || '',
+        ...(searchBody?.policyNumber ? { contractNumber: searchBody?.policyNumber } : {}),
+        ...(searchBody?.zinniaLiveCaseId ? { zinniaLiveCaseId: searchBody?.zinniaLiveCaseId } : {}),
+        ...(searchBody?.documentStatus ? { docStatus: searchBody?.documentStatus?.join(',') } : {}),
+        ...(searchBody?.documentDate ? { documentDate: searchBody?.documentDate } : {}),
+        ...(searchBody?.documentStartDate ? { documentStartDate: searchBody?.documentStartDate } : {}),
+        ...(searchBody?.documentEndDate ? { documentEndDate: searchBody?.documentEndDate } : {}),
+        ...(searchBody?.periods ? { periods: searchBody?.periods } : {}),
+        limit,
+        offset,
+    };
+};
+
+export const getDocumentDownloadQuery = async (
+    documentId: string,
+    documentType: DocumentTypeView,
+    carrierCode: string,
+    fileType: string | undefined,
+    useV3: boolean
+): Promise<{ blob: Blob; fileExtension: string }> => {
+    let doc;
+    if (useV3) {
+        let docClass;
+        switch (documentType) {
+            case DocumentTypeView.Correspondence:
+                docClass = DocsSearchRequest.documentClassification.OUTBOUND;
+                break;
+            case DocumentTypeView.Policy:
+            default:
+                docClass = DocsSearchRequest.documentClassification.INBOUND;
+        }
+        doc = await downloadDocumentV3(documentId, docClass, carrierCode);
+    } else {
+        doc = await downloadDocumentV2(documentId, documentType, carrierCode);
+    }
+
+    if (!doc || !doc?.binaryData || !doc?.fileExtension) {
+        throw 'Invalid doc structure or no document data';
+    }
+    // this is only necessary until documents v3 is fully live.
+    // forces the browser to render emails as .eml instead of .pdf, doc v2 doesn't yet support .eml
+    if (fileType == 'email') {
+        doc.fileExtension = 'eml';
+        doc.mimeType = 'application/eml';
+    }
+
+    const docBlob = b64ToBlob(doc.binaryData, doc.mimeType);
+    if (!docBlob) {
+        console.error('DocumentDownload::download::no-blob');
+        throw new Error('No blob created');
+    }
+    return { blob: docBlob, fileExtension: doc.fileExtension };
+};
 
 export const getDocumentSearchResultsQuery = async (
     searchBody: SearchRequest | null,
