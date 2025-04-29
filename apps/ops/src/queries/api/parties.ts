@@ -42,3 +42,14 @@ export const getPartyMetadata = async (): Promise<AxiosResponse> => {
         return error;
     }
 };
+
+export const getPartyMetadataById = async (partyId: string): Promise<AxiosResponse> => {
+    try {
+        const response = await client.get<void, AxiosResponse>(`${baseAppUrl}/api/party/v1/parties/${partyId}/reference`);
+        return response;
+    } catch (error: any) {
+        console.error('getPartyMetadata::an error occurred', error);
+
+        return error;
+    }
+};

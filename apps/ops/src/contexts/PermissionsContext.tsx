@@ -1,5 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useQuery } from '@tanstack/react-query';
+import { PartyReferenceDataModel } from '@xd/api-types/dist/generated-types/partyreference';
 import {
     BulkCheckTuple,
     checkIfUserHasAdvisorsExcel,
@@ -11,8 +12,10 @@ import {
 import { createContext, ReactNode, useContext } from 'react';
 
 import { UserPermission } from '@deps/models/user-profile';
+import { getPartyMetadataById } from '@deps/queries/api/parties';
 import { bulkCheckPermissionsQuery, doesUserHavePagePermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
+import { isWellabeAgent } from '@deps/utils/agent-helper';
 
 export interface PermissionsContextProps {
     sessionId: string;
@@ -26,6 +29,7 @@ export interface PermissionsContextProps {
     isAllowReadCaseManagement: boolean;
     isAllowReadPolicyAdmin: boolean;
     isAllowReadOtpRenewals: boolean;
+    showToppanMerrill: boolean;
     permissionsLoadingComplete: boolean;
 }
 
@@ -67,6 +71,16 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
+    const { data: showToppanMerrill, isLoading: showToppanMerrillLoading } = useQuery({
+        queryKey: ['partyReferenceMetaData', partyId],
+        queryFn: () => getPartyMetadataById(partyId),
+        enabled: !!partyId,
+        select: (response: any) => {
+            const partyRefData = response?.data as PartyReferenceDataModel;
+            return isWellabeAgent(partyRefData);
+        },
+    });
+
     const {
         data: fgaRoleData,
         isLoading: bulkCheckLoading,
@@ -94,7 +108,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
-    const permissionsLoadingComplete = !bulkCheckLoading && !caseManagementLoading && !policyAdminLoading && !otpRenewalsLoading;
+    const permissionsLoadingComplete =
+        !bulkCheckLoading && !caseManagementLoading && !policyAdminLoading && !otpRenewalsLoading && !showToppanMerrillLoading;
     return (
         <PermissionContext.Provider
             value={{
@@ -109,6 +124,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAllowReadCaseManagement: !!isAllowReadCaseManagement,
                 isAllowReadPolicyAdmin: !!isAllowReadPolicyAdmin,
                 isAllowReadOtpRenewals: !!isAllowReadOtpRenewals,
+                showToppanMerrill: !!showToppanMerrill,
                 permissionsLoadingComplete,
             }}
         >

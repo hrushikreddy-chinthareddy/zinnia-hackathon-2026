@@ -152,6 +152,8 @@ export const Nav = ({
         <nav className={styles.nav}>
           <ul className={styles.navList}>
             {navGroups?.map((group, index) => {
+              if (group.items.length === 0) return null;
+
               return (
                 <li
                   className={clsx(

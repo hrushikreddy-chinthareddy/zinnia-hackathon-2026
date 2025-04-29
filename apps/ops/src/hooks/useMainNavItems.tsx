@@ -20,6 +20,7 @@ export const useMainNavItems = (): NavGroup[] => {
         isAllowReadPolicyAdmin,
         permissionsLoadingComplete,
         isSuperAdmin,
+        showToppanMerrill,
     } = usePermissionsContext();
 
     const { user } = useUser();
@@ -88,6 +89,15 @@ export const useMainNavItems = (): NavGroup[] => {
         renderComponent: <NavLink type={NavElementType.Link} href={dashboardHref} onClick={() => handleAnalytics(dashboardText)} />,
     };
 
+    const toppanMerrillLink = {
+        id: '/toppan-merrill',
+        display: 'Toppan Merrill Storefront',
+        icon: IconType.LIGHTBULB,
+        renderComponent: (
+            <NavLink type={NavElementType.Link} href={'/toppan-merrill'} onClick={() => handleAnalytics('Toppan Merrill Storefront')} />
+        ),
+    };
+
     const accessManagementLink = {
         id: accessManagement,
         display: accessManagement,
@@ -123,7 +133,7 @@ export const useMainNavItems = (): NavGroup[] => {
             items: [...(hasDashboardPermission ? [dashboardLink] : [])],
         },
         {
-            items: [...(isSuperAdmin ? [accessManagementLink] : []), userContextMenu],
+            items: [...(isSuperAdmin ? [accessManagementLink] : []), ...(showToppanMerrill ? [toppanMerrillLink] : []), userContextMenu],
             alignEnd: true,
         },
     ];

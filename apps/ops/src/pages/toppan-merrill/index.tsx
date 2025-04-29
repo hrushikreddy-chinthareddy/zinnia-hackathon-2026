@@ -1,9 +1,12 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { PartyReferenceDataModel } from '@zinnia/api-types/types/partyreference';
 import { AxiosResponse } from 'axios';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect } from 'react';
 
+import { TranslationFiles } from '@deps/config/translations';
 import { getUserData } from '@deps/helpers/query-data.helper';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
@@ -12,6 +15,7 @@ import { findCarrierAgents } from '@deps/utils/agent-helper';
 import { encryptWellabeToppanMerrill } from '@deps/utils/crypto/crypto';
 import { ToppanMerrillStorefrontAgent } from '@deps/utils/merrill-toppan/merrill-toppan-xml';
 import { logTrace, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import nextI18nextConfig from 'next-i18next.config';
 
 interface ToppanMerrillProps {
     postUrl: string;
@@ -56,6 +60,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             logTrace('toppan-merrill/index::start', loggingContext);
 
             let agentData: AgentDataResponse | undefined;
+
             try {
                 // Pull the party reference data so we can identify the user's persona and carrier
                 const partyRefReq = await serverApi.get<null, AxiosResponse>(
@@ -166,8 +171,17 @@ export const getServerSideProps = withPageAuthAndLogging(
                 source: 'zinnia',
             };
 
+            const { locale = DEFAULT_LOCALE, res, req } = context;
+            const translations = await serverSideTranslations(
+                locale,
+                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
+
             return {
                 props: {
+                    ...translations,
                     postUrl,
                     postData,
                 },
