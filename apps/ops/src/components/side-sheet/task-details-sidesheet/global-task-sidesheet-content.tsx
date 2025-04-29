@@ -402,7 +402,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                             options={statuses}
                         />
                     ) : (
-                        <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6">
+                        <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 inline-block ">
                             <Badge
                                 icon={badgeIcon}
                                 variant={badgeVariant}
