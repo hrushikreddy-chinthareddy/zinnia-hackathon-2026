@@ -239,11 +239,8 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     const showStartButton = task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending;
     const statusReason = task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason;
 
-    const details = t(`sideSheet.task.taskDetails.${convertToCamelCase(task.taskType)}`, {
-        taskType: toSentenceCase(task.taskName),
-        caseType: task.process,
-        defaultValue: '',
-    });
+    const details = task.taskDetails;
+
 
     let badgeIcon, badgeVariant, badgeLabel;
 
@@ -451,11 +448,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
                 {task.taskName && type == 'case' && (
                     <>
-                        <div className="col-span-1 text-[--color-base-text-text-secondary]">{t('sideSheet.task.stepLabel')}</div>
-                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                            {task.taskName}
-                        </Typography>
-
                         {details && (
                             <>
                                 <div className="col-span-1 text-[--color-base-text-text-secondary]">{t('sideSheet.task.detailsLabel')}</div>

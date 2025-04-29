@@ -3453,12 +3453,7 @@
             "startTask": "Start task",
             "claimTask": "Claim task",
             "claimTaskError": "You don’t have the necessary permissions to access this feature. Please reach out to the administrator for assistance.",
-            "taskHeading": "Task",
-            "taskDetails": {
-                "purchaseDocumentMatching": "As part of the document matching process for the purchase document, one or more documents require review and confirmation to ensure proper alignment before proceeding with contract issuance",
-                "suitabilityReview": "One or more issues were found during Zinnia {{taskType}}. These issues must be reviewed by Carrier and overridden to issue the contract.",
-                "nbAgentNigo": "One or more Not in Good Order (NIGO) issues were identified during the review of the {{caseType}} application. These issues must be reviewed and resolved to ensure the application meets all requirements before proceeding with contract issuance"
-            }
+            "taskHeading": "Task"
         },
         "suitability": {
             "header": "Complete Suitability Review",

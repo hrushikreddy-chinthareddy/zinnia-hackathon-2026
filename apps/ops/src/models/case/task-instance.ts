@@ -66,6 +66,7 @@ export type ManagementTask<T = TaskStatus> = {
     assignee?: string;
     impededReason?: string;
     cancellationReason?: string;
+    taskDetails?: string;
     createdByPartyId?: string;
 };
 
