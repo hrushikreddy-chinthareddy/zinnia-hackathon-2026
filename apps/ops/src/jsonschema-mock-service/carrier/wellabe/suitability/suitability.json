@@ -10,84 +10,6 @@
     "status": "INPROGRESS",
     "data": {
         "details": {
-            "financialObjectives": {
-                "purchaseReason": ["PASS_TO_BENEFICIARIES"]
-            },
-            "adminClient": null,
-            "suitabilityId": "4ab47991-90ec-437a-976d-d4a5bd194ed4",
-            "policyData": {
-                "productType": "SecureWell 7 Year MYGA",
-                "qualPlanType": "QUALIFIED",
-                "annualPaymentAmt": null,
-                "lineOfBusiness": null,
-                "productCode": "WBFDAV07"
-            },
-            "policyNumber": "ADA2501312",
-            "emailId": null,
-            "californiaResidentQuestions": null,
-            "fiscalData": {
-                "annualIncome": "100000",
-                "netWorth": "100000000",
-                "liquidNetWorth": "1000000",
-                "sourceOfIncome": ["CHECKING_SAVING_ACCOUNT"],
-                "totalAssets": "10",
-                "totalDebt": "0",
-                "annualExpenses": "0",
-                "sourceOfFunds": ["LIFETIME_INCOME"],
-                "federalTaxBand": "10",
-                "surrPeriodMaterialChangeExp": "NO"
-            },
-            "transmittingCompanyIdentifier": null,
-            "requestId": null,
-            "additionalInfo": {
-                "currentResidenceOption": "FAMILY_RESIDENCE"
-            },
-            "correlationId": "5cd17f1b-d49f-4491-9d6c-d520a770e31c",
-            "financialExperience": {
-                "rateChangeAcknowledgment": "NO",
-                "totalAnnuityValue": "0",
-                "financialProducts": {
-                    "assetsDistribution": [
-                        {
-                            "productType": "",
-                            "qualificationType": "",
-                            "amount": ""
-                        }
-                    ],
-                    "totalAsset": []
-                }
-            },
-            "liquidityOptions": {
-                "fundsAccessExplanation": "NO",
-                "futureDistributionMethods": [
-                    {
-                        "distributionMethods": "",
-                        "optedYears": ""
-                    }
-                ],
-                "benefitAnnuityQuestions": {
-                    "planForIncomeDecreaseAfter10Years": []
-                }
-            },
-            "transmittingCompanyName": null,
-            "submittedBy": null,
-            "clientId": "WELB",
-            "userId": null,
-            "receivingCompanyName": null,
-            "investmentRiskInfo": {
-                "riskTolerance": "MODERATE_CONSERVATIVE"
-            },
-            "agentAcknowledgment": {
-                "maApplicationQuestionnaire": {
-                    "soldPoliciesToApplicant": "NO"
-                }
-            },
-            "signatureInfo": [
-                {
-                    "signatureRoleCode": "AGENT",
-                    "signatureDate": "2025-04-01"
-                }
-            ],
             "parties": [
                 {
                     "partyType": "PERSON",
@@ -97,12 +19,16 @@
                         "firstName": "Abhigyan",
                         "middleName": "A",
                         "lastName": "Anand",
+                        "gender": "MALE",
                         "age": "50",
+                        "birthDate": "1994-03-04",
                         "martialStatus": "MARRIED",
                         "birthCountry": "AF",
-                        "birthJurisdictionState": "AK",
-                        "gender": "MALE",
-                        "birthDate": null
+                        "birthJurisdictionState": "AK"
+                    },
+                    "employment": {
+                        "employmentStatus": "YES",
+                        "disabilityExplanation": "disabled"
                     },
                     "govtIdInfo": [
                         {
@@ -121,11 +47,7 @@
                             "country": "AL",
                             "zip": "46239"
                         }
-                    ],
-                    "employment": {
-                        "employmentStatus": "DISABLED",
-                        "disabilityExplanation": "disabled"
-                    }
+                    ]
                 },
                 {
                     "partyType": "PERSON",
@@ -163,11 +85,118 @@
                     "employment": null
                 }
             ],
-            "applicationId": "WELLANI041120254278560002",
+            "policyData": {
+                "lineOfBusiness": "ANNUITY",
+                "productCode": "WBFDAV07",
+                "productType": "SecureWell 7 Year MYGA",
+                "qualPlanType": "QUALIFIED",
+                "annualPaymentAmt": "500"
+            },
             "applicationInfo": {
-                "replacementInd": "NO"
-            }
-        }
+                "replacementInd": "NO",
+                "additionalInformation": {
+                    "soldPoliciesToApplicant": "YES"
+                }
+            },
+            "fiscalData": {
+                "materialChangeExp": "NO",
+                "annualIncome": "100000",
+                "annualExpenses": "20",
+                "netWorth": "100000000",
+                "liquidNetWorth": "1000000",
+                "sourceOfIncome": ["SALARY"],
+                "totalAssets": "10",
+                "totalDebt": "0",
+                "sourceOfFunds": ["CHECKING_SAVING_ACCOUNT"],
+                "federalTaxBand": "10",
+                "surrPeriodMaterialChangeExp": "NO"
+            },
+            "financialExperience": {
+                "rateChangeAcknowledgment": "NO",
+                "totalAnnuityValue": "0",
+                "financialProducts": {
+                    "assetsDistribution": [
+                        {
+                            "productType": "CHECKING_SAVING_ACCOUNT",
+                            "qualificationType": "QUALIFIED",
+                            "amount": "200"
+                        }
+                    ],
+                    "totalAsset": [{}]
+                }
+            },
+            "investmentRiskInfo": {
+                "riskTolerance": "MODERATE_CONSERVATIVE"
+            },
+            "financialObjectives": {
+                "purchaseReason": ["INCOME"]
+            },
+            "liquidityOptions": {
+                "planToHoldAnnuity": "2",
+                "surrenderChargeConsentUnderAge": "YES",
+                "futureDistributionMethods": [
+                    {
+                        "distributionMethods": "PENALTY-FREE-WITHDRWAWAL",
+                        "optedYears": "2"
+                    }
+                ],
+                "fundsAccessExplanation": "NO",
+                "benefitAnnuityQuestions": {
+                    "planForIncomeDecreaseAfter10Years": []
+                }
+            },
+            "agentAcknowledgment": {
+                "maApplicationQuestionnaire": {
+                    "soldPoliciesToApplicant": "YES",
+                    "productDetails": []
+                },
+                "disclosureAcknowledgement": {
+                    "productConsDiscussed": {
+                        "byAgent": [],
+                        "byApplicant": []
+                    }
+                }
+            },
+            "additionalInfo": {
+                "currentResidenceOption": "FAMILY_RESIDENCE",
+                "extraFundAvailable": "YES",
+                "existingPoliciesSoldByAgent": "YES",
+                "consideredOtherInsuranceNeeds": "YES",
+                "resideInNursingHomeOrAssistedLiving": "YES",
+                "noOfDependents": "3",
+                "otherDependents": "3"
+            },
+            "signatureInfo": [
+                {
+                    "signatureRoleCode": "AGENT",
+                    "signatoryName": "ffdsf",
+                    "signatureDate": "2025-04-01",
+                    "signatureCity": "fds",
+                    "signatureState": "AP",
+                    "signatoryDesignation": "CUSTODIAN"
+                }
+            ],
+            "adminClient": null,
+            "suitabilityId": "4ab47991-90ec-437a-976d-d4a5bd194ed4",
+            "policyNumber": "ADA2501312",
+            "emailId": null,
+            "californiaResidentQuestions": {
+                "applyForMeansTestedBenefits": "YES",
+                "buyingForGovernmentBenefits": "YES",
+                "reverseMortgage": "YES"
+            },
+            "transmittingCompanyIdentifier": null,
+            "requestId": null,
+            "correlationId": "5cd17f1b-d49f-4491-9d6c-d520a770e31c",
+            "transmittingCompanyName": null,
+            "submittedBy": null,
+            "clientId": "WELB",
+            "userId": null,
+            "receivingCompanyName": null,
+            "applicationId": "WELLANI041120254278560002"
+        },
+        "nigoList": [],
+        "missingInformation": false
     },
     "mappedExceptions": [],
     "mappedDocuments": [],
@@ -184,7 +213,6 @@
     "updatedBy": "Vijayalaxmi.Sambhane@zinnia.com",
     "updatedByPartyId": "fa49a69c3939412d87b315cb39459497",
     "updatedAt": "2025-02-21T13:29:17Z",
-
     "identifiers": [
         {
             "identifier": "policyNumber",

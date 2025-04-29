@@ -8,7 +8,7 @@ import {
     RJSFSchema,
     StrictRJSFSchema,
 } from '@rjsf/utils';
-import { Table, TableBody , TableHeader, TableHeaderCell, TableRow } from '@zinnia/bloom/components';
+import { Table, TableBody, TableHeader, TableHeaderCell, TableRow } from '@zinnia/bloom/components';
 import React from 'react';
 
 import style from './array-field.module.css';

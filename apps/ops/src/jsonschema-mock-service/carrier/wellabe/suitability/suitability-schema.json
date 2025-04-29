@@ -27,7 +27,6 @@
                                     "minItems": 1,
                                     "items": {
                                         "type": "object",
-                                        "title": "PARTY",
                                         "properties": {
                                             "partyType": {
                                                 "type": "string",
@@ -1074,6 +1073,18 @@
                                     }
                                 }
                             },
+                            "required": [
+                                "policyData",
+                                "applicationInfo",
+                                "fiscalData",
+                                "financialExperience",
+                                "investmentRiskInfo",
+                                "financialObjectives",
+                                "liquidityOptions",
+                                "agentAcknowledgment",
+                                "additionalInfo",
+                                "signatureInfo"
+                            ],
                             "allOf": [
                                 {
                                     "if": {
@@ -1614,9 +1625,12 @@
                         "parties": {
                             "items": {
                                 "ui:options": {
-                                    "title": "party",
+                                    "nobackground": true,
+                                    "title": "{{roleType}}",
+                                    "defaultItemLabel": "New Party",
                                     "minItems": 1,
-                                    "label": false
+                                    "label": true,
+                                    "expandable": true
                                 },
                                 "partyType": {
                                     "ui:options": {
@@ -1843,7 +1857,7 @@
                         },
                         "policyData": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "expandable": true
                             },
                             "lineOfBusiness": {
                                 "ui:options": {
@@ -1876,7 +1890,7 @@
                         "applicationInfo": {
                             "ui:order":["replacementInd", "replacementReason", "additionalInformation"],
                             "ui:options": {
-                                "classNames": "divider"
+                                "expandable": true
                             },
                             "replacementInd": {
                                 "ui:widget": "radio",
@@ -1943,7 +1957,7 @@
                                 "federalTaxBand"
                             ],
                             "ui:options": {
-                                "classNames": "divider"
+                                "expandable": true
                             },
                             "annualIncome": {},
                             "annualExpenses": {},
@@ -2086,7 +2100,7 @@
                         },
                         "financialExperience": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "expandable": true
                             },
                             "totalAnnuityValue": {
                                 "ui:options": {
@@ -2165,7 +2179,7 @@
                         },
                         "investmentRiskInfo": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "expandable": true
                             },
                             "riskTolerance": {
                                 "ui:options": {
@@ -2183,7 +2197,7 @@
                         },
                         "financialObjectives": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "expandable": true
                             },
                             "purchaseReason": {
                                 "ui:options": {
@@ -2202,7 +2216,7 @@
                         },
                         "liquidityOptions": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "expandable": true
                             },
                             "planToHoldAnnuity": {
                                 "ui:options": {
@@ -2249,7 +2263,7 @@
                         },
                         "agentAcknowledgment": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "expandable": true
                             },
                             "maApplicationQuestionnaire": {
                                 "soldPoliciesToApplicant": {
@@ -2320,7 +2334,7 @@
                         "additionalInfo": {
                             "ui:order": ["extraFundAvailable", "extraFundAvailableDetails", "resideInNursingHomeOrAssistedLiving", "noOfDependents", "otherDependents"],
                             "ui:options": {
-                                "classNames": "divider"
+                                "expandable": true
                             },
                             "extraFundAvailable": {},
                             "extraFundAvailableDetails": {},
@@ -2330,7 +2344,7 @@
                         },
                         "californiaResidentQuestions": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "expandable": true
                             },
                             "applyForMeansTestedBenefits": {},
                             "buyingForGovernmentBenefits": {},
@@ -2342,9 +2356,12 @@
                             },
                             "items": {
                                 "ui:options": {
-                                    "title": "signature information",
+                                    "title": "{{signatureRoleCode}} Signature",
+                                    "defaultItemLabel": "New Signature",
                                     "minItems": 1,
-                                    "label": false
+                                    "label": true,
+                                    "expandable": true,
+                                    "nobackground": true
                                 },
                                 "signatureRoleCode": {
                                     "ui:options": {
