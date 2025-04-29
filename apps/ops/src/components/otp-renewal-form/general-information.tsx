@@ -14,7 +14,7 @@ interface GeneralInformationProps {
 }
 
 export default function GeneralInformation({ isFormStateReadOnly }: GeneralInformationProps) {
-    const { caseDocument, channel, setChannel } = useContext(RenewalFormDataContext);
+    const { document, channel, setChannel } = useContext(RenewalFormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
 
     return (
@@ -25,7 +25,7 @@ export default function GeneralInformation({ isFormStateReadOnly }: GeneralInfor
             <div className="mb-4 flex">
                 <div className="mr-8">
                     <FieldLabel classNames="font-secondary text-md !mb-0" label={t('contractId') as string} />
-                    <p className="mb-2 font-secondary text-md">{caseDocument?.contract}</p>
+                    <p className="mb-2 font-secondary text-md">{document?.contract}</p>
                 </div>
                 <SelectSimple
                     className="w-full max-w-[200px]"

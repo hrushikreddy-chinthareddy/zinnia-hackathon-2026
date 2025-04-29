@@ -49,7 +49,6 @@ const NigoEntryContainer = ({
 }: NigoEntryContainerContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry' });
     const { setTransactionType, setTransactionSubType, setDocument, sectionOption } = useNigoEntry();
-
     const [policy, setPolicy] = useState<Policy>();
     const [availableFormsTransactions, setAvailableFormsTransactions] = useState<AvailableFormsTransaction[]>([]);
     const [prevTransactionDetails, setPrevTransactionDetails] = useState<AdditionalDataInstance | null>(null);
@@ -216,7 +215,7 @@ const NigoEntryContainer = ({
             {
                 ariaLabel: t('tabs.formEntry'),
                 isVisible: () => sectionOption === SelOptionType.DATA_ENTRY,
-                component: <FormEntryStep document={documentData} clientCode={clientCode} docType={docType} planCode={policy?.product?.planCode || planCode}/>,
+                component: <FormEntryStep document={documentData} clientCode={clientCode} docType={docType} planCode={policy?.product?.planCode || planCode} />,
                 screenReaderLabel: t('tabs.formEntry'),
                 index: 1,
                 text: t('tabs.formEntry'),
@@ -248,7 +247,7 @@ const NigoEntryContainer = ({
                 text: t('tabs.confirm'),
             },
         ],
-        [availableFormsTransactions, clientCode, docType, documentData, documentNumber, nigoExceptions, nigoSubExceptions, policy, sectionOption, t, taskInfoLink]
+        [availableFormsTransactions, clientCode, docType, documentData, documentNumber, nigoExceptions, nigoSubExceptions, planCode, policy, policyNumber, sectionOption, t, taskInfoLink]
     );
 
     const filteredSteps: Step[] = useMemo(

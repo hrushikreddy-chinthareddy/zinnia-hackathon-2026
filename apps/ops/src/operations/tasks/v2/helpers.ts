@@ -15,3 +15,18 @@ export const mapTaskToActiveWithdrawalCaseTask = (data: ManagementTask<TaskStatu
         data: payload
     }
 }
+
+export const mapTaskToActiveRenewalCaseTask = (data: ManagementTask<TaskStatus>, payload: any): any => {
+    return {
+        taskId: data.id,
+        carrier: data.carrier,
+        caseId: data.caseId,
+        status: data.status,
+        taskType: data.taskType as TaskType,
+        updatedDate: data.updatedAt,
+        createdDate: data.createdAt,
+        createdByPartyId: data?.createdByPartyId,
+        source: 'Zinnia.TaskManagement',
+        data: payload
+    }
+}

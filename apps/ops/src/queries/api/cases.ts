@@ -83,7 +83,6 @@ export const createCase = async (query: CreateCaseBody): Promise<CreateCaseRespo
 export const getCases = async (query: CaseSearchBody): Promise<CaseSearchResponse | CaseSearchErrorResponse> => {
     try {
         const { data } = await client.post<CaseSearchBody, AxiosResponse>(`${baseCasesUrl}/search`, query);
-
         return data;
     } catch (error: any) {
         console.error('getCases::An error occurred while getting case search results', error);

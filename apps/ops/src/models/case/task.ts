@@ -11,6 +11,7 @@ export enum TaskType {
     RMD = 'RMDFormInputTask',
     SSW = 'SSWFormInputTask',
     RENEWAL = 'RenewalTask',
+    RENEWAL_TASK= 'RENEWAL_TASK',
     REG60 = 'NBReg60Comparision',
     SuitabilityDataEntry = 'SUITABILITY_DATA_ENTRY',
     SuitabilityReview = 'SUITABILITY_REVIEW',
@@ -46,6 +47,7 @@ export enum EarlyTaskType {
     SSW = 'SSWFormInputTask',
     RENEWAL = 'RenewalTask',
     REG60 = 'NBReg60Comparision',
+    RENEWAL_TASK = 'RENEWAL_TASK'
 }
 
 export enum TaskSource {
@@ -79,6 +81,7 @@ export interface OwnerInformation {
 
 export interface RenewalsFormData {
     documentNumber: string;
+    caseId?: string;
     source: string;
     contractNum: string;
     contractValue?: number | string | null;
@@ -115,7 +118,7 @@ export interface CreateTaskBody<TaskStatus, K> {
 }
 
 export type TaskV1Payload = RenewalsFormData | ActiveWithdrawalCase;
-export type TaskV2Payload = Reg60FormData | ActiveWithdrawalCaseData;
+export type TaskV2Payload = Reg60FormData | ActiveWithdrawalCaseData | RenewalsFormData;
 
 export interface CreateTaskResponse {
     id: string;

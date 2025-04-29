@@ -1577,6 +1577,9 @@
             }
         },
         "request": {
+            "formTitles": {
+                "standard": "{{carrier}} Renewal Request"
+            },
             "callReceivedDate": "Call received date",
             "callReceivedDateError": "Call received date is required",
             "callValidation": "Call Validation",
@@ -2251,7 +2254,7 @@
                 "stateShouldNotBeEmpty": "State should not be empty",
                 "zipShouldNotBeEmpty": "Zip should not be empty",
                 "formValidationWarning": "Form submission was prevented due to validation warnings. Address the warnings above or check the ignore warning checkbox to submit the form.",
-                "diaryNotesViewWarning": "Form submission is restricted due to presence of diary notes.View diary notes and submit",
+                "diaryNotesViewWarning": "Form submission is restricted due to presence of diary notes. View diary notes and submit",
                 "fboDetails": "FBO detail is required",
                 "accountTypeMustBeSelected": "Please choose an account type to proceed with your request."
             },
@@ -2306,7 +2309,7 @@
             }
         },
         "sidebar": {
-            "contractStatusCode": "Policy Status",
+            "contractStatusCode": "Policy status",
             "abbreviatedcontractStatusCode": "Pol.",
             "abbreviatedCaseId": "Case",
             "abbreviatedContractId": "Cont.",
@@ -2315,9 +2318,9 @@
             "abbreviatedIssueDate": "Issue.",
             "abbreviatedOwnerName": "Own.",
             "abbreviatedAnnuitantName": "Ann.",
-            "abbreviatedContractValue": "Ctr Val.",
+            "abbreviatedContractValue": "Ctr val.",
             "qualType": "Qualification type",
-            "contractValue": "Contract Value",
+            "contractValue": "Contract value",
             "issueDate": "Issue date",
             "contractId": "Contract id",
             "ownerName": "Owner Name",
@@ -5174,7 +5177,7 @@
             "title": "Submitted!",
             "subTitle": "Your request has been sent for processing.",
             "subTitleReindexing": "This document will be re-indexed. The existing case had been cancelled.",
-            "cta": "Go to case management",
+            "cta": "Go to TransactionOps Suite",
             "secondaryCta": "Close",
             "submitNigo": "Submit NIGO details",
             "submitTask": "Submit task details"
@@ -5240,7 +5243,8 @@
                 "oft": "{{carrier}} Outgoing Funds Transfer Request",
                 "ssw": "{{carrier}} Systematic Withdrawal Request",
                 "rmd": "{{carrier}} Required Minimum Distribution Request",
-                "defaultTitle": "Form Entry"
+                "defaultTitle": "Form Entry",
+                "renewal": "{{carrier}} Renewal Request"
             }
         }
     },

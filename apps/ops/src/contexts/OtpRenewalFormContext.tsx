@@ -9,9 +9,10 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 export interface OtpRenewalFormState {
+    initialForm: any;
     parties: LifeCadParty[];
     ownerInformation: OwnerInformation[];
-    caseDocument: DocumentData;
+    document: DocumentData;
     channel: Channel;
     renewalRequestSignDate: string;
     subsequentTargetFunds: TargetFundAllocation[] | null;
@@ -38,12 +39,13 @@ export interface OtpRenewalFormState {
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 
 export const defaultFormDataContext = {
+    initialForm: {} as any,
     parties: [],
     ownerInformation: [] as OwnerInformation[],
     formValidator: () => {
         return {} as FormValidationErrors;
     },
-    caseDocument: {} as DocumentData,
+    document: {} as DocumentData,
     channel: Channel.Form,
     subsequentTargetFunds: [] as TargetFundAllocation[],
     renewalRequestSignDate: '',
