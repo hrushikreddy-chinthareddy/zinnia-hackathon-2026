@@ -6,8 +6,6 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { toTitleCase } from '@deps/helpers/string.helper';
 import { Case } from '@deps/models/case/case';
-import { ReactComponent as AnnotationsIcon } from '@deps/styles/elements/icons/communications/annotations.svg';
-import { ReactComponent as ProgressIcon } from '@deps/styles/elements/icons/illustrations/check-progress.svg';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { CaseTabClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
@@ -15,6 +13,7 @@ import CallLogsTab from './case-tabs/call-logs-tab';
 import DocumentsTab from './case-tabs/documents-tab';
 import NotesTab from './case-tabs/notes-tab';
 import ProgressTab from './case-tabs/progress/progress-tab';
+import Typography, { TypographyVariant } from '../typography/typography';
 
 export default function CaseSubPage({
     caseDetails,
@@ -38,24 +37,32 @@ export default function CaseSubPage({
     };
 
     return (
-        <div className="w-full rounded bg-white shadow-elevation-light-04 lg:w-2/3">
+        <div className="w-full rounded bg-white border-1 border-gray-200 lg:w-2/3">
             <TabGroup defaultValue={tab} value={tab} activationMode="manual" onValueChange={handleTabChange}>
                 <TabList className="!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8">
                     <TabTrigger value={CaseDetailsTabValues.progress} onClick={trackTabClick('Progress')}>
-                        <ProgressIcon width={24} height={24} className="hidden lg:block" />{' '}
-                        {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues.progress}`) ?? '')}
+                        <Icon type={IconType.CHECK_PROGRESS} width={20} height={20} className="hidden lg:block" />
+                        <Typography variant={TypographyVariant.LabelMdAlt}>
+                            {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues.progress}`) ?? '')}
+                        </Typography>
                     </TabTrigger>
                     <TabTrigger value={CaseDetailsTabValues.documents} onClick={trackTabClick('Documents')}>
-                        <Icon width={24} height={24} className="hidden lg:block" type={IconType.DOCUMENT_TEXT} />{' '}
-                        {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues.documents}`) ?? '')}
+                        <Icon width={20} height={20} className="hidden lg:block" type={IconType.DOCUMENT_TEXT} />
+                        <Typography variant={TypographyVariant.LabelMdAlt}>
+                            {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues.documents}`) ?? '')}
+                        </Typography>
                     </TabTrigger>
                     <TabTrigger value={CaseDetailsTabValues.notes} onClick={trackTabClick('Notes')}>
-                        <AnnotationsIcon width={24} height={24} className="hidden lg:block" />{' '}
-                        {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues.notes}`) ?? '')}
+                        <Icon type={IconType.ANNOTATION} width={20} height={20} className="hidden lg:block" />
+                        <Typography variant={TypographyVariant.LabelMdAlt}>
+                            {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues.notes}`) ?? '')}
+                        </Typography>
                     </TabTrigger>
                     <TabTrigger value={CaseDetailsTabValues['call-logs']} onClick={trackTabClick('Call Logs')}>
-                        <Icon type={IconType.PHONE} width={24} height={24} className="hidden flex-shrink-0 lg:block" />{' '}
-                        {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues['call-logs']}`) ?? '')}
+                        <Icon type={IconType.PHONE} width={20} height={20} className="hidden flex-shrink-0 lg:block" />
+                        <Typography variant={TypographyVariant.LabelMdAlt}>
+                            {toTitleCase(t(`caseOverview.tabs.${CaseDetailsTabValues['call-logs']}`) ?? '')}
+                        </Typography>
                     </TabTrigger>
                 </TabList>
                 <TabContent className="w-full" value={CaseDetailsTabValues.progress}>

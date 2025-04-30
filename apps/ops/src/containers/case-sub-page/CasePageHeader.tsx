@@ -27,7 +27,7 @@ const CasePageHeader = ({ caseId, title, tag, status, statusTooltip, statusVaria
     const caseTitle = toSentenceCase(title);
 
     return (
-        <div className="flex items-start gap-4 rounded-t border-b-2 border-gray-100 bg-white p-4 md:items-center md:p-8">
+        <div className="flex items-start gap-4 rounded-t border-b-2 border-gray-100 bg-white pb-4 md:items-center md:pb-8">
             {breadcrumb?.url && (
                 <Tooltip placement={PopoverPlacement.TopRight} body={breadcrumb?.text} isTabbable={false}>
                     <NavElement

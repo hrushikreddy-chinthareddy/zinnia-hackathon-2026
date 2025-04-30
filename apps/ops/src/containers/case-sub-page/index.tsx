@@ -42,7 +42,7 @@ const CaseRedesign = ({ caseDetails, tab }: CaseRedesignProps) => {
     const statusDetails = getStatusDetails({ singleCase: caseDetailsModel, t });
 
     return (
-        <div className="w-full bg-gray-50">
+        <div className="w-full">
             <CasePageHeader
                 caseId={caseDetailsModel.id}
                 title={caseDetailsModel.processSubType as string}

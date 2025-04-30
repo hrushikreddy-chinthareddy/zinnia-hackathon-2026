@@ -59,7 +59,7 @@ const ProcessingTimeStamp = ({ data }: CaseSideNavProps) => {
     }
 
     return (
-        <div className="flex w-full flex-row items-center gap-2 rounded bg-white p-4 shadow-elevation-light-04">
+        <div className="flex w-full flex-row items-center gap-2 rounded bg-white p-4 border-1 border-gray-200">
             <TimeIcon height={20} width={20} role="presentation" />
             <Typography variant={TypographyVariant.Body}>{statusText}</Typography>
         </div>
@@ -206,7 +206,7 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
         <div className="flex-column flex w-full gap-2 lg:w-[456px]">
             <div className="flex w-full flex-col gap-2 rounded">
                 <ProcessingTimeStamp data={data} />
-                <div className="flex w-full flex-col rounded bg-white shadow-elevation-light-04">
+                <div className="flex w-full flex-col rounded bg-white border-gray-200 border-1">
                     <ContractDetails data={data} />
                     <CaseDetailsSideNav
                         CaseAdditionalDetails={caseDetails?.additionalData}

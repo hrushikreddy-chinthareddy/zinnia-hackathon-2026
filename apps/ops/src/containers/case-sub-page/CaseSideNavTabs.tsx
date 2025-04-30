@@ -35,7 +35,7 @@ export default function CaseSideNavTabs({ caseDetails, sideNavData }: { caseDeta
     const showFundingSourceTab = tabs.includes(TabViews.fundingSource);
 
     return (
-        <div className='className="flex w-full flex-col px-8 py-4 rounded bg-white shadow-elevation-light-04'>
+        <div className='className="flex w-full flex-col px-8 py-4 rounded bg-white border-1 border-gray-200'>
             <TabGroup defaultValue={tab} value={tab} activationMode="manual" onValueChange={setTab}>
                 <TabList className={`w-full ${tabs.length <= 1 ? '!hidden' : ''}`}>
                     {tabs.map(view => (
