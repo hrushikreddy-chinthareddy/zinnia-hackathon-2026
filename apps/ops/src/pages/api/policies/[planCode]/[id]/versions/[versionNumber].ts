@@ -5,15 +5,12 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { apiServerBaseUrl, policyApiBaseUrl } from '@deps/queries/api-config';
 import { requestHandler } from '@deps/queries/api-utils/server';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { ErrorResponse } from '@deps/types/api';
 import { CheckTupleResponse } from '@deps/types/fga';
 import { fullyMaskPolicyResponse, policyResponseSanitizer } from '@deps/utils/sanitizers';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<Policy> | ErrorResponse>, loggingContext) => {
+    async (req, res, loggingContext) => {
         const session = await getSession(req, res);
         const { id, planCode, versionNumber } = req.query;
         const unmaskingResponse = await serverApi.post<any, AxiosResponse<CheckTupleResponse>>(
@@ -27,6 +24,7 @@ export default withAuthAndLogging(
             `${policyApiBaseUrl}/${planCode}/${id}/versions/${versionNumber}?viewDetails=true`,
             req,
             res,
+            loggingContext,
             masker
         );
     },

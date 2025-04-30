@@ -5,7 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { ErrorResponse } from '@deps/types/api';
 import { SanitizerFn } from '@deps/utils/sanitizers';
-import { buildNextApiLoggingContext, logError, LoggingContext, logTrace, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import { logError, LoggingContext, logTrace, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { serverApi } from './serverApiClient';
 
@@ -111,9 +111,15 @@ const deleteRequest = async (
     }
 };
 
-export const requestHandler = async <T>(url: string, req: NextApiRequest, res: NextApiResponse, sanitizer?: SanitizerFn<any>) => {
+export const requestHandler = async <T>(
+    url: string,
+    req: NextApiRequest,
+    res: NextApiResponse,
+    logCtx: LoggingContext,
+    sanitizer?: SanitizerFn<any>
+) => {
     const loggingContext = {
-        ...(await buildNextApiLoggingContext(req, res)),
+        ...logCtx,
         file: 'queries/api-utils/server',
         function: 'requestHandler',
     } as LoggingContext;

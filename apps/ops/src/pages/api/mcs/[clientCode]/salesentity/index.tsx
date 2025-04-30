@@ -4,15 +4,12 @@ import { AxiosResponse } from 'axios';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { requestHandler } from '@deps/queries/api-utils/server';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { ErrorResponse } from '@deps/types/api';
 import { CheckTupleResponse } from '@deps/types/fga';
 import { fullyMaskMcsResponse, mcsResponseSanitizer } from '@deps/utils/sanitizers';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>, loggingContext) => {
+    async (req, res, loggingContext) => {
         const session = await getSession(req, res);
         const { clientCode, idType, id, parentIdType, parentId, skip, take, policyNumber, planCode, IsClientChild } = req.query;
 
@@ -36,7 +33,7 @@ export default withAuthAndLogging(
         );
 
         const masker = unmaskingResponse.data?.allowed ? mcsResponseSanitizer : fullyMaskMcsResponse;
-        return await requestHandler<any>(proxyUrl, req, res, masker);
+        return await requestHandler<any>(proxyUrl, req, res, loggingContext, masker);
     },
     { file: 'api/:clientCode/salesentity', function: 'routeHandler' }
 );

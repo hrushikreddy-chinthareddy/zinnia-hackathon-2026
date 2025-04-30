@@ -1,17 +1,13 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { requestHandler } from '@deps/queries/api-utils/server';
 import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
-import { ErrorResponse } from '@deps/types/api';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
-
-import type { NextApiRequest, NextApiResponse } from 'next';
 
 // Will proxy any request made to the next server directly to the gateway apis
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | any | ErrorResponse>) => {
+    async (req, res, loggingContext) => {
         const session = await getSession(req, res);
         const re = new RegExp('^.*?/api');
         const proxyUrl = req.url?.replace(re, apiServerBaseUrl as string);
@@ -22,7 +18,7 @@ export default withAuthAndLogging(
             return res.status(403).json({ error: 'Forbidden' });
         }
 
-        return await requestHandler<any>(proxyUrl as string, req, res);
+        return await requestHandler<any>(proxyUrl as string, req, res, loggingContext);
     },
     { file: 'callcenter/v1/CallEntry', function: 'routeHandler' }
 );
