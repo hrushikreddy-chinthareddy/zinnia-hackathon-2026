@@ -9,7 +9,7 @@ import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 function POM() {
-    const { t } = useTranslation('pom');
+    const { t } = useTranslation();
 
     const isPomExperienceFeatureFlagEnabled = usePomExperience();
 
@@ -27,7 +27,12 @@ export const getServerSideProps = withPageAuthAndLogging(
         getServerSideProps: async context => {
             const { locale = DEFAULT_LOCALE } = context;
 
-            const translations = await serverSideTranslations(locale, [TranslationFiles.POM], nextI18nextConfig, ALL_LOCALES);
+            const translations = await serverSideTranslations(
+                locale,
+                [TranslationFiles.COMMON, TranslationFiles.POM],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
 
             return {
                 props: {
