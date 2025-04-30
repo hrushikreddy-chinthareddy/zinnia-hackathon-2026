@@ -8,11 +8,11 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import PolicyExtrasCards from '@deps/containers/policy-extras-cards/policy-extras-cards';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 
-import { calculaterFilterProps, ExtraFilters, FilterKeys } from './policy-extras-sub-page.helper';
+import { calculaterFilterProps, ExtraFilters, FilterKeys } from './riders-and-features-sub-page.helpers';
 
-const PolicyExtrasSubPage = () => {
+const RidersAndFeaturesSubPage = () => {
     const { t } = useTranslation(undefined, {
-        keyPrefix: 'policy.detailCards.policyExtras',
+        keyPrefix: 'policy.detailCards.ridersAndFeatures',
     });
     const { policyDetails } = useContext(PolicyData);
 
@@ -28,7 +28,7 @@ const PolicyExtrasSubPage = () => {
     return (
         <>
             <div className="border-b-2 border-gray-200 text-gray-900">
-                <PageHeader headerText={t('featuresAndRiders') || ''} />
+                <PageHeader headerText={t('title') || ''} />
             </div>
             <CardContainer classNames="flex flex-col gap-4">
                 <>
@@ -62,4 +62,4 @@ const PolicyExtrasSubPage = () => {
     );
 };
 
-export default PolicyExtrasSubPage;
+export default RidersAndFeaturesSubPage;

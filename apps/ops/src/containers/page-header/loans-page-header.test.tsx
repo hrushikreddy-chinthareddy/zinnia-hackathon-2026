@@ -8,7 +8,7 @@ import * as BpmQueries from '@deps/queries/api/bpm';
 import * as ProductRateQueries from '@deps/queries/api/product-rate';
 
 import LoansPageHeaderContainer from './loans-page-header';
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 jest.mock('next/router', () => ({
     useRouter: jest.fn(() => ({
@@ -45,7 +45,7 @@ describe('verify correct labels and fields are present', () => {
             );
         });
 
-        const allHeaders = screen.getAllByText('transactions.loans.header.loansTitle');
+        const allHeaders = screen.getAllByText('pageHeader.loans.headerText');
         expect(allHeaders).toHaveLength(2);
 
         const h1Headers = allHeaders.filter(element => element.tagName.toLowerCase() === 'h1');

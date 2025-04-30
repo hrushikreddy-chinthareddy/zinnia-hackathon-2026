@@ -46,39 +46,13 @@
             "close": "Close"
         },
         "pageTitles": {
+            "activity": "Activity",
+            "addPremiumAutopay": "Add Premium Autopay",
+            "annuitization": "Annuitization",
+            "cancelFreeLook": "Free Look Cancel",
             "caseManagement": "Case Management",
             "caseOverview": "Case Overview",
-            "contractExtras": "Contract Extras",
-            "policySearch": "Policies",
-            "policyDetails": "Policy Details",
-            "policyExtras": "Policy Extras",
             "coverage": "Coverage",
-            "funds": "Funds",
-            "people": "People",
-            "partyDetails": "Party Details",
-            "premiums": "Premiums",
-            "loans": "Loans",
-            "withdrawals": "Withdrawals",
-            "history": "History",
-            "documents": "Documents",
-            "newPremium": "New Premium",
-            "cancelFreeLook": "Free Look Cancel",
-            "addPremiumAutopay": "Add Premium Autopay",
-            "updatePremium": "Update Premium Autopay",
-            "newWithdrawal": "New Withdrawal",
-            "formData": "Form Data",
-            "annuitization": "Annuitization",
-            "dashboard": "Case Stats",
-            "loanAutopay": "Loan Autopay",
-            "loanPayment": "Loan Payment",
-            "newLoan": "New Loan",
-            "activity": "Activity",
-            "fundTransfer": "Fund Transfer",
-            "featuresAndRiders": "Features and Riders",
-            "sendDocument": "Send Document",
-            "sendStatement": "Send Statement",
-            "sendTaxForm": "Send Tax Form",
-            "viewDocument": "View Document",
             "createCase": "Create New OTP Request",
             "createCaseCreate": "Start New OTP Request",
             "createCaseError": "OTP Request Error",
@@ -87,178 +61,35 @@
             "createCaseRenewal": "Process Renewal - OTP",
             "createCaseRmd": "Process RMD - OTP",
             "createCaseSsw": "Process Systematic Withdrawal - OTP",
-            "createCaseWithdrawal": "Process Withdrawal - OTP"
+            "createCaseWithdrawal": "Process Withdrawal - OTP",
+            "dashboard": "Case Stats",
+            "documents": "Documents",
+            "formData": "Form Data",
+            "funds": "Funds",
+            "fundTransfer": "Fund Transfer",
+            "history": "History",
+            "loanAutopay": "Loan Autopay",
+            "loanPayment": "Loan Payment",
+            "loans": "Loans",
+            "newLoan": "New Loan",
+            "newPremium": "New Premium",
+            "newWithdrawal": "New Withdrawal",
+            "partyDetails": "Party Details",
+            "people": "People",
+            "policyDetails": "Policy Details",
+            "policySearch": "Policies",
+            "premiums": "Premiums",
+            "ridersAndFeatures": "Riders and Features",
+            "sendDocument": "Send Document",
+            "sendStatement": "Send Statement",
+            "sendTaxForm": "Send Tax Form",
+            "updatePremium": "Update Premium Autopay",
+            "viewDocument": "View Document",
+            "withdrawals": "Withdrawals"
         },
         "navLinks": {
             "accessManagement": {
                 "text": "Manage Access"
-            },
-            "caseManagement": {
-                "text": "Cases",
-                "link": "/cases"
-            },
-            "home": {
-                "text": "Home",
-                "link": "/home"
-            },
-            "policySearch": {
-                "text": "Policies",
-                "link": "/policies",
-                "altText": "Policies"
-            },
-            "summary": {
-                "text": "Summary",
-                "link": "/policies/{{planCode}}/{{id}}/summary"
-            },
-            "details": {
-                "text": "Details",
-                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details"
-            },
-            "contractDetails": {
-                "text": "Contract Details",
-                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",
-                "altText": "Contract"
-            },
-            "contractExtras": {
-                "text": "Contract Extras",
-                "link": "/policies/{{planCode}}/{{id}}/policy/policy-extras"
-            },
-            "policyDetails": {
-                "text": "Policy Details",
-                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",
-                "altText": "Policy"
-            },
-            "coverage": {
-                "text": "Coverage",
-                "link": "/policies/{{planCode}}/{{id}}/policy/coverage"
-            },
-            "policyExtras": {
-                "text": "Policy Extras",
-                "link": "/policies/{{planCode}}/{{id}}/policy/policy-extras"
-            },
-            "parties": {
-                "text": "Parties",
-                "link": "/policies/{{planCode}}/{{id}}/parties"
-            },
-            "people": {
-                "text": "People",
-                "link": "/policies/{{planCode}}/{{id}}/people"
-            },
-            "annuitization": {
-                "text": "Annuitization",
-                "href": "/policies/{{planCode}}/{{id}}/policy/annuitization"
-            },
-            "transactions": {
-                "text": "Transactions",
-                "link": "/policies/{{planCode}}/{{id}}/policy/premiums",
-                "premiums": {
-                    "href": "/policies/{{planCode}}/{{id}}/policy/premiums",
-                    "text": "Premiums"
-                },
-                "withdrawals": {
-                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals",
-                    "text": "Withdrawals"
-                },
-                "withdrawalStart": {
-                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
-                    "text": "Start a withdrawal"
-                },
-                "withdrawalOneTime": {
-                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
-                    "text": "Make a one-time withdrawal"
-                },
-                "loans": {
-                    "text": "Loans",
-                    "href": "/policies/{{planCode}}/{{id}}/policy/loans"
-                },
-                "funds": {
-                    "text": "Funds",
-                    "href": "/policies/{{planCode}}/{{id}}/policy/funds/new-fund-transfer"
-                },
-                "exchange1035": {
-                    "text": "1035 Exchange",
-                    "href": "#"
-                }
-            },
-            "features": {
-                "text": "Features",
-                "link": "/policies/{{planCode}}/{{id}}/features"
-            },
-            "riders": {
-                "text": "Riders",
-                "link": "/policies/{{planCode}}/{{id}}/riders"
-            },
-            "fees": {
-                "text": "Fees",
-                "link": "/policies/{{planCode}}/{{id}}/fees"
-            },
-            "funds": {
-                "text": "Funds and Accounts",
-                "link": "/policies/{{planCode}}/{{id}}/policy/funds"
-            },
-            "systematicProgram": {
-                "text": "Systematic Program",
-                "link": "/policies/{{planCode}}/{{id}}/systematic-program"
-            },
-            "backToCaseManagement": {
-                "textSmallScreen": "Back",
-                "textLargeScreen": "Back to case management",
-                "link": "/cases"
-            },
-            "backToCreateCase": {
-                "textSmallScreen": "Back",
-                "textLargeScreen": "Back to create case",
-                "link": "/create-case"
-            },
-            "relatedActivity": {
-                "text": "Related policy activity:"
-            },
-            "diaryNotes": {
-                "text": "Diary notes"
-            },
-            "caseDetails": {
-                "text": "Case Details"
-            },
-            "viewDetails": {
-                "text": "View Details",
-                "qualificationType": "Qualification Type",
-                "contractValue": "Contract Value",
-                "policyDate": "Policy Date",
-                "issueState": "Issue State"
-            },
-            "diaryNotesWarning": {
-                "text": "Attention: Diary notes present. Review required to submit.",
-                "clickToView": "Click to view"
-            },
-            "notes": {
-                "text": "Notes"
-            },
-            "documents": {
-                "text": "Documents",
-                "link": "/policies/{{planCode}}/{{id}}/documents"
-            },
-            "callLogs": {
-                "text": "Call logs"
-            },
-            "caseRenewalCreate": {
-                "text": "Create Case",
-                "link": "/create-case"
-            },
-            "transactionOpsSuite": {
-                "text": "TransactionOps Suite",
-                "link": "/create-case"
-            },
-            "contactCenter": {
-                "text": "Contact Center",
-                "link": "/contact-center"
-            },
-            "history": {
-                "text": "History",
-                "link": "/policies/{{planCode}}/{{id}}/activity"
-            },
-            "dashboard": {
-                "text": "Case Stats",
-                "link": "/dashboard"
             },
             "activity": {
                 "text": "Activity",
@@ -273,6 +104,164 @@
                         "link": "/policies/{{planCode}}/{{id}}/activity/transactions"
                     }
                 }
+            },
+            "annuitization": {
+                "text": "$t(pageHeader.annuitization.headerText)",
+                "href": "/policies/{{planCode}}/{{id}}/policy/annuitization"
+            },
+            "backToCaseManagement": {
+                "textSmallScreen": "Back",
+                "textLargeScreen": "Back to case management",
+                "link": "/cases"
+            },
+            "backToCreateCase": {
+                "textSmallScreen": "Back",
+                "textLargeScreen": "Back to create case",
+                "link": "/create-case"
+            },
+            "callLogs": {
+                "text": "Call logs"
+            },
+            "caseDetails": {
+                "text": "Case Details"
+            },
+            "caseManagement": {
+                "text": "Cases",
+                "link": "/cases"
+            },
+            "caseRenewalCreate": {
+                "text": "Create Case",
+                "link": "/create-case"
+            },
+            "contactCenter": {
+                "text": "Contact Center",
+                "link": "/contact-center"
+            },
+            "contractDetails": {
+                "text": "$t(pageHeader.contractDetails.headerText)",
+                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",
+                "altText": "Contract"
+            },
+            "coverage": {
+                "text": "$t(pageHeader.coverage.headerText)",
+                "link": "/policies/{{planCode}}/{{id}}/policy/coverage"
+            },
+            "dashboard": {
+                "text": "Case Stats",
+                "link": "/dashboard"
+            },
+            "details": {
+                "text": "Details",
+                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details"
+            },
+            "diaryNotes": {
+                "text": "Diary notes"
+            },
+            "diaryNotesWarning": {
+                "text": "Attention: Diary notes present. Review required to submit.",
+                "clickToView": "Click to view"
+            },
+            "documents": {
+                "text": "Documents",
+                "link": "/policies/{{planCode}}/{{id}}/documents"
+            },
+            "fees": {
+                "text": "Fees",
+                "link": "/policies/{{planCode}}/{{id}}/fees"
+            },
+            "funds": {
+                "text": "$t(pageHeader.funds.headerText)",
+                "link": "/policies/{{planCode}}/{{id}}/policy/funds"
+            },
+            "history": {
+                "text": "History",
+                "link": "/policies/{{planCode}}/{{id}}/activity"
+            },
+            "home": {
+                "text": "Home",
+                "link": "/home"
+            },
+            "notes": {
+                "text": "Notes"
+            },
+            "parties": {
+                "text": "Parties",
+                "link": "/policies/{{planCode}}/{{id}}/parties"
+            },
+            "people": {
+                "text": "People",
+                "link": "/policies/{{planCode}}/{{id}}/people"
+            },
+            "policyDetails": {
+                "text": "$t(pageHeader.policyDetails.headerText)",
+                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",
+                "altText": "Policy"
+            },
+            "policySearch": {
+                "text": "Policies",
+                "link": "/policies",
+                "altText": "Policies"
+            },
+            "relatedActivity": {
+                "text": "Related policy activity:"
+            },
+            "ridersAndFeatures": {
+                "text": "$t(pageHeader.ridersAndFeatures.headerText)",
+                "link": "/policies/{{planCode}}/{{id}}/policy/riders-and-features"
+            },
+            "summary": {
+                "text": "Summary",
+                "link": "/policies/{{planCode}}/{{id}}/summary"
+            },
+            "systematicProgram": {
+                "text": "Systematic Program",
+                "link": "/policies/{{planCode}}/{{id}}/systematic-program"
+            },
+            "transactionOpsSuite": {
+                "text": "TransactionOps Suite",
+                "link": "/create-case"
+            },
+            "transactions": {
+                "text": "Transactions",
+                "link": "/policies/{{planCode}}/{{id}}/policy/premiums",
+                "exchange1035": {
+                    "text": "1035 Exchange",
+                    "href": "#"
+                },
+                "funds": {
+                    "text": "Funds",
+                    "href": "/policies/{{planCode}}/{{id}}/policy/funds/new-fund-transfer"
+                },
+                "loans": {
+                    "text": "$t(pageHeader.loans.headerText)",
+                    "link": "/policies/{{planCode}}/{{id}}/policy/loans",
+                    "href": "/policies/{{planCode}}/{{id}}/policy/loans"
+                },
+                "premiums": {
+                    "text": "$t(pageHeader.premiums.headerText)",
+                    "link": "/policies/{{planCode}}/{{id}}/policy/premiums",
+                    "href": "/policies/{{planCode}}/{{id}}/policy/premiums"
+                },
+                "withdrawalOneTime": {
+                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
+                    "text": "Make a one-time withdrawal"
+                },
+                "withdrawals": {
+                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals",
+                    "link": "/policies/{{planCode}}/{{id}}/policy/withdrawals",
+                    "text": "$t(pageHeader.withdrawals.headerText)"
+                },
+                "withdrawalStart": {
+                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
+                    "text": "Start a withdrawal"
+                }
+            },
+            "viewDetails": {
+                "text": "View Details",
+                "qualificationType": "Qualification Type",
+                "contractValue": "Contract Value",
+                "policyDate": "Policy Date",
+                "issueState": "Issue State"
             }
         },
         "loader": "Loading..."
@@ -2650,7 +2639,7 @@
         "globalSelectSearch": "Start typing to find values..."
     },
     "funds": {
-        "header": "$t(site.navLinks.funds.text)",
+        "header": "$t(pageHeader.funds.headerText)",
         "headerValues": {
             "account": {
                 "label": "account value",
@@ -2737,7 +2726,7 @@
                 "allTimePremium": "All-time premium",
                 "baseDeathBenefit": "Base death benefit",
                 "baseDeathBenefitTooltip": "This is the death benefit amount related to the owner's base coverage. It reflects the current figure, so it accounts for any changes to the death benefit that have occurred due to withdrawals or loans. (Note: This figure may differ from total gross death benefit if there are additional lines of coverage or riders that add to the death benefit.)",
-                "contractDetails": "Contract Details",
+                "contractDetails": "$t(pageHeader.contractDetails.headerText)",
                 "costBasis": "Cost basis",
                 "costBasisTooltip": "The cost basis is how much of the account value comes from paid premiums. Account value grows as premiums are paid and earn interest. Withdrawals up to the cost basis amount are tax-free. Owners only pay taxes on gains they withdraw.",
                 "funds": "Funds",
@@ -2747,7 +2736,7 @@
                 "loansTaken": "Loans taken",
                 "netSurrenderValue": "Net surrender value",
                 "netSurrenderValueTooltip": "This is how much the owner or their payees can expect if the policy is surrendered. It's the current account value minus surrender charges, outstanding loans, and other fees.",
-                "policyDetails": "Policy Details",
+                "policyDetails": "$t(pageHeader.policyDetails.headerText)",
                 "premiums": "Premiums",
                 "total": "Total",
                 "totalFundValue": "Total fund value",
@@ -2838,10 +2827,8 @@
                 "netAmountRiskPopover": "This factor helps the insurance company understand how much money is at risk if the insured on the policy died today. This is used for finance and accounting purposes.",
                 "planCode": "Plan code"
             },
-            "policyExtras": {
-                "contractExtras": "Contract Extras",
-                "policyExtras": "Policy Extras",
-                "featuresAndRiders": "Features and Riders",
+            "ridersAndFeatures": {
+                "title": "$t(pageHeader.ridersAndFeatures.headerText)",
                 "filter": {
                     "label": "Filter by type:",
                     "Rider": "Riders",
@@ -3277,7 +3264,7 @@
         },
         "loans": {
             "header": {
-                "loansTitle": "Loans",
+                "loansTitle": "$t(pageHeader.loans.headerText)",
                 "viewLoanTransactionHistory": "Go to loan transaction history",
                 "eligiblePopover": "The owner can take a loan from the account value on this policy. Owners can borrow at any time, as long as the funds are available. A loan can reduce the death benefit unless and until it is paid back.",
                 "ineligiblePopover": "This policy doesn't have enough account value for a loan. Owners can borrow from their policy at any time, as long as the funds are available.",
@@ -3602,6 +3589,15 @@
         }
     },
     "pageHeader": {
+        "activity": {
+            "headerText": "Activity"
+        },
+        "annuitization": {
+            "headerText": "Annuitization and Payout"
+        },
+        "contractDetails": {
+            "headerText": "Contract Details"
+        },
         "coverage": {
             "headerText": "Coverage",
             "descriptionList": {
@@ -3612,7 +3608,7 @@
                 }
             },
             "popOver": {
-                "grossDeathBenefit": "This is what the policy pays out when the insured dies. It’s usually the same as the base death benefit (also known as the face amount) but it can include additions (like returned premiums) in some cases.",
+                "grossDeathBenefit": "This is what the policy pays out when the insured dies. It's usually the same as the base death benefit (also known as the face amount) but it can include additions (like returned premiums) in some cases.",
                 "netDeathBenefit": "This is roughly how much the beneficiaries will receive from a death claim. The amount reflects the total gross death benefit minus outstanding loans. It doesn't include interest charges that can only be calculated at the time a death claim processes. Consider it a helpful, but inexact amount.",
                 "deathBenefitOption": "Some policies come with an option to increase coverage over time. Level death benefit stays the same for the life of the policy. An increasing death benefit goes up as the policy's account value increases."
             }
@@ -3620,11 +3616,31 @@
         "documents": {
             "headerText": "Documents"
         },
+        "funds": {
+            "headerText": "Funds and Accounts"
+        },
+        "history": {
+            "headerText": "History"
+        },
+        "loans": {
+            "headerText": "Loans",
+            "fields": {
+                "totalLoans": "Number of loans",
+                "totalLoanBalance": "Total loan balance",
+                "numOfLoans_one": " loan",
+                "numOfLoans_other": " loans",
+                "eligibleForLoan": "Eligible for loan",
+                "eligibleForLoanPopover": "This amount is how much the owner may borrow from the account value of their policy. Loans have consequences. Aside from incurring interest, a loan may reduce the owner’s death benefit.",
+                "estimatedNetDeathBenefit": "Estimated net death benefit",
+                "estimatedNetDeathBenefitPopover": "This is roughly how much the beneficiaries will receive from a death claim. The amount reflects the total gross death benefit minus outstanding loans. It doesn't include interest charges that can only be calculated at the time a death claim processes. Consider it a helpful, but inexact amount.",
+                "availableLoanInterestRate": "Available loan interest rate",
+                "availableLoanInterestRatePopover": "If the owner wants to take a loan, this is the interest rate they'll be offered. Loans from a cash value life insurance policy accrue interest at a certain percentage rate. Interest will be applied to the principal annually. Interest must be paid back along with principal in order to close the loan and restore the death benefit.",
+                "availableLoanCreditRate": "Available loan credit rate",
+                "availableLoanCreditRatePopover": "If the owner wants to take a loan, this is the credit rate they'll earn. (Yes, earn!) A loan from a cash value life insurance policy is a loan from the insurance carrier with the account value on the policy used as collateral. When an owner borrows from their policy, the principal loan amount is kept separate but remains invested and continues to earn gains at an annual percentage rate."
+            }
+        },
         "policyDetails": {
             "headerText": "Policy Details"
-        },
-        "policyExtras": {
-            "headerText": "Policy Extras"
         },
         "people": {
             "headerText": "People",
@@ -3649,34 +3665,14 @@
                 "gracePeriodMinPayment": "This is the minimum amount the owner must pay in premium before the grace period ends to keep their policy active (and their coverage and account value intact.)"
             }
         },
-        "withdrawals": {
-            "headerText": "Withdrawals"
+        "ridersAndFeatures": {
+            "headerText": "Riders and Features"
         },
         "transactions": {
             "headerText": "Transactions"
         },
-        "loans": {
-            "headerText": "Loans",
-            "fields": {
-                "totalLoans": "Number of loans",
-                "totalLoanBalance": "Total loan balance",
-                "numOfLoans_one": " loan",
-                "numOfLoans_other": " loans",
-                "eligibleForLoan": "Eligible for loan",
-                "eligibleForLoanPopover": "This amount is how much the owner may borrow from the account value of their policy. Loans have consequences. Aside from incurring interest, a loan may reduce the owner’s death benefit.",
-                "estimatedNetDeathBenefit": "Estimated net death benefit",
-                "estimatedNetDeathBenefitPopover": "This is roughly how much the beneficiaries will receive from a death claim. The amount reflects the total gross death benefit minus outstanding loans. It doesn't include interest charges that can only be calculated at the time a death claim processes. Consider it a helpful, but inexact amount.",
-                "availableLoanInterestRate": "Available loan interest rate",
-                "availableLoanInterestRatePopover": "If the owner wants to take a loan, this is the interest rate they'll be offered. Loans from a cash value life insurance policy accrue interest at a certain percentage rate. Interest will be applied to the principal annually. Interest must be paid back along with principal in order to close the loan and restore the death benefit.",
-                "availableLoanCreditRate": "Available loan credit rate",
-                "availableLoanCreditRatePopover": "If the owner wants to take a loan, this is the credit rate they'll earn. (Yes, earn!) A loan from a cash value life insurance policy is a loan from the insurance carrier with the account value on the policy used as collateral. When an owner borrows from their policy, the principal loan amount is kept separate but remains invested and continues to earn gains at an annual percentage rate."
-            }
-        },
-        "history": {
-            "headerText": "History"
-        },
-        "activity": {
-            "headerText": "Activity"
+        "withdrawals": {
+            "headerText": "Withdrawals"
         }
     },
     "piiBreadcrumb": "Back to",
@@ -4101,7 +4097,7 @@
         "contingentAllocation": "Contingent Allocation"
     },
     "annuitization": {
-        "title": "Annuitization and Payout",
+        "title": "$t(pageHeader.annuitization.headerText)",
         "headerDetails": {
             "payoutOption": "Annuity payout option",
             "fixedPayoutAmount": "Fixed payout amount",

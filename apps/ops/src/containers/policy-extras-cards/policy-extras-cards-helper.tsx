@@ -20,7 +20,7 @@ import { ConfiguredSettingId } from '@deps/types/product-config-settings';
 import { BenefitId, CoverageId, CoverageToBenefitId, RiderBenefit } from '@deps/types/product-rate';
 
 import { ExtrasCardType } from './policy-extras-cards';
-import { ExtraFilters, filterValidFeature } from '../policy-extras-sub-page/policy-extras-sub-page.helper';
+import { ExtraFilters, filterValidFeature } from '../riders-and-features-sub-page/riders-and-features-sub-page.helpers';
 
 export const RIDER_NOT_ELECTED = 'NOT ELECTED';
 

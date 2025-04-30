@@ -46,38 +46,13 @@
             "close": "Fermer"
         },
         "pageTitles": {
+            "activity": "Activité",
+            "addPremiumAutopay": "Ajouter le prélèvement automatique de la prime",
+            "annuitization": "Annuitisation",
+            "cancelFreeLook": "Annuler Free Look",
             "caseManagement": "Gestion des Dossiers",
             "caseOverview": "Aperçu du Dossier",
-            "contractExtras": "Options du Contrat",
-            "policySearch": "Politiques",
-            "policyDetails": "Détails de la Police",
-            "policyExtras": "Options de Police",
             "coverage": "Couverture",
-            "funds": "Fonds",
-            "people": "Personnes",
-            "partyDetails": "Détails de la Personne",
-            "premiums": "Primes",
-            "loans": "Prêts",
-            "withdrawals": "Retraits",
-            "history": "Histoire",
-            "documents": "Documents",
-            "newPremium": "Nouveau Prime",
-            "cancelFreeLook": "Annuler Free Look",
-            "addPremiumAutopay": "Ajouter le prélèvement automatique de la prime",
-            "updatePremium": "Gérer Paiement Automatique",
-            "newWithdrawal": "Nouveau Retrait",
-            "formData": "Données du formulaire",
-            "annuitization": "Annuitisation",
-            "dashboard": "Statistiques du dossier",
-            "loanAutopay": "Paiement automatique du prêt",
-            "loanPayment": "Paiement de prêts",
-            "activity": "Activité",
-            "fundTransfer": "Transfert de fonds",
-            "featuresAndRiders": "Caractéristiques et cavaliers",
-            "sendDocument": "Envoyer un document",
-            "sendStatement": "Envoyer un extrait de compte",
-            "sendTaxForm": "Formulaire de taxes envoyé",
-            "viewDocument": "Voir le document",
             "createCase": "Créer une nouvelle demande OTP",
             "createCaseCreate": "Démarrer une nouvelle demande OTP",
             "createCaseError": "Erreur de demande OTP",
@@ -86,187 +61,210 @@
             "createCaseRenewal": "Traiter le renouvellement - OTP",
             "createCaseRmd": "Traiter RMD - OTP",
             "createCaseSsw": "Traiter retrait systématique - OTP",
-            "createCaseWithdrawal": "Traiter retrait - OTP"
+            "createCaseWithdrawal": "Traiter retrait - OTP",
+            "dashboard": "Statistiques du dossier",
+            "documents": "Documents",
+            "featuresAndRiders": "Caractéristiques et cavaliers",
+            "formData": "Données du formulaire",
+            "funds": "Fonds",
+            "fundTransfer": "Transfert de fonds",
+            "history": "Histoire",
+            "loanAutopay": "Paiement automatique du prêt",
+            "loanPayment": "Paiement de prêts",
+            "loans": "Prêts",
+            "newPremium": "Nouveau Prime",
+            "newWithdrawal": "Nouveau Retrait",
+            "partyDetails": "Détails de la Personne",
+            "people": "Personnes",
+            "policyDetails": "Détails de la Police",
+            "policySearch": "Politiques",
+            "premiums": "Primes",
+            "ridersAndFeatures": "Avenants et Caractéristiques",
+            "sendDocument": "Envoyer un document",
+            "sendStatement": "Envoyer un extrait de compte",
+            "sendTaxForm": "Formulaire de taxes envoyé",
+            "updatePremium": "Gérer Paiement Automatique",
+            "viewDocument": "Voir le document",
+            "withdrawals": "Retraits"
         },
         "navLinks": {
             "accessManagement": {
                 "text": "Gestion des accès"
             },
-            "caseManagement": {
-                "text": "Dossiers",
-                "link": "/cases"
-            },
-            "policySearch": {
-                "text": "Politiques",
-                "link": "/policies",
-                "altText": "Police"
-            },
-            "summary": {
-                "text": "Résumé",
-                "link": "/policies/{{planCode}}/{{id}}/summary"
-            },
-            "details": {
-                "text": "Détails",
-                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details"
-            },
-            "contractDetails": {
-                "text": "Contrat",
-                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",
-                "altText": "Contrat"
-            },
-            "contractExtras": {
-                "text": "Options du contrat",
-                "link": "/policies/{{planCode}}/{{id}}/policy/policy-extras"
-            },
-            "policyDetails": {
-                "text": "Politique",
-                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",
-                "altText": "Politique"
-            },
-            "coverage": {
-                "text": "Couverture",
-                "link": "/policies/{{planCode}}/{{id}}/policy/coverage"
-            },
-            "policyExtras": {
-                "text": "Options de police",
-                "link": "/policies/{{planCode}}/{{id}}/policy/policy-extras"
-            },
-            "parties": {
-                "text": "Parties",
-                "link": "/policies/{{planCode}}/{{id}}/parties"
-            },
-            "people": {
-                "text": "Personnes",
-                "link": "/policies/{{planCode}}/{{id}}/people"
+            "activity": {
+                "link": "/policies/{{planCode}}/{{id}}/activity",
+                "subLinks": {
+                    "callLogs": {
+                        "link": "activity/call-logs",
+                        "text": "Histoire d'appels"
+                    },
+                    "transactions": {
+                        "link": "activity/transactions",
+                        "text": "Transactions"
+                    }
+                },
+                "text": "Activité"
             },
             "annuitization": {
-                "text": "Annuitisation",
-                "href": "/policies/{{planCode}}/{{id}}/policy/annuitization"
+                "link": "/policies/{{planCode}}/{{id}}/policy/annuitization",
+                "text": "$t(pageHeader.annuitization.headerText)"
+            },
+            "backToCaseManagement": {
+                "link": "/cases",
+                "textLargeScreen": "Retour à la gestion des dossiers",
+                "textSmallScreen": "Retour"
+            },
+            "backToCreateCase": {
+                "link": "/create-case",
+                "textLargeScreen": "Retour à la création de cas",
+                "textSmallScreen": "Retour"
+            },
+            "callLogs": {
+                "text": "Histoire d'appels"
+            },
+            "caseDetails": {
+                "text": "Détails du cas"
+            },
+            "caseManagement": {
+                "link": "/cases",
+                "text": "Dossiers"
+            },
+            "caseRenewalCreate": {
+                "link": "/create-case",
+                "text": "Créer un cas"
+            },
+            "contactCenter": {
+                "link": "/contact-center",
+                "text": "Contact Center"
+            },
+            "contractDetails": {
+                "altText": "Contrat",
+                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",
+                "text": "$t(pageHeader.contractDetails.headerText)"
+            },
+            "coverage": {
+                "link": "/policies/{{planCode}}/{{id}}/policy/coverage",
+                "text": "$t(pageHeader.coverage.headerText)"
+            },
+            "dashboard": {
+                "link": "/dashboard",
+                "text": "Statistiques du dossier"
+            },
+            "details": {
+                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",
+                "text": "Détails"
+            },
+            "diaryNotes": {
+                "text": "Notes de journal"
+            },
+            "diaryNotesWarning": {
+                "clickToView": "Clique pour voir",
+                "text": "Attention: Notes d'agenda présentes. Examen requis pour soumettre"
+            },
+            "documents": {
+                "text": "Documents"
+            },
+            "features": {
+                "link": "/policies/{{planCode}}/{{id}}/features",
+                "text": "Caractéristiques"
+            },
+            "fees": {
+                "link": "/policies/{{planCode}}/{{id}}/fees",
+                "text": "Le Redevance"
+            },
+            "funds": {
+                "link": "/policies/{{planCode}}/{{id}}/policy/funds",
+                "text": "$t(pageHeader.funds.headerText)"
+            },
+            "history": {
+                "link": "/policies/{{planCode}}/{{id}}/activity",
+                "text": "Histoire"
+            },
+            "notes": {
+                "text": "Remarques"
+            },
+            "parties": {
+                "link": "/policies/{{planCode}}/{{id}}/parties",
+                "text": "Parties"
+            },
+            "people": {
+                "link": "/policies/{{planCode}}/{{id}}/people",
+                "text": "Personnes"
+            },
+            "policyDetails": {
+                "altText": "Politique",
+                "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",
+                "text": "$t(pageHeader.policyDetails.headerText)"
+            },
+            "policyExtras": {
+                "link": "/policies/{{planCode}}/{{id}}/policy/policy-extras",
+                "text": "Options de police"
+            },
+            "policySearch": {
+                "altText": "Police",
+                "link": "/policies",
+                "text": "Politiques"
+            },
+            "relatedActivity": {
+                "text": "Activité liée à la police:"
+            },
+            "ridersAndFeatures": {
+                "link": "/policies/{{planCode}}/{{id}}/policy/riders-and-features",
+                "text": "$t(pageHeader.ridersAndFeatures.headerText)"
+            },
+            "summary": {
+                "link": "/policies/{{planCode}}/{{id}}/summary",
+                "text": "Résumé"
+            },
+            "systematicProgram": {
+                "link": "/policies/{{planCode}}/{{id}}/systematic-program",
+                "text": "Programme Systématique"
+            },
+            "transactionOpsSuite": {
+                "link": "/create-case",
+                "text": "Suite TransactionOps"
             },
             "transactions": {
-                "text": "Transactions",
+                "exchange1035": {
+                    "href": "#",
+                    "text": "Échange 1035"
+                },
+                "funds": {
+                    "href": "/policies/{{planCode}}/{{id}}/policy/funds/new-fund-transfer",
+                    "text": "Fonds"
+                },
                 "link": "/fr/policies/{{planCode}}/{{id}}/policy/premiums",
+                "loans": {
+                    "href": "/policies/{{planCode}}/{{id}}/policy/loans",
+                    "link": "/policies/{{planCode}}/{{id}}/policy/loans",
+                    "text": "$t(pageHeader.loans.headerText)"
+                },
                 "premiums": {
                     "href": "/fr/policies/{{planCode}}/{{id}}/policy/premiums",
-                    "text": "Primes"
+                    "link": "/fr/policies/{{planCode}}/{{id}}/policy/premiums",
+                    "text": "$t(pageHeader.premiums.headerText)"
                 },
-                "withdrawals": {
-                    "href": "/fr/policies/{{planCode}}/{{id}}/policy/withdrawals",
-                    "text": "Retrait"
+                "text": "Transactions",
+                "withdrawalOneTime": {
+                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
+                    "text": "Faire un retrait unique"
                 },
                 "withdrawalStart": {
                     "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
                     "text": "Commencer un retrait"
                 },
-                "withdrawalOneTime": {
-                    "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
-                    "text": "Faire un retrait unique"
-                },
-                "loans": {
-                    "text": "Prêts",
-                    "href": "/policies/{{planCode}}/{{id}}/policy/loans"
-                },
-                "funds": {
-                    "text": "Fonds",
-                    "href": "/policies/{{planCode}}/{{id}}/policy/funds/new-fund-transfer"
-                },
-                "exchange1035": {
-                    "text": "Échange 1035",
-                    "href": "#"
+                "withdrawals": {
+                    "href": "/fr/policies/{{planCode}}/{{id}}/policy/withdrawals",
+                    "link": "/fr/policies/{{planCode}}/{{id}}/policy/withdrawals",
+                    "text": "$t(pageHeader.withdrawals.headerText)"
                 }
-            },
-            "features": {
-                "text": "Caractéristiques",
-                "link": "/policies/{{planCode}}/{{id}}/features"
-            },
-            "riders": {
-                "text": "Avenants",
-                "link": "/policies/{{planCode}}/{{id}}/riders"
-            },
-            "fees": {
-                "text": "Le Redevance",
-                "link": "/policies/{{planCode}}/{{id}}/fees"
-            },
-            "funds": {
-                "text": "Fonds et Comptes",
-                "link": "/policies/{{planCode}}/{{id}}/policy/funds"
-            },
-            "systematicProgram": {
-                "text": "Programme Systématique",
-                "link": "/policies/{{planCode}}/{{id}}/systematic-program"
-            },
-            "backToCaseManagement": {
-                "textSmallScreen": "Retour",
-                "textLargeScreen": "Retour à la gestion des dossiers",
-                "link": "/cases"
-            },
-            "backToCreateCase": {
-                "textSmallScreen": "Retour",
-                "textLargeScreen": "Retour à la création de cas",
-                "link": "/create-case"
-            },
-            "relatedActivity": {
-                "text": "Activité liée à la police:"
-            },
-            "notes": {
-                "text": "Remarques"
-            },
-            "documents": {
-                "text": "Documents"
-            },
-            "callLogs": {
-                "text": "Histoire d'appels"
-            },
-            "caseRenewalCreate": {
-                "text": "Créer un cas",
-                "link": "/create-case"
-            },
-            "transactionOpsSuite": {
-                "text": "Suite TransactionOps",
-                "link": "/create-case"
-            },
-            "contactCenter": {
-                "text": "Contact Center",
-                "link": "/contact-center"
-            },
-            "diaryNotes": {
-                "text": "Notes de journal"
-            },
-            "caseDetails": {
-                "text": "Détails du cas"
-            },
-            "diaryNotesWarning": {
-                "text": "Attention: Notes d'agenda présentes. Examen requis pour soumettre",
-                "clickToView": "Clique pour voir"
             },
             "viewDetails": {
-                "text": "voir les détails",
-                "qualificationType": "Type de qualification",
                 "contractValue": "Valeur du contrat",
+                "issueState": "État d'émission",
                 "policyDate": "date du contrat",
-                "issueState": "État d'émission"
-            },
-            "history": {
-                "text": "Histoire",
-                "link": "/policies/{{planCode}}/{{id}}/activity"
-            },
-            "dashboard": {
-                "text": "Statistiques du dossier",
-                "link": "/dashboard"
-            },
-            "activity": {
-                "text": "Activité",
-                "link": "/policies/{{planCode}}/{{id}}/activity",
-                "subLinks": {
-                    "callLogs": {
-                        "text": "Histoire d'appels",
-                        "link": "activity/call-logs"
-                    },
-                    "transactions": {
-                        "text": "Transactions",
-                        "link": "activity/transactions"
-                    }
-                }
+                "qualificationType": "Type de qualification",
+                "text": "voir les détails"
             }
         },
         "loader": "Chargement..."
@@ -2631,7 +2629,7 @@
         "globalSelectSearch": "Commencez à taper pour trouver des valeurs..."
     },
     "funds": {
-        "header": "$t(site.navLinks.funds.text)",
+        "header": "$t(pageHeader.funds.headerText)",
         "headerValues": {
             "account": {
                 "label": "valeur du compte",
@@ -2718,7 +2716,7 @@
                 "allTimePremium": "Prime totale",
                 "baseDeathBenefit": "Montant de base de la prestation en cas de décès",
                 "baseDeathBenefitTooltip": "Il s'agit du montant du capital décès lié à la couverture de base du propriétaire. Il reflète la valeur actuelle, prenant ainsi en compte toutes les modifications du capital décès survenues en raison de retraits ou de prêts. (Remarque : Cette valeur peut différer du montant total brut du capital décès s'il existe d'autres lignes de couverture ou des avenants qui ajoutent au capital décès.)",
-                "contractDetails": "Détail du contrat",
+                "contractDetails": "$t(pageHeader.contractDetails.headerText)",
                 "costBasis": "Base de coût",
                 "costBasisTooltip": "La base fiscale représente la part de la valeur du compte provenant des primes payées. La valeur du compte augmente lorsque des primes sont versées et génèrent des intérêts. Les retraits jusqu'à concurrence du montant de la base fiscale sont exonérés d'impôt. Les propriétaires ne paient des impôts que sur les gains qu'ils retirent.",
                 "funds": "Fonds",
@@ -2728,7 +2726,7 @@
                 "loansTaken": "Prêts contractés",
                 "netSurrenderValue": "Valeur de rachat nette",
                 "netSurrenderValueTooltip": "Il s'agit du montant que le propriétaire ou ses bénéficiaires peuvent espérer en cas de rachat de la police. C'est la valeur actuelle du compte moins les frais de rachat, les prêts impayés et autres frais.",
-                "policyDetails": "Détails de la police",
+                "policyDetails": "$t(pageHeader.policyDetails.headerText)",
                 "premiums": "Primes",
                 "total": "Total",
                 "totalFundValue": "Valeur totale du fonds",
@@ -2819,10 +2817,8 @@
                 "netAmountRiskPopover": "Ce facteur aide la compagnie d'assurance à comprendre combien d'argent est en jeu si l'assuré décédait aujourd'hui en vertu de la police. Il est utilisé à des fins financières et comptables.",
                 "planCode": "Code du plan"
             },
-            "policyExtras": {
-                "contractExtras": "Options de contrat supplémentaires",
-                "policyExtras": "Options de police supplémentaires",
-                "featuresAndRiders": "Caractéristiques et cavaliers",
+            "ridersAndFeatures": {
+                "title": "$t(pageHeader.ridersAndFeatures.headerText)",
                 "filter": {
                     "label": "Filtrer par type :",
                     "Rider": "Avenants",
@@ -3259,7 +3255,7 @@
         },
         "loans": {
             "header": {
-                "loansTitle": "Prêts",
+                "loansTitle": "$t(pageHeader.loans.headerText)",
                 "viewLoanTransactionHistory": "Accéder à l'historique des transactions de prêt",
                 "eligiblePopover": "Le propriétaire peut contracter un prêt sur la valeur de ce contrat. Les propriétaires peuvent emprunter à tout moment, tant que les fonds sont disponibles. Un prêt peut réduire la prestation de décès tant qu'il n'est pas remboursé.",
                 "ineligiblePopover": "Ce contrat n'a pas suffisamment de valeur de compte pour un prêt. Les propriétaires peuvent emprunter sur leur contrat à tout moment, tant que les fonds sont disponibles.",
@@ -3582,6 +3578,15 @@
         }
     },
     "pageHeader": {
+        "activity": {
+            "headerText": "Activité"
+        },
+        "annuitization": {
+            "headerText": "Annuitisation et Paiement"
+        },
+        "contractDetails": {
+            "headerText": "Détails du contrat"
+        },
         "coverage": {
             "headerText": "Couverture",
             "descriptionList": {
@@ -3600,40 +3605,11 @@
         "documents": {
             "headerText": "Documents"
         },
-        "policyDetails": {
-            "headerText": "Détails de la police"
+        "funds": {
+            "headerText": "Fonds et comptes"
         },
-        "policyExtras": {
-            "headerText": "Extras de la police"
-        },
-        "people": {
-            "headerText": "Personnes",
-            "actionButton": {
-                "addANewPerson": "Ajouter nouvelle personne"
-            }
-        },
-        "premiums": {
-            "headerText": "Primes",
-            "descriptionList": {
-                "label": {
-                    "ytdPremium": "Prime cumulée depuis le début de l'année",
-                    "allTimePremium": "Prime de tous les temps",
-                    "costBasis": "Base de coût",
-                    "gracePeriodBeforeLapse": "Délai de grâce avant déchéance",
-                    "gracePeriodMinPayment": "Paiement minimum du délai de grâce"
-                }
-            },
-            "popOver": {
-                "costBasis": "La base de coût est la portion de la valeur du compte provenant des primes payées. La valeur du compte augmente à mesure que les primes sont payées et génèrent des intérêts. Les retraits jusqu'à concurrence du montant de la base de coût sont exempts d'impôts ; les propriétaires ne paient des impôts que sur les gains d'intérêts. (Remarque : La base de coût peut différer du montant total des primes si le propriétaire a effectué des retraits.)",
-                "gracePeriodBeforeLapse": "Ces dates vous indiquent combien de temps le propriétaire doit effectuer le paiement différé requis pour maintenir la police active. La première date est celle à laquelle la police est passée au statut de déchéance en attente, et la seconde est la date limite pour effectuer le paiement différé requis.",
-                "gracePeriodMinPayment": "Il s'agit du montant minimum que le propriétaire doit payer en prime avant la fin de la période de grâce pour maintenir sa police active (et sa couverture et la valeur de son compte intactes)."
-            }
-        },
-        "withdrawals": {
-            "headerText": "Retraits"
-        },
-        "transactions": {
-            "headerText": "Transactions"
+        "history": {
+            "headerText": "Histoire"
         },
         "loans": {
             "headerText": "Prêts",
@@ -3652,11 +3628,40 @@
                 "availableLoanCreditRatePopover": "Si le propriétaire souhaite contracter un prêt, c'est le taux de crédit qu'il obtiendra. (Oui, obtiendra !) Un prêt d'une police d'assurance-vie en valeur de rachat est un prêt de la compagnie d'assurance avec la valeur du contrat utilisée comme garantie. Lorsqu'un propriétaire emprunte sur son contrat, le montant du prêt principal est conservé séparément mais reste investi et continue de générer des gains à un taux d'intérêt annuel."
             }
         },
-        "history": {
-            "headerText": "Histoire"
+        "people": {
+            "headerText": "Personnes",
+            "actionButton": {
+                "addANewPerson": "Ajouter nouvelle personne"
+            }
         },
-        "activity": {
-            "headerText": "Activité"
+        "policyDetails": {
+            "headerText": "Détails de la police"
+        },
+        "premiums": {
+            "headerText": "Primes",
+            "descriptionList": {
+                "label": {
+                    "ytdPremium": "Prime cumulée depuis le début de l'année",
+                    "allTimePremium": "Prime de tous les temps",
+                    "costBasis": "Base de coût",
+                    "gracePeriodBeforeLapse": "Délai de grâce avant déchéance",
+                    "gracePeriodMinPayment": "Paiement minimum du délai de grâce"
+                }
+            },
+            "popOver": {
+                "costBasis": "La base de coût est la portion de la valeur du compte provenant des primes payées. La valeur du compte augmente à mesure que les primes sont payées et génèrent des intérêts. Les retraits jusqu'à concurrence du montant de la base de coût sont exempts d'impôts ; les propriétaires ne paient des impôts que sur les gains d'intérêts. (Remarque : La base de coût peut différer du montant total des primes si le propriétaire a effectué des retraits.)",
+                "gracePeriodBeforeLapse": "Ces dates vous indiquent combien de temps le propriétaire doit effectuer le paiement différé requis pour maintenir la police active. La première date est celle à laquelle la police est passée au statut de déchéance en attente, et la seconde est la date limite pour effectuer le paiement différé requis.",
+                "gracePeriodMinPayment": "Il s'agit du montant minimum que le propriétaire doit payer en prime avant la fin de la période de grâce pour maintenir sa police active (et sa couverture et la valeur de son compte intactes)."
+            }
+        },
+        "ridersAndFeatures": {
+            "headerText": "Avenants et Caractéristiques"
+        },
+        "transactions": {
+            "headerText": "Transactions"
+        },
+        "withdrawals": {
+            "headerText": "Retraits"
         }
     },
     "piiBreadcrumb": "Retour à",
@@ -4080,7 +4085,7 @@
         "contingentAllocation": "Allocation Contingente"
     },
     "annuitization": {
-        "title": "Annuitisation et Paiement",
+        "title": "$t(pageHeader.annuitization.headerText)",
         "headerDetails": {
             "payoutOption": "Option de versement de rente",
             "fixedPayoutAmount": "Montant fixe du paiement",

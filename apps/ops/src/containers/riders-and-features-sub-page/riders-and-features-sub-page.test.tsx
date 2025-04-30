@@ -8,8 +8,8 @@ import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { PolicyFeature, Rider, Status } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import PolicyExtrasContainer from './policy-extras-sub-page';
-import { calculaterFilterProps } from './policy-extras-sub-page.helper';
+import RidersAndFeaturesContainer from './riders-and-features-sub-page';
+import { calculaterFilterProps } from './riders-and-features-sub-page.helpers';
 
 jest.mock('next/router', () => ({
     useRouter: jest.fn(() => ({
@@ -26,17 +26,17 @@ afterEach(() => {
     jest.clearAllMocks();
 });
 
-describe('Policy Extras Container', () => {
+describe('Riders and Features Container', () => {
     describe('Verify the correct labels are passed', () => {
         it('should contain the correct h1', () => {
             render(
                 <PolicyData.Provider value={{ policy: mockPolicy, policyDetails: new PolicyDetails(mockPolicy), refreshPolicy: jest.fn() }}>
-                    <PolicyExtrasContainer />
+                    <RidersAndFeaturesContainer />
                 </PolicyData.Provider>
             );
 
             expect(screen.getByTestId('header-text')).toBeInTheDocument();
-            expect(screen.getByTestId('header-text')).toHaveTextContent('featuresAndRiders');
+            expect(screen.getByTestId('header-text')).toHaveTextContent('title');
         });
     });
 
@@ -44,7 +44,7 @@ describe('Policy Extras Container', () => {
         it('should contain the correct chips', () => {
             render(
                 <PolicyData.Provider value={{ policy: mockPolicy, policyDetails: new PolicyDetails(mockPolicy), refreshPolicy: jest.fn() }}>
-                    <PolicyExtrasContainer />
+                    <RidersAndFeaturesContainer />
                 </PolicyData.Provider>
             );
 
@@ -61,7 +61,7 @@ describe('Policy Extras Container', () => {
         it('should start with correct initial checked states', () => {
             render(
                 <PolicyData.Provider value={{ policy: mockPolicy, policyDetails: new PolicyDetails(mockPolicy), refreshPolicy: jest.fn() }}>
-                    <PolicyExtrasContainer />
+                    <RidersAndFeaturesContainer />
                 </PolicyData.Provider>
             );
 
@@ -77,7 +77,7 @@ describe('Policy Extras Container', () => {
         it('should change chip states correctly when one is clicked', () => {
             render(
                 <PolicyData.Provider value={{ policy: mockPolicy, policyDetails: new PolicyDetails(mockPolicy), refreshPolicy: jest.fn() }}>
-                    <PolicyExtrasContainer />
+                    <RidersAndFeaturesContainer />
                 </PolicyData.Provider>
             );
 
@@ -91,7 +91,7 @@ describe('Policy Extras Container', () => {
     });
 });
 
-describe('Policy Extras Helpers', () => {
+describe('Riders and Features Helpers', () => {
     describe('calculaterFilterProps', () => {
         it('returns the correct values for each filter type, including variant', () => {
             const futureEndDate = dayjs().add(11, 'y').format(ZAHARA_API_DATE_FORMAT);

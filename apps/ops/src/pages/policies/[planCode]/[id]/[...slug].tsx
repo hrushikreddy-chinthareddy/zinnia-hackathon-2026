@@ -17,8 +17,8 @@ import PeopleSubPage from '@deps/containers/people-sub-page';
 import PersonSubPage from '@deps/containers/person-sub-page';
 import PolicyDetailsContainer from '@deps/containers/policy-details/policy-details';
 import PolicyDetailsSubPage from '@deps/containers/policy-details-sub-page';
-import PolicyExtrasSubPage from '@deps/containers/policy-extras-sub-page/policy-extras-sub-page';
 import PremiumsSubPage from '@deps/containers/premiums-sub-page';
+import RidersAndFeaturesSubPage from '@deps/containers/riders-and-features-sub-page/riders-and-features-sub-page';
 import ActivitySubPage from '@deps/containers/subpages/activity-sub-page/activity-sub-page';
 import DocumentsSubPage from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import FundsSubPage from '@deps/containers/subpages/funds-sub-page';
@@ -140,9 +140,10 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
                     subPageTitleKey = 'policyDetails';
                 }
 
-                if (slug[1] === 'policy-extras') {
-                    subPageContent = <PolicyExtrasSubPage />;
-                    subPageTitleKey = policyDetails.isAnnuity ? 'contractExtras' : 'policyExtras';
+                // policy-extras is an old link.  Leaving it here for backwards compatibility
+                if (['riders-and-features', 'policy-extras'].includes(slug[1])) {
+                    subPageContent = <RidersAndFeaturesSubPage />;
+                    subPageTitleKey = 'ridersAndFeatures';
                 }
 
                 if (slug[1] === 'funds') {

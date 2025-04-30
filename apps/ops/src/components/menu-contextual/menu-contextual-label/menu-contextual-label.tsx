@@ -6,12 +6,19 @@ import { MenuContextualItemProps } from '../menu-contextual-item/menu-contextual
 export interface MenuContextualLabelProps {
     children: ReactElement<MenuContextualItemProps> | ReactElement<MenuContextualItemProps>[];
     label: string;
+    hideLabel?: boolean;
 }
 
-const MenuContextualLabel = ({ label, children }: MenuContextualLabelProps) => {
+const MenuContextualLabel = ({ label, children, hideLabel = false }: MenuContextualLabelProps) => {
     return (
         <DropdownMenu.Label className="flex w-full flex-col gap-4">
-            <p className="flex items-start gap-2 self-stretch px-4 font-primary text-base font-medium text-white">{label}</p>
+            <p
+                className={`flex items-start gap-2 self-stretch px-4 font-primary text-base font-medium text-white ${
+                    hideLabel ? 'sr-only' : ''
+                }`}
+            >
+                {label}
+            </p>
             <ul className="flex flex-col gap-4">{children}</ul>
         </DropdownMenu.Label>
     );

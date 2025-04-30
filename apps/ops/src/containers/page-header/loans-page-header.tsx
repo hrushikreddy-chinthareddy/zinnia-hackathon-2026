@@ -63,19 +63,21 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
     const headerRowFlexClassNames = 'mb-4';
     const groupOneFlexClassNames = 'flex gap-4';
 
-    const {
-        data: newLoanEligibility,
-        isLoading: isLoadingNewLoanEligibility,
-    } = useQuery({
+    const { data: newLoanEligibility, isLoading: isLoadingNewLoanEligibility } = useQuery({
         queryKey: ['checkNewLoanEligibility', policy.product?.planCode, policy.policyNumber, policy.loanValues?.maximumLoanAmount],
-        queryFn: () => checkNewLoanEligibilityQuery(policy.product?.planCode as string, policy.policyNumber as string, policy.loanValues?.maximumLoanAmount),
+        queryFn: () =>
+            checkNewLoanEligibilityQuery(
+                policy.product?.planCode as string,
+                policy.policyNumber as string,
+                policy.loanValues?.maximumLoanAmount
+            ),
         placeholderData: previousData => previousData,
-        select: (data) => {
+        select: data => {
             return {
                 ...data,
-                isEligibleNewLoan: data?.status === TransactionResponseStatus.Success
-            }
-        }
+                isEligibleNewLoan: data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
     const headerTextSiblingsGroupOne = (
@@ -86,7 +88,11 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
                     label={newLoanEligibility?.isEligibleNewLoan ? 'Eligible' : 'Ineligible'}
                     variant={newLoanEligibility?.isEligibleNewLoan ? BadgeVariant.Positive : BadgeVariant.Negative}
                     tooltipPlacement={PopoverPlacement.BottomRight}
-                    tooltip={t(`transactions.loans.header.${newLoanEligibility?.isEligibleNewLoan ? 'eligiblePopover' : 'ineligiblePopover'}`) as string}
+                    tooltip={
+                        t(
+                            `transactions.loans.header.${newLoanEligibility?.isEligibleNewLoan ? 'eligiblePopover' : 'ineligiblePopover'}`
+                        ) as string
+                    }
                 />
             )}
         </>
@@ -172,7 +178,7 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
 
     return (
         <PageHeader
-            headerText={t(`transactions.loans.header.loansTitle`) || ''}
+            headerText={t(`pageHeader.loans.headerText`) || ''}
             breadcrumbText={breadcrumbText}
             breadcrumbUrl={breadcrumbUrl}
             headerTextSiblingsGroupOne={headerTextSiblingsGroupOne}

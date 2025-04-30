@@ -252,7 +252,7 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
 
     return (
         <PageHeader
-            headerText={t('withdrawals.withdrawals') || ''}
+            headerText={t('pageHeader.withdrawals.headerText') || ''}
             breadcrumbText={breadcrumbText}
             breadcrumbUrl={breadcrumbUrl}
             headerTextSiblingsGroupOne={headerTextSiblingsGroupOne}

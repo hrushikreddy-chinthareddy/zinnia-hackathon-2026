@@ -16,6 +16,7 @@ export interface QuickLinksProps extends QuickActionsMenuProps {
     links: {
         href: string;
         name: string;
+        hideLabel?: boolean;
         subLinks?: { href: string; name: string }[];
     }[];
     policy: PolicyDetails;
@@ -51,7 +52,7 @@ const QuickLinks = ({ links, policy, sessionId, userPartyId, className }: QuickL
 
     return (
         <div className={clsx('flex flex-wrap gap-x-8 gap-y-4', className)} data-testid="quick-links">
-            {links.map(({ name, href, subLinks }) => {
+            {links.map(({ name, href, subLinks, hideLabel }) => {
                 if (subLinks) {
                     return (
                         <MenuContextual
@@ -63,7 +64,7 @@ const QuickLinks = ({ links, policy, sessionId, userPartyId, className }: QuickL
                                 </Typography>
                             }
                         >
-                            <MenuContextualLabel label={name}>
+                            <MenuContextualLabel label={name} hideLabel={hideLabel}>
                                 {subLinks.map(subLink => {
                                     return (
                                         <MenuContextualItem

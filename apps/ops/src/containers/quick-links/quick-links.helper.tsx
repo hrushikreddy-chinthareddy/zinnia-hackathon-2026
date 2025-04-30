@@ -11,6 +11,7 @@ export const getPolicyQuickLinks = (t: TFunction, policy: PolicyDetails): QuickL
         {
             href: t('site.navLinks.policyDetails.link', { id: policyNumber, planCode }),
             name: t(policy.isLife ? 'site.navLinks.policyDetails.altText' : 'site.navLinks.contractDetails.altText'),
+            hideLabel: true,
             subLinks: [
                 {
                     name: t(`site.navLinks.${isAnnuity ? 'contractDetails' : 'policyDetails'}.text`),
@@ -21,8 +22,8 @@ export const getPolicyQuickLinks = (t: TFunction, policy: PolicyDetails): QuickL
                     href: t('site.navLinks.coverage.link', { id: policyNumber, planCode }) || '',
                 },
                 {
-                    name: t(`site.navLinks.${isAnnuity ? 'contractExtras' : 'policyExtras'}.text`),
-                    href: t(`site.navLinks.${isAnnuity ? 'contractExtras' : 'policyExtras'}.link`, { id: policyNumber, planCode }) || '',
+                    name: t(`site.navLinks.ridersAndFeatures.text`),
+                    href: t(`site.navLinks.ridersAndFeatures.link`, { id: policyNumber, planCode }) || '',
                 },
                 {
                     name: t('site.navLinks.funds.text'),
@@ -57,6 +58,7 @@ export const getPolicyQuickLinks = (t: TFunction, policy: PolicyDetails): QuickL
         {
             href: t('site.navLinks.history.link', { id: policyNumber, planCode }),
             name: t('pageHeader.activity.headerText'),
+            hideLabel: true,
             subLinks: [
                 {
                     name: t(`site.navLinks.activity.subLinks.transactions.text`),
