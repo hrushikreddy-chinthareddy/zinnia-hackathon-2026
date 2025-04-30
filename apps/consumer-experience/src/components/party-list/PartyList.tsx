@@ -90,7 +90,13 @@ export const PartyList = ({ parties }: PartyListProps) => {
   );
 };
 
-const Party = ({ key, party }: { key: string; party: PolicyParty }) => {
+export const Party = ({
+  key,
+  party,
+}: {
+  key?: string | null;
+  party: PolicyParty;
+}) => {
   const {
     partyId,
     partyRoles,
@@ -113,6 +119,7 @@ const Party = ({ key, party }: { key: string; party: PolicyParty }) => {
   const filteredAddresses = filterItemsWithPastEndDate(addresses);
   const fileteredPhones = filterItemsWithPastEndDate(phones);
   const filteredEmails = filterItemsWithPastEndDate(emails);
+  const id = React.useId();
 
   const name =
     partyType === PartyType.INDIVIDUAL ? { firstName, lastName } : { fullName };
@@ -123,7 +130,7 @@ const Party = ({ key, party }: { key: string; party: PolicyParty }) => {
     partyRoles?.includes(PartyRole.JOINTOWNER);
 
   return (
-    <div key={key}>
+    <div key={key ?? id}>
       <SideSheet
         header="Person Details"
         trigger={

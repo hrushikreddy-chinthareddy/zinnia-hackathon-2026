@@ -75,6 +75,7 @@ const allBeneficiaries = (policy: Policy) => {
         beneficiaryPercentage: party.beneficiaryPercentage,
         addresses: party.addresses,
         emails: party.emails,
+        phones: party.phones,
         partyRole: correspondingRole.partyRole,
         relationshipToInsured: correspondingRole.relationshipToInsured,
       } as Beneficiary);

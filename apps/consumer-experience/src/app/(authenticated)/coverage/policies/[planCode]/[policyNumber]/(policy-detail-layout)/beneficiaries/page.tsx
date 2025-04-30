@@ -1,4 +1,4 @@
-import { PartyRole } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness, PartyRole } from '@zinnia/api-types/types/sor';
 import {
   AllocationColorBar,
   Icon,
@@ -19,6 +19,9 @@ import { RouteKey, getPageTitle } from '@/route-map';
 import { getBeneficiaries } from '@/services/policy';
 import { Beneficiary } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { getFeatureFlags } from '@/services/feature-flags';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { BeneficiariesView } from '@/app/(authenticated)/coverage/shared-views/beneficiaries-view/BeneficiariesView';
 
 const pageTitle = getPageTitle(RouteKey.BENEFICIARIES);
 // disable because NextJS needs this to be exported from this file
@@ -71,6 +74,8 @@ export default async function Beneficiaries({
 }) {
   const planCode = params.planCode || '';
   const policyNumber = params.policyNumber || '';
+  const flags = await getFeatureFlags();
+  const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
 
   const { data, error } = await getBeneficiaries({
     planCode,
@@ -99,6 +104,18 @@ export default async function Beneficiaries({
     },
     { primary: [] as Beneficiary[], contingent: [] as Beneficiary[] }
   );
+
+  if (showParties) {
+    return (
+      <BeneficiariesView
+        data={{
+          beneficiaries: groupedBenes,
+          totalCoverageAmount: data?.totalCoverageAmount,
+        }}
+        lineOfBusiness={LineOfBusiness.LIFE}
+      />
+    );
+  }
 
   const beneListItems = (beneGroup: Beneficiary[]) =>
     beneGroup?.map((bene: Beneficiary, index: number) => {

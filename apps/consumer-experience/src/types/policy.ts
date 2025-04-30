@@ -87,10 +87,10 @@ interface Person {
 }
 
 export interface PolicyParty {
-  partyId?: string;
-  firstName?: string;
-  lastName?: string;
-  fullName?: string;
+  partyId?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  fullName?: string | null;
   addresses?: Address[];
   emails?: Email[];
   phones?: Phone[];
@@ -164,6 +164,7 @@ export interface Beneficiary {
   beneficiaryPercentage: number;
   addresses?: Address[];
   emails?: Email[];
+  phones?: Phone[];
 }
 
 export interface TransactionRequestInputs extends PolicyRequestInputs {
