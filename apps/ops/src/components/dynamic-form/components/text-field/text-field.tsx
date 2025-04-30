@@ -13,10 +13,11 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     disabled?: boolean;
     placeholder?: string;
     onChange: (value: any, es?: ErrorSchema<any> | undefined, id?: string) => void;
+    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const TextField = (props: TextFieldProps) => {
-    const { id, label, value, className, disabled, placeholder, onChange, onBlur, onFocus } = props;
+    const { id, label, value, className, disabled, placeholder, onChange, onBlur, onFocus, onKeyDown } = props;
 
     const classes = clsx(
         styles.textField,
@@ -37,6 +38,7 @@ const TextField = (props: TextFieldProps) => {
                 value={value}
                 onBlur={onBlur}
                 onFocus={onFocus}
+                onKeyDown={e => { e.key === 'Enter' ? e.preventDefault() : null }}
             />
         </>
     );
