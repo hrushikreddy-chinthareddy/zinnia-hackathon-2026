@@ -36,11 +36,12 @@ export const UserContextMenu: FC<{ name: string }> = props => {
             }
         >
             <MenuContextualItem
-                href={t('auth.logout.link') ?? '/api/auth/logout'}
+                href={'/'}
                 onClick={() => {
                     // Remove all items from sessionStorage, including cached API responses
                     handleAnalytics();
                     storage.clear();
+                    window.location.href = t('auth.logout.link') ?? '/api/auth/logout';
                 }}
                 icon={<SignOutIcon height={20} width={20} />}
                 content={t('auth.logout.text')}
