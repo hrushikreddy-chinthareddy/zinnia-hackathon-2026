@@ -11,6 +11,7 @@ export type NavLinkProps = {
     size?: NavElementSize;
     variant?: NavElementVariant;
     pathname?: string;
+    replace?: boolean;
 } & AnchorHTMLAttributes<HTMLAnchorElement>;
 
 export default function NavLink({
@@ -26,6 +27,7 @@ export default function NavLink({
     startIcon,
     children,
     pathname,
+    replace = false,
     ...rest
 }: NavLinkProps) {
     const clickEvent = !disabled && onClick ? onClick : () => undefined;
@@ -77,6 +79,7 @@ export default function NavLink({
             onClick={clickEvent}
             onFocus={focusEvent}
             onBlur={blurEvent}
+            replace={replace}
             {...rest}
         >
             {startIcon}

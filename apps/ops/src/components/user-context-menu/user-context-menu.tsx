@@ -36,6 +36,7 @@ export const UserContextMenu: FC<{ name: string }> = props => {
             }
         >
             <MenuContextualItem
+                replace={true}
                 href={t('auth.logout.link') ?? '/api/auth/logout'}
                 onClick={() => {
                     // Remove all items from sessionStorage, including cached API responses

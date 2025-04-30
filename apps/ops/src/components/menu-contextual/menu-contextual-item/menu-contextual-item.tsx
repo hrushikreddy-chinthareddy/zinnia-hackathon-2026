@@ -10,9 +10,10 @@ export interface MenuContextualItemProps {
     onClick?: () => void;
     disabled?: boolean;
     openInNewTab?: boolean;
+    replace?: boolean;
 }
 
-const MenuContextualItem = ({ content, icon, href, onClick, disabled, openInNewTab }: MenuContextualItemProps) => {
+const MenuContextualItem = ({ content, icon, href, onClick, disabled, openInNewTab, replace = false }: MenuContextualItemProps) => {
     const router = useRouter();
 
     const handleSelect = () => {
@@ -35,6 +36,7 @@ const MenuContextualItem = ({ content, icon, href, onClick, disabled, openInNewT
                 href={href}
                 rel={openInNewTab ? 'noopener noreferrer' : undefined}
                 target={openInNewTab ? '_blank' : undefined}
+                replace={replace}
             >
                 {icon}
                 <p className="whitespace-nowrap font-primary text-md font-light leading-6">{content}</p>
