@@ -107,6 +107,7 @@ export const Party = ({
     phones,
     emails,
     partyType,
+    allocationPercentage,
   } = party;
 
   // Format roles as a comma-separated string
@@ -128,6 +129,11 @@ export const Party = ({
   const shouldDisplayIcon =
     partyRoles?.includes(PartyRole.OWNER) ||
     partyRoles?.includes(PartyRole.JOINTOWNER);
+
+  const showAllocation =
+    allocationPercentage &&
+    (partyRoles?.includes(PartyRole.PRIMARYBENEFICIARY) ||
+      partyRoles?.includes(PartyRole.CONTINGENTBENEFICIARY));
 
   return (
     <div key={key ?? id}>
@@ -154,6 +160,12 @@ export const Party = ({
               {roles}
             </span>
           </div>
+          {showAllocation && (
+            <div>
+              <h2 className="mb-lg">Allocation</h2>
+              <p>{`${allocationPercentage}%`}</p>
+            </div>
+          )}
           {filteredAddresses.length > 0 && (
             <div>
               <h2 className="mb-lg">Address</h2>

@@ -96,6 +96,7 @@ export interface PolicyParty {
   phones?: Phone[];
   partyRoles?: PartyRole[];
   partyType?: PartyType;
+  allocationPercentage?: number | null;
 }
 
 export interface PolicyProfile {
@@ -157,6 +158,7 @@ export interface BeneficiaryData {
 export interface Beneficiary {
   firstName?: string | null;
   lastName?: string | null;
+  fullName?: string | null;
   partyId?: string | null;
   partyType: PartyType;
   partyRole: PartyRole;

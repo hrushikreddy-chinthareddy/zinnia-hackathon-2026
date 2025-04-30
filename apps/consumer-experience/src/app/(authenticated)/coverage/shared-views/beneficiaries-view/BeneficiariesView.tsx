@@ -33,11 +33,13 @@ const BeneficiaryListItem = ({
     partyId: beneficiary.partyId,
     firstName: beneficiary.firstName,
     lastName: beneficiary.lastName,
+    fullName: beneficiary.fullName,
     addresses: beneficiary.addresses,
     phones: beneficiary.phones,
     emails: beneficiary.emails,
     partyRoles: [beneficiary.partyRole],
     partyType: beneficiary.partyType,
+    allocationPercentage: beneficiary.beneficiaryPercentage,
   };
 
   return (

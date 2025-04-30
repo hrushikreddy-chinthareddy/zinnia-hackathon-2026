@@ -70,6 +70,7 @@ const allBeneficiaries = (policy: Policy) => {
       benesWithRoles.push({
         firstName: party.firstName,
         lastName: party.lastName,
+        fullName: party.fullName,
         partyType: party.partyType,
         partyId: party.partyId,
         beneficiaryPercentage: party.beneficiaryPercentage,
@@ -190,6 +191,7 @@ export const policyParties = (policy: Policy): PolicyParty[] => {
       phones: party.phones,
       partyRoles: partyRoles,
       partyType: party.partyType,
+      allocationPercentage: party.beneficiaryPercentage,
     };
   });
 };
