@@ -1,14 +1,16 @@
 import { useMutation } from '@tanstack/react-query';
 import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 import { saveAs } from 'file-saver';
-
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { PolicyDocument, supportedExtensions } from '@deps/models/case/document';
+import { DocumentDownloadV2WithMime, PolicyDocument, supportedExtensions } from '@deps/models/case/document';
+import { downloadDocumentV2 } from '@deps/queries/api/client/documents/v2/download';
+import { downloadDocumentV3 } from '@deps/queries/api/client/documents/v3/download';
+import { DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
 import { getDocumentDownloadQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 export const isPreviewSupported = (document: PolicyDocument | MetadataSearchResponse): boolean => {
-    return supportedExtensions.includes(document?.fileType?.toLowerCase() || '');
+    return supportedExtensions.includes(document?.fileType?.trim().toLowerCase() || '');
 };
 
 export const useDocumentDownload = (
