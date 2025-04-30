@@ -9,6 +9,10 @@ export enum FgaRelation {
     UiAccess = 'ui_access',
 }
 
+export enum FgaUiEntity {
+    ZinniaLiveHomeExerience = 'entity:zinnia_live_home_experience',
+}
+
 export type GetCarrierListQuery = {
     user: string;
     relation: string;

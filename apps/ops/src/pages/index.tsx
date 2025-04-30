@@ -4,14 +4,15 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Button, { ButtonType } from '@deps/components/button/button';
 import { TranslationFiles } from '@deps/config/translations';
-import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
 import { DEFAULT_LOCALE, setNextLocaleCookie } from '@deps/helpers/routing.helper';
-import { UserPermission, UserProfile } from '@deps/models/user-profile';
+import { UserProfile } from '@deps/models/user-profile';
 import { ReactComponent as ZinniaLogo } from '@deps/styles/elements/logos/zinnia-logo.svg';
 import { ReactComponent as ZinniaWelcomeArt } from '@deps/styles/elements/welcome-art/zinnia-welcome-art.svg';
 import { buildNextPageLoggingContext } from '@deps/utils/server-logging';
 
 import type { GetServerSideProps } from 'next';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
+import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
 
 const WelcomePage = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, { useSuspense: false });
@@ -70,31 +71,12 @@ export const getServerSideProps: GetServerSideProps = async context => {
     const loggingContext = await buildNextPageLoggingContext(context, '/', 'pages/index', 'getServerSideProps');
 
     if (user) {
-        // Create a permissions object, strongly typed using the enum.
-        const permissions = {
-            [UserPermission.AllowReadCaseManagement]: await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadCaseManagement,
-                loggingContext
-            ),
-            [UserPermission.AllowReadPolicyAdmin]: await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadPolicyAdmin,
-                loggingContext
-            ),
-            [UserPermission.AllowReadOtpRenewals]: await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                loggingContext
-            ),
-        };
-
         let returnTo = locale + '/cases';
 
-        if (!permissions[UserPermission.AllowReadCaseManagement] && permissions[UserPermission.AllowReadPolicyAdmin]) {
-            returnTo = locale + '/policies';
-        } else if (!permissions[UserPermission.AllowReadCaseManagement] && permissions[UserPermission.AllowReadOtpRenewals]) {
-            returnTo = locale + '/create-case';
+        const homePageCheck = await checkTuplePage(context, FgaRelation.UiAccess, FgaUiEntity.ZinniaLiveHomeExerience, loggingContext);
+
+        if (homePageCheck) {
+            returnTo = locale + '/home';
         }
 
         return {

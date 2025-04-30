@@ -20,6 +20,7 @@ export const useMainNavItems = (): NavGroup[] => {
         isAllowReadPolicyAdmin,
         permissionsLoadingComplete,
         isSuperAdmin,
+        hasHomeExperience,
         showToppanMerrill,
     } = usePermissionsContext();
 
@@ -121,7 +122,7 @@ export const useMainNavItems = (): NavGroup[] => {
     const navGroups: NavGroup[] = [
         {
             items: [
-                ...(isAllowReadOtpRenewals && showHomeNavBtn ? [homeLink] : []),
+                ...(hasHomeExperience && showHomeNavBtn ? [homeLink] : []),
                 ...(isAllowReadCaseManagement ? [caseLink] : []),
                 ...(isAdvisorsExcel || isAllowReadPolicyAdmin ? [policyLink] : []),
             ],

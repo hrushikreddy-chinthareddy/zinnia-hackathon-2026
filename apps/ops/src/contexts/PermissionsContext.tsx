@@ -12,9 +12,11 @@ import {
 import { createContext, ReactNode, useContext } from 'react';
 
 import { UserPermission } from '@deps/models/user-profile';
+import { checkTuple } from '@deps/queries/api/fga';
 import { getPartyMetadataById } from '@deps/queries/api/parties';
 import { bulkCheckPermissionsQuery, doesUserHavePagePermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
+import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
 import { isWellabeAgent } from '@deps/utils/agent-helper';
 
 export interface PermissionsContextProps {
@@ -31,6 +33,7 @@ export interface PermissionsContextProps {
     isAllowReadOtpRenewals: boolean;
     showToppanMerrill: boolean;
     permissionsLoadingComplete: boolean;
+    hasHomeExperience: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>({} as PermissionsContextProps);
@@ -43,6 +46,15 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const { user } = useUser();
     const partyId = user?.partyId as string;
     const sessionId = user?.sid as string;
+
+    const { data: homeCheck, isLoading: homeCheckLoading } = useQuery({
+        queryKey: ['isAllowHomeExperience', partyId],
+        queryFn: () => {
+            return checkTuple(partyId, FgaRelation.UiAccess, FgaUiEntity.ZinniaLiveHomeExerience);
+        },
+        enabled: !!partyId,
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+    });
 
     const { data: isAllowReadCaseManagement, isLoading: caseManagementLoading } = useQuery({
         queryKey: ['isAllowReadCaseManagement', partyId],
@@ -109,7 +121,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     });
 
     const permissionsLoadingComplete =
-        !bulkCheckLoading && !caseManagementLoading && !policyAdminLoading && !otpRenewalsLoading && !showToppanMerrillLoading;
+        !bulkCheckLoading &&
+        !caseManagementLoading &&
+        !policyAdminLoading &&
+        !otpRenewalsLoading &&
+        !showToppanMerrillLoading &&
+        !homeCheckLoading;
     return (
         <PermissionContext.Provider
             value={{
@@ -124,6 +141,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAllowReadCaseManagement: !!isAllowReadCaseManagement,
                 isAllowReadPolicyAdmin: !!isAllowReadPolicyAdmin,
                 isAllowReadOtpRenewals: !!isAllowReadOtpRenewals,
+                hasHomeExperience: !!homeCheck?.data,
                 showToppanMerrill: !!showToppanMerrill,
                 permissionsLoadingComplete,
             }}
