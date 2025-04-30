@@ -249,8 +249,8 @@ module.exports = {
                         light: 'var(--color-semantics-color-semantic-warning-light)',
                     },
                     error: {
-                        DEFAULT: 'var(--color-semantics-color-semantic-warning)',
-                        light: 'var(--color-semantics-color-semantic-warning-light)',
+                        DEFAULT: 'var(--color-semantics-color-semantic-error)',
+                        light: 'var(--color-semantics-color-semantic-error-light)',
                     },
                     focus: 'var(--color-semantics-color-semantic-focus)',
                     highlight: 'var(--color-semantics-color-semantic-text-highlight)',
