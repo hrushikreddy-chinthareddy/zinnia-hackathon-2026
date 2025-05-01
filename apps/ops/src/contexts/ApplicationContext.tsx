@@ -96,19 +96,19 @@ const ApplicationComponentWrapper = ({ children }: Omit<ApplicationDataProviderP
 export const ApplicationDataProvider: React.FC<ApplicationDataProviderProps> = ({ children, pageProps }) => {
     return (
         <ApplicationDataContext.Provider value={{ pageProps }}>
-            <PermissionsProvider>
-                <ErrorBoundary>
-                    <OptimizelyProvider>
-                        <SideSheetProvider>
-                            <PolicySearchFiltersProvider>
-                                <ApplicationComponentWrapper>
-                                    <LayoutWrapper>{children}</LayoutWrapper>
-                                </ApplicationComponentWrapper>
-                            </PolicySearchFiltersProvider>
-                        </SideSheetProvider>
-                    </OptimizelyProvider>
-                </ErrorBoundary>
-            </PermissionsProvider>
+            <OptimizelyProvider>
+                <PermissionsProvider>
+                    <ErrorBoundary>
+                            <SideSheetProvider>
+                                <PolicySearchFiltersProvider>
+                                    <ApplicationComponentWrapper>
+                                        <LayoutWrapper>{children}</LayoutWrapper>
+                                    </ApplicationComponentWrapper>
+                                </PolicySearchFiltersProvider>
+                            </SideSheetProvider>
+                    </ErrorBoundary>
+                </PermissionsProvider>
+            </OptimizelyProvider>
         </ApplicationDataContext.Provider>
     );
 };

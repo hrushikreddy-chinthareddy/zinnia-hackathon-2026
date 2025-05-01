@@ -3,6 +3,8 @@ export enum FgaRoles {
   CASE_INSIGHTS_ENTITY = 'entity:case_insights',
   ADVISORS_EXCEL = 'role:advisors_excel_imo_support',
   SUPER_ADMIN = 'role:zinnia_super_admin',
+  CASE_MANAGEMENT_ZL_ENTITY = 'entity:zinnia_live_case_management',
+  POLICY_MANAGEMENT_ZL_ENTITY = 'entity:zinnia_live_policy_management',
 }
 
 export enum FgaRelation {

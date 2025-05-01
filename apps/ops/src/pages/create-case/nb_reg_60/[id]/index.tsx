@@ -17,7 +17,7 @@ import { CreateReg60CaseProps } from '@deps/containers/otp/reg60-forms/reg60.typ
 import { DefaultSidebarContent } from '@deps/containers/otp/reg60-forms/utils/reg60-constants';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';

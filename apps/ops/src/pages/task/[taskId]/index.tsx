@@ -8,7 +8,7 @@ import TaskContainer from '@deps/containers/task-container/task-container';
 import { applyDynamicOptions } from '@deps/containers/task-container/task-handlers/handle-task';
 import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';

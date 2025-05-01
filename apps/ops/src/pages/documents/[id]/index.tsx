@@ -3,7 +3,7 @@ import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { getUserData } from '@deps/helpers/query-data.helper';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import documentDownloadV2 from '@deps/queries/server/documents/v2/download';
 import documentDownload from '@deps/queries/server/documents/v3/download';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';

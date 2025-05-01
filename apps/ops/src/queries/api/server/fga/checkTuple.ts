@@ -2,7 +2,7 @@ import { getAccessToken, getSession } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
 
-import { getUserData } from '@deps/helpers/query-data.helper';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { ApiResponse } from '@deps/types/api-response';

@@ -7,7 +7,7 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { UserPermission } from '@deps/models/user-profile';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';

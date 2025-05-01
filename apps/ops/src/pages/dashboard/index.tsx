@@ -12,7 +12,7 @@ import { ActiveApplications } from '@deps/containers/dashboard/active-applicatio
 import { ClosedTransactions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { getUserData } from '@deps/helpers/query-data.helper';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';

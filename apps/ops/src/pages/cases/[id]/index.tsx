@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { FgaRoles } from '@xd/utils/dist';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { PageHead } from '@deps/components/page-title';
@@ -7,7 +8,7 @@ import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import CaseOverview from '@deps/containers/case-sub-page/index';
 import { CaseActivityProvider } from '@deps/contexts/CaseActivityContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Case } from '@deps/models/case/case';
@@ -17,6 +18,8 @@ import getCase from '@deps/queries/server/case/get-case';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 
 interface BaseCaseDetailsPageProps {
@@ -55,12 +58,15 @@ export const getServerSideProps = withPageAuthAndLogging(
                 });
                 return serverSidePropsLogout();
             }
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
-            const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadCaseManagement,
-                loggingContext
-            );
+            const hasPermissionToReadCaseManagement = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+                ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.CASE_MANAGEMENT_ZL_ENTITY, loggingContext)
+                : await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadCaseManagement,
+                    loggingContext
+                );
             const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
 
             if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {

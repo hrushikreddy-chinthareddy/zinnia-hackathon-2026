@@ -8,6 +8,7 @@ import {
     checkIfUserHasDashboardAccess,
     checkIfUserIsSuperAdmin,
     createBulkCheckBodyRequest,
+    FgaRoles,
 } from '@zinnia/utils';
 import { createContext, ReactNode, useContext } from 'react';
 
@@ -18,6 +19,9 @@ import { bulkCheckPermissionsQuery, doesUserHavePagePermissionQuery } from '@dep
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
 import { isWellabeAgent } from '@deps/utils/agent-helper';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+
+import { useOptimizely } from './OptimizelyContext';
 
 export interface PermissionsContextProps {
     sessionId: string;
@@ -44,6 +48,7 @@ export const usePermissionsContext = () => {
 
 export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const { user } = useUser();
+    const { featureFlags } = useOptimizely();
     const partyId = user?.partyId as string;
     const sessionId = user?.sid as string;
 
@@ -57,9 +62,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     });
 
     const { data: isAllowReadCaseManagement, isLoading: caseManagementLoading } = useQuery({
-        queryKey: ['isAllowReadCaseManagement', partyId],
-        queryFn: () => {
-            return doesUserHavePagePermissionQuery(UserPermission.AllowReadCaseManagement, partyId);
+        queryKey: ['isAllowReadCaseManagement', partyId, featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH]],
+        queryFn: async () => {
+            if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH]) {
+                return await checkTuple(partyId, FgaRelation.UiAccess, FgaRoles.CASE_MANAGEMENT_ZL_ENTITY);
+            }
+            return await doesUserHavePagePermissionQuery(UserPermission.AllowReadCaseManagement, partyId);
         },
         enabled: !!partyId,
         staleTime: FIFTEEN_MINUTES_IN_MS,

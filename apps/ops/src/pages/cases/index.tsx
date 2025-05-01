@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { FgaRoles } from '@xd/utils/dist';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import dynamic from 'next/dynamic';
@@ -27,7 +28,7 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { formatCaseTotals, getAdditionalFilters, getSearchValueObject, toggleLabels } from '@deps/helpers/case-management';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { storage } from '@deps/helpers/sessionStorage.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
@@ -40,6 +41,8 @@ import { getCaseSearchQuery, postCaseStatsQuery } from '@deps/queries/tanstack/c
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -121,11 +124,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     const searchValueObject = useMemo(() => {
         const svo = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
-        let additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
-        if (isAdvisorsExcel) {
-            const advisorsExcelParams = getAdvisorsExcelCaseParams(enableAdditionalAdvisorsExcelCarriers);
-            additionalFilters = { ...additionalFilters, ...advisorsExcelParams };
-        }
+        const additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
+
         return {
             ...svo,
             ...additionalFilters,
@@ -143,7 +143,6 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         limit,
         caseManagementFilters.sortDirection,
         caseManagementFilters.sortBy,
-        isAdvisorsExcel,
         enableAdditionalAdvisorsExcelCarriers,
     ]);
 
@@ -152,8 +151,8 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         isLoading: caseSearchLoading,
         isError: caseSearchError,
     } = useQuery({
-        queryKey: ['cases', searchValueObject],
-        queryFn: () => getCaseSearchQuery(searchValueObject),
+        queryKey: ['cases', searchValueObject, featureFlags],
+        queryFn: () => getCaseSearchQuery(searchValueObject, featureFlags),
         enabled: loadedStoredFilters,
     });
 
@@ -409,12 +408,15 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadCaseManagement,
-                loggingContext
-            );
+            const doesUserHasPagePermissions = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+                ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.CASE_MANAGEMENT_ZL_ENTITY, loggingContext)
+                : await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadCaseManagement,
+                    loggingContext
+                );
 
             // DEPU-2835
             const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);

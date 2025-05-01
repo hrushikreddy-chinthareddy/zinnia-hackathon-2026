@@ -11,8 +11,9 @@ import { PageHead } from '@deps/components/page-title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { CaseTypeToProcessesMap } from '@deps/constants/case';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { getSlug } from '@deps/helpers/string.helper';
 import { CaseType, Statuses } from '@deps/models/case/case';
@@ -49,6 +50,7 @@ interface CaseCreateProps {
 export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'createCaseCreate' });
     const router = useRouter();
+    const { featureFlags } = useOptimizely();
     const [cardProps, setCardProps] = useState({ title: '', subtitle: '', icon: null as ReactNode });
     const [isError, setIsError] = useState(false);
 
@@ -116,7 +118,7 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
                 process: [CaseTypeToProcessesMap[caseType]],
                 sortDirection: 'desc',
                 sortBy: 'createdAt',
-            });
+            }, featureFlags);
 
             if (response && 'total' in response) {
                 if (response.data.length > 0) {

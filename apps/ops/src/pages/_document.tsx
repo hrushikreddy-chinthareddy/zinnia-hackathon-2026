@@ -1,6 +1,6 @@
 import NextDocument, { DocumentContext, DocumentProps, Head, Html, Main, NextScript } from 'next/document';
 
-import { getInitialData } from '@deps/helpers/query-data.helper';
+import { getInitialData } from '@deps/helpers/query-data.helpers';
 
 import i18nextConfig from '../../next-i18next.config';
 

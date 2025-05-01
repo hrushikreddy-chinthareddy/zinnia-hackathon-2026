@@ -20,7 +20,7 @@ import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { determineFormToRender } from '@deps/helpers/form-selector.helper';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { deStringifyTrueFalseNull } from '@deps/helpers/string.helper';
 import { useScreenSize } from '@deps/hooks/useScreenSize';

@@ -5,7 +5,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import BeneChangeContainer from '@deps/containers/bene-change/bene-change-container';
 import { BeneChangeProvider } from '@deps/containers/bene-change/bene-change-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';

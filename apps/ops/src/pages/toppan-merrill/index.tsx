@@ -5,7 +5,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { getUserData } from '@deps/helpers/query-data.helper';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
@@ -171,7 +171,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 source: 'zinnia',
             };
 
-            const { locale = DEFAULT_LOCALE, res, req } = context;
+            const { locale = DEFAULT_LOCALE } = context;
             const translations = await serverSideTranslations(
                 locale,
                 [TranslationFiles.COMMON, TranslationFiles.COLDEFS],

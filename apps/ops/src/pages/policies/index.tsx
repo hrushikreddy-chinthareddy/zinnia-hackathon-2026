@@ -14,7 +14,7 @@ import SearchResults from '@deps/containers/search-results/search-results';
 import { PolicySearchFilters, PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';

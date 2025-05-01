@@ -4,7 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import TaskManagementQueue from '@deps/containers/task-management-queue/task-management-queue-container';
-import { getUserData } from '@deps/helpers/query-data.helper';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { UserProfile } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';

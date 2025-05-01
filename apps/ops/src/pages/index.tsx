@@ -6,13 +6,13 @@ import Button, { ButtonType } from '@deps/components/button/button';
 import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_LOCALE, setNextLocaleCookie } from '@deps/helpers/routing.helper';
 import { UserProfile } from '@deps/models/user-profile';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { ReactComponent as ZinniaLogo } from '@deps/styles/elements/logos/zinnia-logo.svg';
 import { ReactComponent as ZinniaWelcomeArt } from '@deps/styles/elements/welcome-art/zinnia-welcome-art.svg';
+import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
 import { buildNextPageLoggingContext } from '@deps/utils/server-logging';
 
 import type { GetServerSideProps } from 'next';
-import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
-import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
 
 const WelcomePage = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, { useSuspense: false });

@@ -10,7 +10,7 @@ import { getNigoExceptions } from '@deps/containers/nigo-entry-container/compone
 import RenewalFormProvider from '@deps/containers/otp/renewal-forms/components/renewal-form-provider';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helper';
+import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
@@ -334,7 +334,7 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 const [parties, searchCasesResponse, policies, nigoExceptionResponse] = await Promise.all([
                     await getPolicyPartiesSSR(contractNum ?? docContract, clientCode, accessToken as string, loggingContext),
-                    await searchCasesSSR(filters, accessToken, loggingContext),
+                    await searchCasesSSR(filters, accessToken, loggingContext, featureFlagDecisions),
                     await searchPolicySSR(contractNum ?? docContract, [clientCode?.toUpperCase()], accessToken, 1, 0, loggingContext),
                     await getNigoExceptions(nigoFilters, accessToken, loggingContext),
                 ]);

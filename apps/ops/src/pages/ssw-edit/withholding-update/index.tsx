@@ -5,7 +5,7 @@ import WithholdingUpdateContainer from '@deps/components/ssw-edit/withholding-up
 import { TranslationFiles } from '@deps/config/translations';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { getUserData } from '@deps/helpers/query-data.helper';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ActiveWithdrawalCase, Carrier } from '@deps/models/case/withdrawal/case';

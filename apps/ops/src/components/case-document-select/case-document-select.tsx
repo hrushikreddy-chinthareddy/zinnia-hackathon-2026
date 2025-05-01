@@ -5,9 +5,11 @@ import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-
 import CardCaseDocument from '@deps/components/card/card-case-document/card-case-document';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { ViewState } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Processes, Statuses } from '@deps/models/case/case';
 import { getCases } from '@deps/queries/api/cases';
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 export const PROCESS_WITHOUT_CASE_DOCUMENT = '';
 
@@ -47,6 +49,7 @@ interface GetCaseDocumentOptions {
     setCaseDocumentOptions: SetStateCaseDocumentOptions;
     setViewState: SetStateViewState;
     t: TFunction;
+    featureFlags: FeatureFlags;
 }
 
 const getAssistiveText = ({ caseId, currentErrors, t }: GetAssistiveText) => {
@@ -67,6 +70,7 @@ const getCaseDocumentOptions = async ({
     setCaseDocumentOptions: setCaseDocumentOptions,
     setViewState,
     t,
+    featureFlags,
 }: GetCaseDocumentOptions) => {
     if (!policyNumber) return;
 
@@ -83,7 +87,7 @@ const getCaseDocumentOptions = async ({
         notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
         policyNumber,
         process: [processType],
-    });
+    }, featureFlags);
 
     if (response && 'total' in response) {
         const mappedCaseOptions = response.data
@@ -120,16 +124,16 @@ const CaseDocumentSelect = ({
     setViewState,
 }: CaseDocumentSelectProps) => {
     const { t } = useTranslation();
-
+    const { featureFlags } = useOptimizely();
     const assistiveText = getAssistiveText({ caseId, currentErrors, t });
 
     useEffect(() => {
         if (caseDocumentOptions?.length) {
             return;
         } else {
-            getCaseDocumentOptions({ policyNumber, processType, setCaseDocumentOptions, setViewState, t });
+            getCaseDocumentOptions({ policyNumber, processType, setCaseDocumentOptions, setViewState, t, featureFlags });
         }
-    }, [caseDocumentOptions, policyNumber, processType, setCaseDocumentOptions, setViewState, t]);
+    }, [caseDocumentOptions, featureFlags, policyNumber, processType, setCaseDocumentOptions, setViewState, t]);
 
     return (
         <div className="flex flex-col gap-2">

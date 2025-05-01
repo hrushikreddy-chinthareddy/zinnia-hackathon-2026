@@ -15,7 +15,7 @@ import TabGroupContainer from '@deps/containers/tab-group-container/tab-group';
 import { CorrespondenceProvider } from '@deps/contexts/CorrespondenceContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { getUserData } from '@deps/helpers/query-data.helper';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { AttachmentDetails, AttachmentType, CorrespondenceFormParts } from '@deps/models/case/correspondence';
