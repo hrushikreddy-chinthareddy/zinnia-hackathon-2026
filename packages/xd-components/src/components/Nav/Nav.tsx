@@ -198,7 +198,8 @@ export const Nav = ({
                                   }
                                   href={navItem.href ? navItem.href : undefined}
                                   aria-current={
-                                    navItem.id === activeNavItem
+                                    activeNavItem &&
+                                    activeNavItem.includes(navItem.id)
                                       ? 'page'
                                       : undefined
                                   }

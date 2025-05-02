@@ -169,11 +169,7 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
     };
 
     const isIdle = Object.keys(policySearchFilters.searchValue).length === 0;
-    const showPagination =
-        !!policyData?.total &&
-        !!policyData?.results &&
-        policyData?.results?.length !== 0 &&
-        policyData?.total > policyData?.results?.length;
+    const showPagination = !!policyData?.total && !!policyData?.results?.length;
 
     const onToggle = (value: PolicySearchKeys) => {
         const newSearchValues: PolicySearchFilters = { ...policySearchFilters, toggleValue: value };

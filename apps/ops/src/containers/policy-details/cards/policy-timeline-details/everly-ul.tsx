@@ -22,7 +22,7 @@ const EverlyUl = ({ policyTimelineCardData, productType }: EverlyUlPolicyProps) 
     const { issueDate, maturityDate, policyAge, policyLength, policyYearsLeft } = policyTimelineCardData;
 
     return (
-        <div className="mt-4 grid grid-cols-[repeat(2,max-content)] gap-8 lg:ml-8 lg:grid-cols-[repeat(4,max-content)]">
+        <div className="mt-4 grid grid-cols-[repeat(2,max-content)] gap-8 lg:grid-cols-[repeat(4,max-content)]">
             <PolicyLength productType={productType} policyLength={policyLength} policyYearsLeft={policyYearsLeft} />
             <PolicyAge policyAge={policyAge} />
             <IssueDate issueDate={issueDate} />
