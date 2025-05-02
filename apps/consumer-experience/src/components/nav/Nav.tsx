@@ -1,7 +1,7 @@
+import { CarrierLogos } from '@zinnia/bloom/components';
 import Link from 'next/link';
 
 import EverlyLogoImage from '@/app/styles/everly/assets/everly-logo-new.svg';
-import WellabeLogoImage from '@/app/styles/wellabe/assets/wellabe-logo.svg';
 import { getMyPoliciesByCarrier } from '@/services';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { CompanyName } from '@/types/carriers';
@@ -35,6 +35,7 @@ export async function Nav({
       carrierDetails = getCarrierListDetails(policyData);
     }
   }
+  const WellabeLogoImage = CarrierLogos[CompanyName.WELLABE];
 
   const carrierNavLogo = () => {
     if (themeCookie === CompanyName.EVERLY) {
@@ -49,7 +50,8 @@ export async function Nav({
     if (themeCookie === CompanyName.WELLABE) {
       return (
         <WellabeLogoImage
-          alt="Wellabe Logo"
+          title="Wellabe Logo"
+          width="auto"
           height="32px"
           color="var(--color-primary-color-primary)"
           fill="var(--color-primary-color-primary)"

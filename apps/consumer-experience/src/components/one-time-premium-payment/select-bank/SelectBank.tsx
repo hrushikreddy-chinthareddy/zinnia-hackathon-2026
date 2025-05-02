@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { Button } from '@/components/button/Button';
 import { ConfirmDialog } from '@/components/confirm-dialog/ConfirmDialog';
 import { FeatureFlagComponent } from '@/components/FeatureFlagComponent';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
@@ -30,7 +31,6 @@ import { CancelDialogLink } from '../CancelDialogLink';
 import { FormStepWrapper } from '../FormStepWrapper';
 import premiumStyles from '../OneTimePremiumPayment.module.css';
 import { getStepInfo, Steps } from '../steps';
-import { Button } from '@/components/button/Button';
 
 export const SelectBank = ({
   planCode,
@@ -175,7 +175,10 @@ export const SelectBank = ({
                 />{' '}
                 to add. If you're not seeing the account you want to pay with,
                 give us a call at{' '}
-                <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
+                <a
+                  className="typography-nav-links-sm-inline"
+                  href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}
+                >
                   {EVERLY_CONTACT_PHONE_NUMBER}
                 </a>
                 .

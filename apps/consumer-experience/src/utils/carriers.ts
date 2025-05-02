@@ -14,10 +14,10 @@ export const getCarrierSubdomainById = (
     case CarrierId.ELIC:
     case CarrierId.SBUL:
       return Subdomains.EVERLY;
-    // TODO: Add this to the carrierId enum when it gets added in the backend
-    case 'WELB':
+    case CarrierId.WELLABE:
       return Subdomains.WELLABE;
-
+    case CarrierId.FARMERS:
+      return Subdomains.FARMERS;
     default:
       return '';
   }
@@ -111,13 +111,15 @@ export const getCarrierIdsByName = (name: string | undefined) => {
 
 export const getCarrierIdsByThemeCookie = (themeCookie: string | undefined) => {
   switch (themeCookie) {
-    case 'everly':
+    case Subdomains.EVERLY:
       return [CarrierId.ELIC, CarrierId.SBUL];
-    case 'wellabe':
-      return ['WELB'];
-    default:
-      return [CarrierId.ELIC, CarrierId.SBUL, 'WELB'];
+    case Subdomains.WELLABE:
+      return [CarrierId.WELLABE];
+    case Subdomains.FARMERS:
+      return [CarrierId.FARMERS];
   }
+
+  return [CarrierId.ELIC, CarrierId.SBUL, CarrierId.WELLABE];
 };
 
 export const hasMultipleCarriers = (

@@ -29,6 +29,7 @@ const carrierIcons: Record<
 > = {
   [CarrierNames.EVERLY]: EverlyIcon,
   [CarrierNames.WELLABE]: WellabeIcon,
+  [CarrierNames.FARMERS]: null,
 };
 
 export const NavMenu = ({

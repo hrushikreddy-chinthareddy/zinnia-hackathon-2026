@@ -28,6 +28,8 @@ export enum CarrierId {
   SBUL = 'SBUL',
   SB = 'SB',
   ELIC = 'ELIC',
+  FARMERS = 'FNWL',
+  WELLABE = 'WELB',
 }
 
 // -- @TODO remove this once the TermProductType is added to the ProductType enum from the API spec --

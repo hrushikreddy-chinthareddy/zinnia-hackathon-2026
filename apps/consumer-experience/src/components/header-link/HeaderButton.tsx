@@ -1,6 +1,5 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import Link from 'next/link';
 import { PropsWithChildren } from 'react';
 
 import { toTitleCase } from '@/utils/strings';
@@ -31,7 +30,7 @@ export const HeaderButton = ({
           />
         </button>
       )}
-      <h1 className="typography-desktop-headline-1d">{formatTitle}</h1>
+      <h1>{formatTitle}</h1>
       {children}
     </div>
   );

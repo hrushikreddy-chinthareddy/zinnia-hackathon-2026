@@ -38,7 +38,6 @@ export const PolicyDetailPageHeader = () => {
         <div className={styles.headerContainer}>
           <AnalyticsPageHeader
             pageTitle={pageTitle}
-            className="typography-desktop-headline-1d"
             analyticsProps={{
               policyNumber: params.policyNumber,
             }}

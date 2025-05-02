@@ -33,6 +33,7 @@ const logo = (company: CompanyName) => {
 const themeClasses = {
   [CompanyName.EVERLY]: styles.everly,
   [CompanyName.WELLABE]: styles.wellabe,
+  [CompanyName.FARMERS]: styles.farmers,
 };
 
 export const GenericInfoPage = async ({

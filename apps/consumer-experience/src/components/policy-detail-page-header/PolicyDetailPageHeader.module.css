@@ -1,6 +1,6 @@
 .breadcrumbs {
   a {
-    font: var(----typography-nav-links-sm);
+    font: var(--typography-nav-links-sm);
   }
 
   span {

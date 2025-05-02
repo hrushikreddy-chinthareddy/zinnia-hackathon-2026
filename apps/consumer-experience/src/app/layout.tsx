@@ -1,5 +1,4 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
-import localFont from 'next/font/local';
 import Script from 'next/script';
 
 import type { Metadata } from 'next';
@@ -7,11 +6,11 @@ import type { Metadata } from 'next';
 import { DataDogInit } from '@/components/DataDogInit';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { isProd } from '@/utils';
+import '@/app/styles/globals.css';
 import { getCookie } from '@/utils/auth';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
 
 import Providers from './providers';
-import '@/app/styles/globals.css';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -22,75 +21,6 @@ export const metadata: Metadata = {
     default: 'Login | MyPolicyView',
   },
 };
-
-const primaryFont = localFont({
-  variable: '--font-family-primary',
-  display: 'swap',
-  src: [
-    {
-      path: './styles/fonts/Poppins-ExtraLight.ttf',
-      style: 'normal',
-      weight: '200',
-    },
-    {
-      path: './styles/fonts/Poppins-Light.ttf',
-      style: 'normal',
-      weight: '300',
-    },
-
-    {
-      path: './styles/fonts/Poppins-Regular.ttf',
-      style: 'normal',
-      weight: '400',
-    },
-
-    {
-      path: './styles/fonts/Poppins-Medium.ttf',
-      style: 'normal',
-      weight: '500',
-    },
-
-    {
-      path: './styles/fonts/Poppins-SemiBold.ttf',
-      style: 'normal',
-      weight: '600',
-    },
-    {
-      path: './styles/fonts/Poppins-Bold.ttf',
-      style: 'normal',
-      weight: '700',
-    },
-  ],
-  preload: true,
-});
-
-const secondaryFont = localFont({
-  variable: '--font-family-secondary',
-  src: [
-    {
-      path: './styles/fonts/Lato-Light.ttf',
-      style: 'normal',
-      weight: '300',
-    },
-    {
-      path: './styles/fonts/Lato-Regular.ttf',
-      style: 'normal',
-      weight: '400',
-    },
-    {
-      path: './styles/fonts/Lato-Bold.ttf',
-      style: 'normal',
-      weight: '700',
-    },
-
-    {
-      path: './styles/fonts/Lato-Black.ttf',
-      style: 'normal',
-      weight: '900',
-    },
-  ],
-  preload: true,
-});
 
 const MouseflowTrackingCode = () => {
   let mouseflowURL =
@@ -125,7 +55,7 @@ export default async function RootLayout({
     <html
       lang="en"
       data-theme={themeCooke}
-      className={`${primaryFont.variable} ${secondaryFont.variable} typography-content-body-sm`}
+      className={`typography-content-body-sm`}
     >
       <body>
         {/* Next includes scroll to top functionality with the Link component HOWEVER, it's scroll to top

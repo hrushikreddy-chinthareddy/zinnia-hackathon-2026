@@ -3,14 +3,17 @@
 export enum CompanyName {
   EVERLY = 'everly',
   WELLABE = 'wellabe',
+  FARMERS = 'farmers',
 }
 
 export enum Subdomains {
   EVERLY = 'everly',
   WELLABE = 'wellabe',
+  FARMERS = 'farmers',
 }
 
 export enum CarrierNames {
   EVERLY = 'Everly Life',
   WELLABE = 'Wellabe',
+  FARMERS = 'Farmers Insurance',
 }

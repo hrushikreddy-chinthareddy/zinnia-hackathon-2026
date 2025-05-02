@@ -1,6 +1,7 @@
 @import '~@zinnia/bloom/css';
 @import '~@zinnia/bloom/themes/bloom';
 @import '~@zinnia/bloom/themes/everly';
+@import '~@zinnia/bloom/themes/farmers';
 @import '~@zinnia/bloom/themes/wellabe';
 @import './fonts.css';
 @import './spacing.css';
@@ -26,7 +27,7 @@ html {
 
 body {
   height: 100%;
-  background-color: var(--color-base-surface-surface-tertiary, #ededed);
+  background-color: var(--color-base-surface-surface-carrier);
 }
 
 body,
@@ -102,46 +103,30 @@ p:has(a) {
 * TYPOGRAPHY
 * ==========
 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: unset;
+}
 
-/* TODO: this needs some thinking through, possibly use postcss-extend library to be able to extend
-  classes from design system to set heading values */
 h1 {
-  font-family: var(--font-family-primary);
-  font-size: 28px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 36px;
-  /* 128.571% */
+  font: var(--typography-desktop-headline-1-d);
 }
 
 h2 {
-  font-family: var(--font-family-primary);
-  font-style: normal;
-  font-weight: 500;
-  font-size: 22px;
-  line-height: 28px;
-  letter-spacing: 0em;
-  text-indent: 0px;
+  font: var(--typography-desktop-headline-2-d);
 }
 
-@media (min-width: 500px) {
+@media (max-width: 500px) {
   h1 {
-    font-family: var(--font-family-primary);
-    font-size: 36px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 44px;
-    /* 122.222% */
+    font: var(--typography-mobile-headline-1-m);
   }
 
   h2 {
-    font-family: var(--font-family-primary);
-    font-style: normal;
-    font-weight: 500;
-    font-size: 26px;
-    line-height: 32px;
-    letter-spacing: 0em;
-    text-indent: 0px;
+    font: var(--typography-mobile-headline-2-m);
   }
 }
 

@@ -40,11 +40,7 @@ export default async function Page({
     await getMyPoliciesByCarrier(carrierIds);
 
   const CoveragePageHeader = (
-    <AnalyticsPageHeader
-      className="typography-desktop-headline-1d"
-      analyticsProps={{}}
-      pageTitle={pageTitle}
-    />
+    <AnalyticsPageHeader analyticsProps={{}} pageTitle={pageTitle} />
   );
 
   if (error || policyReferenceData?.length === 0) {

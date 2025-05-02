@@ -29,9 +29,5 @@ export const AnalyticsPageHeader = ({
   // render pageTitle as children
   const children = pageTitle;
 
-  return createElement(
-    heading,
-    { className: className || 'typography-desktop-headline-1d' },
-    children
-  );
+  return createElement(heading, { className: className }, children);
 };

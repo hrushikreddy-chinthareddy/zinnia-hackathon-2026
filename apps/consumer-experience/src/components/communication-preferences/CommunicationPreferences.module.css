@@ -50,7 +50,6 @@
   border-radius: var(--measure-dimension-radius-sm);
   padding: var(--measure-dimension-padding-2xl);
   cursor: pointer;
-  font: var(--font-family-secondary);
 
   &:hover {
     border-color: var(--color-states-selected-border-selected-border);

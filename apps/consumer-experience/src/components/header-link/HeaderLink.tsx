@@ -52,7 +52,7 @@ export const HeaderLink = ({
           />
         </Link>
       )}
-      <h1 className="typography-desktop-headline-1d">{formatTitle}</h1>
+      <h1>{formatTitle}</h1>
       {children}
     </div>
   );

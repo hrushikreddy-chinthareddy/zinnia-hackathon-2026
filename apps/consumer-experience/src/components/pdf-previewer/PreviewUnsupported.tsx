@@ -21,7 +21,6 @@ export default function PreviewUnsupported({
       <div className={styles.content}>
         <AnalyticsPageHeader
           pageTitle={'Documents'}
-          className="typography-desktop-headline-1d"
           analyticsProps={{
             documentUrl: url,
           }}

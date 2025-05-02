@@ -19,7 +19,7 @@ export const RecentTransactions: FC<RecentTransactionProps> = ({
 }) => {
   return (
     <>
-      <h2 className="typography-desktop-headline-2-d">Recent Transactions</h2>
+      <h2>Recent Transactions</h2>
       {transactions.completedTransactions.length > 0 && (
         <CardListHistory>
           <CardListHistory.Header>
