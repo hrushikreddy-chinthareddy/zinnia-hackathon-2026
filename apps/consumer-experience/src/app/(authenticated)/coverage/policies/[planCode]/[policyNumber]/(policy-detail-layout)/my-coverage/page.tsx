@@ -1,16 +1,16 @@
 import { Label } from '@zinnia/bloom/components';
-import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/utils';
+import { DEFAULT_UNAVAILABLE_STRING, yearsLeft } from '@zinnia/utils';
 import { Metadata } from 'next';
 
+import styles from '@/app/(authenticated)/coverage/shared-styles/Coverage.module.css';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getCoverage } from '@/services/policy';
+import { ExtendedPolicyProductType } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-
-import styles from '@/app/(authenticated)/coverage/shared-styles/Coverage.module.css';
 
 const pageTitle = getPageTitle(RouteKey.MY_COVERAGE);
 // disable because NextJS needs this to be exported from this file
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: pageTitle,
 };
 
-export default async function Beneficiaries({
+export default async function Coverage({
   params,
 }: {
   params: {
@@ -43,9 +43,17 @@ export default async function Beneficiaries({
     );
   }
 
-  const { totalCoverageAmount } = data;
+  const {
+    totalCoverageAmount,
+    policyTerm,
+    policyProductType,
+    policyStartDate,
+  } = data;
 
   const CURRENT_COVERAGE = 'Current Coverage';
+
+  const elapsedYears = yearsLeft(policyStartDate, policyTerm);
+  const caption = `${policyTerm} year term length (${elapsedYears} years left)`;
 
   const coverageContent = (amount: number | null | undefined) => {
     if (amount && typeof amount === 'number') {
@@ -71,7 +79,12 @@ export default async function Beneficiaries({
 
       <ClickableCardContainer>
         <div className={styles.coverageValues}>
-          <FieldData Label={<Label>{CURRENT_COVERAGE}</Label>}>
+          <FieldData
+            Label={<Label>{CURRENT_COVERAGE}</Label>}
+            caption={
+              policyProductType === ExtendedPolicyProductType.TERM && caption
+            }
+          >
             {coverageContent(totalCoverageAmount)}
           </FieldData>
 

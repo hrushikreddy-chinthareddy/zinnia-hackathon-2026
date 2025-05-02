@@ -44,3 +44,34 @@ export const toEnterpriseDate = (date: string | Date | null | undefined) => {
 
   return dayjs(date).format(ENTERPRISE_DATE_FORMAT);
 };
+
+/**
+ * Calculate the number of years left until a given duration is completed.
+ *
+ * @param startDate - The start date in ISO string format
+ * @param duration - The duration in years
+ * @returns The number of years left until the duration is completed
+ */
+export const yearsLeft = (
+  startDate: string | undefined | null,
+  duration: number | undefined | null
+): number => {
+  if (!startDate || !duration) {
+    return 0;
+  }
+  const start = new Date(startDate);
+  const now = new Date();
+
+  let elapsedYears = now.getFullYear() - start.getFullYear();
+
+  // Adjust the year calculation depending on which month we are in
+  if (
+    now.getMonth() < start.getMonth() ||
+    (now.getMonth() === start.getMonth() && now.getDate() < start.getDate())
+  ) {
+    elapsedYears--;
+  }
+
+  const yearsLeft = duration - elapsedYears;
+  return yearsLeft > 0 ? yearsLeft : 0;
+};

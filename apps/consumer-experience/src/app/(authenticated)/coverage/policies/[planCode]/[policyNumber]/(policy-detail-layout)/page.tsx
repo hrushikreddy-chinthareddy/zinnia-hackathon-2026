@@ -15,6 +15,7 @@ import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statu
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
 import { LineOfBusinessPath } from '@/types';
+import { ExtendedPolicyProductType } from '@/types/policy';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -81,21 +82,24 @@ export default async function Page({
     return (
       <div className="card-container">
         <UpcomingPremium planCode={planCode} policyNumber={policyNumber} />
-        <ClickableCardContainer>
-          <ClickableCardContainer.LinkContent
-            linkTo={{
-              url: `/coverage/${LineOfBusinessPath.POLICIES}/${planCode}/${policyNumber}/account`,
-              label: 'go to account value page',
-            }}
-          >
-            <AccountValue
-              planCode={planCode}
-              policyNumber={policyNumber}
-              isLink
-              showIcon
-            />
-          </ClickableCardContainer.LinkContent>
-        </ClickableCardContainer>
+        {data?.product?.productType !== ExtendedPolicyProductType.TERM && (
+          <ClickableCardContainer>
+            <ClickableCardContainer.LinkContent
+              linkTo={{
+                url: `/coverage/${LineOfBusinessPath.POLICIES}/${planCode}/${policyNumber}/account`,
+                label: 'go to account value page',
+              }}
+            >
+              <AccountValue
+                planCode={planCode}
+                policyNumber={policyNumber}
+                isLink
+                showIcon
+              />
+            </ClickableCardContainer.LinkContent>
+          </ClickableCardContainer>
+        )}
+
         <Coverage
           planCode={planCode}
           policyNumber={policyNumber}

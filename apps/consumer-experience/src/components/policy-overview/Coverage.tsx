@@ -1,3 +1,4 @@
+import { yearsLeft } from '@xd/utils/dist';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType } from '@zinnia/bloom/components';
 
@@ -5,6 +6,7 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { FieldData } from '@/components/field-data/FieldData';
 import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { getCoverage } from '@/services';
+import { ExtendedPolicyProductType } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined, lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
@@ -33,7 +35,15 @@ export const Coverage = async ({
   if (error) {
     return null;
   }
-  const { totalCoverageAmount, policyStartDate, maturityDate } = data!;
+  const {
+    totalCoverageAmount,
+    policyStartDate,
+    maturityDate,
+    policyTerm,
+    policyProductType,
+  } = data!;
+
+  const elapsedYears = yearsLeft(policyStartDate, policyTerm);
 
   const coverageContent = isNullEmptyOrUndefined(totalCoverageAmount) ? (
     <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
@@ -42,6 +52,17 @@ export const Coverage = async ({
       {formatUSDollars(totalCoverageAmount)}
     </p>
   );
+
+  const nonTermCaption =
+    policyStartDate && maturityDate
+      ? `${standardDateMonthDayYear(policyStartDate)} - ${standardDateMonthDayYear(maturityDate)}`
+      : '';
+  const termCaption = `${policyTerm} year term length (${elapsedYears} years left)`;
+
+  const caption =
+    policyProductType === ExtendedPolicyProductType.TERM
+      ? termCaption
+      : nonTermCaption;
 
   return (
     <ClickableCardContainer>
@@ -63,11 +84,7 @@ export const Coverage = async ({
                 {COVERAGE}
               </Label>
             }
-            caption={
-              policyStartDate && maturityDate
-                ? `${standardDateMonthDayYear(policyStartDate)} - ${standardDateMonthDayYear(maturityDate)}`
-                : ''
-            }
+            caption={caption}
           >
             {coverageContent}
           </FieldData>

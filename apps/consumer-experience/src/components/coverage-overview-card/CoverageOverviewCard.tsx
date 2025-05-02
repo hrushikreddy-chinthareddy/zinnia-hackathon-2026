@@ -2,7 +2,10 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
 import styles from '@/app/(authenticated)/coverage/policies.module.css';
-import { CarrierPolicyDetails } from '@/types/policy';
+import {
+  CarrierPolicyDetails,
+  ExtendedPolicyProductType,
+} from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { lineOfBusinessUrlPath } from '@/utils/data';
 
@@ -35,33 +38,36 @@ export const CoverageOverviewCard = ({
             summary={{ ...policy }}
           />
           <div className={styles.policyCardPolicyValues}>
-            <FieldData
-              className="mr-3xl typography-content-body-sm-bold"
-              Label={
-                <Label
-                  interactiveElements={[
-                    <AccountValuePopover
-                      key="account-value-popover"
-                      // Date of last policy transaction, when policy value was last updated
-                      // the frequency of transactions is a lot higher on life products, so the
-                      // effective date shows when the last transaction occurred
-                      // for annuity products, we just show current date
-                      // (decision documented in CUI-512)
-                      dataTimestamp={
-                        policy.lineOfBusiness === LineOfBusiness.ANNUITY
-                          ? new Date().toISOString()
-                          : policy.effectiveDate
-                      }
-                      lineOfBusiness={policy.lineOfBusiness}
-                    />,
-                  ]}
-                >
-                  Account value
-                </Label>
-              }
-            >
-              {formatUSDollars(policy.endingAccountValue)}
-            </FieldData>
+            {/* Hide Account value for term products */}
+            {policy.product?.productType !== ExtendedPolicyProductType.TERM && (
+              <FieldData
+                className="mr-3xl typography-content-body-sm-bold"
+                Label={
+                  <Label
+                    interactiveElements={[
+                      <AccountValuePopover
+                        key="account-value-popover"
+                        // Date of last policy transaction, when policy value was last updated
+                        // the frequency of transactions is a lot higher on life products, so the
+                        // effective date shows when the last transaction occurred
+                        // for annuity products, we just show current date
+                        // (decision documented in CUI-512)
+                        dataTimestamp={
+                          policy.lineOfBusiness === LineOfBusiness.ANNUITY
+                            ? new Date().toISOString()
+                            : policy.effectiveDate
+                        }
+                        lineOfBusiness={policy.lineOfBusiness}
+                      />,
+                    ]}
+                  >
+                    Account value
+                  </Label>
+                }
+              >
+                {formatUSDollars(policy.endingAccountValue)}
+              </FieldData>
+            )}
             {policy.lineOfBusiness === LineOfBusiness.LIFE && (
               <FieldData
                 className="typography-content-body-sm-bold"
