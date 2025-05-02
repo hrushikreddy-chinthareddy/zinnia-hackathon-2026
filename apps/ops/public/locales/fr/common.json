@@ -1485,7 +1485,12 @@
             "commonTaskIssues": "Problème: Une ou plusieurs problèmes {{taskType}} trouvées.",
             "standardDocumentMatching": "Document de correspondance",
             "toaNigo": "Examiner les problèmes de transfert",
-            "applicationReview": "Valider les détails de la candidature"
+            "applicationReview": "Valider les détails de la candidature",
+            "appDataEntry": "Résoudre les problèmes de saisie des données de l'application",
+            "agentOnboardingReview": "Valider les problèmes d'onboarding",
+            "toaReview": "Examiner les problèmes de transfert",
+            "prenoteReview": "Réviser les problèmes de pré-notes",
+            "paymentProcessingReview": "Examiner la prime initiale"
         },
         "processDate": {
             "cancled": "Annulé le",
@@ -2045,7 +2050,12 @@
                 "cancel": "Annuler",
                 "submit": "Soumettre",
                 "submitedMessage": "La demande de mise à jour bancaire a été soumise.",
-                "ussa": "USSA"
+                "ussa": "USSA",
+                "qcd": {
+                    "addPayment": "Ajouter un paiement",
+                    "charityName": "Nom de l'association caritative",
+                    "amount": "Montant"
+                }
             },
             "neaBenefitsSensitivity": "Sensibilité aux avantages NEA",
             "distributionInstruction": {
@@ -2327,7 +2337,8 @@
                 "taxId": "SSN",
                 "dob": "Date de naissance",
                 "isYourSpouseYoungerThanYou": "Votre conjoint a-t-il 10 ans de moins que vous?"
-            }
+            },
+            "formType": "Form type"
         },
         "sidebar": {
             "contractStatusCode": "Statut de la politique",

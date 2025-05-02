@@ -61,9 +61,14 @@ export const frequencyToValue: Record<string, number> = {
 
 interface RMDMethodProps {
     isFormStateReadOnly: boolean;
+    rmdTypeOptions?: {
+        label: string;
+        value: RMDType;
+    }[];
+    isQCD?: boolean;
 }
 
-export default function RMDMethod({ isFormStateReadOnly }: RMDMethodProps) {
+export default function RMDMethod({ isFormStateReadOnly, rmdTypeOptions, isQCD = false }: RMDMethodProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.rmdMethod' });
     const { formProgram, setFormProgram, formErrors } = useContext(FormDataContext);
 
@@ -155,7 +160,7 @@ export default function RMDMethod({ isFormStateReadOnly }: RMDMethodProps) {
         return programs.some(program => program?.duration?.text === '0');
     };
 
-    const rmdTypeOptions = [
+    const RmdMultipleTypeOptions = [
         { label: t(`rmdTypes.auto`), value: RMDType.AutoRMD },
         { label: t(`rmdTypes.calculate`), value: RMDType.CalculateRMD },
     ];
@@ -173,52 +178,54 @@ export default function RMDMethod({ isFormStateReadOnly }: RMDMethodProps) {
                     toggle={val => {
                         setRmdType(val as RMDType);
                     }}
-                    labels={rmdTypeOptions}
+                    labels={rmdTypeOptions ?? RmdMultipleTypeOptions}
                     disabled={isFormStateReadOnly}
                 />
             </div>
-            <ExistingPrograms terminated={terminated} onDataChange={setTerminated} disableAllPrograms={true}  />
+            <ExistingPrograms terminated={terminated} onDataChange={setTerminated} disableAllPrograms={true} />
             {rmdType === RMDType.CalculateRMD && <RMDCalculator />}
-            <div className="p-2">
-                <Typography variant={TypographyVariant.BodyBold} className="my-2">
-                    {t(`newRmdProgram`)}
-                </Typography>
-                {rmdRows.map((rmdMethod, index) => (
-                    <div
-                        key={rmdMethod.id}
-                        className={`grid grid-cols-auto-2 p-2 ${
-                            overlappingRmds.includes(rmdMethod.id as string) ? 'my-4 rounded border-2 border-semantic-error' : ''
-                        }`}
-                    >
-                        <div className="grid grid-cols-auto-2">
-                            <RMDOptions
-                                onDataChange={val => setRMDData({ ...val, id: rmdMethod.id }, index)}
-                                rmdData={rmdMethod}
-                                isFormStateReadOnly={isFormStateReadOnly}
-                            />
-                            <IconButton
-                                className="ml-5 mt-6"
-                                onClick={event => handleRMDOptionDelete(event, index)}
-                                aria-label={t('removeThisRmdProgram') as string}
-                                disabled={isFormStateReadOnly}
-                            >
-                                <RemoveIcon height={25} width={25} />
-                            </IconButton>
+            {!isQCD && (
+                <div className="p-2">
+                    <Typography variant={TypographyVariant.BodyBold} className="my-2">
+                        {t(`newRmdProgram`)}
+                    </Typography>
+                    {rmdRows.map((rmdMethod, index) => (
+                        <div
+                            key={rmdMethod.id}
+                            className={`grid grid-cols-auto-2 p-2 ${
+                                overlappingRmds.includes(rmdMethod.id as string) ? 'my-4 rounded border-2 border-semantic-error' : ''
+                            }`}
+                        >
+                            <div className="grid grid-cols-auto-2">
+                                <RMDOptions
+                                    onDataChange={val => setRMDData({ ...val, id: rmdMethod.id }, index)}
+                                    rmdData={rmdMethod}
+                                    isFormStateReadOnly={isFormStateReadOnly}
+                                />
+                                <IconButton
+                                    className="ml-5 mt-6"
+                                    onClick={event => handleRMDOptionDelete(event, index)}
+                                    aria-label={t('removeThisRmdProgram') as string}
+                                    disabled={isFormStateReadOnly}
+                                >
+                                    <RemoveIcon height={25} width={25} />
+                                </IconButton>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
 
-                <Button
-                    onClick={addRmdRow}
-                    size={ButtonSize.Small}
-                    type={ButtonType.Primary}
-                    className="my-4"
-                    disabled={validateDuration(rmdRows) ? true : false}
-                    variant={validateDuration(rmdRows) || isFormStateReadOnly ? ButtonVariant.Inactive : ButtonVariant.Default}
-                >
-                    {t('add')}
-                </Button>
-            </div>
+                    <Button
+                        onClick={addRmdRow}
+                        size={ButtonSize.Small}
+                        type={ButtonType.Primary}
+                        className="my-4"
+                        disabled={validateDuration(rmdRows) ? true : false}
+                        variant={validateDuration(rmdRows) || isFormStateReadOnly ? ButtonVariant.Inactive : ButtonVariant.Default}
+                    >
+                        {t('add')}
+                    </Button>
+                </div>
+            )}
 
             {formErrors && (
                 <div className="flex flex-col">

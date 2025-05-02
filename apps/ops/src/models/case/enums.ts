@@ -76,3 +76,8 @@ export enum PendingReasonOptions {
     AwaitingApproval = 'Awaiting approval',
     AwaitingApplication = 'Awaiting application',
 }
+
+export enum RmdFormType {
+    RMD = 'RMD',
+    QCD = 'QCD',
+}

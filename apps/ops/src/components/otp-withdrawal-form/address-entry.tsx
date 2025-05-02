@@ -56,7 +56,6 @@ export default function AddressEntry({
     const [state, setState] = useState(initialAddress.state || '');
     const [zip, setZip] = useState(initialAddress.zip || '');
     const [zipPlusFour, setZipPlusFour] = useState(initialAddress.zipPlusFour || '');
-    const [ssn, setSsn] = useState(initialAddress.ssn || '');
 
     const stateOptions = getStateCodes().map(state => ({ label: state, value: state }));
     useEffect(() => {

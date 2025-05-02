@@ -301,6 +301,7 @@ export interface FormProgram {
     programFrequency?: ProgramFrequency | null;
     rollover?: string | null;
     rmd?: RMD | null;
+    qcd?: QCD[] | null;
     terminateprograms?: Terminateprogram[] | null;
     programAmount?: {
         text: string | null;
@@ -401,6 +402,15 @@ export interface RMD {
     isJointLifeExpectancy: boolean;
     rmdPrograms: RMDProgram[];
     taxId: { text: string | null };
+}
+
+export interface QCD {
+    charityName: string;
+    amount: {
+        text: string;
+        amountType: 'DOLLAR';
+    };
+    address: Address;
 }
 
 export interface Terminateprogram {

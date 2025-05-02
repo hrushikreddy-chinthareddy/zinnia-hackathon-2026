@@ -2044,7 +2044,12 @@
                 "cancel": "Cancel",
                 "submit": "Submit",
                 "submitedMessage": "Bank Update Request has been submitted.",
-                "ussa": "USSA"
+                "ussa": "USSA",
+                "qcd": {
+                    "addPayment": "Add Payment",
+                    "charityName": "Charity name",
+                    "amount": "Amount"
+                }
             },
             "neaBenefitsSensitivity": "NEA Benefit Sensitivity",
             "distributionInstruction": {
@@ -2328,7 +2333,8 @@
                 "taxId": "SSN",
                 "dob": "Date of birth",
                 "isYourSpouseYoungerThanYou": "Is your spouse 10 years younger than you?"
-            }
+            },
+            "formType": "Form type"
         },
         "sidebar": {
             "contractStatusCode": "Policy status",

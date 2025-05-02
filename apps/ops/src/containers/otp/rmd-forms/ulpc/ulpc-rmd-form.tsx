@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import BeneficiaryInfo from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
@@ -16,10 +16,14 @@ import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdin
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
-import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
+import { Processes } from '@deps/models/case/case';
+import { RmdFormType } from '@deps/models/case/enums';
+import { Carrier, FundWithdrawnMethod, RMDType } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getUlpcRmdConfig from './ulpc-rmd-form.helper';
+import DistributionMethodQcd from '../qcd/qcd-distribution-method';
+import SelectFormType from '../rmd-form-type';
 
 export default function UlpcRmdWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -41,6 +45,8 @@ export default function UlpcRmdWithdrawalForm() {
         formParty,
         setFormData,
         formData,
+        formProgram,
+        setFormProgram,
         initialForm,
         setFormValidator,
         ownerStateOfResidence,
@@ -53,6 +59,7 @@ export default function UlpcRmdWithdrawalForm() {
         formESignatureData,
         setFormESignatureData,
     } = useContext(FormDataContext);
+    const [rmdFormType, setRmdFormType] = useState((formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -61,14 +68,24 @@ export default function UlpcRmdWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.ULPC}_RMD_DIGITAL_FORM`,
+            formExtName: `${Carrier.ULPC}_${rmdFormType}_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.ULPC}_RMD_DIGITAL_FORM`,
+                formType: `${Carrier.ULPC}_${rmdFormType}_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
         });
-    }, [initialForm]);
+        setFormProgram(prev => ({
+            ...prev,
+            program: {
+                text: rmdFormType === RmdFormType.QCD ? Processes.QCD : Processes.RequiredMinimumDistribution,
+            },
+            programType: {
+                text: rmdFormType === RmdFormType.QCD ? RmdFormType.QCD : RmdFormType.RMD,
+            },
+            qcd: prev.qcd ? [...prev.qcd] : [],
+        }));
+    }, [initialForm, rmdFormType]);
 
     useEffect(() => {
         const newOwnerStateOfResidence = getOwnerStateOfResidence(formParty);
@@ -78,11 +95,10 @@ export default function UlpcRmdWithdrawalForm() {
     }, [formParty]);
 
     const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const isRmdForm = rmdFormType === RmdFormType.RMD;
 
-    return (
+    const rmdComponents = isRmdForm && (
         <>
-            {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
             <BeneficiaryInfo
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -90,13 +106,6 @@ export default function UlpcRmdWithdrawalForm() {
                 onBeneChange={setFormBeneInfo}
                 isBeneSpouseOption={isBeneSpouseOption}
                 configs={beneficiaryConfig}
-            />
-            <FormDistribution
-                isFormStateReadOnly={isFormStateReadOnly}
-                fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.distributionInstruction') as string}
-                isDerivedMethodFromFunds={true}
-                defaultMethod={FundWithdrawnMethod.Prorata}
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />
             <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
@@ -106,6 +115,33 @@ export default function UlpcRmdWithdrawalForm() {
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
                 )}
+        </>
+    );
+
+    const qcdComponents = !isRmdForm && (
+        <>
+            <RMDMethod
+                isFormStateReadOnly={isFormStateReadOnly}
+                rmdTypeOptions={[{ label: t('rmdMethod.rmdTypes.calculate'), value: RMDType.CalculateRMD }]}
+                isQCD={true}
+            />
+            <DistributionMethodQcd formProgram={formProgram} setFormProgram={setFormProgram} isFormStateReadOnly={isFormStateReadOnly} />
+        </>
+    );
+
+    return (
+        <>
+            {!isFormStateReadOnly && <DiaryNotesWarning />}
+            <SelectFormType formType={rmdFormType} onFormTypeChange={setRmdFormType} isFormStateReadOnly={isFormStateReadOnly} />
+            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            {isRmdForm ? rmdComponents : qcdComponents}
+            <FormDistribution
+                isFormStateReadOnly={isFormStateReadOnly}
+                fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
+                title={t('distributionInstruction.distributionInstruction') as string}
+                isDerivedMethodFromFunds={true}
+                defaultMethod={FundWithdrawnMethod.Prorata}
+            />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             <ESignatureValidation
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}

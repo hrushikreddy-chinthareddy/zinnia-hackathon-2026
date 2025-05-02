@@ -101,6 +101,7 @@ export enum Processes {
     LoanRepaymentOneTime = 'Loan Repayment One Time',
     Suitability = 'Suitability',
     SuitabilityReview = 'Suitability Review',
+    QCD = 'Qualified Charitable Distribution',
     FundTransfer = 'Fund Management',
 }
 

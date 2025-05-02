@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
@@ -13,12 +13,17 @@ import SignatureValidations from '@deps/components/otp-withdrawal-form/signature
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
+import { Processes } from '@deps/models/case/case';
+import { RmdFormType } from '@deps/models/case/enums';
+import { Carrier, FundWithdrawnMethod, RMDType } from '@deps/models/case/withdrawal/case';
 
 import getDlicWithdrawalConfig from './dlic-rmd-form.helper';
+import DistributionMethodQcd from '../qcd/qcd-distribution-method';
+import SelectFormType from '../rmd-form-type';
 
 const DlicRmdWithdrawalForm = () => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+
     const {
         formValidation,
         formPartyConfigs,
@@ -39,42 +44,49 @@ const DlicRmdWithdrawalForm = () => {
         initialForm,
         isFormStateReadOnly,
         contractIssueState,
+        formProgram,
+        setFormProgram,
         formErrors,
         formESignatureData,
         setFormESignatureData,
     } = useContext(FormDataContext);
 
+    const [rmdFormType, setRmdFormType] = useState((formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD);
+
     useEffect(() => {
         if (formSubtype) {
             setFormData(fs => ({
                 ...fs,
-                formExtName: `${initialForm?.carrier || Carrier.DLIC}_RMD_DIGITAL_FORM`,
+                formExtName: `${initialForm?.carrier || Carrier.DLIC}_${rmdFormType}_DIGITAL_FORM`,
                 metaData: {
-                    formType: `${initialForm?.carrier || Carrier.DLIC}_RMD_DIGITAL_FORM`,
+                    formType: `${initialForm?.carrier || Carrier.DLIC}_${rmdFormType}_DIGITAL_FORM`,
                     formId: null,
                     formNumber: '',
                 },
             }));
         }
-    }, [setFormData, initialForm, formSubtype]);
+        setFormProgram(prev => ({
+            ...prev,
+            program: {
+                text: rmdFormType === RmdFormType.QCD ? Processes.QCD : Processes.RequiredMinimumDistribution,
+            },
+            programType: {
+                text: rmdFormType === RmdFormType.QCD ? RmdFormType.QCD : RmdFormType.RMD,
+            },
+            qcd: prev.qcd ? [...prev.qcd] : [],
+        }));
+    }, [initialForm, formSubtype, rmdFormType]);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
     }, [setFormValidator]);
 
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
+    const isRmdForm = rmdFormType === RmdFormType.RMD;
 
-    return (
+    const rmdComponents = isRmdForm && (
         <>
-            {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
-            <FormDistribution
-                isFormStateReadOnly={isFormStateReadOnly}
-                fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.distributionInstruction') as string}
-                defaultMethod={FundWithdrawnMethod.Default}
-            />
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}
                 ownerStateOfResidence={ownerStateOfResidence}
@@ -86,6 +98,34 @@ const DlicRmdWithdrawalForm = () => {
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
                 )}
+        </>
+    );
+
+    const qcdComponents = !isRmdForm && (
+        <>
+            <RMDMethod
+                isFormStateReadOnly={isFormStateReadOnly}
+                rmdTypeOptions={[{ label: t('rmdMethod.rmdTypes.calculate'), value: RMDType.CalculateRMD }]}
+                isQCD={true}
+            />
+            <DistributionMethodQcd formProgram={formProgram} setFormProgram={setFormProgram} isFormStateReadOnly={isFormStateReadOnly} />
+        </>
+    );
+
+    return (
+        <>
+            {!isFormStateReadOnly && <DiaryNotesWarning />}
+            <SelectFormType formType={rmdFormType} onFormTypeChange={setRmdFormType} isFormStateReadOnly={isFormStateReadOnly} />
+            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            {isRmdForm ? rmdComponents : qcdComponents}
+
+            <FormDistribution
+                isFormStateReadOnly={isFormStateReadOnly}
+                fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
+                title={t('distributionInstruction.distributionInstruction') as string}
+                defaultMethod={FundWithdrawnMethod.Default}
+            />
+
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}

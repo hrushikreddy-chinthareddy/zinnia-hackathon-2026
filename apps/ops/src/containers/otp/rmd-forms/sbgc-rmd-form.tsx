@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
@@ -16,9 +16,13 @@ import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdin
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { Carrier } from '@deps/models/case/withdrawal/case';
+import { Processes } from '@deps/models/case/case';
+import { RmdFormType } from '@deps/models/case/enums';
+import { Carrier, RMDType } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
+import DistributionMethodQcd from './qcd/qcd-distribution-method';
+import SelectFormType from './rmd-form-type';
 import getSbgcRmdConfig from './sbgc-rmd-form.helper';
 
 export default function SbgcRmdWithdrawalForm() {
@@ -38,6 +42,8 @@ export default function SbgcRmdWithdrawalForm() {
         formParty,
         setFormData,
         formData,
+        formProgram,
+        setFormProgram,
         initialForm,
         setFormValidator,
         formTpaAuthorization,
@@ -48,6 +54,8 @@ export default function SbgcRmdWithdrawalForm() {
         formErrors,
     } = useContext(FormDataContext);
 
+    const [rmdFormType, setRmdFormType] = useState((formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD);
+
     useEffect(() => {
         setFormValidator(() => formValidation);
     }, []);
@@ -55,33 +63,63 @@ export default function SbgcRmdWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.SBGC}_RMD_DIGITAL_FORM`,
+            formExtName: `${Carrier.SBGC}_${rmdFormType}_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.SBGC}_RMD_DIGITAL_FORM`,
+                formType: `${Carrier.SBGC}_${rmdFormType}_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
         });
-    }, [initialForm]);
+
+        setFormProgram(prev => ({
+            ...prev,
+            program: {
+                text: rmdFormType === RmdFormType.QCD ? Processes.QCD : Processes.RequiredMinimumDistribution,
+            },
+            programType: {
+                text: rmdFormType === RmdFormType.QCD ? RmdFormType.QCD : RmdFormType.RMD,
+            },
+            qcd: prev.qcd ? [...prev.qcd] : [],
+        }));
+    }, [initialForm, rmdFormType]);
 
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const ownerIsVirginiaResident = ownerStateOfResidence === USStates.VIRGINIA;
     const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const isRmdForm = rmdFormType === RmdFormType.RMD;
+
+    const rmdComponents = isRmdForm && (
+        <>
+            <JointLifeExpectancy isFormStateReadOnly={isFormStateReadOnly} configs={jointLifeExpectancyConfigs} />
+            <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
+            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
+            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
+            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
+        </>
+    );
+
+    const qcdComponents = !isRmdForm && (
+        <>
+            <RMDMethod
+                isFormStateReadOnly={isFormStateReadOnly}
+                rmdTypeOptions={[{ label: t('rmdMethod.rmdTypes.calculate'), value: RMDType.CalculateRMD }]}
+                isQCD={true}
+            />
+            <DistributionMethodQcd formProgram={formProgram} setFormProgram={setFormProgram} isFormStateReadOnly={isFormStateReadOnly} />
+        </>
+    );
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
+            <SelectFormType formType={rmdFormType} onFormTypeChange={setRmdFormType} isFormStateReadOnly={isFormStateReadOnly} />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <JointLifeExpectancy isFormStateReadOnly={isFormStateReadOnly} configs={jointLifeExpectancyConfigs} />
-            <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.distributionInstruction') as string}
             />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
+            {isRmdForm ? rmdComponents : qcdComponents}
             {ownerIsVirginiaResident && <FinancialProfessionalSignature isFormStateReadOnly={isFormStateReadOnly} />}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
