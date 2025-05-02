@@ -26,7 +26,7 @@ import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
-import { CreateTaskBody, RenewalsFormData, TaskSource, OwnerInformation } from '@deps/models/case/task';
+import { TaskSource, OwnerInformation } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { updateTask } from '@deps/queries/api/v2/task';
@@ -207,7 +207,7 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
         }
     };
 
-    const buildRenewalFormV2 = (
+    /*const buildRenewalFormV2 = (
         status: TaskStatus,
     ): CreateTaskBody<TaskStatus, RenewalsFormData> => {
         return {
@@ -216,17 +216,23 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
             status,
             data: getRenewalFormDataPayload(ownerInformation, contractValue, transOption, user?.email ?? '', renewalDocument),
         };
-    };
+    };*/
 
     const submit = useCallback(async () => {
 
         setIsLoading(true);
         if (caseType === CaseType.Renewal) {
             if (renewalInitialForm.status !== TaskStatus.Completed) {
+                const payload = {
+                    source: TaskSource.ZinniaTaskManagement,
+                    taskType: renewalInitialForm.taskType,
+                    status: TaskStatus.Completed,
+                    data: getRenewalFormDataPayload(ownerInformation, contractValue, transOption, user?.email ?? '', renewalDocument),
+                };
                 const successfulCaseUpdate = await updateTask(
                     renewalInitialForm.caseId,
                     renewalInitialForm.taskId,
-                    buildRenewalFormV2(TaskStatus.Completed),
+                    payload,
                     timer
                 );
                 if (successfulCaseUpdate && successfulCaseUpdate.id) {
@@ -260,7 +266,7 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
         }
 
         setIsLoading(false);
-    }, [document, formState, setSubmitFailed, timer, renewalInitialForm, caseType]);
+    }, [caseType, renewalInitialForm.status, renewalInitialForm.taskType, getRenewalFormDataPayload, ownerInformation, contractValue, transOption, user?.email, renewalDocument, setSubmitFailed, formState, document, timer]);
 
     const handleFormSubmit = async () => {
         setIsLoading(true);
