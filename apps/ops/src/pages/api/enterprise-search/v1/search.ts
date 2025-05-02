@@ -12,7 +12,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 // Will proxy any request made to the next server directly to the gateway apis
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>) => {
+    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>, loggingContext) => {
         const re = new RegExp('^.*?/api');
         const proxyUrl = req.url?.replace(re, apiServerBaseUrl as string);
 
@@ -22,7 +22,7 @@ export default withAuthAndLogging(
 
         const masker = canUnmask ? caseSearchSanitizer : caseSearchFullMasker;
 
-        return await requestHandler<any>(proxyUrl as string, req, res, masker);
+        return await requestHandler<any>(proxyUrl as string, req, res, loggingContext, masker);
     },
     { file: 'enterprise-search/v1/search', function: 'routeHandler' }
 );
