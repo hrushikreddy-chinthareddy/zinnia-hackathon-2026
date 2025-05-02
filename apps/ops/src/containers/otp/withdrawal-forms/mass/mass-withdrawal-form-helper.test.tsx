@@ -49,7 +49,6 @@ describe('Mass withdrawal form config', () => {
     describe('Config existence', () => {
         it('should return an object with the correct configuration options', () => {
             expect(current.getSignaturesConfig).toBeDefined();
-            expect(current.signaturesNotaryConfig).toBeDefined();
             expect(current.fundWithdrawnMethodOptions).toBeDefined();
             expect(current.partialWithdrawalOptions).toBeDefined();
             expect(current.identifySelectedFormProgramOption).toBeDefined();
@@ -283,85 +282,6 @@ describe('Mass withdrawal form config', () => {
             it('should be in the config', () => {
                 expect(spouseConfig).toBeTruthy();
                 expect(spouseConfig?.fields).toHaveLength(3);
-            });
-
-            it('should have shouldDisplay logic', () => {
-                expect(spouseConfig?.shouldDisplay?.({ formSignature: signature } as OtpWithdrawalFormState)).toBeTruthy();
-            });
-        });
-    });
-
-    describe('notaryConfig', () => {
-        const { signaturesNotaryConfig } = current;
-        // const mockFormDisbursement = {
-        //     ...getDefaultFormDisbursementValues(),
-        //     PaymentMethod: {
-        //         text: PaymentMethod.AlternatePayeeAddress,
-        //     },
-        // };
-        const isKeogh = true;
-        describe('Owner notary', () => {
-            const ownerConfig = signaturesNotaryConfig(isKeogh).find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.OwnerNotaryStamp
-            );
-            it('should be in the config', () => {
-                expect(ownerConfig).toBeTruthy();
-                expect(ownerConfig?.fields).toHaveLength(4);
-            });
-        });
-
-        describe('Joint owner notary', () => {
-            const jointOwnerConfig = signaturesNotaryConfig(isKeogh).find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.JointOwnerNotaryStamp
-            );
-            it('should be in the config', () => {
-                expect(jointOwnerConfig).toBeTruthy();
-                expect(jointOwnerConfig?.fields).toHaveLength(4);
-            });
-        });
-
-        describe('Spouse notary', () => {
-            const signature = {
-                signatures: [
-                    {
-                        isSigned: null,
-                        signDate: {
-                            text: '',
-                        },
-                        signExtension: null,
-                        signName: null,
-                        signOtherTitle: null,
-                        signTitle: {
-                            text: '',
-                        },
-                        signTitles: [
-                            {
-                                text: null,
-                            },
-                        ],
-                        signType: {
-                            text: 'Spouse',
-                        },
-                        spousalConsent: {
-                            text: null,
-                        },
-                    },
-                ],
-                isSpousalConsentRequired: null,
-                isCheckCSNLValid: null,
-                signVerificationReason: [
-                    {
-                        text: 'MARRIED_SUBJECT_TO_ERISA',
-                    },
-                ],
-            };
-
-            const spouseConfig = signaturesNotaryConfig(isKeogh).find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.SpouseNotaryStamp
-            );
-            it('should be in the config', () => {
-                expect(spouseConfig).toBeTruthy();
-                expect(spouseConfig?.fields).toHaveLength(4);
             });
 
             it('should have shouldDisplay logic', () => {

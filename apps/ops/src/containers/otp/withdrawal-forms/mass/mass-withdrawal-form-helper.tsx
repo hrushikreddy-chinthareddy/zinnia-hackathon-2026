@@ -186,86 +186,6 @@ export default function useMassWithdrawalConfig(t: TFunction) {
         },
     ];
 
-    const signaturesNotaryConfig = (isKeogh: boolean) => [
-        {
-            key: 'owner-notary-stamp',
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'notary-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'notary-present',
-                },
-                {
-                    component: SignatureFields.NotaryStampValid,
-                    key: 'notary-stamp-valid',
-                },
-                {
-                    component: SignatureFields.CommissionExpireDate,
-                    key: 'notary-commission-exp-date',
-                },
-            ],
-            signatureType: SignatureValidationTypeWithdrawal.OwnerNotaryStamp,
-        },
-        {
-            key: 'joint-owner-notary-stamp',
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'notary-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'notary-present',
-                },
-                {
-                    component: SignatureFields.NotaryStampValid,
-                    key: 'notary-stamp-valid',
-                },
-                {
-                    component: SignatureFields.CommissionExpireDate,
-                    key: 'notary-commission-exp-date',
-                },
-            ],
-            signatureType: SignatureValidationTypeWithdrawal.JointOwnerNotaryStamp,
-
-            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
-            },
-        },
-        {
-            key: 'spouse-notary-stamp',
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'notary-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'notary-present',
-                },
-                {
-                    component: SignatureFields.NotaryStampValid,
-                    key: 'notary-stamp-valid',
-                },
-                {
-                    component: SignatureFields.CommissionExpireDate,
-                    key: 'notary-commission-exp-date',
-                },
-            ],
-            signatureType: SignatureValidationTypeWithdrawal.SpouseNotaryStamp,
-
-            shouldDisplay: ({ formSignature }: OtpWithdrawalFormState): boolean => {
-                const isMarriedSelected = !!formSignature.signVerificationReason?.some(
-                    reason => reason.text === SignVerificationReason.MarriedWithERISA
-                );
-                return isKeogh && isMarriedSelected;
-            },
-        },
-    ];
-
     const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
         const programTypeText = formProgram?.programType?.text || '';
 
@@ -892,7 +812,6 @@ export default function useMassWithdrawalConfig(t: TFunction) {
         formPartyConfigs,
         formValidation,
         getSignaturesConfig,
-        signaturesNotaryConfig,
         fundWithdrawnMethodOptions,
         identifySelectedFormProgramOption,
         partialWithdrawalOptions,

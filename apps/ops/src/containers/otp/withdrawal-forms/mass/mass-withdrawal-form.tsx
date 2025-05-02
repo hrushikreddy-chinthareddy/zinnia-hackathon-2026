@@ -34,7 +34,6 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         identifySelectedFormProgramOption,
         partialWithdrawalOptions,
         getSignaturesConfig,
-        signaturesNotaryConfig,
         formPartyConfigs,
         disbursementOptions,
         fundWithdrawnMethodOptions,
@@ -125,11 +124,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
                     ></SignatureVerificationReasons>
                 ) : null}
             </SignatureValidations>
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                headerTranslationKey={'notaryHeader'}
-                config={signaturesNotaryConfig(isKeogh)}
-            />
+
             <ESignatureValidation
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}

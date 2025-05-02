@@ -48,7 +48,6 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
         systematicWithdrawalOptions,
         validateMaritalStatusAllowances,
         irsSignatureConfig,
-        signaturesNotaryConfig,
         signVerificationReasonConfig,
         eSignatureFieldConfig,
     } = useMassWithdrawalConfig(t);
@@ -99,11 +98,6 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
                     ></SignatureVerificationReasons>
                 ) : null}
             </SignatureValidations>
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                headerTranslationKey={'notaryHeader'}
-                config={signaturesNotaryConfig(isKeogh)}
-            />
             <ESignatureValidation
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}

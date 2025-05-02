@@ -352,28 +352,6 @@ export default function useMassMutualRmdConfig(t: TFunction) {
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
-        {
-            key: `sig-val-notary`,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'notary-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'notary-present',
-                },
-                {
-                    component: SignatureFields.NotaryStampValid,
-                    key: 'notary-stamp-valid',
-                },
-                {
-                    component: SignatureFields.CommissionExpireDate,
-                    key: 'notary-commission-exp-date',
-                },
-            ],
-            signatureType: SignatureValidationTypeWithdrawal.Notary,
-        },
     ];
 
     const rmdformValidation = ({
