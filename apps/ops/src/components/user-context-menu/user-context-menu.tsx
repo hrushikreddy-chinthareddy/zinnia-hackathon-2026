@@ -38,7 +38,7 @@ export const UserContextMenu: FC<{ name: string }> = props => {
             <DropdownMenu.Item onSelect={handleAnalytics}>
                 <a
                     className={
-                        'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-0 text-white hover:bg-gray-800 active:bg-white active:text-gray-900'
+                        'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-0 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10'
                     }
                     href={t('auth.logout.link') ?? '/api/auth/logout'}
                 >

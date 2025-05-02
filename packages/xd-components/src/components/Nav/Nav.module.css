@@ -1,6 +1,6 @@
 .navContainer {
   --nav-expanded-width: 240px;
-
+  z-index: 50;
   height: 100vmin;
   background-color: var(--color-grayscale-color-50-gray);
   /* for the sake of the animation hiding text properly we're using a border instead of padding */
@@ -185,6 +185,7 @@ div:has(> .searchInput)::before {
   gap: var(--measure-dimension-z-space-2);
   padding: var(--measure-dimension-z-space-1);
   width: 100%;
+  height: 32px;
 
   &:hover {
     background-color: var(--color-grayscale-color-white);
@@ -205,8 +206,10 @@ div:has(> .searchInput)::before {
 }
 
 .listItem__iconContainer {
-  padding: var(--measure-dimension-z-space-0);
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1px; /* This aligns the icon correctly in collapsed state */
 }
 
 /* Since we're using max width it needs to be the change value (1024px) minus 1 */

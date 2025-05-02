@@ -17,6 +17,7 @@ import { SearchKeys } from '@deps/components/create-case-form/create-case-form.h
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import { Loading } from '@deps/components/loading';
 import NotificationMessage from '@deps/components/notification-message/notification-message';
+import { PageHead } from '@deps/components/page-title';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
@@ -43,7 +44,6 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-import { PageHead } from '@deps/components/page-title';
 
 interface CaseCreatePageProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
@@ -82,6 +82,9 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
 
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
 
+    //TODO: This needs to be refactored to not fire on route change.
+    // The logic to show/hide a loader should be more purposeful and tied to a button click or something.
+    // Leaving it for now because I don't understand the ramifications of removing it
     const handleRouteChange = () => {
         setShowLoader(true);
     };
