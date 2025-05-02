@@ -35,14 +35,3 @@
         }
     }
 }
-
-.policyView {
-    position: relative;
-    z-index: 1000000;
-    text-underline-offset: 0.2rem;
-    text-decoration-color: var(--color-base-text-text-secondary);
-}
-
-.policyView:hover {
-    text-decoration: underline;
-}

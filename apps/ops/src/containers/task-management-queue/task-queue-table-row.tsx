@@ -11,7 +11,6 @@ import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helper';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
-import IconButton from '@deps/components/icon-button/icon-button';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -26,6 +25,7 @@ import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
+import { ReactComponent as ToDo } from '@deps/styles/elements/icons/icons_outlined/clipboard.svg';
 import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
 import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
@@ -36,10 +36,10 @@ import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { NO_ASSIGNEE } from './task-management-queue-container';
 import TaskQueueDrawer from './task-queue-drawer';
-import { isProd } from '@deps/utils/environment.helper';
 
 import styles from './task-management-queue.module.css';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
+import { EarlyTaskType } from '@deps/models/case/task';
 
 type TaskQueueTableRowProps = {
     task: AssignedTask | UnassignedTask;
@@ -121,7 +121,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
         if (task) {
             const { taskName = '', id } = task;
             sideSheet.changeSideSheetContent(
-                `${taskName ? `${t('sideSheet.task.heading')}: ${taskName}` : t('sideSheet.task.heading')}`,
+                `${taskName ? `${t('sideSheet.task.heading')}: ${toSentenceCase(taskName)}` : t('sideSheet.task.heading')}`,
                 <GlobalTaskSideSheet taskId={id} taskDescription={task?.taskDetails} onTaskClaimSuccess={handleTaskClaimSuccess} />
             );
             sideSheet.handleOpen(true);
@@ -149,12 +149,22 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
             badgeVariant = BadgeVariant.Inactive;
             badgeLabel = 'Canceled';
             break;
+        case TaskStatus.InProgress:
+            badgeIcon = <Progress width={16} height={16} />;
+            badgeVariant = BadgeVariant.Info;
+            badgeLabel = 'In Progress';
+            break;
+        case TaskStatus.Closed:
+            badgeIcon = <CancelIcon width={16} height={16} />;
+            badgeVariant = BadgeVariant.Urgent;
+            badgeLabel = 'Closed';
+            break;
         case TaskStatus.Pending:
             (badgeIcon = <Pause width={16} height={16} />), (badgeVariant = BadgeVariant.Error);
             badgeLabel = 'Pending';
             break;
         default:
-            badgeIcon = <Progress width={16} height={16} />;
+            badgeIcon = <ToDo width={16} height={16} />;
             badgeVariant = BadgeVariant.Default;
             badgeLabel = 'To do';
             break;
@@ -198,12 +208,11 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
             <TableCell>
                 <Content details={toSentenceCase(taskName)} variant={ContentVariant.BodySm} />
                 <Content className={styles.fadedText} details={toSentenceCase(process)} variant={ContentVariant.BodySm} />
-                {!isProd() && documentNumber && (
-                    <Content details={`${t('documentNumber')} ${documentNumber || '-'}`} variant={ContentVariant.BodySm} />
-                )}
             </TableCell>
             <TableCell>
-                {task?.status === TaskStatus.InProgress && task?.queue ? (
+                {task?.status === TaskStatus.InProgress &&
+                task?.queue &&
+                !Object.values(EarlyTaskType).includes(task?.taskType as EarlyTaskType) ? (
                     <div className="relative z-100">
                         {task?.status === TaskStatus.InProgress && (
                             <Dropdown
@@ -243,7 +252,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
                             </Typography>
                             {policyNumber ? (
                                 <NextLink
-                                    className={`${policyNumber && styles.policyView} text-secondary`}
+                                    className="relative z-5 text-secondary hover-[--color-base-text-text-secondary] hover:underline hover:decoration-2 hover:underline-offset-2"
                                     href={`/policies?policyNumber=${policyNumber}`}
                                 >
                                     {policyNumber}
@@ -278,19 +287,25 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
                         <Tooltip
                             placement={TooltipPlacement.TopRight}
                             tooltipClassName="!w-auto"
-                            triggerClassName="!z-10"
+                            triggerClassName="!z-10 focus:outline-none"
                             trigger={
-                                <IconButton
-                                    className="text-secondary"
-                                    onClick={() => {
-                                        handleUnassignTask(task?.id);
+                                <span
+                                    tabIndex={0}
+                                    aria-label="Unassign Task"
+                                    className="text-secondary cursor-pointer"
+                                    onClick={() => handleUnassignTask(task?.id)}
+                                    onKeyDown={e => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            handleUnassignTask(task?.id);
+                                        }
                                     }}
                                 >
                                     <CancelIcon height={18} width={18} />
-                                </IconButton>
+                                </span>
                             }
                         >
-                            <span className="text-md">Unassign</span>
+                            <span className="text-md">{t('unassign')}</span>
                         </Tooltip>
                     )}
                 </div>

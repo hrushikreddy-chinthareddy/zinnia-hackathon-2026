@@ -101,9 +101,16 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         enabled: Object.keys(searchValue).length > 0,
     });
 
+    const setSearchFromUrl = (policyNumber: string | string[] | undefined): boolean => {
+        return (
+            !!policyNumber &&
+            (!policySearchFilters?.searchValue?.policyNumber || policySearchFilters?.searchValue?.policyNumber !== policyNumber)
+        );
+    };
+
     useEffect(() => {
-        const { policyNumber } = router.query;
-        if (policyNumber && !policySearchFilters?.searchValue?.policyNumber) {
+        const { policyNumber = '' } = router.query;
+        if (setSearchFromUrl(policyNumber)) {
             const newSearchValue = {
                 ...policySearchFilters.searchValue,
                 policyNumber: policyNumber as string,
@@ -113,7 +120,7 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                 searchValue: newSearchValue,
             });
         }
-    }, [router.query.policyNumber, policySearchFilters]);
+    }, [router.query?.policyNumber, policySearchFilters]);
 
     const removePolicyNumberFromQuery = async (router: NextRouter) => {
         try {

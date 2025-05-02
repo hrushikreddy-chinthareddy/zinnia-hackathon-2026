@@ -63,6 +63,7 @@ export type ManagementTask<T = TaskStatus> = {
     impededTillDate?: string;
     prefferedAssignee?: string;
     mappedDocuments?: TaskDocument[];
+    identifiers?: IdentifierInstance[];
     additionalDocuments?: TaskDocument[];
     assignee?: string;
     impededReason?: string;

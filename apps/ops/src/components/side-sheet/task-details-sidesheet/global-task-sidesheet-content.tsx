@@ -37,6 +37,10 @@ import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache, writeToCache } from '@deps/utils/cache';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { getCaseIdentifierValue } from '@deps/helpers/case-management';
+import { CaseIdentifier } from '@deps/models/case/case';
+import { IdentifierInstance } from '@deps/models/case/identifier-instance';
+import { isProd } from '@deps/utils/environment.helper';
 
 export enum TabOptions {
     Details = 'Details',
@@ -286,7 +290,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             <span>No assignee</span>
             {task.status === TaskStatus.New &&
                 (!claimTaskLoader ? (
-                    <button className="text-blue-600 hover:text-blue-700 hover:underline focus:outline-none" onClick={handleClaimTask}>
+                    <button tabIndex={0} className="text-blue-600 hover:text-blue-700 hover:underline" onClick={handleClaimTask}>
                         {t('sideSheet.task.claimTask')}
                     </button>
                 ) : (
@@ -386,12 +390,13 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             </>
         );
     };
+    const documentNumber = getCaseIdentifierValue(task?.identifiers as Array<IdentifierInstance>, CaseIdentifier.DocumentNumber);
+
     const renderDetails = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg mt-8">{t('sideSheet.task.tabs.details')}</label>
             <div className="grid grid-cols-3 gap-2 text-md align-center">
                 <div className="col-span-1 mt-4 align-self text-[--color-base-text-text-secondary]">
-                    {' '}
                     {t('sideSheet.task.status.label')}{' '}
                 </div>
                 <div className="col-span-2 mt-2 align-self">
@@ -436,6 +441,13 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 )}
 
                 {renderTaskStatus(task.status)}
+
+                {!isProd() && documentNumber && (
+                    <>
+                        <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.documentNumber')} </div>
+                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">{`${documentNumber}`}</Typography>
+                    </>
+                )}
 
                 <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.assigneeLabel')} </div>
                 <div className="col-span-2">
