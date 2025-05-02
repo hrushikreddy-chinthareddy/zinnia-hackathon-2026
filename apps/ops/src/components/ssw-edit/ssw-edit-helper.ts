@@ -31,6 +31,8 @@ export const getDocumentSource = (documentId: string): ChannelType => {
     if (documentId) {
         if (documentId.includes('-MAN-') || documentId.includes('-O-')) {
             return ChannelType.Phone;
+        } else if (documentId.includes('-X-')) {
+            return ChannelType.Phone;
         } else {
             return ChannelType.Email;
         }
