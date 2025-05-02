@@ -18,14 +18,26 @@ import SignatureVerificationReasons from '@deps/components/otp-withdrawal-form/s
 import { USStates } from '@deps/constants/geography/us-states';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import SswEditSelection from '../ssw-edit-selection';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 type MassWithdrawalFormProps = {
     qualType: QualTypes | '';
 };
 
 export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
-    const { formSignature, formParty, setFormValidator, setFormData, initialForm, isFormStateReadOnly, contractIssueState } =
-        useContext(FormDataContext);
+    const {
+        formSignature,
+        formParty,
+        setFormValidator,
+        setFormData,
+        initialForm,
+        isFormStateReadOnly,
+        contractIssueState,
+        formErrors,
+        formESignatureData,
+        setFormESignatureData,
+    } = useContext(FormDataContext);
 
     const {
         reasonOptions,
@@ -38,6 +50,7 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
         irsSignatureConfig,
         signaturesNotaryConfig,
         signVerificationReasonConfig,
+        eSignatureFieldConfig,
     } = useMassWithdrawalConfig(t);
 
     useEffect(() => {
@@ -90,6 +103,12 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
                 isFormStateReadOnly={isFormStateReadOnly}
                 headerTranslationKey={'notaryHeader'}
                 config={signaturesNotaryConfig(isKeogh)}
+            />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );

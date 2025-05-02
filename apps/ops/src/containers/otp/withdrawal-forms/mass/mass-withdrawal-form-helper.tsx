@@ -73,10 +73,16 @@ export default function useMassWithdrawalConfig(t: TFunction) {
         ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
             if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-                if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
+                if (
+                    formDisbursement?.bank[0].bankName === '' &&
+                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                ) {
                     errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
                 }
-                if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
+                if (
+                    formDisbursement?.bank[0].bankName === '' &&
+                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                ) {
                     errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
                 }
             }
@@ -90,7 +96,10 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     'formValidation.signaturePresentOptionMustBeSelected'
                 );
             }
-            if (formDisbursement?.bank[0].accountType?.text === '' && [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+            if (
+                formDisbursement?.bank[0].accountType?.text === '' &&
+                [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
+            ) {
                 errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
             }
             return errors;
@@ -421,7 +430,7 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     fieldLabel: t('distributionMethod.bankName'),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
-                    classNames: 'col-start-1'
+                    classNames: 'col-start-1',
                 },
             ],
             getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
@@ -532,7 +541,7 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     fieldName: BankingFields.BankName,
                     fieldLabel: t('distributionMethod.bankName'),
                     component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1'
+                    classNames: 'col-start-1',
                 },
             ],
             getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
@@ -871,6 +880,12 @@ export default function useMassWithdrawalConfig(t: TFunction) {
         },
     ];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
 
     return {
         disbursementOptions,
@@ -888,6 +903,6 @@ export default function useMassWithdrawalConfig(t: TFunction) {
         validateMaritalStatusAllowances,
         distributionReasonOptions,
         waiverItemsConfig,
-
+        eSignatureFieldConfig,
     };
 }

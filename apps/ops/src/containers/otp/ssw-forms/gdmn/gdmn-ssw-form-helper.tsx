@@ -22,14 +22,20 @@ import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext'
 import { statesAndTerritories } from '@deps/helpers/states.helper';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
-    AccountType, AmountType, FormDisbursement,
+    AccountType,
+    AmountType,
+    FormDisbursement,
     FormParts,
-    FormValidationErrors, Frequency, FundWithdrawnMethod, LifeCadPartyRoles, PartyRoles,
+    FormValidationErrors,
+    Frequency,
+    FundWithdrawnMethod,
+    LifeCadPartyRoles,
+    PartyRoles,
     PaymentMailType,
     PaymentMethod,
     PhoneTypes,
     RestrictionOption,
-    SSWType
+    SSWType,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -42,7 +48,6 @@ import {
 import { createValidator } from '../../utils/helper-utils';
 
 export default function getGdmnConfig(t: TFunction) {
-
     const formValidation = ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
         if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
@@ -71,7 +76,10 @@ export default function getGdmnConfig(t: TFunction) {
             );
         }
 
-        if (formDisbursement?.bank[0].accountType?.text === '' && [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
+        ) {
             errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
         }
         return errors;
@@ -207,11 +215,11 @@ export default function getGdmnConfig(t: TFunction) {
     const fundWithdrawnMethodOptions = [
         {
             label: t(`distributionInstruction.prorata`),
-            value: FundWithdrawnMethod.Prorata
+            value: FundWithdrawnMethod.Prorata,
         },
         {
             label: t(`distributionInstruction.specifyFunds`),
-            value: FundWithdrawnMethod.SpecifyFunds
+            value: FundWithdrawnMethod.SpecifyFunds,
         },
     ];
 
@@ -243,129 +251,129 @@ export default function getGdmnConfig(t: TFunction) {
 
     const disbursementOptions: PaymentMethodOption[] = [
         {
-          label: t('distributionMethod.eft'),
-          value: FormDisbursementSelections.EFT,
-          fields: [
-              {
-                  fieldName: BankingFields.Bank,
-                  fieldLabel: t('distributionMethod.chooseTheBank'),
-                  component: DisbursementFields.SelectBank,
-              },
-              {
-                  fieldName: BankingFields.IsVoidCheckAttached,
-                  fieldLabel: t('distributionMethod.isVoidCheckAttached'),
-                  component: DisbursementFields.BankBooleanButtonGroup,
-                  classNames: 'col-start-1',
-              },
-              {
-                  fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                  fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
-                  component: DisbursementFields.BankBooleanButtonGroup,
-              },
-              {
-                  fieldName: BankingFields.AccountType,
-                  fieldLabel: t('distributionMethod.accountType'),
-                  component: DisbursementFields.AccountTypes,
-                  classNames: 'col-start-1 col-span-2 w-full',
-                  isBankingField: true,
-              },
-              {
-                  fieldName: BankingFields.AccountNumber,
-                  fieldLabel: t('distributionMethod.accountNumber'),
-                  component: DisbursementFields.BankTextField,
-                  classNames: 'col-start-1',
-                  isBankingField: true,
-                  maskOnBlur: true,
-                  disableCopyPaste: true,
-              },
-              {
-                  fieldName: BankingFields.ReEnterAccountNumber,
-                  fieldLabel: t('distributionMethod.reEnterAccountNumber'),
-                  component: DisbursementFields.BankTextField,
-                  classNames: 'col-start-2',
-                  isBankingField: true,
-                  disableCopyPaste: true,
-                  validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
-              },
-              {
-                  fieldName: BankingFields.BankRoutingNumber,
-                  fieldLabel: t('distributionMethod.bankRoutingNumber'),
-                  component: DisbursementFields.BankTextField,
-                  isBankingField: true,
-                  maskOnBlur: true,
-                  disableCopyPaste: true,
-                  classNames: 'col-start-1',
-              },
-              {
-                  fieldName: BankingFields.ReEnterBankRoutingNumber,
-                  fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
-                  component: DisbursementFields.BankTextField,
-                  isBankingField: true,
-                  disableCopyPaste: true,
-                  validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
-              },
-              {
-                  fieldName: BankingFields.BankName,
-                  fieldLabel: t('distributionMethod.bankName'),
-                  component: DisbursementFields.BankTextField,
-                  isBankingField: true,
-                  classNames: 'col-start-1',
-              },
-              {
-                  fieldName: BankingFields.AccountHolder,
-                  fieldLabel: t('distributionMethod.accountHolder'),
-                  component: DisbursementFields.BankTextField,
-              },
-          ],
-          getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
-              if (paymentMethod.text !== PaymentMethod.EFT) {
-                  return DEFAULT_DISBURSEMENT_UPDATE;
-              }
-              const selectedBank = bank[0];
-              return {
-                  ...DEFAULT_DISBURSEMENT_UPDATE,
-                  doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
-                  isVoidCheckAttached: voidCheck,
-                  accountHolder: selectedBank.nameOnBankAccount ?? '',
-                  accountNumber: selectedBank.accountNumber ?? '',
-                  accountType: selectedBank.accountType?.text ?? AccountType.Checking,
-                  bankName: selectedBank.bankName ?? '',
-                  bankRoutingNumber: selectedBank.routingNumber ?? '',
-              };
-          },
-          generatePayloadFromSelection: ({
-              accountNumber,
-              accountType,
-              bankName,
-              bankRoutingNumber,
-              accountHolder,
-              isVoidCheckAttached,
-              doesCheckMeetSecurityRequirements,
-              reEnterAccountNumber,
-              reEnterBankRoutingNumber,
-          }: DisbursementParts) => {
-              return {
-                  ...getDefaultFormDisbursementValues(),
-                  paymentMethod: { text: PaymentMethod.EFT },
-                  paymentMailType: { text: null },
-                  bank: [
-                      {
-                          ...DEFAULT_BANK_DETAILS,
-                          accountNumber,
-                          accountType: {
-                              text: accountType,
-                          },
-                          bankName,
-                          nameOnBankAccount: accountHolder ?? '',
-                          routingNumber: bankRoutingNumber,
-                          reEnterAccountNumber,
-                          reEnterBankRoutingNumber,
-                      },
-                  ],
-                  voidCheck: isVoidCheckAttached ?? null,
-                  doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
-              };
-          },
+            label: t('distributionMethod.eft'),
+            value: FormDisbursementSelections.EFT,
+            fields: [
+                {
+                    fieldName: BankingFields.Bank,
+                    fieldLabel: t('distributionMethod.chooseTheBank'),
+                    component: DisbursementFields.SelectBank,
+                },
+                {
+                    fieldName: BankingFields.IsVoidCheckAttached,
+                    fieldLabel: t('distributionMethod.isVoidCheckAttached'),
+                    component: DisbursementFields.BankBooleanButtonGroup,
+                    classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
+                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    component: DisbursementFields.BankBooleanButtonGroup,
+                },
+                {
+                    fieldName: BankingFields.AccountType,
+                    fieldLabel: t('distributionMethod.accountType'),
+                    component: DisbursementFields.AccountTypes,
+                    classNames: 'col-start-1 col-span-2 w-full',
+                    isBankingField: true,
+                },
+                {
+                    fieldName: BankingFields.AccountNumber,
+                    fieldLabel: t('distributionMethod.accountNumber'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                    isBankingField: true,
+                    maskOnBlur: true,
+                    disableCopyPaste: true,
+                },
+                {
+                    fieldName: BankingFields.ReEnterAccountNumber,
+                    fieldLabel: t('distributionMethod.reEnterAccountNumber'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-2',
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                },
+                {
+                    fieldName: BankingFields.BankRoutingNumber,
+                    fieldLabel: t('distributionMethod.bankRoutingNumber'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    maskOnBlur: true,
+                    disableCopyPaste: true,
+                    classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.ReEnterBankRoutingNumber,
+                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                },
+                {
+                    fieldName: BankingFields.BankName,
+                    fieldLabel: t('distributionMethod.bankName'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.AccountHolder,
+                    fieldLabel: t('distributionMethod.accountHolder'),
+                    component: DisbursementFields.BankTextField,
+                },
+            ],
+            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+                if (paymentMethod.text !== PaymentMethod.EFT) {
+                    return DEFAULT_DISBURSEMENT_UPDATE;
+                }
+                const selectedBank = bank[0];
+                return {
+                    ...DEFAULT_DISBURSEMENT_UPDATE,
+                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    isVoidCheckAttached: voidCheck,
+                    accountHolder: selectedBank.nameOnBankAccount ?? '',
+                    accountNumber: selectedBank.accountNumber ?? '',
+                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    bankName: selectedBank.bankName ?? '',
+                    bankRoutingNumber: selectedBank.routingNumber ?? '',
+                };
+            },
+            generatePayloadFromSelection: ({
+                accountNumber,
+                accountType,
+                bankName,
+                bankRoutingNumber,
+                accountHolder,
+                isVoidCheckAttached,
+                doesCheckMeetSecurityRequirements,
+                reEnterAccountNumber,
+                reEnterBankRoutingNumber,
+            }: DisbursementParts) => {
+                return {
+                    ...getDefaultFormDisbursementValues(),
+                    paymentMethod: { text: PaymentMethod.EFT },
+                    paymentMailType: { text: null },
+                    bank: [
+                        {
+                            ...DEFAULT_BANK_DETAILS,
+                            accountNumber,
+                            accountType: {
+                                text: accountType,
+                            },
+                            bankName,
+                            nameOnBankAccount: accountHolder ?? '',
+                            routingNumber: bankRoutingNumber,
+                            reEnterAccountNumber,
+                            reEnterBankRoutingNumber,
+                        },
+                    ],
+                    voidCheck: isVoidCheckAttached ?? null,
+                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                };
+            },
         },
         {
             label: t('distributionMethod.wire'),
@@ -458,7 +466,7 @@ export default function getGdmnConfig(t: TFunction) {
                 isVoidCheckAttached,
                 doesCheckMeetSecurityRequirements,
                 reEnterAccountNumber,
-                reEnterBankRoutingNumber
+                reEnterBankRoutingNumber,
             }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -649,6 +657,12 @@ export default function getGdmnConfig(t: TFunction) {
         { label: t('distributionReason.reasonOptions.other'), value: RestrictionOption.Empty },
     ];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
     return {
         formValidation,
         formPartyConfigs,
@@ -659,5 +673,6 @@ export default function getGdmnConfig(t: TFunction) {
         w4pSignaturesConfig,
         disbursementOptions,
         signaturesConfig,
+        eSignatureFieldConfig,
     };
 }

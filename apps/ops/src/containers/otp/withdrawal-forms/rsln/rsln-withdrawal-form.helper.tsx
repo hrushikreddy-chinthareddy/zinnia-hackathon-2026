@@ -837,8 +837,15 @@ export default function getRslnConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-
     ];
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         formPartyConfigs,
         formValidation,
@@ -855,5 +862,6 @@ export default function getRslnConfig(t: TFunction) {
         identifySelectedFormProgramOption,
         irsSignatureConfig,
         meritalStatusAllowanceConfig,
+        eSignatureFieldConfig,
     };
 }

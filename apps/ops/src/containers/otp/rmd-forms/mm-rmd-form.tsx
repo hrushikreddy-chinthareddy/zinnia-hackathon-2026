@@ -2,6 +2,8 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
@@ -37,6 +39,7 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
         jointLifeExpectancyConfigs,
         signVerificationReasonConfig,
         validateMaritalStatusAllowances,
+        eSignatureFieldConfig,
     } = useMassMutualRmdConfig(t);
 
     const {
@@ -50,6 +53,9 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
         formSignature,
         contractIssueState,
         isFormStateReadOnly,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -79,7 +85,7 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
     const isKeogh = qualType === QualTypes.KEOGHHR10;
     const signaturesConfig = getSignaturesConfig(isKeogh);
     const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
-    const shouldStateW4pRender = isAllowedState(contractIssueState)
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -109,6 +115,12 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
                     ></SignatureVerificationReasons>
                 ) : null}
             </SignatureValidations>
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }

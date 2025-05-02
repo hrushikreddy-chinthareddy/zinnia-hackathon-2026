@@ -20,11 +20,23 @@ import SswEditSelection from '../ssw-edit-selection';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 import W4pTaxForm from '@deps/components/w4p-tax-form/w4p-tax-form';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 
 export function NassauSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
-    const { formParty, parties, setFormValidator, setFormData, initialForm, isFormStateReadOnly, contractIssueState } =
-        useContext(FormDataContext);
+    const {
+        formParty,
+        parties,
+        setFormValidator,
+        setFormData,
+        initialForm,
+        isFormStateReadOnly,
+        contractIssueState,
+        formErrors,
+        formESignatureData,
+        setFormESignatureData,
+    } = useContext(FormDataContext);
 
     const {
         fundWithdrawnMethodOptions,
@@ -38,6 +50,7 @@ export function NassauSSWForm() {
         defaultValues,
         handleShouldShowDOBInOl4573,
         w4pSignaturesConfig,
+        eSignatureFieldConfig,
     } = useNassauConfig(t);
 
     useEffect(() => {
@@ -59,6 +72,7 @@ export function NassauSSWForm() {
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties);
     const shouldStateW4pRender = isAllowedState(contractIssueState ?? '');
+
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -89,6 +103,12 @@ export function NassauSSWForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 headerTranslationKey={'notaryHeader'}
                 config={signaturesNotaryConfig}
+            />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );

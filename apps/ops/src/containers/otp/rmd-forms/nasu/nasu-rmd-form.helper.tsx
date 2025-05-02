@@ -11,7 +11,7 @@ import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import {
     SignatureFieldNames,
-    SignatureFields
+    SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { stringifyTrueFalseNull } from '@deps/helpers/string.helper';
@@ -20,11 +20,15 @@ import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/sig
 import {
     FormValidationErrors,
     PartyRoles,
-    AddressTypes, FormParts, PaymentMethod,
+    AddressTypes,
+    FormParts,
+    PaymentMethod,
     PaymentMailType,
     AccountType,
-    FormDisbursement, PhoneTypes, LifeCadPartyPersonType,
-    LifeCadPartyRoles
+    FormDisbursement,
+    PhoneTypes,
+    LifeCadPartyPersonType,
+    LifeCadPartyRoles,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -229,29 +233,29 @@ export default function getNasuRmdConfig(t: TFunction) {
             }: DisbursementParts) => {
                 const bank = isDirectDeposit
                     ? [
-                        {
-                            ...DEFAULT_BANK_DETAILS,
-                            maskedAccountNumber: null,
-                            accountNumber,
-                            accountType: {
-                                text: accountType,
-                            },
-                            bankName,
-                            nameOnBankAccount: accountHolder ?? '',
-                            routingNumber: bankRoutingNumber,
-                            isDirectDeposit: { text: true },
-                            isDirectDepositValid: { text: isDirectDepositValid },
-                            reEnterAccountNumber,
-                            reEnterBankRoutingNumber,
-                        },
-                    ]
+                          {
+                              ...DEFAULT_BANK_DETAILS,
+                              maskedAccountNumber: null,
+                              accountNumber,
+                              accountType: {
+                                  text: accountType,
+                              },
+                              bankName,
+                              nameOnBankAccount: accountHolder ?? '',
+                              routingNumber: bankRoutingNumber,
+                              isDirectDeposit: { text: true },
+                              isDirectDepositValid: { text: isDirectDepositValid },
+                              reEnterAccountNumber,
+                              reEnterBankRoutingNumber,
+                          },
+                      ]
                     : [
-                        {
-                            ...DEFAULT_BANK_DETAILS,
-                            isDirectDeposit: { text: false },
-                            maskedAccountNumber: maskedAccountNumber ?? null,
-                        },
-                    ];
+                          {
+                              ...DEFAULT_BANK_DETAILS,
+                              isDirectDeposit: { text: false },
+                              maskedAccountNumber: maskedAccountNumber ?? null,
+                          },
+                      ];
 
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -374,7 +378,6 @@ export default function getNasuRmdConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-
     ];
 
     const isBeneSpouseOption = [
@@ -449,6 +452,13 @@ export default function getNasuRmdConfig(t: TFunction) {
         return errors;
     };
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         formPartyConfigs,
         signaturesConfig,
@@ -459,7 +469,7 @@ export default function getNasuRmdConfig(t: TFunction) {
         w4pSignaturesConfig,
         disbursementOptions,
         isBeneSpouseOption,
-        beneficiaryConfig
+        beneficiaryConfig,
+        eSignatureFieldConfig,
     };
 }
-

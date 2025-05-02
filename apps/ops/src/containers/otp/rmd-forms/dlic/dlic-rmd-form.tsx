@@ -3,6 +3,8 @@ import { useContext, useEffect } from 'react';
 
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
@@ -27,9 +29,20 @@ const DlicRmdWithdrawalForm = () => {
         additionalWithholdingAmountConfig,
         signaturesNotaryConfig,
         cslnCheckStates,
+        eSignatureFieldConfig,
     } = getDlicWithdrawalConfig(t);
-    const { formParty, setFormValidator, setFormData, formSubtype, initialForm, isFormStateReadOnly, contractIssueState } =
-        useContext(FormDataContext);
+    const {
+        formParty,
+        setFormValidator,
+        setFormData,
+        formSubtype,
+        initialForm,
+        isFormStateReadOnly,
+        contractIssueState,
+        formErrors,
+        formESignatureData,
+        setFormESignatureData,
+    } = useContext(FormDataContext);
 
     useEffect(() => {
         if (formSubtype) {
@@ -78,6 +91,12 @@ const DlicRmdWithdrawalForm = () => {
                 isFormStateReadOnly={isFormStateReadOnly}
                 headerTranslationKey={'notaryHeader'}
                 config={signaturesNotaryConfig}
+            />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );

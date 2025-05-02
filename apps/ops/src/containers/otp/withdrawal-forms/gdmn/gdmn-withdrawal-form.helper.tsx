@@ -771,8 +771,15 @@ export default function getGdmnConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-
     ];
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -787,5 +794,6 @@ export default function getGdmnConfig(t: TFunction) {
         selectOneOptions,
         fullWithdrawalOptions,
         reasonOptions,
+        eSignatureFieldConfig,
     };
 }

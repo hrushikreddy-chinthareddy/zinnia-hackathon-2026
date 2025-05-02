@@ -80,6 +80,7 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
             formTpaAuthorization,
             formSurrenderingCompany,
             formAdditionalWaivers,
+            formESignatureData,
             formComment,
         } = formState;
         const errors = formValidator({
@@ -94,6 +95,7 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
             formRestriction,
             formSignature,
             formSource,
+            formESignatureData,
             formSpecialInstruction: formRequest.formSpecialInstruction,
             formTaxWithholding,
             formTaxIdCertificate: formRequest.formTaxIdCertificate,

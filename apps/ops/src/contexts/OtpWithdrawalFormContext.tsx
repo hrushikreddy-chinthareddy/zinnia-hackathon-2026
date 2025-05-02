@@ -1,6 +1,7 @@
 import { createContext } from 'react';
 
 import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { FormSubtype } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -70,6 +71,8 @@ export interface OtpWithdrawalFormState {
     formComment?: FormComment;
     formBeneInfo: FormBeneInfo | null;
     formPeriodicPension: PeriodicPensionFormType | null;
+    formESignatureData?: FormEsignatureData | any;
+    setFormESignatureData: React.Dispatch<React.SetStateAction<any>>;
     setFormPeriodicPension: React.Dispatch<React.SetStateAction<PeriodicPensionFormType | null>>;
     setCurrentFormState: React.Dispatch<React.SetStateAction<WithdrawalTaskStatus>>;
     setFormSubtype?: React.Dispatch<React.SetStateAction<FormSubtype>>;
@@ -140,6 +143,7 @@ export const defaultFormDataContext = {
     isFormStateReadOnly: false,
     formBeneInfo: {} as FormBeneInfo,
     formPeriodicPension: {} as PeriodicPensionFormType,
+    formEsignatureData: {} as FormEsignatureData,
     setFormPeriodicPension: noop,
     setCurrentFormState: noop,
     setFormAdditionalWaivers: noop,
@@ -169,6 +173,7 @@ export const defaultFormDataContext = {
     setFormReindexingData: noop,
     setFormComment: noop,
     setFormBeneInfo: noop,
+    setFormESignatureData: noop,
 };
 
 export const FormDataContext = createContext<OtpWithdrawalFormState>(defaultFormDataContext as OtpWithdrawalFormState);

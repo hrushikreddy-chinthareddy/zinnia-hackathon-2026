@@ -72,10 +72,16 @@ export default function useMassSSWConfig(t: TFunction) {
             );
 
             if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-                if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
+                if (
+                    formDisbursement?.bank[0].bankName === '' &&
+                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                ) {
                     errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
                 }
-                if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
+                if (
+                    formDisbursement?.bank[0].bankName === '' &&
+                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                ) {
                     errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
                 }
             }
@@ -87,7 +93,10 @@ export default function useMassSSWConfig(t: TFunction) {
                 );
             }
 
-            if (formDisbursement?.bank[0].accountType?.text === '' && [PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+            if (
+                formDisbursement?.bank[0].accountType?.text === '' &&
+                [PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
+            ) {
                 errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
             }
 
@@ -631,9 +640,7 @@ export default function useMassSSWConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.JointOwnerNotaryStamp,
 
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!(
-                    formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER)
-                );
+                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
             },
         },
         {
@@ -671,7 +678,12 @@ export default function useMassSSWConfig(t: TFunction) {
         return sswType === SSWType.PercentOfAmountValue ? undefined : FundWithdrawnMethod.Prorata;
     };
 
-
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
 
     return {
         disbursementOptions,
@@ -687,5 +699,6 @@ export default function useMassSSWConfig(t: TFunction) {
         irsSignatureConfig,
         signaturesNotaryConfig,
         signVerificationReasonConfig,
+        eSignatureFieldConfig,
     };
 }

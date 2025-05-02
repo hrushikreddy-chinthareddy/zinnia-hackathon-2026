@@ -36,7 +36,7 @@ import {
     ProcessRequestType,
     Program,
     AccountType,
-    FormDisbursement
+    FormDisbursement,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_BANK_DETAILS,
@@ -615,7 +615,7 @@ export default function useSbgcOftConfig(t: TFunction) {
                             bankFurtherCreditAccount,
                             bankFurtherCreditName,
                             reEnterAccountNumber,
-                            reEnterBankRoutingNumber
+                            reEnterBankRoutingNumber,
                         },
                     ],
                     payee: {
@@ -786,6 +786,14 @@ export default function useSbgcOftConfig(t: TFunction) {
         disbursementOption: FormDisbursementSelections.DTCC,
     };
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+        accordForm: true,
+    };
+
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -797,5 +805,6 @@ export default function useSbgcOftConfig(t: TFunction) {
         defaultValues,
         qualTypeOptions: getQualTypeOptions(t),
         showContractReplacement: true,
+        eSignatureFieldConfig,
     };
 }

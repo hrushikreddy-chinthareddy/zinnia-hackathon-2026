@@ -2,6 +2,8 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useEffect } from 'react';
 
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
@@ -40,7 +42,8 @@ export default function RslnWithdrawalForm() {
         identifySelectedFormProgramOption,
         irsSignatureConfig,
         meritalStatusAllowanceConfig,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
+        eSignatureFieldConfig,
     } = getRslnConfig(t);
     const {
         formParty,
@@ -53,7 +56,10 @@ export default function RslnWithdrawalForm() {
         initialForm,
         isFormStateReadOnly,
         formSubtype,
-        contractIssueState
+        contractIssueState,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -81,7 +87,7 @@ export default function RslnWithdrawalForm() {
         },
         [setOwnerAcknowledgement]
     );
-    const shouldStateW4pRender = isAllowedState(contractIssueState)
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -134,6 +140,12 @@ export default function RslnWithdrawalForm() {
 
             {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }

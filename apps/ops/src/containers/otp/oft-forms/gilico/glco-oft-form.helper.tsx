@@ -725,6 +725,14 @@ export default function getGlcoOftConfig(t: TFunction) {
         { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Default },
         { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
     ];
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+        accordForm: true,
+    };
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -736,5 +744,6 @@ export default function getGlcoOftConfig(t: TFunction) {
         defaultValues,
         qualificationOptions: getQualTypeOptions(t),
         fundWithdrawnMethodOptions,
+        eSignatureFieldConfig,
     };
 }

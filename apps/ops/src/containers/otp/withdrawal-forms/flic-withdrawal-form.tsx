@@ -3,6 +3,8 @@ import { useContext, useEffect } from 'react';
 
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramFullWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-full-withdrawal';
@@ -36,6 +38,7 @@ export default function FlicWithdrawalForm({ qualType }: { qualType: string }) {
         formPartyConfigs,
         selectOneOptions,
         fullWithdrawalOptions,
+        eSignatureFieldConfig,
     } = getFlicConfig(t, qualType);
 
     const {
@@ -49,6 +52,9 @@ export default function FlicWithdrawalForm({ qualType }: { qualType: string }) {
         setOwnerStateOfResidence,
         contractIssueState,
         isFormStateReadOnly,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -111,6 +117,12 @@ export default function FlicWithdrawalForm({ qualType }: { qualType: string }) {
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
                 )}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }

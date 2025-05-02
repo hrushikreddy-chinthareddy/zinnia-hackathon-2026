@@ -328,6 +328,13 @@ export default function getGlcoRmdConfig(t: TFunction) {
         ],
     };
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -337,6 +344,7 @@ export default function getGlcoRmdConfig(t: TFunction) {
         w4pSignaturesConfig,
         disbursementOptions,
         isBeneSpouseOption,
-        beneficiaryConfig
+        beneficiaryConfig,
+        eSignatureFieldConfig,
     };
 }

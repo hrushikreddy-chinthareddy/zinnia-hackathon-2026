@@ -3,6 +3,8 @@ import { useContext, useEffect } from 'react';
 
 import AmountDetails, { determineProgramType } from '@deps/components/otp-withdrawal-form/amount-details';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FinancialProfessionalSignature from '@deps/components/otp-withdrawal-form/financial-professional-signature';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
@@ -32,6 +34,9 @@ export default function SbgcWithdrawalForm() {
         isFormStateReadOnly,
         contractIssueState,
         formProgram,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     const withdrawalType = determineProgramType(formProgram);
@@ -48,6 +53,7 @@ export default function SbgcWithdrawalForm() {
         reasonOptions,
         w4pSignaturesConfig,
         programTypes,
+        eSignatureFieldConfig,
     } = getSbgcConfig(t);
 
     useEffect(() => {
@@ -93,6 +99,12 @@ export default function SbgcWithdrawalForm() {
             {ownerIsVirginiaResident && <FinancialProfessionalSignature isFormStateReadOnly={isFormStateReadOnly} />}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }

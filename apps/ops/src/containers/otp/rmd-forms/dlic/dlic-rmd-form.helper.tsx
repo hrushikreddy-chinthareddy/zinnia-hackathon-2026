@@ -440,6 +440,13 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
     ];
     const cslnCheckStates = ['CA', 'CO', 'TX'];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -450,5 +457,6 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
         additionalWithholdingAmountConfig,
         signaturesNotaryConfig,
         cslnCheckStates,
+        eSignatureFieldConfig,
     };
 }

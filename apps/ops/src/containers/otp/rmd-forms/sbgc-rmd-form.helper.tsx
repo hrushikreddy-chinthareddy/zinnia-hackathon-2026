@@ -484,6 +484,14 @@ export default function getSbgcRmdConfig(t: TFunction) {
             key: 'w4p-signature-sign-date',
         },
     ];
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -492,5 +500,6 @@ export default function getSbgcRmdConfig(t: TFunction) {
         jointLifeExpectancyConfigs,
         fundWithdrawnMethodOptions,
         w4pSignaturesConfig,
+        eSignatureFieldConfig,
     };
 }

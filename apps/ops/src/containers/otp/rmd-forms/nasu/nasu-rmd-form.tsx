@@ -3,6 +3,8 @@ import { useContext, useEffect } from 'react';
 
 import BeneficiaryInfo from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
@@ -30,7 +32,8 @@ export default function NasuRmdWithdrawalForm() {
         disbursementOptions,
         isBeneSpouseOption,
         handleShouldShowDOBInOl4573,
-        beneficiaryConfig
+        beneficiaryConfig,
+        eSignatureFieldConfig,
     } = getNasuRmdConfig(t);
 
     const {
@@ -45,7 +48,10 @@ export default function NasuRmdWithdrawalForm() {
         isFormStateReadOnly,
         formBeneInfo,
         setFormBeneInfo,
-        parties
+        parties,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -71,9 +77,8 @@ export default function NasuRmdWithdrawalForm() {
         }
     }, [formParty]);
 
-
     const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties);
-    const shouldStateW4pRender = isAllowedState(contractIssueState)
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -88,10 +93,7 @@ export default function NasuRmdWithdrawalForm() {
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <TaxOL4753Attachment
-                isFormStateReadOnly={isFormStateReadOnly}
-                shouldShowDOBInOl4573={shouldShowDOBInOl4573}
-            />
+            <TaxOL4753Attachment isFormStateReadOnly={isFormStateReadOnly} shouldShowDOBInOl4573={shouldShowDOBInOl4573} />
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             {(ownerStateOfResidence || contractIssueState) &&
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
@@ -102,6 +104,12 @@ export default function NasuRmdWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 headerTranslationKey={'notaryHeader'}
                 config={signaturesNotaryConfig}
+            />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );

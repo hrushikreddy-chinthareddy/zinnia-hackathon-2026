@@ -2,6 +2,8 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
@@ -37,7 +39,8 @@ export default function GdmnWithdrawalForm() {
         selectOneOptions,
         fullWithdrawalOptions,
         reasonOptions,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
+        eSignatureFieldConfig,
     } = getGdmnConfig(t);
 
     const {
@@ -51,13 +54,15 @@ export default function GdmnWithdrawalForm() {
         setOwnerStateOfResidence,
         isFormStateReadOnly,
         formTpaAuthorization,
-        contractIssueState
+        contractIssueState,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
     }, []);
-
 
     useEffect(() => {
         setFormData({
@@ -79,7 +84,7 @@ export default function GdmnWithdrawalForm() {
     }, [formParty]);
 
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
-    const shouldStateW4pRender = isAllowedState(contractIssueState)
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -114,6 +119,12 @@ export default function GdmnWithdrawalForm() {
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }

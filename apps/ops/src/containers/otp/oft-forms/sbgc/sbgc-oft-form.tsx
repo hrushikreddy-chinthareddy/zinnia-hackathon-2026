@@ -2,6 +2,8 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import CedingCompanyDistribution from '@deps/components/otp-withdrawal-form/ceding-company-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FinancialProfessionalSignature from '@deps/components/otp-withdrawal-form/financial-professional-signature';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
@@ -36,6 +38,7 @@ export default function SbgcOftWithdrawalForm({ planCode }: SbgcOftWithdrawalFor
         defaultValues,
         qualTypeOptions,
         showContractReplacement,
+        eSignatureFieldConfig,
     } = useSbgcOftConfig(t);
 
     const {
@@ -47,6 +50,9 @@ export default function SbgcOftWithdrawalForm({ planCode }: SbgcOftWithdrawalFor
         formTpaAuthorization,
         isFormStateReadOnly,
         setOwnerStateOfResidence,
+        formErrors,
+        formESignatureData,
+        setFormESignatureData,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -106,6 +112,12 @@ export default function SbgcOftWithdrawalForm({ planCode }: SbgcOftWithdrawalFor
                 isFormStateReadOnly={isFormStateReadOnly}
                 title={t('distributionMethod.cedingCompanyDistribution') as string}
                 defaultValue={defaultValues.disbursementOption}
+            />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );

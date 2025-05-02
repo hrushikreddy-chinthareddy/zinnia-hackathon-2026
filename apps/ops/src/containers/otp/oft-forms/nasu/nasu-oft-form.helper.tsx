@@ -46,7 +46,7 @@ import {
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementParts,
     PaymentMethodOption,
-    FormDisbursementSelections
+    FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
@@ -206,7 +206,7 @@ export default function getNasuOftConfig(t: TFunction) {
                     addressType: AddressTypes.DEFAULT,
                     title: t('addressDetails.residentialAddressTitle'),
                 },
-            ]
+            ],
         },
         {
             partyRoleType: PartyRoles.JOINT_OWNER,
@@ -330,18 +330,19 @@ export default function getNasuOftConfig(t: TFunction) {
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-      {
-          label: t('amountDetails.processTimeframe.immediately'),
-          value: ProcessRequestType.Immediately
-      },
-      {
-          label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
-          value: ProcessRequestType.NoLongerSubject,
-      },
-      {
-        label: t('amountDetails.processTimeframe.asOfThisDate'),
-        value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent />
-      },
+        {
+            label: t('amountDetails.processTimeframe.immediately'),
+            value: ProcessRequestType.Immediately,
+        },
+        {
+            label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
+            value: ProcessRequestType.NoLongerSubject,
+        },
+        {
+            label: t('amountDetails.processTimeframe.asOfThisDate'),
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
+        },
     ];
 
     const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
@@ -663,7 +664,7 @@ export default function getNasuOftConfig(t: TFunction) {
                             bankFurtherCreditAccount,
                             bankFurtherCreditName,
                             reEnterAccountNumber,
-                            reEnterBankRoutingNumber
+                            reEnterBankRoutingNumber,
                         },
                     ],
                     payee: {
@@ -819,11 +820,19 @@ export default function getNasuOftConfig(t: TFunction) {
                     },
                 };
             },
-        }
+        },
     ];
 
     const defaultValues = {
         disbursementOption: FormDisbursementSelections.EFT,
+    };
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+        accordForm: true,
     };
 
     return {
@@ -837,5 +846,6 @@ export default function getNasuOftConfig(t: TFunction) {
         identifySelectedFormProgramOption,
         defaultValues,
         qualificationOptions: getQualTypeOptions(t),
+        eSignatureFieldConfig,
     };
 }

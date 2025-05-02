@@ -37,7 +37,7 @@ import {
     Program,
     FundWithdrawnMethod,
     AccountType,
-    FormDisbursement
+    FormDisbursement,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_BANK_DETAILS,
@@ -554,7 +554,7 @@ export default function getOftDlicConfig(t: TFunction) {
                 {
                     fieldName: BankingFields.BankName,
                     fieldLabel: t('distributionMethod.bankName'),
-                    component: DisbursementFields.BankTextField
+                    component: DisbursementFields.BankTextField,
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditName,
@@ -816,6 +816,14 @@ export default function getOftDlicConfig(t: TFunction) {
         disbursementOption: FormDisbursementSelections.DTCC,
     };
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+        accordForm: true,
+    };
+
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -828,5 +836,6 @@ export default function getOftDlicConfig(t: TFunction) {
         defaultValues,
         qualificationOptions: getQualTypeOptions(t),
         showContractReplacement: true,
+        eSignatureFieldConfig,
     };
 }

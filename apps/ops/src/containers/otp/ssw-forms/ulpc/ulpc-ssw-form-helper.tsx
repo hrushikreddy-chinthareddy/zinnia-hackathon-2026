@@ -48,11 +48,7 @@ import { spousalSignatureStateCodes } from '../../withdrawal-forms/gdmn/gdmn-wit
 export default function getUlpcConfig(t: TFunction) {
     const { formValidation } = sbgcConfig(t);
 
-    const sswFormValidation = ({
-        formParty,
-        formSignature,
-        formDisbursement,
-    }: Partial<FormParts> = {}): FormValidationErrors => {
+    const sswFormValidation = ({ formParty, formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
         if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
             if (
@@ -528,7 +524,14 @@ export default function getUlpcConfig(t: TFunction) {
         },
     ];
 
-    const jointCoveredPlanCodes = [ '775' ];
+    const jointCoveredPlanCodes = ['775'];
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
 
     return {
         disbursementOptions,
@@ -538,6 +541,7 @@ export default function getUlpcConfig(t: TFunction) {
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
         w4pSignaturesConfig,
-        jointCoveredPlanCodes
+        jointCoveredPlanCodes,
+        eSignatureFieldConfig,
     };
 }

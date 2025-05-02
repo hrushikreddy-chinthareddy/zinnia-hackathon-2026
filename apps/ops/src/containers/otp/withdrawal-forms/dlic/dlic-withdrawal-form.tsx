@@ -3,6 +3,8 @@ import { useContext, useEffect } from 'react';
 
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
@@ -31,9 +33,20 @@ export default function DlicWithdrawalForm() {
         fundWithdrawnMethodOptions,
         selectOneOptions,
         cslnCheckStates,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
+        eSignatureFieldConfig,
     } = useDlicConfig(t);
-    const { formParty, setFormValidator, setFormData, initialForm, contractIssueState, isFormStateReadOnly } = useContext(FormDataContext);
+    const {
+        formParty,
+        setFormValidator,
+        setFormData,
+        initialForm,
+        contractIssueState,
+        isFormStateReadOnly,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
+    } = useContext(FormDataContext);
 
     useEffect(() => {
         setFormData(fs => ({
@@ -52,7 +65,7 @@ export default function DlicWithdrawalForm() {
     }, [setFormValidator]);
 
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
-    const shouldStateW4pRender = isAllowedState(contractIssueState)
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -78,12 +91,20 @@ export default function DlicWithdrawalForm() {
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
+                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
+                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
+                )}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 headerTranslationKey={'notaryHeader'}
                 config={signaturesNotaryConfig}
+            />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );

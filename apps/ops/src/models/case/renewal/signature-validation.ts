@@ -37,7 +37,12 @@ export enum SignatureValidationTypeWithdrawal {
     OwnerNotaryStamp = 'Owner Notary Stamp',
     JointOwnerNotaryStamp = 'Joint Owner Notary Stamp',
     SpouseNotaryStamp = 'Spouse Notary Stamp',
-    Witness='Witness'
+    Witness = 'Witness',
+}
+
+export enum ESignatureValidationTypeWithdrawal {
+    Owner = 'Owner',
+    JointOwner = 'Joint Owner',
 }
 
 export enum SignatureDesignation {

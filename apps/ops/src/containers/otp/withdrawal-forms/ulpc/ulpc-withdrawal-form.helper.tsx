@@ -708,8 +708,14 @@ export default function getUlpcConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-
     ];
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
 
     return {
         cslnCheckStates,
@@ -726,6 +732,7 @@ export default function getUlpcConfig(t: TFunction) {
         fullWithdrawalOptions,
         maritalStatusAllowanceConfig,
         validateMaritalStatusAllowances,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
+        eSignatureFieldConfig,
     };
 }

@@ -484,6 +484,13 @@ export default function getRslnRmdConfig(t: TFunction) {
         },
     ];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         formPartyConfigs,
         jointLifeExpectancyConfigs,
@@ -493,5 +500,6 @@ export default function getRslnRmdConfig(t: TFunction) {
         disbursementOptions,
         signaturesConfig,
         formValidation: rmdFormValidation,
+        eSignatureFieldConfig,
     };
 }

@@ -8,20 +8,20 @@ import {
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
-import {
-    SignatureFields
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { stringifyTrueFalseNull } from '@deps/helpers/string.helper';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
     PartyRoles,
-    AddressTypes, FormParts, PaymentMethod,
+    AddressTypes,
+    FormParts,
+    PaymentMethod,
     PaymentMailType,
     AccountType,
     FormDisbursement,
-    FundWithdrawnMethod
+    FundWithdrawnMethod,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -66,7 +66,7 @@ export default function getUlpcRmdConfig(t: TFunction) {
                     title: t('addressDetails.residentialAddressTitle'),
                 },
             ],
-        }
+        },
     ];
 
     // CMW-13796 remove further credit info
@@ -251,10 +251,16 @@ export default function getUlpcRmdConfig(t: TFunction) {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
         const rmds = formProgram?.rmd?.rmdPrograms;
         if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
                 errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
             }
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
                 errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
             }
         }
@@ -279,7 +285,6 @@ export default function getUlpcRmdConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-
     ];
 
     const isBeneSpouseOption = [
@@ -302,6 +307,12 @@ export default function getUlpcRmdConfig(t: TFunction) {
         ],
     };
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
     return {
         formPartyConfigs,
         signaturesConfig,
@@ -312,7 +323,7 @@ export default function getUlpcRmdConfig(t: TFunction) {
         w4pSignaturesConfig,
         disbursementOptions,
         isBeneSpouseOption,
-        beneficiaryConfig
+        beneficiaryConfig,
+        eSignatureFieldConfig,
     };
 }
-

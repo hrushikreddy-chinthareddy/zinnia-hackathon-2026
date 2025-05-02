@@ -177,7 +177,7 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                 isVoidCheckAttached,
                 doesCheckMeetSecurityRequirements,
                 reEnterAccountNumber,
-                reEnterBankRoutingNumber
+                reEnterBankRoutingNumber,
             }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -194,7 +194,7 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
                             nameOnBankAccount: accountHolder ?? '',
                             routingNumber: bankRoutingNumber,
                             reEnterAccountNumber,
-                            reEnterBankRoutingNumber
+                            reEnterBankRoutingNumber,
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
@@ -449,6 +449,13 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
         },
     ];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -457,6 +464,7 @@ export default function getPrdnRmdWithdrawalConfig(t: TFunction) {
         irsSignatureConfig,
         jointLifeExpectancyConfigs,
         signaturesConfig,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
+        eSignatureFieldConfig,
     };
 }

@@ -2,6 +2,7 @@ import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
+import { ESignature } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import {
     BankingFields,
     DisbursementFields,
@@ -19,7 +20,7 @@ import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/
 import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helper';
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
-import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+import { ESignatureValidationTypeWithdrawal, SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormParts,
     FormValidationErrors,
@@ -49,11 +50,15 @@ import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdraw
 
 export default function useFlicSSWConfig(t: TFunction) {
     const formValidation = useCallback(
-        ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+        ({ formSignature, formDisbursement, formESignatureData }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
 
             const ownerSignature = formSignature?.signatures?.find(
                 sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+            );
+
+            const ownerEsignature = formESignatureData?.eSignatures?.find(
+                (sigInfo: ESignature) => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
             );
 
             if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
@@ -83,6 +88,12 @@ export default function useFlicSSWConfig(t: TFunction) {
                 [PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
             ) {
                 errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
+            }
+
+            if (ownerEsignature?.isSigned === null) {
+                errors[`${ESignatureValidationTypeWithdrawal.Owner}-signPresent`] = t(
+                    'formValidation.signaturePresentOptionMustBeSelected'
+                );
             }
             return errors;
         },
@@ -581,6 +592,13 @@ export default function useFlicSSWConfig(t: TFunction) {
 
     const cslnCheckStates = ['AZ', 'CA', 'CO', 'LA', 'MT', 'NV', 'ND', 'NM', 'OH', 'RI', 'TX', 'WA'];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         formValidation: sswFormValidation,
         formPartyConfigs,
@@ -591,5 +609,6 @@ export default function useFlicSSWConfig(t: TFunction) {
         disbursementOptions,
         signaturesConfig,
         cslnCheckStates,
+        eSignatureFieldConfig,
     };
 }

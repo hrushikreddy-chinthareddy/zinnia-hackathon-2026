@@ -488,6 +488,13 @@ export default function getUsaaConfig(t: TFunction) {
         },
     ];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         formValidation,
         formPartyConfigs,
@@ -497,5 +504,6 @@ export default function getUsaaConfig(t: TFunction) {
         w4pSignaturesConfig,
         disbursementOptions,
         signaturesConfig,
+        eSignatureFieldConfig,
     };
 }

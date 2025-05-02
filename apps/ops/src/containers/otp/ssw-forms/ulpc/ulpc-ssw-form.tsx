@@ -3,6 +3,8 @@ import { useContext, useEffect } from 'react';
 
 import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
@@ -33,10 +35,10 @@ export function UlpcSSWForm({ planCode }: UlpcSSWFormProps) {
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
         w4pSignaturesConfig,
-        jointCoveredPlanCodes
+        jointCoveredPlanCodes,
+        eSignatureFieldConfig,
     } = getUlpcConfig(t);
     const {
-        formParty,
         formTpaAuthorization,
         setFormValidator,
         formData,
@@ -44,6 +46,9 @@ export function UlpcSSWForm({ planCode }: UlpcSSWFormProps) {
         initialForm,
         isFormStateReadOnly,
         contractIssueState,
+        formErrors,
+        formESignatureData,
+        setFormESignatureData,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -85,6 +90,12 @@ export function UlpcSSWForm({ planCode }: UlpcSSWFormProps) {
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }

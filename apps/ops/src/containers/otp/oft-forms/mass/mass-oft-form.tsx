@@ -3,6 +3,8 @@ import { useContext, useEffect } from 'react';
 
 import CedingCompanyDistribution from '@deps/components/otp-withdrawal-form/ceding-company-distribution';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
@@ -26,7 +28,8 @@ export default function MassOftWithdrawalForm() {
         selectOneOptions,
         fundWithdrawnMethodOptions,
         defaultValues,
-        qualificationOptions
+        qualificationOptions,
+        eSignatureFieldConfig,
     } = getMassOftConfig(t);
 
     const {
@@ -39,6 +42,9 @@ export default function MassOftWithdrawalForm() {
         ownerStateOfResidence,
         setOwnerStateOfResidence,
         isFormStateReadOnly,
+        formErrors,
+        formESignatureData,
+        setFormESignatureData,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -93,6 +99,12 @@ export default function MassOftWithdrawalForm() {
                 options={disbursementOptions}
                 title={t('distributionMethod.cedingCompanyDistribution') as string}
                 defaultValue={defaultValues.disbursementOption}
+            />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );

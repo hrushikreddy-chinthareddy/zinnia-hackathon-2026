@@ -691,8 +691,15 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-
     ];
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         cslnCheckStates,
         disbursementOptions,
@@ -709,5 +716,6 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
         w4pSignaturesConfig,
         validateMaritalStatusAllowances,
         meritalStatusAllowanceConfig,
+        eSignatureFieldConfig,
     };
 }

@@ -424,7 +424,7 @@ export default function getMassOftConfig(t: TFunction) {
                     fieldName: BankingFields.BankName,
                     fieldLabel: t('distributionMethod.bankName'),
                     component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1'
+                    classNames: 'col-start-1',
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditName,
@@ -512,7 +512,7 @@ export default function getMassOftConfig(t: TFunction) {
                             bankFurtherCreditAccount,
                             bankFurtherCreditName,
                             reEnterAccountNumber,
-                            reEnterBankRoutingNumber
+                            reEnterBankRoutingNumber,
                         },
                     ],
                     payee: {
@@ -716,6 +716,14 @@ export default function getMassOftConfig(t: TFunction) {
         disbursementOption: FormDisbursementSelections.Check,
     };
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+        accordForm: true,
+    };
+
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -727,5 +735,6 @@ export default function getMassOftConfig(t: TFunction) {
         fundWithdrawnMethodOptions,
         defaultValues,
         qualificationOptions: getQualTypeOptions(t),
+        eSignatureFieldConfig,
     };
 }

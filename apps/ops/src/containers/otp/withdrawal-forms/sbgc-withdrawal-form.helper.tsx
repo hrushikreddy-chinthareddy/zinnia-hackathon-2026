@@ -716,6 +716,13 @@ export default function getSbgcConfig(t: TFunction) {
         },
     ];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         formPartyConfigs,
         formValidation,
@@ -728,5 +735,6 @@ export default function getSbgcConfig(t: TFunction) {
         reasonOptions,
         disbursementOptions,
         programTypes,
+        eSignatureFieldConfig,
     };
 }

@@ -568,6 +568,13 @@ export default function useSbgcConfig(t: TFunction) {
         },
     ];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -578,5 +585,6 @@ export default function useSbgcConfig(t: TFunction) {
         reasonOptions,
         systematicWithdrawalOptions,
         w4pSignaturesConfig,
+        eSignatureFieldConfig,
     };
 }

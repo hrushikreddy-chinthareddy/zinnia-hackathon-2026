@@ -3,6 +3,8 @@ import { useContext, useEffect } from 'react';
 
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
@@ -31,6 +33,7 @@ export default function FlicRmdWithdrawalForm() {
         fundWithdrawnMethodOptions,
         disbursementOptions,
         jointLifeExpectancyConfigs,
+        eSignatureFieldConfig,
     } = getFlicRmdConfig(t);
 
     const {
@@ -43,6 +46,9 @@ export default function FlicRmdWithdrawalForm() {
         setOwnerStateOfResidence,
         contractIssueState,
         isFormStateReadOnly,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -67,7 +73,7 @@ export default function FlicRmdWithdrawalForm() {
             setOwnerStateOfResidence(newOwnerStateOfResidence);
         }
     }, [formParty]);
-    const shouldStateW4pRender = isAllowedState(contractIssueState)
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -88,6 +94,12 @@ export default function FlicRmdWithdrawalForm() {
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
                 )}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }

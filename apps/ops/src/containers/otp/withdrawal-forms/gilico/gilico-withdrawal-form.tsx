@@ -3,6 +3,8 @@ import { useContext, useEffect } from 'react';
 
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramFullWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-full-withdrawal';
@@ -35,6 +37,9 @@ export default function GilicoWithdrawalForm() {
         setOwnerStateOfResidence,
         contractIssueState,
         isFormStateReadOnly,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     const {
@@ -52,7 +57,8 @@ export default function GilicoWithdrawalForm() {
         fullWithdrawalOptions,
         validateMaritalStatusAllowances,
         meritalStatusAllowanceConfig,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
+        eSignatureFieldConfig,
     } = getGilicoConfig(t, formSubtype as FormSubtype);
 
     useEffect(() => {
@@ -79,7 +85,7 @@ export default function GilicoWithdrawalForm() {
     }, [formParty]);
 
     const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
-    const shouldStateW4pRender = isAllowedState(contractIssueState)
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -120,6 +126,12 @@ export default function GilicoWithdrawalForm() {
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
                 )}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }

@@ -548,6 +548,13 @@ export default function getDlicConfig(t: TFunction) {
     ];
     const cslnCheckStates = ['CA', 'CO', 'TX'];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         formValidation: sswFormValidation,
         formPartyConfigs,
@@ -560,5 +567,6 @@ export default function getDlicConfig(t: TFunction) {
         additionalWithholdingAmountConfig,
         irsSignatureConfig,
         cslnCheckStates,
+        eSignatureFieldConfig,
     };
 }

@@ -2,6 +2,8 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import CedingCompanyDistribution from '@deps/components/otp-withdrawal-form/ceding-company-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
@@ -33,7 +35,8 @@ export default function GdmnOftWithdrawalForm({ qualType }: GdmnOftWithdrawalFor
         selectOneOptions,
         reasonOptions,
         qualificationOptions,
-        defaultValues
+        defaultValues,
+        eSignatureFieldConfig,
     } = useGdmnOftConfig(t);
 
     const {
@@ -44,7 +47,10 @@ export default function GdmnOftWithdrawalForm({ qualType }: GdmnOftWithdrawalFor
         ownerStateOfResidence,
         isFormStateReadOnly,
         setOwnerStateOfResidence,
-        formProgram
+        formProgram,
+        formErrors,
+        formESignatureData,
+        setFormESignatureData,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -77,7 +83,7 @@ export default function GdmnOftWithdrawalForm({ qualType }: GdmnOftWithdrawalFor
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            { is403b && <DistributionReason reasonOptions={reasonOptions} isFormStateReadOnly={isFormStateReadOnly} /> }
+            {is403b && <DistributionReason reasonOptions={reasonOptions} isFormStateReadOnly={isFormStateReadOnly} />}
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={surrenderingInstructionsOptions}
@@ -85,19 +91,24 @@ export default function GdmnOftWithdrawalForm({ qualType }: GdmnOftWithdrawalFor
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
-            {selectedOption === ProgramType.FullSurrender && <LoanAcknowledgement isFormStateReadOnly={isFormStateReadOnly} isLoanRepayment={true}/> }
+            {selectedOption === ProgramType.FullSurrender && (
+                <LoanAcknowledgement isFormStateReadOnly={isFormStateReadOnly} isLoanRepayment={true} />
+            )}
             {is403b && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
 
-            <CedingCompanyDistribution
-                qualificationOptions={qualificationOptions}
-                isFormStateReadOnly={isFormStateReadOnly}
-            />
+            <CedingCompanyDistribution qualificationOptions={qualificationOptions} isFormStateReadOnly={isFormStateReadOnly} />
             <FormDisbursement
                 options={disbursementOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
                 title={t('distributionMethod.cedingCompanyDistribution') as string}
                 defaultValue={defaultValues.disbursementOption}
+            />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );

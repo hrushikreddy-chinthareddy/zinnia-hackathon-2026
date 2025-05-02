@@ -1,6 +1,7 @@
 import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
+import { ESignature } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { defaultDisbursmentConsent } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement-parts/consent-available';
 import {
     BankingFields,
@@ -17,7 +18,7 @@ import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
-import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+import { ESignatureValidationTypeWithdrawal, SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormParts,
     FormValidationErrors,
@@ -48,14 +49,17 @@ import { createValidator } from '../../utils/helper-utils';
 
 export default function useNassauConfig(t: TFunction) {
     const formValidation = useCallback(
-        ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+        ({ formSignature, formDisbursement, formESignatureData }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
 
             const ownerSignature = formSignature?.signatures?.find(
                 sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
             );
 
-            // No choice made for signature
+            const ownerEsignature = formESignatureData?.eSignatures?.find(
+                (sigInfo: ESignature) => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+            );
+
             if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
                 errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
                     'formValidation.signaturePresentOptionMustBeSelected'
@@ -86,6 +90,12 @@ export default function useNassauConfig(t: TFunction) {
                 formDisbursement?.bank[0].isDirectDeposit?.text
             ) {
                 errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
+            }
+
+            if (ownerEsignature?.isSigned === null) {
+                errors[`${ESignatureValidationTypeWithdrawal.Owner}-signPresent`] = t(
+                    'formValidation.signaturePresentOptionMustBeSelected'
+                );
             }
             return errors;
         },
@@ -340,29 +350,29 @@ export default function useNassauConfig(t: TFunction) {
             }: DisbursementParts) => {
                 const bank = isDirectDeposit
                     ? [
-                        {
-                            ...DEFAULT_BANK_DETAILS,
-                            maskedAccountNumber: null,
-                            accountNumber,
-                            accountType: {
-                                text: accountType,
-                            },
-                            bankName,
-                            nameOnBankAccount: accountHolder ?? '',
-                            routingNumber: bankRoutingNumber,
-                            bankFurtherCreditAccount,
-                            bankFurtherCreditName,
-                            isDirectDeposit: { text: true },
-                            isDirectDepositValid: { text: isDirectDepositValid ?? null },
-                        },
-                    ]
+                          {
+                              ...DEFAULT_BANK_DETAILS,
+                              maskedAccountNumber: null,
+                              accountNumber,
+                              accountType: {
+                                  text: accountType,
+                              },
+                              bankName,
+                              nameOnBankAccount: accountHolder ?? '',
+                              routingNumber: bankRoutingNumber,
+                              bankFurtherCreditAccount,
+                              bankFurtherCreditName,
+                              isDirectDeposit: { text: true },
+                              isDirectDepositValid: { text: isDirectDepositValid ?? null },
+                          },
+                      ]
                     : [
-                        {
-                            ...DEFAULT_BANK_DETAILS,
-                            isDirectDeposit: { text: false },
-                            maskedAccountNumber: maskedAccountNumber ?? null,
-                        },
-                    ];
+                          {
+                              ...DEFAULT_BANK_DETAILS,
+                              isDirectDeposit: { text: false },
+                              maskedAccountNumber: maskedAccountNumber ?? null,
+                          },
+                      ];
 
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -473,6 +483,7 @@ export default function useNassauConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.Notary,
         },
     ];
+
     const w4pSignaturesConfig = [
         {
             component: SignatureFields.SignatureType,
@@ -486,8 +497,15 @@ export default function useNassauConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-
     ];
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -499,6 +517,7 @@ export default function useNassauConfig(t: TFunction) {
         signaturesNotaryConfig,
         defaultValues,
         handleShouldShowDOBInOl4573,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
+        eSignatureFieldConfig,
     };
 }

@@ -430,6 +430,13 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
         },
     ];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -437,5 +444,6 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
         fundWithdrawnMethodOptions,
         irsSignatureConfig,
         signaturesConfig,
+        eSignatureFieldConfig,
     };
 }

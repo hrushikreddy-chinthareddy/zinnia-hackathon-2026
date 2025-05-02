@@ -41,7 +41,8 @@ export default function NasuWithdrawalForm() {
         reasonOptions,
         defaultValues,
         handleShouldShowDOBInOl4573,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
+        eSignatureFieldConfig,
     } = useNasuConfig(t);
     const {
         formParty,
@@ -53,6 +54,9 @@ export default function NasuWithdrawalForm() {
         contractIssueState,
         isFormStateReadOnly,
         parties,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -74,7 +78,7 @@ export default function NasuWithdrawalForm() {
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties);
-    const shouldStateW4pRender = isAllowedState(contractIssueState)
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -110,10 +114,7 @@ export default function NasuWithdrawalForm() {
 
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <TaxOL4753Attachment
-                isFormStateReadOnly={isFormStateReadOnly}
-                shouldShowDOBInOl4573={shouldShowDOBInOl4573}
-            />
+            <TaxOL4753Attachment isFormStateReadOnly={isFormStateReadOnly} shouldShowDOBInOl4573={shouldShowDOBInOl4573} />
             {(ownerStateOfResidence || contractIssueState) &&
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />

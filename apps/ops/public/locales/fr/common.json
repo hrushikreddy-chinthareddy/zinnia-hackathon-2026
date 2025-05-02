@@ -2236,6 +2236,18 @@
                     "marriedWithERISA": "Je suis marié et mon régime est soumis à l'ERISA (la signature du conjoint et le cachet/sceau du notaire sont également requis dans cette section)"
                 }
             },
+            "eSignatureValidation": {
+                "title": "Signature électronique",
+                "selectOption": "Sélectionner",
+                "na": "N/A",
+                "yes": "Oui",
+                "no": "Non",
+                "type": "Type",
+                "date": "Date de signature",
+                "signPresent": "Signature présente",
+                "auditTrial": "Piste d'audit",
+                "accordForm": "Formulaire Accord"
+            },
             "employerTpaAuthorization": {
                 "header": "Employeur/TPA Autorisation",
                 "yes": "Oui",

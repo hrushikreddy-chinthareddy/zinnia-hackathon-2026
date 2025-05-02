@@ -739,6 +739,14 @@ export default function getFlicOftConfig(t: TFunction, qualType: string) {
         disbursementOption: FormDisbursementSelections.DTCC,
     };
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+        accordForm: true,
+    };
+
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -749,5 +757,6 @@ export default function getFlicOftConfig(t: TFunction, qualType: string) {
         selectOneOptions,
         defaultValues,
         qualificationOptions: getQualTypeOptions(t),
+        eSignatureFieldConfig,
     };
 }

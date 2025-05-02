@@ -2,6 +2,8 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FinancialProfessionalSignature from '@deps/components/otp-withdrawal-form/financial-professional-signature';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
@@ -28,11 +30,23 @@ export default function SbgcRmdWithdrawalForm() {
         disbursementOptions,
         jointLifeExpectancyConfigs,
         fundWithdrawnMethodOptions,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
+        eSignatureFieldConfig,
     } = getSbgcRmdConfig(t);
 
-    const { formParty, setFormData, formData, initialForm, setFormValidator, formTpaAuthorization, isFormStateReadOnly, contractIssueState } =
-        useContext(FormDataContext);
+    const {
+        formParty,
+        setFormData,
+        formData,
+        initialForm,
+        setFormValidator,
+        formTpaAuthorization,
+        isFormStateReadOnly,
+        contractIssueState,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
+    } = useContext(FormDataContext);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -53,7 +67,7 @@ export default function SbgcRmdWithdrawalForm() {
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const ownerIsVirginiaResident = ownerStateOfResidence === USStates.VIRGINIA;
-    const shouldStateW4pRender = isAllowedState(contractIssueState)
+    const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -71,6 +85,12 @@ export default function SbgcRmdWithdrawalForm() {
             {ownerIsVirginiaResident && <FinancialProfessionalSignature isFormStateReadOnly={isFormStateReadOnly} />}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }

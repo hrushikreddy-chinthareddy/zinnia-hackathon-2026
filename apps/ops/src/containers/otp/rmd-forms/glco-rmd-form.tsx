@@ -3,6 +3,8 @@ import { useContext, useEffect } from 'react';
 
 import BeneficiaryInfo from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
@@ -29,7 +31,8 @@ export default function GlcoRmdWithdrawalForm() {
         w4pSignaturesConfig,
         disbursementOptions,
         isBeneSpouseOption,
-        beneficiaryConfig
+        beneficiaryConfig,
+        eSignatureFieldConfig,
     } = getGlcoRmdConfig(t);
 
     const {
@@ -44,6 +47,9 @@ export default function GlcoRmdWithdrawalForm() {
         setOwnerStateOfResidence,
         contractIssueState,
         isFormStateReadOnly,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -91,6 +97,12 @@ export default function GlcoRmdWithdrawalForm() {
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
                 )}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }

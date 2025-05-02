@@ -704,6 +704,13 @@ export default function getFlicConfig(t: TFunction, qualType = '') {
         },
     ];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         cslnCheckStates,
         disbursementOptions,
@@ -718,5 +725,6 @@ export default function getFlicConfig(t: TFunction, qualType = '') {
         w4pSignaturesConfig,
         selectOneOptions,
         fullWithdrawalOptions,
+        eSignatureFieldConfig,
     };
 }

@@ -550,6 +550,13 @@ export default function getRslnConfig(t: TFunction) {
         },
     ];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         reasonOptions,
         formValidation: sswFormValidation,
@@ -559,5 +566,6 @@ export default function getRslnConfig(t: TFunction) {
         signaturesConfig,
         fundWithdrawnMethodOptions,
         w4pSignaturesConfig,
+        eSignatureFieldConfig,
     };
 }

@@ -2,6 +2,8 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
@@ -17,10 +19,27 @@ import getUsaaWithdrawalConfig from './usaa-rmd-from.helper';
 
 const UsaaRmdWithdrawalForm = () => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
-    const { formValidation, formPartyConfigs, disbursementOptions, fundWithdrawnMethodOptions, irsSignatureConfig, signaturesConfig } =
-        getUsaaWithdrawalConfig(t);
-    const { formParty, setFormValidator, setFormData, formSubtype, initialForm, isFormStateReadOnly, formTpaAuthorization } =
-        useContext(FormDataContext);
+    const {
+        formValidation,
+        formPartyConfigs,
+        disbursementOptions,
+        fundWithdrawnMethodOptions,
+        irsSignatureConfig,
+        signaturesConfig,
+        eSignatureFieldConfig,
+    } = getUsaaWithdrawalConfig(t);
+    const {
+        formParty,
+        setFormValidator,
+        setFormData,
+        formSubtype,
+        initialForm,
+        isFormStateReadOnly,
+        formTpaAuthorization,
+        formErrors,
+        formESignatureData,
+        setFormESignatureData,
+    } = useContext(FormDataContext);
 
     useEffect(() => {
         if (formSubtype) {
@@ -60,6 +79,12 @@ const UsaaRmdWithdrawalForm = () => {
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 };

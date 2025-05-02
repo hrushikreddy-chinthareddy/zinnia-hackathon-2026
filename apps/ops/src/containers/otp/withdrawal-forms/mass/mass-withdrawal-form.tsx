@@ -2,6 +2,8 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramFullWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-full-withdrawal';
@@ -43,7 +45,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         validateMaritalStatusAllowances,
         distributionReasonOptions,
         waiverItemsConfig,
-
+        eSignatureFieldConfig,
     } = useMassWithdrawalConfig(t);
     const {
         setFormValidator,
@@ -53,6 +55,9 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         contractIssueState,
         isFormStateReadOnly,
         formSignature,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -124,6 +129,12 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
                 isFormStateReadOnly={isFormStateReadOnly}
                 headerTranslationKey={'notaryHeader'}
                 config={signaturesNotaryConfig(isKeogh)}
+            />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );

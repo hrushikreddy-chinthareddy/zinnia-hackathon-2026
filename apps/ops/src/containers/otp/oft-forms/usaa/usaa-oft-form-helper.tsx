@@ -44,7 +44,7 @@ import {
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementParts,
     PaymentMethodOption,
-    FormDisbursementSelections
+    FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
@@ -56,98 +56,98 @@ export default function getUsaaOftConfig(t: TFunction) {
     const formValidation = (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values);
 
     const signaturesConfig: SignatureValidationConfig[] = [
-      {
-          key: `sig-val-owner`,
-          fields: [
-              {
-                  component: SignatureFields.SignatureType,
-                  key: 'owner-type',
-              },
-              {
-                  component: SignatureFields.SignaturePresent,
-                  key: 'owner-sign-present',
-              },
-              {
-                  component: SignatureFields.SignatureTitle,
-                  key: 'owner-title',
-              },
-              {
-                  component: SignatureFields.SignatureDate,
-                  key: 'owner-date',
-              },
-          ],
-          signatureType: SignatureValidationTypeWithdrawal.Owner,
-      },
-      {
-          key: `sig-val-joint`,
-          fields: [
-              {
-                  component: SignatureFields.SignatureType,
-                  key: 'joint-type',
-              },
-              {
-                  component: SignatureFields.SignaturePresent,
-                  key: 'joint-sign-present',
-              },
-              {
-                  component: SignatureFields.SignatureTitle,
-                  key: 'joint-title',
-              },
-              {
-                  component: SignatureFields.SignatureDate,
-                  key: 'joint-date',
-              },
-          ],
-          signatureType: SignatureValidationTypeWithdrawal.JointOwner,
-          shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-              return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
-          },
-      },
+        {
+            key: `sig-val-owner`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'owner-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'owner-sign-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'owner-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'owner-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.Owner,
+        },
+        {
+            key: `sig-val-joint`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'joint-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'joint-sign-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'joint-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'joint-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.JointOwner,
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
+                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+            },
+        },
 
-      {
-          key: `sig-val-beneficiary`,
-          fields: [
-              {
-                  component: SignatureFields.SignatureType,
-                  key: 'beneficiary-type',
-              },
-              {
-                  component: SignatureFields.SignaturePresent,
-                  key: 'beneficiary-present',
-              },
-              {
-                  component: SignatureFields.SignatureTitle,
-                  key: 'beneficiary-title',
-              },
-              {
-                  component: SignatureFields.SignatureDate,
-                  key: 'beneficiary-date',
-              },
-          ],
-          signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-      },
-      {
-          key: `sig-val-spouse`,
-          bonusField: SignatureBonusFields.SpousalConsent,
-          fields: [
-              {
-                  component: SignatureFields.SignatureType,
-                  key: 'spouse-type',
-              },
-              {
-                  component: SignatureFields.SignaturePresent,
-                  key: 'spouse-present',
-              },
-              {
-                  component: SignatureFields.SignatureDate,
-                  key: 'spouse-date',
-              },
-          ],
-          shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-              return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
-          },
-          signatureType: SignatureValidationTypeWithdrawal.Spouse,
-      },
+        {
+            key: `sig-val-beneficiary`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'beneficiary-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'beneficiary-present',
+                },
+                {
+                    component: SignatureFields.SignatureTitle,
+                    key: 'beneficiary-title',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'beneficiary-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+        },
+        {
+            key: `sig-val-spouse`,
+            bonusField: SignatureBonusFields.SpousalConsent,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'spouse-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'spouse-present',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'spouse-date',
+                },
+            ],
+            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
+                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            },
+            signatureType: SignatureValidationTypeWithdrawal.Spouse,
+        },
     ];
 
     const oftFormValidation = ({ formParty, formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
@@ -165,7 +165,7 @@ export default function getUsaaOftConfig(t: TFunction) {
     };
 
     const formPartyConfigs: PartyConfig[] = [
-{
+        {
             partyRoleType: PartyRoles.OWNER,
             title: t('personalDetails.title'),
             fields: [
@@ -633,7 +633,7 @@ export default function getUsaaOftConfig(t: TFunction) {
                             bankFurtherCreditAccount,
                             bankFurtherCreditName,
                             reEnterAccountNumber,
-                            reEnterBankRoutingNumber
+                            reEnterBankRoutingNumber,
                         },
                     ],
                     payee: {
@@ -668,9 +668,9 @@ export default function getUsaaOftConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                     maxLength: 35,
                     tooltip: {
-                      shouldDisplay: true,
-                      title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                      body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                        shouldDisplay: true,
+                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
+                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
                     },
                 },
                 {
@@ -795,7 +795,7 @@ export default function getUsaaOftConfig(t: TFunction) {
     const selectOneOptions: SelectOneOption[] = [
         {
             label: t('amountDetails.processTimeframe.immediately'),
-            value: ProcessRequestType.Immediately
+            value: ProcessRequestType.Immediately,
         },
         {
             label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
@@ -803,23 +803,32 @@ export default function getUsaaOftConfig(t: TFunction) {
         },
         {
             label: t('amountDetails.processTimeframe.asOfThisDate'),
-            value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent />
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
         },
     ];
 
     const fundWithdrawnMethodOptions = [
         {
             label: t('distributionInstruction.prorata'),
-            value: FundWithdrawnMethod.Default
+            value: FundWithdrawnMethod.Default,
         },
         {
             label: t('distributionInstruction.specifyFunds'),
-            value: FundWithdrawnMethod.SpecifyFunds
+            value: FundWithdrawnMethod.SpecifyFunds,
         },
     ];
 
     const defaultValues = {
         disbursementOption: FormDisbursementSelections.DTCC,
+    };
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+        accordForm: true,
     };
 
     return {
@@ -833,5 +842,6 @@ export default function getUsaaOftConfig(t: TFunction) {
         identifySelectedFormProgramOption,
         defaultValues,
         qualificationOptions: getQualTypeOptions(t),
+        eSignatureFieldConfig,
     };
 }

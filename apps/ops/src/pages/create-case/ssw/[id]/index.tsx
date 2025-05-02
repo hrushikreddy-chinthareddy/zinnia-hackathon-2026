@@ -297,19 +297,19 @@ export const getServerSideProps = withPageAuthAndLogging(
             if (shouldShowNewExperience && action !== 'readonly') {
                 logInfo('create-case/ssw/:id:Checking NIGO', loggingContext);
                 const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken, loggingContext);
-                if (isNigoCase && !isUsedLastSaved) {
-                    logInfo('create-case/ssw/:id::Nigo exists for case', {
-                        ...loggingContext,
-                        caseId: document.caseId,
-                        lob: document?.lob,
-                    });
-                    return {
-                        redirect: {
-                            destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
-                            permanent: false,
-                        },
-                    };
-                }
+                // if (isNigoCase && !isUsedLastSaved) {
+                //     logInfo('create-case/ssw/:id::Nigo exists for case', {
+                //         ...loggingContext,
+                //         caseId: document.caseId,
+                //         lob: document?.lob,
+                //     });
+                //     return {
+                //         redirect: {
+                //             destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
+                //             permanent: false,
+                //         },
+                //     };
+                // }
             } else {
                 logInfo('create-case/ssw/:id:Skipping NIGO check', loggingContext);
             }

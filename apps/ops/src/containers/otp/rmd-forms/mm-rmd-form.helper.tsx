@@ -99,7 +99,6 @@ export default function useMassMutualRmdConfig(t: TFunction) {
                     maskOnBlur: true,
                     classNames: 'col-start-1',
                     disableCopyPaste: true,
-
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
@@ -377,15 +376,26 @@ export default function useMassMutualRmdConfig(t: TFunction) {
         },
     ];
 
-    const rmdformValidation = ({ formParty, formSignature, formDisbursement, formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
+    const rmdformValidation = ({
+        formParty,
+        formSignature,
+        formDisbursement,
+        formProgram,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({ formParty, formSignature, formDisbursement });
         const rmds = formProgram?.rmd?.rmdPrograms;
 
         if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
                 errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
             }
-            if (formDisbursement?.bank[0].bankName === '' && formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
                 errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
             }
         }
@@ -507,8 +517,14 @@ export default function useMassMutualRmdConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-
     ];
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
     return {
         getSignaturesConfig,
         formPartyConfigs,
@@ -520,5 +536,6 @@ export default function useMassMutualRmdConfig(t: TFunction) {
         jointLifeExpectancyConfigs,
         signVerificationReasonConfig,
         validateMaritalStatusAllowances,
+        eSignatureFieldConfig,
     };
 }

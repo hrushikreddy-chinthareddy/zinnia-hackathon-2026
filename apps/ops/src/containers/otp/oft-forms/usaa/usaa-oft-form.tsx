@@ -3,6 +3,8 @@ import { useContext, useEffect } from 'react';
 
 import CedingCompanyDistribution from '@deps/components/otp-withdrawal-form/ceding-company-distribution';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
@@ -26,7 +28,8 @@ export default function UsaaOftWithdrawalForm() {
         selectOneOptions,
         defaultValues,
         qualificationOptions,
-        fundWithdrawnMethodOptions
+        fundWithdrawnMethodOptions,
+        eSignatureFieldConfig,
     } = getUsaaOftConfig(t);
 
     const {
@@ -38,6 +41,9 @@ export default function UsaaOftWithdrawalForm() {
         ownerStateOfResidence,
         isFormStateReadOnly,
         setOwnerStateOfResidence,
+        formErrors,
+        formESignatureData,
+        setFormESignatureData,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -73,7 +79,7 @@ export default function UsaaOftWithdrawalForm() {
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
-             <FormDistribution
+            <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={t('distributionInstruction.investmentSelectionForDistribution') as string}
@@ -92,7 +98,13 @@ export default function UsaaOftWithdrawalForm() {
                 title={t('distributionMethod.cedingCompanyDistribution') as string}
                 defaultValue={defaultValues.disbursementOption}
             />
+
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }
-

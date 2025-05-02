@@ -603,6 +603,14 @@ export default function getUlpcOftConfig(t: TFunction) {
         disbursementOption: FormDisbursementSelections.Wire,
     };
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+        accordForm: true,
+    };
+
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -614,5 +622,6 @@ export default function getUlpcOftConfig(t: TFunction) {
         identifySelectedFormProgramOption,
         defaultValues,
         qualificationOptions: getQualTypeOptions(t),
+        eSignatureFieldConfig,
     };
 }

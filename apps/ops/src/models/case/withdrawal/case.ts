@@ -1,4 +1,5 @@
 import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { MaritalStatusAllowances } from '@deps/components/otp-withdrawal-form/maritial-status-allowance-withholdings';
 import { RelationshipToCoveredPerson } from '@deps/containers/otp/ssw-forms/sbgc/joint-covered-person.helper';
 import { WithdrawalTaskStatus } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -77,6 +78,7 @@ export interface FormParts {
     formTpaAuthorization: FormTpaAuthorization;
     formFullSurrenderAck: FormFullSurrenderAck;
     formSignature: FormSignature;
+    formESignatureData?: FormEsignatureData | null;
     formSurrenderingCompany: FormSurrenderingCompany | null;
     formTaxWithholding: FormTaxWithholding;
     formAdditionalWaivers: FormAdditionalWaiver[];

@@ -4,6 +4,8 @@ import { useContext, useEffect, useState } from 'react';
 import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
@@ -26,7 +28,7 @@ interface DlicSSWFormProps {
 
 export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
-    const [sswProgramFrequency, setSswProgramFrequency] = useState('' as Frequency);
+    const [_, setSswProgramFrequency] = useState('' as Frequency);
 
     const {
         formValidation,
@@ -40,6 +42,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         additionalWithholdingAmountConfig,
         irsSignatureConfig,
         cslnCheckStates,
+        eSignatureFieldConfig,
     } = getDlicConfig(t);
     const {
         formParty,
@@ -53,6 +56,9 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         contractIssueState,
         setOwnerStateOfResidence,
         formProgram,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -126,6 +132,12 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 isFormStateReadOnly={isFormStateReadOnly}
                 headerTranslationKey={'notaryHeader'}
                 config={signaturesNotaryConfig}
+            />
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );

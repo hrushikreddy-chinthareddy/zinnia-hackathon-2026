@@ -206,7 +206,6 @@ export default function useNasuConfig(t: TFunction) {
 
         if (programTypeText === ProgramType.GrossWithdrawal) {
             return { selectedOption: ProgramType.GrossWithdrawal, amount };
-
         }
 
         return { selectedOption: null, amount: '' };
@@ -254,7 +253,6 @@ export default function useNasuConfig(t: TFunction) {
             },
         },
     ];
-
 
     const disbursementOptions: PaymentMethodOption[] = [
         {
@@ -358,29 +356,29 @@ export default function useNasuConfig(t: TFunction) {
             }: DisbursementParts) => {
                 const bank = isDirectDeposit
                     ? [
-                        {
-                            ...DEFAULT_BANK_DETAILS,
-                            maskedAccountNumber: null,
-                            accountNumber,
-                            accountType: {
-                                text: accountType,
-                            },
-                            bankName,
-                            nameOnBankAccount: accountHolder ?? '',
-                            routingNumber: bankRoutingNumber,
-                            bankFurtherCreditAccount,
-                            bankFurtherCreditName,
-                            isDirectDeposit: { text: true },
-                            isDirectDepositValid: { text: isDirectDepositValid },
-                        },
-                    ]
+                          {
+                              ...DEFAULT_BANK_DETAILS,
+                              maskedAccountNumber: null,
+                              accountNumber,
+                              accountType: {
+                                  text: accountType,
+                              },
+                              bankName,
+                              nameOnBankAccount: accountHolder ?? '',
+                              routingNumber: bankRoutingNumber,
+                              bankFurtherCreditAccount,
+                              bankFurtherCreditName,
+                              isDirectDeposit: { text: true },
+                              isDirectDepositValid: { text: isDirectDepositValid },
+                          },
+                      ]
                     : [
-                        {
-                            ...DEFAULT_BANK_DETAILS,
-                            isDirectDeposit: { text: false },
-                            maskedAccountNumber: maskedAccountNumber ?? null,
-                        },
-                    ];
+                          {
+                              ...DEFAULT_BANK_DETAILS,
+                              isDirectDeposit: { text: false },
+                              maskedAccountNumber: maskedAccountNumber ?? null,
+                          },
+                      ];
 
                 return {
                     ...getDefaultFormDisbursementValues(),
@@ -648,8 +646,14 @@ export default function useNasuConfig(t: TFunction) {
             component: SignatureFields.SignatureDate,
             key: 'w4p-signature-sign-date',
         },
-
     ];
+
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
     return {
         disbursementOptions,
         formSubtypeOptions,
@@ -666,6 +670,7 @@ export default function useNasuConfig(t: TFunction) {
         reasonOptions,
         defaultValues,
         handleShouldShowDOBInOl4573,
-        w4pSignaturesConfig
+        w4pSignaturesConfig,
+        eSignatureFieldConfig,
     };
 }

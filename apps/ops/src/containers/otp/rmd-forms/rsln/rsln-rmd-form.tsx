@@ -2,6 +2,8 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
+import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
@@ -21,18 +23,29 @@ import getRslnRmdConfig from './rsln-rmd-form.helper';
 export default function RslnRmdWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
-      formValidation,
-      formPartyConfigs,
-      jointLifeExpectancyConfigs,
-      fundWithdrawnMethodOptions,
-      irsSignatureConfig,
-      w4pSignaturesConfig,
-      disbursementOptions,
-      signaturesConfig
+        formValidation,
+        formPartyConfigs,
+        jointLifeExpectancyConfigs,
+        fundWithdrawnMethodOptions,
+        irsSignatureConfig,
+        w4pSignaturesConfig,
+        disbursementOptions,
+        signaturesConfig,
+        eSignatureFieldConfig,
     } = getRslnRmdConfig(t);
 
-    const { setFormData, formData, initialForm, setFormValidator, formTpaAuthorization, isFormStateReadOnly, contractIssueState } =
-        useContext(FormDataContext);
+    const {
+        setFormData,
+        formData,
+        initialForm,
+        setFormValidator,
+        formTpaAuthorization,
+        isFormStateReadOnly,
+        contractIssueState,
+        formErrors,
+        formESignatureData,
+        setFormESignatureData,
+    } = useContext(FormDataContext);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -72,6 +85,12 @@ export default function RslnRmdWithdrawalForm() {
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            <ESignatureValidation
+                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
         </>
     );
 }

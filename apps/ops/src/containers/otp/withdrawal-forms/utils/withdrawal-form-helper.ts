@@ -29,6 +29,7 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
         formOL4753Data,
         formSpecialInstruction,
         ownerAcknowledgement,
+        formESignatureData,
         formNigos,
         formReindexingData,
         formComment,
@@ -85,6 +86,7 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
             formComment,
             formBeneInfo,
             periodicPensionForm: formPeriodicPension,
+            formESignatureData,
         },
     };
 };

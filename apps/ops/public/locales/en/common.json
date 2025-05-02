@@ -2240,6 +2240,18 @@
                     "marriedWithERISA": "Married and my Plan is subject to ERISA (Signature of spouse and Notary stamp/seal also required in this section)"
                 }
             },
+            "eSignatureValidation": {
+                "title": "E-Signature",
+                "selectOption": "Select",
+                "na": "NA",
+                "yes": "Yes",
+                "no": "No",
+                "type": "Type",
+                "date": "Sign date",
+                "signPresent": "Sign present",
+                "auditTrial": "Audit trial",
+                "accordForm": "Acord Form"
+            },
             "employerTpaAuthorization": {
                 "header": "Employer/TPA Authorization",
                 "yes": "Yes",
