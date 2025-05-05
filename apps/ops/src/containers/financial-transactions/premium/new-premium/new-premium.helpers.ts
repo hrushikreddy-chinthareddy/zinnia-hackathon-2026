@@ -4,7 +4,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { Premium } from "@deps/contexts/transactions/NewPremiumContext";
 import { OneTimePremiumRequestQuery } from "@deps/queries/api/bpm";
 import { PaymentForm } from '@zinnia/api-types/types/bpm';
-import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { EDS_DATE_DISPLAY_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 export const buildNewPremiumRequestBody = (premium: Premium): OneTimePremiumRequestQuery => {
     const now = dayjs();
@@ -12,11 +12,11 @@ export const buildNewPremiumRequestBody = (premium: Premium): OneTimePremiumRequ
         .set('hour', now.get('hour'))
         .set('minute', now.get('minute'))
         .set('second', now.get('second'));
-
+        
     return {
         caseId: premium.caseId || '',
         correlationId: uuidV4(),
-        effectiveDate: dayjs(effectiveDate).utc().format(),
+        effectiveDate: dayjs(effectiveDate).utc().format(EDS_DATE_DISPLAY_FORMAT),
         reverseInitiator: premium.reverseInitiator,
         transactionAmounts: {
             requestedAmount: Number(premium.paymentAmount),
