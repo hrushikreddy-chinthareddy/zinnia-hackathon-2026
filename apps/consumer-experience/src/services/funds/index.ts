@@ -57,6 +57,7 @@ export interface Fund {
 interface GetFundDetailsArgs {
   carrierId?: string;
   fundId?: string;
+  queryParams?: { fundDetailsAsOfDate?: string; amount?: number };
 }
 
 interface getProductDetailsArgs {
@@ -77,11 +78,18 @@ interface getFundsArgs {
 export const getFundDetails = async ({
   carrierId,
   fundId,
+  queryParams: { fundDetailsAsOfDate, amount } = {},
 }: GetFundDetailsArgs): Promise<ApiResponse<FundDetails>> => {
   try {
-    const response = await EnterpriseTokenApi.get(
+    const url = new URL(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/funds/v1/carriers/${carrierId}/funds/${fundId}`
     );
+
+    if (fundDetailsAsOfDate)
+      url.searchParams.set('fundDetailsAsOfDate', fundDetailsAsOfDate);
+    if (amount) url.searchParams.set('amount', amount.toString());
+
+    const response = await EnterpriseTokenApi.get(url);
 
     if (!response.ok) {
       throw response;
@@ -96,6 +104,10 @@ export const getFundDetails = async ({
       error: null,
     };
   } catch (error) {
+    logTrace('Error getting fund details', {
+      data: { carrierId, fundId },
+      reqStatus: (error as Response)?.status,
+    });
     return {
       data: null,
       error: {
@@ -109,17 +121,41 @@ export const getFundDetails = async ({
 };
 
 /**
- * Loops through a list of fundIds and hits the fund details endpoint.
+ * Loops through a list of funds and hits the fund details endpoint.
+ * For fixed or holding funds, uses the original deposit date of the first fund segment to fetch details.
  * Filters out any fund responses that arent fulfilled
- * @param fundIds
+ * @param funds
  * @param carrierId
- * @returns
+ * @returns a list of fund details
  */
-const collectAllFundDetails = async (fundIds: string[], carrierId?: string) => {
+const collectAllFundDetails = async (
+  funds: (PolicyFund | Fund)[],
+  carrierId?: string
+) => {
   // Loop through each fund and get details like interest rate and product type
-  const fundDetailsResponses = fundIds.map(async fundId => {
-    return getFundDetails({ carrierId, fundId });
-  });
+  const fundDetailsResponses = funds.map(
+    async ({ fundId, fundAccountType, fundSegments }) => {
+      // Fixed/holding funds interest rates depend on the originalDepositDate of the first fundSegment
+      if (
+        fundAccountType === FundAccountTypeEnum.FIXED ||
+        fundAccountType === FundAccountTypeEnum.HOLDING
+      ) {
+        const fundDetailsAsOfDate = fundSegments?.find(
+          // in case a number is returned by the api
+          ({ segmentId }) => segmentId == '1'
+        )?.originalDepositDate;
+
+        return getFundDetails({
+          carrierId,
+          fundId,
+          queryParams: {
+            fundDetailsAsOfDate,
+          },
+        });
+      }
+      return getFundDetails({ carrierId, fundId });
+    }
+  );
 
   // wait for the fund details promises to resolve
   const fundDetails = (await Promise.allSettled(fundDetailsResponses))
@@ -221,7 +257,22 @@ export const getFunds = async ({
 
     // Get all fund details based on fundIds. Returns interestRate and productType from the fund detail API
     const fundIds = Object.keys(productsDetails.funds);
-    const fundDetails = await collectAllFundDetails(fundIds, carrierId);
+
+    const productFundMap = new Map<string, PolicyFund | Fund>();
+
+    // Combine both product and policy fund data
+    fundIds.forEach(fundId => {
+      productFundMap.set(fundId, {
+        ...policyFunds?.find(fund => fund.fundId === fundId),
+        ...productsDetails?.funds?.[fundId],
+      });
+    });
+
+    // Call api to get the details for each fund
+    const fundDetails = await collectAllFundDetails(
+      Array.from(productFundMap.values()),
+      carrierId
+    );
 
     // Take all of the information and pass it to a combiner function.
     // This function also loops through each fund and calls a separate
