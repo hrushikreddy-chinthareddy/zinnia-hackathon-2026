@@ -61,12 +61,21 @@ export const updatePreferencesByPlanCode = async ({
       effectiveDate = effectiveDate.add(1, 'day');
     }
 
+    // Not sure if there should be a different default besides email
+    const prefDetails = isMailPreference
+      ? {
+          preferredCommunicationType:
+            CommunicationPreferenceChange.preferredCommunicationType
+              .REGULARMAIL,
+        }
+      : {
+          preferredCommunicationType:
+            CommunicationPreferenceChange.preferredCommunicationType.EMAIL,
+          email: newPreferencesData.email,
+        };
+
     const reqBody = {
-      communicationPreference: {
-        preferredCommunicationType: isMailPreference
-          ? CommunicationPreferenceChange.preferredCommunicationType.REGULARMAIL
-          : CommunicationPreferenceChange.preferredCommunicationType.EMAIL,
-      },
+      communicationPreference: prefDetails,
       effectiveDate: dayjs(effectiveDate).format(ZAHARA_DATE_FORMAT),
     };
 

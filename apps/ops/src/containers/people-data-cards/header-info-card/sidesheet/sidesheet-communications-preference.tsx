@@ -161,12 +161,16 @@ export const SidesheetCommunicationsPreference = ({
             return;
         }
 
-        let preferredCommunicationType = CommunicationPreferenceChange.preferredCommunicationType.NOPREFERENCE;
+        let preferredCommunication: { type: CommunicationPreferenceChange.preferredCommunicationType; email?: string } = {
+            type: CommunicationPreferenceChange.preferredCommunicationType.NOPREFERENCE,
+        };
+
         if (selectedOption?.contactType === PreferredCommunicationType.REGULARMAIL) {
-            preferredCommunicationType = CommunicationPreferenceChange.preferredCommunicationType.REGULARMAIL;
+            preferredCommunication.type = CommunicationPreferenceChange.preferredCommunicationType.REGULARMAIL;
         }
         if (selectedOption?.contactType === PreferredCommunicationType.EMAIL) {
-            preferredCommunicationType = CommunicationPreferenceChange.preferredCommunicationType.EMAIL;
+            preferredCommunication.type = CommunicationPreferenceChange.preferredCommunicationType.EMAIL;
+            preferredCommunication.email = (selectedOption.contactInfo as Email)?.emailAddress;
         }
 
         const response = await updateEDeliveryPreferenceByPlanCode({
@@ -176,7 +180,7 @@ export const SidesheetCommunicationsPreference = ({
             newPreferencesData: {
                 ...body,
                 communicationPreference: {
-                    preferredCommunicationType,
+                    ...preferredCommunication,
                     text: '',
                 },
             },
