@@ -348,7 +348,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     return (
         <CaseManagementFiltersContext.Provider value={[caseManagementFilters, setCaseManagementFilters]}>
             <PageHead titleKey="caseManagement" />
-            <Typography variant={TypographyVariant.H1} className="md:mb-8 mb-4">
+            <Typography variant={TypographyVariant.H1} className="mb-4">
                 {t('caseManagementDashboard.h1')}
             </Typography>
             <>
@@ -412,11 +412,7 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const doesUserHasPagePermissions = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
                 ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.CASE_MANAGEMENT_ZL_ENTITY, loggingContext)
-                : await doesUserHavePagePermissions(
-                    context,
-                    UserPermission.AllowReadCaseManagement,
-                    loggingContext
-                );
+                : await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement, loggingContext);
 
             // DEPU-2835
             const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
