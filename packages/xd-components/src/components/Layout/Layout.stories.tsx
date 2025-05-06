@@ -2,13 +2,13 @@ import { Meta, StoryObj } from '@storybook/react';
 import { Layout } from './Layout';
 import { mockNavGroups } from '../../stories/mocks';
 
-const meta = {
+const meta: Meta<typeof Layout> = {
   title: 'Example/Layout',
   component: Layout,
   parameters: {
     layout: 'fullscreen',
   },
-} satisfies Meta<typeof Layout>;
+};
 
 export default meta;
 
