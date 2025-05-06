@@ -385,7 +385,7 @@
         },
         "start": {
             "label": "Commencer",
-            "subtitle": "Ici, vous pouvez modifier le bénéficiaire de cette police. Tout d’abord, assurons-nous que nous pouvons suivre cette transaction dans OnBase.",
+            "subtitle": "Ici, vous pouvez modifier le bénéficiaire de cette police.",
             "title": "Gérer les bénéficiaires"
         },
         "ownerInfo": {
@@ -694,7 +694,7 @@
         },
         "start": {
             "label": "Commencer",
-            "subtitle": "Vous pouvez mettre à jour une adresse et/ou un numéro de téléphone. Tout d’abord, assurons-nous que nous pouvons suivre cette transaction dans OnBase.",
+            "subtitle": "Vous pouvez mettre à jour une adresse et/ou un numéro de téléphone.",
             "title": "Coordonnées mises à jour"
         },
         "rolesAndContracts": {
@@ -1573,10 +1573,10 @@
             "createError": "Une erreur s'est produite lors du processus de création de l'affaire. Aucun identifiant d'affaire n'a été renvoyé depuis /case/v1/cases pour l'identifiant du document {{documentId}}. Si ce problème persiste, veuillez informer le support opérationnel.",
             "documentId": "ID du document",
             "policyNumber": "Numéro de police",
-            "documentIdPlaceholder": "Créer un ID de document à partir de OnBase",
-            "policyNumberPlaceholder": "Entrez le numéro de police d'OnBase",
+            "documentIdPlaceholder": "Créer un ID de document à partir de Zinnia Live",
+            "policyNumberPlaceholder": "Entrez le numéro de police d'Zinnia Live",
             "invalidDocumentError": "Numéro de document invalide",
-            "documentOrPolicyNumberIsRequired": "Entrez un numéro de document ou un numéro de police d'OnBase",
+            "documentOrPolicyNumberIsRequired": "Entrez un numéro de document ou un numéro de police d'Zinnia Live",
             "invalidDocumentOrClientId": "Numéro de document ou ID client invalide",
             "oft": "Transfert de fonds sortant",
             "renewal": "Renouvellement",
@@ -3327,7 +3327,7 @@
         "caseDocumentSelect": {
             "documentNumber": "Numéro de document : ",
             "label": "Sur quel document travaillez-vous ?",
-            "noDocumentAssistiveText": "Si vous continuez sans sélectionner de document, nous ne pourrons pas mettre à jour OnBase pour vous.",
+            "noDocumentAssistiveText": "Si vous continuez sans sélectionner de document, nous ne pourrons pas mettre à jour Zinnia Live dossier pour vous.",
             "processWithoutDocument": "Procéder sans document"
         },
         "transactionCta": {
@@ -4377,7 +4377,7 @@
         "viewTransactionFees": "Voir les frais de transaction",
         "start": {
             "label": "Démarrer",
-            "subtitle": "Prêt, partez, retirez! Vous pouvez demander une reddition ou un retrait partiel. Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans OnBase.",
+            "subtitle": "Prêt, partez, retirez! Vous pouvez demander une reddition ou un retrait partiel.",
             "title": "Commencer un retrait"
         },
         "amount": {
@@ -4464,7 +4464,7 @@
             "status200subtitle": "Ça a l'air bien! Assurez-vous de vérifier vos entrées avant de soumettre.",
             "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette politique. Les calculs des taxes et des frais ne seront pas disponibles. Veuillez vérifier l'erreur ci-dessous.",
             "submitWithdrawal": "Soumettre un retrait",
-            "submitWithErrorsText": "Soumettre avec des erreurs. (Cela créera automatiquement une tâche NIGO dans OnBase.)",
+            "submitWithErrorsText": "Soumettre avec des erreurs. (Cela créera automatiquement une tâche NIGO dans Zinnia Live.)",
             "taxes": "Impôts",
             "totalPayment": "Paiement total",
             "totalPaymentTooltip": "C'est le montant qui sera réellement payé à partir de ce retrait. C'est le montant demandé moins les frais de transaction applicables.",
@@ -4609,7 +4609,7 @@
         "start": {
             "label": "Démarrer",
             "title": "Faire un paiement de prêt",
-            "subtitle": "Besoin de soumettre un paiement de prêt unique? Faisons-le. Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans OnBase."
+            "subtitle": "Besoin de soumettre un paiement de prêt unique? Faisons-le."
         },
         "summary": {
             "label": "Résumé",
@@ -4673,7 +4673,7 @@
         "start": {
             "label": "Démarrer",
             "title": "Démarrer un prêt",
-            "subtitle": "Prêt à soumettre une demande de prêt? Tout d'abord, assurons-nous que nous pouvons suivre cette transaction dans OnBase."
+            "subtitle": "Prêt à soumettre une demande de prêt?"
         },
         "summary": {
             "fundAllocation": "Allocation des fonds",
@@ -4701,7 +4701,7 @@
         "start": {
             "label": "Commencer",
             "title": "Effectuer un paiement de prime",
-            "subtitle": "Besoin de soumettre un paiement de prime à cette police ? Faisons-le! Tout d’abord, assurons-nous que nous pouvons suivre cette transaction dans OnBase."
+            "subtitle": "Besoin de soumettre un paiement de prime à cette police? Faisons-le!"
         },
         "amount": {
             "label": "Montant",
@@ -4752,7 +4752,7 @@
     "premiumAutopay": {
         "start": {
             "label": "Démarrer",
-            "subtitleManage": "Apportez des modifications à l'horaire, au montant ou à la méthode de paiement pour le prélèvement automatique de prime de cette police. Tout d'abord, assurons-nous que nous puissions suivre cette transaction dans OnBase.",
+            "subtitleManage": "Apportez des modifications à l'horaire, au montant ou à la méthode de paiement pour le prélèvement automatique de prime de cette police.",
             "titleStart": "Configurer le prélèvement automatique de la prime",
             "titleManage": "Gérer le prélèvement automatique de la prime"
         },
@@ -4810,7 +4810,7 @@
         "start": {
             "label": "Démarrer",
             "title": "Démarrer un transfert de fonds",
-            "subtitle": "Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans OnBase."
+            "subtitle": "Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans Zinnia Live."
         },
         "transfer": {
             "label": "Transférer",
@@ -5049,8 +5049,9 @@
             "documentNumber": "Numéro de document: {{documentNumber}}",
             "caseId": "Numéro du cas: ",
             "processWithoutDocument": "Processus sans document",
-            "processWithoutDocAssistiveText": "Si vous continuez sans sélectionner de document, nous ne pouvons pas mettre à jour OnBase pour vous.",
-            "processWithoutDocAssistiveTextWithOnBaseUpdate": "Si vous continuez sans sélection de document, nous pouvons mettre à jour OnBase pour vous.",
+            "processWithoutDocAssistiveText": "Si vous continuez sans sélectionner de document, nous ne pourrons pas mettre à jour Zinnia Live dossier pour vous.",
+            "processWithoutDocAssistiveTextWithOnBaseUpdate": "Si vous continuez sans sélection de document, nous pouvons mettre à jour Zinnia Live pour vous.",
+            "processWithoutDocWithOnBaseDocCheckAssistiveText": "Si vous continuez sans sélection de document, nous pouvons mettre à jour Zinnia Live pour vous.",
             "missingSelection": "Sélectionnez un document (ou continuez sans) pour continuer."
         },
         "paymentStep": {
@@ -5282,7 +5283,7 @@
             "start": {
                 "tabTitle": "Démarrer",
                 "title": "Mettre à jour le programme SSW",
-                "subTitle": "Apportez des modifications au montant ou à la méthode de paiement pour l'autopaiement de la prime de cette police. Tout d'abord, assurons-nous de pouvoir suivre cette transaction dans OnBase."
+                "subTitle": "Apportez des modifications au montant ou à la méthode de paiement pour l'autopaiement de la prime de cette police."
             },
             "amount": {
                 "tabTitle": "Montant",

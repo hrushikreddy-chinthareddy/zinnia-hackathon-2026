@@ -287,7 +287,7 @@
         },
         "start": {
             "label": "Start",
-            "subtitle": "Here you can make changes to this policy’s beneficiary. First up, lets make sure we can keep track of this transaction in OnBase.",
+            "subtitle": "Here you can make changes to this policy’s beneficiary.",
             "title": "Manage Beneficiaries"
         },
         "ownerInfo": {
@@ -597,7 +597,7 @@
         },
         "start": {
             "label": "Start",
-            "subtitle": "You can update an address and/or a phone number. First up, lets make sure we can keep track of this transaction in OnBase.",
+            "subtitle": "You can update an address and/or a phone number.",
             "title": "Update Contact Information"
         },
         "rolesAndContracts": {
@@ -1559,10 +1559,10 @@
             "createError": "An error occurred during the case creation process. No Case ID was returned from /case/v1/cases for document ID {{documentNumber}}. If this issue persists, please notify operations support.",
             "documentId": "Document ID",
             "policyNumber": "Policy number",
-            "documentIdPlaceholder": "Enter document ID from OnBase",
-            "policyNumberPlaceholder": "Enter policy number from OnBase",
+            "documentIdPlaceholder": "Enter document ID from Zinnia Live",
+            "policyNumberPlaceholder": "Enter policy number from Zinnia Live",
             "invalidDocumentError": "Invalid document number",
-            "documentOrPolicyNumberIsRequired": "Enter a document number or policy number from OnBase",
+            "documentOrPolicyNumberIsRequired": "Enter a document number or policy number from Zinnia Live",
             "invalidDocumentOrClientId": "Invalid document number or client ID",
             "oft": "Outgoing Funds Transfer",
             "renewal": "Renewal",
@@ -2319,7 +2319,7 @@
                 "OFTFormInputTask": "Great news! We've initiated a Outgoing Funds Transfer task for {{documentNumber}} and {{contractNumber}}",
                 "SSWFormInputTask": "Great news! We've initiated a Systematic Withdrawal task for {{documentNumber}} and {{contractNumber}}"
             },
-            "openNigoExists": "An onbase case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal.",
+            "openNigoExists": "The Zinnia Live case includes a NIGO. Please resolve the open NIGO issue before submitting another request through the Digital Portal.",
             "beneficiaryInfo": {
                 "title": "Beneficiary Information",
                 "isBeneficiarySpouse": {
@@ -3333,7 +3333,7 @@
         "caseDocumentSelect": {
             "documentNumber": "Document number: ",
             "label": "Which document are you working from?",
-            "noDocumentAssistiveText": "If you continue without a document selection, we can't update OnBase for you.",
+            "noDocumentAssistiveText": "If you continue without a document selection, we can't update Zinnia Live case for you.",
             "processWithoutDocument": "Process without a document"
         },
         "transactionCta": {
@@ -4382,7 +4382,7 @@
         "viewTransactionFees": "View transaction fees",
         "start": {
             "label": "Start",
-            "subtitle": "Ready, set, withdraw! You can request a surrender or partial withdrawal. First up, let’s make sure we can keep track of this transaction in OnBase.",
+            "subtitle": "Ready, set, withdraw! You can request a surrender or partial withdrawal.",
             "title": "Start a Withdrawal"
         },
         "amount": {
@@ -4471,7 +4471,7 @@
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
             "status400subtitle": "Hm, we found an issue when checking this policy's rules. Tax and fee calculations will not be available. Review the error below.",
             "submitWithdrawal": "Submit withdrawal",
-            "submitWithErrorsText": "Submit with errors.  (This will automatically create a NIGO task in OnBase.)",
+            "submitWithErrorsText": "Submit with errors.  (This will automatically create a NIGO task in Zinnia Live.)",
             "taxes": "Taxes",
             "totalPayment": "Total payment",
             "totalPaymentTooltip": "This is how much will actually be paid from this withdrawal. It's the requested amount minus any applicable transaction fees.",
@@ -4616,7 +4616,7 @@
         "start": {
             "label": "Start",
             "title": "Make a Loan Payment",
-            "subtitle": "Need to submit a one-time loan payment? Let's do it. First up, let's make sure we can keep track of this transaction in OnBase."
+            "subtitle": "Need to submit a one-time loan payment? Let's do it."
         },
         "summary": {
             "label": "Summary",
@@ -4680,7 +4680,7 @@
         "start": {
             "label": "Start",
             "title": "Start a Loan",
-            "subtitle": "Ready to submit a loan request? First up, let's make sure we can keep track of this transaction in OnBase."
+            "subtitle": "Ready to submit a loan request?"
         },
         "summary": {
             "bpm500Error": "BPM 500 error",
@@ -4709,7 +4709,7 @@
         "start": {
             "label": "Start",
             "title": "Make a Premium Payment",
-            "subtitle": "Need to submit a premium payment to this policy? Let's do it! First up, let's make sure we can keep track of this transaction in OnBase."
+            "subtitle": "Need to submit a premium payment to this policy? Let's do it!"
         },
         "amount": {
             "label": "Amount",
@@ -4760,7 +4760,7 @@
     "premiumAutopay": {
         "start": {
             "label": "Start",
-            "subtitleManage": "Make changes to the schedule, amount, or payment method for this policy's premium autopay. First up, let's make sure we can keep track of this transaction in OnBase.",
+            "subtitleManage": "Make changes to the schedule, amount, or payment method for this policy's premium autopay.",
             "titleStart": "Set Up Premium Autopay",
             "titleManage": "Manage Premium Autopay"
         },
@@ -4818,7 +4818,7 @@
         "start": {
             "label": "Start",
             "title": "Start a fund transfer",
-            "subtitle": "First up, let’s make sure we can keep track of this transaction in OnBase."
+            "subtitle": "First up, let’s make sure we can keep track of this transaction in Zinnia Live."
         },
         "transfer": {
             "label": "Transfer",
@@ -5057,9 +5057,9 @@
             "documentNumber": "Document number: ",
             "caseId": "Case id: ",
             "processWithoutDocument": "Process without a document",
-            "processWithoutDocAssistiveText": "If you continue without a document selection, we can't update OnBase for you.",
-            "processWithoutDocAssistiveTextWithOnBaseUpdate": "If you continue without a document selection, we can update OnBase for you.",
-            "processWithoutDocWithOnbaseDocCheckAssistiveText": "If you continue without a document selection, we can update OnBase for you.",
+            "processWithoutDocAssistiveText": "If you continue without a document selection, we can't update Zinnia Live case for you.",
+            "processWithoutDocAssistiveTextWithOnBaseUpdate": "If you continue without a document selection, we can update Zinnia Live for you.",
+            "processWithoutDocWithOnBaseDocCheckAssistiveText": "If you continue without a document selection, we can update Zinnia Live for you.",
             "missingSelection": "Select a document (or proceed without) to continue."
         },
         "paymentStep": {
@@ -5293,7 +5293,7 @@
             "start": {
                 "tabTitle": "Start",
                 "title": "Update SSW Program",
-                "subTitle": "Make changes to the schedule amount or payment method for this policy's premium autopay. First up, let's make sure we can keep trackof this transaction in OnBase."
+                "subTitle": "Make changes to the schedule amount or payment method for this policy's premium autopay."
             },
             "amount": {
                 "tabTitle": "Amount",
