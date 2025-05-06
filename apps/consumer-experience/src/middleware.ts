@@ -1,33 +1,36 @@
+// NOTE!! Redirecting in server actions and then redirecting in middleware results in some wonky
+// behavior where the browser has redirected but middleware does one more redirect and loads the next
+// responses page data as noted in this github issue: https://github.com/vercel/next.js/discussions/65900 and
+// https://github.com/vercel/next.js/discussions/64993
+// prefetched pages also hit middleware by default!!
+
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { RouteKey, getRedirectUrl, routeMap } from '@/route-map';
+import { RouteKey } from '@/route-map';
 import { isMockAllowed } from '@/utils';
 import {
   ACKNOWLEDGEMENT_COOKIE_KEY,
-  FROM_LOGIN_QUERY_KEY,
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
   MFA_OOB_CODE_COOKIE_KEY,
   MFA_TOKEN_COOKIE_KEY,
   MOCK_COOKIE_KEY,
   MOCK_ERROR_COOKIE_KEY,
-  RETURN_TO_URL_COOKIE_KEY,
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
-import { getMyPoliciesByCarrier, getPolicyDetails } from './services';
-import { consumerExperienceAPIBaseUrl } from './services/api-config';
+import {
+  consumerExperienceAPIBaseUrl,
+  getPolicyDetails,
+  ServerApi,
+} from './services';
 import { checkResetDeliveryDateEligibility } from './services/bpm';
-import { ServerApi } from './services/server-http';
 import { ROOT_URL_PATH } from './types';
-import { TermsAndConditionApiResponse } from './types/auth';
-import { CarrierId } from './types/policy';
 import {
   deleteCookie,
   deleteSession,
   getMfaCookie,
   getOobMfaCookie,
-  getReturnUrlCookie,
   getSession,
   setRefreshRouterCookie,
   setReturnUrlCookie,
@@ -45,6 +48,12 @@ import {
   getSubdomain,
   prependSubdomain,
 } from './utils/url';
+import { TermsAndConditionApiResponse } from './types/auth';
+import {
+  getFriendlyRedirectUrl,
+  isRedirectAFriendlyUrl,
+  userSinglePolicy,
+} from './utils/singlePolicyRedirect';
 
 const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
   if (!isMockAllowed()) {
@@ -81,6 +90,9 @@ export async function middleware(req: NextRequest) {
 
   const session = await getSession(resNext);
   const pathname = req.nextUrl.pathname;
+  // If the path includes `/coverage/` it means that the user is on something like
+  // /coverage/policies/{planCode}/{policyNumber}
+  const pathnameIsInternalPage = pathname.includes('/coverage/');
   const isLoginLikeOrRoot = pathname.includes('/login') || pathname === '/';
   const isSessionPage = pathname === '/session';
 
@@ -92,11 +104,9 @@ export async function middleware(req: NextRequest) {
   applyThemeCookies(req, resNext);
 
   if (session) {
-    const searchParmas = req.nextUrl.searchParams;
-    const fromLogin = searchParmas.get(FROM_LOGIN_QUERY_KEY);
     // since the user has a session we need to check if they signed the terms and conditions
     // we only want to do this once per session. We will store the value on the user object
-    if (!session.user.hasSignedTermsAndConditions) {
+    if (!session?.user.hasSignedTermsAndConditions) {
       // call API to check if the user has signed the terms and conditions
       const termsAndConditionsRequest = await ServerApi.get(
         `${consumerExperienceAPIBaseUrl}/agreementToTermsAndConditions`
@@ -113,128 +123,27 @@ export async function middleware(req: NextRequest) {
     }
     await touchSession(resNext);
 
+    // This is to handle user coming in after login flow or with just a root url
     if (isLoginLikeOrRoot) {
       return NextResponse.redirect(new URL(ROOT_URL_PATH, req.url));
     }
 
-    const returnUrl = await getReturnUrlCookie();
-    const routeKey = returnUrl?.pathname
-    let redirectObj
-
-    if (routeKey?.length && routeKey in routeMap) {
-      redirectObj = routeMap[routeKey as RouteKey]
-    }
-
-    // if we have a return url and the route isn't a "friendly" path, for example /riders
-    // it means we should redirect to the fully qualified path
-    if (returnUrl && !redirectObj) {
-      const resRedirect = NextResponse.redirect(new URL(returnUrl.href));
-      await deleteCookie(RETURN_TO_URL_COOKIE_KEY, resRedirect);
-      return resRedirect;
-    }
-
-    // This logic is hit when a user had a friendly url + multiple policies and has clicked on their
-    // selected policy. Rather than going to the policy overview page, we redirect them to the route
-    // of the friendly url so we check to see if the 3 pathname url item is present,
-    // if it is that means it is not the coverage index page (because it has more than '' and ROOT_URL_PATH in the array)
-    //
-    if (
-      req.nextUrl.pathname.includes('/coverage/') &&
-      returnUrl &&
-      redirectObj
-    ) {
-      // there is no good way at the moment to get params in middleware like there is on the client side (useParams)
-      // so we need to grab the planCode and policyNumber from the path
-      const { planCode, policyNumber, lineOfBusiness } =
-        getPolicyDataFromPath(pathname);
-
-      const url = getRedirectUrl(redirectObj, {
-        planCode,
-        policyNumber,
-        lineOfBusiness,
-      });
-      const resRedirect = NextResponse.redirect(new URL(url, req.url));
-      await deleteCookie(RETURN_TO_URL_COOKIE_KEY, resRedirect);
-      return resRedirect;
-    }
-
-    // If the url is not the index page AND has a friendly url object
-    const redirect = pathname !== RouteKey.COVERAGE && routeMap[pathname as RouteKey];
-
-    // if we get here and we have a redirect we need to determine how many policies a user has
-    // if they have multiple policies or some unknown error occurs we send them to the policies index page
-    // after the user select a policy we will redirect them to the appropiate page.
-    // For example if the user entered /riders after they select a policy we will redirect them to
-    // /coverage/[planCode]/[policyNumber]/riders
-    if (redirect) {
-      const allPolicies = await getMyPoliciesByCarrier([
-        CarrierId.SBUL,
-        CarrierId.ELIC,
-        'WELB',
-      ]);
-      if (
-        !allPolicies.data ||
-        allPolicies.data.length === 0 ||
-        allPolicies.data.length > 1
-      ) {
-        const resRedirect = NextResponse.redirect(
-          new URL(ROOT_URL_PATH, req.url)
-        );
-        await setReturnUrlCookie(req.nextUrl, resRedirect);
-        await setRefreshRouterCookie(resRedirect);
-        return resRedirect;
-      }
-
-      const [policy] = allPolicies.data;
-      const redirectUrl = getRedirectUrl(redirect, {
-        planCode: policy?.planCode || '',
-        policyNumber: policy?.policyNumber || '',
-        lineOfBusiness: lineOfBusinessUrlPath(policy?.lineOfBusiness),
+    // If page isn't the coverage page AND is a friendlyUrl e.g. mypolicyview.com/riders
+    // this logic is only hit if the user is already within a session, if they are coming
+    // from login, the logic is handled in login-actions
+    if (pathname !== RouteKey.COVERAGE && isRedirectAFriendlyUrl(pathname)) {
+      const singlePolicyUserPolicy = await userSinglePolicy();
+      const friendlyRedirectUrl = await getFriendlyRedirectUrl({
+        redirectTo: pathname,
+        policy: singlePolicyUserPolicy,
       });
 
-      return NextResponse.redirect(new URL(redirectUrl, req.url));
-    }
-
-    // if the user is on the login page and they have a session we need to redirect them to the policies index page
-    // if they have only one policy we will redirect them to the policy details page
-    // otherwise we will send them to the policy index page
-
-    if (fromLogin === 'true') {
-      const allPolicies = await getMyPoliciesByCarrier([
-        CarrierId.SBUL,
-        CarrierId.ELIC,
-        'WELB',
-      ]);
-
-      // We need to hit the feature flag route handler in middleware instead of the server function.
-      // This has something to do with how middleware runs on the Edge runtime instead of Node runtime
-      // If you try to hit the server function directly, optimizely will error out initializing.
-
-      // If Annuity mode is on, if they are on a valid subdomain, direct them straight to the policy.
-      // Otherwise they need to go to the carrier picker and select a carrier before this applies
-      const currentSubDomain = getSubdomain(req.headers);
-      const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
-
-      if (allPolicies.data && allPolicies.data.length === 1 && validSubdomain) {
-        const [policy] = allPolicies.data;
-        const carrierSubdomainById = getCarrierSubdomainById(policy?.carrierId);
-
-        // Make sure that if someone is logging into like 'every.mypolicyview' but they only have a 'wellabe' policy,
-        // we dont send them to the every policy.
-        if (carrierSubdomainById === currentSubDomain) {
-          return NextResponse.redirect(
-            new URL(
-              `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy?.planCode}/${policy?.policyNumber}`,
-              req.url
-            )
-          );
-        }
-      }
+      return NextResponse.redirect(new URL(friendlyRedirectUrl, req.url));
     }
 
     // Ensure user is on a valid subdomain for the policy theyre viewing.
     // If not, redirect them to the correct subdomain for a policy
-    if (pathname.includes('/coverage/')) {
+    if (pathnameIsInternalPage) {
       const { planCode, policyNumber, lineOfBusiness } =
         getPolicyDataFromPath(pathname);
 
@@ -276,9 +185,8 @@ export async function middleware(req: NextRequest) {
     // First check if we've already checked this policy in this session, if yes, ignore,
     // otherwise check if the policy requires acknowledgement and redirect them back to the coverage page instead of letting them
     // go to the policy details page
-    if (pathname.includes('/coverage/')) {
+    if (pathnameIsInternalPage) {
       const { planCode, policyNumber } = getPolicyDataFromPath(pathname);
-
       const hasAckowledgedPolicy = req.cookies.get(
         ACKNOWLEDGEMENT_COOKIE_KEY
       )?.value;
@@ -326,6 +234,7 @@ export async function middleware(req: NextRequest) {
     }
 
     applyMockCookies(req, resNext);
+
     return resNext;
   }
 
@@ -336,6 +245,9 @@ export async function middleware(req: NextRequest) {
     return resNext;
   }
 
+  // If the user's session has expired, and they try to reload the current page
+  // they are on, this will redirect them to the session page which will get them into
+  // the logic above that deletes the data associated with the session
   if (req.cookies.has(HAD_PREVIOUS_SESSION_COOKIE_KEY) && !isSessionPage) {
     const res = NextResponse.redirect(new URL(`/session`, req.url));
     return res;
@@ -372,16 +284,15 @@ export async function middleware(req: NextRequest) {
   // so we want to ignore it.
   if (
     pathname !== '/.well-known/vercel/flags' && // If the url is not the index page AND has a friendly url object
-    pathname !== RouteKey.COVERAGE &&
-    routeMap[pathname as RouteKey]
+    pathname !== RouteKey.COVERAGE
   ) {
     //if a route gets here that means the user is not authenticated and we need to store where they wanted to go
     // after login we will send them to this page
     // we are storing the nextUrl object so we have easy access to key variables that NextJS sets for us like pathname and href
+
     await setReturnUrlCookie(req.nextUrl, resRedirect);
     await setRefreshRouterCookie(resRedirect);
   }
-
   return resRedirect;
 }
 
@@ -390,13 +301,15 @@ export const config = {
     /*
      * Match all request paths except for the ones starting with:
      * - api (API routes)
-     * - login
      * - session
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - everly-logo.png (this is used for the email template. This is in place for MVP)
      */
-    '/((?!api|health|_next/static|_next/image|favicon.ico|everly-logo.png).*)',
+    {
+      source:
+        '/((?!api|health|_next/static|_next/image|favicon.ico|everly-logo.png).*)',
+    },
   ],
 };

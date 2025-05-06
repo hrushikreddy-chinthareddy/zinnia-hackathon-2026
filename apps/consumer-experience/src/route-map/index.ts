@@ -142,10 +142,15 @@ export const getRedirectUrl = (
   redirect: RouteMap,
   replaceMents: Index<string>
 ) => {
-  let result = redirect.destination;
+  let result = redirect?.destination;
+
+  if (!result) {
+    return '';
+  }
+
   Object.keys(replaceMents).forEach(key => {
     const regex = new RegExp(`\\[${key}\\]`, 'g'); // Use regex to match [key] format
-    result = result.replace(regex, replaceMents[key] || '');
+    result = result.replace(regex, (key && replaceMents[key]) || '');
   });
   return result;
 };

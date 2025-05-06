@@ -2,7 +2,6 @@
 import { RedirectType, redirect } from 'next/navigation';
 
 import { ServerApi } from '@/services';
-import { ROOT_URL_PATH } from '@/types';
 import {
   Auth0ErrorResponse,
   MfaAssoicateResponse,
@@ -13,8 +12,10 @@ import {
   PasswordlessCodeMfaResponse,
 } from '@/types/auth';
 import {
+  deleteCookie,
   getMfaCookie,
   getOobMfaCookie,
+  getReturnUrlCookie,
   setCookie,
   setLoginCookies,
   setMfaCookie,
@@ -22,9 +23,48 @@ import {
 } from '@/utils/auth';
 import { logTrace, logWarn } from '@/utils/logging/server-logging';
 import {
-  FROM_LOGIN_QUERY_KEY,
   LOGIN_EMAIL_COOKIE_KEY,
+  RETURN_TO_URL_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
+import {
+  getFriendlyRedirectUrl,
+  isRedirectAFriendlyUrl,
+  userSinglePolicy,
+} from '@/utils/singlePolicyRedirect';
+import { lineOfBusinessUrlPath } from '@/utils/data';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+
+export const loginVerificationSuccessUrl = async () => {
+  const returnUrl = await getReturnUrlCookie();
+  const singlePolicyUserPolicy = await userSinglePolicy();
+  // There is a const for this elsewhere in the project
+  //, but the file that it is defined in, has not loaded
+  // when this code is evaluated so it returns an empty string
+  const rootPath = '/coverage';
+
+  if (returnUrl) {
+    await deleteCookie(RETURN_TO_URL_COOKIE_KEY);
+    // if return url is something like mypolicyview.com/riders
+    if (isRedirectAFriendlyUrl(returnUrl.pathname)) {
+      return getFriendlyRedirectUrl({
+        redirectTo: returnUrl.pathname,
+        policy: singlePolicyUserPolicy,
+      });
+    } else {
+      // if return url is something like mypolicyview.com/coverage/annuities/planCode/policyNumber/riders
+      return returnUrl.pathname;
+    }
+  } else {
+    // if a user only has one policy we want to direct them directly to that policy
+    // overview page on login
+    if (singlePolicyUserPolicy) {
+      return `/${rootPath}/${lineOfBusinessUrlPath(singlePolicyUserPolicy.lineOfBusiness as LineOfBusiness)}/${singlePolicyUserPolicy.planCode}/${singlePolicyUserPolicy.policyNumber}`;
+    }
+  }
+
+  // default is to redirect to policy index page
+  return `/${rootPath}`;
+};
 
 interface LoginActionErrorResponse extends Auth0ErrorResponse {
   timestamp: Date;
@@ -196,6 +236,7 @@ export async function verifyPasswordlessStartChallenge(
       email,
       code,
     });
+
     data = await response.json();
 
     // Auth0 treats mfa_required as an error, however we need to treat it as a success so we can redirect to the MFA pages.
@@ -305,7 +346,7 @@ export async function verifyPasswordlessStartChallenge(
 
   await setLoginCookies(tokenData);
 
-  return redirect(`/coverage?${FROM_LOGIN_QUERY_KEY}=true`);
+  redirect(await loginVerificationSuccessUrl());
 }
 /**
  * Async function to associate MFA with the provided form data.
@@ -473,7 +514,7 @@ export async function verifyMfaChallenge(
   const tokenData = data! as OauthToken;
   await setLoginCookies(tokenData);
 
-  return redirect(`/${ROOT_URL_PATH}?${FROM_LOGIN_QUERY_KEY}=true`);
+  redirect(await loginVerificationSuccessUrl());
 }
 
 export async function resendMfaChallenge(

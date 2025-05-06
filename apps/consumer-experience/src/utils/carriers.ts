@@ -3,6 +3,19 @@ import { CarrierId, CarrierPolicyDetails } from '@/types/policy';
 
 import { prependSubdomain } from './url';
 
+// Carriers that use the base mpv experience where users can
+// switch between carrier policies
+export const baseExperienceCarriers = [
+  CarrierId.SBUL,
+  CarrierId.ELIC,
+  CarrierId.WELLABE,
+];
+
+// Carriers that use sso for authentication. Users will only
+// be able to navigate through policies that are authorized for
+// that sso login
+export const ssoExperienceCarriers = [CarrierId.FARMERS];
+
 export const getCarrierSubdomainById = (
   carrierId: string | undefined | null
 ): string => {
@@ -14,6 +27,7 @@ export const getCarrierSubdomainById = (
     case CarrierId.ELIC:
     case CarrierId.SBUL:
       return Subdomains.EVERLY;
+    // TODO: Add this to the carrierId enum when it gets added in the backend
     case CarrierId.WELLABE:
       return Subdomains.WELLABE;
     case CarrierId.FARMERS:
@@ -54,8 +68,7 @@ export const getCarrierNameById = (
     case CarrierId.ELIC:
     case CarrierId.SBUL:
       return CarrierNames.EVERLY;
-    // TODO: Change this to the enum value when it gets added to the backend
-    case 'WELB':
+    case CarrierId.WELLABE:
       return CarrierNames.WELLABE;
     default:
       return '';
@@ -103,7 +116,7 @@ export const getCarrierIdsByName = (name: string | undefined) => {
     case 'Everly':
       return [CarrierId.ELIC, CarrierId.SBUL];
     case 'Wellabe':
-      return ['WELB'];
+      return [CarrierId.WELLABE];
     default:
       return [];
   }

@@ -17,7 +17,7 @@ export const prependSubdomain = (subdomain: string): string => {
  * @returns
  */
 export const getSubdomain = (requestHeaders: Headers) => {
-  return requestHeaders.get('x-forwarded-host')?.split('.')[0];
+  return requestHeaders?.get('x-forwarded-host')?.split('.')[0];
 };
 
 export const getPolicyDataFromPath = (pathname: string) => {

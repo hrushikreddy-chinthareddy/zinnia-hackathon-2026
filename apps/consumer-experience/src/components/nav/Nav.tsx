@@ -5,8 +5,10 @@ import { Link } from '@/components/link/Link';
 import { getMyPoliciesByCarrier } from '@/services';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { CompanyName } from '@/types/carriers';
-import { CarrierId } from '@/types/policy';
-import { getCarrierListDetails } from '@/utils/carriers';
+import {
+  baseExperienceCarriers,
+  getCarrierListDetails,
+} from '@/utils/carriers';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './Nav.module.css';
@@ -25,11 +27,9 @@ export async function Nav({
   const featureFlagDecisions = await getFeatureFlags();
   let carrierDetails;
   if (featureFlagDecisions?.[FEATURE_FLAGS.ANNUITY_MODE]) {
-    const { data: policyData, error } = await getMyPoliciesByCarrier([
-      CarrierId.ELIC,
-      CarrierId.SBUL,
-      'WELB',
-    ]);
+    const { data: policyData, error } = await getMyPoliciesByCarrier(
+      baseExperienceCarriers
+    );
 
     if (!error && policyData) {
       carrierDetails = getCarrierListDetails(policyData);

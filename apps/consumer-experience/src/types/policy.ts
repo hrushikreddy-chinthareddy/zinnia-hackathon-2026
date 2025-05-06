@@ -25,6 +25,7 @@ import {
 import { BankDetail } from '@/components/person-data/types';
 
 export enum CarrierId {
+  // Everly/Security Benefit
   SBUL = 'SBUL',
   SB = 'SB',
   ELIC = 'ELIC',

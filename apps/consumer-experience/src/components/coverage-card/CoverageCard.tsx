@@ -17,7 +17,13 @@ import { SkeletonLoader } from '../skeleton-loader/SkeletonLoader';
 // We don't set the cookie here because we rely on that to happen
 // either in middleware or once the user has actively acknowledged the
 // policy
-export const CoverageCard = ({ policy }: { policy: CarrierPolicyDetails }) => {
+export const CoverageCard = ({
+  policy,
+  redirectTo,
+}: {
+  policy: CarrierPolicyDetails;
+  redirectTo?: string;
+}) => {
   const [clientReady, setClientReady] = useState(false);
 
   const ackowledgedCookie = Cookies.get(ACKNOWLEDGEMENT_COOKIE_KEY);
@@ -69,5 +75,5 @@ export const CoverageCard = ({ policy }: { policy: CarrierPolicyDetails }) => {
     return <AcknowledgePolicyCard policy={policy} />;
   }
 
-  return <CoverageOverviewCard policy={policy} />;
+  return <CoverageOverviewCard policy={policy} redirectTo={redirectTo} />;
 };

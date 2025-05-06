@@ -83,7 +83,13 @@ export default async function Page({
     Body = (
       <div className="card-container" style={{ paddingLeft: 0 }}>
         {policyReferenceData?.map(p => {
-          return <CoverageCard key={p.policyNumber} policy={p} />;
+          return (
+            <CoverageCard
+              key={p.policyNumber}
+              policy={p}
+              redirectTo={searchParams?.redirectTo}
+            />
+          );
         })}
       </div>
     );

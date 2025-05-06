@@ -16,6 +16,7 @@ export const RETURN_TO_URL_COOKIE_KEY = 'returnTo';
 export const REFRESH_ROUTER_COOKIE_KEY = 'refreshRouter';
 export const CARRIER_COOKIE_KEY = 'refreshRouter';
 export const FROM_LOGIN_QUERY_KEY = 'fromLogin';
+export const REDIRECT_TO_URL_KEY = 'redirectTo';
 export const AUTH0_SCOPE = process.env.AUTH0_SCOPE;
 // used to let middleware know the user had a previous session
 // if a user had a session and their session is no longer expired they should be redirected to the session page

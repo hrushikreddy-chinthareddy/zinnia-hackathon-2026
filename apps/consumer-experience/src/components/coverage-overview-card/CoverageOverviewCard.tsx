@@ -15,18 +15,32 @@ import { FieldData } from '../field-data/FieldData';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { PolicyDetailsSummary } from '../policy-details-summary/PolicyDetailsSummary';
 import { CoveragePopover } from '../policy-overview/CoveragePopover';
+import { getRedirectUrl, RouteKey, routeMap } from '@/route-map';
 
 export const CoverageOverviewCard = ({
   policy,
+  redirectTo,
 }: {
   policy: CarrierPolicyDetails;
+  redirectTo?: string;
 }) => {
+  const friendlyUrlRedirectObj = routeMap[`${redirectTo}` as RouteKey];
+  // TODO: i think i could just add redirectTo onto the end of the link, they should match
+  // up but calling the method here just in case....
+  const url = redirectTo
+    ? getRedirectUrl(friendlyUrlRedirectObj, {
+        planCode: policy?.planCode || '',
+        policyNumber: policy?.policyNumber || '',
+        lineOfBusiness: lineOfBusinessUrlPath(policy?.lineOfBusiness),
+      })
+    : `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy.planCode}/${policy.policyNumber}`;
+
   return (
     <ClickableCardContainer>
       <ClickableCardContainer.LinkContent
         linkTo={{
           label: `Get details for Policy ${policy.marketingName}`,
-          url: `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy.planCode}/${policy.policyNumber}`,
+          url,
           isInternal: true,
         }}
       >
