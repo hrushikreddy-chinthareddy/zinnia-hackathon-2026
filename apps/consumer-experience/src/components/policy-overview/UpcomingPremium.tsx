@@ -1,5 +1,5 @@
 import { PolicyStatus, Status } from '@zinnia/api-types/types/sor';
-import { Label, Icon, IconType, Link } from '@zinnia/bloom/components';
+import { Label, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
@@ -8,6 +8,7 @@ dayjs.extend(isSameOrAfter);
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
+import { Link } from '@/components/link/Link';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';

@@ -1,8 +1,9 @@
 'use client';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+
+import { Link } from '@/components/link/Link';
 
 import breadcrumbStyles from './PolicyDetailPageHeader.module.css';
 import {
@@ -72,7 +73,7 @@ export const Breadcrumbs = ({
 
             return (
               <span key={breadcrumb.title}>
-                <Link href={breadcrumb.url} prefetch>
+                <Link isInternal href={breadcrumb.url} prefetch>
                   {breadcrumb.title}
                 </Link>
               </span>

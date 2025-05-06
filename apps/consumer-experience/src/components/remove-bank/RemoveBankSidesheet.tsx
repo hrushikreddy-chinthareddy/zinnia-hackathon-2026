@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
 import { putEndDateBankAccount } from '@/actions/bpm/bank-actions';
+import { Button } from '@/components/button/Button';
 import { useNeedsVerificationCode } from '@/hooks/use-needs-verification-code';
 import { useUser } from '@/hooks/use-user';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
@@ -13,12 +14,12 @@ import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 
+import { Link } from '../link/Link';
 import { Error } from './form-steps/error/Error';
 import { Loading } from './form-steps/loading/Loading';
 import { RemoveBankConfirm } from './form-steps/remove-bank-confirm/RemoveBankConfirm';
 import { Success } from './form-steps/success/Success';
 import { VerifyIdentity } from '../transaction-steps/verify-identity/VerifyIdentity';
-import { Button } from '@/components/button/Button';
 
 export interface RemoveBankProps {
   partyId: string;
@@ -126,9 +127,12 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
           errorMessage={
             <span>
               To manage your autopay details, call us at{' '}
-              <a href={`tel:${EVERLY_CONTACT_PHONE_NUMBER}`}>
+              <Link
+                isNativeAnchorTag
+                href={`tel:${EVERLY_CONTACT_PHONE_NUMBER}`}
+              >
                 {EVERLY_CONTACT_PHONE_NUMBER}
-              </a>
+              </Link>
             </span>
           }
           closeCallback={onClose}

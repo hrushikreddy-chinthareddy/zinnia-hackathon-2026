@@ -1,8 +1,9 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { clsx } from 'clsx';
 import { NextComponentType } from 'next';
-import Link, { LinkProps } from 'next/link';
 import { FC, PropsWithChildren, ReactNode } from 'react';
+
+import { Link, Props as LinkProps } from '@/components/link/Link';
 
 import styles from './ClickableCardContainer.module.css';
 
@@ -62,6 +63,7 @@ const LinkArrow = ({
       target={newTab ? '_blank' : '_self'}
       // @ts-expect-error prop diff
       prefetch={isInternal ? true : undefined}
+      isInternal={isInternal}
     >
       {ctaText && <div className="typography-nav-links-sm">{ctaText}</div>}
       {iconToRender && (

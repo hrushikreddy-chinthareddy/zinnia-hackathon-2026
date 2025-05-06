@@ -6,9 +6,9 @@ import {
   PolicyStatus,
 } from '@zinnia/api-types/types/sor';
 import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { Link } from '@/components/link/Link';
 import { PolicyRequestInputs, PolicyStatusDetail } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import {
@@ -66,6 +66,7 @@ export const PolicyStatusAlertBanner = ({
             {standardDateMonthDayYear(policyStatusData.minimumPaymentDueDate)}{' '}
             to get back on track.{' '}
             <Link
+              isInternal
               href={`/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/premium/amount`}
             >
               Click here
@@ -85,9 +86,12 @@ export const PolicyStatusAlertBanner = ({
               You’re still in the free look period, a {policyStatusData.period}
               -day window after policy issuance when you can cancel without
               penalty. If you'd like to cancel, call{' '}
-              <a href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}>
+              <Link
+                isNativeAnchorTag
+                href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}
+              >
                 {EVERLY_CONTACT_PHONE_NUMBER}
-              </a>
+              </Link>
               .
             </span>
           ),

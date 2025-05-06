@@ -12,6 +12,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@/components/button/Button';
 import { ConfirmDialog } from '@/components/confirm-dialog/ConfirmDialog';
 import { FeatureFlagComponent } from '@/components/FeatureFlagComponent';
+import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.css';
 import { BankDetail } from '@/components/person-data/types';
@@ -175,12 +176,13 @@ export const SelectBank = ({
                 />{' '}
                 to add. If you're not seeing the account you want to pay with,
                 give us a call at{' '}
-                <a
+                <Link
+                  isNativeAnchorTag
                   className="typography-nav-links-sm-inline"
                   href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}
                 >
                   {EVERLY_CONTACT_PHONE_NUMBER}
-                </a>
+                </Link>
                 .
               </p>
             </div>

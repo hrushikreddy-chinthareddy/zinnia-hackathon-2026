@@ -1,9 +1,9 @@
 'use client';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import Link from 'next/link';
 import { PropsWithChildren, useEffect } from 'react';
 
+import { Link } from '@/components/link/Link';
 import { analytics } from '@/utils/segment';
 import { toTitleCase } from '@/utils/strings';
 
@@ -40,6 +40,7 @@ export const HeaderLink = ({
     <div className={clsx(styles.headerLinkContainer, className)}>
       {link && (
         <Link
+          isInternal
           href={link?.url}
           aria-label={link?.label}
           className={styles.headerLinkAction}

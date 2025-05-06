@@ -1,5 +1,6 @@
-import { Icon, IconType, Link } from '@zinnia/bloom/components';
+import { Icon, IconType } from '@zinnia/bloom/components';
 
+import { Link } from '@/components/link/Link';
 import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 
 import styles from '../OneTimePremiumPayment.module.css';
@@ -21,9 +22,9 @@ export const PaymentInvalid = ({ goToUrl }: { goToUrl: string }) => {
         <p className="typography-content-body">
           The payment you are trying to make is invalid. Please contact support
           at{' '}
-          <a href={`tel:${EVERLY_CONTACT_PHONE_NUMBER}`}>
+          <Link isNativeAnchorTag href={`tel:${EVERLY_CONTACT_PHONE_NUMBER}`}>
             {EVERLY_CONTACT_PHONE_NUMBER}
-          </a>{' '}
+          </Link>{' '}
           for more information.
         </p>
         <Link className="mt-2xl" variant="button" text="Close" href={goToUrl} />

@@ -17,6 +17,7 @@ import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './DevMenu.module.css';
 import { ApiEndpoints } from './types';
+import { Link } from '../link/Link';
 
 export const DevMenu = () => {
   const [open, setOpen] = useState(false);
@@ -124,7 +125,8 @@ export const DevMenu = () => {
           <nav className={styles.innerContent}>
             <ul>
               <li>
-                <a
+                <Link
+                  isNativeAnchorTag
                   href="#"
                   onClick={setMock}
                   className={`${styles.navItem} typography-nav-nav-drawer`}
@@ -136,7 +138,7 @@ export const DevMenu = () => {
                     />
                   </span>
                   <span>{mockText}</span>
-                </a>
+                </Link>
                 {isMockOn && (
                   <div>
                     <div className={styles.radioItem}>
@@ -290,7 +292,8 @@ export const DevMenu = () => {
                 </button>
               </li>
               <li>
-                <a
+                <Link
+                  isNativeAnchorTag
                   href="#"
                   onClick={removeDevMenu}
                   className={`${styles.navItem} typography-nav-nav-drawer`}
@@ -302,7 +305,7 @@ export const DevMenu = () => {
                     />
                   </span>
                   <span>Remove Dev Menu</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </nav>

@@ -2,12 +2,12 @@
 import * as Popover from '@radix-ui/react-popover';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import EverlyIcon from '@/app/styles/everly/assets/everly-logo-icon-new.svg';
 import WellabeIcon from '@/app/styles/wellabe/assets/wellabe-logo-icon.svg';
+import { Link } from '@/components/link/Link';
 import { UserBadge } from '@/components/user-badge/UserBadge';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import useMock from '@/hooks/use-mock';
@@ -110,6 +110,7 @@ export const NavMenu = ({
                         )}
                       </span>
                       <Link
+                        isInternal
                         href={detail.link.href}
                         aria-label={detail.link.label}
                         onClick={() => {
@@ -131,6 +132,7 @@ export const NavMenu = ({
                   <Icon type={IconType.CIRCLE_USER} width={20} height={20} />
                 </span>
                 <Link
+                  isInternal
                   href="/my-account"
                   onClick={() => {
                     setIsOpen(false);
@@ -144,12 +146,12 @@ export const NavMenu = ({
               target this last li without also targeting the last li in the ul above, so i'm just
               explicitly setting the marginBottom here */}
               <li style={{ marginBottom: 0 }}>
-                <a href="/api/logout">
+                <Link isNativeAnchorTag href="/api/logout">
                   <span>
                     <Icon type={IconType.LOGOUT} width={20} height={20} />
                   </span>
                   Sign out
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

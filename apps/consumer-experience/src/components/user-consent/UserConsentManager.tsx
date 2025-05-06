@@ -15,6 +15,7 @@ import { useUser } from '@/hooks/use-user';
 
 import styles from './UserConsent.module.css';
 import { Footer } from '../footer/Footer';
+import { Link } from '../link/Link';
 
 const default_error =
   'You must agree to the Privacy Policy and Terms of Use to continue.';
@@ -81,23 +82,25 @@ export const UserConsentManager = ({
               improve functionality, analyze site use, and generate analytics.
               See our Privacy Policy for details. By ticking the check box, you
               agree to our{' '}
-              <a
+              <Link
+                isNativeAnchorTag
                 href="https://zinnia.com/terms-of-use/"
                 className="typography-content-body-bold"
                 target="_blank"
                 rel="noreferrer"
               >
                 Terms of Use
-              </a>{' '}
+              </Link>{' '}
               and{' '}
-              <a
+              <Link
+                isNativeAnchorTag
                 href="https://zinnia.com/privacy-policy/"
                 className="typography-content-body-bold"
                 target="_blank"
                 rel="noreferrer"
               >
                 Privacy Policy
-              </a>
+              </Link>
               .
             </p>
             <Checkbox

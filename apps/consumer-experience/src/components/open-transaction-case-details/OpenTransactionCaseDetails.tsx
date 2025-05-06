@@ -3,20 +3,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
-import Link from 'next/link';
 
+import { Link } from '@/components/link/Link';
+import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import { searchCasesByPolicyNumber } from '@/queries/case-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { RouteKey } from '@/route-map';
 import { CaseSummary, CaseTypes } from '@/types/case';
 import { caseTypesToProccessSubtype } from '@/utils/cases';
 import { lineOfBusinessUrlPath } from '@/utils/data';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { indefiniteArticle } from '@/utils/strings';
 
 import styles from './OpenTransactionCaseDetails.module.css';
 import { ClientOnly } from '../client-only/ClientOnly';
-import { useFeatureFlags } from '@/hooks/use-feature-flags';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { indefiniteArticle } from '@/utils/strings';
 
 const caseTypeDisplay: Partial<{ [key in CaseTypes]: string }> = {
   [CaseTypes.ADDRESS_CHANGE]: 'address',
@@ -76,6 +76,7 @@ export const OpenTransactionCaseDetails = ({
               className="mb-sm"
             />
             <Link
+              isInternal
               href={`/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}${RouteKey.NOTIFICATIONS}`}
               className={styles.exceptionNotificationLink}
             >

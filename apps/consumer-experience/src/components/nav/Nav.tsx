@@ -1,7 +1,7 @@
 import { CarrierLogos } from '@zinnia/bloom/components';
-import Link from 'next/link';
 
 import EverlyLogoImage from '@/app/styles/everly/assets/everly-logo-new.svg';
+import { Link } from '@/components/link/Link';
 import { getMyPoliciesByCarrier } from '@/services';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { CompanyName } from '@/types/carriers';
@@ -68,6 +68,7 @@ export async function Nav({
         <DevMenu />
 
         <Link
+          isInternal
           prefetch
           href="/"
           className="justify-self-start"

@@ -1,11 +1,11 @@
 'use client';
 
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import Link from 'next/link';
 import useWindowSize from 'react-use/lib/useWindowSize';
 
 import documentStyles from '@/app/(authenticated)/coverage/shared-styles/Documents.module.css';
 import { ClientOnly } from '@/components/client-only/ClientOnly';
+import { Link } from '@/components/link/Link';
 import { DocumentCategory } from '@/types/document';
 import { lineOfBusinessUrlPath } from '@/utils/data';
 
@@ -30,6 +30,7 @@ export const DocumentsTabs = ({
       <ul className={documentStyles.nav}>
         <li>
           <Link
+            isInternal
             href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents`}
             className={`${activeTab === DocumentCategory.DOCUMENTS ? documentStyles.active : ''}`}
           >
@@ -38,6 +39,7 @@ export const DocumentsTabs = ({
         </li>
         <li>
           <Link
+            isInternal
             href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents?type=${DocumentCategory.STATEMENTS}`}
             className={`${activeTab === DocumentCategory.STATEMENTS ? documentStyles.active : ''}`}
           >
@@ -47,6 +49,7 @@ export const DocumentsTabs = ({
         {showTaxDocuments && (
           <li>
             <Link
+              isInternal
               href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents?type=${DocumentCategory.TAX}`}
               className={`${activeTab === DocumentCategory.TAX ? documentStyles.active : ''}`}
             >

@@ -1,8 +1,8 @@
 'use client';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import { Link } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 
+import { Link } from '@/components/link/Link';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { lineOfBusinessUrlPath } from '@/utils/data';

@@ -2,11 +2,11 @@
 
 import Cookies from 'js-cookie';
 
+import { Link } from '@/components/link/Link';
 import { CompanyName } from '@/types/carriers';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
 
 import { SkeletonLoader } from '../skeleton-loader/SkeletonLoader';
-
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
 export const WELLABE_CONTACT_PHONE_NUMBER = '1-888-222-3003';
 
@@ -37,5 +37,9 @@ export const CarrierPhoneNumber = () => {
     );
   }
 
-  return <a href={`tel:+${phoneNumber}`}>{phoneNumber}</a>;
+  return (
+    <Link isNativeAnchorTag href={`tel:+${phoneNumber}`}>
+      {phoneNumber}
+    </Link>
+  );
 };

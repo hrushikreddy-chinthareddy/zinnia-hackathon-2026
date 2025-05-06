@@ -6,6 +6,7 @@ import { Metadata } from 'next';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
+import { Link } from '@/components/link/Link';
 import { ValueWithPopover } from '@/components/value-with-popover/ValueWithPopover';
 import { RouteKey, getPageTitle } from '@/route-map';
 import {
@@ -99,7 +100,8 @@ export default async function Withdrawals({
                 <br />
                 <p>
                   To learn more about the requirements, visit the{' '}
-                  <a
+                  <Link
+                    isNativeAnchorTag
                     target="_blank"
                     className={styles.link}
                     href="https://www.irs.gov/retirement-plans/retirement-plan-and-ira-required-minimum-distributions-faqs"
@@ -107,7 +109,7 @@ export default async function Withdrawals({
                   >
                     IRS website
                     <Icon type={IconType.EXTERNAL_LINK} small />
-                  </a>
+                  </Link>
                 </p>
               </LabelPopover>
             }
@@ -124,7 +126,8 @@ export default async function Withdrawals({
                 <br />
                 <p>
                   To learn more about the requirements, visit the{' '}
-                  <a
+                  <Link
+                    isNativeAnchorTag
                     target="_blank"
                     className={styles.link}
                     href="https://www.irs.gov/retirement-plans/retirement-plan-and-ira-required-minimum-distributions-faqs"
@@ -136,7 +139,7 @@ export default async function Withdrawals({
                       type={IconType.EXTERNAL_LINK}
                       small
                     />
-                  </a>
+                  </Link>
                 </p>
               </LabelPopover>
             }

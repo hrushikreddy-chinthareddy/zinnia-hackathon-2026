@@ -2,6 +2,7 @@ import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
 import styles from './Footer.module.css';
+import { Link } from '../link/Link';
 
 export interface Props extends React.HTMLAttributes<HTMLDivElement> {
   hasBorder?: boolean;
@@ -10,7 +11,8 @@ export interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export const Footer = ({ hasBorder, style, className }: Props) => {
   const legalLink = (text: string, url: string) => {
     return (
-      <a
+      <Link
+        isNativeAnchorTag
         href={url}
         className={styles.link}
         target="_blank"
@@ -22,7 +24,7 @@ export const Footer = ({ hasBorder, style, className }: Props) => {
           {text}
           <Icon type={IconType.EXTERNAL_LINK} small />
         </span>
-      </a>
+      </Link>
     );
   };
 
@@ -53,7 +55,8 @@ export const Footer = ({ hasBorder, style, className }: Props) => {
         {legalLink('Privacy Policy', 'https://zinnia.com/privacy-policy/')}.
       </p>
       <p>
-        <a
+        <Link
+          isNativeAnchorTag
           href="https://levelaccess.com/a/zinnia"
           target="_blank"
           rel="noreferrer"
@@ -138,7 +141,7 @@ export const Footer = ({ hasBorder, style, className }: Props) => {
               </clipPath>
             </defs>
           </svg>
-        </a>
+        </Link>
       </p>
     </div>
   );
