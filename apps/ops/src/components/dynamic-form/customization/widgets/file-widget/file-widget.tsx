@@ -81,6 +81,13 @@ function processFiles(files: FileList) {
     return Promise.all(Array.from(files).map(processFile));
 }
 
+function getFileSubtype(blob: Blob) {
+    if (blob && blob.type && blob.type.includes('/')) {
+        return blob.type.split('/')[1];
+    }
+    return blob.type || '';
+}
+
 export function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     filesInfo,
     registry,
@@ -162,11 +169,12 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         const uploadPromises = Object.keys(files).map(async (key: string) => {
             const { blob, name } = dataURItoBlob(files[key]);
             const processedData = replacePlaceholders(data, formContext ?? {});
+
             const metaData = {
                 ...processedData,
                 sourceFileName: name,
                 documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
-                fileType: blob.type,
+                fileType: getFileSubtype(blob),
             };
             try {
                 const response = await uploadDocumentV2(metaData, files[key], formContext?.correlationId || '');

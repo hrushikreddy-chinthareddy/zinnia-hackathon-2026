@@ -53,9 +53,13 @@
                 "title": "Restriction",
                 "enumNames": ["Restricted", "Un-restricted"],
                 "enum": ["CARRIER_ONLY", "CLIENT_COPY"]
+            },
+            "sourceSystem": {
+                "type": "string",
+                "default": "ZL"
             }
         },
-        "required": ["docCategory", "documentType", "docAccessLevel"]
+        "required": ["docCategory", "documentTypeSelect", "docAccessLevel"]
     },
     "uiSchema": {
         "ui:submitButtonOptions": {
@@ -156,6 +160,9 @@
         },
         "docAccessLevel": {
             "ui:placeholder": "Select"
+        },
+        "sourceSystem": {
+            "ui:widget": "hidden"
         }
     }
 }
