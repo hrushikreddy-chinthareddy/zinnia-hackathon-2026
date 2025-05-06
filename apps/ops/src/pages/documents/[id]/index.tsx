@@ -4,8 +4,10 @@ import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
+import { supportedTiffExtensions } from '@deps/models/case/document';
 import documentDownloadV2 from '@deps/queries/server/documents/v2/download';
 import documentDownload from '@deps/queries/server/documents/v3/download';
+import { TiffConversion } from '@deps/utils/fileviewer/tiffConversion';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
@@ -43,6 +45,7 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const documentType = query.documentType as string;
             const carrierCode = query.carrierCode as string;
+            let finalBuffer: Buffer;
 
             if (!documentType || !carrierCode || !id) {
                 return {
@@ -104,10 +107,21 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
+            if (docDownload?.mimeType === 'image/tiff' || supportedTiffExtensions.includes(docDownload?.fileExtension)) {
+                const { tiffBuffer, success } = await TiffConversion({ binaryData: docDownload.binaryData });
+
+                if (success) {
+                    docDownload.mimeType = 'image/png';
+                    docDownload.fileExtension = 'png';
+                }
+                finalBuffer = tiffBuffer;
+            } else {
+                finalBuffer = Buffer.from(docDownload.binaryData, 'base64');
+            }
+
             res.setHeader('Content-Type', docDownload.mimeType);
             res.setHeader('Content-Disposition', `inline; filename=document.${docDownload.fileExtension}`);
-
-            res.end(Buffer.from(docDownload.binaryData, 'base64'));
+            res.end(finalBuffer);
 
             return {
                 props: {},
