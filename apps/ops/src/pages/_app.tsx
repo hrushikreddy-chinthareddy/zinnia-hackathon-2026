@@ -8,7 +8,7 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AppProps } from 'next/app';
-import { Lato, Poppins } from 'next/font/google';
+import { Lato } from 'next/font/google';
 import Head from 'next/head';
 import { appWithTranslation } from 'next-i18next';
 import { useEffect } from 'react';
@@ -21,11 +21,6 @@ import { NODE_ENV_PRODUCTION } from '@deps/types/constants';
 import { initializeBrowserLogging } from '@deps/utils/browser-logs';
 import { isProd } from '@deps/utils/environment.helper';
 
-const poppins = Poppins({
-    subsets: ['latin'],
-    weight: ['200', '300', '400', '500', '600', '700', '800'],
-    variable: '--font-family-primary',
-});
 const lato = Lato({
     subsets: ['latin'],
     weight: ['400', '700'],
@@ -113,7 +108,7 @@ const App = (props: AppProps) => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <section className={`${poppins.variable} ${lato.variable} relative`}>
+            <section className={`${lato.variable} relative`}>
                 <UserProvider>
                     <AppHead />
                     <AppBody {...props} />
