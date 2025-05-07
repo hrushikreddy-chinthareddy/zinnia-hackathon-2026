@@ -11,6 +11,7 @@ export type ExceptionInstance = {
     category: string;
     createdAt?: string; // TODO - This doesn't seem to exist any more.  Update once new contract comes out?
     detailedReason: string;
+    processingReason?: string;
     eventRef?: string[];
     id: string;
     mappedTasks?: string[];

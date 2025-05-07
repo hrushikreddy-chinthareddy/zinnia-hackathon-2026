@@ -476,12 +476,27 @@ export class TransformedCase {
     private buildException(exception: ExceptionInstance, isUnmapped?: boolean): ExceptionView {
         // Building up the exceptionReason to use if the nigoReason hasn't mapped the provided exceptionRefId or if the refId is missing
 
+        const exceptionReason = exception?.reason ? (isUnmapped ? toSentenceCase(exception?.reason) : exception?.reason) : '';
 
-        const exceptionReason = exception?.reason ? isUnmapped ? toSentenceCase(exception?.reason) : exception?.reason: "";
-        const exceptionDetailedReason = exception?.detailedReason ? isUnmapped ? toSentenceCase(exception?.detailedReason) : exception?.detailedReason: "";
-        const exceptionDescription = exceptionDetailedReason ? exceptionDetailedReason : exception?.exceptionRefId
-            ? this.t(`caseManagementApiKeys.nigoReasons.${exception.exceptionRefId}`, exceptionReason)
-            : exceptionReason;
+        // Prioritize processingReason to show detailed reasons as per process.
+        // Keeping the current detailedReason for other use cases.
+        // Use detailedReason as a fallback when processingReason is unavailable.
+        const getDetailedReason = (exception: ExceptionInstance, isUnmapped: boolean = false): string => {
+            const reason = exception?.processingReason || exception?.detailedReason;
+            if (!reason) return '';
+            return isUnmapped ? toSentenceCase(reason) : reason;
+        };
+
+        const getExceptionDescription = (exception: ExceptionInstance, detailedReason: string, exceptionReason: string): string => {
+            if (detailedReason) return detailedReason;
+            if (exception?.exceptionRefId) {
+                return this.t(`caseManagementApiKeys.nigoReasons.${exception.exceptionRefId}`, exceptionReason);
+            }
+            return exceptionReason;
+        };
+
+        const exceptionDetailedReason = getDetailedReason(exception, isUnmapped);
+        const exceptionDescription = getExceptionDescription(exception, exceptionDetailedReason, exceptionReason);
 
         const tasks: TaskView[] = (
             (exception.taskIdList || ([] as string[]))
