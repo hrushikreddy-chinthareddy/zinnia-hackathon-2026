@@ -1,8 +1,9 @@
 import { RouteKey, routeMap, getRedirectUrl } from '@/route-map';
 import { getMyPoliciesByCarrier } from '@/services';
+
+import { baseExperienceCarriers } from './carriers';
 import { lineOfBusinessUrlPath } from './data';
 import { REDIRECT_TO_URL_KEY } from './serverClientUtils';
-import { baseExperienceCarriers } from './carriers';
 
 /**
  * If the user only has one policy, this will return that policy

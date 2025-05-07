@@ -1,7 +1,8 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 
-import styles from '../OneTimePremiumPayment.module.css';
 import { Link } from '@/components/link/Link';
+
+import styles from '../OneTimePremiumPayment.module.css';
 
 export const PaymentError = ({ goToUrl }: { goToUrl: string }) => {
   return (

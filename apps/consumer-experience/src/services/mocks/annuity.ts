@@ -26,7 +26,7 @@ import {
   FeatureType,
 } from '@zinnia/api-types/types/sor';
 
-import { Nullable } from '@/types/utilityTypes';
+type Nullable<T> = T | null;
 
 export const mockAnnuityResponse: Policy = {
   id: null,

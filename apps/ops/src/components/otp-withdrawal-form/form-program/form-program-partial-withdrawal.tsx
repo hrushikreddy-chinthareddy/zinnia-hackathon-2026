@@ -64,7 +64,6 @@ export default function FormProgramPartialWithdrawal({
         }
 
         // remove accountCloseReason and setIsValidAsOfDate to true)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         setFormProgram(({ accountCloseReason: omitThis, isValidAsOfDate: omitThisToo, ...rest }) => {
             return { ...rest, isValidAsOfDate: true };
         });

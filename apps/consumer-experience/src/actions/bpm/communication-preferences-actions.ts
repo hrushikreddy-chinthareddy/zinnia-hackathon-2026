@@ -8,6 +8,7 @@ import utc from 'dayjs/plugin/utc';
 
 import { ApiResponse, bpmApiBaseUrl, ServerApi } from '@/services';
 import { BPMResponse } from '@/types/transactions';
+import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 import {
   ActionTypes,
@@ -15,7 +16,6 @@ import {
   returnErrorResponse,
   returnSuccessResponse,
 } from './utils';
-import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -57,22 +57,22 @@ export const updatePreferencesByPlanCode = async ({
     // day to next day
     const central = dayjs().tz('America/Chicago');
     let effectiveDate = dayjs();
-    if ((central.isAfter(central.hour(15)), 'hour')) {
+    if ((central.isAfter(central.hour(15), 'hour'))) {
       effectiveDate = effectiveDate.add(1, 'day');
     }
 
     // Not sure if there should be a different default besides email
     const prefDetails = isMailPreference
       ? {
-          preferredCommunicationType:
-            CommunicationPreferenceChange.preferredCommunicationType
-              .REGULARMAIL,
-        }
+        preferredCommunicationType:
+          CommunicationPreferenceChange.preferredCommunicationType
+            .REGULARMAIL,
+      }
       : {
-          preferredCommunicationType:
-            CommunicationPreferenceChange.preferredCommunicationType.EMAIL,
-          email: newPreferencesData.email,
-        };
+        preferredCommunicationType:
+          CommunicationPreferenceChange.preferredCommunicationType.EMAIL,
+        email: newPreferencesData.email,
+      };
 
     const reqBody = {
       communicationPreference: prefDetails,

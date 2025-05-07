@@ -22,7 +22,6 @@ export default function FormProgramProcessDate({ options, isFormStateReadOnly }:
     const [selected, setSelected] = useState<ProcessRequestType | ''>(formProgram?.processRequestType?.[0]?.text || '');
 
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { asOfDate: intentionallyRemovingThisValue, ...rest } = formProgram;
 
         const formProcessRequestType = selected ? [{ text: selected }] : null;

@@ -78,7 +78,7 @@ export const Completed: StoryObj<typeof NotificationCenter> = {
   },
 };
 
-export const noNotifications: StoryObj<typeof NotificationCenter> = {
+export const NoNotifications: StoryObj<typeof NotificationCenter> = {
   args: {
     initialNotifications: [],
   },

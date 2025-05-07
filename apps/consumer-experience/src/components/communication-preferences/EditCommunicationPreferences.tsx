@@ -6,13 +6,13 @@ import {
 } from '@zinnia/api-types/types/preferences';
 import { Email } from '@zinnia/api-types/types/sor';
 import { Button, Radio } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { Controller, useForm } from 'react-hook-form';
 
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './CommunicationPreferences.module.css';
 import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
-import clsx from 'clsx';
 
 interface EditCommunicationPreferencesProps {
   currentPreference: EDeliveryPreferenceModel;

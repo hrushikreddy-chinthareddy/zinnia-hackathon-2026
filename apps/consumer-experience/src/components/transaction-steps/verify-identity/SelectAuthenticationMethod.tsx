@@ -9,6 +9,7 @@ import {
 } from 'react-hook-form';
 
 import Loading from '@/app/loading';
+import { Button } from '@/components/button/Button';
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
 import { postLoginSendMfaChallenge } from '@/components/mfa/mfa-actions';
 import { MfaPhoneNumber } from '@/components/mfa/phone-number/MfaPhoneNumber';
@@ -17,7 +18,6 @@ import { getUserAuthenticationMethods } from '@/queries/user-queries';
 import { MfaVerificationType } from '@/types/auth';
 
 import styles from './VerifyIdentity.module.css';
-import { Button } from '@/components/button/Button';
 
 export const SelectAuthenticationMethod = ({
   transactionDescription,

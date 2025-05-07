@@ -1,10 +1,10 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
+import { Button } from '@/components/button/Button';
 import { AccountNumber } from '@/components/pii/AccountNumber';
 
 import styles from './RemoveBankConfirm.module.css';
-import { Button } from '@/components/button/Button';
 
 interface RemoveBankConfirmProps {
   bankNickname?: string;

@@ -5,8 +5,8 @@ import { Metadata } from 'next';
 import { Footer } from '@/components/footer/Footer';
 import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage';
 import styles from '@/components/generic-info-page/GenericInfoPage.module.css';
-import { getSession } from '@/utils/auth';
 import { ROOT_URL_PATH } from '@/types';
+import { getSession } from '@/utils/auth';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components

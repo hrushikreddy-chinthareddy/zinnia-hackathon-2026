@@ -26,6 +26,7 @@ import {
 } from './services';
 import { checkResetDeliveryDateEligibility } from './services/bpm';
 import { ROOT_URL_PATH } from './types';
+import { TermsAndConditionApiResponse } from './types/auth';
 import {
   deleteCookie,
   deleteSession,
@@ -42,18 +43,17 @@ import {
   isValidCarrierSubdomain,
 } from './utils/carriers';
 import { lineOfBusinessUrlPath } from './utils/data';
+import {
+  getFriendlyRedirectUrl,
+  isRedirectAFriendlyUrl,
+  userSinglePolicy,
+} from './utils/singlePolicyRedirect';
 import { applyThemeCookies } from './utils/theme';
 import {
   getPolicyDataFromPath,
   getSubdomain,
   prependSubdomain,
 } from './utils/url';
-import { TermsAndConditionApiResponse } from './types/auth';
-import {
-  getFriendlyRedirectUrl,
-  isRedirectAFriendlyUrl,
-  userSinglePolicy,
-} from './utils/singlePolicyRedirect';
 
 const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
   if (!isMockAllowed()) {

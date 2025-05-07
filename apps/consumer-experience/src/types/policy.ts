@@ -101,7 +101,7 @@ export interface PolicyCoverage {
   effectiveDate?: string | null;
 }
 
-interface Person {
+interface _Person {
   firstName: string;
   lastName: string;
 }

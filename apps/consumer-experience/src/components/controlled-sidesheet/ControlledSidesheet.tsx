@@ -6,8 +6,9 @@ import {
 } from '@zinnia/bloom/components';
 import { FC, PropsWithChildren, useState } from 'react';
 
-import styles from './ControlledSidesheet.module.css';
 import { Button } from '@/components/button/Button';
+
+import styles from './ControlledSidesheet.module.css';
 
 type ControlledSidesheetProps = {
   closeBeforeContent?: string;

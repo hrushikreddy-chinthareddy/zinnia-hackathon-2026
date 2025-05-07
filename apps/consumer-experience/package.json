@@ -9,6 +9,7 @@
     "check-types": "tsc --noemit",
     "lint": "next lint && pnpm check-types",
     "lint-staged": "pnpm run lint",
+    "lint:fix": "next lint --fix",
     "test": "cd ../.. pnpm run build && cd apps/consumer-experience && jest",
     "test:watch": "jest --watch",
     "storybook": "storybook dev -p 6007 --no-open",

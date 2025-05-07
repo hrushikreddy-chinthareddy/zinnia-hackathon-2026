@@ -2,6 +2,7 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
 import styles from '@/app/(authenticated)/coverage/policies.module.css';
+import { getRedirectUrl, RouteKey, routeMap } from '@/route-map';
 import {
   CarrierPolicyDetails,
   ExtendedPolicyProductType,
@@ -15,7 +16,6 @@ import { FieldData } from '../field-data/FieldData';
 import { LabelPopover } from '../label-popover/LabelPopover';
 import { PolicyDetailsSummary } from '../policy-details-summary/PolicyDetailsSummary';
 import { CoveragePopover } from '../policy-overview/CoveragePopover';
-import { getRedirectUrl, RouteKey, routeMap } from '@/route-map';
 
 export const CoverageOverviewCard = ({
   policy,

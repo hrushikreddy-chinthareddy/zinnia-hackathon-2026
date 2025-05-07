@@ -1,8 +1,9 @@
 'use client';
 
 import { Icon, IconType } from '@zinnia/bloom/components';
-import styles from './UserBadge.module.css';
 import clsx from 'clsx';
+
+import styles from './UserBadge.module.css';
 
 const firstLetter = (val: string) => {
   if (!val) {

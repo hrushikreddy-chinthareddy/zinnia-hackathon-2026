@@ -1,8 +1,9 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { FC, ReactNode } from 'react';
 
-import styles from './Error.module.css';
 import { Button } from '@/components/button/Button';
+
+import styles from './Error.module.css';
 interface ErrorProps {
   errorTitle: string;
   errorMessage: ReactNode;

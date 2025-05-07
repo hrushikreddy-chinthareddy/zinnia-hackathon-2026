@@ -8,10 +8,10 @@ import { PiiProvider } from '@/components/providers/PiiProvider';
 import { RefreshRouterManager } from '@/components/providers/RefreshRouterManager';
 import { SessionManager } from '@/components/providers/SessionManager';
 import { UserProvider } from '@/components/providers/UserProvider';
+import { UserConsentManager } from '@/components/user-consent/UserConsentManager';
 import { CompanyName } from '@/types/carriers';
 import { getCookie, getSession } from '@/utils/auth';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
-import { UserConsentManager } from '@/components/user-consent/UserConsentManager';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components

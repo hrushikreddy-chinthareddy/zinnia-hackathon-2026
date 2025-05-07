@@ -42,6 +42,14 @@ module.exports = {
   },
   rules: {
     // 'check-file/no-index': 'error',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', {
+      argsIgnorePattern: '^_',
+      caughtErrors: 'none',
+      ignoreRestSiblings: true,
+      varsIgnorePattern: '^_',
+      vars: 'all',
+    }],
     'check-file/filename-blocklist': [
       'error',
       {

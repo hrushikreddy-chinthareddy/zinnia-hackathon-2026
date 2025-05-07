@@ -12,10 +12,10 @@ jest.mock('../utils/api', () => ({
 }));
 
 describe('EnterpriseApiTokenHttp', () => {
-  let originalFetch;
+  let _originalFetch;
 
   beforeEach(() => {
-    originalFetch = global.fetch;
+    _originalFetch = global.fetch;
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () =>

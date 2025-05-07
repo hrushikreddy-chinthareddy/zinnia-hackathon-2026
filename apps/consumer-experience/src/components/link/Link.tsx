@@ -67,7 +67,6 @@ export const Link = (props: Props): React.ReactElement => {
   };
 
   if (props.isInternal) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { children, isInternal, isNativeAnchorTag, ...rest } = props;
 
     return (
@@ -78,7 +77,6 @@ export const Link = (props: Props): React.ReactElement => {
   }
 
   if (props.isNativeAnchorTag) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { children, isInternal, isNativeAnchorTag, ...rest } = props;
 
     return (
@@ -88,7 +86,6 @@ export const Link = (props: Props): React.ReactElement => {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { isInternal: _, isNativeAnchorTag: __, ...rest } = props;
   return <BloomLink {...rest} onClick={trackAndClick} />;
 };

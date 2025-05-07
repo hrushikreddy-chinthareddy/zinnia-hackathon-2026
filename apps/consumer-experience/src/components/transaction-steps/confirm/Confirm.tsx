@@ -1,8 +1,9 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
-import styles from './Confirm.module.css';
 import { Button } from '@/components/button/Button';
+
+import styles from './Confirm.module.css';
 interface ConfirmProps {
   confirmTitle: string;
   confirmMessage?: string;

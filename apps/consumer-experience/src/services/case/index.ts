@@ -102,7 +102,7 @@ export const searchCasesByPolicyNumber = async ({
   policyNumber,
   // TODO: i'm assuming i should include this because policyNumber is not
   // guaranteed unique?
-  carrierCode,
+  carrierCode: _carrierCode,
 }: {
   policyNumber: string;
   carrierCode?: string;

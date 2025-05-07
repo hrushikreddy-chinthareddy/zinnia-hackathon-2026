@@ -1,4 +1,5 @@
 'use server';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { RedirectType, redirect } from 'next/navigation';
 
 import { ServerApi } from '@/services';
@@ -21,6 +22,7 @@ import {
   setMfaCookie,
   setMfaOobCookie,
 } from '@/utils/auth';
+import { lineOfBusinessUrlPath } from '@/utils/data';
 import { logTrace, logWarn } from '@/utils/logging/server-logging';
 import {
   LOGIN_EMAIL_COOKIE_KEY,
@@ -31,8 +33,6 @@ import {
   isRedirectAFriendlyUrl,
   userSinglePolicy,
 } from '@/utils/singlePolicyRedirect';
-import { lineOfBusinessUrlPath } from '@/utils/data';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 export const loginVerificationSuccessUrl = async () => {
   const returnUrl = await getReturnUrlCookie();

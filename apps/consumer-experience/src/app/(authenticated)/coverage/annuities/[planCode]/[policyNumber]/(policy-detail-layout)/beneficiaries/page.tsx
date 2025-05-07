@@ -9,6 +9,7 @@ import {
 import { Metadata } from 'next';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Beneficiaries.module.css';
+import { BeneficiariesView } from '@/app/(authenticated)/coverage/shared-views/beneficiaries-view/BeneficiariesView';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
@@ -16,11 +17,10 @@ import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { FullName } from '@/components/pii/FullName';
 import { RouteKey, getPageTitle } from '@/route-map';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { getBeneficiaries } from '@/services/policy';
 import { Beneficiary } from '@/types/policy';
-import { getFeatureFlags } from '@/services/feature-flags';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { BeneficiariesView } from '@/app/(authenticated)/coverage/shared-views/beneficiaries-view/BeneficiariesView';
 
 const pageTitle = getPageTitle(RouteKey.BENEFICIARIES);
 // disable because NextJS needs this to be exported from this file

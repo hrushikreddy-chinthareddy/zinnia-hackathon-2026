@@ -4,13 +4,13 @@ import { Radio, Label } from '@zinnia/bloom/components';
 import { FC } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
+import { Button } from '@/components/button/Button';
 import { BankFormFields } from '@/types/bank';
 import { isNumber } from '@/utils/regex';
 
 import styles from './AddBank.module.css';
 import { FieldDataActive } from '../../../field/data-active/FieldDataActive';
 import { FieldStatus } from '../../../field/types';
-import { Button } from '@/components/button/Button';
 
 export interface AddBankProps {
   cancelCallback?: () => void;

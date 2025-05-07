@@ -119,7 +119,7 @@ export const PasswordlessEmailChallenge = () => {
             className={inputStyles}
             placeholder="Enter your code"
             name="code"
-            onChange={e => {
+            onChange={() => {
               setCurrentError('');
             }}
           />

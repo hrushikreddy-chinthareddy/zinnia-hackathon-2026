@@ -1,8 +1,9 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
-import styles from './Success.module.css';
 import { Button } from '@/components/button/Button';
+
+import styles from './Success.module.css';
 interface SuccessProps {
   successTitle: string;
   successMessage: string;
