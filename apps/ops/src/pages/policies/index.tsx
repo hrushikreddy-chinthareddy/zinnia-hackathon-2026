@@ -29,6 +29,9 @@ import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/ut
 import nextI18nextConfig from 'next-i18next.config';
 import { NextRouter, useRouter } from 'next/router';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { FgaRoles } from '@xd/utils/dist';
 
 const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
     {
@@ -236,15 +239,18 @@ export const getServerSideProps = withPageAuthAndLogging(
                 });
                 return serverSidePropsLogout();
             }
-            // If they can't read Policy Admin there's no point in continuing. Redirect to 403 Forbidden.
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadPolicyAdmin,
-                loggingContext
-            );
+
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+                ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY, loggingContext)
+                : await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadPolicyAdmin,
+                    loggingContext
+                );
             const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
 
-            if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
+            if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
                 return {
                     redirect: {
                         destination: '/403',

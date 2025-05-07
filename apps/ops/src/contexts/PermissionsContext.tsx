@@ -74,9 +74,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     });
 
     const { data: isAllowReadPolicyAdmin, isLoading: policyAdminLoading } = useQuery({
-        queryKey: ['isAllowReadPolicyAdmin', partyId],
-        queryFn: () => {
-            return doesUserHavePagePermissionQuery(UserPermission.AllowReadPolicyAdmin, partyId);
+        queryKey: ['isAllowReadPolicyAdmin', partyId, featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH]],
+        queryFn: async () => {
+            if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH]) {
+                return await checkTuple(partyId, FgaRelation.UiAccess, FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY);
+            }
+            return await doesUserHavePagePermissionQuery(UserPermission.AllowReadPolicyAdmin, partyId);
         },
         enabled: !!partyId,
         staleTime: FIFTEEN_MINUTES_IN_MS,

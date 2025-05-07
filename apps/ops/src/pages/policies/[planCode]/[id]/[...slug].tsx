@@ -43,6 +43,9 @@ import { PolicySearchResponse } from '@deps/types/search';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { logError, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { FgaRoles } from '@xd/utils/dist';
 
 interface PolicyPageProps extends SegmentTrackedPageProps {
     policy: Policy;
@@ -216,17 +219,17 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const [allowReadPolicyAdminPermissionPromise, isAdvisorsExcelPromise] = await Promise.allSettled([
-                doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin, loggingContext),
-                checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext),
-            ]);
+            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+                ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY, loggingContext)
+                : await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadPolicyAdmin,
+                    loggingContext
+                );
+            const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
 
-            const isAdvisorsExcel = isAdvisorsExcelPromise.status === 'fulfilled' ? isAdvisorsExcelPromise.value : false;
-            const allowReadPolicyAdminPermission =
-                allowReadPolicyAdminPermissionPromise.status === 'fulfilled' ? allowReadPolicyAdminPermissionPromise.value : false;
-
-            // If the user can't read Policy Admin and is not Advisor Excel, redirect to 403 Forbidden.
-            if (!isAdvisorsExcel && !allowReadPolicyAdminPermission) {
+            if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
                 return {
                     redirect: {
                         destination: '/403',
