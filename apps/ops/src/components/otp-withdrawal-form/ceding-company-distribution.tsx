@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { deStringifyTrueFalseNull, stringifyTrueFalseNull } from '@deps/helpers/string.helper';
+import { deStringifyTrueFalseNull, stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import { NonRegTypeReason, QualTypes, RegReason } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 

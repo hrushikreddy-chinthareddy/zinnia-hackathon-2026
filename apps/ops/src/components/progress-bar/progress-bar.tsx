@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { ProgressBarTest } from '@deps/jest/constants/test-id-constants';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 

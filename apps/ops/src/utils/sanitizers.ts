@@ -1,6 +1,6 @@
 import { ApiError } from 'next/dist/server/api-utils';
 
-import { formatAccountNumber, formatSSN, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { formatAccountNumber, formatSSN, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { Case } from '@deps/models/case/case';
 import { DocumentInstance } from '@deps/models/case/document-instance';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
@@ -311,11 +311,11 @@ const fullyMaskSteps = (steps: StepInstance[] | undefined): StepInstance[] | und
             ...rest,
             ...(instanceInfo
                 ? {
-                      instanceInfo: {
-                          ...instanceInfo,
-                          label: toMaskedStringOrNull(instanceInfo?.label) as string,
-                      },
-                  }
+                    instanceInfo: {
+                        ...instanceInfo,
+                        label: toMaskedStringOrNull(instanceInfo?.label) as string,
+                    },
+                }
                 : { instanceInfo: null }),
         } as StepInstance;
     });

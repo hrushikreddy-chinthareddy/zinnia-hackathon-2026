@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 
 import Badge from './badge';
-import { BadgeVariant } from './badge.helper';
+import { BadgeVariant } from './badge.helpers';
 
 export const BadgeComponent = (args: any) => {
     const badge = args.icon ? (

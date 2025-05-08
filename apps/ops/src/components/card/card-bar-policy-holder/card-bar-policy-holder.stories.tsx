@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import { Status } from '@deps/models/policy/sor-policy';
 
 import CardBarPolicyHolder from './card-bar-policy-holder';

@@ -1,18 +1,17 @@
-
 import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useEffect, useState } from 'react';
 
-import TransactionNavigationButtons, { ParentPage } from "@deps/components/transaction-navigation-buttons/transaction-navigation-buttons";
-import WorkflowCard from "@deps/components/workflows/workflow-card/workflow-card";
+import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
+import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helpers';
 import { NigoSubException } from '@deps/containers/task-container/components/steps/nigo-details/nigo-details.types';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isEmptyObject } from '@deps/helpers/objects.helper';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { isEmptyObject } from '@deps/helpers/objects.helpers';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
@@ -24,11 +23,10 @@ import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import { SuggestedDocType } from './document-indexing-info';
 import { SelOptionType, ServiceFormReview } from './service-form-review';
-import { getFormData } from './service-form-review.helper';
+import { getFormData } from './service-form-review.helpers';
 import { useNigoEntry } from '../../nigo-entry-provider';
-import { getCaseType } from '../form-entry/form-entry-step.helper';
+import { getCaseType } from '../form-entry/form-entry-step.helpers';
 import { NigoException } from '../nigo-details/nigo-details.types';
-
 
 interface ServiceFormReviewStepProps {
     documentNumber: string;
@@ -39,16 +37,34 @@ interface ServiceFormReviewStepProps {
     document: DocumentData;
     nigoExceptions: NigoException[];
     nigoSubExceptions: NigoSubException[];
-};
+}
 
-export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, clientCode, document, nigoExceptions, nigoSubExceptions} : ServiceFormReviewStepProps ) => {
+export const ServiceFormReviewStep = ({
+    documentNumber,
+    policyNumber,
+    docType,
+    clientCode,
+    document,
+    nigoExceptions,
+    nigoSubExceptions,
+}: ServiceFormReviewStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
     const { goToNext } = useWorkflow();
 
     const { sectionOption, documentIndexingInfo, formErrors, setFormErrors, setSubmitFailed, setMessages, messages } = useNigoEntry();
     const formState = useContext(FormDataContext);
 
-    const { formSource, setFormSource, setFormData, formSubtype, setFormReindexingData, setFormNigos, formNigos, formComment, setFormComment } = formState;
+    const {
+        formSource,
+        setFormSource,
+        setFormData,
+        formSubtype,
+        setFormReindexingData,
+        setFormNigos,
+        formNigos,
+        formComment,
+        setFormComment,
+    } = formState;
     const caseType = getCaseType(docType as string);
     const carrier = clientCode?.toUpperCase();
     const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +73,7 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
     const NIGO_EXCEPTION = filteredNigoException?.value;
     const subExceptions = nigoSubExceptions?.find((subItem: NigoSubException) => subItem.nmId === NIGO_EXCEPTION)?.subExceptions;
     const notesSubException = subExceptions?.find((item: any) => {
-        return item.label === 'Validation failed due to reason not listed.'
+        return item.label === 'Validation failed due to reason not listed.';
     })?.value;
 
     const submit = useCallback(async () => {
@@ -78,14 +94,14 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
                 browserLogInfo('ServiceFormReviewStep::submit::Successfully updated task', {
                     caseId: formState.initialForm.caseId,
                     taskId: formState.initialForm.taskId,
-                    id: successfulCaseUpdate.id
+                    id: successfulCaseUpdate.id,
                 });
                 setSubmitFailed(false);
             } else {
                 browserLogInfo('ServiceFormReviewStep::submit::Failed to update task', {
                     caseId: formState.initialForm.caseId,
                     taskId: formState.initialForm.taskId,
-                    id: successfulCaseUpdate.id
+                    id: successfulCaseUpdate.id,
                 });
                 setSubmitFailed(true);
             }
@@ -96,7 +112,7 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
         setIsLoading(false);
     }, [document, formState, setSubmitFailed, timer]);
 
-    const handleStepContinue = useCallback(async() => {
+    const handleStepContinue = useCallback(async () => {
         const errors = {} as FormValidationErrors;
         setFormErrors({});
 
@@ -104,13 +120,17 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
             if (isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex)) {
                 errors['noDocTypeToReindex'] = t('formErrors.formValidation.noDocTypeToReindex');
             }
-            if (!isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex) && documentIndexingInfo?.docTypeToReindex === SuggestedDocType.OTHER && isNullEmptyOrUndefined(documentIndexingInfo?.notes)) {
+            if (
+                !isNullEmptyOrUndefined(documentIndexingInfo?.docTypeToReindex) &&
+                documentIndexingInfo?.docTypeToReindex === SuggestedDocType.OTHER &&
+                isNullEmptyOrUndefined(documentIndexingInfo?.notes)
+            ) {
                 errors['noNotes'] = t('formErrors.formValidation.noNotes');
             }
         }
 
         if (sectionOption === NIGO_EXCEPTION) {
-            if ( messages[NIGO_EXCEPTION] === undefined || isEmptyObject(messages[NIGO_EXCEPTION])) {
+            if (messages[NIGO_EXCEPTION] === undefined || isEmptyObject(messages[NIGO_EXCEPTION])) {
                 errors['noCategoryDetailsSelected'] = t('formErrors.formValidation.noCategoryDetailsSelected');
             } else {
                 const selectedMessage = messages[NIGO_EXCEPTION] ? Object.keys(messages[NIGO_EXCEPTION]) : [];
@@ -133,16 +153,15 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
         }
     }, [documentIndexingInfo, goToNext, sectionOption, setFormErrors, submit, messages, formComment, t]);
 
-
     useEffect(() => {
         if (sectionOption === NIGO_EXCEPTION && Object.keys(formErrors).length === 0) {
             const nigos: NigoMessages[] = [];
             const obj = {
                 exceptionId: NIGO_EXCEPTION,
-                messages: !isEmptyObject(messages) ? Object.keys(messages[NIGO_EXCEPTION]) : []
+                messages: !isEmptyObject(messages) ? Object.keys(messages[NIGO_EXCEPTION]) : [],
             };
             nigos.push(obj);
-            setFormNigos({ nigos: nigos } );
+            setFormNigos({ nigos: nigos });
         } else {
             setFormNigos(null);
         }
@@ -166,9 +185,9 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
             const data = getFormData(caseType, carrier, formSubtype);
             if (data) {
                 setFormData(prevFormData => {
-                    return{
+                    return {
                         ...prevFormData,
-                        ...data
+                        ...data,
                     };
                 });
             }
@@ -182,16 +201,16 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
                 lob: document.lob,
                 docHandle: document.sysDocumentHandle,
                 docTypeToReindex: documentIndexingInfo?.docTypeToReindex,
-                notes: documentIndexingInfo?.docTypeToReindex === SuggestedDocType.OTHER ? documentIndexingInfo?.notes : null
+                notes: documentIndexingInfo?.docTypeToReindex === SuggestedDocType.OTHER ? documentIndexingInfo?.notes : null,
             }));
             setFormNigos(null);
             setMessages([]);
-            setFormComment({comment: ''})
+            setFormComment({ comment: '' });
         } else if (sectionOption === SelOptionType.NIGO_ENTRY) {
             setFormNigos(null);
             setFormReindexingData(null);
             setMessages([]);
-            setFormComment({comment: ''})
+            setFormComment({ comment: '' });
         } else if (sectionOption === NIGO_EXCEPTION) {
             setFormReindexingData(null);
             setFormNigos(null);
@@ -199,7 +218,7 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
             setFormReindexingData(null);
             setFormNigos(null);
             setMessages([]);
-            setFormComment({comment: ''})
+            setFormComment({ comment: '' });
         }
     }, [sectionOption, document, documentIndexingInfo, NIGO_EXCEPTION]);
 
@@ -212,7 +231,7 @@ export const ServiceFormReviewStep = ({documentNumber, policyNumber, docType, cl
                     className="mt-4"
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
-                    leaveTransactionLink='/create-case'
+                    leaveTransactionLink="/create-case"
                 />
             }
         >

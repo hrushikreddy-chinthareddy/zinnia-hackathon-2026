@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import SideSheet, { SideSheetLocation } from '@deps/components/side-sheet/side-sheet';
 
@@ -21,17 +21,22 @@ interface SideSheetProviderProps {
     children: React.ReactNode;
 }
 
-export const SideSheetProvider: React.FC<SideSheetProviderProps> = ({ children }) => {
+export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
     const [header, setHeader] = useState<string | undefined>('');
     const [headerComponent, setHeaderComponent] = useState<React.ReactNode>(<></>);
     const [contentComponent, setContentComponent] = useState<React.ReactNode>(<></>);
     const [location, setLocation] = useState<SideSheetLocation>(SideSheetLocation.Right);
     const [open, setOpen] = useState(false);
     const router = useRouter();
-    const { taskId, ...rest } = router.query;
+    const { taskId, ..._rest } = router.query;
     const [secondarySideSheetOpen, setSecondarySideSheetOpen] = useState(false);
     const [secondarySideSheetHeader, setSecondarySideSheetHeader] = useState<React.ReactNode>(null);
     const [secondarySideSheetContent, setSecondarySideSheetContent] = useState<React.ReactNode>(null);
+
+    const closeAll = useCallback(() => {
+        onClose();
+        setSecondarySideSheetOpen(false);
+    }, []);
 
     useEffect(() => {
         router.events.on('routeChangeComplete', closeAll);
@@ -39,18 +44,13 @@ export const SideSheetProvider: React.FC<SideSheetProviderProps> = ({ children }
         return () => {
             router.events.off('routeChangeComplete', closeAll);
         };
-    }, []);
+    }, [closeAll, router.events]);
 
     const handleOpen = (isOpen: boolean) => {
         setOpen(isOpen);
     };
     const handleLocation = (location: SideSheetLocation) => {
         setLocation(location);
-    };
-
-    const closeAll = () => {
-        onClose();
-        setSecondarySideSheetOpen(false);
     };
 
     const onClose = () => {

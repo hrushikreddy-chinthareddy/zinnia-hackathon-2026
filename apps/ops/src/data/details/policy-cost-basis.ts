@@ -1,4 +1,4 @@
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { DataDefinition } from '@deps/types/data';
 

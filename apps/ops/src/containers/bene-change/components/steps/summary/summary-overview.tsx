@@ -5,10 +5,10 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 import { PartyRole } from '@deps/models/policy/sor-policy';
 
-import { getTagVariant } from './summary-step.helper';
+import { getTagVariant } from './summary-step.helpers';
 
 const BeneficiaryOverview = ({ name, action, allocation }: any) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.summary' });

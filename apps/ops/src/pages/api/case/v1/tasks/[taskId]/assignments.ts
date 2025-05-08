@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { HttpStatusCode } from 'axios';
 
 import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
@@ -7,7 +8,6 @@ import { HttpMethod } from '@deps/queries/api-utils/serverClientUtils';
 import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { HttpStatusCode } from 'axios';
 
 type error = {
     error: string;

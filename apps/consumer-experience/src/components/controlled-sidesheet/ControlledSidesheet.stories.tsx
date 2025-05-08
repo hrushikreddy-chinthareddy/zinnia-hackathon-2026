@@ -15,7 +15,7 @@ const meta: Meta<typeof ControlledSidesheet> = {
 
 export default meta;
 
-export const Default: StoryObj<any> = {
+export const Default: StoryObj<typeof ControlledSidesheet> = {
   args: {
     children: <div>Test content</div>,
     header: 'This is the header',

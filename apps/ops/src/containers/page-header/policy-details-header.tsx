@@ -3,11 +3,11 @@ import { useTranslation } from 'next-i18next';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import PageHeader from '@deps/components/page-header/page-header';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 
 import TransactionCard from '../policy-details/cards/transaction-card';
-import { buildTransactionCards } from '../policy-details/policy-details.helper';
+import { buildTransactionCards } from '../policy-details/policy-details.helpers';
 
 export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation(undefined, {

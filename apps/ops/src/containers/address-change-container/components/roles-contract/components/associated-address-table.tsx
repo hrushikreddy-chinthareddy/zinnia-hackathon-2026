@@ -13,7 +13,7 @@ import { Policy, PolicyParties } from '@deps/models/policy/sor-policy';
 
 import { EmptyAssociatedAddress } from './empty-associated-address';
 import { AssociatedAddressTableColumns } from '../utils/roles-contract-constants';
-import { getAssociatedTableData, getContractSelectionRadioConfig, isRowAlreadySelected } from '../utils/roles-contract-helper';
+import { getAssociatedTableData, getContractSelectionRadioConfig, isRowAlreadySelected } from '../utils/roles-contract-helpers';
 import { mapRoleItemToRoleState } from '../utils/roles-contract-mappers';
 import { AssociateAddressTableRow } from '../utils/roles-contract-types';
 

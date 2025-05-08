@@ -16,7 +16,7 @@ import {
     getSubstandardRating,
     getAddressType,
     getFullName,
-} from './party-info-helper';
+} from './party-info-helpers';
 
 const partyInfo: PolicyAllOfPartiesItem = {
     partyId: 'Party_PI_1',

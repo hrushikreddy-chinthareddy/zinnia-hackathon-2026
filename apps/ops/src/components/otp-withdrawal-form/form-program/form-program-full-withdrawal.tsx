@@ -8,7 +8,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { AccountCloseReason, FormProgram, ProgramSubType, ProgramType, WithdrawalType } from '@deps/models/case/withdrawal/case';
 
 import FormProgramProcessDate, { SelectOneOption } from './form-program-process-date';
-import { getDefaultFormProgramValues } from './form-program.helper';
+import { getDefaultFormProgramValues } from './form-program.helpers';
 
 const toggleOption = (val: string, setFormProgram: React.Dispatch<React.SetStateAction<FormProgram>>) => {
     return (shouldBeChecked: boolean): void => {

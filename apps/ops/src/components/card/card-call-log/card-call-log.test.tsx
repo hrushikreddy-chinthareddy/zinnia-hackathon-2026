@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 
 import CallLogCard from './card-call-log';
 

@@ -12,7 +12,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 
 import VerifyAddress from './address-validator';
-import { formatAddress, validateContractStep } from './contact-details.helper';
+import { formatAddress, validateContractStep } from './contact-details.helpers';
 import { ContactDetailsProps, ContactTypes } from './contact-details.types';
 import PhoneNumber from './phone-number';
 import { useAddressChange } from '../../address-change-provider';

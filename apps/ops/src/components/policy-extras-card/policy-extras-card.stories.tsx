@@ -5,7 +5,7 @@ import { tooltipPlacementArgTypes, numberOfFieldsArgTypes } from '@deps/utils/st
 
 import PolicyExtrasCard, { PolicyExtrasCardProps } from './policy-extras-card';
 import BadgeWithTooltip from '../badge/badge-with-tooltip/badge-with-tooltip';
-import { BadgeVariant } from '../badge/badge.helper';
+import { BadgeVariant } from '../badge/badge.helpers';
 import { NoTooltip as HeaderNoTooltip, WithTooltip as HeaderWithTooltip } from '../policy-extras-header/policy-extras-header.stories';
 import { PopoverPlacement } from '../popover/popover';
 

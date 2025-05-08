@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 import { Party } from '@deps/models/policy/sor-policy';
 import { sanitizeIdentifications } from '@deps/utils/sanitizers';
 

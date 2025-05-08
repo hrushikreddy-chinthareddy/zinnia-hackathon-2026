@@ -10,7 +10,7 @@ import { Address, AmountType, maritalStatusType, SignatureWithdrawal } from '@de
 import { PartyRole } from '@deps/models/policy/sor-policy';
 
 import IncomeDisclosure from './income-disclosure';
-import { maritalStatusOptions, w4pPeriodicPaymentDefault } from './w4p-tax-form.helper';
+import { maritalStatusOptions, w4pPeriodicPaymentDefault } from './w4p-tax-form.helpers';
 import CheckboxText from '../checkbox/checkbox-text/checkbox-text';
 import Field, { FieldSize, FieldType, FieldVariant } from '../fields/field';
 import AddressEntry from '../otp-withdrawal-form/address-entry';

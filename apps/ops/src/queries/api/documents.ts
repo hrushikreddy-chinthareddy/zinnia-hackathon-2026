@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import {
     PolicyDocumentApiRequest,
     DocumentData,

@@ -18,7 +18,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import getSbgcConfig from './sbgc-ssw-form-helper';
+import getSbgcConfig from './sbgc-ssw-form-helpers';
 import SswEditSelection from '../ssw-edit-selection';
 
 export function SbgcSSWForm() {

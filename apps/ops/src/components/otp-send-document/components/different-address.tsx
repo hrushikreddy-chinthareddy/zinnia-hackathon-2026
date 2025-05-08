@@ -1,6 +1,6 @@
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
@@ -8,7 +8,7 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@
 import AddressEntry from '@deps/components/otp-withdrawal-form/address-entry';
 import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import VerifyAddress from '@deps/containers/address-change-container/components/contact-details/address-validator';
-import { formatAddress } from '@deps/containers/address-change-container/components/contact-details/contact-details.helper';
+import { formatAddress } from '@deps/containers/address-change-container/components/contact-details/contact-details.helpers';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 

@@ -5,7 +5,7 @@ import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { MultiselectOption } from '@deps/components/select/select.helpers';
 import { TranslationFiles } from '@deps/config/translations';
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 import { CarrierListItem } from '@deps/pages/dashboard';
 import { DashboardResponseData, fetchAgents } from '@deps/queries/api/dashboard';
 type BrokerDealerFilterProps = {

@@ -1,16 +1,12 @@
 import { Transition } from '@headlessui/react';
 import { countries } from 'countries-list';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import FieldSelect from '@deps/components/fields/field-select/field-select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import {
-    countryOptions,
-    frequentCountryOptions,
-} from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
-import { formatPhoneNumberRaw } from '@deps/helpers/phone.helper';
+import { countryOptions, frequentCountryOptions } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
+import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
 import { Phone, PhoneType } from '@deps/models/policy/sor-policy';
 
 import { useAddressChange } from '../../address-change-provider';
@@ -22,7 +18,7 @@ interface PhoneNumberProps {
     setPhone: (value: any) => void;
 }
 
-const PhoneNumber = ({country, phone, setCountry, setPhone}: PhoneNumberProps) => {
+const PhoneNumber = ({ country, phone, setCountry, setPhone }: PhoneNumberProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'addressChange.contactDetails.phoneNumber' });
     const { formErrors } = useAddressChange();
 
@@ -51,7 +47,7 @@ const PhoneNumber = ({country, phone, setCountry, setPhone}: PhoneNumberProps) =
                     setCountry(value as keyof typeof countries);
                     setPhone((prevState: any) => ({
                         ...prevState,
-                        countryCode: countries[value as keyof typeof countries].phone
+                        countryCode: countries[value as keyof typeof countries].phone,
                     }));
                 }}
                 options={countryOptions}
@@ -78,10 +74,12 @@ const PhoneNumber = ({country, phone, setCountry, setPhone}: PhoneNumberProps) =
                     className="w-[120px]"
                     formatOptions={{ format: '####' }}
                     label={t('fieldLabels.extension') as string}
-                    onChange={event => setPhone((prevState: any) => ({
-                        ...prevState,
-                        extension: event.target.value
-                    }))}
+                    onChange={event =>
+                        setPhone((prevState: any) => ({
+                            ...prevState,
+                            extension: event.target.value,
+                        }))
+                    }
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
                     value={phone.extension}

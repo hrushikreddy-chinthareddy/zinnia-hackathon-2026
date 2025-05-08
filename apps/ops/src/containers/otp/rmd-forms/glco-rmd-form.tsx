@@ -14,13 +14,13 @@ import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
+import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { Processes } from '@deps/models/case/case';
 import { RmdFormType } from '@deps/models/case/enums';
 import { Carrier, RMDType } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import getGlcoRmdConfig from './glco-rmd-form.helper';
+import getGlcoRmdConfig from './glco-rmd-form.helpers';
 import DistributionMethodQcd from './qcd/qcd-distribution-method';
 import SelectFormType from './rmd-form-type';
 

@@ -19,7 +19,7 @@ import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/c
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
 
 import SswOperations from './ssw-operations';
-import { SswUpdateType } from '../ssw-edit-helper';
+import { SswUpdateType } from '../ssw-edit-helpers';
 
 type TabGroupContainerProps = {
     steps: Step[];

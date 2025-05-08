@@ -20,8 +20,8 @@ import BankingDetails from '@deps/components/side-sheet/banking-details/banking-
 import { TranslationFiles } from '@deps/config/translations';
 import { useContentContext } from '@deps/contexts/LayoutContexts/StaticContentContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { convertKebabedDateString, toTitleCase } from '@deps/helpers/string.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { convertKebabedDateString, toTitleCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as PaymentIcon } from '@deps/styles/elements/icons/content/payment.svg';
 
 import { UpcomingPaymentCardProps, UpcomingPaymentCardTest } from './card-upcoming-payment.types';

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
-import { getFormattedDateTime, getSlug, toTitleCase } from '@deps/helpers/string.helper';
+import { getFormattedDateTime, getSlug, toTitleCase } from '@deps/helpers/string.helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 
@@ -43,7 +43,7 @@ export const getStatusDateTime = (t: TFunction, date: string, taskStatus: string
     } else if (taskStatus === 'COMPLETED') {
         statusDuration = t('tasksListing.taskCompletedOn', { updatedDateTime });
     } else if (taskStatus === 'PENDING' || taskStatus === 'NEW') {
-        statusDuration = t('tasksListing.taskCreatedOn', { updatedDateTime});
+        statusDuration = t('tasksListing.taskCreatedOn', { updatedDateTime });
     }
 
     return statusDuration;
@@ -73,7 +73,7 @@ export const toFormattedTask = (t: TFunction, task: Task, caseId: string, caseTy
         taskName: task.taskName || '-',
         statusDuration: task?.updatedDate ? getStatusDuration(t, task.updatedDate, task.status) : '-',
         taskDate: task?.updatedDate ? getStatusDateTime(t, task.updatedDate, task.status) : '-',
-        userId: task.userId || '-'
+        userId: task.userId || '-',
     };
 };
 

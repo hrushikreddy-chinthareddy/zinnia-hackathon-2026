@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 import { Case } from '@deps/models/case/case';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { CaseTabClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
@@ -12,8 +12,8 @@ import { CaseTabClickedEvent, SegmentTrackedEventName } from '@deps/types/segmen
 import CallLogsTab from './case-tabs/call-logs-tab';
 import DocumentsTab from './case-tabs/documents-tab';
 import NotesTab from './case-tabs/notes-tab';
-import ProgressTab from './case-tabs/progress/progress-tab';
 import Typography, { TypographyVariant } from '../typography/typography';
+import ProgressTab from './case-tabs/progress/progress-tab';
 
 export default function CaseSubPage({
     caseDetails,

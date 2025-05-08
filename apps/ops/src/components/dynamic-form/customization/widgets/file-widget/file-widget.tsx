@@ -9,6 +9,7 @@ import {
     UIOptionsType,
     WidgetProps,
 } from '@rjsf/utils';
+import { Loader, Toast, ToastVariant } from '@zinnia/bloom/components';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
@@ -16,26 +17,23 @@ import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { csrApiHelper } from '@deps/helpers/csr-api-helper';
-import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { csrApiHelper } from '@deps/helpers/csr-api-helpers';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ApiProps, FormMetadata } from '@deps/models/case/task';
 import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
-
-const baseUrl = baseAppUrl + '/api/';
-const INTERVAL = 3000;
-
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helper';
+import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helpers';
 
 import FileAttachmentComponent from './file-attachment.component';
 import style from './file-widget.module.css';
 
-import { Loader, Toast, ToastVariant } from '@zinnia/bloom/components';
+const baseUrl = baseAppUrl + '/api/';
+const INTERVAL = 3000;
 
 function addNameToDataURL(dataURL: string, name: string) {
     if (dataURL === null) {

@@ -1,6 +1,6 @@
 import { DataDefinition } from '@deps/types/data';
 
-import { orderObjectsByFirstString, orderObjectsByString, sort, sortByAndThenBy } from './sort.helper';
+import { orderObjectsByFirstString, orderObjectsByString, sort, sortByAndThenBy } from './sort.helpers';
 
 describe('Sort Helper', () => {
     describe('> sort', () => {

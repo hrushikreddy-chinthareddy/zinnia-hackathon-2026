@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { convertKebabedDateString } from '@deps/helpers/string.helper';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
 import { TaskType } from '@deps/models/case/task';
@@ -36,7 +36,7 @@ export const SupportedTaskMap = [
     TaskType.Payment_Processing_Review,
     TaskType.Suitaibility_DataEntry_Nigo_Review,
     TaskType.Background_Nigo,
-    TaskType.Background_Review
+    TaskType.Background_Review,
 ];
 
 export function Task({ task }: { task: TaskView }) {

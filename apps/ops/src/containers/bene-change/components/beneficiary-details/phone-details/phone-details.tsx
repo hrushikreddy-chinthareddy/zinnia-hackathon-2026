@@ -2,29 +2,26 @@ import { countries } from 'countries-list';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-import  { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import FieldSelect from '@deps/components/fields/field-select/field-select';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
-import {
-    countryOptions,
-    frequentCountryOptions,
-} from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
+import { countryOptions, frequentCountryOptions } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
 
-import { EnterprisePhone, formatPhoneNumber, getPhoneTypeOptions, INITIAL_PHONE } from './phone-details.helper';
+import { EnterprisePhone, formatPhoneNumber, getPhoneTypeOptions, INITIAL_PHONE } from './phone-details.helpers';
 
 export interface PhoneDetailsProps {
     setCurrentPhones: Dispatch<SetStateAction<EnterprisePhone[]>>;
     updatePhone?: EnterprisePhone;
     index: number;
     isReadOnly?: boolean;
-};
+}
 
 export default function PhoneDetails({ index, updatePhone, setCurrentPhones, isReadOnly }: PhoneDetailsProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.phone' });
     const [phone, setPhone] = useState<EnterprisePhone>(updatePhone ?? INITIAL_PHONE);
     const [country, setCountry] = useState('US' as keyof typeof countries);
-    const phoneTypeOptions = getPhoneTypeOptions({t});
+    const phoneTypeOptions = getPhoneTypeOptions({ t });
 
     useEffect(() => {
         setCurrentPhones(prevState => {
@@ -40,7 +37,7 @@ export default function PhoneDetails({ index, updatePhone, setCurrentPhones, isR
                     aria-label={t('labels.phoneType') as string}
                     label={t('labels.phoneType') as string}
                     onChange={value => {
-                        setPhone((prevState: any) => ({...prevState, phoneType: value}));
+                        setPhone((prevState: any) => ({ ...prevState, phoneType: value }));
                     }}
                     options={phoneTypeOptions}
                     size={FieldSize.Small}

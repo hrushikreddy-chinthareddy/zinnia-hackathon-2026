@@ -1,7 +1,7 @@
 import router from 'next/router';
 
 import NavElement, { NavElementType, NavElementSize, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import { getSlug } from '@deps/helpers/string.helper';
+import { getSlug } from '@deps/helpers/string.helpers';
 
 import NoTasksFound from './no-tasks-found';
 import { toFormattedTask } from './task-listing.helpers';

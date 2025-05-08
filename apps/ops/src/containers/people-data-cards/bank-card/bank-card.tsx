@@ -10,7 +10,7 @@ import SideSheetBank from '@deps/containers/people-data-cards/bank-card/side-she
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
 import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { isEndDated } from '@deps/helpers/date.helper';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';

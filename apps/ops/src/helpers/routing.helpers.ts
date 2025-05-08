@@ -4,7 +4,7 @@ import { NextRouter } from 'next/router';
 import { TFunction } from 'next-i18next';
 import { RefObject } from 'react';
 
-import { toSentenceCase } from './string.helper';
+import { toSentenceCase } from './string.helpers';
 import nextI18nextConfig from '../../next-i18next.config';
 
 interface LocalePrefix {

@@ -11,13 +11,20 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 
-import getSbgcRenewalConfig from './sbgc-form.helper';
+import getSbgcRenewalConfig from './sbgc-form.helpers';
 
 export default function SbgcRenewalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
 
-    const { channel, setFormValidator, renewalRequestSignDate, ownerInformation, isFormStateReadOnly, setRenewalRequestSignDate, planCode } =
-        useContext(RenewalFormDataContext);
+    const {
+        channel,
+        setFormValidator,
+        renewalRequestSignDate,
+        ownerInformation,
+        isFormStateReadOnly,
+        setRenewalRequestSignDate,
+        planCode,
+    } = useContext(RenewalFormDataContext);
     const { formPartyConfigs, signatureConfigs, formValidation, transList } = getSbgcRenewalConfig(t);
 
     useEffect(() => {

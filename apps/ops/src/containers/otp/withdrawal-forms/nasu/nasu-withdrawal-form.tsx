@@ -19,8 +19,8 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import useNasuConfig from './nasu-withdrawal-form-helper';
-import { FormSubtype } from '../flic-withdrawal-form.helper';
+import useNasuConfig from './nasu-withdrawal-form-helpers';
+import { FormSubtype } from '../flic-withdrawal-form.helpers';
 
 export default function NasuWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

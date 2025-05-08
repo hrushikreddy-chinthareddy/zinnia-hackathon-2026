@@ -14,7 +14,7 @@ import { SimpleOption } from '@deps/components/select/select.helpers';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { determineRange } from '@deps/helpers/numbers.helper';
+import { determineRange } from '@deps/helpers/numbers.helpers';
 import { PolicyDocument } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
 import { Policy } from '@deps/models/policy/sor-policy';

@@ -27,13 +27,19 @@ export function FieldTemplate(props: FieldTemplateProps) {
         </Tooltip>
     );
 
-
     const fieldLabel = label ? (
         <span className={styles.labelRequired}>
             {label}
-            {required && <span className={styles.requiredAsterisk}>{'\u00A0'}{'\u002A'} </span>}
+            {required && (
+                <span className={styles.requiredAsterisk}>
+                    {'\u00A0'}
+                    {'\u002A'}{' '}
+                </span>
+            )}
         </span>
-    ) : '';
+    ) : (
+        ''
+    );
 
     return (
         <>

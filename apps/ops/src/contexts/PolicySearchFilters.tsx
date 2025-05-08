@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { createContext, useEffect, useMemo, useState } from 'react';
 
 import { SearchBarInitialValues } from '@deps/components/search/search-bar';
-import { storage } from '@deps/helpers/sessionStorage.helper';
+import { storage } from '@deps/helpers/sessionStorage.helpers';
 import { POLICY_SEARCH_FILTERS_STORAGE_KEY, isResetQueryParam } from '@deps/types/constants';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 export interface PolicySearchFilters {

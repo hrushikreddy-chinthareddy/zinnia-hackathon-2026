@@ -8,7 +8,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { CaseType } from '@deps/models/case/case';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 
-import { searchByLabels, SearchKeys } from './create-case-form.helper';
+import { searchByLabels, SearchKeys } from './create-case-form.helpers';
 import ButtonGroup from '../button-group/button-group';
 
 interface CreateCaseViewProps {
@@ -103,7 +103,7 @@ const CreateCaseForm = ({
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
                                 value={documentNumber}
-                                id='documentNumber'
+                                id="documentNumber"
                             />
                         )}
                     </div>
@@ -125,7 +125,7 @@ const CreateCaseForm = ({
                                         size={FieldSize.Small}
                                         type={FieldType.BaseActive}
                                         value={documentNumber}
-                                        id='documentNumber'
+                                        id="documentNumber"
                                     />
                                 ) : (
                                     <Field
@@ -136,7 +136,7 @@ const CreateCaseForm = ({
                                         size={FieldSize.Small}
                                         type={FieldType.BaseActive}
                                         value={policyNumber}
-                                        id='policyNumber'
+                                        id="policyNumber"
                                     />
                                 )}
                             </div>

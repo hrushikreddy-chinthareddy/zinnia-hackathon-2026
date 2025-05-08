@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { deStringifyTrueFalseNull, stringifyTrueFalseNull } from '@deps/helpers/string.helper';
+import { deStringifyTrueFalseNull, stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import { FormSpecialInstruction, StringTrueFalseNull } from '@deps/models/case/withdrawal/case';
 
 import CheckboxText from '../checkbox/checkbox-text/checkbox-text';
@@ -28,7 +28,7 @@ const NeaBenefits = () => {
             neaBenefitSensitivity: {
                 text: 'null',
             },
-        })); 
+        }));
     }, []);
     return (
         <div className="content-divider my-4 px-4 pb-4">

@@ -9,8 +9,8 @@ import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-f
 import { PhoneWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { SideSheetPeopleHeaderProps } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
-import { isEndDated } from '@deps/helpers/date.helper';
-import { formatPhoneNumberWithExtension } from '@deps/helpers/phone.helper';
+import { isEndDated } from '@deps/helpers/date.helpers';
+import { formatPhoneNumberWithExtension } from '@deps/helpers/phone.helpers';
 import { Phone, PhoneType } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';

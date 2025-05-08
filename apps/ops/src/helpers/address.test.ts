@@ -1,6 +1,6 @@
 import { Address } from '@deps/models/policy/sor-policy';
 
-import { formatAddress, formatCityStateZip } from './address.helper';
+import { formatAddress, formatCityStateZip } from './address.helpers';
 
 describe('formatFullAddress', () => {
     it('should format a complete address', () => {

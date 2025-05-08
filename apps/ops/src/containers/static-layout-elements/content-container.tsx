@@ -9,13 +9,13 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { AnnuityDetailsViewInfo, AnnuityViewDetailsDto } from '@deps/data/annuity-details-view';
 import { generatePolicyAnnuityDetailsDto } from '@deps/data/details-view';
 import { PolicyDetailsViewInfo, PolicyViewDetailsDto } from '@deps/data/policy-details-view';
-import { fillColDefs } from '@deps/helpers/data-transform.helper';
+import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { LineOfBusiness, PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 import styles from './content-container.module.css';
 import QuickLinks from '../quick-links/quick-links';
-import { getPolicyQuickLinks } from '../quick-links/quick-links.helper';
+import { getPolicyQuickLinks } from '../quick-links/quick-links.helpers';
 
 interface ContentContainerProps extends PropsWithChildren {
     policy: Policy;

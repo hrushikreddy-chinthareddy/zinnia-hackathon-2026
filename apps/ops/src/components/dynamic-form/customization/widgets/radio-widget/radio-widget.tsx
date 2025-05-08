@@ -3,7 +3,7 @@ import { IconType } from '@zinnia/bloom/components';
 import { useMemo } from 'react';
 
 import Radio, { RadioItem } from '@deps/components/radio/radio';
-import { csrApiHelper } from '@deps/helpers/csr-api-helper';
+import { csrApiHelper } from '@deps/helpers/csr-api-helpers';
 import { ApiProps, ApiResponseTypes, CardTypes } from '@deps/models/case/task';
 import { baseAppUrl } from '@deps/queries/api-config';
 
@@ -39,8 +39,10 @@ const renderSubElement = (option: any, properties: any, cardType: any, icon: any
 };
 
 export type RadioWidgetProps<T, S extends StrictRJSFSchema, F extends FormContextType> = WidgetProps<T, S, F>;
-function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(widgetProps: RadioWidgetProps<T, S, F>) {
-    const { options, value, disabled, onChange, id, uiSchema,formContext } = widgetProps;
+function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+    widgetProps: RadioWidgetProps<T, S, F>
+) {
+    const { options, value, disabled, onChange, id, uiSchema, formContext } = widgetProps;
 
     const { enumOptions, enumDisabled } = options;
     const { customOptions, props, properties, cardType, icon, sectionTitle } = getUiOptions<T, S, F>(uiSchema);
@@ -54,20 +56,20 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     const newOptions = useMemo(() => {
         return Array.isArray(currentOptions)
             ? currentOptions.map((option: RadioItem) => ({
-                label: option.label,
-                value: option.value,
-                disabled: enumDisabled?.includes(option.value) || false,
-                subElement: option.subElement && renderSubElement(option.subElement, properties, cardType, icon, sectionTitle as string),
-            }))
+                  label: option.label,
+                  value: option.value,
+                  disabled: enumDisabled?.includes(option.value) || false,
+                  subElement: option.subElement && renderSubElement(option.subElement, properties, cardType, icon, sectionTitle as string),
+              }))
             : [];
     }, [currentOptions]);
 
     async function fetchDetails(value: string) {
         csrApiHelper(apiProps, { ...formContext?.customData, value }).then(response => {
             if (apiProps.responseType === ApiResponseTypes.FormData) {
-                formContext?.setCustomData && formContext.setCustomData({[apiProps?.dataKey]: response });
+                formContext?.setCustomData && formContext.setCustomData({ [apiProps?.dataKey]: response });
             } else {
-                formContext?.updateSchema && formContext.updateSchema({[apiProps?.dataKey]: response });
+                formContext?.updateSchema && formContext.updateSchema({ [apiProps?.dataKey]: response });
             }
         });
     }

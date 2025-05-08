@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 
 import Confirm from '@deps/components/otp-send-document/confirm';
 import Correspondence from '@deps/components/otp-send-document/correspondence';
-import { generateCommunicationRequest } from '@deps/components/otp-send-document/correspondence.helper';
+import { generateCommunicationRequest } from '@deps/components/otp-send-document/correspondence.helpers';
 import StatementSelection from '@deps/components/otp-send-document/statement-selection';
 import { PageHead } from '@deps/components/page-title';
 import { RadioItem } from '@deps/components/radio/radio';

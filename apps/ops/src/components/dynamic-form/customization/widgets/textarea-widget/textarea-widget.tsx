@@ -1,6 +1,6 @@
 import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
-import { csrApiHelper } from '@deps/helpers/csr-api-helper';
+import { csrApiHelper } from '@deps/helpers/csr-api-helpers';
 import { ApiProps, ApiResponseTypes } from '@deps/models/case/task';
 
 import styles from './textarea-widget.module.css';
@@ -28,7 +28,6 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 
     return (
         <div className={styles.container}>
-
             <textarea
                 id={id}
                 className={styles.textarea}

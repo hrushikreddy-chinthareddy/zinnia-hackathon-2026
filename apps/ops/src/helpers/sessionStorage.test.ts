@@ -1,4 +1,4 @@
-import { storage } from './sessionStorage.helper';
+import { storage } from './sessionStorage.helpers';
 
 describe('SessionStorageHelper', () => {
     beforeEach(() => {

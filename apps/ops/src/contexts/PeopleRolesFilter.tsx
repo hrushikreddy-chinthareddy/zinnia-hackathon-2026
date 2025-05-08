@@ -1,7 +1,7 @@
 import { createContext, useEffect, useMemo, useState } from 'react';
 
 import PageLoader from '@deps/components/page-loader/page-loader';
-import { storage } from '@deps/helpers/sessionStorage.helper';
+import { storage } from '@deps/helpers/sessionStorage.helpers';
 
 export interface PeopleRolesFilter {
     filterValue: string;

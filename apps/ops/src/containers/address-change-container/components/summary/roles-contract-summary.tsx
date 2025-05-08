@@ -11,7 +11,7 @@ import {
     getRolesRecordForCurrentContract,
     getRolesRecordForOtherContract,
     TableColumnFields,
-} from './summary-step-helper';
+} from './summary-step-helpers';
 import { useAddressChange } from '../../address-change-provider';
 
 type ApplicableRolesContractSummaryProps = {

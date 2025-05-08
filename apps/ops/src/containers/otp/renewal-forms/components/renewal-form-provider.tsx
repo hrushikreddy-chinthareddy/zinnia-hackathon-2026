@@ -10,8 +10,7 @@ import { CaseStatus, FormValidationErrors } from '@deps/models/case/withdrawal/c
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
-import { DEFAULT_TRANS_OPTION, getOwnerInfo } from './renewal-form-helper';
-
+import { DEFAULT_TRANS_OPTION, getOwnerInfo } from './renewal-form-helpers';
 
 interface RenewalFormProviderProps {
     children: React.ReactNode;
@@ -22,7 +21,7 @@ interface RenewalFormProviderProps {
     featureFlagDecisions: FeatureFlags;
     planCode: string;
     form: any;
-    initialForm: any
+    initialForm: any;
 }
 
 const RenewalFormProvider = ({ children, parties, document, action, featureFlagDecisions, planCode, form }: RenewalFormProviderProps) => {
@@ -31,14 +30,19 @@ const RenewalFormProvider = ({ children, parties, document, action, featureFlagD
     let ownerInfo;
 
     if (form?.createdByPartyId !== 'SYSTEM') {
-        ownerInfo = Array.isArray(form?.data?.ownerInformation) && form?.data?.ownerInformation.length > 0 ? form?.data?.ownerInformation : getOwnerInfo(owners);
+        ownerInfo =
+            Array.isArray(form?.data?.ownerInformation) && form?.data?.ownerInformation.length > 0
+                ? form?.data?.ownerInformation
+                : getOwnerInfo(owners);
     } else {
         ownerInfo = form?.data?.ownerInformation ?? getOwnerInfo(owners);
     }
 
     const [ownerInformation, setOwnerInformation] = useState<OwnerInformation[]>(ownerInfo);
     const [transOption, setTransOption] = useState<string | null>(form?.data?.transOption || DEFAULT_TRANS_OPTION);
-    const [subsequentTargetFunds, setSubsequentTargetFunds] = useState<TargetFundAllocation[] | null>(form?.data?.subsequentTargetFunds || null);
+    const [subsequentTargetFunds, setSubsequentTargetFunds] = useState<TargetFundAllocation[] | null>(
+        form?.data?.subsequentTargetFunds || null
+    );
     const [renewalRequestSignDate, setRenewalRequestSignDate] = useState<string>(form?.data?.renewalRequestSignDate ?? '');
     // Error information
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
@@ -51,7 +55,8 @@ const RenewalFormProvider = ({ children, parties, document, action, featureFlagD
 
     const [currentFormState, setCurrentFormState] = useState(form.status ?? '');
     const isFormStateReadOnly = shouldShowNewExperience
-        ? (action === 'readonly') || (currentFormState !== CaseStatus.Pending && currentFormState !== TaskStatus.New && currentFormState !== TaskStatus.InProgress)
+        ? action === 'readonly' ||
+          (currentFormState !== CaseStatus.Pending && currentFormState !== TaskStatus.New && currentFormState !== TaskStatus.InProgress)
         : false;
 
     return (

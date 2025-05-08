@@ -2,7 +2,7 @@ import { getUiOptions, UiSchema, WidgetProps } from '@rjsf/utils';
 import router from 'next/router';
 
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/actions/external-link.svg';
 
 const HyperLinkWidget = (props: WidgetProps) => {

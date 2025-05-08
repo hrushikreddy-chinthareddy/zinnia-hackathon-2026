@@ -3,7 +3,7 @@ import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
 import { Icon, IconType, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useState } from 'react';
 
-import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
 import style from './object-field.module.css';

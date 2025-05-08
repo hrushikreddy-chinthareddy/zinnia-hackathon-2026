@@ -161,7 +161,7 @@ export const SidesheetCommunicationsPreference = ({
             return;
         }
 
-        let preferredCommunication: { type: CommunicationPreferenceChange.preferredCommunicationType; email?: string } = {
+        const preferredCommunication: { type: CommunicationPreferenceChange.preferredCommunicationType; email?: string } = {
             type: CommunicationPreferenceChange.preferredCommunicationType.NOPREFERENCE,
         };
 

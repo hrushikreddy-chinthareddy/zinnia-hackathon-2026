@@ -18,7 +18,7 @@ import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case'
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
-import getUlpcConfig from './ulpc-ssw-form-helper';
+import getUlpcConfig from './ulpc-ssw-form-helpers';
 
 interface UlpcSSWFormProps {
     planCode?: string;

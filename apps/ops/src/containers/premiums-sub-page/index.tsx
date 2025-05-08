@@ -4,15 +4,15 @@ import { useContext, useMemo } from 'react';
 
 import { FooterContent } from '@deps/components/card/card-section/card-section';
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
-import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helper';
+import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helpers';
 import SideSheetCancelAutopay from '@deps/components/side-sheet/side-sheet-transaction/cancel-autopay/side-sheet-cancel-autopay';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
-import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helper';
+import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
+import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helpers';
 import { ArrangementType, PolicyFeatureFeatureType, ProductType, Reason } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {

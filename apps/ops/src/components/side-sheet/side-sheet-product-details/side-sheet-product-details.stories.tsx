@@ -1,9 +1,9 @@
 import '@deps/styles/styles.css';
 import { Meta } from '@storybook/react';
 
-import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
+import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
 import Button from '@deps/components/button/button';
-import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
+import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import { SideSheetProvider, useSideSheetContext } from '@deps/contexts/SideSheetContext';

@@ -7,7 +7,7 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
+import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helpers';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
@@ -23,10 +23,10 @@ interface ConfirmStepProps {
     documentNumber?: string;
     docType?: string;
     clientCode?: string;
-    document: DocumentData
+    document: DocumentData;
 }
 
-const ConfirmStep = ({ document}: ConfirmStepProps) => {
+const ConfirmStep = ({ document }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.confirmStep' });
     const router = useRouter();
     const { submitFailed, setSubmitFailed, sectionOption } = useNigoEntry();
@@ -35,17 +35,24 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
     const [timer] = useState(performance.now());
 
     const getSubmitLabel = () => {
-        switch(sectionOption) {
-            case SelOptionType.DATA_ENTRY: return t('submitTask');
-            case SelOptionType.NIGO_ENTRY: return t('submitNigo');
-            case SelOptionType.DOC_INDEXING: return t('submitDocIndexing');
-            default: return t('submit');
+        switch (sectionOption) {
+            case SelOptionType.DATA_ENTRY:
+                return t('submitTask');
+            case SelOptionType.NIGO_ENTRY:
+                return t('submitNigo');
+            case SelOptionType.DOC_INDEXING:
+                return t('submitDocIndexing');
+            default:
+                return t('submit');
         }
     };
 
     const submit = useCallback(async () => {
         setIsLoading(true);
-        if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 && formState.initialForm.status !== TaskStatus.Completed) {
+        if (
+            TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 &&
+            formState.initialForm.status !== TaskStatus.Completed
+        ) {
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm.taskId,
@@ -100,9 +107,7 @@ const ConfirmStep = ({ document}: ConfirmStepProps) => {
                 secondaryCta={
                     <NavElement
                         aria-label={t('secondaryCta') as string}
-                        onClick={() =>
-                            router.push('/create-case')
-                        }
+                        onClick={() => router.push('/create-case')}
                         size={NavElementSize.Small}
                         type={NavElementType.Button}
                         variant={NavElementVariant.Default}

@@ -23,7 +23,7 @@ import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { convertKebabedDateString } from '@deps/helpers/string.helper';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { isPreviewSupported, useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { ReactComponent as LinkIcon } from '@deps/styles/elements/icons/actions/link.svg';
 import loadingImage from '@deps/styles/images/loader.png';

@@ -9,7 +9,7 @@ import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import { ConsentAvailable } from './consent-available';
 import { DEFAULT_ADDRESS } from '../../address-entry';
-import { getDefaultFormDisbursementValues } from '../form-disbursement.helper';
+import { getDefaultFormDisbursementValues } from '../form-disbursement.helpers';
 
 afterEach(cleanup);
 

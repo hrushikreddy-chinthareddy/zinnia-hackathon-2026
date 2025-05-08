@@ -1,7 +1,7 @@
 import { TFunction } from 'next-i18next';
 
 import ChipX from '@deps/components/chip/chip-x';
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 
 const SubTypeChip = ({
     subTypeCode,

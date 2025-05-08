@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import xss from 'xss';
 
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
-import { getStateCodes } from '@deps/helpers/states.helper';
+import { getStateCodes } from '@deps/helpers/states.helpers';
 import { Address, AddressTypes, FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import { selectVarientByConfig } from './form-party/form-party';

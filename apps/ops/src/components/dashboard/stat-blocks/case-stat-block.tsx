@@ -7,7 +7,7 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { formatNumberLabel, wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { formatNumberLabel, wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertToQueryString } from '@deps/helpers/routing.helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { CaseDashboardStatsResponse } from '@deps/models/case/case';

@@ -25,7 +25,7 @@ import { ConsentAvailable } from './form-disbursement-parts/consent-available';
 import MaskedAccountNumberToggle, { BankInfoType } from './form-disbursement-parts/masked-account-toggle';
 import { SelectedBankContext } from './form-disbursement-parts/pre-populate-banking-details';
 import FormDisbursementSection from './form-disbursement-section';
-import { BankingFields } from './form-disbursement.helper';
+import { BankingFields } from './form-disbursement.helpers';
 
 // Selection options for payment method
 export const FormDisbursementSelections = { ...PaymentMethod, ...PaymentMailType, SimpleBrokerage: 'SimpleBrokerage' };

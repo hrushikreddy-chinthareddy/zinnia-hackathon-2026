@@ -3,12 +3,12 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import { Content, ContentVariant } from '@deps/components/content/content';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { TransactionType } from '@deps/models/policy/sor-policy';
 
 import SideSheetReversedTransactionContent from './side-sheet-reversed-transaction-content';
 import { SideSheetTransactionProps } from '../types';
-import { getReverseRecreateTransactionSideSheetValues } from './side-sheet-reverse-recreate.helper';
+import { getReverseRecreateTransactionSideSheetValues } from './side-sheet-reverse-recreate.helpers';
 import { ReverseTransactionSidesheetValues } from './types';
 
 export const SideSheetReversedTransaction = ({ policy, transaction }: SideSheetTransactionProps) => {

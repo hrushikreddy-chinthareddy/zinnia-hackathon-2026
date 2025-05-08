@@ -1,6 +1,6 @@
-import { isEndDated } from '@deps/helpers/date.helper';
-import { getPartyFullName } from '@deps/helpers/party-info-helper';
-import { convertKebabedDateString } from '@deps/helpers/string.helper';
+import { isEndDated } from '@deps/helpers/date.helpers';
+import { getPartyFullName } from '@deps/helpers/party-info-helpers';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import {
     Address,
     BankAccount,
@@ -19,7 +19,7 @@ import {
     PolicyParties,
 } from '@deps/models/policy/sor-policy';
 
-import { calculateAgeNumber } from '../age.helper';
+import { calculateAgeNumber } from '../age.helpers';
 import { Addresses } from './party-items/Addresses';
 import { Banks } from './party-items/Banks';
 import { Emails } from './party-items/Emails';

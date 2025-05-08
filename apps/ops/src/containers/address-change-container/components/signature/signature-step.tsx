@@ -7,14 +7,14 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useAddressChange } from '@deps/containers/address-change-container/address-change-provider';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { getName } from '@deps/helpers/party-info-helper';
+import { getName } from '@deps/helpers/party-info-helpers';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
-import { useSignatureStepConfig } from './signature-step-helper';
+import { useSignatureStepConfig } from './signature-step-helpers';
 import { SignatureState } from '../../types/address-change-types';
-import { isAnnuitantSignatureRequired, isJointOwnerPresent } from '../../utils/address-change-helper';
+import { isAnnuitantSignatureRequired, isJointOwnerPresent } from '../../utils/address-change-helpers';
 
 export interface SignatureStepProps {
     policy: Policy;

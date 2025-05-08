@@ -1,11 +1,13 @@
+import { useTranslation } from 'next-i18next';
+import { Dispatch, SetStateAction, useState } from 'react';
+
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { FundViewModel } from '../types';
 import { SideSheetContextProps } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as CircleCheckMark } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
+
+import { FundViewModel } from '../types';
 import { EditAllocationsSummary } from './edit-allocations-summary';
 
 interface IAllocationSuccessFlow {

@@ -1,6 +1,6 @@
 import { Phone, PhoneType } from '@deps/models/policy/sor-policy';
 
-import { formatPhoneNumber, formatPhoneNumberWithExtension, formatPhoneNumberRaw, formatPhoneNumberWithCountryCode } from './phone.helper';
+import { formatPhoneNumber, formatPhoneNumberWithExtension, formatPhoneNumberRaw, formatPhoneNumberWithCountryCode } from './phone.helpers';
 
 describe('Phone Formatter', () => {
     it('should format phone number correctly', () => {

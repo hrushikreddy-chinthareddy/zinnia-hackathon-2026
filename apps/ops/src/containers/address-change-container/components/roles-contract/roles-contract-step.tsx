@@ -12,7 +12,7 @@ import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 import { RoleAddressCard } from './components/role-address-cards';
 import { AllowedRoleTypes } from './utils/roles-contract-constants';
-import { groupPartiesByAddress } from './utils/roles-contract-helper';
+import { groupPartiesByAddress } from './utils/roles-contract-helpers';
 import { PartyAddressCard, RoleContractValidationKeys } from './utils/roles-contract-types';
 import { useAddressChange } from '../../address-change-provider';
 

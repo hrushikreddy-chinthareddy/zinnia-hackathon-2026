@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { TranslationFiles } from '@deps/config/translations';
-import { convertKebabedDateString } from '@deps/helpers/string.helper';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 interface IssueDateProps {
     issueDate?: string;

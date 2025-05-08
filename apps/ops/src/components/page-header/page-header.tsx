@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 
@@ -71,7 +71,7 @@ export const Breadcrumb = ({ breadcrumbUrl, breadcrumbText, onClick }: PageHeade
 
 const HeaderText = ({ headerText }: Pick<PageHeaderProps, 'headerText'>) => {
     return (
-        <Typography className="flex items-center" variant={TypographyVariant.H1} data-testid='header-text'>
+        <Typography className="flex items-center" variant={TypographyVariant.H1} data-testid="header-text">
             {headerText}
         </Typography>
     );

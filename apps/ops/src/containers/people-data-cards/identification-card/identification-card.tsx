@@ -11,8 +11,8 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
 import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
-import { getStateName } from '@deps/helpers/states.helper';
-import { convertKebabedDateString, formatSSN, safeString } from '@deps/helpers/string.helper';
+import { getStateName } from '@deps/helpers/states.helpers';
+import { convertKebabedDateString, formatSSN, safeString } from '@deps/helpers/string.helpers';
 import { PartyType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 

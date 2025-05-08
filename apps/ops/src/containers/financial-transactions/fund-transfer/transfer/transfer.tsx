@@ -16,7 +16,7 @@ import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { getFundDetailsViewModel } from '@deps/containers/subpages/funds-sub-page/funds.helper';
+import { getFundDetailsViewModel } from '@deps/containers/subpages/funds-sub-page/funds.helpers';
 import { useFundTransfer } from '@deps/contexts/transactions/FundTransferContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { AmountType } from '@deps/models/funds/enums';

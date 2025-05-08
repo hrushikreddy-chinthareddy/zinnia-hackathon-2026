@@ -2,7 +2,7 @@ import { getCookie, setCookie } from 'cookies-next';
 
 import { DEFAULT_PERMISSIONS_COOKIE, PERMISSIONS_COOKIE_NAME, PermissionsCookie } from '@deps/types/permissionsCookie';
 
-import { isHttpsEnvironment } from '../environment.helper';
+import { isHttpsEnvironment } from '../environment.helpers';
 import { logWarn } from '../server-logging';
 
 const permissionsCookieOptions = {

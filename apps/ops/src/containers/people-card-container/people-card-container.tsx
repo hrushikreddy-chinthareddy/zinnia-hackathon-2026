@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import CardPeople from '@deps/components/card/card-people/card-people';
 import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
 import { goTo } from '@deps/helpers/routing.helpers';
-import { safeString, toTitleCase } from '@deps/helpers/string.helper';
+import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
 import { PartyType } from '@deps/models/policy/sor-policy';
 import { TagKey } from '@deps/types/components';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';

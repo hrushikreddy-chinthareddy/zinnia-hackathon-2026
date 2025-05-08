@@ -14,12 +14,12 @@ import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
+import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
-import getPrdnConfig from './prdn-ssw-from-helper';
+import getPrdnConfig from './prdn-ssw-from-helpers';
 
 export function PrdnSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

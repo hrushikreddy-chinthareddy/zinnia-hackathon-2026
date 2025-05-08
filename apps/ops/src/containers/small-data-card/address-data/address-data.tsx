@@ -5,9 +5,9 @@ import { useTranslation } from 'next-i18next';
 import ClickContainer from '@deps/components/click-container/click-container';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import { formatAddress, formatAddressV2 } from '@deps/helpers/address.helper';
-import { getAddressType } from '@deps/helpers/party-info-helper';
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { formatAddress, formatAddressV2 } from '@deps/helpers/address.helpers';
+import { getAddressType } from '@deps/helpers/party-info-helpers';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 import { Address } from '@deps/models/policy/sor-policy';
 
 export interface AddressDataCardProps {

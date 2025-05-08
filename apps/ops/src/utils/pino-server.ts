@@ -1,6 +1,6 @@
 import pino from 'pino';
 
-import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 
 const levelToStatus = {
     10: 'trace',

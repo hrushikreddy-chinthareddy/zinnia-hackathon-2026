@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as CogIcon } from '@deps/styles/elements/icons/icons_outlined/cog.svg';
 

@@ -5,8 +5,8 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helpers';
 import { LoanValues } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 

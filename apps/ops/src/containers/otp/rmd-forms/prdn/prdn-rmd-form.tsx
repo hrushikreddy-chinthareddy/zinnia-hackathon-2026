@@ -18,7 +18,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import getPrdnWithdrawalConfig from './prdn-rmd-form.helper';
+import getPrdnWithdrawalConfig from './prdn-rmd-form.helpers';
 
 const PrdnRmdWithdrawalForm = () => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

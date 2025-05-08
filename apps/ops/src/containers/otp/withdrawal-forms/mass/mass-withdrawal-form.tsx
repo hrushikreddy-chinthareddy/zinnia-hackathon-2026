@@ -20,8 +20,8 @@ import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
 
-import useMassWithdrawalConfig from './mass-withdrawal-form-helper';
-import { FormSubtype } from '../flic-withdrawal-form.helper';
+import useMassWithdrawalConfig from './mass-withdrawal-form-helpers';
+import { FormSubtype } from '../flic-withdrawal-form.helpers';
 
 type MassWithdrawalFormProps = {
     qualType: QualTypes | '';

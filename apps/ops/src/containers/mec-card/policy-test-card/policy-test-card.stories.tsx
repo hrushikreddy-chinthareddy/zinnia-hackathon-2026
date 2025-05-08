@@ -1,8 +1,8 @@
 import '@deps/styles/styles.css';
 import { Meta, StoryObj } from '@storybook/react';
 
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 
 import PolicyTestCard, { PolicyTestCardProps } from './policy-test-card';
 

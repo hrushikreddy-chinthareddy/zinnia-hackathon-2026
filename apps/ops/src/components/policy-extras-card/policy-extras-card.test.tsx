@@ -6,15 +6,13 @@ import { generateFields } from '@deps/utils/mock/mockPolicyExtrasFields';
 
 import PolicyExtrasCard, { PolicyExtrasCardProps } from './policy-extras-card';
 import Badge from '../badge/badge';
-import { BadgeVariant } from '../badge/badge.helper';
+import { BadgeVariant } from '../badge/badge.helpers';
 
 describe('PolicyExtrasCard', () => {
     const headerText = 'header text';
     const labelText = 'label text';
     const badgeLabelText = 'Badge Label';
-    const subheader = [
-        'subheader 1',
-    ]
+    const subheader = ['subheader 1'];
     const badge = <Badge variant={BadgeVariant.Success} label={badgeLabelText} />;
     const numberOfFields = 1;
     const children = generateFields(numberOfFields);

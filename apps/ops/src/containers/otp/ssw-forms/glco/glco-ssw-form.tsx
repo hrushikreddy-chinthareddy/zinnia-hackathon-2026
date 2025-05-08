@@ -18,7 +18,7 @@ import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case'
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
-import getGlcoConfig from './glco-ssw-form-helper';
+import getGlcoConfig from './glco-ssw-form-helpers';
 
 interface GlcoSSWFormProps {
     planCode?: string;

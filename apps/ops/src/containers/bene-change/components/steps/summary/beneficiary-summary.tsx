@@ -8,13 +8,17 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
-import { percentFormatify } from '@deps/helpers/numbers.helper';
-import { safeString, toTitleCase } from '@deps/helpers/string.helper';
+import { percentFormatify } from '@deps/helpers/numbers.helpers';
+import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
 import { Gender, PartyRole } from '@deps/models/policy/sor-policy';
 
-import { DEFAULT_BENE_ADDRESS, getTagVariant, isEqualObjects } from './summary-step.helper';
-import { getAddresses } from '../../beneficiary-details/address-details/address-details.helper';
-import { EnterprisePhone, formatPhoneNumberWithCountryCode, getPhones } from '../../beneficiary-details/phone-details/phone-details.helper';
+import { DEFAULT_BENE_ADDRESS, getTagVariant, isEqualObjects } from './summary-step.helpers';
+import { getAddresses } from '../../beneficiary-details/address-details/address-details.helpers';
+import {
+    EnterprisePhone,
+    formatPhoneNumberWithCountryCode,
+    getPhones,
+} from '../../beneficiary-details/phone-details/phone-details.helpers';
 
 export interface FormattedEnterprisePhoneProps {
     phone: EnterprisePhone;
@@ -44,18 +48,17 @@ const getFormattedAddress = (address: any) => {
         address.country = 'US';
     }
     const isDefault = isEqualObjects(DEFAULT_BENE_ADDRESS, address);
-    return isDefault ? {} :address;
+    return isDefault ? {} : address;
 };
 
 const getFormattedPhone = (phone: any) => {
     if (phone.dialNumber) {
         return phone;
     } else {
-     return {};
+        return {};
     }
- };
+};
 
- 
 const BeneficiarySummary = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.summary' });
     const { beneData, peopleSelection } = useBeneChange();
@@ -76,9 +79,12 @@ const BeneficiarySummary = () => {
                 const currentAddresses: any[] = getAddresses({ addresses });
                 const currentPhones: EnterprisePhone[] = getPhones({ phones });
                 const { firstName, middleName, lastName, gender } = item.party.info;
-                const updatedAddress =  item?.party?.addresses?.[0] ? getFormattedAddress(item?.party?.addresses?.[0]) : {};
+                const updatedAddress = item?.party?.addresses?.[0] ? getFormattedAddress(item?.party?.addresses?.[0]) : {};
                 const updatedPhone = item?.party?.phones?.[0] ? getFormattedPhone(item.party?.phones?.[0]) : {};
-                const currAddress =  {  ...currentAddresses?.[0], country: currentAddresses?.[0]?.country === 'USA' ? 'US' : currentAddresses?.[0]?.country };
+                const currAddress = {
+                    ...currentAddresses?.[0],
+                    country: currentAddresses?.[0]?.country === 'USA' ? 'US' : currentAddresses?.[0]?.country,
+                };
 
                 return (
                     <div className="my-4 w-full rounded-sm border-2 border-gray-100 p-8" key={item.index}>

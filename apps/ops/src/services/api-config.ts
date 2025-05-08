@@ -1,28 +1,28 @@
 import { getCookie } from 'cookies-next';
 
-import { isMockAllowed } from '@deps/utils/environment.helper';
+import { isMockAllowed } from '@deps/utils/environment.helpers';
 
 const getMockParam = () => {
     return getCookie('..mock..') as string;
 };
-  
+
 // const getMockErrorParam = () => {
 //     const cookieStore = cookies();
 
 //     return cookieStore.get('..mock_error..')?.value;
 // };
-  
+
 //   export const isMockErrorEnabled = (endpoint: ApiEndpoints) => {
 //     if (!isMockAllowed()) {
 //       return false;
 //     }
-  
+
 //     const mockErrorVals = getMockErrorParam();
-  
+
 //     if (!mockErrorVals) {
 //       return false;
 //     }
-  
+
 //     return JSON.parse(mockErrorVals).includes(endpoint);
 //   };
 

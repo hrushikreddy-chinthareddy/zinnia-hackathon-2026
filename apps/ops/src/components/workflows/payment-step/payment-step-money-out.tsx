@@ -11,7 +11,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import AddressDataCard from '@deps/containers/small-data-card/address-data/address-data';
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isEndDated } from '@deps/helpers/date.helper';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { Address as AddressOld, BankAccount } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 

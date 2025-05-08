@@ -1,4 +1,4 @@
-import { escapeRegExp } from '@deps/helpers/string.helper';
+import { escapeRegExp } from '@deps/helpers/string.helpers';
 
 interface HighlighterProps {
     text?: string;

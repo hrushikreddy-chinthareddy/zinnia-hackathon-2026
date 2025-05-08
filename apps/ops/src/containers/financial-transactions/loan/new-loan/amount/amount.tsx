@@ -9,7 +9,7 @@ import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fiel
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import FieldLabel from '@deps/components/fields/field-label';
 import Radio, { RadioItem, RadioVariant } from '@deps/components/radio/radio';
-import { radioClasses } from '@deps/components/radio/radio.helper';
+import { radioClasses } from '@deps/components/radio/radio.helpers';
 import SelectSimple from '@deps/components/select/select';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -17,8 +17,8 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useNewLoan } from '@deps/contexts/transactions/NewLoanContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
@@ -34,7 +34,6 @@ export type AmountType = {
 interface AmountProps {
     policy: Policy;
 }
-
 
 const getRadioItems = (
     t: TFunction,

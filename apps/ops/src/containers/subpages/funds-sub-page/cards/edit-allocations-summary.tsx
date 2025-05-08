@@ -1,8 +1,10 @@
+import { useTranslation } from 'next-i18next';
+import { Dispatch, SetStateAction } from 'react';
+
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { ReactComponent as EditAlt } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
+
 import { FundViewModel } from '../types';
-import { Dispatch, SetStateAction } from 'react';
-import { useTranslation } from 'next-i18next';
 
 interface IEditAllocationsSummary {
     funds: FundViewModel[];

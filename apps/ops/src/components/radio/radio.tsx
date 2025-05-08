@@ -4,7 +4,7 @@ import { InputHTMLAttributes } from 'react';
 
 import { RadioTest } from '@deps/jest/constants/test-id-constants';
 
-import { radioClasses } from './radio.helper';
+import { radioClasses } from './radio.helpers';
 import FieldLabel from '../fields/field-label';
 
 export enum RadioVariant {

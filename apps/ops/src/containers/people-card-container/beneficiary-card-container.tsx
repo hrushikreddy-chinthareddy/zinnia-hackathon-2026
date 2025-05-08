@@ -5,11 +5,11 @@ import AllocationColorBar, { AllocationColor } from '@deps/components/allocation
 import { LabelVariant, labelMapping } from '@deps/components/label/label';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as SettingsIcon } from '@deps/styles/elements/icons/actions/settings.svg';
 
 import PeopleCardContainer from './people-card-container';
-import { getBeneficiaryColor, getContigentColor } from './people-card-container.helper';
+import { getBeneficiaryColor, getContigentColor } from './people-card-container.helpers';
 import { BeneficiaryType, PeopleCardContainerProps } from './people-card-container.types';
 import { NameTag } from '../people-sub-page/people-sub-page.helpers';
 

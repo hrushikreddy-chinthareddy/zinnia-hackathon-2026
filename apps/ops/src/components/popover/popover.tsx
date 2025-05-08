@@ -9,7 +9,7 @@ import { PopoverTest } from '@deps/jest/constants/test-id-constants';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 } from '@deps/types/constants';
 
-import { getPlacementProps, commonPopoverClasses, commonTriggerClasses } from './popover.helper';
+import { getPlacementProps, commonPopoverClasses, commonTriggerClasses } from './popover.helpers';
 
 export enum PopoverPlacement {
     TopRight = 'top-right',
@@ -39,11 +39,11 @@ export default function Popover({
     const { t } = useTranslation();
     const { policyDetails } = useContext(PolicyData);
     const router = useRouter();
-    if(router) {
-        const isPoliciesPage = router.pathname.includes('policies')
-        const hideTooltips = HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 && isPoliciesPage && !!policyDetails.isAnnuity
+    if (router) {
+        const isPoliciesPage = router.pathname.includes('policies');
+        const hideTooltips = HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 && isPoliciesPage && !!policyDetails.isAnnuity;
         if (hideTooltips) {
-            return null
+            return null;
         }
     }
     const popoverContent = (

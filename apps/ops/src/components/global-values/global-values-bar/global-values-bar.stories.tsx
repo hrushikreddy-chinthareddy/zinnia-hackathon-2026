@@ -1,13 +1,13 @@
 import { Meta } from '@storybook/react';
 import { t } from 'i18next';
 
-import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
+import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
 import { FindKeyValueSearch } from '@deps/components/global-values/find-key-value-search/find-key-value-search';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
-import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
+import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import { WithdrawalInfo } from '@deps/components/global-values/withdrawal-info/withdrawal-info';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
-import { formatDate } from '@deps/helpers/string.helper';
+import { formatDate } from '@deps/helpers/string.helpers';
 import { PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 import { generateParty } from '@deps/utils/mock/mockParty';
 

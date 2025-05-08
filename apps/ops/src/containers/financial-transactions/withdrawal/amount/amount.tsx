@@ -15,7 +15,7 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { WithdrawalType, useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { TransactionStep } from '@deps/types/segment-analytics';
@@ -148,9 +148,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
     ]);
     // TODO MG: pass in trackEventProps so we dont have to do this in every step
     const transactionType = useMemo(() => {
-        return withdrawal.type === WithdrawalType.Surrender
-            ? TransactionType.FULL_SURRENDER
-            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+        return withdrawal.type === WithdrawalType.Surrender ? TransactionType.FULL_SURRENDER : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
 
     return (

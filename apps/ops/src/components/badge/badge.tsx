@@ -3,7 +3,7 @@ import { JSXElementConstructor, ReactElement } from 'react';
 
 import { BadgeTest } from '@deps/jest/constants/test-id-constants';
 
-import { BadgeVariant } from './badge.helper';
+import { BadgeVariant } from './badge.helpers';
 
 export interface BadgeProps {
     variant: BadgeVariant;

@@ -6,12 +6,12 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
 import FieldLabel from '@deps/components/fields/field-label';
 import Radio, { RadioItem, RadioVariant } from '@deps/components/radio/radio';
-import { radioClasses } from '@deps/components/radio/radio.helper';
+import { radioClasses } from '@deps/components/radio/radio.helpers';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { Policy } from '@deps/models/policy/sor-policy';
 
 const getRadioItems = (

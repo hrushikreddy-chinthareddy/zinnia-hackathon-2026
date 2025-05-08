@@ -1,7 +1,7 @@
 import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import React, { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
@@ -10,7 +10,7 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
@@ -53,7 +53,7 @@ const Amount = ({ policy }: AmountProps) => {
         const { paymentAmount, ...remainingErrors } = errors;
 
         setLoanPayment(prevState => ({ ...prevState, paymentAmount: paymentValue }));
-        setErrors(remainingErrors)
+        setErrors(remainingErrors);
     };
 
     const validateFields = (effectiveDate: string, paymentAmount: string) => {

@@ -23,7 +23,7 @@ import { Coverage } from './Coverage';
 import { Features } from './Features';
 import { Parties, PolicyParty } from './Parties';
 import { SystematicPrograms } from './SystematicPrograms';
-import { isNullEmptyOrUndefined } from '../string.helper';
+import { isNullEmptyOrUndefined } from '../string.helpers';
 
 export type BasePolicyComponentArgs = {
     policy: PolicyDetails;

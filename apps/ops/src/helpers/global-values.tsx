@@ -1,11 +1,11 @@
 import { TFunction } from 'next-i18next';
 
-import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
-import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
+import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
+import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { formatDate } from '@deps/helpers/string.helper';
+import { formatDate } from '@deps/helpers/string.helpers';
 import { PolicyFeatureFeatureType, PolicyStatus } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 

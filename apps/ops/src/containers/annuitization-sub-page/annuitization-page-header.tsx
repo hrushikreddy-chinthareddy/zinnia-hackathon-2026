@@ -5,12 +5,12 @@ import { FC, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import PageHeader from '@deps/components/page-header/page-header';
 import { TranslationFiles } from '@deps/config/translations';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Policy, PolicyFeatureFeatureType, PolicyStatus } from '@deps/models/policy/sor-policy';
 

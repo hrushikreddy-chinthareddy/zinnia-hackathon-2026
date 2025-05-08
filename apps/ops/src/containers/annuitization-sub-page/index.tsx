@@ -14,9 +14,9 @@ import {
 } from '@deps/components/responsive-flex/responsive-flex.types';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { convertKebabedDateString } from '@deps/helpers/string.helper';
+import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { ArrangementType, PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, checkEligibilitySystematicPrograms } from '@deps/queries/api/bpm';
 

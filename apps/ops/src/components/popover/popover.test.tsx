@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { PopoverTest } from '@deps/jest/constants/test-id-constants';
 
 import Popover, { PopoverPlacement } from './popover';
-import { getPlacementProps } from './popover.helper';
+import { getPlacementProps } from './popover.helpers';
 
 import '@testing-library/jest-dom';
 

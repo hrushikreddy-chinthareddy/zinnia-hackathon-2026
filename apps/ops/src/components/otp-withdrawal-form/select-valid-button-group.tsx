@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 
-import { stringifyTrueFalseNull } from '@deps/helpers/string.helper';
+import { stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 
 import ButtonGrp from '../button-group/button-group';
 

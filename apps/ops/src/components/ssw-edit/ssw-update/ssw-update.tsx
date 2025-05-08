@@ -18,7 +18,7 @@ import Amount from './steps/amount';
 import Start from './steps/start';
 import Summary from './steps/summary';
 import TabGroupContainer from './tab-group-container';
-import { buildSSWFormData, getDocumentSource, sswEditFormValidator, SswUpdateType, UpdatedProgram } from '../ssw-edit-helper';
+import { buildSSWFormData, getDocumentSource, sswEditFormValidator, SswUpdateType, UpdatedProgram } from '../ssw-edit-helpers';
 import Signature from './steps/signature';
 
 type SswUpdateContainerProps = {

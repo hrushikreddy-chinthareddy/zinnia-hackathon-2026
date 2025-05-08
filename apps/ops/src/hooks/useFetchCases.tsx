@@ -1,7 +1,7 @@
 import { useState, useCallback, Dispatch, SetStateAction, useEffect } from 'react';
 
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { isEmptyObject } from '@deps/helpers/objects.helper';
+import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { Case } from '@deps/models/case/case';
 import { getCases } from '@deps/queries/api/cases';
 import { CaseSearchBody } from '@deps/types/search';

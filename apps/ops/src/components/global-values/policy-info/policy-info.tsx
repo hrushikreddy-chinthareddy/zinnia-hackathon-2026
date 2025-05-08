@@ -3,14 +3,14 @@ import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 
 import Badge from '@deps/components/badge/badge';
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
 import Highlighter from '@deps/components/highlighter/highlighter';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { mapProductTypeToTranslation } from '@deps/helpers/translation.helper';
+import { mapProductTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 

@@ -11,7 +11,7 @@ import Field, { FieldType, FieldSize, FieldVariant } from '@deps/components/fiel
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Radio from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
-import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helper';
+import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
@@ -31,10 +31,10 @@ import {
     getAddressTypeOptions,
     getFormErrors,
 } from '@deps/containers/people-data-cards/address-card/side-sheet/side-sheet-address.helpers';
-import { getFirstLastName } from '@deps/helpers/party-info-helper';
-import { getStateCodes } from '@deps/helpers/states.helper';
-import { toTitleCase } from '@deps/helpers/string.helper';
-import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helper';
+import { getFirstLastName } from '@deps/helpers/party-info-helpers';
+import { getStateCodes } from '@deps/helpers/states.helpers';
+import { toTitleCase } from '@deps/helpers/string.helpers';
+import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Processes } from '@deps/models/case/case';
 import { Address, AddressType, PolicyAllOfPartiesItem, State } from '@deps/models/policy/sor-policy';
 import { ValidationResult } from '@deps/queries/api/bpm';

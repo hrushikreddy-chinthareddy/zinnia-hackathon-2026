@@ -4,9 +4,10 @@
     "private": true,
     "scripts": {
         "dev": "next dev",
-        "build": "next build",
+        "build": "next build --no-lint",
         "start": "next start",
         "lint": "next lint",
+        "lint:fix": "next lint --fix",
         "lint:test": "eslint 'src/**/*.{js,ts,jsx,tsx}' --max-warnings=0 --no-ignore",
         "clean": "./scripts/clean.sh",
         "test": "cd ../.. pnpm run build && cd apps/ops && jest --verbose=true --maxWorkers=50% --coverage",

@@ -3,7 +3,8 @@ import clsx from 'clsx';
 
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 function FileInfoTemplate(props: ArrayFieldTemplateProps) {
-    let { items, formData, uiSchema } = props;
+    const { items: _items, uiSchema } = props;
+    let { formData } = props;
 
     if (formData.length === 0) {
         const formContextOptions: any = uiSchema?.['ui:options']?.formContext;

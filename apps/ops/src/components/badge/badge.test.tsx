@@ -4,7 +4,7 @@ import { BadgeTest } from '@deps/jest/constants/test-id-constants';
 
 import Badge from './badge';
 import '@testing-library/jest-dom';
-import { BadgeVariant } from './badge.helper';
+import { BadgeVariant } from './badge.helpers';
 
 describe('Badge Component', () => {
     it('should render without crashing', () => {

@@ -1,7 +1,7 @@
 import { TFunction } from 'next-i18next';
 
 import { PartyRoleChipToText } from '@deps/constants/party-roles';
-import { orderObjectsByFirstString, orderObjectsByString, sortByAndThenBy } from '@deps/helpers/sort.helper';
+import { orderObjectsByFirstString, orderObjectsByString, sortByAndThenBy } from '@deps/helpers/sort.helpers';
 import { PartyRole, PartyType, PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
 import { TagKey } from '@deps/types/components';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';

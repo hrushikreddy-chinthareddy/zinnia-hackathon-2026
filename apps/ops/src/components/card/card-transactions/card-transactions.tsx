@@ -10,7 +10,7 @@ import {
     ItemPadding,
     VerticalResizing,
 } from '@deps/components/responsive-flex/responsive-flex.types';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { JestProps } from '@deps/types/props';
 
 export enum CardTransactionsTest {

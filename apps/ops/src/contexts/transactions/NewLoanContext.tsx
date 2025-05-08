@@ -3,9 +3,9 @@ import dayjs from 'dayjs';
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react';
 
 import { PayeesType } from '@deps/components/workflows/payees-step/payees-step';
+import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
 import { AmountType } from '@deps/containers/financial-transactions/loan/new-loan/amount/amount';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
 
 export interface NewLoan extends AmountType, PayeesType, PaymentMethodType {
     caseId?: string;

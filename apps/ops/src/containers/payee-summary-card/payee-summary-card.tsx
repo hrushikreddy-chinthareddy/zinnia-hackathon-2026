@@ -7,14 +7,14 @@ import DotContainer from '@deps/components/dot-container/dot-container';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import PopoverOnTruncate from '@deps/components/popover-on-truncate/popover-on-truncate';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { formatAddress } from '@deps/helpers/address.helper';
-import { formatAccountNumber } from '@deps/helpers/string.helper';
-import { getPaymentType } from '@deps/helpers/systematic-program.helper';
+import { formatAddress } from '@deps/helpers/address.helpers';
+import { formatAccountNumber } from '@deps/helpers/string.helpers';
+import { getPaymentType } from '@deps/helpers/systematic-program.helpers';
 import { Address, DisbursementPaymentForm, DisbursementType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import PayeeSummaryCardRow from './payee-summary-card-row/payee-summary-card-row';
-import { getBeneficiaryColor } from '../people-card-container/people-card-container.helper';
+import { getBeneficiaryColor } from '../people-card-container/people-card-container.helpers';
 
 interface FinancialDataProps {
     beneficiaryColor?: boolean;
@@ -129,7 +129,7 @@ const PaymentInfo = ({ accountNumber, address, branchName, paymentType, t }: Pay
     switch (paymentType) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        case 'WIRE':// case DisbursementPaymentForm.WIRE:
+        case 'WIRE': // case DisbursementPaymentForm.WIRE:
         case DisbursementPaymentForm.EFT:
         case DisbursementPaymentForm.ACH:
             return (

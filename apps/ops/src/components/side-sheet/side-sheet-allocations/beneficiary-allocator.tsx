@@ -15,7 +15,7 @@ import {
     calculateTotalPercent,
     convertBenefitPercentagesToAllocationPercentages,
     getBeneficiariesByFocusedParty,
-} from './side-sheet-allocations-helper';
+} from './side-sheet-allocations-helpers';
 
 export interface BeneficiaryAllocatorProps {
     beneficiaries: Beneficiary[];

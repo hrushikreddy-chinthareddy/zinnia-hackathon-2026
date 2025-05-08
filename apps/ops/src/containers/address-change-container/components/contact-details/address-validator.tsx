@@ -10,7 +10,7 @@ import { ReactComponent as ShieldIcon } from '@deps/styles/elements/icons/icons_
 import loadingImage from '@deps/styles/images/loader.png';
 
 import { AddressError } from './address-error';
-import { getAddressCardDetails, useVerifyAddress, validateAddressFields } from './contact-details.helper';
+import { getAddressCardDetails, useVerifyAddress, validateAddressFields } from './contact-details.helpers';
 
 interface VerifyAddressProps {
     clientCode: string;
@@ -65,7 +65,7 @@ export default function VerifyAddress({
     const handleAddressVerification = () => {
         if (isAddressValidationRequired && setAddressValidator) {
             const addressErrors = validateAddressFields(address?.Address[0], t, true, true);
-            if (Object.keys(addressErrors).length > 0 ) {
+            if (Object.keys(addressErrors).length > 0) {
                 setAddressValidator(addressErrors);
                 return;
             }

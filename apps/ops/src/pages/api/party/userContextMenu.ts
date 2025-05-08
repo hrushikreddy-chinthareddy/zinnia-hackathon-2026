@@ -6,7 +6,7 @@ import { AxiosResponse } from 'axios';
 import { checkTupleApi } from '@deps/queries/api/server/fga/checkTuple';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { isWellabeAgent } from '@deps/utils/agent-helper';
+import { isWellabeAgent } from '@deps/utils/agent-helpers';
 import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';

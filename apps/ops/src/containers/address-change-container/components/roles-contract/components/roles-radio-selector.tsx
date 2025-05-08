@@ -7,7 +7,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useAddressChange } from '@deps/containers/address-change-container/address-change-provider';
 import { PolicyParties } from '@deps/models/policy/sor-policy';
 
-import { getRolesRadioConfig } from '../utils/roles-contract-helper';
+import { getRolesRadioConfig } from '../utils/roles-contract-helpers';
 
 interface RolesRadioSelectorsProps {
     extractedPartyRoles: PolicyParties[];

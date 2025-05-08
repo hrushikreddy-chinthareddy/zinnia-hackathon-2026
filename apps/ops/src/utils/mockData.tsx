@@ -1,5 +1,5 @@
 import DescriptionList from '@deps/components/description-list/description-list';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 
 interface LabelValue {
     label: string;

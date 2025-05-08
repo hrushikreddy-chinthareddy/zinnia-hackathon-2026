@@ -14,8 +14,8 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
 import { useNewLoan } from '@deps/contexts/transactions/NewLoanContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { Address, DisbursementPaymentForm } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
@@ -34,7 +34,17 @@ const Summary = ({ policy }: SummaryProps) => {
     const [showSelectionError, setShowSelectionError] = useState<boolean>(false);
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const { goToNext } = useWorkflow();
-    const { amount, effectiveDate, fboFfc, paymentAccountNumber, paymentAddress, paymentBranchName, paymentForm, payeeFullName, validationResponse } = newLoan;
+    const {
+        amount,
+        effectiveDate,
+        fboFfc,
+        paymentAccountNumber,
+        paymentAddress,
+        paymentBranchName,
+        paymentForm,
+        payeeFullName,
+        validationResponse,
+    } = newLoan;
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
 
     const handleContinue = async () => {
@@ -57,10 +67,7 @@ const Summary = ({ policy }: SummaryProps) => {
                 </Typography>
                 <div className="flex w-full flex-row gap-8">
                     <div className="flex flex-col">
-                        <Label
-                            variant={LabelVariant.FieldLabel}
-                            label={t('loanAmount')}
-                        />
+                        <Label variant={LabelVariant.FieldLabel} label={t('loanAmount')} />
                         <Typography variant={TypographyVariant.Value}>{numberFormatify(amount)}</Typography>
                     </div>
                     <div className="flex flex-col">

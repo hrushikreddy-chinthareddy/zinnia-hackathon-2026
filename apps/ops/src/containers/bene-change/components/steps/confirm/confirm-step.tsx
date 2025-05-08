@@ -13,7 +13,7 @@ import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { addTransaction } from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
-import { buildReRegRequestBody } from './confirm-step.helper';
+import { buildReRegRequestBody } from './confirm-step.helpers';
 import { useBeneChange } from '../../../bene-change-provider';
 
 interface ConfirmStepProps {

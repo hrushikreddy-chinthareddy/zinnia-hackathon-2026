@@ -13,7 +13,7 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useFundTransfer } from '@deps/contexts/transactions/FundTransferContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
 import { AmountType } from '@deps/models/funds/enums';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, ValidationResult } from '@deps/queries/api/bpm';

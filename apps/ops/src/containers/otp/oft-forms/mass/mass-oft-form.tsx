@@ -11,10 +11,10 @@ import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/f
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
+import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { Carrier, ProgramType } from '@deps/models/case/withdrawal/case';
 
-import getMassOftConfig from './mass-oft-form.helper';
+import getMassOftConfig from './mass-oft-form.helpers';
 
 export default function MassOftWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

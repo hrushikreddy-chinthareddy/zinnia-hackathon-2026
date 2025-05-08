@@ -1,11 +1,7 @@
 import '@deps/styles/styles.css';
-import { Meta } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
-import NavElement from '@deps/components/nav-element/nav-element';
-import classes, { NavElementSize, NavElementVariant, NavElementType } from '@deps/components/nav-element/nav-element';
-
-import NavButton from './nav-button/nav-button';
-import NavLink from './nav-link/nav-link';
+import NavElement, { NavElementSize, NavElementVariant, NavElementType } from '@deps/components/nav-element/nav-element';
 
 const meta: Meta<typeof NavElement> = {
     title: 'Components/NavElement',
@@ -36,11 +32,13 @@ const meta: Meta<typeof NavElement> = {
     },
 };
 
-export const NavElementComponent = (args: any) => {
-    return args.type === NavElementType.Button ? (
-        <NavButton onClick={() => console.log('NavButton clicked')} className={classes} {...args} />
-    ) : (
-        <NavLink onClick={() => console.log('NavLink clicked')} className={classes} {...args} />
-    );
+export const NavElementComponent: StoryObj<typeof meta> = {
+    render: ({ type, className, ...restArgs }) => {
+        const handleClick = () => {
+            console.log(`Nav${type}clicked`);
+        };
+        return <NavElement type={type} className={className} {...restArgs} onClick={handleClick} />;
+    },
 };
+
 export default meta;

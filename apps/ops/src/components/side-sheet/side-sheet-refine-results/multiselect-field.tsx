@@ -1,10 +1,8 @@
-import React from 'react';
-
 import { FieldSize } from '@deps/components/fields/field';
 import { Loader } from '@deps/components/page-loader';
 import { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Select from '@deps/components/select/select';
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 
 interface MultiselectFieldProps {
     isLoading: boolean;

@@ -29,7 +29,7 @@ export const useDiaryNotesContext = () => {
 
 export const DiaryNotesContext = createContext<DiaryNotesContextProps>({} as DiaryNotesContextProps);
 
-export const DiaryNotesProvider: React.FC<DiaryNotesProviderProps> = ({ children, caseDetails }) => {
+export const DiaryNotesProvider = ({ children, caseDetails }: DiaryNotesProviderProps) => {
     const [areDiaryNotesViewed, setAreDiaryNotesViewed] = useState(true);
     const { diaryNotes, setDiaryNotes, isLoading, setIsLoading, totalLogs } = useDiaryNotes(
         caseDetails?.policyNum || caseDetails?.policyNumber || '',

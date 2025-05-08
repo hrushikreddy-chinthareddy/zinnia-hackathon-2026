@@ -4,7 +4,7 @@ import { TFunction } from 'next-i18next';
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { CaseActivityContextProps } from '@deps/contexts/CaseActivityContext';
 import { calculateDaysAgo } from '@deps/helpers/case-management';
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 import { AgingTimeRangesKeysExtended, Case, StatCount, Statuses } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';
 
@@ -28,7 +28,7 @@ export const getPartiesFromCase = (caseDetails: Case, t: TFunction): PartiesProp
         const key = createPartyKey({ firstName, lastName, fullName, ssn });
         if (!acc[key]) {
             const createdFullName = toTitleCase(fullName ?? `${firstName ?? ''} ${lastName ?? ''}`);
-            acc[key] = { id: key, fullName: createdFullName, roles: [], fields: {}};
+            acc[key] = { id: key, fullName: createdFullName, roles: [], fields: {} };
             if (ssn) {
                 acc[key].fields.ssn = {
                     label: t('colDefs:owner.ssnAbbreviated'),
@@ -47,7 +47,7 @@ export const getPartiesFromCase = (caseDetails: Case, t: TFunction): PartiesProp
             }
         }
         // if there's two of the same person, just add the roles to the first found
-        if (partyRole?.toLowerCase().includes('owner')){
+        if (partyRole?.toLowerCase().includes('owner')) {
             acc[key].roles.unshift(convertToChipText(partyRole, t));
         } else {
             acc[key].roles.push(convertToChipText(partyRole, t));

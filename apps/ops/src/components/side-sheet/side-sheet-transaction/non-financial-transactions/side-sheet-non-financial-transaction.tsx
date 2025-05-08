@@ -4,24 +4,24 @@ import { TFunction, useTranslation } from 'next-i18next';
 import { ReactNode } from 'react';
 
 import FieldData from '@deps/components/fields/field-data/field-data';
-import { getChangedParty, getPeopleChangeType } from '@deps/components/history-event-card/history-event-card.helper';
+import { getChangedParty, getPeopleChangeType } from '@deps/components/history-event-card/history-event-card.helpers';
 import { PeopleChangeType } from '@deps/components/history-event-card/types';
 import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { formatPhoneNumberWithExtension } from '@deps/helpers/phone.helper';
-import { formatAccountNumber } from '@deps/helpers/string.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { formatPhoneNumberWithExtension } from '@deps/helpers/phone.helpers';
+import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import {
     mapAccountTypeToTranslation,
     mapAddressTypeToTranslation,
     mapEmailTypeToTranslation,
     mapPhoneTypeToTranslation,
-} from '@deps/helpers/translation.helper';
+} from '@deps/helpers/translation.helpers';
 import { Address as PolicyAddress, Policy, Transaction, TransactionType, PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DAY_DATE_FORMAT } from '@deps/types/constants';
 
 import { SideSheetTransactionProps } from '../types';
-import { getNonFinancialTransactionSideSheetValues } from './side-sheet-non-financial-transactions.helper';
+import { getNonFinancialTransactionSideSheetValues } from './side-sheet-non-financial-transactions.helpers';
 
 const changeTable = (vals: { updated: ReactNode; original: ReactNode; label: string }[], t: TFunction) => {
     return (

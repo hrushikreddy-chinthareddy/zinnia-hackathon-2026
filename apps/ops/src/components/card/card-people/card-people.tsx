@@ -4,9 +4,9 @@ import ClickContainer from '@deps/components/click-container/click-container';
 import PartyTag from '@deps/components/party/party-tag';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Title, { TitleVariant } from '@deps/components/title/title';
-import { getBeneficiaryColor, getContigentColor } from '@deps/containers/people-card-container/people-card-container.helper';
+import { getBeneficiaryColor, getContigentColor } from '@deps/containers/people-card-container/people-card-container.helpers';
 import { BeneficiaryType } from '@deps/containers/people-card-container/people-card-container.types';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { PartyStatus } from '@deps/models/policy/sor-policy';
 import { TagKey } from '@deps/types/components';
 

@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import { BankDetailsInputMethod } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement-parts/autofill-account-toggle';
-import { BankingFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
+import { BankingFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
 import { SignatureValidationField } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation';
 import { RadioItem } from '@deps/components/radio/radio';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';

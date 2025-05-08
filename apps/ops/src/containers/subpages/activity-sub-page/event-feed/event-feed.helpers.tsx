@@ -6,7 +6,7 @@ import {
     financialTransactions,
     peopleTransactions,
     policyTransactions,
-} from '@deps/helpers/transaction-types.helper';
+} from '@deps/helpers/transaction-types.helpers';
 import { Transaction } from '@deps/models/policy/sor-policy';
 
 export interface Transactions {

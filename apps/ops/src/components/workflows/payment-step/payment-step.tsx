@@ -8,7 +8,7 @@ import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isEndDated } from '@deps/helpers/date.helper';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { ArrangementType, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 
@@ -107,13 +107,13 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
     return (
         <WorkflowCard
             title={t('workflows.paymentStep.heading')}
-            footerContent={<TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} stopLoading={stopLoading} trackEventProps={trackEventProps} />}
+            footerContent={
+                <TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} stopLoading={stopLoading} trackEventProps={trackEventProps} />
+            }
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col">
-                    <Typography variant={TypographyVariant.LabelLg}>
-                        {subtitle}
-                    </Typography>
+                    <Typography variant={TypographyVariant.LabelLg}>{subtitle}</Typography>
 
                     <div className="flex flex-col gap-4">
                         <Typography variant={TypographyVariant.LabelLg}>{t('workflows.paymentStep.label')}</Typography>

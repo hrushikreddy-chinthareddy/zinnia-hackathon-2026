@@ -1,4 +1,4 @@
-import { groupValues, mapGroupToIcon } from '@deps/helpers/search.helper';
+import { groupValues, mapGroupToIcon } from '@deps/helpers/search.helpers';
 import { DataDefinition } from '@deps/types/data';
 
 import SelectSearchGroupItem from '../select-search-group-item/select-search-group-item';

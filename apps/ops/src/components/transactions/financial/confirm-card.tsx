@@ -6,7 +6,7 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
-import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
 import { AmountType } from '@deps/models/funds/enums';
 
 interface ConfirmProps {

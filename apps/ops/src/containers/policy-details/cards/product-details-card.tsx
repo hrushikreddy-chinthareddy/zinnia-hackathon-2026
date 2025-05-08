@@ -5,7 +5,7 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
-import { mapProductTypeToTranslation } from '@deps/helpers/translation.helper';
+import { mapProductTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 

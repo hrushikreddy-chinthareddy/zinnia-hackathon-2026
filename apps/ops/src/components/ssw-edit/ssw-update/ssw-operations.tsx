@@ -10,8 +10,8 @@ import { ChannelType } from '@deps/models/case/enums';
 import { FormSignature } from '@deps/models/case/withdrawal/case';
 
 import EditProgram from './edit-program';
-import { signaturesConfig } from '../bank-update/bank-update.helper';
-import { getDocumentSource, SswUpdateType } from '../ssw-edit-helper';
+import { signaturesConfig } from '../bank-update/bank-update.helpers';
+import { getDocumentSource, SswUpdateType } from '../ssw-edit-helpers';
 
 type SswOperationsProps = {
     document: DocumentData;

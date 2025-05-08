@@ -6,7 +6,7 @@ import xss from 'xss';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
 import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
-import { TransactionOption, TransactionTypes } from '@deps/helpers/transaction-options.helper';
+import { TransactionOption, TransactionTypes } from '@deps/helpers/transaction-options.helpers';
 import { TargetFundAllocation } from '@deps/models/case/task';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getProductFunds } from '@deps/queries/api/integration';

@@ -10,7 +10,7 @@ import {
     numberFormatify,
     percentFormatify,
     forcePositiveNumber,
-} from './numbers.helper';
+} from './numbers.helpers';
 
 describe('Numbers Helper', () => {
     describe('AccessibleFormattedAmount component', () => {

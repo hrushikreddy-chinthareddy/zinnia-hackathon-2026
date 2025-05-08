@@ -1,6 +1,6 @@
-import React, { CSSProperties, ElementType, PropsWithChildren } from 'react';
+import { CSSProperties, ElementType, PropsWithChildren } from 'react';
 
-import { filterTruthyProps } from '@deps/helpers/data-transform.helper';
+import { filterTruthyProps } from '@deps/helpers/data-transform.helpers';
 import { ResponsiveGridTest } from '@deps/jest/constants/test-id-constants';
 import { CssValue } from '@deps/utils/styles';
 

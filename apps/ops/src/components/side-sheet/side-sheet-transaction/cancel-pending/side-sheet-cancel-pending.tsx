@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { cancelTransaction } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ReactComponent as AlertExclamationIcon } from '@deps/styles/elements/icons/alert/alert-exclamation.svg';

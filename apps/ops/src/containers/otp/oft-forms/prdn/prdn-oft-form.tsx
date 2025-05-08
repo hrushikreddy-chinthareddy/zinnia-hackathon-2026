@@ -11,11 +11,11 @@ import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/f
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
+import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { ProcessType } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 
-import usePrdnOftConfig from './prdn-oft-form-helper';
+import usePrdnOftConfig from './prdn-oft-form-helpers';
 
 export default function PrdnOftWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

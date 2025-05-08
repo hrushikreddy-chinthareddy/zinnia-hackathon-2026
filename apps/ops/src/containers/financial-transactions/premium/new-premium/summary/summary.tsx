@@ -14,7 +14,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
 import { ACH, usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { Address, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, ValidationResult } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
@@ -36,7 +36,7 @@ const Summary = ({ policy }: SummaryProps) => {
 
     const { effectiveDate, paymentAccountNumber, paymentBranchName, paymentAmount, payorAddress, payorFullName, validationResponse } =
         premium;
-    
+
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
     const bannerResults = validationResponse?.validationResult;
     const statusResponse = validationResponse?.status;

@@ -23,9 +23,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { isEmptyObject } from '@deps/helpers/objects.helper';
+import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
-import { formatSSN, toTitleCase } from '@deps/helpers/string.helper';
+import { formatSSN, toTitleCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { Case } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { TFunction , useTranslation } from 'next-i18next';
+import { TFunction, useTranslation } from 'next-i18next';
 import { ChangeEvent, useContext } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
@@ -16,7 +16,7 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { Benefit, ComparisonContractProps, ComparisonType, ContractComparisonTableConfig } from './create-disclosure.types';
-import getMassMutualReg60Config from '../../mass-mutual/mass-mutual-reg60-form-helper';
+import getMassMutualReg60Config from '../../mass-mutual/mass-mutual-reg60-form-helpers';
 import { FIVE_YEAR, SURRENDER_BENEFITS, TEN_YEAR, amountFormat, numberFormat } from '../../utils/reg60-constants';
 import AppliedCharges from '../applied-charges/applied-charges';
 import BenefitsTable from '../comparison-benefits/benefits-table';
@@ -24,7 +24,6 @@ import { RowConfig } from '../comparison-benefits/benefits-table.types';
 import { Products } from '../disclosure-authorization/disclosure-authorization.types';
 import ProposedAnnuityQuote from '../proposed-annuity-quote/proposed-annuity-quote';
 import { AnnuityQuote } from '../proposed-annuity-quote/proposed-annuity-quote.types';
-
 
 const getComparisonTypeOptions = (t: TFunction) => [
     { label: t('comparisonTypes.veriableToFixed'), value: ComparisonType.VARIABLE_TO_FIXED },

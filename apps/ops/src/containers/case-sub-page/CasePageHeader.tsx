@@ -6,7 +6,7 @@ import { PopoverPlacement } from '@deps/components/popover/popover';
 import { StatusBadge } from '@deps/components/status-badge/status-badge';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
+import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { PolicyStatus } from '@deps/models/policy/sor-policy';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';

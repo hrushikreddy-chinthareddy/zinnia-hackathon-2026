@@ -18,7 +18,7 @@ import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case'
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
-import getUsaaConfig from './usaa-ssw-form-helper';
+import getUsaaConfig from './usaa-ssw-form-helpers';
 
 export function UsaaSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

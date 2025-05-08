@@ -12,9 +12,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
-import { ACH,useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
+import { ACH, useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
@@ -57,18 +57,11 @@ const Summary = ({ policy }: SummaryProps) => {
                 </Typography>
                 <div className="flex w-full flex-row gap-8">
                     <div className="flex flex-col gap-1">
-                        <Label
-                            variant={LabelVariant.FieldLabel}
-                            label={t('loanPaymentAmount')}
-                        />
+                        <Label variant={LabelVariant.FieldLabel} label={t('loanPaymentAmount')} />
                         <Typography variant={TypographyVariant.Value}>{numberFormatify(paymentAmount)}</Typography>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <Label
-                            variant={LabelVariant.FieldLabel}
-                            label={t('effectiveDate')}
-                            tooltipTitle={t('effectiveDate')}
-                        />
+                        <Label variant={LabelVariant.FieldLabel} label={t('effectiveDate')} tooltipTitle={t('effectiveDate')} />
                         <Typography variant={TypographyVariant.Value}>
                             {dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(DEFAULT_DATE_FORMAT)}
                         </Typography>

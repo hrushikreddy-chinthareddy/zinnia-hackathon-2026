@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 
 import { getESignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import {
@@ -21,7 +21,7 @@ import {
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
-import { FormSubtype } from '../flic-withdrawal-form.helper';
+import { FormSubtype } from '../flic-withdrawal-form.helpers';
 
 const StatusesForSaveAsDraftAction: string[] = [CaseStatus.Pending, TaskStatus.New, TaskStatus.InProgress];
 

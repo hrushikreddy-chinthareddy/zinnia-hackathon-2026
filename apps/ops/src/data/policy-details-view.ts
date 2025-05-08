@@ -1,5 +1,5 @@
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { convertKebabedDateString, isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { convertKebabedDateString, isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helpers';
 import { FundAccountType, Policy, PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { DataDefinition } from '@deps/types/data';
@@ -85,7 +85,7 @@ export const toPolicyViewDetailsDto = (policy: Policy): PolicyViewDetailsDto => 
             guidelineBasis: guidelineBasis || 0,
             amountRemainingUntilCurrentSevenPayLimit:
                 (testValues?.modifiedEndowmentContract?.sevenPayLimit || 0) -
-                    (testValues?.modifiedEndowmentContract?.sevenPayTestBasis || 0) || 0,
+                (testValues?.modifiedEndowmentContract?.sevenPayTestBasis || 0) || 0,
             sevenPayPremiumBasis: testValues?.modifiedEndowmentContract?.sevenPayTestBasis || 0,
             planCode: policy?.product?.planCode || '',
             productName: policy.product?.planName || '',

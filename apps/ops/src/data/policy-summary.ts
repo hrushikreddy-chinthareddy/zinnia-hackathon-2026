@@ -1,8 +1,8 @@
 import { TFunction } from 'next-i18next';
 
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { getBankDetails, getParty } from '@deps/helpers/payments.helper';
-import { convertKebabedDateString, isNullEmptyOrUndefined, translateYearOrYears } from '@deps/helpers/string.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { getBankDetails, getParty } from '@deps/helpers/payments.helpers';
+import { convertKebabedDateString, isNullEmptyOrUndefined, translateYearOrYears } from '@deps/helpers/string.helpers';
 import { BankAccount, Policy, PolicyFeatureFeatureType, Reason } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { DataDefinition } from '@deps/types/data';
@@ -59,9 +59,8 @@ export const toPolicySummaryColDto = (policy: Policy, t?: TFunction): PolicySumm
 
     const result = {
         freeLookExpirationDate: freeLookFeature?.endDate,
-        upcomingMonthlyPremium: `${upcomingPremium?.amount},${convertKebabedDateString(paymentDate || '')},${accountNumber || 'empty'},${
-            payorBankDetails?.accountType
-        },${policy.policyNumber}`,
+        upcomingMonthlyPremium: `${upcomingPremium?.amount},${convertKebabedDateString(paymentDate || '')},${accountNumber || 'empty'},${payorBankDetails?.accountType
+            },${policy.policyNumber}`,
         maturityDate: policyDates?.maturityDate,
         issueDate: convertKebabedDateString(policyDates?.issueDate),
         baseDeathBenefit: baseDeathBenefit,

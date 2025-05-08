@@ -3,7 +3,7 @@ import { Meta } from '@storybook/react';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 
 import BadgeWithTooltip, { BadgeWithTooltipProps } from './badge-with-tooltip';
-import { BadgeVariant } from '../badge.helper';
+import { BadgeVariant } from '../badge.helpers';
 
 export const BadgeWithTooltipComponent = (args: BadgeWithTooltipProps) => {
     return args.icon ? (

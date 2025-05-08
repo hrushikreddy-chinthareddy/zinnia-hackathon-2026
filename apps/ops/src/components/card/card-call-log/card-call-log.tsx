@@ -1,10 +1,9 @@
-import { Tag } from '@zinnia/bloom/components'
+import { Tag } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { useTimestampText } from '@deps/hooks/useStatusInfo';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { ReactComponent as PhoneIcon } from '@deps/styles/elements/icons/icons_outlined/phone.svg';
@@ -35,9 +34,9 @@ export default function CallLogCard({
     summary,
     isSecondaryPage,
     handleNavigate,
-    className
+    className,
 }: CallLogCardProps) {
-    tag = toSentenceCase(tag)
+    tag = toSentenceCase(tag);
     const displayName = (
         <Typography variant={TypographyVariant.LabelLg} className="mb-2">
             {callerRole ? `${callerName}, ` : callerName}
@@ -70,7 +69,11 @@ export default function CallLogCard({
                     />
                 )}
             </div>
-            {tag && <span className="block mb-4 mt-2"><Tag text={tag} /></span>}
+            {tag && (
+                <span className="block mb-4 mt-2">
+                    <Tag text={tag} />
+                </span>
+            )}
             {summary ? (
                 <Typography variant={TypographyVariant.Body} className={clsx({ 'line-clamp-5 break-normal': !isSecondaryPage })}>
                     {summary}

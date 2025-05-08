@@ -5,7 +5,7 @@ import isBetween from 'dayjs/plugin/isBetween';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { KeyboardEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import FilterButton from '@deps/components/filter-button/filter-button';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -30,7 +30,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { formatCaseTotals, getAdditionalFilters, getSearchValueObject, toggleLabels } from '@deps/helpers/case-management';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
-import { storage } from '@deps/helpers/sessionStorage.helper';
+import { storage } from '@deps/helpers/sessionStorage.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Statuses } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
@@ -53,6 +53,9 @@ const SideSheetRefineResults = dynamic(() => import('@deps/components/side-sheet
 const ActiveFilters = dynamic(() => import('@deps/containers/active-filters/active-filters'));
 const SearchResultsErrorCard = dynamic(() => import('@deps/containers/search-results/search-results-error-card/search-results-error-card'));
 const PaginationControls = dynamic(() => import('@deps/components/pagination/pagination'));
+
+// extend dayjs with isBetween plugin outside of the component to avoid re-initializing it on every render
+dayjs.extend(isBetween);
 
 interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
@@ -229,7 +232,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             });
             setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
         },
-        [setCaseManagementFilters]
+        [setCaseManagementFilters, user.sid, user.partyId]
     );
 
     const handleClear = useCallback(
@@ -341,8 +344,11 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         );
         sideSheet.handleOpen(true);
     };
-
-    dayjs.extend(isBetween);
+    const handleKeyDown = (event: KeyboardEvent<HTMLAnchorElement>) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            openRefineResultsSidesheet();
+        }
+    };
 
     // JSX
     return (
@@ -382,12 +388,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         className="flex items-center whitespace-nowrap"
                         aria-label={t('ariaLabel.openRefineResultsButton') as string}
                         onClick={openRefineResultsSidesheet}
-                        onKeyDown={e => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                openRefineResultsSidesheet();
-                            }
-                        }}
+                        onKeyDown={handleKeyDown}
                     >
                         {t('caseManagementDashboard.addFilters')}
                     </NavElement>

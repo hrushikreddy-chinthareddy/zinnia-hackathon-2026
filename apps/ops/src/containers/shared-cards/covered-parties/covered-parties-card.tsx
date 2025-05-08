@@ -6,9 +6,9 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { getRiskClass } from '@deps/helpers/party-info-helper';
+import { getRiskClass } from '@deps/helpers/party-info-helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {

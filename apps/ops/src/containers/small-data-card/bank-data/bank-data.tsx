@@ -4,8 +4,8 @@ import { useTranslation } from 'next-i18next';
 import ClickContainer from '@deps/components/click-container/click-container';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import { getBankAccountType } from '@deps/helpers/party-info-helper';
-import { formatAccountNumber } from '@deps/helpers/string.helper';
+import { getBankAccountType } from '@deps/helpers/party-info-helpers';
+import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import { BankAccount } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 

@@ -2,8 +2,8 @@ import router from 'next/router';
 import { TFunction } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
-import getCreateCaseConfig from '@deps/containers/otp/create-case-form/create-case-form.helper';
-import { getSlug } from '@deps/helpers/string.helper';
+import getCreateCaseConfig from '@deps/containers/otp/create-case-form/create-case-form.helpers';
+import { getSlug } from '@deps/helpers/string.helpers';
 import { Case, CaseType, Statuses } from '@deps/models/case/case';
 import { fetchTasks } from '@deps/operations/tasks/task-operations';
 

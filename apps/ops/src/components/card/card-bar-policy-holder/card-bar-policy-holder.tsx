@@ -1,6 +1,6 @@
 import Badge from '@deps/components/badge/badge';
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 import { Status } from '@deps/models/policy/sor-policy';
 
 interface CardBarPolicyHolderProps {

@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { Rider } from '@deps/models/policy/sor-policy';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
@@ -48,9 +48,8 @@ const buildClientSideProductRatePathUrl = (
     resource?: ConfiguredSettingId,
     querySearchParams?: string
 ): string => {
-    return `${appUrlCarriers}/${carrierCode}/products/${planCode}/benefits/${benefitCode}/configured-settings/${resource}${
-        querySearchParams ? `?${querySearchParams}` : ''
-    }`;
+    return `${appUrlCarriers}/${carrierCode}/products/${planCode}/benefits/${benefitCode}/configured-settings/${resource}${querySearchParams ? `?${querySearchParams}` : ''
+        }`;
 };
 
 // Makes an attempt to retrieve the value from a product-rates response.

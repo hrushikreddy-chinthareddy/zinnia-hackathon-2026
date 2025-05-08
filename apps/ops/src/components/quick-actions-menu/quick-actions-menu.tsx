@@ -9,7 +9,7 @@ import { v4 as uuidV4 } from 'uuid';
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
 import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
-import { commonPopoverClasses, commonTriggerClasses } from '@deps/components/popover/popover.helper';
+import { commonPopoverClasses, commonTriggerClasses } from '@deps/components/popover/popover.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';

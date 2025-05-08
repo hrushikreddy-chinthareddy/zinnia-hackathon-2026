@@ -12,9 +12,9 @@ import BankingDetails from '@deps/components/side-sheet/banking-details/banking-
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
-import { formatAccountNumber, toTitleCase } from '@deps/helpers/string.helper';
+import { formatAccountNumber, toTitleCase } from '@deps/helpers/string.helpers';
 import { Reason } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
@@ -82,7 +82,10 @@ const UpcomingPremiumDisplayField = ({ policy }: BasePolicyComponentArgs) => {
 
     return (
         <div>
-            <Label variant={LabelVariant.FieldLabel} label={t('colDefs:policySummary.upcomingPremium', { frequency: translatedFrequency })} />
+            <Label
+                variant={LabelVariant.FieldLabel}
+                label={t('colDefs:policySummary.upcomingPremium', { frequency: translatedFrequency })}
+            />
             <UpcomingPremium policy={policy} />
         </div>
     );

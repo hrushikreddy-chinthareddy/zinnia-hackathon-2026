@@ -7,8 +7,8 @@ import { TFunction } from 'next-i18next';
 
 import { DocumentPreviewerProps } from '@deps/components/document-viewer/document-previewer';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
-import { percentFormatify } from '@deps/helpers/numbers.helper';
-import { toTitleCase, toSentenceCase } from '@deps/helpers/string.helper';
+import { percentFormatify } from '@deps/helpers/numbers.helpers';
+import { toTitleCase, toSentenceCase } from '@deps/helpers/string.helpers';
 import { Case, Statuses } from '@deps/models/case/case';
 import { DocumentInstance } from '@deps/models/case/document-instance';
 import { ExceptionInstance, ExceptionStatuses } from '@deps/models/case/exception-instance';

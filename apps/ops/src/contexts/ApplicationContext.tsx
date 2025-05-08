@@ -3,7 +3,7 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 
 import ErrorBoundary from '@deps/components/error-boundary/error-boundary';
 import { LayoutWrapper } from '@deps/containers/layout-wrapper/layout-wrapper';
-import { storage } from '@deps/helpers/sessionStorage.helper';
+import { storage } from '@deps/helpers/sessionStorage.helpers';
 
 import { OptimizelyProvider } from './OptimizelyContext';
 import { PermissionsProvider } from './PermissionsContext';

@@ -18,7 +18,7 @@ import { getPartyMetadataById } from '@deps/queries/api/parties';
 import { bulkCheckPermissionsQuery, doesUserHavePagePermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
-import { isWellabeAgent } from '@deps/utils/agent-helper';
+import { isWellabeAgent } from '@deps/utils/agent-helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { useOptimizely } from './OptimizelyContext';

@@ -15,8 +15,8 @@ import { FormSignature, FormTaxWithholding } from '@deps/models/case/withdrawal/
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
 
-import { getDocumentSource, sswEditFormValidator } from '../ssw-edit-helper';
-import { signaturesConfig, taxWithholdingUpdateFormData } from './withholding-update.helper';
+import { getDocumentSource, sswEditFormValidator } from '../ssw-edit-helpers';
+import { signaturesConfig, taxWithholdingUpdateFormData } from './withholding-update.helpers';
 import Failed from '../Failed';
 import Success from '../Success';
 

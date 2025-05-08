@@ -13,7 +13,7 @@ import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import GlWbWrapper from './glwb-wrapper';
 import SingleLifePersonDetails from './single-life-person-details';
-import { getCoveredLifeInitialValues, SSWFormProgramFields } from './ssw-form-program.helper';
+import { getCoveredLifeInitialValues, SSWFormProgramFields } from './ssw-form-program.helpers';
 import SystematicWithdrawalRow, { SSWProgram } from './ssw-row';
 import ExistingPrograms from '../rmd-method/existing-programs';
 

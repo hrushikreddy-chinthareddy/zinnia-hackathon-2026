@@ -20,7 +20,7 @@ import {
     determinePartyBeneficiaryRole,
     getBeneficiariesByRole,
     PartyId,
-} from './side-sheet-allocations-helper';
+} from './side-sheet-allocations-helpers';
 
 interface SideSheetAllocationsProps {
     focusedPartyId?: PartyId;

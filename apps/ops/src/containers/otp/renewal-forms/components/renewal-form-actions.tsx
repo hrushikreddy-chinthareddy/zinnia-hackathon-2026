@@ -22,7 +22,7 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 
-import { OWNER_TYPES } from './renewal-form-helper';
+import { OWNER_TYPES } from './renewal-form-helpers';
 interface RenewalFormControls {
     userId: string;
     caseId: string;
@@ -99,12 +99,10 @@ const RenewalFormActions = ({ userId, clientId, caseId, setIsLoading }: RenewalF
             taskType: 'RenewalTransfer',
             transOption,
             userId,
-        }
+        };
     };
 
-    const buildRenewalFormV2 = (
-        status: TaskStatus,
-    ): CreateTaskBody<TaskStatus, RenewalsFormData> => {
+    const buildRenewalFormV2 = (status: TaskStatus): CreateTaskBody<TaskStatus, RenewalsFormData> => {
         return {
             source: TaskSource.ZinniaTaskManagement,
             taskType: initialForm.taskType,
@@ -113,22 +111,15 @@ const RenewalFormActions = ({ userId, clientId, caseId, setIsLoading }: RenewalF
         };
     };
 
-
     const submitRenewalRequest = async (event: FormEvent): Promise<void> => {
         event.preventDefault();
         setFormErrors({});
         setTaskApiError('');
 
-
         if (validateForm() && areDiaryNotesViewed) {
             setIsLoading(true);
 
-            const data = await updateTask(
-                initialForm.caseId,
-                initialForm.taskId,
-                buildRenewalFormV2(TaskStatus.Completed),
-                timer
-            );
+            const data = await updateTask(initialForm.caseId, initialForm.taskId, buildRenewalFormV2(TaskStatus.Completed), timer);
             if (data?.id) {
                 if (isLocalStorageEnabled()) {
                     const successMessage = t('caseRenewal.request.createTaskSuccess', {
@@ -146,7 +137,6 @@ const RenewalFormActions = ({ userId, clientId, caseId, setIsLoading }: RenewalF
                 setIsLoading(false);
             }
         }
-
     };
 
     const validateForm = () => {
@@ -177,13 +167,14 @@ const RenewalFormActions = ({ userId, clientId, caseId, setIsLoading }: RenewalF
                 {Object.keys(formErrors) && <div className="flex flex-col">{renderErrors(Object.keys(formErrors))}</div>}
                 {taskApiError && <AssistiveText variant={AssistiveTextVariant.Error} text={taskApiError} className="mt-2" />}
                 <div className="flex flex-row self-center p-4">
-                    <Button className="mr-4"
+                    <Button
+                        className="mr-4"
                         onClick={submitRenewalRequest}
                         size={ButtonSize.Small}
                         type={ButtonType.Primary}
                         variant={isFormStateReadOnly ? ButtonVariant.Inactive : ButtonVariant.Default}
                         disabled={isFormStateReadOnly}
-                        >
+                    >
                         {t('caseRenewal.request.submit')}
                     </Button>
                     <NavElement

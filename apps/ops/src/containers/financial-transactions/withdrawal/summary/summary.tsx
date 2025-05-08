@@ -15,16 +15,17 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
 import { useWithdrawal, WithdrawalType } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { toTitleCase } from '@deps/helpers/string.helper';
-import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helper';
-import { getRequestedWithheldTaxesDisplay, getReturnedWithheldTaxesDisplay } from '@deps/helpers/transactions/tax-withholdings.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { toTitleCase } from '@deps/helpers/string.helpers';
+import { getRequestedWithheldTaxesDisplay } from '@deps/helpers/tax-withholdings.helpers';
+import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
+import { getReturnedWithheldTaxesDisplay } from '@deps/helpers/transactions/tax-withholdings.helpers';
 import { Address } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
-import { getOwnersTaxJurisdictionState } from '../taxes/taxes.helper';
+import { getOwnersTaxJurisdictionState } from '../taxes/taxes.helpers';
 
 interface SummaryProps {
     policy: Policy;
@@ -60,11 +61,9 @@ const Summary = ({ policy }: SummaryProps) => {
         : numberFormatify(validationResponse?.quoteResponse?.transactionAmounts?.appliedAmount);
 
     const transactionType = useMemo(() => {
-        return withdrawal.type === WithdrawalType.Surrender
-            ? TransactionType.FULL_SURRENDER
-            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+        return withdrawal.type === WithdrawalType.Surrender ? TransactionType.FULL_SURRENDER : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
-    
+
     const handleContinue = async () => {
         if (!validationSucceeded && !isChecked) {
             setShowSelectionError(true);

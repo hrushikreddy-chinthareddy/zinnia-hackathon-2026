@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 import { FC } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
 import { TransactionStatus } from '@deps/models/policy/sor-policy';
 import { isObjectKey } from '@deps/utils/types';

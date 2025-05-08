@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 
 import BadgeWithTooltip from './badge-with-tooltip';
 

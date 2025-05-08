@@ -1,8 +1,64 @@
 import { render, screen } from '@testing-library/react';
 
+import { PolicyDocument } from '@deps/models/case/document';
+
 import SideSheetDocumentItem from './document-item';
-import { mockDocuments } from './document-item.stories';
 import { DocumentTypeView } from '../DocumentTypeView';
+
+export const mockDocuments: PolicyDocument[] = [
+    {
+        caseId: '000000000123',
+        contractNumber: '000000000123',
+        displayName: 'Document PDF',
+        documentDate: '2023-05-01T10:00:00.000Z',
+        documentID: 'doc1',
+        docStatus: 'Active',
+        documentType: 'Incoming Transfer',
+        documentNumber: '20230726-M-621551',
+        importDate: '2023-05-01T10:00:00.000Z',
+        source: 'ETP',
+        fileType: 'pdf',
+    },
+    {
+        caseId: '00000000124',
+        contractNumber: '000000000124',
+        displayName: 'Document HTML',
+        documentDate: '2023-05-01T10:00:00.000Z',
+        documentID: 'doc2',
+        docStatus: 'Active',
+        documentType: 'Incoming Transfer',
+        documentNumber: '20230726-M-621551',
+        importDate: '2023-05-01T10:00:00.000Z',
+        source: 'ETP',
+        fileType: 'html',
+    },
+    {
+        caseId: '00000000125',
+        contractNumber: '000000000125',
+        displayName: 'Document JPEG',
+        documentDate: '2023-05-01T10:00:00.000Z',
+        documentID: 'doc3',
+        docStatus: 'Active',
+        documentType: 'Incoming Transfer',
+        documentNumber: '20230726-M-621551',
+        importDate: '2023-05-01T10:00:00.000Z',
+        source: 'ETP',
+        fileType: 'jpeg',
+    },
+    {
+        caseId: '00000000125',
+        contractNumber: '000000000125',
+        displayName: 'Unsupported Document',
+        documentDate: '2023-05-01T10:00:00.000Z',
+        documentID: 'doc3',
+        docStatus: 'Active',
+        documentType: 'Incoming Transfer',
+        documentNumber: '20230726-M-621551',
+        importDate: '2023-05-01T10:00:00.000Z',
+        source: 'ETP',
+        fileType: 'NADA',
+    },
+];
 
 const unsupportedDocument = mockDocuments[mockDocuments.length - 1];
 const supportedDocument = mockDocuments[0];

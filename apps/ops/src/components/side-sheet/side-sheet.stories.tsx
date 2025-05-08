@@ -3,13 +3,13 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
 import Button from '@deps/components/button/button';
-import { formatDate } from '@deps/helpers/string.helper';
+import { formatDate } from '@deps/helpers/string.helpers';
 import { PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 
 import SideSheet from './side-sheet';
 import '@deps/styles/styles.css';
-import { getBadgeStatus, getBadgeStatusVariant } from '../badge/badge.helper';
-import { getPolicyBadgeStatusTooltip } from '../global-values/global-values-bar/global-values-helper';
+import { getBadgeStatus, getBadgeStatusVariant } from '../badge/badge.helpers';
+import { getPolicyBadgeStatusTooltip } from '../global-values/global-values-bar/global-values-helpers';
 import PolicyInfo from '../global-values/policy-info/policy-info';
 
 export default {

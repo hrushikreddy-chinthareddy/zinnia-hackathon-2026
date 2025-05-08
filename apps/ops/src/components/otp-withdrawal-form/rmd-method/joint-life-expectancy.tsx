@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import React, { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
@@ -12,7 +12,7 @@ import { RMD } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { IFieldConfig } from '../form-party/form-party';
-import { PartyFields } from '../form-party/party-helper';
+import { PartyFields } from '../form-party/party-helpers';
 
 interface JLEFieldConfig {
     fieldName: PartyFields;
@@ -147,13 +147,12 @@ type JointLifeExpectancy = Pick<RMD, 'firstName' | 'middleName' | 'lastName' | '
 
 export interface JointLifeExpectancyProps {
     configs: JointLifeExpectancyConfig;
-    isFormStateReadOnly?: boolean,
+    isFormStateReadOnly?: boolean;
 }
 export default function JointLifeExpectancy({ configs, isFormStateReadOnly = false }: JointLifeExpectancyProps) {
     const { formProgram, setFormProgram } = useContext(FormDataContext);
     const [isJointLifeExpectancy, setisJointLifeExpectancy] = useState(formProgram?.rmd?.isJointLifeExpectancy || false);
     const { renderField, firstName, middleName, lastName, dob, taxId } = useJLEFields(formProgram?.rmd || DEFAULT_LIFE_EXPECTANCY);
-
 
     useEffect(() => {
         // reset to default when isJointLifeExpectancy is false
@@ -193,7 +192,7 @@ export default function JointLifeExpectancy({ configs, isFormStateReadOnly = fal
             </div>
 
             {isJointLifeExpectancy && (
-                <div className="my-4 grid grid-cols-5 gap-2">{configs.fields?.map(field => renderField(field, isFormStateReadOnly ))}</div>
+                <div className="my-4 grid grid-cols-5 gap-2">{configs.fields?.map(field => renderField(field, isFormStateReadOnly))}</div>
             )}
         </CardContainer>
     );

@@ -4,18 +4,18 @@ import { useEffect, useState } from 'react';
 
 import AddressEntry, { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
-import { SingleParty } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
+import { SingleParty } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
 import PartyPhone, { DEFAULT_PHONE } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { isEndDated } from '@deps/helpers/date.helper';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { Address, AddressTypes, Party, PartyRoles, Phone, PhoneTypes } from '@deps/models/case/withdrawal/case';
 import { IdentificationType, PhoneBase, Policy } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import { ENTERPRISE_ADDRESS_TYPE, EnterpriseAddress } from '../../beneficiary-details/address-details/address-details.helper';
-import { ENTERPRISE_PHONE_TYPE } from '../../beneficiary-details/phone-details/phone-details.helper';
+import { ENTERPRISE_ADDRESS_TYPE, EnterpriseAddress } from '../../beneficiary-details/address-details/address-details.helpers';
+import { ENTERPRISE_PHONE_TYPE } from '../../beneficiary-details/phone-details/phone-details.helpers';
 
 export const DEFAULT_PARTY = [
     {
@@ -70,30 +70,32 @@ const formatPhone = (phone: PhoneBase) => {
 
 const getFormattedAddresses = (policyParty: any) => {
     const addresses = [];
-    let homeAddresses = policyParty?.addresses?.map((address: any) => {
-        if (address.addressType === ENTERPRISE_ADDRESS_TYPE.HOME && !isEndDated(address?.endDate) ) {
-            return address;
-        }
-    }).filter((item: any) => item !== undefined);
+    let homeAddresses = policyParty?.addresses
+        ?.map((address: any) => {
+            if (address.addressType === ENTERPRISE_ADDRESS_TYPE.HOME && !isEndDated(address?.endDate)) {
+                return address;
+            }
+        })
+        .filter((item: any) => item !== undefined);
 
-    homeAddresses  = homeAddresses
-            ?.sort((a: any, b: any) => {
-                return dayjs(a?.startDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs(b?.startDate, ZAHARA_API_DATE_FORMAT)) ? 1 : -1;
-            })
+    homeAddresses = homeAddresses?.sort((a: any, b: any) => {
+        return dayjs(a?.startDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs(b?.startDate, ZAHARA_API_DATE_FORMAT)) ? 1 : -1;
+    });
 
     if (homeAddresses && homeAddresses.length > 0) {
         addresses.push(homeAddresses[0]);
     }
-    let defaultAddresses = policyParty?.addresses?.map((address: any) => {
-        if (address.addressType === ENTERPRISE_ADDRESS_TYPE.DEFAULT && !isEndDated(address.endDate) ) {
-            return address;
-        }
-    }).filter((item: any) => item !== undefined);
+    let defaultAddresses = policyParty?.addresses
+        ?.map((address: any) => {
+            if (address.addressType === ENTERPRISE_ADDRESS_TYPE.DEFAULT && !isEndDated(address.endDate)) {
+                return address;
+            }
+        })
+        .filter((item: any) => item !== undefined);
 
-    defaultAddresses  = defaultAddresses
-            ?.sort((a: any, b: any) => {
-                return dayjs(a?.startDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs(b?.startDate, ZAHARA_API_DATE_FORMAT)) ? 1 : -1;
-            })
+    defaultAddresses = defaultAddresses?.sort((a: any, b: any) => {
+        return dayjs(a?.startDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs(b?.startDate, ZAHARA_API_DATE_FORMAT)) ? 1 : -1;
+    });
 
     if (defaultAddresses && defaultAddresses.length > 0) {
         addresses.push(defaultAddresses[0]);
@@ -105,7 +107,7 @@ const getFormattedAddresses = (policyParty: any) => {
     });
 
     return formattedAddresses;
-}
+};
 
 const getPartyInfo = (policy: Policy, role: PartyRoles) => {
     const id = policy?.partyRoles?.find(partyRole => partyRole.partyRole === role.replace('_', ''))?.partyId;
@@ -114,11 +116,13 @@ const getPartyInfo = (policy: Policy, role: PartyRoles) => {
     }
     const policyParty = policy?.parties?.find(item => item.partyId === id);
 
-    const phones = policyParty?.phones?.map(phone => {
-        if (phone.phoneType === ENTERPRISE_PHONE_TYPE.HOME && !isEndDated(phone.endDate)) {
-            return formatPhone(phone);
-        }
-    }).filter((item: any) => item !== undefined);
+    const phones = policyParty?.phones
+        ?.map(phone => {
+            if (phone.phoneType === ENTERPRISE_PHONE_TYPE.HOME && !isEndDated(phone.endDate)) {
+                return formatPhone(phone);
+            }
+        })
+        .filter((item: any) => item !== undefined);
 
     const formattedAddresses: any = getFormattedAddresses(policyParty);
 
@@ -146,7 +150,7 @@ const getInitialParty = (policy: Policy, configs: any) => {
     configs?.map((config: any) => {
         const party = getPartyInfo(policy, config.partyRoleType);
         //const jointOwnerParty = getPartyInfo(policy, PartyRoles.JOINT_OWNER);
-  
+
         if (party) {
             initialParties.push(party);
         }

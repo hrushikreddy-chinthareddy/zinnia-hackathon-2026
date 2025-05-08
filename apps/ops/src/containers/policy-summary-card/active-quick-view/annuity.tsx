@@ -3,9 +3,9 @@ import { useTranslation } from 'next-i18next';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { TranslationFiles } from '@deps/config/translations';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
-import { convertKebabedDateString } from '@deps/helpers/string.helper';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 } from '@deps/types/constants';
 
 import { QuickViewRoot } from '../policy-summary-card';

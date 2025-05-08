@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
 import { NewPremiumProvider, usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { Processes } from '@deps/models/case/case';
@@ -12,7 +13,6 @@ import StartStep, { StartStepSetState } from '../../components/workflows/start-s
 import Confirm from '../financial-transactions/premium/new-premium/confirm/confirm';
 import Summary from '../financial-transactions/premium/new-premium/summary/summary';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
-import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
 
 export default {
     title: 'Containers/WorkflowContainer',

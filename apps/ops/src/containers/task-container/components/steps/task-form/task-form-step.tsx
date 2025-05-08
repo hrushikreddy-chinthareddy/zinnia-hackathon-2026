@@ -9,7 +9,7 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
-import { updateTask } from '@deps/containers/task-container/task.helper';
+import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';

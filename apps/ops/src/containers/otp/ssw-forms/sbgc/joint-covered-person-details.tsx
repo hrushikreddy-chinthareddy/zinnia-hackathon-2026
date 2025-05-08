@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
 import AddressEntry from '@deps/components/otp-withdrawal-form/address-entry';
-import { SingleParty } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
+import { SingleParty } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Address, PartyRoles, PayoutOptions } from '@deps/models/case/withdrawal/case';
@@ -13,8 +13,8 @@ import {
     payoutOptions,
     relationshipToCoveredPerson,
     RelationshipToCoveredPerson,
-} from './joint-covered-person.helper';
-import useSbgcConfig from './sbgc-ssw-form-helper';
+} from './joint-covered-person.helpers';
+import useSbgcConfig from './sbgc-ssw-form-helpers';
 
 type JointCoveredPersonDetailsProps = {
     isReadOnly: boolean;
@@ -31,7 +31,7 @@ const JointCoveredPersonDetails = ({ isReadOnly, planCode, jointCoveredPlanCodes
         party?.relationshipToOwnerAnnutant || RelationshipToCoveredPerson.NA
     );
 
-    const [payoutOption, setPayoutOption] = useState(party?.withdrawalPayoutOption || '' as PayoutOptions);
+    const [payoutOption, setPayoutOption] = useState(party?.withdrawalPayoutOption || ('' as PayoutOptions));
     const { coveredPartyConfigs } = useSbgcConfig(t);
     const [partyInfo, setPartyInfo] = useState(party || DEFAULT_JOINT_PERSON_DATA);
 

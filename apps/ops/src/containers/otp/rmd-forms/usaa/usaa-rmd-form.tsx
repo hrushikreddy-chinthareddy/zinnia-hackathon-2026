@@ -15,7 +15,7 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 
-import getUsaaWithdrawalConfig from './usaa-rmd-from.helper';
+import getUsaaWithdrawalConfig from './usaa-rmd-from.helpers';
 
 const UsaaRmdWithdrawalForm = () => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

@@ -6,7 +6,7 @@ import { v4 as uuidV4 } from 'uuid';
 import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/components/case-document-select/case-document-select';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
-import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helper';
+import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
@@ -21,9 +21,9 @@ import {
     getAccountTypeOptions,
     getFormErrors,
 } from '@deps/containers/people-data-cards/bank-card/side-sheet/side-sheet-bank.helpers';
-import { getFirstLastName } from '@deps/helpers/party-info-helper';
-import { buildFullNameFromParty } from '@deps/helpers/string.helper';
-import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helper';
+import { getFirstLastName } from '@deps/helpers/party-info-helpers';
+import { buildFullNameFromParty } from '@deps/helpers/string.helpers';
+import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Processes } from '@deps/models/case/case';
 import { AccountStatus, AccountType, BankAccount, PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { ValidationResult } from '@deps/queries/api/bpm';

@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { storage } from '@deps/helpers/sessionStorage.helper';
-import { firstNameAndLastInitial } from '@deps/helpers/string.helper';
+import { storage } from '@deps/helpers/sessionStorage.helpers';
+import { firstNameAndLastInitial } from '@deps/helpers/string.helpers';
 
 import styles from './user-context-menu.module.css';
 

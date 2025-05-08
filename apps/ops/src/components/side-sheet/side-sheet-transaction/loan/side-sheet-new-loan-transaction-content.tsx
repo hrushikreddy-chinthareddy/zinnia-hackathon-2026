@@ -5,9 +5,9 @@ import { Key } from 'react';
 import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helper';
-import { getBankAccountType } from '@deps/helpers/party-info-helper';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
+import { getBankAccountType } from '@deps/helpers/party-info-helpers';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import loadingImage from '@deps/styles/images/loader.png';
 
 import { NewLoanTransactionSideSheetValues } from './types';

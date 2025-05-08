@@ -6,12 +6,12 @@ import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { DocumentData } from '@deps/models/case/document';
 
-import getMassMutualReg60Config from './mass-mutual-reg60-form-helper';
+import getMassMutualReg60Config from './mass-mutual-reg60-form-helpers';
 import CreateDisclosure from '../components/create-disclosure/create-disclosure';
 import DisclosureAuthorizationForm from '../components/disclosure-authorization/disclosure-authorization-form';
 import UserInformation from '../components/user-information/user-information';
 import { CurrentPage, PartyRoles } from '../reg60.types';
-import { getErrorObjectByRole } from '../utils/reg60-form-helper';
+import { getErrorObjectByRole } from '../utils/reg60-form-helpers';
 
 export default function MassMutualReg60Form({ document }: { document: DocumentData }) {
     const {

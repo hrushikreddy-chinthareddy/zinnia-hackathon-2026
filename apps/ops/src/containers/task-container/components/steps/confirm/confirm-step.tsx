@@ -9,7 +9,7 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
-import { updateTask } from '@deps/containers/task-container/task.helper';
+import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 

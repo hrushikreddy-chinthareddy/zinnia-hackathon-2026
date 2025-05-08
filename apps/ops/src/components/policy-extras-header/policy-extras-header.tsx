@@ -1,8 +1,8 @@
 import { Skeleton } from '@radix-ui/themes';
 import { HTMLProps } from 'react';
 
-import { filterTruthyProps } from '@deps/helpers/data-transform.helper';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { filterTruthyProps } from '@deps/helpers/data-transform.helpers';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { PolicyExtrasTest } from '@deps/jest/constants/test-id-constants';
 
 import { ContentVariant } from '../content/content';

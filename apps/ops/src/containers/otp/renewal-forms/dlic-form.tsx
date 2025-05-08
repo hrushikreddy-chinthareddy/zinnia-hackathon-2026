@@ -11,7 +11,7 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 
-import getDlicConfig from './dlic-form.helper';
+import getDlicConfig from './dlic-form.helpers';
 
 export enum DlicPlanCodes {
     'planCode730' = '730',

@@ -13,7 +13,7 @@ import { Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
 
 import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
-import useMassWithdrawalConfig from './mass-ssw-form-helper';
+import useMassWithdrawalConfig from './mass-ssw-form-helpers';
 import SignatureVerificationReasons from '@deps/components/otp-withdrawal-form/signature-validation/signature-verification-reason';
 import { USStates } from '@deps/constants/geography/us-states';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';

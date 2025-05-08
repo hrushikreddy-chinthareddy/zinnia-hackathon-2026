@@ -8,7 +8,7 @@ import { FormMetadata } from '@deps/models/case/task';
 import fields from './customization/fields/fields';
 import templates from './customization/templates/templates';
 import widgets from './customization/widgets/widgets';
-import { ApplyUITemplates } from './helpers/template.helper';
+import { ApplyUITemplates } from './helpers/template.helpers';
 
 type DynamicFormProps = {
     onChange: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, id?: string) => void;

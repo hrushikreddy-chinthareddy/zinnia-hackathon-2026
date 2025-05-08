@@ -15,7 +15,7 @@ import { searchNigoExceptionRefs } from '@deps/queries/api/v1/exceptionRefs';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
-import { useGetCaseDocs } from './task-review.helper';
+import { useGetCaseDocs } from './task-review.helpers';
 
 interface TaskReviewProps {
     caseId: string;

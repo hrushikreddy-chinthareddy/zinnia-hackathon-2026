@@ -9,7 +9,7 @@ import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loade
 import SelectSimple from '@deps/components/select/select';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat, getLabelSubString } from '@deps/helpers/dashboard/dashboard-helpers';
-import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import { DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { DashboardSearchFilter } from '@deps/queries/cases';

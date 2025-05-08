@@ -6,7 +6,7 @@ import { formatTimestamp, TransformedStep } from '@deps/components/case-sub-page
 import { CaseAdditionalData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { formatAddressToContainer } from '@deps/containers/small-data-card/address-data/address-data';
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 import { AdditionalDataStepIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
 import { Statuses } from '@deps/models/case/case';
 

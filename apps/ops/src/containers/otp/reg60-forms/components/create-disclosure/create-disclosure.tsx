@@ -11,10 +11,10 @@ import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/action
 
 import ComparisonContract from './comparison-contract';
 import { ContractComparison, CreateDisclosureProps } from './create-disclosure.types';
-import getMassMutualReg60Config from '../../mass-mutual/mass-mutual-reg60-form-helper';
+import getMassMutualReg60Config from '../../mass-mutual/mass-mutual-reg60-form-helpers';
 import { CurrentPage } from '../../reg60.types';
 import { LAST_COMPARISON, MAX_COMPARISON } from '../../utils/reg60-constants';
-import { getCreateDisclosureInfo } from '../../utils/reg60-form-helper';
+import { getCreateDisclosureInfo } from '../../utils/reg60-form-helpers';
 import { Products } from '../disclosure-authorization/disclosure-authorization.types';
 import ProposedAnnuityQuote from '../proposed-annuity-quote/proposed-annuity-quote';
 import { AnnuityQuote } from '../proposed-annuity-quote/proposed-annuity-quote.types';

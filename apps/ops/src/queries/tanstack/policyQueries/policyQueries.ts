@@ -3,7 +3,7 @@ import { hasCookie } from 'cookies-next';
 import { getAgentData } from '@deps/queries/api/agents';
 import { fetchPolicy, searchPolicy } from '@deps/queries/api/policies';
 import { MOCK_COOKIE_KEY } from '@deps/queries/api-utils/serverClientUtils';
-import { getMockPolicy } from '@deps/services/mocks/mock-policy.helper';
+import { getMockPolicy } from '@deps/services/mocks/mock-policy.helpers';
 import { SearchViewQuery } from '@deps/types/search';
 
 export const getPolicyQuery = async (id: string, planCode: string) => {

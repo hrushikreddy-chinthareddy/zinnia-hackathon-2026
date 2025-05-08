@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { calculateDaysAgo } from '@deps/helpers/case-management';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { ExceptionInstance } from '@deps/models/case/exception-instance';
 
 export default function ExceptionRow({ exceptions }: { exceptions: ExceptionInstance[] }) {

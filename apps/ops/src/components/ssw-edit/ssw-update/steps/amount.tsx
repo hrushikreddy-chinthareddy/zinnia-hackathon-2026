@@ -12,7 +12,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { Frequency } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import { UpdatedProgram } from '../../ssw-edit-helper';
+import { UpdatedProgram } from '../../ssw-edit-helpers';
 
 const frequencyOptions = (t: TFunction) => [
     {

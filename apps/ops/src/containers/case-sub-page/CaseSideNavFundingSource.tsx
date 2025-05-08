@@ -7,7 +7,7 @@ import { HTMLAttributes } from 'react';
 import ClickWrapper from '@deps/components/click-container/click-wrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { CaseAdditionalData } from '@deps/models/case/case';
 import { Address, Country, State } from '@deps/models/policy/sor-policy';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';

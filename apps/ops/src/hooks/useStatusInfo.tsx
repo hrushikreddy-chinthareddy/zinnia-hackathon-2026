@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useTranslation, TFunction } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
-import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
+import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
 import InProgressIcon from '@deps/styles/elements/icons/alert/in-progress.svg';
 import NotStartedIcon from '@deps/styles/elements/icons/alert/not-started.svg';
@@ -29,7 +29,15 @@ export const getStatusIcon = (t: TFunction, status: Statuses | undefined, width?
         case Statuses.Completed:
             return <Image src={CheckmarkIcon} alt={t('status.completed')} width={width ? width : 17} height={height ? height : 17} />;
         default:
-            return <Image src={NotStartedIcon} alt={t('status.notStarted')} width={width ? width : 16} height={height ? height : 16} className="text-gray-300" />;
+            return (
+                <Image
+                    src={NotStartedIcon}
+                    alt={t('status.notStarted')}
+                    width={width ? width : 16}
+                    height={height ? height : 16}
+                    className="text-gray-300"
+                />
+            );
     }
 };
 

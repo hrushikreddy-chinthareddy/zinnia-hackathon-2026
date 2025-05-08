@@ -13,7 +13,7 @@ import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
 
-import { BankUpdateFieldConfigs, bankUpdateFormData, signaturesConfig, typeOptions } from './bank-update.helper';
+import { BankUpdateFieldConfigs, bankUpdateFormData, signaturesConfig, typeOptions } from './bank-update.helpers';
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '../../button/button';
 import CardInfo from '../../card/card-info/card-info';
 import { FieldSize } from '../../fields/field';
@@ -21,7 +21,7 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '.
 import FormDisbursementSection from '../../otp-withdrawal-form/form-disbursement/form-disbursement-section';
 import SignatureValidations from '../../otp-withdrawal-form/signature-validation/signature-validations';
 import PageLoader, { PageLoaderVariant } from '../../page-loader/page-loader';
-import { getDocumentSource, sswEditFormValidator } from '../ssw-edit-helper';
+import { getDocumentSource, sswEditFormValidator } from '../ssw-edit-helpers';
 
 type BankUpdateFormProps = {
     document: DocumentData;

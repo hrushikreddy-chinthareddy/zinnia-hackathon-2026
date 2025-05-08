@@ -10,13 +10,13 @@ import SideSheetFinancialTransaction from '@deps/components/side-sheet/side-shee
 import SideSheetNonFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transaction';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { AccessibleFormattedAmount } from '@deps/helpers/numbers.helper';
+import { AccessibleFormattedAmount } from '@deps/helpers/numbers.helpers';
 import { Statuses } from '@deps/models/case/case';
 import { Policy, Transaction, TransactionStatus } from '@deps/models/policy/sor-policy';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { DEFAULT_DATE_FORMAT } from '@deps/types/constants';
 
-import { getEventTitle, getHistoryEventCardValues } from './history-event-card.helper';
+import { getEventTitle, getHistoryEventCardValues } from './history-event-card.helpers';
 import { FinancialTransactionTypes } from '../side-sheet/side-sheet-transaction/financial/types';
 import { SideSheetTransactionProps } from '../side-sheet/side-sheet-transaction/types';
 
@@ -113,7 +113,7 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
                             </div>
                         )}
                     </div>
-                    <div className={"flex flex-col flex-shrink items-end " + (isClickable ? '' : 'mr-[40px]')}>
+                    <div className={'flex flex-col flex-shrink items-end ' + (isClickable ? '' : 'mr-[40px]')}>
                         {amount !== undefined && (
                             <div className="font-bold md:text-content-value">
                                 <AccessibleFormattedAmount amount={amount} />

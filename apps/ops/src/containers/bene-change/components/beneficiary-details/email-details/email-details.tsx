@@ -5,7 +5,7 @@ import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fiel
 import { TranslationFiles } from '@deps/config/translations';
 import { Email } from '@deps/models/policy/sor-policy';
 
-import { INITIAL_EMAIL } from './email-details.helper';
+import { INITIAL_EMAIL } from './email-details.helpers';
 
 export interface EmailDetailsProps {
     setCurrentEmails: Dispatch<SetStateAction<Email[]>>;
@@ -14,18 +14,18 @@ export interface EmailDetailsProps {
     isReadOnly?: boolean;
 }
 
-export default function EmailDetails( {setCurrentEmails, updateEmail, index, isReadOnly} : EmailDetailsProps) {
+export default function EmailDetails({ setCurrentEmails, updateEmail, index, isReadOnly }: EmailDetailsProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.email' });
 
     //const [action, setAction] = useState(updateEmail ? NonFinancialTransactionActions.Edit : NonFinancialTransactionActions.Add);
-    const [ email, setEmail ] = useState<Email>(updateEmail ?? INITIAL_EMAIL);
-    const [ currentErrors ] = useState<any>();
+    const [email, setEmail] = useState<Email>(updateEmail ?? INITIAL_EMAIL);
+    const [currentErrors] = useState<any>();
 
     useEffect(() => {
         setCurrentEmails(prevState => {
             prevState.splice(index, 1, { ...prevState[index], ...email });
             return prevState;
-        }); 
+        });
     }, [email, index, setCurrentEmails]);
 
     return (

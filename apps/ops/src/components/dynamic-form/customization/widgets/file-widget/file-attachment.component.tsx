@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { FormMetadata } from '@deps/models/case/task';
-import { cleanForm } from '@deps/utils/tasks/task-payload-helper';
+import { cleanForm } from '@deps/utils/tasks/task-payload-helpers';
 
 export type FileAttachmentComponentProps = {
     schema: FormMetadata;

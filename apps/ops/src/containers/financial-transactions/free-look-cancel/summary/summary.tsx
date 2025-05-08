@@ -10,8 +10,8 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { Address, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
@@ -27,7 +27,8 @@ const Summary = ({ policy }: SummaryProps) => {
     const { withdrawal } = useWithdrawal();
 
     const { goToNext } = useWorkflow();
-    const { amount, effectiveDate, paymentAccountNumber, paymentAddress, paymentBranchName, paymentForm, payeeFullName, fboFfc } = withdrawal;
+    const { amount, effectiveDate, paymentAccountNumber, paymentAddress, paymentBranchName, paymentForm, payeeFullName, fboFfc } =
+        withdrawal;
 
     return (
         <div>

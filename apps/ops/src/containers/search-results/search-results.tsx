@@ -7,7 +7,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import SearchResultsEmptyCard from './search-results-empty-card/search-results-empty-card';
 import SearchResultsErrorCard from './search-results-error-card/search-results-error-card';
 import SearchResultsStartCard from './search-results-start-card/search-results-start-card';
-
 import { default as styles } from './search-results.module.css';
 
 export interface QueryResult {

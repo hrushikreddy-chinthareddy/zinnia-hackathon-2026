@@ -1,4 +1,4 @@
-import { storage } from '@deps/helpers/sessionStorage.helper';
+import { storage } from '@deps/helpers/sessionStorage.helpers';
 
 interface CacheData {
     data: any;

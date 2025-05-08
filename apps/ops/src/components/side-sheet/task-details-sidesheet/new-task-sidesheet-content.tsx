@@ -8,7 +8,7 @@ import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-
 import Label, { LabelVariant } from '@deps/components/label/label';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helper';
+import { parseAndFormatDate, toSentenceCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { TaskType, TaskSource } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';

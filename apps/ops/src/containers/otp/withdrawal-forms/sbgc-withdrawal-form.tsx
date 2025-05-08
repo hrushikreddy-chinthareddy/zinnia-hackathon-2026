@@ -20,7 +20,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import getSbgcConfig from './sbgc-withdrawal-form.helper';
+import getSbgcConfig from './sbgc-withdrawal-form.helpers';
 
 export default function SbgcWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

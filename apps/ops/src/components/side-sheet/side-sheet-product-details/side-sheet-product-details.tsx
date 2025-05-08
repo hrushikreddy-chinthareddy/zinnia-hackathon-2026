@@ -4,7 +4,7 @@ import DescriptionList from '@deps/components/description-list/description-list'
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { mapProductTypeToTranslation } from '@deps/helpers/translation.helper';
+import { mapProductTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 

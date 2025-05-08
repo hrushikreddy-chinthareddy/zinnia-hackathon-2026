@@ -1,9 +1,8 @@
 import { Tag } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { useTimestampText } from '@deps/hooks/useStatusInfo';
 import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/icons_outlined/annotation.svg';
 
@@ -37,7 +36,11 @@ export default function DiaryNoteCard({ alert, category, noteDate, noteText }: D
                     )}
                 </div>
             </div>
-            {category && <span className="block my-2"><Tag text={category} /></span>}
+            {category && (
+                <span className="block my-2">
+                    <Tag text={category} />
+                </span>
+            )}
             {noteText ? (
                 <Typography variant={TypographyVariant.Body} className="line-clamp-5 break-normal">
                     {noteText}

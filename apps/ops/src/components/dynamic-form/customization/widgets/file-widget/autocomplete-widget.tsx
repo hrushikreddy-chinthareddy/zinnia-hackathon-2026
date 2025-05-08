@@ -7,11 +7,11 @@ import { useTranslation } from 'react-i18next';
 
 import ClickContainer from '@deps/components/click-container/click-container';
 import inputStyles from '@deps/components/search/search-field-toggle/search-field-toggle.module.css';
-import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helper';
+import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helpers';
 
 import style from './file-widget.module.css';
 export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(

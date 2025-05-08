@@ -15,11 +15,11 @@ import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
+import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { Carrier, Frequency, FundWithdrawnMethod, PaymentMethod, QualTypes } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import getFlicConfig from './flic-ssw-form-helper';
+import getFlicConfig from './flic-ssw-form-helpers';
 import SswEditSelection from '../ssw-edit-selection';
 
 type SswFormProps = {

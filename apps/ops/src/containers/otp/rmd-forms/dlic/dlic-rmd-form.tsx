@@ -17,7 +17,7 @@ import { Processes } from '@deps/models/case/case';
 import { RmdFormType } from '@deps/models/case/enums';
 import { Carrier, FundWithdrawnMethod, RMDType } from '@deps/models/case/withdrawal/case';
 
-import getDlicWithdrawalConfig from './dlic-rmd-form.helper';
+import getDlicWithdrawalConfig from './dlic-rmd-form.helpers';
 import DistributionMethodQcd from '../qcd/qcd-distribution-method';
 import SelectFormType from '../rmd-form-type';
 

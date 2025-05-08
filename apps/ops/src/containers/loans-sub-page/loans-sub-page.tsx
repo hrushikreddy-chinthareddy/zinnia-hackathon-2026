@@ -3,14 +3,14 @@ import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
-import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helper';
+import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helpers';
 import SideSheetCancelAutopay from '@deps/components/side-sheet/side-sheet-transaction/cancel-autopay/side-sheet-cancel-autopay';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
-import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helper';
-import { getFrequency } from '@deps/helpers/systematic-program.helper';
+import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
+import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helpers';
+import { getFrequency } from '@deps/helpers/systematic-program.helpers';
 import { ArrangementType, Frequency, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {

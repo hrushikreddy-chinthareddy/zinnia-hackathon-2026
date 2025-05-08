@@ -2,12 +2,12 @@ import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
-import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helper';
+import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helpers';
 import { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import WithdrawalsPageHeaderContainer from '@deps/containers/page-header/withdrawals-page-header';
 import WithdrawalRules from '@deps/containers/withdrawal-rules/withdrawal-rules';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helper';
+import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helpers';
 import { TempAnnuityArrangementTypes } from '@deps/helpers/policy-sor/SystematicPrograms';
 import { ArrangementType, Policy } from '@deps/models/policy/sor-policy';
 

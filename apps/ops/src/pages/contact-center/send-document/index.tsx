@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import ConfirmComponent from '@deps/components/otp-send-document/confirm';
 import Correspondence from '@deps/components/otp-send-document/correspondence';
-import { generateCommunicationRequest } from '@deps/components/otp-send-document/correspondence.helper';
+import { generateCommunicationRequest } from '@deps/components/otp-send-document/correspondence.helpers';
 import FormSelection, { DefaultFormDetail } from '@deps/components/otp-send-document/form-selection';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';

@@ -20,7 +20,7 @@ import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case'
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
-import getGdmnConfig from './gdmn-ssw-form-helper';
+import getGdmnConfig from './gdmn-ssw-form-helpers';
 
 export function GdmnSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

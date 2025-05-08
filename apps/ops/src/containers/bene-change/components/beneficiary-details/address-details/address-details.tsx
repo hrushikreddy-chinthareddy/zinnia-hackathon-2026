@@ -4,10 +4,10 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
-import { getStateCodes } from '@deps/helpers/states.helper';
+import { getStateCodes } from '@deps/helpers/states.helpers';
 import { PartyType, State } from '@deps/models/policy/sor-policy';
 
-import { ENTERPRISE_ADDRESS_TYPE, EnterpriseAddress, Errors, INITIAL_ADDRESS } from './address-details.helper';
+import { ENTERPRISE_ADDRESS_TYPE, EnterpriseAddress, Errors, INITIAL_ADDRESS } from './address-details.helpers';
 
 export interface AddressDetailsProps {
     setCurrentAddresses: Dispatch<SetStateAction<EnterpriseAddress[]>>;
@@ -17,7 +17,7 @@ export interface AddressDetailsProps {
     partyType: PartyType;
 }
 
-export default function AddressDetails({setCurrentAddresses, updateAddress, index, isReadOnly, partyType}: AddressDetailsProps) {
+export default function AddressDetails({ setCurrentAddresses, updateAddress, index, isReadOnly, partyType }: AddressDetailsProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.address' });
     const stateOptions = getStateCodes().map(state => ({ label: state, value: state }));
     const addressTypeOptions = [
@@ -27,7 +27,7 @@ export default function AddressDetails({setCurrentAddresses, updateAddress, inde
         { label: t('addressType.default'), value: ENTERPRISE_ADDRESS_TYPE.DEFAULT },
     ];
     const addressLine1Label = partyType === PartyType.TRUST ? t('labels.trusteeName') : t('labels.addressLine1');
-    const addressLine1MaxLength =  partyType === PartyType.TRUST ? 31 : 35;
+    const addressLine1MaxLength = partyType === PartyType.TRUST ? 31 : 35;
     const [address, setAddress] = useState<EnterpriseAddress>(updateAddress ?? INITIAL_ADDRESS);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
 
@@ -35,7 +35,7 @@ export default function AddressDetails({setCurrentAddresses, updateAddress, inde
         setCurrentAddresses(prevState => {
             prevState.splice(index, 1, { ...prevState[index], ...address });
             return prevState;
-        }); 
+        });
 
         if (address.addressLine1 || address.addressLine2) {
             if (!address.zipCode) {
@@ -48,7 +48,7 @@ export default function AddressDetails({setCurrentAddresses, updateAddress, inde
                 setCurrentErrors((prevState: any) => ({ ...prevState, city: t('formValidations.city') }));
             }
         }
-        if ( !address.addressLine1  && !address.addressLine2 ) {
+        if (!address.addressLine1 && !address.addressLine2) {
             setCurrentErrors((prevState: any) => ({ ...prevState, city: null, state: null, zipCode: null }));
         }
     }, [address, index, setCurrentAddresses, t]);
@@ -57,12 +57,12 @@ export default function AddressDetails({setCurrentAddresses, updateAddress, inde
         <>
             <div className="grid grid-cols-2">
                 <div className="mb-3 flex w-full flex-col">
-                    <div className='my-3'>
+                    <div className="my-3">
                         <SelectSimple
                             aria-label={t('labels.addressType') as string}
                             label={t('labels.addressType') as string}
                             onChange={value => {
-                                setAddress((prevState: any)  => ({...prevState, addressType: value}));
+                                setAddress((prevState: any) => ({ ...prevState, addressType: value }));
                             }}
                             options={addressTypeOptions}
                             size={FieldSize.Small}
@@ -71,7 +71,7 @@ export default function AddressDetails({setCurrentAddresses, updateAddress, inde
                             disabled={isReadOnly}
                         />
                     </div>
-                    <div className='my-3'>
+                    <div className="my-3">
                         <Field
                             aria-label={addressLine1Label}
                             label={addressLine1Label as string}
@@ -90,7 +90,7 @@ export default function AddressDetails({setCurrentAddresses, updateAddress, inde
                             aria-label={t('labels.addressLine2') as string}
                             label={t('labels.addressLine2') as string}
                             onChange={event => {
-                                setAddress((prevState: any)  => ({ ...prevState, addressLine2: event.target.value }));
+                                setAddress((prevState: any) => ({ ...prevState, addressLine2: event.target.value }));
                             }}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
@@ -101,7 +101,7 @@ export default function AddressDetails({setCurrentAddresses, updateAddress, inde
                     </div>
                 </div>
             </div>
-        
+
             <div className="grid grid-cols-2">
                 <div className="flex gap-4">
                     <div className="flex-grow">
@@ -114,13 +114,13 @@ export default function AddressDetails({setCurrentAddresses, updateAddress, inde
                                     const { city, ...errors } = prevState ?? {};
                                     return errors;
                                 });
-                                setAddress((prevState: any)  => ({ ...prevState, city: event.target.value }));
+                                setAddress((prevState: any) => ({ ...prevState, city: event.target.value }));
                             }}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={address?.city}
                             maxLength={40}
-                            variant={isReadOnly ? FieldVariant.Inactive : (currentErrors?.city ? FieldVariant.Error : FieldVariant.Default)}
+                            variant={isReadOnly ? FieldVariant.Inactive : currentErrors?.city ? FieldVariant.Error : FieldVariant.Default}
                         />
                     </div>
                     <div className="basis-1/4">
@@ -133,12 +133,12 @@ export default function AddressDetails({setCurrentAddresses, updateAddress, inde
                                     const { state, ...errors } = prevState ?? {};
                                     return errors;
                                 });
-                                setAddress((prevState: any)  => ({...prevState, state: value as State}));
+                                setAddress((prevState: any) => ({ ...prevState, state: value as State }));
                             }}
                             options={stateOptions}
                             size={FieldSize.Small}
                             value={address?.state}
-                            variant={isReadOnly ? FieldVariant.Inactive : (currentErrors?.state ? FieldVariant.Error : FieldVariant.Default)}
+                            variant={isReadOnly ? FieldVariant.Inactive : currentErrors?.state ? FieldVariant.Error : FieldVariant.Default}
                             disabled={isReadOnly}
                         />
                     </div>
@@ -153,13 +153,15 @@ export default function AddressDetails({setCurrentAddresses, updateAddress, inde
                                     const { zipCode, ...errors } = prevState ?? {};
                                     return errors;
                                 });
-                                setAddress((prevState: any)  => ({ ...prevState, zipCode: event.target.value }));
+                                setAddress((prevState: any) => ({ ...prevState, zipCode: event.target.value }));
                             }}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
-                            value={(address.zipCode ?? '')}
+                            value={address.zipCode ?? ''}
                             maxLength={5}
-                            variant={isReadOnly ? FieldVariant.Inactive : (currentErrors?.zipCode ? FieldVariant.Error : FieldVariant.Default)}
+                            variant={
+                                isReadOnly ? FieldVariant.Inactive : currentErrors?.zipCode ? FieldVariant.Error : FieldVariant.Default
+                            }
                         />
                     </div>
                     <div className="basis-1/4">
@@ -168,11 +170,11 @@ export default function AddressDetails({setCurrentAddresses, updateAddress, inde
                             formatOptions={{ format: '####' }}
                             label={t('labels.zipPlusFour') as string}
                             onChange={event => {
-                                setAddress((prevState: any)  => ({...prevState, zipCodeExtension: event.target.value }));
+                                setAddress((prevState: any) => ({ ...prevState, zipCodeExtension: event.target.value }));
                             }}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
-                            value={(address.zipCodeExtension ?? '')}
+                            value={address.zipCodeExtension ?? ''}
                             maxLength={4}
                             variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
                         />

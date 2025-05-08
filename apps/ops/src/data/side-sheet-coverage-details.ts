@@ -2,8 +2,8 @@ import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import { TFunction } from 'next-i18next';
 
 import { PopoverPlacement } from '@deps/components/popover/popover';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { convertKebabedDateString } from '@deps/helpers/string.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { DataDefinition } from '@deps/types/data';
 

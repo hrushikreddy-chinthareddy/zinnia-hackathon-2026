@@ -29,7 +29,7 @@ import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { SegmentPageName } from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
-import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';

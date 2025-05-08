@@ -4,10 +4,10 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { PropsWithChildren, ReactNode, useContext, useMemo, useState } from 'react';
 
-import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
+import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize } from '@deps/components/fields/field';
-import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
+import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -29,13 +29,13 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { AnnuityDetailsViewInfo, AnnuityViewDetailsDto } from '@deps/data/annuity-details-view';
 import { generatePolicyAnnuityDetailsDto } from '@deps/data/details-view';
 import { PolicyDetailsViewInfo, PolicyViewDetailsDto } from '@deps/data/policy-details-view';
-import { fillColDefs } from '@deps/helpers/data-transform.helper';
+import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs, PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertToQueryString } from '@deps/helpers/routing.helpers';
-import { convertKebabedDateString, formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
-import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helper';
+import { convertKebabedDateString, formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helpers';
+import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { CardColumnsTest, CardDetailsTest } from '@deps/jest/constants/test-id-constants';
 import {
     Address,
@@ -63,15 +63,14 @@ import EverlyIul from './active-quick-view/everly-iul';
 import EverlyUl from './active-quick-view/everly-ul';
 import BaseDeathBenefit from './display-fields/base-death-benefit';
 import UpcomingPremiumDisplayField from './display-fields/upcoming-premium';
+import { default as styles } from './policy-summary-card.module.css';
 import SideSheetAddress from '../people-data-cards/address-card/side-sheet/side-sheet-address';
 import { sortEmailsByType } from '../people-data-cards/email-card/email-card.helpers';
 import SideSheetEmail from '../people-data-cards/email-card/side-sheet/side-sheet-email';
 import { sortPhonesByType } from '../people-data-cards/phone-card/phone-card.helpers';
 import { SideSheetPhone } from '../people-data-cards/phone-card/side-sheet/side-sheet-phone';
 import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header/side-sheet-people-header';
-import { getPolicyQuickLinks } from '../quick-links/quick-links.helper';
-
-import { default as styles } from './policy-summary-card.module.css';
+import { getPolicyQuickLinks } from '../quick-links/quick-links.helpers';
 
 interface SummaryCardProps extends PropsWithChildren {
     policy: Policy;

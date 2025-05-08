@@ -1,10 +1,10 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 
-import getFlicOftConfig from '@deps/containers/otp/oft-forms/flic/flic-oft-form.helper';
-import useDlicConfig from '@deps/containers/otp/withdrawal-forms/dlic/dlic-withdrawal-form-helper';
-import getFlicConfig from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
-import getSbgcConfig from '@deps/containers/otp/withdrawal-forms/sbgc-withdrawal-form.helper';
+import getFlicOftConfig from '@deps/containers/otp/oft-forms/flic/flic-oft-form.helpers';
+import useDlicConfig from '@deps/containers/otp/withdrawal-forms/dlic/dlic-withdrawal-form-helpers';
+import getFlicConfig from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helpers';
+import getSbgcConfig from '@deps/containers/otp/withdrawal-forms/sbgc-withdrawal-form.helpers';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { AddressTypes, maritalStatusType, PartyRoles, PhoneTypes, QualTypes } from '@deps/models/case/withdrawal/case';

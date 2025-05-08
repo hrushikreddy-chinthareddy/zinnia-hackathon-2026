@@ -14,7 +14,7 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useWithdrawal, WithdrawalType } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
 import {
@@ -23,7 +23,7 @@ import {
     getOwnersTaxJurisdictionState,
     mapTaxWithholdingInstructionsFromViewModel,
     mapTaxWithholdingInstructionsToViewModel,
-} from './taxes.helper';
+} from './taxes.helpers';
 
 export type TaxesType = {
     taxWithholdingInstructions: TaxWithholdingInstructions[];
@@ -52,9 +52,7 @@ const Taxes = ({ policy }: TaxesProps) => {
     const ownerTaxState = getOwnersTaxJurisdictionState(policy);
 
     const transactionType = useMemo(() => {
-        return withdrawal.type === WithdrawalType.Surrender
-            ? TransactionType.FULL_SURRENDER
-            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+        return withdrawal.type === WithdrawalType.Surrender ? TransactionType.FULL_SURRENDER : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
 
     const handleContinue = () => {

@@ -20,7 +20,7 @@ import {
     getPaymentFrequencyOptions,
     getRetireEaseChoiceOptions,
     getRetireEaseOptions,
-} from '../../utils/reg60-form-helper';
+} from '../../utils/reg60-form-helpers';
 import { Products } from '../disclosure-authorization/disclosure-authorization.types';
 
 const ProposedAnnuityQuote = ({

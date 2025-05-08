@@ -7,7 +7,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-import { getSalesChannelCardData } from '../policy-details.helper';
+import { getSalesChannelCardData } from '../policy-details.helpers';
 
 const BASE_KEY = 'policy.detailCards.salesChannel.';
 

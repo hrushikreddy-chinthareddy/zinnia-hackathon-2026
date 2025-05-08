@@ -2,10 +2,10 @@ import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 
 import Badge from '@deps/components/badge/badge';
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { convertKebabedDateString } from '@deps/helpers/string.helper';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { ReactComponent as DocumentReportIcon } from '@deps/styles/elements/icons/files/document-report.svg';
 
 import PolicyTestCard from './policy-test-card/policy-test-card';

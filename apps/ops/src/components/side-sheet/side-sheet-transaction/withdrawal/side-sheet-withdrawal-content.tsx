@@ -7,8 +7,8 @@ import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import PayeeSummaryCardRow from '@deps/containers/payee-summary-card/payee-summary-card-row/payee-summary-card-row';
-import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helper';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { TransactionType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 

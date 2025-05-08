@@ -1,4 +1,4 @@
-import { isHttpsEnvironment } from '@deps/utils/environment.helper';
+import { isHttpsEnvironment } from '@deps/utils/environment.helpers';
 
 // The __Host- prepend requires an https environmenet
 export const PERMISSIONS_COOKIE_NAME = `${isHttpsEnvironment() ? '__Host-' : ''}fga-permissions`;

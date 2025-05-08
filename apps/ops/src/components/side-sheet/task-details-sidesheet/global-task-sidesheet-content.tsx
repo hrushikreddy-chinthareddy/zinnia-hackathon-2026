@@ -3,12 +3,12 @@ import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Button, Icon, IconType, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import router from 'next/router';
-import { useTranslation } from 'next-i18next';
+import { TFunction, useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import Badge from '@deps/components/badge/badge';
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import CallLogCard from '@deps/components/card/card-call-log/card-call-log';
 import { formatTimestamp } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -21,7 +21,10 @@ import { DocumentsLimit } from '@deps/constants/case';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { formatDateTime } from '@deps/helpers/string.helper';
+import { getCaseIdentifierValue } from '@deps/helpers/case-management';
+import { formatDateTime } from '@deps/helpers/string.helpers';
+import { CaseIdentifier } from '@deps/models/case/case';
+import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { EarlyTaskType, TaskSource } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus, TaskLabel, DocumentData, TaskSideSheetProps, TaskComment } from '@deps/models/case/task-instance';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
@@ -36,11 +39,8 @@ import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outli
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache, writeToCache } from '@deps/utils/cache';
+import { isProd } from '@deps/utils/environment.helpers';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { getCaseIdentifierValue } from '@deps/helpers/case-management';
-import { CaseIdentifier } from '@deps/models/case/case';
-import { IdentifierInstance } from '@deps/models/case/identifier-instance';
-import { isProd } from '@deps/utils/environment.helper';
 
 export enum TabOptions {
     Details = 'Details',
@@ -51,7 +51,81 @@ export enum TabOptions {
 export interface DocumentItemProps {
     document: DocumentData;
     taskCarrier: string;
+    t: TFunction;
 }
+
+const EmptyState = ({ content }: { content: string }) => {
+    return (
+        <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
+            <AssistiveText
+                text={content}
+                variant={AssistiveTextVariant.Default}
+                iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
+            />
+        </div>
+    );
+};
+
+const DocumentItem = ({ document, taskCarrier, t }: DocumentItemProps) => {
+    return (
+        <div className="my-3 flex w-[436px] rounded border border-gray-100 p-[12px] gap-2" key={document.documentId}>
+            <div>
+                <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />
+            </div>
+            <div>
+                <div className="text-sm font-bold break-all">
+                    <PiiWrapper>{document.displayName ?? ''}</PiiWrapper>
+                </div>
+                <div className="flex items-center text-sm font-normal text-gray-300 break-all">
+                    <PiiWrapper>{t('nigoEntry.documentPanel.documentId') + ': ' + document.documentId}</PiiWrapper>
+                </div>
+            </div>
+            <div className="ml-auto">{createAction(document as V3DocumentWithSource, taskCarrier.toUpperCase(), t, 'View')}</div>
+        </div>
+    );
+};
+
+const DocumentsListComponent = ({
+    additionalLoader,
+    documentsList,
+    errorDocuments,
+    task,
+    t,
+    documentsListType,
+}: {
+    documentsList: DocumentData[];
+    task: { carrier: string };
+    t: TFunction;
+    documentsListType?: string;
+    additionalLoader: boolean;
+    errorDocuments: boolean;
+}) => {
+    return (
+        <>
+            {documentsList.length === 0 ? (
+                documentsListType === 'additional' && additionalLoader ? (
+                    <div className="flex justify-center items-center">
+                        <Loader />
+                    </div>
+                ) : (
+                    <EmptyState
+                        content={
+                            documentsListType === 'additional' && errorDocuments
+                                ? t('sideSheet.task.errorAdditionalDocuments')
+                                : t('sideSheet.task.noDocuments')
+                        }
+                    />
+                )
+            ) : (
+                documentsList.map((document: DocumentData) =>
+                    document.documentId ? (
+                        <DocumentItem t={t} document={document} taskCarrier={task.carrier} key={document.documentId} />
+                    ) : null
+                )
+            )}
+        </>
+    );
+};
 
 export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescription, taskName, onTaskClaimSuccess }: TaskSideSheetProps) {
     const { t } = useTranslation();
@@ -299,37 +373,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
         </div>
     );
 
-    const EmptyState = ({ content }: { content: string }) => {
-        return (
-            <div className="w-full rounded border-2 border-gray-100 bg-gray-50 p-8">
-                <AssistiveText
-                    text={content}
-                    variant={AssistiveTextVariant.Default}
-                    iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
-                />
-            </div>
-        );
-    };
-
-    const DocumentItem = ({ document, taskCarrier }: DocumentItemProps) => {
-        return (
-            <div className="my-3 flex w-[436px] rounded border border-gray-100 p-[12px] gap-2" key={document.documentId}>
-                <div>
-                    <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />
-                </div>
-                <div>
-                    <div className="text-sm font-bold break-all">
-                        <PiiWrapper>{document.displayName ?? ''}</PiiWrapper>
-                    </div>
-                    <div className="flex items-center text-sm font-normal text-gray-300 break-all">
-                        <PiiWrapper>{t('nigoEntry.documentPanel.documentId') + ': ' + document.documentId}</PiiWrapper>
-                    </div>
-                </div>
-                <div className="ml-auto">{createAction(document as V3DocumentWithSource, taskCarrier.toUpperCase(), t, 'View')}</div>
-            </div>
-        );
-    };
-
     const openSideSheet = () => {
         const content = (
             <TaskQueueDrawer
@@ -500,44 +543,17 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
         </div>
     );
 
-    const DocumentsListComponent: React.FC<{
-        documentsList: DocumentData[];
-        task: { carrier: string };
-        t: (key: string) => string;
-        documentsListType?: string;
-    }> = ({ documentsList, task, t, documentsListType }) => {
-        return (
-            <>
-                {documentsList.length === 0 ? (
-                    documentsListType === 'additional' && additionalLoader ? (
-                        <div className="flex justify-center items-center">
-                            <Loader />
-                        </div>
-                    ) : (
-                        <EmptyState
-                            content={
-                                documentsListType === 'additional' && errorDocuments
-                                    ? t('sideSheet.task.errorAdditionalDocuments')
-                                    : t('sideSheet.task.noDocuments')
-                            }
-                        />
-                    )
-                ) : (
-                    documentsList.map((document: DocumentData) =>
-                        document.documentId ? (
-                            <DocumentItem document={document} taskCarrier={task.carrier} key={document.documentId} />
-                        ) : null
-                    )
-                )}
-            </>
-        );
-    };
-
     const renderDocuments = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg mt-8">{t('sideSheet.task.tabs.documents')}</label>
             <div className="border-box w-full  mt-2">
-                <DocumentsListComponent documentsList={documentsList} task={task} t={t} />
+                <DocumentsListComponent
+                    additionalLoader={additionalLoader}
+                    errorDocuments={errorDocuments}
+                    documentsList={documentsList}
+                    task={task}
+                    t={t}
+                />
             </div>
             <div className="border-box w-full">
                 <div className="flex items-baseline gap-1 mb-4">
@@ -550,7 +566,14 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     <label className="font-primary text-lg mt-10">{t('sideSheet.task.additionalDocuments')}</label>
                 </div>
                 {showAdditionalDocuments ? (
-                    <DocumentsListComponent documentsList={additionalDocuments} task={task} t={t} documentsListType={'additional'} />
+                    <DocumentsListComponent
+                        additionalLoader={additionalLoader}
+                        errorDocuments={errorDocuments}
+                        documentsList={additionalDocuments}
+                        task={task}
+                        t={t}
+                        documentsListType={'additional'}
+                    />
                 ) : null}
             </div>
         </div>

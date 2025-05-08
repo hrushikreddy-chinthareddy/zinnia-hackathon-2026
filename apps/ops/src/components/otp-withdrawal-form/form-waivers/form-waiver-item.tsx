@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import ButtonGrp from '@deps/components/button-group/button-group';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import { deStringifyTrueFalseNull, stringifyTrueFalseNull } from '@deps/helpers/string.helper';
+import { deStringifyTrueFalseNull, stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import { PolicyWaiver, SelectOption } from '@deps/models/case/withdrawal/case';
 
 import { WaiverItemConfig } from './form-waivers';
@@ -39,7 +39,13 @@ export const FormWaiverItem = ({ id, title, optionTitle, options, selectedOption
     return (
         <div className="mb-2 mt-4">
             <div className="mb-4">
-                <CheckboxText isDisabled={isFormStateReadOnly} data-testid={`${id}-checkbox`} label={title} checked={isVisible} onChange={setIsVisible} />
+                <CheckboxText
+                    isDisabled={isFormStateReadOnly}
+                    data-testid={`${id}-checkbox`}
+                    label={title}
+                    checked={isVisible}
+                    onChange={setIsVisible}
+                />
             </div>
             {isVisible && (
                 <ButtonGrp

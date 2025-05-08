@@ -7,16 +7,16 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@
 import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { isLocalStorageEnabled } from '@deps/helpers/local-storage.hepler';
-import { getSlug } from '@deps/helpers/string.helper';
+import { getSlug } from '@deps/helpers/string.helpers';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { caseTypes } from '@deps/models/case/helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { createTask, updateTask } from '@deps/queries/api/v2/task';
 import { FormSuccessMessageKey } from '@deps/types/localStorage';
 
-import getMassMutualReg60Config from '../mass-mutual/mass-mutual-reg60-form-helper';
+import getMassMutualReg60Config from '../mass-mutual/mass-mutual-reg60-form-helpers';
 import { CurrentPage } from '../reg60.types';
-import { buildForm } from '../utils/reg60-form-helper';
+import { buildForm } from '../utils/reg60-form-helpers';
 
 export type FormControlsProps = {
     document: DocumentData;

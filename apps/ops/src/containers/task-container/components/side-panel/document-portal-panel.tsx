@@ -8,7 +8,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { TaskDocument } from '@deps/models/case/task-instance';
 
-import { useGetCaseDocs } from '../steps/task-review/task-review.helper';
+import { useGetCaseDocs } from '../steps/task-review/task-review.helpers';
 
 export enum TabOptions {
     Working = 'Working',

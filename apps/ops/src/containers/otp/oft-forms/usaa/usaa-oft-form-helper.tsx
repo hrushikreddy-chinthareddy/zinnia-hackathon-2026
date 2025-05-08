@@ -5,14 +5,14 @@ import {
     BankingFields,
     DisbursementFields,
     getDefaultFormDisbursementValues,
-} from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helper';
+} from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
-import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helper';
+import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import AsOfDateComponent from '@deps/components/otp-withdrawal-form/form-program/as-of-date';
 import { PartialWithdrawalOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-process-date';
-import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helper';
+import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helpers';
 import {
     SignatureBonusFields,
     SignatureFields,
@@ -48,8 +48,8 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helper';
-import { commonOftFormValidation, getQualTypeOptions } from '../oft-form-helper';
+import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
+import { commonOftFormValidation, getQualTypeOptions } from '../oft-form-helpers';
 
 export default function getUsaaOftConfig(t: TFunction) {
     // importing base configuration from FLIC form helper.

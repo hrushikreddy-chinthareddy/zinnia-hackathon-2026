@@ -13,10 +13,10 @@ import {
 } from '@deps/models/case/correspondence';
 import { CommunicationTypes, Confirm } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { Policy, TransactionType } from '@deps/models/policy/sor-policy';
+import { Policy } from '@deps/models/policy/sor-policy';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 import { browserLogWarn } from '@deps/utils/browser-logging';
-import { isNonProductionEnvironment } from '@deps/utils/environment.helper';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';

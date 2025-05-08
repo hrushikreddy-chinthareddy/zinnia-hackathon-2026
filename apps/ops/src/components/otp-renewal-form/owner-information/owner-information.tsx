@@ -2,15 +2,15 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useState, useEffect } from 'react';
 
 import FieldLabel from '@deps/components/fields/field-label';
-import { OwnerConfig } from '@deps/containers/otp/renewal-forms/mass-mutual-form.helper';
+import { OwnerConfig } from '@deps/containers/otp/renewal-forms/mass-mutual-form.helpers';
 import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
 import { OwnerInformation, Signature } from '@deps/models/case/task';
 
-import { AdditionalOwnerInformation, SingleOwner } from './owner-information-helper';
+import { AdditionalOwnerInformation, SingleOwner } from './owner-information-helpers';
 
 interface FormPartiesProps {
     configs: OwnerConfig[];
-    isFormStateReadOnly: boolean,
+    isFormStateReadOnly: boolean;
 }
 
 const getInitialOwner = (parties: OwnerInformation[]): AdditionalOwnerInformation[] => {

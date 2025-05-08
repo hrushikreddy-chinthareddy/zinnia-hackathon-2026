@@ -12,9 +12,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import { ACH, useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { buildFullNameFromParty, toTitleCase } from '@deps/helpers/string.helper';
-import { getFrequency } from '@deps/helpers/systematic-program.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { buildFullNameFromParty, toTitleCase } from '@deps/helpers/string.helpers';
+import { getFrequency } from '@deps/helpers/systematic-program.helpers';
 import { Frequency, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, ValidationResult } from '@deps/queries/api/bpm';
 import { DEFAULT_EXTENDED_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
@@ -26,7 +26,18 @@ interface SummaryProps {
 
 const ManageSummary = ({ policy }: SummaryProps) => {
     const { autopay } = useAutopay();
-    const { parentPage, systematicProgramReason, translationKeyPrefix, paymentAmount, frequency, effectiveDate, paymentAccountNumber, paymentBranchName, payorFullName, validationResponse } = autopay;
+    const {
+        parentPage,
+        systematicProgramReason,
+        translationKeyPrefix,
+        paymentAmount,
+        frequency,
+        effectiveDate,
+        paymentAccountNumber,
+        paymentBranchName,
+        payorFullName,
+        validationResponse,
+    } = autopay;
 
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.summary` });
     const { t: defaultT } = useTranslation();
@@ -40,9 +51,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
 
     // TODO MG: this is duped three times at least
     const transactionType = useMemo(() => {
-        return parentPage === ParentPage.Premiums
-            ? TransactionType.SUBSEQUENT_PREMIUM
-            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+        return parentPage === ParentPage.Premiums ? TransactionType.SUBSEQUENT_PREMIUM : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [parentPage]);
 
     const systematicProgram = policy.systematicPrograms?.find(sp => sp.reason === systematicProgramReason);
@@ -123,11 +132,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                             </BannerAlert>
                         ))}
                         <div className="mt-6 flex flex-row">
-                            <CheckboxText
-                                label={t('submitWithErrorsText')}
-                                checked={isChecked}
-                                onChange={() => setIsChecked(!isChecked)}
-                            />
+                            <CheckboxText label={t('submitWithErrorsText')} checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
                         </div>
                     </div>
                 )}
@@ -137,15 +142,13 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                 )}
 
                 <TransactionNavigationButtons
-                    className='mt-10'
+                    className="mt-10"
                     handleContinue={handleContinue}
                     isSubmit={true}
                     parentPage={parentPage as ParentPage}
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
-                    submitLabel={
-                        validationSucceeded ? (t('updateAutopay') as string) : (t('submit') as string)
-                    }
+                    submitLabel={validationSucceeded ? (t('updateAutopay') as string) : (t('submit') as string)}
                     trackEventProps={{ type: transactionType, step: TransactionStep.Summary }}
                 />
             </div>

@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import React from 'react';
 
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 import { Processes } from '@deps/models/case/case';
 
 import CaseType from './case-type';

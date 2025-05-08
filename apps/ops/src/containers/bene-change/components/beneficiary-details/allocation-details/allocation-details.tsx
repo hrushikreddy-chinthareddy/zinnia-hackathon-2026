@@ -6,19 +6,19 @@ import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fiel
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 
-import { BeneRelationshipToInsured } from './allocation-details.helper';
+import { BeneRelationshipToInsured } from './allocation-details.helpers';
 
 interface AllocationDetailsProps {
     updateAllocation: any;
     setAllocationDetails: Dispatch<SetStateAction<any>>;
     isReadOnly?: boolean;
-};
+}
 
 const INITIAL_ALLOCATION = {
     beneficiaryPercentage: '',
     relationshipToInsured: '',
-}
-export default function AllocationDetails({updateAllocation, setAllocationDetails, isReadOnly}: AllocationDetailsProps) {
+};
+export default function AllocationDetails({ updateAllocation, setAllocationDetails, isReadOnly }: AllocationDetailsProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.allocation' });
 
     const relationshipToInsuredOptions = [
@@ -66,7 +66,7 @@ export default function AllocationDetails({updateAllocation, setAllocationDetail
                 currentValue = Number(String(currentValue)[0]);
             }
             return { ...prevState, beneficiaryPercentage: currentValue };
-        })
+        });
     };
 
     useEffect(() => {

@@ -1,22 +1,18 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { getQualTypeOptions } from '@deps/containers/otp/oft-forms/oft-form-helper';
+import { getQualTypeOptions } from '@deps/containers/otp/oft-forms/oft-form-helpers';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { ButtonGroupTest } from '@deps/jest/constants/test-id-constants';
 import { mockT as t } from '@deps/setupTests';
 
 import CedingCompanyDistribution from './ceding-company-distribution';
 
-
 describe('#CedingCompanyDistribution component', () => {
     it('should render the corporate resolution and loa attached sections by default', () => {
         render(
             <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
-                <CedingCompanyDistribution
-                    qualificationOptions={getQualTypeOptions(t)}
-                    isFormStateReadOnly={false}
-                />
+                <CedingCompanyDistribution qualificationOptions={getQualTypeOptions(t)} isFormStateReadOnly={false} />
             </FormDataContext.Provider>
         );
 
@@ -29,7 +25,6 @@ describe('#CedingCompanyDistribution component', () => {
         expect(screen.getByText('cedingCompanySignature.isSignatureValid')).toBeInTheDocument();
         expect(screen.getByText('cedingCompanySignature.isLoaAttached')).toBeInTheDocument();
         expect(screen.getByText('cedingCompanySignature.validOwnerRegType')).toBeInTheDocument();
-        
     });
 
     it('should not render the corporate resolution and loa attached sections when render is false', () => {

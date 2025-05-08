@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 
-import { mapProductTypeToTranslation } from '@deps/helpers/translation.helper';
+import { mapProductTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { ProductType } from '@deps/models/policy/sor-policy';
 
 export type FootnoteProps = {

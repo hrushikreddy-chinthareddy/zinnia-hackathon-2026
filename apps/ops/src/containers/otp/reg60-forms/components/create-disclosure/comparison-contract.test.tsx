@@ -2,8 +2,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import ComparisonContract from './comparison-contract';
 import { BenefitType } from './create-disclosure.types';
-import { amountCellFormatter, numberParser } from '../../mass-mutual/mass-mutual-reg60-form-helper';
-import { getCreateDisclosureInfo } from '../../utils/reg60-form-helper';
+import { amountCellFormatter, numberParser } from '../../mass-mutual/mass-mutual-reg60-form-helpers';
+import { getCreateDisclosureInfo } from '../../utils/reg60-form-helpers';
 
 describe('ComparisonContract', () => {
     const formConfigs = {

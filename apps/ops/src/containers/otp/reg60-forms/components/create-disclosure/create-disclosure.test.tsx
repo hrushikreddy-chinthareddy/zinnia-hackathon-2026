@@ -6,7 +6,7 @@ import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 
 import CreateDisclosure from './create-disclosure';
 import { Disclosure } from './create-disclosure.types';
-import getMassMutualReg60Config from '../../mass-mutual/mass-mutual-reg60-form-helper';
+import getMassMutualReg60Config from '../../mass-mutual/mass-mutual-reg60-form-helpers';
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({

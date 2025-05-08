@@ -21,7 +21,7 @@ import { FormSuccessMessageKey } from '@deps/types/localStorage';
 import { TaskTypeTranslation } from '@deps/types/translation-mapping';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-import { buildForm, buildFormV2 } from '../utils/withdrawal-form-helper';
+import { buildForm, buildFormV2 } from '../utils/withdrawal-form-helpers';
 
 export type FormControlsProps = {
     t: TFunction;

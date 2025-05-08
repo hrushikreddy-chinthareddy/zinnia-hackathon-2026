@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import { filterTruthyProps } from '@deps/helpers/data-transform.helper';
+import { filterTruthyProps } from '@deps/helpers/data-transform.helpers';
 import { generateFields } from '@deps/utils/mock/mockPolicyExtrasFields';
 import { numberOfFieldsArgTypes } from '@deps/utils/storybook';
 import fullConfig from '@deps/utils/styles';

@@ -8,7 +8,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { Policy } from '@deps/models/policy/sor-policy';
 
-import { getConfigFlic, getConfigMass, getConfigSbgc } from './owner-info.helper';
+import { getConfigFlic, getConfigMass, getConfigSbgc } from './owner-info.helpers';
 import OwnerInformation from './owner-information';
 import { useBeneChange } from '../../../bene-change-provider';
 

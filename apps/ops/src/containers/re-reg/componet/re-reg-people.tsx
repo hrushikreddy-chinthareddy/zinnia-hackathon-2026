@@ -17,7 +17,7 @@ import {
     normalizePartyRole,
 } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
-import { sortByAndThenBy } from '@deps/helpers/sort.helper';
+import { sortByAndThenBy } from '@deps/helpers/sort.helpers';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 

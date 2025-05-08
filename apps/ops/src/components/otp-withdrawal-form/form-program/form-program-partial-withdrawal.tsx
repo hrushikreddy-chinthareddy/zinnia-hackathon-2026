@@ -15,7 +15,7 @@ import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import ContractReplacement from './contract-replacement';
 import FormProgramProcessDate, { SelectOneOption } from './form-program-process-date';
-import { EditableFormProgramFields } from './form-program.helper';
+import { EditableFormProgramFields } from './form-program.helpers';
 
 export interface PartialWithdrawalOption extends Omit<RadioItem, 'subelement'> {
     amountFieldType?: AmountType;

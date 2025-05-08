@@ -6,9 +6,9 @@ import { CSSProperties } from 'react';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import { TranslationFiles } from '@deps/config/translations';
-import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helper';
+import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import styles from './funds-table.module.css';

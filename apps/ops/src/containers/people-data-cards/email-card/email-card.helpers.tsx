@@ -8,7 +8,7 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
 import { EmailWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import { SideSheetPeopleHeaderProps } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
-import { isEndDated } from '@deps/helpers/date.helper';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { Email, EmailType } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';

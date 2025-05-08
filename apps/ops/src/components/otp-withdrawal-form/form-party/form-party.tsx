@@ -5,11 +5,11 @@ import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text'
 import { FieldVariant } from '@deps/components/fields/field';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { FormSubtype } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
+import { FormSubtype } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helpers';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Address, AddressTypes, Party, PartyRoles, Phone, PhoneTypes } from '@deps/models/case/withdrawal/case';
 
-import { AdditionalPartyInformation, PartyFields, SingleParty } from './party-helper';
+import { AdditionalPartyInformation, PartyFields, SingleParty } from './party-helpers';
 import PartyPhone, { DEFAULT_PHONE, PhoneFields } from './party-phone';
 import AddressEntry, { DEFAULT_ADDRESS } from '../address-entry';
 import { RecommendedByAgent } from './plugins/agent-reco';
@@ -94,7 +94,6 @@ export default function FormParties({ configs, isFormStateReadOnly }: FormPartie
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const [partyInfo, setPartyInfo] = useState<AdditionalPartyInformation[]>(getInitialParty(formParty?.parties || DEFAULT_Party));
     const [isAddressChanged, setAddressChanged] = useState(false);
-
 
     const setPartyInformation = (val: Party) => {
         setPartyInfo(parties => {

@@ -1,8 +1,8 @@
 import { useTranslation } from 'next-i18next';
 
-import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
+import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
-import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
+import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
@@ -12,9 +12,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getTotalMinRequiredAmount } from '@deps/helpers/global-values';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { convertKebabedDateString, isNullEmptyOrUndefined, formatDate } from '@deps/helpers/string.helper';
+import { convertKebabedDateString, isNullEmptyOrUndefined, formatDate } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 const BASE_KEY = 'policy.detailCards.baseCoverage';

@@ -6,7 +6,7 @@ import { mockPolicy, mockPremiumSystematicProgram } from '@deps/jest/data/mockPo
 import { Transaction, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
 
 import HistoryEventCard from './history-event-card';
-import { getHistoryEventCardValues } from './history-event-card.helper';
+import { getHistoryEventCardValues } from './history-event-card.helpers';
 
 jest.mock('@deps/queries/api/policies', () => {
     return {

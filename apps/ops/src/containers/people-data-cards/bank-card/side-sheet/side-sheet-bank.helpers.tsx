@@ -2,9 +2,9 @@ import { TFunction, useTranslation } from 'next-i18next';
 
 import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { isAccountNumberValid, isRoutingNumberValid } from '@deps/helpers/bank-validation.helper';
-import { getBankAccountType } from '@deps/helpers/party-info-helper';
-import { formatAccountNumber } from '@deps/helpers/string.helper';
+import { isAccountNumberValid, isRoutingNumberValid } from '@deps/helpers/bank-validation.helpers';
+import { getBankAccountType } from '@deps/helpers/party-info-helpers';
+import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import { AccountType, BankAccount, BankAccountBase } from '@deps/models/policy/sor-policy';
 
 interface BankDetails {

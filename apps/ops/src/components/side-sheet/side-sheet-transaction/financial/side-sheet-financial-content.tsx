@@ -4,7 +4,7 @@ import { TFunction } from 'next-i18next';
 import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { TransactionStatus } from '@deps/models/policy/sor-policy';
 import loadingImage from '@deps/styles/images/loader.png';
 

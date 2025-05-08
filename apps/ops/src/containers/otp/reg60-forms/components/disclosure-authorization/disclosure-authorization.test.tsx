@@ -5,7 +5,7 @@ import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { DisclosureAuthorization } from './disclosure-authorization';
-import getMassMutualReg60Config from '../../mass-mutual/mass-mutual-reg60-form-helper';
+import getMassMutualReg60Config from '../../mass-mutual/mass-mutual-reg60-form-helpers';
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({

@@ -7,13 +7,13 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import IconButton from '@deps/components/icon-button/icon-button';
 import { TranslationFiles } from '@deps/config/translations';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
-import { getName } from '@deps/helpers/party-info-helper';
+import { getName } from '@deps/helpers/party-info-helpers';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 
 import BeneficiaryDetails from '../beneficiary-details';
-import { getInitialBene } from '../beneficiary-details.helper';
+import { getInitialBene } from '../beneficiary-details.helpers';
 
 export interface BeneficiaryListingItemProps {
     partyRole: PartyRole;

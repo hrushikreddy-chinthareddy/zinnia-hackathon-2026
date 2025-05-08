@@ -20,7 +20,7 @@ import {
     toTitleCase,
     trimStringByCharacterCount,
     hasDigitsRegex
-} from './string.helper';
+} from './string.helpers';
 
 describe('String Helper', () => {
     describe('> isNullEmptyOrUndefined', () => {

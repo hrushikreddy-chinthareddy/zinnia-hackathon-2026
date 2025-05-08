@@ -22,7 +22,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier, FundWithdrawnMethod, OwnerAcknowledgement } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import getRslnConfig, { FormSubtype } from './rsln-withdrawal-form.helper';
+import getRslnConfig, { FormSubtype } from './rsln-withdrawal-form.helpers';
 
 export default function RslnWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

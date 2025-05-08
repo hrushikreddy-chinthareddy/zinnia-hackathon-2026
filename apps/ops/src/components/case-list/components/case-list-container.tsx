@@ -6,7 +6,7 @@ import { ButtonSize } from '@deps/components/button/button';
 import { Loading } from '@deps/components/loading';
 import { CaseTypeToProcessesMap } from '@deps/constants/case';
 import SearchResultsErrorCard from '@deps/containers/search-results/search-results-error-card/search-results-error-card';
-import { isEmptyObject } from '@deps/helpers/objects.helper';
+import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { useFetchCases } from '@deps/hooks/useFetchCases';
 import { Case, CaseType, Statuses } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
@@ -30,7 +30,18 @@ export interface CaseListContainerProps {
     setErrorMessage: Dispatch<SetStateAction<any>>;
     setPolicyNumber: Dispatch<SetStateAction<any>>;
 }
-export const CaseListContainer = ({ t, caseType, policyNumber, clientId, document, caseId, isInvalid, setShowLoader, setErrorMessage, setPolicyNumber }: CaseListContainerProps) => {
+export const CaseListContainer = ({
+    t,
+    caseType,
+    policyNumber,
+    clientId,
+    document,
+    caseId,
+    isInvalid,
+    setShowLoader,
+    setErrorMessage,
+    setPolicyNumber,
+}: CaseListContainerProps) => {
     const { cases, total, loading, error, fetchCases, filters, setFilters } = useFetchCases();
     const [selectedCaseData, setSelectedCaseData] = useState<Case | null>(null);
     const [showCreateCase, setShowCreateCase] = useState<boolean>(false);
@@ -85,9 +96,9 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, documen
     );
 
     const onCreateCase = async () => {
-        if(!document) return;
+        if (!document) return;
         setPolicyNumber('');
-        setShowLoader(true)
+        setShowLoader(true);
         const caseResult = await createCaseFromDocumentNumber(
             document.documentNumber,
             document.caseId,
@@ -103,7 +114,7 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, documen
                 contract: document.contract,
                 caseType,
                 clientId,
-                file: 'case-list-container'
+                file: 'case-list-container',
             });
             setErrorMessage(t('caseRenewal.caseCreate.createError', { documentNumber: document.documentNumber }) as string);
             setShowLoader(false);
@@ -114,7 +125,7 @@ export const CaseListContainer = ({ t, caseType, policyNumber, clientId, documen
             contract: document.contract,
             caseType,
             clientId,
-            file: 'case-list-container'
+            file: 'case-list-container',
         });
         setPolicyNumber(document.contract);
         setShowLoader(false);

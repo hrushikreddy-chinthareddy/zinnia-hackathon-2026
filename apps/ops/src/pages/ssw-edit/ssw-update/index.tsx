@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
-import { getFullFrequency } from '@deps/components/ssw-edit/ssw-edit-helper';
+import { getFullFrequency } from '@deps/components/ssw-edit/ssw-edit-helpers';
 import SswUpdate from '@deps/components/ssw-edit/ssw-update/ssw-update';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';

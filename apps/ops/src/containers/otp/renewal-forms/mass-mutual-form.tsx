@@ -11,7 +11,7 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 
-import getMassMutualConfig from './mass-mutual-form.helper';
+import getMassMutualConfig from './mass-mutual-form.helpers';
 
 export default function MassRenewalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
@@ -47,10 +47,7 @@ export default function MassRenewalForm() {
             {planCode === '723' ? (
                 <RenewalPeriodMultiSection isFormStateReadOnly={isFormStateReadOnly} options={transList} planCode={planCode} />
             ) : (
-                <RenewalPeriodSingleSection
-                    isFormStateReadOnly={isFormStateReadOnly}
-                    options={periodRadioItems}
-                />
+                <RenewalPeriodSingleSection isFormStateReadOnly={isFormStateReadOnly} options={periodRadioItems} />
             )}
             <hr className="my-4 h-0.5 border-none bg-gray-100 px-4" />
             {channel === Channel.Phone && <CallReceiveDate isFormStateReadOnly={isFormStateReadOnly} />}

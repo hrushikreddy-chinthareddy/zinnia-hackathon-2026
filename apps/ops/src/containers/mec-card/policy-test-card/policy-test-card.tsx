@@ -4,13 +4,13 @@ import { useTranslation } from 'next-i18next';
 import { CSSProperties, useRef } from 'react';
 
 import Badge from '@deps/components/badge/badge';
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import FieldData, { FieldDataProps } from '@deps/components/fields/field-data/field-data';
 import Label, { LabelVariant, TooltipProps } from '@deps/components/label/label';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { filterTruthyProps } from '@deps/helpers/data-transform.helper';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { filterTruthyProps } from '@deps/helpers/data-transform.helpers';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PremiumCardTest } from '@deps/jest/constants/test-id-constants';
 import { ReactComponent as RewardsIcon } from '@deps/styles/elements/icons/navigation/rewards-portal.svg';
 

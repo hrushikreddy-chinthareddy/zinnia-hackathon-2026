@@ -7,7 +7,7 @@ import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/co
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
-import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helper';
+import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import AlertState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/alert-state';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
@@ -27,8 +27,8 @@ import {
     getEmailTypes,
     getFormErrors,
 } from '@deps/containers/people-data-cards/email-card/side-sheet/side-sheet-email.helpers';
-import { getFirstLastName } from '@deps/helpers/party-info-helper';
-import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helper';
+import { getFirstLastName } from '@deps/helpers/party-info-helpers';
+import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Processes } from '@deps/models/case/case';
 import { Email, EmailType, PolicyAllOfPartiesItem, PreferredCommunicationType } from '@deps/models/policy/sor-policy';
 import { ValidationResult } from '@deps/queries/api/bpm';

@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { useLayoutEffect, useState } from 'react';
 
 import { getBreadcrumbText } from '@deps/helpers/routing.helpers';
-import { storage } from '@deps/helpers/sessionStorage.helper';
+import { storage } from '@deps/helpers/sessionStorage.helpers';
 
 export interface Breadcrumb {
     url: string;

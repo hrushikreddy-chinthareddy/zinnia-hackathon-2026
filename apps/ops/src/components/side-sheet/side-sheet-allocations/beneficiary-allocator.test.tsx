@@ -4,7 +4,7 @@ import { Matcher, SelectorMatcherOptions, fireEvent, render } from '@testing-lib
 import { PartyRole } from '@deps/models/policy/sor-policy';
 
 import BeneficiaryAllocator, { BeneficiaryAllocatorProps } from './beneficiary-allocator';
-import { Beneficiary } from './side-sheet-allocations-helper';
+import { Beneficiary } from './side-sheet-allocations-helpers';
 const MAX_ALLOCATION = 100;
 
 describe('beneficiary-allocator', () => {

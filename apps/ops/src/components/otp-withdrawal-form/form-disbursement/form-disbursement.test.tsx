@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
 
-import getFlicConfig from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
+import getFlicConfig from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helpers';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import {
@@ -17,7 +17,7 @@ import {
 import { PaymentMethodOption } from '@deps/models/case/withdrawal/disbursement-types';
 
 import FormDisbursement, { getBankFieldsList } from './form-disbursement';
-import { BankingFields } from './form-disbursement.helper';
+import { BankingFields } from './form-disbursement.helpers';
 import { DEFAULT_ADDRESS } from '../address-entry';
 
 jest.mock('next-i18next', () => ({

@@ -8,7 +8,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { Policy } from '@deps/models/policy/sor-policy';
 
-import { validateBeneData } from './bene-details-step.helper';
+import { validateBeneData } from './bene-details-step.helpers';
 import { useBeneChange } from '../../../bene-change-provider';
 import BeneficiaryListing from '../../beneficiary-details/beneficiary-listing/beneficiary-listing';
 

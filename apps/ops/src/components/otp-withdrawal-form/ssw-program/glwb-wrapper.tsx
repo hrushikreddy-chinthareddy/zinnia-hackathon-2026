@@ -7,7 +7,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { PartyRoles, SSWType } from '@deps/models/case/withdrawal/case';
 
 import GuaranteedWithdrawalBenefits from './guaranteed-life-time-withdrawal-benefits';
-import { GlwbType, glwbTypeOptions } from './ssw-form-program.helper';
+import { GlwbType, glwbTypeOptions } from './ssw-form-program.helpers';
 import { SSWProgram } from './ssw-row';
 
 interface GlWbWrapperProps {
@@ -21,7 +21,9 @@ const GlWbWrapper = ({ sswData }: GlWbWrapperProps) => {
     const [glwbType, setGlwbType] = useState(formProgram?.glwbType?.text || GlwbType.Dynamic);
 
     const applicablePartyRoles = [PartyRoles.GLWB_FIRST_COVERED_PERSON, PartyRoles.GLWB_SEC_COVERED_PERSON];
-    const showCoverPerson = [SSWType.SingleLifetimeIncomeOption, SSWType.JointLifetimeIncomeOption].includes(sswData?.programSubType.text as SSWType);
+    const showCoverPerson = [SSWType.SingleLifetimeIncomeOption, SSWType.JointLifetimeIncomeOption].includes(
+        sswData?.programSubType.text as SSWType
+    );
 
     useEffect(() => {
         if (showCoverPerson) {

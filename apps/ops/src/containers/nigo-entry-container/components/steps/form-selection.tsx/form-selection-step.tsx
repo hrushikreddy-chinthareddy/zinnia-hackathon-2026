@@ -8,10 +8,10 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helper';
+import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helpers';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
@@ -20,7 +20,7 @@ import { TaskStatus } from '@deps/models/case/task-instance';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { updateTask } from '@deps/queries/api/v2/task';
 
-import { getFormSelectionConfig } from './form-selection.helper';
+import { getFormSelectionConfig } from './form-selection.helpers';
 import TransactionDocumentSelection from './transaction-document-selection';
 import { useNigoEntry } from '../../nigo-entry-provider';
 

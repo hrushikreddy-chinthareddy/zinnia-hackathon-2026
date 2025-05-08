@@ -10,7 +10,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { getPolicyOwners } from '@deps/helpers/parties';
-import { formatDateDescriptionList, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
+import { formatDateDescriptionList, formatSSN, toTitleCase } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
 import { ExceptionInstance, ExceptionStatuses } from '@deps/models/case/exception-instance';
 import { PartyInstance } from '@deps/models/case/party-instance';

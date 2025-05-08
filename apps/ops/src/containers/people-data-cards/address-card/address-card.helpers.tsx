@@ -11,10 +11,10 @@ import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-f
 import { AddressWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { SideSheetPeopleHeaderProps } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
-import { formatCityStateZip } from '@deps/helpers/address.helper';
-import { isEndDated } from '@deps/helpers/date.helper';
-import { toTitleCase } from '@deps/helpers/string.helper';
-import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helper';
+import { formatCityStateZip } from '@deps/helpers/address.helpers';
+import { isEndDated } from '@deps/helpers/date.helpers';
+import { toTitleCase } from '@deps/helpers/string.helpers';
+import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Address, AddressType, PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';

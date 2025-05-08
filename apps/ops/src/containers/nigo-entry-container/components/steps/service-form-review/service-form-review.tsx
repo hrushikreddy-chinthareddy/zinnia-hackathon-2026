@@ -9,14 +9,14 @@ import { createAction } from '@deps/containers/subpages/documents-sub-page/docum
 
 import { DocumentIndexingInfo } from './document-indexing-info';
 import { NigoOptionDetails } from './nigo-option-details';
-import { useGetPolicyTypeDocs } from './service-form-review.helper';
+import { useGetPolicyTypeDocs } from './service-form-review.helpers';
 import { useNigoEntry } from '../../nigo-entry-provider';
 
 export enum SelOptionType {
-    DATA_ENTRY = "DATA_ENTRY",
-    NIGO_ENTRY = "NIGO_ENTRY",
-    DOC_INDEXING = "DOC_INDEXING",
-};
+    DATA_ENTRY = 'DATA_ENTRY',
+    NIGO_ENTRY = 'NIGO_ENTRY',
+    DOC_INDEXING = 'DOC_INDEXING',
+}
 
 interface SetFormReviewProps {
     policyNumber: string;
@@ -25,45 +25,50 @@ interface SetFormReviewProps {
     documentNumber: string;
     nigoExpection: any;
     nigoSubExceptions: any;
-};
+}
 
-export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentNumber, nigoExpection, nigoSubExceptions }: SetFormReviewProps) => {
+export const ServiceFormReview = ({
+    policyNumber,
+    clientCode,
+    docType,
+    documentNumber,
+    nigoExpection,
+    nigoSubExceptions,
+}: SetFormReviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
     const NIGO_EXCEPTION: SelOptionType = nigoExpection?.value;
     const { sectionOption, setSectionOption, setExceptions } = useNigoEntry();
     const [loading, getPolicyDocs, workingDocument] = useGetPolicyTypeDocs(policyNumber, clientCode, docType, documentNumber);
     const { displayName } = workingDocument || {};
 
-    const sectionOptions = docType === 'Exchange'
-        ? [
-            {
-                label: t('options.allSectionsAreComplete'),
-                value: SelOptionType.DATA_ENTRY
-            }
-        ]
-        : [
-            {
-                label: t('options.allSectionsAreComplete'),
-                value: SelOptionType.DATA_ENTRY
-            },
-            {
-                label: t('options.missingDetails'),
-                value:  SelOptionType.NIGO_ENTRY
-            },
-            {
-                label: t('options.incorrectDocIndexing'),
-                value: SelOptionType.DOC_INDEXING
-            },
-        ];
+    const sectionOptions =
+        docType === 'Exchange'
+            ? [
+                  {
+                      label: t('options.allSectionsAreComplete'),
+                      value: SelOptionType.DATA_ENTRY,
+                  },
+              ]
+            : [
+                  {
+                      label: t('options.allSectionsAreComplete'),
+                      value: SelOptionType.DATA_ENTRY,
+                  },
+                  {
+                      label: t('options.missingDetails'),
+                      value: SelOptionType.NIGO_ENTRY,
+                  },
+                  {
+                      label: t('options.incorrectDocIndexing'),
+                      value: SelOptionType.DOC_INDEXING,
+                  },
+              ];
 
     if (nigoExpection) {
-
-        sectionOptions.push(
-            {
-                label: nigoExpection.label,
-                value: nigoExpection.value
-            }
-        );
+        sectionOptions.push({
+            label: nigoExpection.label,
+            value: nigoExpection.value,
+        });
     }
 
     useEffect(() => {
@@ -97,16 +102,14 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                             <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
                         </div>
                         <div>
-                            <div className="text-sm font-bold"><PiiWrapper>{displayName}</PiiWrapper></div>
+                            <div className="text-sm font-bold">
+                                <PiiWrapper>{displayName}</PiiWrapper>
+                            </div>
                             <div className="flex items-center text-sm font-normal text-gray-300">
-                                <PiiWrapper>
-                                    {t('documentId') + ': ' + documentNumber}
-                                </PiiWrapper>
+                                <PiiWrapper>{t('documentId') + ': ' + documentNumber}</PiiWrapper>
                             </div>
                         </div>
-                        <div className="flex items-center">
-                            {createAction(workingDocument, clientCode?.toUpperCase(), t)}
-                        </div>
+                        <div className="flex items-center">{createAction(workingDocument, clientCode?.toUpperCase(), t)}</div>
                     </div>
                 )}
                 {!loading && !workingDocument && (
@@ -116,9 +119,20 @@ export const ServiceFormReview = ({ policyNumber, clientCode, docType, documentN
                         </div>
                     </div>
                 )}
-                <Radio items={sectionOptions} label={''} onChange={event => onOptionSelection(event.target.value as SelOptionType)} value={sectionOption || SelOptionType.DATA_ENTRY} />
-                { sectionOption === SelOptionType.DOC_INDEXING && <DocumentIndexingInfo /> }
-                { sectionOption === NIGO_EXCEPTION && <NigoOptionDetails selNigoExpetion={nigoExpection.value} nigoSubExceptions={nigoSubExceptions} nigoExpetion={NIGO_EXCEPTION} /> }
+                <Radio
+                    items={sectionOptions}
+                    label={''}
+                    onChange={event => onOptionSelection(event.target.value as SelOptionType)}
+                    value={sectionOption || SelOptionType.DATA_ENTRY}
+                />
+                {sectionOption === SelOptionType.DOC_INDEXING && <DocumentIndexingInfo />}
+                {sectionOption === NIGO_EXCEPTION && (
+                    <NigoOptionDetails
+                        selNigoExpetion={nigoExpection.value}
+                        nigoSubExceptions={nigoSubExceptions}
+                        nigoExpetion={NIGO_EXCEPTION}
+                    />
+                )}
             </div>
         </>
     );

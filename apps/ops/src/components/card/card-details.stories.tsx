@@ -7,7 +7,7 @@ import { mockPolicyData } from '@deps/utils/mockData';
 
 import CardBarPolicyHolder from './card-bar-policy-holder/card-bar-policy-holder';
 import DetailsCard from './card-details';
-import { BadgeVariant } from '../badge/badge.helper';
+import { BadgeVariant } from '../badge/badge.helpers';
 
 export default {
     title: 'Components/CardDetails',

@@ -6,7 +6,7 @@ import {
     mapAddressTypeToTranslation,
     mapPhoneTypeToTranslation,
     mapProductTypeToTranslation,
-} from './translation.helper';
+} from './translation.helpers';
 
 jest.mock('i18next', () => ({
     t: jest.fn(str => str),

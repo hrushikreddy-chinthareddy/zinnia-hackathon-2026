@@ -15,8 +15,8 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
 import { ACH, useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { getFrequency } from '@deps/helpers/systematic-program.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { getFrequency } from '@deps/helpers/systematic-program.helpers';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
@@ -38,14 +38,17 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
     const [showSelectionError, setShowSelectionError] = useState<boolean>(false);
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const { goToNext } = useWorkflow();
-    const { isSetUp, paymentAmount, effectiveDate, frequency, paymentAccountNumber, paymentBranchName, payorFullName, validationResponse } = autopay;
+    const { isSetUp, paymentAmount, effectiveDate, frequency, paymentAccountNumber, paymentBranchName, payorFullName, validationResponse } =
+        autopay;
 
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
 
     const transactionType = useMemo(() => {
         return parentPage === ParentPage.Premiums
             ? TransactionType.SUBSEQUENT_PREMIUM
-            : isSetUp ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+            : isSetUp
+            ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP
+            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [isSetUp, parentPage]);
 
     const handleContinue = async () => {
@@ -68,26 +71,15 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                 </Typography>
                 <div className="flex w-full flex-row gap-8">
                     <div className="flex flex-col gap-1">
-                        <Label
-                            variant={LabelVariant.FieldLabel}
-                            label={t('autopayAmount')}
-                        />
+                        <Label variant={LabelVariant.FieldLabel} label={t('autopayAmount')} />
                         <Typography variant={TypographyVariant.Value}>{numberFormatify(paymentAmount)}</Typography>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <Label
-                            variant={LabelVariant.FieldLabel}
-                            label={t('paymentFrequency')}
-                        />
-                        <Typography variant={TypographyVariant.Value}>
-                            {toTitleCase(getFrequency(frequency, defaultT))}
-                        </Typography>
+                        <Label variant={LabelVariant.FieldLabel} label={t('paymentFrequency')} />
+                        <Typography variant={TypographyVariant.Value}>{toTitleCase(getFrequency(frequency, defaultT))}</Typography>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <Label
-                            variant={LabelVariant.FieldLabel}
-                            label={t('paymentStartDate')}
-                        />
+                        <Label variant={LabelVariant.FieldLabel} label={t('paymentStartDate')} />
                         <Typography variant={TypographyVariant.Value}>
                             {dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(DEFAULT_DATE_FORMAT)}
                         </Typography>

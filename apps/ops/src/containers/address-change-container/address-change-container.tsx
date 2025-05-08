@@ -17,7 +17,7 @@ import { ContactDetailsStep } from './components/contact-details/contact-details
 import { RolesAndContractStep } from './components/roles-contract/roles-contract-step';
 import { SignatureStep } from './components/signature/signature-step';
 import { SummaryStep } from './components/summary/summary-step';
-import { getChannel } from './utils/address-change-helper';
+import { getChannel } from './utils/address-change-helpers';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 
 interface AddressChangeContainerProps {
@@ -87,7 +87,7 @@ const AddressChangeContainer = ({ policy, document, planCode }: AddressChangeCon
             {
                 ariaLabel: t('address-change.step-navigations.confirm'),
                 isVisible: () => true,
-                component: <ConfirmStep policy={policy} document={document} planCode={planCode} clientId={clientId as string}/>,
+                component: <ConfirmStep policy={policy} document={document} planCode={planCode} clientId={clientId as string} />,
                 screenReaderLabel: t('address-change.step-navigations.confirm'),
                 text: t('tabs.confirm'),
             },

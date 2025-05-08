@@ -27,7 +27,7 @@ export const useSpecialProgram = (initialForm: ActiveWithdrawalCase) => {
                         [ProgramType.PremiumDefault, ProgramType.RMD, ProgramType.SSW, ProgramType.SSWNet].includes(program.typeOfAlloc) &&
                         (program.termDate === '' || dayjs().isBefore(program.termDate))
                 ) || null;
-            setActivePrograms(activeProg);
+            setActivePrograms(activeProg as SpecialProgram[]);
             setIsLoading(false);
         } catch (e) {
             setIsLoading(false);

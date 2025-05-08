@@ -8,20 +8,20 @@ import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fiel
 import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { stringifyTrueFalseNull } from '@deps/helpers/string.helper';
+import { stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { IFieldConfig } from '../form-party/form-party';
-import { PartyFields } from '../form-party/party-helper';
+import { PartyFields } from '../form-party/party-helpers';
 
 export type FormBeneInfo = {
     spouseDOB: string | null;
     isBeneInfoProvided: boolean;
     isBeneSpouse: boolean;
-    spouseFirstName: string | null,
-    spouseMiddleName: string | null,
-    spouseLastName: string | null,
-    spouseSSN: string | null
+    spouseFirstName: string | null;
+    spouseMiddleName: string | null;
+    spouseLastName: string | null;
+    spouseSSN: string | null;
 };
 
 export interface BeneficiaryConfig {
@@ -53,7 +53,7 @@ const DEFAULT_BENEFICIARY = {
     spouseDOB: null,
     spouseSSN: null,
     isBeneSpouse: false,
-    isBeneInfoProvided: false
+    isBeneInfoProvided: false,
 };
 
 type BeneficiaryInfoFields = Pick<FormBeneInfo, 'spouseFirstName' | 'spouseMiddleName' | 'spouseLastName' | 'spouseDOB' | 'spouseSSN'>;
@@ -166,31 +166,64 @@ export function useJLEFields({
     };
 }
 
-const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, beneInfo, onBeneChange, isBeneSpouseOption, configs }: BeneficiaryInfoProps) => {
+const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({
+    isFormStateReadOnly,
+    beneInfo,
+    onBeneChange,
+    isBeneSpouseOption,
+    configs,
+}: BeneficiaryInfoProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
-    const { renderField, spouseFirstName, spouseMiddleName, spouseLastName, spouseDOB, spouseSSN } = useJLEFields(beneInfo || DEFAULT_BENEFICIARY);
+    const { renderField, spouseFirstName, spouseMiddleName, spouseLastName, spouseDOB, spouseSSN } = useJLEFields(
+        beneInfo || DEFAULT_BENEFICIARY
+    );
 
     useEffect(() => {
-        const info = beneInfo && beneInfo?.isBeneSpouse
-            ? { spouseFirstName, spouseMiddleName, spouseLastName, spouseDOB, spouseSSN, isBeneSpouse: beneInfo?.isBeneSpouse || false, isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false }
-            : { ...DEFAULT_BENEFICIARY, isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false };
+        const info =
+            beneInfo && beneInfo?.isBeneSpouse
+                ? {
+                      spouseFirstName,
+                      spouseMiddleName,
+                      spouseLastName,
+                      spouseDOB,
+                      spouseSSN,
+                      isBeneSpouse: beneInfo?.isBeneSpouse || false,
+                      isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false,
+                  }
+                : { ...DEFAULT_BENEFICIARY, isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false };
         onBeneChange(info);
-    }, [beneInfo?.isBeneSpouse, spouseFirstName, spouseMiddleName,spouseLastName, spouseDOB, spouseSSN]);
-
+    }, [beneInfo?.isBeneSpouse, spouseFirstName, spouseMiddleName, spouseLastName, spouseDOB, spouseSSN]);
 
     const handleBeneChange = (isBeneInfoProvided: boolean) => {
         const info = isBeneInfoProvided
-            ? { spouseFirstName, spouseMiddleName,spouseLastName, spouseDOB, spouseSSN, isBeneSpouse: beneInfo?.isBeneSpouse || false, isBeneInfoProvided: isBeneInfoProvided }
+            ? {
+                  spouseFirstName,
+                  spouseMiddleName,
+                  spouseLastName,
+                  spouseDOB,
+                  spouseSSN,
+                  isBeneSpouse: beneInfo?.isBeneSpouse || false,
+                  isBeneInfoProvided: isBeneInfoProvided,
+              }
             : DEFAULT_BENEFICIARY;
         onBeneChange(info);
     };
 
     const handleButtonClick = (isBeneSpouse: string) => {
-        const info = isBeneSpouse === 'true'
-            ? { spouseFirstName, spouseMiddleName, spouseLastName, spouseDOB, spouseSSN, isBeneSpouse: isBeneSpouse === 'true', isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false }
-            : { ...DEFAULT_BENEFICIARY, isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false };
+        const info =
+            isBeneSpouse === 'true'
+                ? {
+                      spouseFirstName,
+                      spouseMiddleName,
+                      spouseLastName,
+                      spouseDOB,
+                      spouseSSN,
+                      isBeneSpouse: isBeneSpouse === 'true',
+                      isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false,
+                  }
+                : { ...DEFAULT_BENEFICIARY, isBeneInfoProvided: beneInfo?.isBeneInfoProvided || false };
         onBeneChange(info);
-    }
+    };
 
     return (
         <CardContainer containerClassNames={`border-b-2 border-gray-100`}>
@@ -205,7 +238,10 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
             {beneInfo?.isBeneInfoProvided && (
                 <>
                     <div className="my-3">
-                        <Label label={configs.isBeneficiarySpouseTitle || t('beneficiaryInfo.isBeneficiarySpouse.title')} variant={LabelVariant.FieldLabel} />
+                        <Label
+                            label={configs.isBeneficiarySpouseTitle || t('beneficiaryInfo.isBeneficiarySpouse.title')}
+                            variant={LabelVariant.FieldLabel}
+                        />
                         <ButtonGroup
                             activeValue={
                                 beneInfo?.isBeneInfoProvided
@@ -222,15 +258,13 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({ isFormStateReadOnly, 
                     </div>
 
                     {beneInfo?.isBeneSpouse && configs?.isYourSpouseYoungerThanYouLabel && (
-                            <div className="my-3">
-                                <Label label={t('beneficiaryInfo.isYourSpouseYoungerThanYou')} variant={LabelVariant.FieldLabel} />
-                            </div>
-                        )
-                    }
+                        <div className="my-3">
+                            <Label label={t('beneficiaryInfo.isYourSpouseYoungerThanYou')} variant={LabelVariant.FieldLabel} />
+                        </div>
+                    )}
                     {beneInfo?.isBeneSpouse && (
-
                         <div className="my-4 grid grid-cols-5 gap-2">
-                            {configs?.fields?.map(field => renderField(field, isFormStateReadOnly ))}
+                            {configs?.fields?.map(field => renderField(field, isFormStateReadOnly))}
                         </div>
                     )}
                 </>

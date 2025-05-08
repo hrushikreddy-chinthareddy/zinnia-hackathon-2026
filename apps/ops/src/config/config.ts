@@ -1,6 +1,6 @@
 import { User } from 'oidc-client-ts';
 
-import { storage } from '@deps/helpers/sessionStorage.helper';
+import { storage } from '@deps/helpers/sessionStorage.helpers';
 export interface OAuthConfig {
     authority: string;
     clientId: string;

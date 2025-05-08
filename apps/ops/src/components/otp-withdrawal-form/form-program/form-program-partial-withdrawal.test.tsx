@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { WithdrawalSelectionValues } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
+import { WithdrawalSelectionValues } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helpers';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { AmountType, CaseStatus } from '@deps/models/case/withdrawal/case';

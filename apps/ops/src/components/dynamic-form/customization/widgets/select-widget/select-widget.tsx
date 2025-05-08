@@ -10,7 +10,7 @@ import {
 } from '@rjsf/utils';
 
 import SelectComponent from '@deps/components/select/select';
-import { csrApiHelper, parseJsonValue, isString, stringifyValue } from '@deps/helpers/csr-api-helper';
+import { csrApiHelper, parseJsonValue, isString, stringifyValue } from '@deps/helpers/csr-api-helpers';
 import { ApiProps, ApiResponseTypes, EventType, TaskEventProps } from '@deps/models/case/task';
 
 function getValue(

@@ -1,4 +1,4 @@
-import { mergeClasses } from './props.helper';
+import { mergeClasses } from './props.helpers';
 
 describe('Props Helper', () => {
     describe('> mergeClasses', () => {

@@ -7,7 +7,7 @@ import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TranslationFiles } from '@deps/config/translations';
 import { getUpdatedTaskFromFormData, extractFormData } from '@deps/containers/task-container/components/steps/task-form/task-form.utils';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
-import { updateTask } from '@deps/containers/task-container/task.helper';
+import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { EntityTypes, MatchingCase, TransactionData } from '@deps/models/case/task/doc-matching-payment';
 import { ManagementTask } from '@deps/models/case/task-instance';
@@ -15,7 +15,7 @@ import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
-import { buildTaskPayload, cleanForm } from '@deps/utils/tasks/task-payload-helper';
+import { buildTaskPayload, cleanForm } from '@deps/utils/tasks/task-payload-helpers';
 
 type TaskFormProps = {
     readonly: boolean;
@@ -128,7 +128,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onSubmit('');
             return;
         }
-        
+
         const taskPayload = buildTaskPayload(cleanForm(task, taskMetadata), initialTask);
 
         const success = await updateTask(taskPayload, correlationId);
@@ -146,10 +146,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             const hasDataPathFields = Object.keys(uiSchema).some(field => uiSchema[field]?.['ui:dataPath']);
 
             if (!hasDataPathFields) {
-                setTask(ogTask => ({                 
+                setTask(ogTask => ({
                     ...ogTask,
                     data: event.formData,
-                    }));
+                }));
                 return;
             }
 

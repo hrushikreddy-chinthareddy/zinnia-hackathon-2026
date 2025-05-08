@@ -1,7 +1,7 @@
 import { TFunction } from 'next-i18next';
 
 import ChipX from '@deps/components/chip/chip-x';
-import { parseAndFormatDate } from '@deps/helpers/string.helper';
+import { parseAndFormatDate } from '@deps/helpers/string.helpers';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 const CreatedDateChip = ({

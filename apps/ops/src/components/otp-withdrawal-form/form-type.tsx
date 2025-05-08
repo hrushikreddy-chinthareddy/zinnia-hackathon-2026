@@ -3,7 +3,7 @@ import { useContext } from 'react';
 
 import SelectSimple from '@deps/components/select/select';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { FormSubtype } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
+import { FormSubtype } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helpers';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 
 import { FieldSize } from '../fields/field';
@@ -13,18 +13,17 @@ type FormTypeProps = {
         label: string;
         value: FormSubtype;
     }[];
-    isFormStateReadOnly: boolean,
+    isFormStateReadOnly: boolean;
 };
 function FormType({ formSubtypeOptions, isFormStateReadOnly }: FormTypeProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const { formSubtype, setFormSubtype } = useContext(FormDataContext);
 
-
     const handleFormSubtypeChange = (val: FormSubtype) => {
         if (val && setFormSubtype) {
             setFormSubtype(val as FormSubtype);
         }
-    }
+    };
     return (
         <CardContainer classNames={'w-full !mt-0'} containerClassNames="border-b-2 border-gray-100 mt-0 w-full">
             <SelectSimple

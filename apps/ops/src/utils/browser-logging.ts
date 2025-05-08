@@ -1,6 +1,6 @@
 import { datadogLogs } from '@datadog/browser-logs';
 
-import { isNonProductionEnvironment } from './environment.helper';
+import { isNonProductionEnvironment } from './environment.helpers';
 
 export const browserLogError = (message: string, serializableValues: object = {}) => {
     isNonProductionEnvironment() && console.error(message, serializableValues);

@@ -5,7 +5,7 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';

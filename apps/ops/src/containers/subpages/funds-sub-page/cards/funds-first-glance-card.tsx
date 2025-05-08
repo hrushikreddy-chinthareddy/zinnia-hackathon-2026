@@ -5,9 +5,9 @@ import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import PageHeader from '@deps/components/page-header/page-header';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
-import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helpers';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkEligibilityFundTransfer } from '@deps/queries/api/fund-transfer';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';

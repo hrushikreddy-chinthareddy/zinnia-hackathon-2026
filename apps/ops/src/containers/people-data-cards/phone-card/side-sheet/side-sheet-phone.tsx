@@ -11,7 +11,7 @@ import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fiel
 import FieldSelect from '@deps/components/fields/field-select/field-select';
 import Radio, { RadioOrientation } from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
-import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helper';
+import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
@@ -35,9 +35,9 @@ import {
     getPhoneTypeOptions,
     getTimeZoneOptions,
 } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
-import { getFirstLastName } from '@deps/helpers/party-info-helper';
-import { formatPhoneNumberRaw } from '@deps/helpers/phone.helper';
-import { mapPhoneTypeToTranslation } from '@deps/helpers/translation.helper';
+import { getFirstLastName } from '@deps/helpers/party-info-helpers';
+import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
+import { mapPhoneTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Processes } from '@deps/models/case/case';
 import { Phone, PhoneType, PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { ValidationResult } from '@deps/queries/api/bpm';

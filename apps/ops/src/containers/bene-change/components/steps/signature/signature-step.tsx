@@ -14,9 +14,9 @@ import { SignatureDesignation, SignatureValidationTypeWithdrawal, SignPresent } 
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
-import { useReRegSignatureStepConfig } from './signature-step-helper';
+import { useReRegSignatureStepConfig } from './signature-step-helpers';
 import { useBeneChange } from '../../../bene-change-provider';
-import { ENTERPRISE_ADDRESS_TYPE } from '../../beneficiary-details/address-details/address-details.helper';
+import { ENTERPRISE_ADDRESS_TYPE } from '../../beneficiary-details/address-details/address-details.helpers';
 
 interface SignatureStepProps {
     policy: Policy;

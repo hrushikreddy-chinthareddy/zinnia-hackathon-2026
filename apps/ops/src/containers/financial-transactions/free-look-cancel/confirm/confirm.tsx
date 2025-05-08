@@ -13,7 +13,7 @@ import { submitFreeLookCancel } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-import { buildFreeLookCancelRequestBody } from '../free-look-cancel.helper';
+import { buildFreeLookCancelRequestBody } from '../free-look-cancel.helpers';
 
 interface ConfirmProps {
     policy: Policy;

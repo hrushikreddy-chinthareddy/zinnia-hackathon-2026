@@ -1,4 +1,4 @@
-import { UiSchema } from '@rjsf/utils/lib/types';
+import { UiSchema } from '@rjsf/utils';
 
 import { browserLogWarn } from '@deps/utils/browser-logging';
 
@@ -92,7 +92,7 @@ export const normalizeFormData = (formData: any) => {
             }
         } else if (typeof formData === 'object' && formData !== null) {
             for (const key in formData) {
-                if (!formData.hasOwnProperty(key)) continue;
+                if (!Object.prototype.hasOwnProperty.call(formData, key)) continue;
                 const value = formData[key];
                 if (isArrayOfStringifiedObjects(value)) {
                     formData[key] = value.map((item: any) => JSON.parse(item));

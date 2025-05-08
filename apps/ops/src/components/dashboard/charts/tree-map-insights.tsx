@@ -12,7 +12,7 @@ import PageLoader from '@deps/components/page-loader/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS } from '@deps/helpers/dashboard/dashboard-helpers';
-import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';

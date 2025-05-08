@@ -8,7 +8,7 @@ import { AccountCloseReason, CaseStatus, QualTypes } from '@deps/models/case/wit
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import FlicWithdrawalForm from './flic-withdrawal-form';
-import { FormSubtype } from './flic-withdrawal-form.helper';
+import { FormSubtype } from './flic-withdrawal-form.helpers';
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({

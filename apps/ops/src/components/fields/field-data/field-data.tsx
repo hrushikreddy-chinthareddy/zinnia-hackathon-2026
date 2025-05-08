@@ -11,7 +11,7 @@ import {
     ItemSpacing,
 } from '@deps/components/responsive-flex/responsive-flex.types';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { filterTruthyProps } from '@deps/helpers/data-transform.helper';
+import { filterTruthyProps } from '@deps/helpers/data-transform.helpers';
 
 export enum FieldDataTest {
     Container = 'field-data-container-test-id',

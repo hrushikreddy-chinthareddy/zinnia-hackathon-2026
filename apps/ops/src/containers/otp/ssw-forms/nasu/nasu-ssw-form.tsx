@@ -11,7 +11,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 
 import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
-import useNassauConfig from './nasu-ssw-form-helper';
+import useNassauConfig from './nasu-ssw-form-helpers';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import TaxOL4753Attachment from '@deps/components/otp-withdrawal-form/tax-ol4753-attachment';

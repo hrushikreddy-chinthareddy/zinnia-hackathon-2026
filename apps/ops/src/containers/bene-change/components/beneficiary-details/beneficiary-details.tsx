@@ -14,15 +14,15 @@ import { ReactComponent as ContactIcon } from '@deps/styles/elements/icons/icons
 import { ReactComponent as LocationIcon } from '@deps/styles/elements/icons/navigation/location.svg';
 
 import AddressDetails from './address-details/address-details';
-import { EnterpriseAddress, INITIAL_ADDRESS } from './address-details/address-details.helper';
+import { EnterpriseAddress, INITIAL_ADDRESS } from './address-details/address-details.helpers';
 import AllocationDetails from './allocation-details/allocation-details';
 import BeneficiaryIdentification from './bene-identification/bene-identification';
-import { getInitialBene } from './beneficiary-details.helper';
+import { getInitialBene } from './beneficiary-details.helpers';
 import BeneficiaryInformation from './beneficiary-information/beneficiary-information';
 import EmailDetails from './email-details/email-details';
-import { INITIAL_EMAIL } from './email-details/email-details.helper';
+import { INITIAL_EMAIL } from './email-details/email-details.helpers';
 import PhoneDetails from './phone-details/phone-details';
-import { EnterprisePhone, INITIAL_PHONE } from './phone-details/phone-details.helper';
+import { EnterprisePhone, INITIAL_PHONE } from './phone-details/phone-details.helpers';
 import { useBeneChange } from '../../bene-change-provider';
 
 interface BeneficiaryDetailsProps {

@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { render } from '@testing-library/react';
 
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { convertKebabedDateString, toTitleCase } from '@deps/helpers/string.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { convertKebabedDateString, toTitleCase } from '@deps/helpers/string.helpers';
 import { generateBankDetails } from '@deps/utils/mock/mockBankDetails';
 import { generateKebabDate } from '@deps/utils/mock/mockDates';
 import { generateAdditionalCharges } from '@deps/utils/mock/mockPolicyValues';

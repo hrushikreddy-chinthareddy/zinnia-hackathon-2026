@@ -7,8 +7,8 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 
-import { signaturesConfig } from '../../bank-update/bank-update.helper';
-import { sswEditFormValidator } from '../../ssw-edit-helper';
+import { signaturesConfig } from '../../bank-update/bank-update.helpers';
+import { sswEditFormValidator } from '../../ssw-edit-helpers';
 
 const Signature = () => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });

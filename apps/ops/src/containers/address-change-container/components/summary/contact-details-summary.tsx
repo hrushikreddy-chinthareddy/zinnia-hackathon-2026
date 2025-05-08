@@ -6,13 +6,13 @@ import { ReactNode } from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { formatPhone } from '@deps/helpers/string.helper';
+import { formatPhone } from '@deps/helpers/string.helpers';
 import { Address as PolicyAddress, Policy } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { useAddressChange } from '../../address-change-provider';
 import { AllowedRoleTypes } from '../roles-contract/utils/roles-contract-constants';
-import { groupPartiesByAddress } from '../roles-contract/utils/roles-contract-helper';
+import { groupPartiesByAddress } from '../roles-contract/utils/roles-contract-helpers';
 import { PartyAddressCard } from '../roles-contract/utils/roles-contract-types';
 
 type ContactDetailsSummaryProps = {

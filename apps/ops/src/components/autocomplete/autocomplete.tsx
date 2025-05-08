@@ -8,14 +8,13 @@ import { ReactComponent as SearchIcon } from '@deps/styles/elements/icons/action
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as CheckIcon } from '@deps/styles/elements/icons/icons_outlined/checkmark.svg';
 
-import { getItemClasses, getSelectedValueClasses, getTriggerClasses } from './autocomplete.helper';
+import { getItemClasses, getSelectedValueClasses, getTriggerClasses } from './autocomplete.helpers';
 import { AutocompleteOptionsProps, SelectProps, SimpleOption } from './autocomplete.types';
 import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
 import FieldIcon from '../fields/field-icon';
 import FieldLabel from '../fields/field-label';
 import Typography, { TypographyVariant } from '../typography/typography';
-
 
 const AutocompleteOptions = ({ options, value, matches, contentClasses }: AutocompleteOptionsProps) => {
     return (

@@ -13,9 +13,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { formatSSN } from '@deps/helpers/string.helper';
-import { formatDirtyAddress, replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { formatSSN } from '@deps/helpers/string.helpers';
+import { formatDirtyAddress, replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { CardTypes, DataFormattingTypes, TaskFieldTypes } from '@deps/models/case/task';
 import loadingImage from '@deps/styles/images/loader.png';

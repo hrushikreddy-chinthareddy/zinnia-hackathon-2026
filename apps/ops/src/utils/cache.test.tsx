@@ -1,4 +1,4 @@
-import { storage } from '@deps/helpers/sessionStorage.helper';
+import { storage } from '@deps/helpers/sessionStorage.helpers';
 
 import { generateCacheKey, pullFromCache, writeToCache } from './cache';
 

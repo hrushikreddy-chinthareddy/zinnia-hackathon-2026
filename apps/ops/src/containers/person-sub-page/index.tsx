@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
-import { beneficiaryRoles } from '@deps/components/side-sheet/side-sheet-allocations/side-sheet-allocations-helper';
+import { beneficiaryRoles } from '@deps/components/side-sheet/side-sheet-allocations/side-sheet-allocations-helpers';
 import PersonPageHeader from '@deps/containers/page-header/interior-people-page-header';
 import AddressCard from '@deps/containers/people-data-cards/address-card/address-card';
 import AllocationCard from '@deps/containers/people-data-cards/allocation-card/allocation-card';
@@ -11,7 +11,7 @@ import IdentificationCard from '@deps/containers/people-data-cards/identificatio
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import UnderwritingCard from '@deps/containers/people-data-cards/underwriting-card/underwriting-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { findCoverageParticipant, getRiskClass, getSexAtBirth, getSubstandardRating } from '@deps/helpers/party-info-helper';
+import { findCoverageParticipant, getRiskClass, getSexAtBirth, getSubstandardRating } from '@deps/helpers/party-info-helpers';
 import { PartyRole } from '@deps/models/policy/sor-policy';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';

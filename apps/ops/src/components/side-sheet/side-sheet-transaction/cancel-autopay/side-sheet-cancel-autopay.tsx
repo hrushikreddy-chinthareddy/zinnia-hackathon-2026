@@ -12,9 +12,9 @@ import FieldDateSelect from '@deps/components/fields/field-date-select/field-dat
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
 import { ACH } from '@deps/contexts/transactions/AutopayContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { getFrequency } from '@deps/helpers/systematic-program.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import { getFrequency } from '@deps/helpers/systematic-program.helpers';
 import { Processes } from '@deps/models/case/case';
 import { AmountType, ArrangementType, Frequency, PaymentForm, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { submitSystematicProgramUpdate, validateSystematicProgramUpdate, ValidationResult } from '@deps/queries/api/bpm';
@@ -39,7 +39,7 @@ type Errors = {
     caseId?: string;
     confirmCancel?: string;
     effectiveDate?: string;
-}
+};
 
 export type SideSheetCancelAutopayProps = {
     arrangementType: ArrangementType;
@@ -57,12 +57,17 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
         effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
     };
 
-    const systematicProgram = useMemo(() => policy.systematicPrograms?.find(sp => sp.reason === systematicProgramReason), [policy.systematicPrograms, systematicProgramReason]);
+    const systematicProgram = useMemo(
+        () => policy.systematicPrograms?.find(sp => sp.reason === systematicProgramReason),
+        [policy.systematicPrograms, systematicProgramReason]
+    );
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<CaseDocumentOption[]>([]);
     const [body, setBody] = useState(INITIAL_BODY);
     const { caseId } = body;
     const [newCaseId, setNewCaseId] = useState<string>();
-    const [effectiveDate, setEffectiveDate] = useState<string>(dayjs(policy.policyDates?.nextMonthiversaryDate).format(NUMERIC_DATE_FORMAT));
+    const [effectiveDate, setEffectiveDate] = useState<string>(
+        dayjs(policy.policyDates?.nextMonthiversaryDate).format(NUMERIC_DATE_FORMAT)
+    );
     const [confirmCancel, setConfirmCancel] = useState<boolean>(false);
     const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
 
@@ -80,7 +85,7 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
 
     const validateFields = (effectiveDate: string, confirmCancel: boolean, caseId?: string) => {
         let localErrors: Errors = {};
-        
+
         if (caseId == undefined) {
             localErrors = { ...localErrors, caseId: errors.caseId || `${t('missingCaseDocument')}` };
         }
@@ -92,11 +97,11 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
         if (!confirmCancel) {
             localErrors = { ...localErrors, confirmCancel: `${t('confirmCancelError')}` };
         }
-        
+
         setErrors(localErrors);
 
         return Object.keys(localErrors).length === 0;
-    }
+    };
 
     const getUpdateSystematicProgramBody = () => {
         const effectiveDateFormatted = dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
@@ -121,8 +126,8 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
                     partyId: systematicProgram?.party?.[0]?.partyId,
                 },
             },
-        }
-    }
+        };
+    };
 
     const validateAndSubmitUpdate = async () => {
         setLoading(true);
@@ -135,7 +140,12 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
         const arrangementId = systematicProgram?.arrangementId || '';
         const updateBody = getUpdateSystematicProgramBody();
 
-        const validateResponse = await validateSystematicProgramUpdate(policy.product?.planCode, policy.policyNumber || '', arrangementId, updateBody);
+        const validateResponse = await validateSystematicProgramUpdate(
+            policy.product?.planCode,
+            policy.policyNumber || '',
+            arrangementId,
+            updateBody
+        );
 
         if (validateResponse?.status !== StatusCode.Accepted && validateResponse?.status !== StatusCode.Okay) {
             handleResponse({ response: validateResponse, setViewState, setValidationResults });
@@ -149,7 +159,12 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
     const submitUpdate = async () => {
         const arrangementId = systematicProgram?.arrangementId || '';
         const updateBody = getUpdateSystematicProgramBody();
-        const submitResponse = await submitSystematicProgramUpdate(policy.product?.planCode, policy.policyNumber || '', arrangementId, updateBody);
+        const submitResponse = await submitSystematicProgramUpdate(
+            policy.product?.planCode,
+            policy.policyNumber || '',
+            arrangementId,
+            updateBody
+        );
 
         if (submitResponse?.data?.caseId) {
             setNewCaseId(submitResponse?.data?.caseId);
@@ -158,7 +173,7 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
         handleResponse({ response: submitResponse, setViewState, setValidationResults });
 
         return;
-    }
+    };
 
     switch (viewState) {
         case ViewState.BpmError:
@@ -173,17 +188,14 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
                 </BpmErrorState>
             );
         case ViewState.ApiError:
-            return (
-                <ApiErrorState
-                    onCancel={onCancel}
-                    onContinue={submitUpdate}
-                />
-            );
+            return <ApiErrorState onCancel={onCancel} onContinue={submitUpdate} />;
         case ViewState.Success:
             return (
                 <SuccessState
                     caseId={newCaseId}
-                    transactionType={arrangementType === ArrangementType.PAYMENT ? t('premiumAutopayCancellation') : t('loanAutopayCancellation')}
+                    transactionType={
+                        arrangementType === ArrangementType.PAYMENT ? t('premiumAutopayCancellation') : t('loanAutopayCancellation')
+                    }
                     isNigo={!!validationResults?.length}
                     onCancel={onCancel}
                 />
@@ -221,14 +233,16 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
                     message={errors.effectiveDate || ''}
                 />
                 <CheckboxText
-                    assistiveText={!confirmCancel && errors.confirmCancel ? { text: errors.confirmCancel, variant: AssistiveTextVariant.Error } : undefined}
+                    assistiveText={
+                        !confirmCancel && errors.confirmCancel
+                            ? { text: errors.confirmCancel, variant: AssistiveTextVariant.Error }
+                            : undefined
+                    }
                     checked={confirmCancel}
-                    label={t('proceedCancel',
-                        {
-                            frequency: getFrequency(systematicProgram?.frequency as Frequency, defaultT),
-                            amount: numberFormatify(systematicProgram?.amount)
-                        }
-                    )}
+                    label={t('proceedCancel', {
+                        frequency: getFrequency(systematicProgram?.frequency as Frequency, defaultT),
+                        amount: numberFormatify(systematicProgram?.amount),
+                    })}
                     onChange={() => setConfirmCancel(!confirmCancel)}
                 />
             </div>
@@ -245,14 +259,13 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
                 }}
                 stopLoading={!loading}
                 // TODO MG: better handling for this - will need to support withdrawal soon
-                trackEventProps={
-                    {
-                        type: systematicProgramReason === Reason.LOANREPAYMENT
+                trackEventProps={{
+                    type:
+                        systematicProgramReason === Reason.LOANREPAYMENT
                             ? TransactionType.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT
                             : TransactionType.SUBSEQUENT_PREMIUM,
-                        step: TransactionStep.Cancel
-                    }
-                }
+                    step: TransactionStep.Cancel,
+                }}
             />
         </div>
     );

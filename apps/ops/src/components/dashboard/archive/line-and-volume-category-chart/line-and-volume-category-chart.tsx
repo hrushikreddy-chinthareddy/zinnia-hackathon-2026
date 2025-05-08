@@ -10,7 +10,7 @@ import {
     getBottomChartConfig,
     getTopChartConfig,
     LineAndVolumeCategoryAndSeries,
-} from '@deps/helpers/dashboard/line-and-volume-category-chart.helper';
+} from '@deps/helpers/dashboard/line-and-volume-category-chart.helpers';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 export type LineAndVolumeCategoryChartProps = {

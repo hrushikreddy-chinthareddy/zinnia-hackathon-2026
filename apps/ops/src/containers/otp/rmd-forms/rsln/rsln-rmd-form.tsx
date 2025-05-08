@@ -18,7 +18,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import getRslnRmdConfig from './rsln-rmd-form.helper';
+import getRslnRmdConfig from './rsln-rmd-form.helpers';
 
 export default function RslnRmdWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

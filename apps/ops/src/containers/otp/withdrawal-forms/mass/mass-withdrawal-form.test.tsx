@@ -7,7 +7,7 @@ import { CaseStatus } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import MassWithdrawalForm from './mass-withdrawal-form';
-import { FormSubtype } from '../flic-withdrawal-form.helper';
+import { FormSubtype } from '../flic-withdrawal-form.helpers';
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 
 import styles from './sankey-chart.module.css';
 interface SankeyCellTextProps {

@@ -12,8 +12,8 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { Policy, Frequency } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
@@ -47,9 +47,12 @@ const Amount = ({ policy }: AmountProps) => {
     const [errors, setErrors] = useState<Errors>({});
     const { systematicPrograms, policyDates, policyNumber, product } = policy;
 
-    const systematicProgramData = useMemo(() => systematicPrograms?.find(sp => sp.reason === systematicProgramReason), [systematicProgramReason, systematicPrograms]);
+    const systematicProgramData = useMemo(
+        () => systematicPrograms?.find(sp => sp.reason === systematicProgramReason),
+        [systematicProgramReason, systematicPrograms]
+    );
     const { goToNext } = useWorkflow();
-    const dateLabel = useMemo(() => isSetUp ? t('paymentStartDate') : t('nextPaymentDate'), [isSetUp, t])
+    const dateLabel = useMemo(() => (isSetUp ? t('paymentStartDate') : t('nextPaymentDate')), [isSetUp, t]);
 
     useEffect(() => {
         if (autopay.initValues) {
@@ -58,9 +61,7 @@ const Amount = ({ policy }: AmountProps) => {
         // TODO MG: nextMonthiversaryDate only for everly?
         // confirm nextProgramDate is right when updating autopayment
         const isEverly = policy.carrierId === 'SBUL' || policy.carrierId === 'ELIC';
-        const effectiveDate = isSetUp
-            ? isEverly ? policyDates?.nextMonthiversaryDate : dayjs()
-            : systematicProgramData?.nextProgramDate;
+        const effectiveDate = isSetUp ? (isEverly ? policyDates?.nextMonthiversaryDate : dayjs()) : systematicProgramData?.nextProgramDate;
 
         setAutopay(() => ({
             ...autopay,
@@ -72,9 +73,7 @@ const Amount = ({ policy }: AmountProps) => {
     }, [autopay, setAutopay, systematicProgramData, policyDates?.nextMonthiversaryDate, isSetUp, policy.carrierId]);
 
     const transactionType = useMemo(() => {
-        return parentPage === ParentPage.Premiums
-            ? TransactionType.SUBSEQUENT_PREMIUM
-            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+        return parentPage === ParentPage.Premiums ? TransactionType.SUBSEQUENT_PREMIUM : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [parentPage]);
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,7 +149,7 @@ const Amount = ({ policy }: AmountProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     parentPage={parentPage as ParentPage}
-                    trackEventProps={{ type: transactionType, step: TransactionStep.Amount }}                    
+                    trackEventProps={{ type: transactionType, step: TransactionStep.Amount }}
                 />
             }
         >

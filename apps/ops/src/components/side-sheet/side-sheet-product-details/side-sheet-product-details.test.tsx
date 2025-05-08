@@ -2,13 +2,13 @@
 
 import { render, screen } from '@testing-library/react';
 
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import { PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 
 import SideSheetProductDetails from './side-sheet-product-details';
 
-jest.mock('@deps/helpers/translation.helper', () => ({
+jest.mock('@deps/helpers/translation.helpers', () => ({
     mapProductTypeToTranslation: (productType: string) => ({
         label: productType,
     }),

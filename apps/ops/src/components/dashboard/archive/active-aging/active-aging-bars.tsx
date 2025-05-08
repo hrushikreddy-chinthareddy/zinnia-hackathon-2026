@@ -5,7 +5,7 @@ import HighchartsReact, { HighchartsReactRefObject } from 'highcharts-react-offi
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 
 import caseChartHelpers, { ChartConfigSeriesDataSimple } from '@deps/helpers/dashboard/case-chart-helpers';
-import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 
 //https://www.npmjs.com/package/highcharts-react-official#highcharts-with-nextjs

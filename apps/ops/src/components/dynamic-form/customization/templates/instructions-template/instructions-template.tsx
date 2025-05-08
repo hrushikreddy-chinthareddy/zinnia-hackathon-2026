@@ -2,7 +2,7 @@ import { ObjectFieldTemplateProps } from '@rjsf/utils';
 import clsx from 'clsx';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { replacePlaceholders } from '@deps/helpers/value-placement.helper';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 function InstructionsTemplate(props: ObjectFieldTemplateProps) {
     const { title, uiSchema, formContext, description } = props;
 

@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/react';
 import { t } from 'i18next';
 
-import { BadgeVariant, getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
-import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
-import { formatDate } from '@deps/helpers/string.helper';
+import { BadgeVariant, getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
+import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
+import { formatDate } from '@deps/helpers/string.helpers';
 import { PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 
 import PolicyInfo, {

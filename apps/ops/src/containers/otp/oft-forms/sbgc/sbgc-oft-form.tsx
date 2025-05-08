@@ -15,11 +15,11 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { NEA_PLAN_CODES } from '@deps/constants/case';
 import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helper';
+import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { ProcessType } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 
-import useSbgcOftConfig from './sbgc-oft-form-helper';
+import useSbgcOftConfig from './sbgc-oft-form-helpers';
 
 type SbgcOftWithdrawalFormProps = {
     planCode: string | '';

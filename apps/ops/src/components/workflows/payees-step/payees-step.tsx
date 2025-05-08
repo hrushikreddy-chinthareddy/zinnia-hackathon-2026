@@ -11,7 +11,7 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { buildFullNameFromParty, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { buildFullNameFromParty, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
 
@@ -44,11 +44,7 @@ const PayeesStep = ({ parentPage, policy, setState, state, trackEventProps }: Pa
 
     const eligiblePayees = useMemo(() => {
         const ownerPayeeRoles = partyRoles?.filter(role => role.partyRole === PartyRole.OWNER || role.partyRole === PartyRole.PAYEE);
-        const eligibleRoles = ownerPayeeRoles?.filter((value, index, self) =>
-            index === self.findIndex((t) => (
-                t.partyId === value.partyId
-            ))
-        );
+        const eligibleRoles = ownerPayeeRoles?.filter((value, index, self) => index === self.findIndex(t => t.partyId === value.partyId));
         return eligibleRoles?.map(eligibleRole => {
             const party = parties?.find(party => eligibleRole.partyId === party.partyId);
 

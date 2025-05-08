@@ -1,9 +1,9 @@
 
 import dayjs from 'dayjs';
 
-import { getOwnerInfo } from '@deps/containers/otp/renewal-forms/components/renewal-form-helper';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
-import { TransactionTypes } from '@deps/helpers/transaction-options.helper';
+import { getOwnerInfo } from '@deps/containers/otp/renewal-forms/components/renewal-form-helpers';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import { TransactionTypes } from '@deps/helpers/transaction-options.helpers';
 import { DocumentData } from '@deps/models/case/document';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { CreateTaskBody, RenewalsFormData, TaskSource, TaskType } from '@deps/models/case/task';
@@ -267,7 +267,7 @@ export const initializeRenewalTaskSSR = async ({
         logInfo('initializeRenewalTaskSSR::Active task not present. Creating a new task', loggingContext);
         const { parties } = await getPolicyPartyDetails(document, clientId, loggingContext, accessToken);
 
-        const owners = parties.length > 0 ?  parties.filter(party => party?.SrcRoleType === 0) : [];
+        const owners = parties.length > 0 ? parties.filter(party => party?.SrcRoleType === 0) : [];
         const task: CreateTaskBody<TaskStatus, RenewalsFormData> = {
             source: TaskSource.ZinniaTaskManagement,
             taskType: TaskType.RENEWAL_TASK,
@@ -305,7 +305,7 @@ export const initializeRenewalTaskSSR = async ({
             logInfo('initializeRenewalTaskSSR::Failed to create a task', loggingContext);
             throw new Error(`initializeRenewalTaskSSR::Failed to create a task`);
         }
-        logInfo('initializeRenewalTaskSSR::Created new task successfully', { ...loggingContext, taskId:  data.id});
+        logInfo('initializeRenewalTaskSSR::Created new task successfully', { ...loggingContext, taskId: data.id });
         return mapTaskToActiveRenewalCaseTask(data, { ...data?.data, userId });
     } catch (e) {
         logError('initializeRenewalTaskSSR::error', { ...parseErrorInformation(e), ...loggingContext });

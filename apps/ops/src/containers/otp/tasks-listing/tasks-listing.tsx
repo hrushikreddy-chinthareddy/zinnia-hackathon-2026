@@ -2,7 +2,7 @@ import { ICellRendererParams } from 'ag-grid-community/dist/lib/rendering/cellRe
 
 import NavElement, { NavElementType, NavElementSize, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import DepTable from '@deps/components/table/table';
-import { getSlug } from '@deps/helpers/string.helper';
+import { getSlug } from '@deps/helpers/string.helpers';
 
 import { Task, TaskTableRow, TasksListingProps } from './task-listing.types';
 

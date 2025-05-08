@@ -16,7 +16,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import useDlicConfig from './dlic-withdrawal-form-helper';
+import useDlicConfig from './dlic-withdrawal-form-helpers';
 
 export default function DlicWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

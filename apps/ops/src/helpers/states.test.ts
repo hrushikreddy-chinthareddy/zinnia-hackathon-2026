@@ -1,6 +1,6 @@
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-import { getStateCodes, getStateName, getStateNames, getStateCode } from './states.helper';
+import { getStateCodes, getStateName, getStateNames, getStateCode } from './states.helpers';
 
 describe('State helper functions', () => {
     describe('getStateNames', () => {

@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 import { useTranslation } from 'next-i18next';
 
-import { getRelationshipToInsured } from '@deps/helpers/party-info-helper';
+import { getRelationshipToInsured } from '@deps/helpers/party-info-helpers';
 import { RelationshipToInsured } from '@deps/models/policy/sor-policy';
 
 import AllocationCard from './allocation-card';

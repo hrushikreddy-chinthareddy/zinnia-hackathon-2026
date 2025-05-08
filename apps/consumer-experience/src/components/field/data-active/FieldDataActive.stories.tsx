@@ -12,14 +12,14 @@ const meta: Meta<typeof FieldDataActive> = {
 
 export default meta;
 
-export const Default: StoryObj<any> = {
+export const Default: StoryObj<typeof FieldDataActive> = {
   args: {
     onSelect: () => {},
     label: <Label>Data Active</Label>,
   },
 };
 
-export const WithError: StoryObj<any> = {
+export const WithError: StoryObj<typeof FieldDataActive> = {
   args: {
     label: <Label>Data Active</Label>,
     icon: <Icon type={IconType.CALENDAR} />,
@@ -27,7 +27,7 @@ export const WithError: StoryObj<any> = {
   },
 };
 
-export const WithIcon: StoryObj<any> = {
+export const WithIcon: StoryObj<typeof FieldDataActive> = {
   args: {
     label: <Label>Data Active</Label>,
     icon: <Icon type={IconType.CALENDAR} />,

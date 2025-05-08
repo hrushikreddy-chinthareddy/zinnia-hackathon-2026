@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -13,9 +13,9 @@ import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/t
 import { PageHeader } from '@deps/components/page-header/page-header';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { formatValidationResult } from '@deps/helpers/bpm-transaction.helper';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { mapWithdrawalsSubPage } from '@deps/helpers/withdrawals.helper';
+import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { mapWithdrawalsSubPage } from '@deps/helpers/withdrawals.helpers';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkPartialWithdrawalOneTimeEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';

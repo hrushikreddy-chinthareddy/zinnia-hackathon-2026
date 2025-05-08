@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactElement } from 'react';
 
 import ResponsiveGrid from '@deps/components/responsive-grid/responsive-grid';
-import { filterTruthyProps } from '@deps/helpers/data-transform.helper';
+import { filterTruthyProps } from '@deps/helpers/data-transform.helpers';
 
 import { BadgeWithTooltipProps } from '../badge/badge-with-tooltip/badge-with-tooltip';
 import PolicyExtrasHeader, { PolicyExtrasHeaderProps } from '../policy-extras-header/policy-extras-header';

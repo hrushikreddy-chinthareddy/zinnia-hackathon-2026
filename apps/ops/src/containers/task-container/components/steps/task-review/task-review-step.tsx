@@ -7,22 +7,18 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
-import { updateTask } from '@deps/containers/task-container/task.helper';
+import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
 
 import { TaskReview } from './task-review';
-
 
 type TaskReviewStepProps = {
     caseId: string;
     taskInfoLink: string;
     taskType: TaskType;
     clientCode: string;
-
 };
-
-
 
 export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
@@ -41,10 +37,10 @@ export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepP
                 nigoList: selectedExceptionDetails.map(detail => ({
                     issue: nmDetails?.nmDetails,
                     applicationValue: detail,
-                    nmid: nmDetails?.nmId
+                    nmid: nmDetails?.nmId,
                 })),
-                missingInformation: !isReadyForDataEntry
-            }
+                missingInformation: !isReadyForDataEntry,
+            },
         };
 
         setTask(updatedTask);
@@ -55,7 +51,6 @@ export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepP
 
         goToNext();
     }, [goToNext, isReadyForDataEntry, nmDetails, selectedExceptionDetails, setTask, task, correlationId]);
-
 
     return (
         <WorkflowCard
@@ -73,8 +68,15 @@ export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepP
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                    <TaskReview caseId={caseId} taskType={taskType} clientCode={clientCode} activeDocType={DocumentTypeView.Case}
-                        setNmDetails={setNmDetails} selectedExceptionDetails={selectedExceptionDetails} setSelectedExceptionDetails={setSelectedExceptionDetails} />
+                    <TaskReview
+                        caseId={caseId}
+                        taskType={taskType}
+                        clientCode={clientCode}
+                        activeDocType={DocumentTypeView.Case}
+                        setNmDetails={setNmDetails}
+                        selectedExceptionDetails={selectedExceptionDetails}
+                        setSelectedExceptionDetails={setSelectedExceptionDetails}
+                    />
                 </div>
             </div>
         </WorkflowCard>

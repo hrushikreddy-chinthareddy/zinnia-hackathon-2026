@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { DisbursementPaymentForm, DisbursementType } from '@deps/models/policy/sor-policy';
 
 import PayeeSummaryCard, { PayeeSummaryCardProps } from './payee-summary-card';
@@ -57,7 +57,7 @@ export const Default: StoryType = {
 export const Detail: StoryType = {
     args: {
         paymentType: DisbursementPaymentForm.ACH,
-        showFinancialData: true
+        showFinancialData: true,
     },
 };
 
@@ -67,6 +67,6 @@ export const ZeroCharges: StoryType = {
         stateTaxPercentage: '0%',
         federalTaxDollarAmount: '$0',
         federalTaxPercentage: '0%',
-        showFinancialData: true
-    }
-}
+        showFinancialData: true,
+    },
+};

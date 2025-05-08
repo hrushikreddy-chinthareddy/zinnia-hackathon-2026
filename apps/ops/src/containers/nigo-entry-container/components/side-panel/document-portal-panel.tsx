@@ -6,11 +6,11 @@ import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { PolicyDocument } from '@deps/models/case/document';
 import { Policy } from '@deps/models/policy/sor-policy';
 
-import { useGetPolicyTypeDocs } from '../steps/service-form-review/service-form-review.helper';
+import { useGetPolicyTypeDocs } from '../steps/service-form-review/service-form-review.helpers';
 
 export enum TabOptions {
     Working = 'Working',
@@ -22,7 +22,7 @@ type DocumentViewProps = {
     documentNumber: string;
     docType: string;
     policyNumber: string;
-    clientCode: string
+    clientCode: string;
 };
 
 const DocumentPortalPanel = ({ policy, documentNumber, docType, policyNumber, clientCode }: DocumentViewProps) => {
@@ -48,22 +48,20 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType, policyNumber, cl
                     <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
                 </div>
                 <div>
-                    <div className="text-sm font-bold"><PiiWrapper>{displayName}</PiiWrapper></div>
+                    <div className="text-sm font-bold">
+                        <PiiWrapper>{displayName}</PiiWrapper>
+                    </div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
-                        <PiiWrapper>
-                            {t('documentId') + ': ' + document.documentNumber}
-                        </PiiWrapper>
+                        <PiiWrapper>{t('documentId') + ': ' + document.documentNumber}</PiiWrapper>
                     </div>
                 </div>
-                <div className="flex items-center">
-                    {createAction(document, clientCode.toUpperCase(), t)}
-                </div>
+                <div className="flex items-center">{createAction(document, clientCode.toUpperCase(), t)}</div>
             </div>
         );
     };
 
     const displayNoFormAvailable = () => {
-       return (
+        return (
             <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
                 <div className="text-sm font-bold">
                     <AssistiveText
@@ -73,7 +71,7 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType, policyNumber, cl
                     />
                 </div>
             </div>
-       );
+        );
     };
 
     const renderTabContent = (
@@ -84,11 +82,7 @@ const DocumentPortalPanel = ({ policy, documentNumber, docType, policyNumber, cl
             </TabContent>
             <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
                 {relatedDocument?.length !== 0 && (
-                    <>
-                        {relatedDocument?.map((item: PolicyDocument) => (
-                            renderDocumentSection(item, item?.displayName || '', clientCode)
-                        ))}
-                    </>
+                    <>{relatedDocument?.map((item: PolicyDocument) => renderDocumentSection(item, item?.displayName || '', clientCode))}</>
                 )}
                 {relatedDocument?.length === 0 && displayNoFormAvailable()}
             </TabContent>

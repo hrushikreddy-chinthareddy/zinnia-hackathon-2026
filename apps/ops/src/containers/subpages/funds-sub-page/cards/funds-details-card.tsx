@@ -7,7 +7,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 
 import FundsCard from './funds-card';
-import { getFundDetailsViewModel } from '../funds.helper';
+import { getFundDetailsViewModel } from '../funds.helpers';
 import { FundDetailsViewModel } from '../types';
 
 interface FundsDetailsCardProps {

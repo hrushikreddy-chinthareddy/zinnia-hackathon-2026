@@ -4,8 +4,8 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { rateFormatted } from '@deps/helpers/data-transform.helper';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { rateFormatted } from '@deps/helpers/data-transform.helpers';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { LoanSegment, LoanType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 

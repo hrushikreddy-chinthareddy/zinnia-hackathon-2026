@@ -1,4 +1,4 @@
-import { getObjDeepValue } from './objects.helper';
+import { getObjDeepValue } from './objects.helpers';
 
 describe('Objects Helper', () => {
     describe('> getObjDeepValue', () => {

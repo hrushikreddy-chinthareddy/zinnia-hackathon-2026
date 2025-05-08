@@ -6,7 +6,7 @@ import { DEFAULT_DISBURSEMENT_UPDATE, DisbursementConfig, DisbursementParts } fr
 
 import { SelectedBankContext } from './pre-populate-banking-details';
 import FormDisbursementContainer from '../form-disbursement-section';
-import { BankingFields } from '../form-disbursement.helper';
+import { BankingFields } from '../form-disbursement.helpers';
 
 export enum BankDetailsInputMethod {
     Auto = 'auto',

@@ -8,7 +8,7 @@ import { AccountCloseReason, CaseStatus } from '@deps/models/case/withdrawal/cas
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import GdmnWithdrawalForm from './gdmn-withdrawal-form';
-import { FormSubtype } from './gdmn-withdrawal-form.helper';
+import { FormSubtype } from './gdmn-withdrawal-form.helpers';
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({

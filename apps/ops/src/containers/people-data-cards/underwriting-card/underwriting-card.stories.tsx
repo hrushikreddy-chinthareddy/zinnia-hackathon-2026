@@ -7,7 +7,7 @@ import {
     getRiskClass,
     getSexAtBirth,
     getSubstandardRating,
-} from '@deps/helpers/party-info-helper';
+} from '@deps/helpers/party-info-helpers';
 import { PolicyCoverage } from '@deps/models/policy/sor-policy';
 
 import UnderwritingCard from './underwriting-card';

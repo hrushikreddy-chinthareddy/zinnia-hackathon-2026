@@ -6,19 +6,19 @@ import AllocationColorBar, { AllocationColor } from '@deps/components/allocation
 import FieldLabel from '@deps/components/fields/field-label';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helper';
+import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helpers';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { checkEligibilityFundAllocation } from '@deps/queries/api/fund-allocation';
 import { ReactComponent as SettingsIcon } from '@deps/styles/elements/icons/icons_outlined/settings.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import FundsTable from './funds-table';
 import { FundViewModel } from '../types';
 import { EditAllocationsContent } from './edit-allocations-side-sheet-content';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface FundsCardProps {
     loading?: boolean;
@@ -49,7 +49,7 @@ const FundsCard = ({ funds, loading, title, titleTooltip, policy, notElectedfund
     const { featureFlags } = useOptimizely();
     const { t } = useTranslation();
     const showAllocationBar = funds?.some(fund => fund.allocation !== DEFAULT_ERROR_STRING);
-    const [isEligibleToEdit, setIsEligibleToEdit] = useState(false)
+    const [isEligibleToEdit, setIsEligibleToEdit] = useState(false);
 
     useEffect(() => {
         const checkElligibility = async () => {
@@ -92,12 +92,15 @@ const FundsCard = ({ funds, loading, title, titleTooltip, policy, notElectedfund
                         <FieldLabel label="Fund allocation" />
                         {featureFlags[FEATURE_FLAGS.FUND_ALLOCATION_TRANSACTION] && (
                             <div
-                                className={`flex gap-1 text-[#00628B] ${isEligibleToEdit ? 'text-[#00628B] cursor-pointer' : 'text-[#B3B3B3] cursor-not-allowed'
-                                    }`}
+                                className={`flex gap-1 text-[#00628B] ${
+                                    isEligibleToEdit ? 'text-[#00628B] cursor-pointer' : 'text-[#B3B3B3] cursor-not-allowed'
+                                }`}
                                 onClick={isEligibleToEdit ? openSideBar : undefined}
                             >
                                 <SettingsIcon width={16} height={16} />
-                                <Typography className={"cursor-pointer"} variant={TypographyVariant.Label}>{t('fundAllocation.editAllocationsTitle')}</Typography>
+                                <Typography className={'cursor-pointer'} variant={TypographyVariant.Label}>
+                                    {t('fundAllocation.editAllocationsTitle')}
+                                </Typography>
                             </div>
                         )}
                     </div>

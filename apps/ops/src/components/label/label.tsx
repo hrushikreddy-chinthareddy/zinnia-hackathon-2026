@@ -5,7 +5,7 @@ import IconButton from '@deps/components/icon-button/icon-button';
 import { PiiProps } from '@deps/components/pii/pii';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 

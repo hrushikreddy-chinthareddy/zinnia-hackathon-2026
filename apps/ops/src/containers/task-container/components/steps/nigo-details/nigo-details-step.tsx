@@ -8,7 +8,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useTask } from '@deps/containers/task-container/task-provider';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isEmptyObject } from '@deps/helpers/objects.helper';
+import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { FormValidationErrors, NigoMessages } from '@deps/models/case/withdrawal/case';
 
 import { NigoDetails } from './nigo-details';
@@ -33,7 +33,7 @@ export const NigoDetailsStep = ({ nigoExceptions, nigoSubExceptions }: NigoDetai
 
         if (exceptions.length > 0) {
             exceptions.forEach((exception: string) => {
-                if ( messages[exception] === undefined || isEmptyObject(messages[exception])) {
+                if (messages[exception] === undefined || isEmptyObject(messages[exception])) {
                     errors['noCategoryDetailsSelected'] = t('formErrors.formValidation.noCategoryDetailsSelected');
                 }
             });

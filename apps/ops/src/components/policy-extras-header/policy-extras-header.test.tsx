@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { PolicyExtrasTest, PopoverTest } from '@deps/jest/constants/test-id-constants';
 
 import PolicyExtrasHeader, { PolicyExtrasHeaderProps } from './policy-extras-header';

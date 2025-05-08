@@ -8,12 +8,12 @@ import { Loader } from '@deps/components/page-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { percentFormatify } from '@deps/helpers/numbers.helper';
+import { percentFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { getSbulMatchRate } from '@deps/queries/api/product-rate';
 import { ReactComponent as CurrencyDollarsIcon } from '@deps/styles/elements/icons/icons_outlined/currency-dollar.svg';
 
-import { getMatchViewModel } from '../funds.helper';
+import { getMatchViewModel } from '../funds.helpers';
 import { MatchViewModel } from '../types';
 
 interface MatchCardProps {

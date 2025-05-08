@@ -23,7 +23,7 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import DistributionMethodQcd from './qcd/qcd-distribution-method';
 import SelectFormType from './rmd-form-type';
-import getSbgcRmdConfig from './sbgc-rmd-form.helper';
+import getSbgcRmdConfig from './sbgc-rmd-form.helpers';
 
 export default function SbgcRmdWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });

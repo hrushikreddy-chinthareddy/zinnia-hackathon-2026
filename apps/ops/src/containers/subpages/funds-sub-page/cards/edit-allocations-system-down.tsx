@@ -1,12 +1,13 @@
 
+import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
+import { Dispatch, SetStateAction } from 'react';
+
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { SideSheetContextProps } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as HexExclamation } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
-import { useTranslation } from 'next-i18next';
-import Link from 'next/link';
-import { Dispatch, SetStateAction } from 'react';
 
 export const EditAllocationsSystemDown = ({ sideSheet, setIsSystenDown, setIsNigo, setIsSuccessFlow }: {
     sideSheet: SideSheetContextProps,

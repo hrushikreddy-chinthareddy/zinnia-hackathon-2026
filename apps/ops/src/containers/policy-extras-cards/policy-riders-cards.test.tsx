@@ -8,7 +8,7 @@ import { mockT } from '@deps/setupTests';
 import { BenefitId, CoverageId, ConfiguredSettingId, CoverageToBenefitId } from '@deps/types/product-rate';
 
 import PolicyExtrasCards from './policy-extras-cards';
-import { RIDER_NOT_ELECTED } from './policy-extras-cards-helper';
+import { RIDER_NOT_ELECTED } from './policy-extras-cards-helpers';
 
 const baseRider = {
     amount: undefined,

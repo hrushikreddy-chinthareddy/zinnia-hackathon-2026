@@ -5,7 +5,7 @@ import React from 'react';
 import { TooltipTest } from '@deps/jest/constants/test-id-constants';
 
 import { PopoverPlacement } from '../popover/popover';
-import { getPlacementProps, commonPopoverClasses, commonTriggerClasses } from '../popover/popover.helper';
+import { getPlacementProps, commonPopoverClasses, commonTriggerClasses } from '../popover/popover.helpers';
 
 export { PopoverPlacement } from '../popover/popover';
 

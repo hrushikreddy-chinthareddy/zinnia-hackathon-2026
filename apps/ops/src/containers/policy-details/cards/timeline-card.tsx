@@ -7,7 +7,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { ProductType } from '@deps/models/policy/sor-policy';
 
-import { mapPolicyTimelineValues } from '../policy-details.helper';
+import { mapPolicyTimelineValues } from '../policy-details.helpers';
 import EverlyIul from './policy-timeline-details/everly-iul';
 import EverlyUl from './policy-timeline-details/everly-ul';
 

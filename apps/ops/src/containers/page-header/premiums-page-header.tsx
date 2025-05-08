@@ -3,8 +3,8 @@ import { useTranslation } from 'next-i18next';
 
 import { PageHeader } from '@deps/components/page-header/page-header';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { AccountValues, CostBasis, PolicyFeature, PolicyStatus } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';

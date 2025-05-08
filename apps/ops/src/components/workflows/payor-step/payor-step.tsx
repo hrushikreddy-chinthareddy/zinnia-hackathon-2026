@@ -9,8 +9,8 @@ import Tooltip from '@deps/components/tooltip/tooltip';
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isEndDated } from '@deps/helpers/date.helper';
-import { buildFullNameFromParty, isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
+import { isEndDated } from '@deps/helpers/date.helpers';
+import { buildFullNameFromParty, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { Address, PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
@@ -45,11 +45,7 @@ const PayorStep = ({ parentPage, policy, setState, state, trackEventProps }: Pay
     const eligiblePayors = useMemo(() => {
         const ownerPayorRoles = partyRoles?.filter(role => role.partyRole === PartyRole.OWNER || role.partyRole === PartyRole.PAYOR);
 
-        const eligibleRoles = ownerPayorRoles?.filter((value, index, self) =>
-            index === self.findIndex((t) => (
-                t.partyId === value.partyId
-            ))
-        );
+        const eligibleRoles = ownerPayorRoles?.filter((value, index, self) => index === self.findIndex(t => t.partyId === value.partyId));
         return eligibleRoles?.map(eligibleRole => {
             const party = parties?.find(party => eligibleRole.partyId === party.partyId);
 

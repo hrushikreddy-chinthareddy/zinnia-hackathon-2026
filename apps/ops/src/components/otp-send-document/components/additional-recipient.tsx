@@ -1,4 +1,4 @@
-import { ChipX, Label, Tooltip, TooltipPlacement, AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
+import { ChipX, Label, AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import React, { useState, useMemo, useEffect } from 'react';
 import xss from 'xss';
@@ -6,12 +6,11 @@ import xss from 'xss';
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { RoleAddressCard } from '@deps/containers/address-change-container/components/roles-contract/components/role-address-cards';
-import { partyCardsEmail } from '@deps/containers/address-change-container/components/roles-contract/utils/roles-contract-helper';
+import { partyCardsEmail } from '@deps/containers/address-change-container/components/roles-contract/utils/roles-contract-helpers';
 import { PartyAddressCard } from '@deps/containers/address-change-container/components/roles-contract/utils/roles-contract-types';
 import { AllowedRoleTypesEmail } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { PartyRole, PartyType, Policy } from '@deps/models/policy/sor-policy';
-import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 
 import { validateEmail } from '../correspondence';
@@ -28,7 +27,7 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError, policy }
     const { t: addressChangeT } = useTranslation(undefined, { keyPrefix: 'addressChange' });
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
-    const [email, setEmail] = useState<string>(''); 
+    const [email, setEmail] = useState<string>('');
     const [selectedEmailIndex, setSelectedEmailIndex] = useState<number>(-1);
 
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
@@ -92,13 +91,13 @@ const AdditionalRecipient = ({ classNames, emails, setEmails, setError, policy }
         setEmails(emails.filter(email => email !== val));
     };
 
-    useEffect(()=>{
-        if(emails.length==1 && validateEmail(emails[0])){
+    useEffect(() => {
+        if (emails.length == 1 && validateEmail(emails[0])) {
             setEmail(emails[0]);
             addEmail(emails[0]);
             setEmails([]);
-        } 
-    },[])
+        }
+    }, []);
 
     const emailBox = (
         <div className={classNames}>

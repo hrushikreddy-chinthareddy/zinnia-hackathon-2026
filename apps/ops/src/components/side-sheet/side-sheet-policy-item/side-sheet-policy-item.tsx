@@ -1,21 +1,20 @@
 import { ValueGetterParams } from 'ag-grid-community';
 import { TFunction, useTranslation } from 'next-i18next';
-import React from 'react';
 
-import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helper';
+import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
 import CardColumns, { CardColumnsVariant } from '@deps/components/card/card-columns/card-columns';
 import DescriptionLists from '@deps/components/description-list/description-lists';
-import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helper';
+import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import PolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import DepTable from '@deps/components/table/table';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicyOwnerDto, toPolicyOwnerDto } from '@deps/data/policy-owner';
 import { PolicySummaryColDto, getPolicySummaryColDefs, toPolicySummaryColDto } from '@deps/data/policy-summary';
-import { fillColDefs } from '@deps/helpers/data-transform.helper';
+import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { getTotalMinRequiredAmount } from '@deps/helpers/global-values';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { formatDate } from '@deps/helpers/string.helper';
+import { formatDate } from '@deps/helpers/string.helpers';
 import { Policy, PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CirclePlusIcon } from '@deps/styles/elements/icons/circles/circle-plus.svg';
 

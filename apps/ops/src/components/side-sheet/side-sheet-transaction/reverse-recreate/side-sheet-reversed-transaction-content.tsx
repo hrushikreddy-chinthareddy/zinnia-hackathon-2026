@@ -3,7 +3,7 @@ import Image from 'next/image';
 import FieldData, { FieldDataProps } from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import loadingImage from '@deps/styles/images/loader.png';
 
 import { SideSheetReversedTransactionModel } from './types';

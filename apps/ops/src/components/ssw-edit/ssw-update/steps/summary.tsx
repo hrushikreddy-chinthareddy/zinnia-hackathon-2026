@@ -11,7 +11,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { FormSignature } from '@deps/models/case/withdrawal/case';
 
-import { SswUpdateType, UpdatedProgram } from '../../ssw-edit-helper';
+import { SswUpdateType, UpdatedProgram } from '../../ssw-edit-helpers';
 
 type SummaryProps = {
     currentProgram: Program;

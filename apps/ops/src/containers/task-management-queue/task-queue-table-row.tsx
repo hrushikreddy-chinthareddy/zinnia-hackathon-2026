@@ -1,23 +1,24 @@
 import { TableRow, TableCell, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import Image from 'next/image';
-import Link from 'next/link';
+import { default as NextLink, default as Link } from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import NextLink from 'next/link';
 
 import Avatar from '@deps/components/avatar/avatar';
 import Badge from '@deps/components/badge/badge';
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
+import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
-import { toSentenceCase } from '@deps/helpers/string.helper';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { CaseIdentifier } from '@deps/models/case/case';
+import { EarlyTaskType } from '@deps/models/case/task';
 import { AssignedTask, TaskStatus, UnassignedTask } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { unassignTask } from '@deps/queries/api/v1/task';
@@ -25,8 +26,8 @@ import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
-import { ReactComponent as ToDo } from '@deps/styles/elements/icons/icons_outlined/clipboard.svg';
 import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
+import { ReactComponent as ToDo } from '@deps/styles/elements/icons/icons_outlined/clipboard.svg';
 import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
@@ -35,11 +36,8 @@ import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { NO_ASSIGNEE } from './task-management-queue-container';
-import TaskQueueDrawer from './task-queue-drawer';
-
 import styles from './task-management-queue.module.css';
-import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
-import { EarlyTaskType } from '@deps/models/case/task';
+import TaskQueueDrawer from './task-queue-drawer';
 
 type TaskQueueTableRowProps = {
     task: AssignedTask | UnassignedTask;
@@ -49,15 +47,15 @@ type TaskQueueTableRowProps = {
     setErrorMessage: (message: string) => void;
 };
 
-const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, setErrorMessage }: TaskQueueTableRowProps) => {
+const TaskQueueTableRow = ({ task, getTasks, setErrorMessage }: TaskQueueTableRowProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
     const router = useRouter();
-    const [timer] = useState(performance.now());
+    const [_timer] = useState(performance.now());
     const policyNumber = getCaseIdentifierValue(task.identifiers, CaseIdentifier.PolicyNumber);
-    const documentNumber = getCaseIdentifierValue(task.identifiers, CaseIdentifier.DocumentNumber);
+    const _documentNumber = getCaseIdentifierValue(task.identifiers, CaseIdentifier.DocumentNumber);
 
-    const [loader, setLoader] = useState(false);
-    const { taskName, taskType, createdAt, status, carrier, assignee, process } = task;
+    const [_loader, setLoader] = useState(false);
+    const { taskName, taskType: _taskType, createdAt, status: _status, carrier, assignee, process } = task;
     const carrierName = getCarrierNameByClientId(carrier) || carrier?.toUpperCase();
 
     const handleUnassignTask = async (taskId: string) => {
@@ -175,7 +173,7 @@ const TaskQueueTableRow = ({ task, featureFlagDecisions, tabIndex, getTasks, set
     };
 
     const getTimeText = () => {
-        let text;
+        let text = '';
         const { unit, count } = getTimeAgoUnitValue(createdAt) || {};
         const timeText = t('temporal.timeago', { formattedDate: '', count: count, unit: unit }).trim();
         text = timeText;

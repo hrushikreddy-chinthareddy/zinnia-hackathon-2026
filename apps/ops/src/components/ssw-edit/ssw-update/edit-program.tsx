@@ -6,7 +6,7 @@ import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { FormSignature } from '@deps/models/case/withdrawal/case';
 
-import { SswUpdateType } from '../ssw-edit-helper';
+import { SswUpdateType } from '../ssw-edit-helpers';
 
 type EditProgramProps = {
     program: Program;

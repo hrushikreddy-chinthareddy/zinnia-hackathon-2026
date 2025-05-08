@@ -1,8 +1,7 @@
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import ButtonGrp from '@deps/components/button-group/button-group';
-import { deStringifyTrueFalseNull, stringifyTrueFalseNull } from '@deps/helpers/string.helper';
+import { deStringifyTrueFalseNull, stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
 
 const BankBooleanButtonGroup = ({

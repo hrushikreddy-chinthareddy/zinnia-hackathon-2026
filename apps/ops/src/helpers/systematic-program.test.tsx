@@ -2,7 +2,7 @@ import { t } from 'i18next';
 
 import { DisbursementPaymentForm } from '@deps/models/policy/sor-policy';
 
-import { getPaymentType } from './systematic-program.helper';
+import { getPaymentType } from './systematic-program.helpers';
 
 describe('getPaymentType', () => {
     it('should return correct payment Type', () => {

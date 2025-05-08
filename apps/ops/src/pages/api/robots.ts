@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { isProd } from '@deps/utils/environment.helper';
+import { isProd } from '@deps/utils/environment.helpers';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     let robotsTxt = 'User-agent: *\nDisallow: /'; // Default: Block all crawlers

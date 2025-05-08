@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { calculateDaysAgo } from '@deps/helpers/case-management';
-import { toTitleCase } from '@deps/helpers/string.helper';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 import { Case, Statuses } from '@deps/models/case/case';
 
 interface GetStatusDetailsProps {

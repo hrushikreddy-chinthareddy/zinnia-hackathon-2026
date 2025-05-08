@@ -19,7 +19,7 @@ import { DEFAULT_PAGE_TITLE } from '@deps/constants/page-title';
 import { ApplicationDataProvider } from '@deps/contexts/ApplicationContext';
 import { NODE_ENV_PRODUCTION } from '@deps/types/constants';
 import { initializeBrowserLogging } from '@deps/utils/browser-logs';
-import { isProd } from '@deps/utils/environment.helper';
+import { isProd } from '@deps/utils/environment.helpers';
 
 const lato = Lato({
     subsets: ['latin'],

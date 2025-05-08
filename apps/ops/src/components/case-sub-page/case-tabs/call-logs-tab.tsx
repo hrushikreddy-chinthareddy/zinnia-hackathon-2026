@@ -9,7 +9,7 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helper';
+import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getCallLogsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 export const NoSummaryCard = ({ content }: { content: string }) => (

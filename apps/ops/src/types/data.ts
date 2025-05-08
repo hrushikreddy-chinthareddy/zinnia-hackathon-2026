@@ -1,7 +1,7 @@
 import { Component } from 'react';
 
 import { PopoverPlacement } from '@deps/components/popover/popover';
-import { Paths } from '@deps/utils/template-literals.util';
+import { Paths } from '@deps/utils/template-literals.utils';
 
 export interface DataDefinition<T extends object> {
     key: Paths<T>;

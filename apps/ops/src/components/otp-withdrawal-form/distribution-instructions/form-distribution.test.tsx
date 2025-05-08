@@ -3,7 +3,7 @@ import { fireEvent, render, screen, renderHook } from '@testing-library/react';
 import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
 
-import useMassSSWConfig from '@deps/containers/otp/ssw-forms/mass/mass-ssw-form-helper';
+import useMassSSWConfig from '@deps/containers/otp/ssw-forms/mass/mass-ssw-form-helpers';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { AmountType, CaseStatus, SSWType, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';

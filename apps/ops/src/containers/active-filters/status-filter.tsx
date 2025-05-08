@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import Select from '@deps/components/select/select';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
+import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import { Statuses } from '@deps/models/case/case';
 import { DropdownClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 

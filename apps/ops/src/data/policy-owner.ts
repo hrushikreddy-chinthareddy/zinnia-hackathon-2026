@@ -1,5 +1,5 @@
-import { isEndDated } from '@deps/helpers/date.helper';
-import { convertKebabedDateString, toTitleCase, buildFullName } from '@deps/helpers/string.helper';
+import { isEndDated } from '@deps/helpers/date.helpers';
+import { convertKebabedDateString, toTitleCase, buildFullName } from '@deps/helpers/string.helpers';
 import { Address, Email, EmailType, IdentificationType, Phone, PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { DataDefinition } from '@deps/types/data';
 

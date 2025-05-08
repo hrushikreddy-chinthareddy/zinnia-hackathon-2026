@@ -2,12 +2,12 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
 import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
-import { BadgeVariant } from '@deps/components/badge/badge.helper';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { convertKebabedDateString } from '@deps/helpers/string.helper';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import {
     DEFAULT_DATE_FORMAT,
     DEFAULT_EXTENDED_DATE_FORMAT,

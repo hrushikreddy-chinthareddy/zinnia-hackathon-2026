@@ -3,7 +3,7 @@ import { convertToCamelCase } from '@zinnia/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { getNigoExceptions } from '@deps/containers/task-container/components/steps/nigo-details/nigo-details.helper';
+import { getNigoExceptions } from '@deps/containers/task-container/components/steps/nigo-details/nigo-details.helpers';
 import TaskContainer from '@deps/containers/task-container/task-container';
 import { applyDynamicOptions } from '@deps/containers/task-container/task-handlers/handle-task';
 import { TaskProvider } from '@deps/containers/task-container/task-provider';
@@ -17,11 +17,11 @@ import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getCaseDetailsSSR } from '@deps/queries/api/cases';
-import { isProd } from '@deps/utils/environment.helper';
+import { isProd } from '@deps/utils/environment.helpers';
 import { optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { logError, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
-import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helper';
+import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helpers';
 import nextI18nextConfig from 'next-i18next.config';
 
 type TaskPageProps = {

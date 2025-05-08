@@ -6,7 +6,7 @@ import { Variant } from '@deps/types/components';
 import { LabelValue } from '@deps/types/data';
 
 import { ButtonGroupItem } from './button-group-item/button-group-item';
-import { getClasses } from './button-group.helper';
+import { getClasses } from './button-group.helpers';
 
 export type ButtonGroupSize = 'none' | 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

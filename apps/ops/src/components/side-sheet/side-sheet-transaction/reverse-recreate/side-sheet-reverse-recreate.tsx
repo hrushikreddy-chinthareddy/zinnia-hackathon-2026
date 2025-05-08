@@ -9,7 +9,7 @@ import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text'
 import FieldData from '@deps/components/fields/field-data/field-data';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { Errors } from '@deps/containers/people-data-cards/address-card/side-sheet/side-sheet-address.helpers';
-import { numberFormatify } from '@deps/helpers/numbers.helper';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { Processes } from '@deps/models/case/case';
 import { reverseRecreateTransaction } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';

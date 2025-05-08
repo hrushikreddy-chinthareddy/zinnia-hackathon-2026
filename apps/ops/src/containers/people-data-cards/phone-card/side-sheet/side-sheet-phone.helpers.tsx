@@ -5,8 +5,8 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { TimeZoneAbbreviations } from '@deps/data/time-zones';
-import { formatPhoneNumberWithExtension } from '@deps/helpers/phone.helper';
-import { mapPhoneTypeToTranslation } from '@deps/helpers/translation.helper';
+import { formatPhoneNumberWithExtension } from '@deps/helpers/phone.helpers';
+import { mapPhoneTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Phone, PhoneType } from '@deps/models/policy/sor-policy';
 
 interface CountryCodeLabelProps {

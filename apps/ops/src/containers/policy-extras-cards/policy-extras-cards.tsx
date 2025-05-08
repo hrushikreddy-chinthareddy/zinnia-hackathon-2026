@@ -8,7 +8,7 @@ import { Rider } from '@deps/models/policy/sor-policy';
 import { getRiderBenefitData } from '@deps/queries/api/product-rate';
 import { RiderBenefit } from '@deps/types/product-rate';
 
-import { mapPolicyFeaturesToExtrasCards, mapPolicyRidersToExtrasCards } from './policy-extras-cards-helper';
+import { mapPolicyFeaturesToExtrasCards, mapPolicyRidersToExtrasCards } from './policy-extras-cards-helpers';
 
 type PolicyExtrasCardsProps = {
     policyDetails?: PolicyDetails;
@@ -26,16 +26,16 @@ export default function PolicyExtrasCards({ policyDetails, filterValues }: Polic
     });
 
     const [riderBenefitData, setRiderBenefitData] = useState<RiderBenefit[]>([]);
-    const [featuresCards, setFeaturesCards] = useState(mapPolicyFeaturesToExtrasCards(policyDetails?.features.policyFeatures || [], t, policyDetails?.currency));
+    const [featuresCards, setFeaturesCards] = useState(
+        mapPolicyFeaturesToExtrasCards(policyDetails?.features.policyFeatures || [], t, policyDetails?.currency)
+    );
     const [ridersCards, setRidersCards] = useState(mapPolicyRidersToExtrasCards(policyDetails, t));
     const isMounted = useIsMounted();
-    
-    
-    
+
     useEffect(() => {
         setRidersCards(mapPolicyRidersToExtrasCards(policyDetails, t, riderBenefitData));
     }, [policyDetails, riderBenefitData, t]);
-    
+
     useEffect(() => {
         const isAnnuity = !!policyDetails?.isAnnuity;
         const getRiderBenefitDataOnPolicy = async () => {
@@ -45,7 +45,9 @@ export default function PolicyExtrasCards({ policyDetails, filterValues }: Polic
 
                     setRiderBenefitData(prevData => [...prevData, riderBenefit ?? {}]);
                 });
-                setFeaturesCards(mapPolicyFeaturesToExtrasCards(policyDetails?.features.policyFeatures, t, policyDetails?.currency, isAnnuity));
+                setFeaturesCards(
+                    mapPolicyFeaturesToExtrasCards(policyDetails?.features.policyFeatures, t, policyDetails?.currency, isAnnuity)
+                );
             } catch (error) {
                 console.error('An error occurred setting rider/benefit data', error);
             }
