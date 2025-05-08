@@ -1,10 +1,8 @@
 import { cleanup, render, screen } from '@testing-library/react';
-import React from 'react';
 
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 
 import WithdrawalDrawer from './withdrawal-drawer';
-
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({
@@ -27,13 +25,13 @@ describe('WithdrawalDrawer', () => {
             qualType: 'Non-Qualified',
             ownerName: 'John Travolta',
             annuitantName: 'Tim Cook',
-        }
+        };
         render(
             <WithdrawalDrawer
                 content={transactionDetail}
                 setIsOpenOverride={setIsOpenOverride}
                 shouldOverlay={false}
-                isNavDrawerOpen={true} 
+                isNavDrawerOpen={true}
             />
         );
 
@@ -54,17 +52,16 @@ describe('WithdrawalDrawer', () => {
             qualType: 'Non-Qualified',
             ownerName: 'John Travolta',
             annuitantName: 'Tim Cook',
-        }
+        };
         render(
             <WithdrawalDrawer
                 content={transactionDetail}
                 setIsOpenOverride={setIsOpenOverride}
                 shouldOverlay={true}
-                isNavDrawerOpen={false} 
+                isNavDrawerOpen={false}
             />
         );
 
         expect(screen.getByTestId('close-status-row')).toBeInTheDocument();
     });
-
 });

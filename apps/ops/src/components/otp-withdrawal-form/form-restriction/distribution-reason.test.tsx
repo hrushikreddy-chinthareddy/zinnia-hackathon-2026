@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { EmergencyOption, RestrictionOption } from '@deps/models/case/withdrawal/case';
 
 import { Description } from './description';

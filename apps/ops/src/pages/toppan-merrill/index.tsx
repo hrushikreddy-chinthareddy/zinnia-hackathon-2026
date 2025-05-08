@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { getUserData } from '@deps/helpers/query-data.helpers';
-import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';

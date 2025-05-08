@@ -6,7 +6,7 @@ import useDlicConfig from '@deps/containers/otp/withdrawal-forms/dlic/dlic-withd
 import getFlicConfig from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
 import getSbgcConfig from '@deps/containers/otp/withdrawal-forms/sbgc-withdrawal-form.helper';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { AddressTypes, maritalStatusType, PartyRoles, PhoneTypes, QualTypes } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 

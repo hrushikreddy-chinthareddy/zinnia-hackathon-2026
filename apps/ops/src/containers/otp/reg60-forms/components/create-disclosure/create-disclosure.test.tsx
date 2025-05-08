@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
 
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 
 import CreateDisclosure from './create-disclosure';
 import { Disclosure } from './create-disclosure.types';

@@ -26,7 +26,7 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { isLocalStorageEnabled } from '@deps/helpers/local-storage.hepler';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
-import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { toTitleCase } from '@deps/helpers/string.helper';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { CaseType } from '@deps/models/case/case';

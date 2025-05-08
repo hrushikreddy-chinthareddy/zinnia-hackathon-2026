@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 import { WithdrawalSelectionValues } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { AmountType, CaseStatus } from '@deps/models/case/withdrawal/case';
 
 import FormProgramPartialWithdrawal, { PartialWithdrawalOption } from './form-program-partial-withdrawal';

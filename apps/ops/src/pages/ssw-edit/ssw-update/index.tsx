@@ -14,7 +14,7 @@ import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/f
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
-import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { SpecialProgramType } from '@deps/models/case/enums';
 import { ActiveWithdrawalCase, Carrier, RMDProgramType } from '@deps/models/case/withdrawal/case';

@@ -7,7 +7,7 @@ import PageLoader from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { downloadTaxFormById } from '@deps/queries/api/tax-forms';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';

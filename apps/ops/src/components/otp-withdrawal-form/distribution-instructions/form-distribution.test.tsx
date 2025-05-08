@@ -5,7 +5,7 @@ import { TFunction } from 'next-i18next';
 
 import useMassSSWConfig from '@deps/containers/otp/ssw-forms/mass/mass-ssw-form-helper';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { AmountType, CaseStatus, SSWType, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
@@ -66,7 +66,12 @@ describe('Form Distribution component', () => {
             const setMockData = jest.fn();
             render(
                 <FormDataContext.Provider
-                    value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, fundWithdrawnMethod: fundWithdrawnVal, setFundWithdrawnMethod: setMockData }}
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                        fundWithdrawnMethod: fundWithdrawnVal,
+                        setFundWithdrawnMethod: setMockData,
+                    }}
                 >
                     <FormDistribution
                         fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}

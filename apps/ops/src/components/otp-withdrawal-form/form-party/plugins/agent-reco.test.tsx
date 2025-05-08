@@ -1,8 +1,7 @@
 import { render, fireEvent } from '@testing-library/react';
-import React from 'react';
 
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 
 import { RecommendedByAgent } from './agent-reco';
 
@@ -48,7 +47,7 @@ describe('RecommendedByAgent Component', () => {
     test('should set next state for context correctly', async () => {
         let nextState;
         const prevState = {
-            isAgentOrBrokerRecommended: { text: false }
+            isAgentOrBrokerRecommended: { text: false },
         };
         const mockSetter = jest.fn().mockImplementation(callback => {
             nextState = callback(prevState);

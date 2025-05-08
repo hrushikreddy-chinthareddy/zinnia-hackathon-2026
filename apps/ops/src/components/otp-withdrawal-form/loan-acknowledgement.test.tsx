@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 
 import LoanAcknowledgement from './loan-acknowledgement';
@@ -52,7 +52,9 @@ describe('formLoan component', () => {
             const setMockData = jest.fn();
 
             render(
-                <FormDataContext.Provider value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, formLoan, setFormLoan: setMockData }}>
+                <FormDataContext.Provider
+                    value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, formLoan, setFormLoan: setMockData }}
+                >
                     <LoanAcknowledgement />
                 </FormDataContext.Provider>
             );

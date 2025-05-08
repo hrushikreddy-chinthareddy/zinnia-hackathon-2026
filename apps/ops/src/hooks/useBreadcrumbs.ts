@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useLayoutEffect, useState } from 'react';
 
-import { getBreadcrumbText } from '@deps/helpers/routing.helper';
+import { getBreadcrumbText } from '@deps/helpers/routing.helpers';
 import { storage } from '@deps/helpers/sessionStorage.helper';
 
 export interface Breadcrumb {

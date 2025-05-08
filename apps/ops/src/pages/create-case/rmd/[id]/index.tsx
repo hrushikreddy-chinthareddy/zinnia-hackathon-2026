@@ -30,7 +30,7 @@ import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { deStringifyTrueFalseNull } from '@deps/helpers/string.helper';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';

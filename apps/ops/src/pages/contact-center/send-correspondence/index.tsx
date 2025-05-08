@@ -17,7 +17,7 @@ import { CorrespondenceProvider } from '@deps/contexts/CorrespondenceContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { getUserData } from '@deps/helpers/query-data.helpers';
-import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { AttachmentDetails, CorrespondenceFormParts, TransactionTypes } from '@deps/models/case/correspondence';
 import { PolicyDocument } from '@deps/models/case/document';

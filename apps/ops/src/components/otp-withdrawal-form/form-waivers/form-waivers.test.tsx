@@ -1,16 +1,15 @@
 import { render, fireEvent, screen } from '@testing-library/react';
-import React from 'react';
 
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { FormAdditionalWaiver, PolicyWaiver } from '@deps/models/case/withdrawal/case';
 
 import FormWaivers, { WaiverItemConfig } from './form-waivers';
 
-const getStandardOptions = (index: string) => ([
+const getStandardOptions = (index: string) => [
     { label: `yes-${index}`, value: 'true' },
     { label: `no-${index}`, value: 'false' },
-]);
+];
 
 const config: WaiverItemConfig[] = [
     { id: PolicyWaiver.NURSING_HOME_AND_HOSPITAL, title: 'Title 1', optionTitle: 'Option 1', options: getStandardOptions('1') },

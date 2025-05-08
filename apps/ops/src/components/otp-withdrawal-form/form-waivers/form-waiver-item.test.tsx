@@ -1,7 +1,6 @@
 import { render, fireEvent, screen } from '@testing-library/react';
-import React from 'react';
 
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { PolicyWaiver } from '@deps/models/case/withdrawal/case';
 
 import { FormWaiverItem } from './form-waiver-item';

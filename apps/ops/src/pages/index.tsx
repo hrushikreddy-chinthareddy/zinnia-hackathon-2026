@@ -4,7 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Button, { ButtonType } from '@deps/components/button/button';
 import { TranslationFiles } from '@deps/config/translations';
-import { DEFAULT_LOCALE, setNextLocaleCookie } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE, setNextLocaleCookie } from '@deps/helpers/routing.helpers';
 import { UserProfile } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { ReactComponent as ZinniaLogo } from '@deps/styles/elements/logos/zinnia-logo.svg';

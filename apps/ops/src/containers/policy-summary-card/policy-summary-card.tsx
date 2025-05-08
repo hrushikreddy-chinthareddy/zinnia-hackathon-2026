@@ -33,7 +33,7 @@ import { fillColDefs } from '@deps/helpers/data-transform.helper';
 import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helper';
 import { BasePolicyComponentArgs, PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { convertToQueryString } from '@deps/helpers/routing.helper';
+import { convertToQueryString } from '@deps/helpers/routing.helpers';
 import { convertKebabedDateString, formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helper';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helper';
 import { CardColumnsTest, CardDetailsTest } from '@deps/jest/constants/test-id-constants';

@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { getBreadcrumbText, lPrefix } from './routing.helper';
+import { getBreadcrumbText, lPrefix } from './routing.helpers';
 import { toSentenceCase } from './string.helper';
 
 describe('Routing Helper', () => {

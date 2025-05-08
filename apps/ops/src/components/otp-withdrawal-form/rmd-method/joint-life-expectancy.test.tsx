@@ -4,11 +4,10 @@ import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 import getFlicRmdConfig from '@deps/containers/otp/rmd-forms/flic-rmd-form.helper';
 import getMassMutualRmdConfig from '@deps/containers/otp/rmd-forms/mm-rmd-form.helper';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 
 import JointLifeExpectancy from './joint-life-expectancy';
-
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({

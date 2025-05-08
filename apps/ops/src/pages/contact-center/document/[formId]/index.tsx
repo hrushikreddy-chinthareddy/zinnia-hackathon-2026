@@ -6,7 +6,7 @@ import PageLoader from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { downloadFormById } from '@deps/queries/api/c2web';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';

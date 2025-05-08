@@ -31,7 +31,7 @@ import { determineFormToRender } from '@deps/helpers/form-selector.helper';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { deStringifyTrueFalseNull } from '@deps/helpers/string.helper';
 import { TransactionType, TypeDesc, useTransactionsHistory } from '@deps/hooks/otp-withdrawal/transaction-history';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';

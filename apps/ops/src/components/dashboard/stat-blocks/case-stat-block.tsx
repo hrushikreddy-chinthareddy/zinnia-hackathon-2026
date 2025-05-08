@@ -8,7 +8,7 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { formatNumberLabel, wholeNumberFormatify } from '@deps/helpers/numbers.helper';
-import { convertToQueryString } from '@deps/helpers/routing.helper';
+import { convertToQueryString } from '@deps/helpers/routing.helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 import { getCaseInsights } from '@deps/queries/api/openai';

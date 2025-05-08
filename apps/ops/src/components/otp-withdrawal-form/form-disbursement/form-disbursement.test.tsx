@@ -5,7 +5,7 @@ import { TFunction } from 'next-i18next';
 
 import getFlicConfig from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helper';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import {
     AccountType,
     CaseStatus,

@@ -3317,7 +3317,6 @@
                     "header": "View additional loan information",
                     "interestFirst": "Interest first",
                     "loanCollateral": "Loan collateral",
-
                     "loanCollateralTooltip": "This is the loan principal, plus any credit earned since the loan started. This amount is held separate from the unloaned portion of the account value and has its own credit rate at which it gains earnings. A loan from a cash value life insurance policy is a loan from the insurance carrier with the account value on the policy used as collateral. When an owner borrows from their policy, the principal loan amount remains invested and continues to earn interest gains at an annual percentage rate.",
                     "loanPrincipal": "Loan principal",
                     "loanPrincipalTooltip": "The total shown here is what was borrowed, plus any interest accrued. A loan's principal is the original amount borrowed. Interest charges accrues annually, and outstanding interest is added to remaining principal, according to the interest method.",
@@ -5359,7 +5358,6 @@
             "start": "Start",
             "suitabilityForm": "Suitability form",
             "nigoDetails": "Missing Information",
-
             "summary": "Summary"
         },
         "taskReview": {
@@ -5582,7 +5580,6 @@
             "submitTask": "Submit"
         }
     },
-
     "nbPrenoteReview": {
         "confirmStep": {
             "title": "Got It!",

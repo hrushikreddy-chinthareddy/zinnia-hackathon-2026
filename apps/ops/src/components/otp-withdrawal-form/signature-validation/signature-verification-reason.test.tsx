@@ -3,7 +3,7 @@ import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 
 import getMassMutualRmdConfig from '@deps/containers/otp/rmd-forms/mm-rmd-form.helper';
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { CaseStatus, SignVerificationReason } from '@deps/models/case/withdrawal/case';
 
 import SignatureVerificationReasons from './signature-verification-reason';
@@ -100,7 +100,9 @@ describe('Signature Verification component', () => {
             });
 
             render(
-                <FormDataContext.Provider value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, setFormSignature: mockSetter }}>
+                <FormDataContext.Provider
+                    value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, setFormSignature: mockSetter }}
+                >
                     <SignatureVerificationReasons checkedItems={[]} config={current.signVerificationReasonConfig} />
                 </FormDataContext.Provider>
             );

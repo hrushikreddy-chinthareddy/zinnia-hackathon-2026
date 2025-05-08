@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
 import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { AddressTypes, CaseStatus, maritalStatusType, PartyRoles, PhoneTypes } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
@@ -22,13 +22,12 @@ jest.mock('next/navigation', () => {
     return {
         __esModule: true,
         useSearchParams: () => ({
-            get: () => { },
+            get: () => {},
         }),
     };
 });
 
 jest.mock('@deps/utils/server-logging');
-
 
 describe('DLIC Form Specific component', () => {
     window.HTMLElement.prototype.hasPointerCapture = jest.fn();
@@ -115,7 +114,7 @@ describe('DLIC Form Specific component', () => {
                         email: null,
                         employer: null,
                         maritalStatus: {
-                            text: "" as maritalStatusType | null,
+                            text: '' as maritalStatusType | null,
                         },
                         addresses: [
                             {

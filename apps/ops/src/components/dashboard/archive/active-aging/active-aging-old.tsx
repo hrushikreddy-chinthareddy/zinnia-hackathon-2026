@@ -16,7 +16,7 @@ import { getStartAndEndDates } from '@deps/containers/case-sub-page/case-helpers
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helper';
-import { convertToQueryString } from '@deps/helpers/routing.helper';
+import { convertToQueryString } from '@deps/helpers/routing.helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import {
     AgingTimeRanges,

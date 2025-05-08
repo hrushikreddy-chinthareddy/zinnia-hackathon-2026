@@ -9,7 +9,7 @@ import CaseOverview from '@deps/containers/case-sub-page/index';
 import { CaseActivityProvider } from '@deps/contexts/CaseActivityContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Case } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
@@ -62,11 +62,7 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const hasPermissionToReadCaseManagement = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
                 ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.CASE_MANAGEMENT_ZL_ENTITY, loggingContext)
-                : await doesUserHavePagePermissions(
-                    context,
-                    UserPermission.AllowReadCaseManagement,
-                    loggingContext
-                );
+                : await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement, loggingContext);
             const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
 
             if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {

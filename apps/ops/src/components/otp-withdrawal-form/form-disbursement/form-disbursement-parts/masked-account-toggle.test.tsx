@@ -1,7 +1,6 @@
 import { render, fireEvent } from '@testing-library/react';
-import React from 'react';
 
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 
 import BankInformationContainer, { BankInfoType } from './masked-account-toggle';
 

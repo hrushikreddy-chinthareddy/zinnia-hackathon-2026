@@ -6,7 +6,7 @@ import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getSelectedPolicyParty } from '@deps/helpers/party-info-helper';
 import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helpers';
-import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserPermission } from '@deps/models/user-profile';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';

@@ -1,0 +1,224 @@
+{
+    "caseReg60": {
+        "request": {
+            "pageHeader": "Información de contacto",
+            "channel": {
+                "cas": "CAS",
+                "broker": "Corredor"
+            },
+            "ownerInformation": {
+                "header": "Información del propietario",
+                "titleTooltip": "La información del propietario se rellena previamente con las palabras clave de OnBase."
+            },
+            "agentInformation": {
+                "header": "Información del agente",
+                "titleTooltip": "La información del agente se rellena previamente con las palabras clave de OnBase."
+            },
+            "partyDetails": {
+                "firstName": "Nombre",
+                "middleName": "Segundo nombre",
+                "lastName": "Apellido",
+                "ownerPhoneNumber": "Teléfono del propietario",
+                "agentPhoneNumber": "Teléfono del agente/corredor",
+                "ownerSSN": "NSS del propietario",
+                "channel": "Canal",
+                "agentCompany": "Compañía del agente/corredor",
+                "extension": "Extensión",
+                "home": "Casa",
+                "work": "Trabajo",
+                "mobile": "Móvil",
+                "channelOption": {
+                    "cas": "CAS",
+                    "broker": "Corredor"
+                },
+                "addressDetails": {
+                    "streetAddress": "Dirección del propietario",
+                    "agentStreetAddress": "Dirección del agente/corredor",
+                    "streetAddress2": "Dirección 2",
+                    "streetAddress3": "Dirección 3",
+                    "city": "Ciudad",
+                    "state": "Estado",
+                    "zip": "Código postal",
+                    "zipPlusFour": "Código postal +4"
+                }
+            },
+            "actionButtons": {
+                "submit": "Enviar"
+            },
+            "contractComparison": {
+                "createDisclosureHeader": "Crear Divulgación",
+                "comparisonContract": "Contrato de Comparación",
+                "addNewComparison": "Agregar nueva comparación",
+                "removeComparison": "Eliminar comparación",
+                "back": "Atrás",
+                "info": "Información",
+                "goodFaithEstimateInfo": "Si está marcado, no se requieren los valores de Valor de Rescate y Beneficios por Fallecimiento.",
+                "comparisonWarning": "Si se reciben más de 3 solicitudes de transferencia, la comparación debe generarse manualmente.",
+                "isRequired": "es requerido",
+                "greaterThanZero": "debe ser mayor que 0",
+                "comparisonType": "Tipo de comparación",
+                "partialRequest": "Solicitud parcial",
+                "goodFaithEstimateRequired": "Se requiere una estimación de buena fe",
+                "companyName": "Nombre de la compañía",
+                "companyPhoneNumber": "Teléfono de la compañía",
+                "contractNumber": "Número de contrato",
+                "issueDate": "Fecha de emisión",
+                "accountValue": "Valor de la cuenta",
+                "surrenderChargeApplies": "Se aplica cargo por rescate",
+                "surrenderChargeAmount": "Monto del cargo por rescate",
+                "mvaApplies": "Se aplica MVA",
+                "mvaAmount": "Monto del MVA",
+                "surrenderValue": "Valor de rescate",
+                "annuitizationValueReceived": "Valores de anualización recibidos",
+                "table": {
+                    "surrenderValueTable": {
+                        "title": "Valor de rescate",
+                        "fixedCol": {
+                            "years": "Años",
+                            "guaranteedRate": "Tasa garantizada",
+                            "currentRate": "Tasa actual"
+                        },
+                        "variableCol": {
+                            "year": "Año",
+                            "zeroPercent": "0%",
+                            "sixPercent": "6%",
+                            "twelvePercent": "12%"
+                        },
+                        "rowPeriods": {
+                            "fiveYears": "5 años",
+                            "tenYears": "10 años"
+                        }
+                    },
+                    "deathBenefitsTable": {
+                        "title": "Beneficios por fallecimiento",
+                        "fixedCol": {
+                            "years": "Años",
+                            "guaranteedRate": "Tasa garantizada",
+                            "currentRate": "Tasa actual"
+                        },
+                        "variableCol": {
+                            "year": "Año",
+                            "zeroPercent": "0%",
+                            "sixPercent": "6%",
+                            "twelvePercent": "12%"
+                        },
+                        "rowPeriods": {
+                            "fiveYears": "5 años",
+                            "tenYears": "10 años"
+                        }
+                    }
+                }
+            },
+            "comparisonTypes": {
+                "veriableToFixed": "Variable a Fijo",
+                "VeriableToImmediate": "Variable a Inmediato",
+                "fixedToFixed": "Fijo a Fijo",
+                "fixedToImmediate": "Fijo a Inmediato",
+                "lifeToFixed": "Vida a Fijo",
+                "lifeToImmediate": "Vida a Inmediato"
+            },
+            "proposedAnnuityQuote": {
+                "proposedAnnuityQuoteTitle": "Cotización de Anualidad Propuesta",
+                "annuitizationQuoteTitle": "Cotización de Anualización",
+                "annuityPaymentAmount": "Monto del pago de la anualidad",
+                "firstPaymentDate": "Fecha del primer pago",
+                "paymentFrequencyLabel": "Frecuencia de pago",
+                "incomeOptionLabel": "Opción de ingresos",
+                "periodCertainYears": "Años de período cierto",
+                "typeOfPayment": "Tipo de pago",
+                "typeOfPaymentOptions": {
+                    "fixed": "Fijo",
+                    "variable": "Variable"
+                },
+                "paymentFrequency": {
+                    "monthly": "Mensual",
+                    "annually": "Anual",
+                    "semiAnnually": "Semestral",
+                    "quarterly": "Trimestral"
+                },
+                "incomeOption": {
+                    "singleLifeNoDeathBft": "Vida Única Sin Beneficio por Fallecimiento",
+                    "singleLifeCashRefund": "Vida Única Reembolso en Efectivo",
+                    "singleLifeInstallRef": "Vida Única Reembolso por Cuotas",
+                    "singleLifePC": "Vida Única PC",
+                    "singleLifeNoRefund": "Vida Única Sin Reembolso",
+                    "jtAndSurvLifeCashRef": "Vida Conjunta y Supervivencia Reembolso en Efectivo",
+                    "jtAndSurvInstallRef": "Vida Conjunta y Supervivencia Reembolso por Cuotas",
+                    "jtAndSurvLifePC": "Vida Conjunta y Supervivencia PC",
+                    "jtAndSurvLifeHalfReduct": "Vida Conjunta y Supervivencia Reducción a 1/2",
+                    "jtAndSurvLifeTwoThirdsReduct": "Vida Conjunta y Supervivencia Reducción a 2/3",
+                    "jtAndSurvLifeThreeFourthsReduct": "Vida Conjunta y Supervivencia Reducción a 3/4",
+                    "jtAndSurvLifeNoRefund": "Vida Conjunta y Supervivencia Sin Reembolso",
+                    "jtAndSurvLifeNoDeathBenefit": "Vida Conjunta y Supervivencia Sin Beneficio por Fallecimiento",
+                    "jtAndSurvConvNoRef": "Vida Conjunta y Convertida Sin Reembolso",
+                    "jtAndSurvConvPC": "Vida Conjunta y Convertida PC",
+                    "periodCertain": "Período Cierto",
+                    "jtAndSurvConvCashRef": "Vida Conjunta y Convertida Reembolso en Efectivo",
+                    "jtAndSurvConvInstallRef": "Vida Conjunta y Convertida Reembolso por Cuotas"
+                }
+            },
+            "comparisonTable": {
+                "surrenderValue": "Valor de Rescate",
+                "deathBenefits": "Beneficios por Fallecimiento"
+            },
+            "disclosureAuthorization": {
+                "title": "Autorización para la Divulgación de Información",
+                "signatureDate": "Fecha de la firma",
+                "expectedAcctValue": "Valor esperado de la cuenta",
+                "product": "Producto",
+                "cdscPeriod": "Período CDSC",
+                "products": {
+                    "stableVoyage": "Viaje Estable",
+                    "retireEase": "Retiro Fácil",
+                    "retireEaseChoice": "Elección de Retiro Fácil"
+                },
+                "cdscPeriods": {
+                    "na": "N/A",
+                    "oneYearGuarantee": "Garantía de 1 Año",
+                    "threeYearGuarantee": "Garantía de 3 Años",
+                    "fourYearGuarantee": "Garantía de 4 Años",
+                    "fiveYearGuarantee": "Garantía de 5 Años",
+                    "sevenYearGuarantee": "Garantía de 7 Años",
+                    "nineYearGuarantee": "Garantía de 9 Años"
+                }
+            },
+            "formControls": {
+                "cancel": "Cancelar",
+                "cancelConfirm": "¿Desea cancelar esta solicitud? Todos los datos se perderán.",
+                "cancelError": "Ocurrió un error al cancelar esta tarea. Por favor, inténtelo de nuevo.",
+                "saveAsDraft": "Guardar como borrador",
+                "saveAsDraftError": "Ocurrió un error al guardar un borrador de esta tarea. Por favor, inténtelo de nuevo.",
+                "continue": "Continuar",
+                "calculateComparison": "Calcular Comparación",
+                "submitError": "Ocurrió un error al enviar la solicitud de comparación. Por favor, inténtelo de nuevo.",
+                "createTaskSuccessStart": "Solicitud de comparación enviada exitosamente para {{documentNumber}}",
+                "createTaskSuccessEnd": " y {{contractNumber}}"
+            },
+            "formErrors": {
+                "formValidation": {
+                    "formValidationError": "La presentación del formulario fue impedida debido a errores de validación. Aborde los errores anteriores e inténtelo de nuevo.",
+                    "firstNameIsRequired": "El nombre es requerido",
+                    "middleNameIsRequired": "El segundo nombre es requerido",
+                    "lastNameIsRequired": "El apellido es requerido",
+                    "ownerSSNisRequired": "El NSS del propietario es requerido",
+                    "companyNameIsRequired": "El nombre de la compañía es requerido",
+                    "ownerStreetAddressIsRequired": "La dirección del propietario es requerida",
+                    "cityIsRequired": "La ciudad es requerida",
+                    "stateIsRequired": "El estado es requerido",
+                    "zipIsRequired": "El código postal es requerido",
+                    "channelIsRequired": "El canal es requerido",
+                    "signatureDateIsRequired": "La fecha de la firma es requerida",
+                    "signatureDateIsInvalid": "No puede ser una fecha anterior a 120 días desde la fecha del sistema actual y no puede ser mayor que la fecha del sistema actual.",
+                    "expectedAcctValueIsRequired": "El valor esperado de la cuenta es requerido",
+                    "productIsRequired": "El producto es requerido",
+                    "cdscPeriodIsRequired": "El período CDSC es requerido",
+                    "annuityPaymentAmountIsRequired": "El monto del pago de la anualidad es requerido",
+                    "firstPaymentDateIsRequired": "La fecha del primer pago es requerida",
+                    "paymentFrequencyIsRequired": "La frecuencia de pago es requerida",
+                    "incomeOptionIsRequired": "La opción de ingresos es requerida",
+                    "periodCertainYearsIsRequired": "Los años de período cierto son requeridos"
+                }
+            }
+        }
+    }
+}

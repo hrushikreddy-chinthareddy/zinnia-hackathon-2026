@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render } from '@testing-library/react';
-import React from 'react';
 
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 
 import { MaskedAccountNumber } from './form-disbursement-parts/masked-account-number';
 jest.mock('next-i18next', () => ({

@@ -11,7 +11,7 @@ import RenewalFormProvider from '@deps/containers/otp/renewal-forms/components/r
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
-import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helper';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helper';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
@@ -80,7 +80,7 @@ const NigoEntry = ({
     prevTransactionDetails,
     isNigoCase,
     user,
-    caseType
+    caseType,
 }: NigoEntryProps) => {
     useSegmentPageTracker(user, SegmentPageName.NigoEntry, {
         policyNumber,
@@ -95,58 +95,57 @@ const NigoEntry = ({
     const { issueState } = useAccountInfo(document?.contract, clientCode as string);
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
-            { caseType === CaseType.Renewal
-                ? (
-                    <RenewalFormProvider
-                        initialForm={form}
-                        parties={Array.isArray(parties) ? parties : []}
-                        form={form}
-                        userId={''}
-                        document={document}
-                        action={'' as string}
-                        planCode={planCode}
-                        featureFlagDecisions={featureFlagDecisions as FeatureFlags}
-                    >
-                        <NigoEntryProvider>
-                            <NigoEntryContainer
-                                documentNumber={documentNumber}
-                                policyNumber={document?.contract}
-                                planCode={planCode}
-                                docType={docType}
-                                clientCode={clientCode}
-                                nigoExceptions={nigoExceptions}
-                                nigoSubExceptions={nigoSubExceptions}
-                                documentData={document}
-                                taskInfoLink={taskInfoLink}
-                                prevTransactionDetails={prevTransactionDetails}
-                            />
-                        </NigoEntryProvider>
-                    </RenewalFormProvider>
-                ) : (
-                    <FormProvider
-                        form={form}
-                        initialForm={form}
-                        issueState={issueState}
-                        isOpenNigo={isNigoCase}
-                        featureFlagDecisions={featureFlagDecisions}
-                        parties={parties}
-                    >
-                        <NigoEntryProvider>
-                            <NigoEntryContainer
-                                documentNumber={documentNumber}
-                                policyNumber={policyNumber}
-                                planCode={planCode}
-                                docType={docType}
-                                clientCode={clientCode}
-                                nigoExceptions={nigoExceptions}
-                                nigoSubExceptions={nigoSubExceptions}
-                                documentData={document}
-                                taskInfoLink={taskInfoLink}
-                                prevTransactionDetails={prevTransactionDetails}
-                            />
-                        </NigoEntryProvider>
-                    </FormProvider>
-                )}
+            {caseType === CaseType.Renewal ? (
+                <RenewalFormProvider
+                    initialForm={form}
+                    parties={Array.isArray(parties) ? parties : []}
+                    form={form}
+                    userId={''}
+                    document={document}
+                    action={'' as string}
+                    planCode={planCode}
+                    featureFlagDecisions={featureFlagDecisions as FeatureFlags}
+                >
+                    <NigoEntryProvider>
+                        <NigoEntryContainer
+                            documentNumber={documentNumber}
+                            policyNumber={document?.contract}
+                            planCode={planCode}
+                            docType={docType}
+                            clientCode={clientCode}
+                            nigoExceptions={nigoExceptions}
+                            nigoSubExceptions={nigoSubExceptions}
+                            documentData={document}
+                            taskInfoLink={taskInfoLink}
+                            prevTransactionDetails={prevTransactionDetails}
+                        />
+                    </NigoEntryProvider>
+                </RenewalFormProvider>
+            ) : (
+                <FormProvider
+                    form={form}
+                    initialForm={form}
+                    issueState={issueState}
+                    isOpenNigo={isNigoCase}
+                    featureFlagDecisions={featureFlagDecisions}
+                    parties={parties}
+                >
+                    <NigoEntryProvider>
+                        <NigoEntryContainer
+                            documentNumber={documentNumber}
+                            policyNumber={policyNumber}
+                            planCode={planCode}
+                            docType={docType}
+                            clientCode={clientCode}
+                            nigoExceptions={nigoExceptions}
+                            nigoSubExceptions={nigoSubExceptions}
+                            documentData={document}
+                            taskInfoLink={taskInfoLink}
+                            prevTransactionDetails={prevTransactionDetails}
+                        />
+                    </NigoEntryProvider>
+                </FormProvider>
+            )}
         </div>
     );
 };
@@ -212,9 +211,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 const caseType = ProcessesToCaseTypeMap[activeForm.process as Processes];
                 const docType = caseType ? docTypes[caseType] : null;
 
-                const form = caseType === CaseType.Renewal
-                    ? mapTaskToActiveRenewalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name })
-                    : mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name });
+                const form =
+                    caseType === CaseType.Renewal
+                        ? mapTaskToActiveRenewalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name })
+                        : mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name });
 
                 if (!caseType) {
                     logWarn('nigo-entry::Error getting case type', {
@@ -267,7 +267,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
 
-                const shouldShowNigoEntry = caseType !== CaseType.Renewal ? isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions) : true;
+                const shouldShowNigoEntry =
+                    caseType !== CaseType.Renewal ? isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions) : true;
                 // If feature flag is not enabled, redirect to error page
                 if (!shouldShowNigoEntry) {
                     logWarn('nigo_entry::feature flag not enabled', {
