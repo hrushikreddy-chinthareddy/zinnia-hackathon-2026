@@ -1,6 +1,11 @@
 'use client';
 import * as Popover from '@radix-ui/react-popover';
-import { Icon, IconType } from '@zinnia/bloom/components';
+import {
+  CarrierAvatars,
+  CarrierName,
+  Icon,
+  IconType,
+} from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -29,7 +34,8 @@ const carrierIcons: Record<
 > = {
   [CarrierNames.EVERLY]: EverlyIcon,
   [CarrierNames.WELLABE]: WellabeIcon,
-  [CarrierNames.FARMERS]: null,
+  [CarrierNames.FARMERS]: CarrierAvatars[CarrierName.FARMERS],
+  [CarrierNames.ZINNIA]: CarrierAvatars[CarrierName.ZINNIA],
 };
 
 export const NavMenu = ({

@@ -1,6 +1,4 @@
-import { CarrierLogos } from '@zinnia/bloom/components';
-
-import EverlyLogoImage from '@/app/styles/everly/assets/everly-logo-new.svg';
+import { navCarrierConfig } from '@/carrier-config/nav';
 import { Link } from '@/components/link/Link';
 import { getMyPoliciesByCarrier } from '@/services';
 import { getFeatureFlags } from '@/services/feature-flags';
@@ -35,46 +33,24 @@ export async function Nav({
       carrierDetails = getCarrierListDetails(policyData);
     }
   }
-  const WellabeLogoImage = CarrierLogos[CompanyName.WELLABE];
 
-  const carrierNavLogo = () => {
-    if (themeCookie === CompanyName.EVERLY) {
-      return (
-        <EverlyLogoImage
-          alt="Everly Logo"
-          height="32px"
-          className={styles.logoEverly}
-        />
-      );
-    }
-    if (themeCookie === CompanyName.WELLABE) {
-      return (
-        <WellabeLogoImage
-          title="Wellabe Logo"
-          width="auto"
-          height="32px"
-          color="var(--color-primary-color-primary)"
-          fill="var(--color-primary-color-primary)"
-        />
-      );
-    }
+  const carrierConfig =
+    navCarrierConfig[themeCookie] ?? navCarrierConfig[CompanyName.ZINNIA];
 
-    return null;
-  };
+  const CarrierLogo = carrierConfig.image;
 
   return (
     <nav className={styles.nav}>
       <div className={styles.logoContainer}>
         <DevMenu />
-
         <Link
           isInternal
           prefetch
-          href="/"
+          href={carrierConfig.homePageHref}
           className="justify-self-start"
-          aria-label="Home page"
+          aria-label={carrierConfig.hrefAriaLabel}
         >
-          {carrierNavLogo()}
+          <CarrierLogo {...carrierConfig.logoProps} data-testid="nav-logo" />
         </Link>
       </div>
       <NavMenu userName={userName} carrierPolicyDetails={carrierDetails} />

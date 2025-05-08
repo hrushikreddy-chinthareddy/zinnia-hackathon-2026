@@ -47,6 +47,7 @@ import {
   transformPolicyDetails,
   sortPoliciesByIssuedDate,
 } from '@/services/policy/transformers';
+import { CarrierId } from '@/types/carriers';
 import {
   PolicyApiResponse,
   PolicyProfile,
@@ -97,7 +98,7 @@ const getPolicyReferencesByCarrier = async () => {
 
   if (isTestPoliciesEnabled()) {
     // @ts-expect-error specs aren't updated in developer portal yet
-    searchFilter['carrierIds'] = ['SBUL'];
+    searchFilter['carrierIds'] = CarrierId.SBUL;
   }
 
   if (isMockErrorEnabled(ApiEndpoints.POLICY_BY_CARRIERS)) {

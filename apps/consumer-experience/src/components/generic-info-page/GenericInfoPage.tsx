@@ -30,10 +30,11 @@ const logo = (company: CompanyName) => {
 };
 
 // If there's a new company AND you have the branding available, add a key/value here
-const themeClasses = {
+const themeClasses: Record<CompanyName, string | undefined> = {
   [CompanyName.EVERLY]: styles.everly,
   [CompanyName.WELLABE]: styles.wellabe,
   [CompanyName.FARMERS]: styles.farmers,
+  [CompanyName.ZINNIA]: styles.zinnia,
 };
 
 export const GenericInfoPage = async ({
@@ -43,7 +44,7 @@ export const GenericInfoPage = async ({
   footer,
 }: Props) => {
   const featureFlagDecisions = await getFeatureFlags();
-  let themeCookie = await getCookie(THEME_COOKIE);
+  let themeCookie = (await getCookie(THEME_COOKIE)) as CompanyName;
 
   if (!featureFlagDecisions[FEATURE_FLAGS.ANNUITY_MODE]) {
     themeCookie = CompanyName.EVERLY;
@@ -52,14 +53,16 @@ export const GenericInfoPage = async ({
   // but there may be a case where there is a subdomain, but we don't have the branding for it, so only want to add the classes
   // if we have the available branding (in themeClasses above) otherwise show the generic page
   const showBranding =
-    (themeCookie &&
-      Object.keys(themeClasses).includes(themeCookie as CompanyName)) ||
+    (themeCookie && Object.keys(themeClasses).includes(themeCookie)) ||
     !featureFlagDecisions[FEATURE_FLAGS.ANNUITY_MODE];
 
-  const brandingBannerClasses = clsx({
-    [styles.banner as string]: showBranding,
-    [themeClasses[themeCookie as CompanyName] as string]: showBranding,
-  });
+  const brandingBannerClasses = clsx(
+    showBranding && [styles.banner, themeClasses[themeCookie]],
+    {
+      [styles.banner as string]: showBranding,
+      [themeClasses[themeCookie] as string]: showBranding,
+    }
+  );
 
   return (
     <div className={styles.container}>

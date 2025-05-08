@@ -46,6 +46,8 @@ import {
   TaxWithholdingType,
 } from '@zinnia/api-types/types/sor';
 
+import { CarrierId } from '@/types/carriers';
+
 export const mockPolicyResponse: Policy = {
   coverage: {
     totalCoverageAmount: 500000,
@@ -679,7 +681,7 @@ export const mockPolicyResponse: Policy = {
   },
   id: '65def3e15a9da55c349440db',
   event: 'InterestCreditMatch',
-  carrierId: 'SB',
+  carrierId: CarrierId.SB,
   policyReferenceId: '922e84fa774f40c291d6d0fcb9445e3b',
   thirdPartyAdministratorId: 'tpa-12345',
   product: {

@@ -1,5 +1,5 @@
-import { CarrierNames, Subdomains } from '@/types/carriers';
-import { CarrierId, CarrierPolicyDetails } from '@/types/policy';
+import { CarrierId, CarrierNames, Subdomains } from '@/types/carriers';
+import { CarrierPolicyDetails } from '@/types/policy';
 
 import { prependSubdomain } from './url';
 
