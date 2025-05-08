@@ -92,10 +92,10 @@ export const useMainNavItems = (): NavGroup[] => {
 
     const toppanMerrillLink = {
         id: '/toppan-merrill',
-        display: 'Toppan Merrill Storefront',
+        display: 'Wellabe Sales Materials',
         icon: IconType.LIGHTBULB,
         renderComponent: (
-            <NavLink type={NavElementType.Link} href={'/toppan-merrill'} onClick={() => handleAnalytics('Toppan Merrill Storefront')} />
+            <NavLink type={NavElementType.Link} href={'/toppan-merrill'} onClick={() => handleAnalytics('Wellabe Sales Materials')} />
         ),
     };
 

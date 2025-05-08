@@ -122,7 +122,7 @@ export interface AgentData {
         // to do - there is more data here but for now this is more than we need to display
     }[];
     // BPB - ToDo - type this when needed
-    licenses: unknown[];
+    licenses: License[];
     // BPB - ToDo - type this when needed
     linesOfBusiness: unknown[];
     // BPB - ToDo - type this when needed
@@ -224,3 +224,29 @@ export interface AgentDataResponse {
     sql: null;
     totalCount: number;
 }
+
+type License = {
+    assumeInXDays: number;
+    createDate: string;
+    createUserId: string;
+    description: string;
+    effectiveDate: string;
+    entityName: string | null;
+    entityTin: string | null;
+    expireDate: string;
+    externalLicenseId: string | null;
+    id: string;
+    licenseRenewalDate: string;
+    modifyDate: string;
+    modifyUserId: string;
+    number: string;
+    residentStateIndicator: boolean;
+    salesEntityId: string;
+    state: string;
+    stateFullName: string;
+    stateRequirementId: number;
+    trackEducationIndicator: boolean;
+    type: string;
+    typeId: number;
+    linesOfAuthority: LineOfAuthority[];
+};

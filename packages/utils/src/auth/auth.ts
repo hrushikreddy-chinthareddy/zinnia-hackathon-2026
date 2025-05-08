@@ -5,6 +5,7 @@ export enum FgaRoles {
   SUPER_ADMIN = 'role:zinnia_super_admin',
   CASE_MANAGEMENT_ZL_ENTITY = 'entity:zinnia_live_case_management',
   POLICY_MANAGEMENT_ZL_ENTITY = 'entity:zinnia_live_policy_management',
+  WELB_SALES_MATERIALS = 'entity:welb_sales_materials',
 }
 
 export enum FgaRelation {
@@ -44,6 +45,11 @@ export function createBulkCheckBodyRequest(partyId: string) {
         user,
         relation: FgaRelation.Party,
         object: FgaRoles.ADVISORS_EXCEL,
+      },
+      {
+        user,
+        relation: FgaRelation.UiAccess,
+        object: FgaRoles.WELB_SALES_MATERIALS,
       },
     ],
   };
@@ -109,6 +115,19 @@ export function checkIfUserHasAdvisorsExcel(
     (tuple) =>
       tuple.object === roleVals.object &&
       tuple.relation === roleVals.relation &&
+      tuple.allowed
+  );
+}
+
+export function checkRelation(
+  bulkCheckTuples: Array<BulkCheckTuple>,
+  objToCheck: string,
+  relationToCheck: string
+) {
+  return bulkCheckTuples.find(
+    (tuple) =>
+      tuple.object === objToCheck &&
+      tuple.relation === relationToCheck &&
       tuple.allowed
   );
 }

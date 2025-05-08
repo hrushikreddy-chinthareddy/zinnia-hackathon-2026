@@ -73,7 +73,7 @@ export default withAuthAndLogging(
                 if (isWellabeAgent(partyRefData)) {
                     responseData.push({
                         href: `/toppan-merrill`,
-                        content: 'Toppan Merrill Storefront',
+                        content: 'Wellabe Sales Materials',
                         icon: IconType.LIGHTBULB,
                         openInNewTab: true,
                     });

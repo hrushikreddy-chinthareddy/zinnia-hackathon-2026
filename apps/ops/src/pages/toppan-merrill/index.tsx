@@ -89,7 +89,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     // MCS only stores the parent company codes. In this case for Wellabe (WELB), the partent is ARIC
                     const parentCompayCodes = 'ARIC'; // TODO: how do we dynamicallyt find this value? // GLCO for testing locally
                     const externalId = wellabeAgent[0].externalId; // 119350014 for testing locally
-
                     const agentUrlPath = `${apiServerBaseUrl}/api/${parentCompayCodes}/salesentity?idType=external&id=${externalId}&IsClientChild=true&&skip=0&take=10`;
 
                     const agentReq = await serverApi.get<null, AxiosResponse>(
@@ -128,9 +127,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                         agentInfo.setDistribution('AR');
                         agentInfo.setCompany('A2');
 
-                        agent.appointments.forEach(appointment => {
-                            if (!isNullEmptyOrUndefined(appointment.state)) {
-                                agentInfo.addState(appointment.state);
+                        agent.licenses.forEach(license => {
+                            if (!isNullEmptyOrUndefined(license.description)) {
+                                agentInfo.addState(license.description);
                             }
                         });
                     } else {
