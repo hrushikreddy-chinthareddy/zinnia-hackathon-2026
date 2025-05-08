@@ -52,7 +52,7 @@ export default handleAuth({
                 authorizationParams: {
                     scope: 'openid profile email offline_access',
                     connection: connectionName,
-                    audience: process.env.NEXT_PUBLIC_SE2_BACKEND_URL,
+                    audience: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE,
                 },
             });
         } else {
@@ -63,7 +63,7 @@ export default handleAuth({
                 authorizationParams: {
                     scope: 'openid profile email offline_access',
                     grant_type: 'password',
-                    audience: process.env.NEXT_PUBLIC_SE2_BACKEND_URL,
+                    audience: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE,
                 },
             });
         }
