@@ -155,7 +155,7 @@ const Summary = ({ policy, title }: SummaryProps) => {
                                 <>
                                     {bannerResults?.map((result: ValidationResult, index: number) => (
                                         <BannerAlert key={index} variant={BannerVariant.Error} canDismiss={false}>
-                                            ${result.error} ${result.resolution}
+                                            {result.error} {result.resolution}
                                         </BannerAlert>
                                     ))}
                                     <div className="my-6 flex flex-row">
