@@ -59,7 +59,7 @@ const getSideSheetValues = (transactionEntity: TransactionModelResponse, t: TFun
     const { entity } = transactionEntity;
     const { exchangeReplace, institutionName, moneySource } = entity?.payment || {};
     const values: TransactionEntitySideSheetValues = {
-        companyName: exchangeReplace?.companyName || t('caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingDetails'),
+        companyName: exchangeReplace?.companyName || t('caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingSources'),
         sourceType: moneySource,
         expectedAmount: numberFormatify(exchangeReplace?.amountRequested),
         receivedAmount: numberFormatify(entity?.payment?.receivedAmount),

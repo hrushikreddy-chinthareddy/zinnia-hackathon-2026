@@ -1520,6 +1520,7 @@
                 "fundingSourceDetails": "Détails de la source de financement",
                 "fundingSourceSideSheet": {
                     "fundingDetails": "Détails du financement",
+                    "fundingSources": "Sources de financement",
                     "sourceType": "Type de source",
                     "expectedAmount": "Montant attendu",
                     "receivedAmount": "Montant reçu",
