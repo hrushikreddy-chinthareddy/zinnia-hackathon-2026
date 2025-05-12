@@ -11,7 +11,7 @@ import FilterButton from '@deps/components/filter-button/filter-button';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
-import SearchBar, { SearchBarInitialValues } from '@deps/components/search/search-bar';
+import SearchBar from '@deps/components/search/search-bar';
 import { CaseResultTable } from '@deps/components/table/case-result-table';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
@@ -251,8 +251,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     );
 
     const handleToggle = useCallback(
-        (value: PolicySearchKeys) =>
-            setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: SearchBarInitialValues, toggleValue: value })),
+        (value: PolicySearchKeys) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, toggleValue: value })),
         [setCaseManagementFilters]
     );
 
