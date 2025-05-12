@@ -1,6 +1,8 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import React from 'react';
 
-import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
+import styles from '../pagination.module.css';
 
 export enum ArrowDirections {
     Left = 'left',
@@ -30,27 +32,27 @@ const handleKeyDown = (e: React.KeyboardEvent, onClick: () => void) => {
 };
 
 function Arrow({ direction, disabled, selected, onClick }: ArrowProps) {
-    const hoverClass = 'hover:bg-secondary-lightest hover:border-transparent hover:outline-transparent';
-    const selectedClass = selected ? 'outline-2 bg-secondary-light' : '';
-    const disabledClass = disabled ? 'pointer-events-none bg-gray-100 !border-gray-300 !outline-gray-300 text-gray-300' : 'text-secondary';
-    const focusBorderClasses =
-        'relative focus-visible:before:border-2 focus-visible:before:border-semantic-focus focus-visible:before:z-20 focus-visible:before:rounded';
-    const focusSpacingClasses = 'focus-visible:before:absolute focus-visible:before:inset-[-2px] focus-visible:before:-m-2';
-    const classes = `border-1 border-secondary outline outline-offset-0 outline-1 outline-secondary bg-transparent
-        ${hoverClass} ${selectedClass} ${disabledClass} ${focusBorderClasses} ${focusSpacingClasses}`;
+    const ariaLabel = () => {
+        return direction === ArrowDirections.Left ? 'Paginate back' : 'Paginate forward';
+    };
 
     return (
         <button
-            className={`mx-1 flex !h-8 !w-8 items-center justify-center rounded outline-none ${classes}`}
+            className={clsx(styles.paginationItem, selected && styles.selected)}
             onClick={() => !disabled && onClick()}
             data-testid={`arrow-${direction}`}
             id={`pagination-arrow-${direction}`}
-            aria-label="Pagination"
+            aria-label={ariaLabel()}
             role="navigation"
-            tabIndex={disabled ? -1 : 0}
             onKeyDown={e => handleKeyDown(e, onClick)}
+            disabled={disabled}
         >
-            <ChevronDown className={`h-5 w-5 transform ${direction === ArrowDirections.Left ? 'rotate-90' : 'rotate-270'}`} />
+            <Icon
+                type={IconType.CHEVRON}
+                height={20}
+                width={20}
+                className={`transform ${direction === ArrowDirections.Left ? 'rotate-90' : 'rotate-270'}`}
+            />
         </button>
     );
 }

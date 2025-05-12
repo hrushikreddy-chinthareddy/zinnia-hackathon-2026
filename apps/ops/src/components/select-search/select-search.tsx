@@ -1,4 +1,6 @@
 import useDebounce from '@xd/hooks/useDebounce';
+import { Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { v4 as uuid4 } from 'uuid';
@@ -10,7 +12,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { filterOnSearchHandler } from '@deps/helpers/search.helpers';
 import { useOutsideClick } from '@deps/hooks/useOutsideClick';
-import { ReactComponent as ChevronIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { DataDefinition } from '@deps/types/data';
 import { DropdownClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
@@ -167,29 +168,31 @@ const SelectSearch = ({
             </label>
 
             <div className="relative" ref={ref} onFocus={() => handleSelect(true)} onBlur={() => handleSelect(false)}>
-                <div className="bg-transparent">
-                    <div className={inputClassNames}>
-                        <input
-                            type="text"
-                            value={searchValue}
-                            onChange={event => setSearchValue(event.target.value)}
-                            className="w-full border-none bg-transparent pl-4 font-secondary text-md font-normal leading-5.5 shadow-none placeholder:text-gray-300 focus-visible:ring-0"
-                            placeholder={placeHolder}
-                            id={labelId}
-                            aria-label={label}
+                <div className={clsx(inputClassNames, 'bg-transparent')}>
+                    <input
+                        type="text"
+                        value={searchValue}
+                        onChange={event => setSearchValue(event.target.value)}
+                        className="w-full border-none bg-transparent pl-4 font-secondary text-md font-normal leading-5.5 shadow-none placeholder:text-gray-300 focus-visible:ring-0"
+                        placeholder={placeHolder}
+                        id={labelId}
+                        aria-label={label}
+                    />
+                    <button className="py-2 pr-4" onClick={() => setOpen(!open)}>
+                        <Icon
+                            type={IconType.CHEVRON}
+                            className={'simple-transition' + (open ? 'flip180' : '')}
+                            aria-label={`${t('ariaLabel.findKeyValuesIcon')} ${label}`}
+                            height={24}
+                            width={24}
+                            color="var(--color-base-icon-icon-action-text-link)"
                         />
-                        <button className="py-2 pr-4" onClick={() => setOpen(!open)}>
-                            <ChevronIcon
-                                className={'simple-transition default-focus-icons h-6 w-6 text-secondary ' + (open ? 'flip180' : '')}
-                                aria-label={`${t('ariaLabel.findKeyValuesIcon')} ${label}`}
-                            />
-                            <span className="sr-only">{t(`site.controlActions.${open ? 'close' : 'open'}`)}</span>
-                            <span className="sr-only">{label}</span>
-                        </button>
-                    </div>
+                        <span className="sr-only">{t(`site.controlActions.${open ? 'close' : 'open'}`)}</span>
+                        <span className="sr-only">{label}</span>
+                    </button>
                 </div>
-                {open && popupSelection}
             </div>
+            {open && popupSelection}
         </div>
     );
 };

@@ -14,6 +14,8 @@ export const LayoutWrapper: React.FC<PropsWithChildren> = ({ children }) => {
     const navItems = useMainNavItems();
     const path = usePathname();
     const { user } = useUser();
+    const theme = process.env.NEXT_PUBLIC_THEME;
+
     if (noNavRoutes.includes(path)) {
         return <>{children}</>;
     }
@@ -29,7 +31,7 @@ export const LayoutWrapper: React.FC<PropsWithChildren> = ({ children }) => {
     };
 
     return (
-        <Layout navGroups={navItems} displaySearch={false} onNavigationToggle={handleAnalytics} activeNavItem={path}>
+        <Layout navGroups={navItems} displaySearch={false} onNavigationToggle={handleAnalytics} activeNavItem={path} theme={theme}>
             <div className={styles.bodyContainer}>{children}</div>
         </Layout>
     );

@@ -1,5 +1,5 @@
 .bodyContainer {
-    background: var(--color-grayscale-color-white);
+    background: var(--color-base-surface-surface-primary);
     box-shadow: var(--shadow-elevation-elevation-light-sm);
     border-radius: var(--measure-dimension-radius-md);
     flex: 1;
@@ -15,5 +15,11 @@
         border-radius: 0;
         margin: 0;
         padding: var(--measure-dimension-z-space-6);
+    }
+}
+
+[data-theme='farmers'] {
+    .bodyContainer {
+        background-color: var(--color-base-surface-surface-carrier);
     }
 }

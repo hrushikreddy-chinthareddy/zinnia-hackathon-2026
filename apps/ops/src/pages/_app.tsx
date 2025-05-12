@@ -1,5 +1,7 @@
 import '@deps/styles/styles.css';
 import '@zinnia/bloom/css';
+import '@zinnia/bloom/themes/bloom';
+import '@zinnia/bloom/themes/farmers';
 import '@radix-ui/themes/styles.css';
 
 import { UserProvider, useUser } from '@auth0/nextjs-auth0/client';
@@ -106,9 +108,11 @@ const App = (props: AppProps) => {
         initializeBrowserLogging();
     }
 
+    const theme = process.env.NEXT_PUBLIC_THEME;
+
     return (
         <QueryClientProvider client={queryClient}>
-            <section className={`${lato.variable} relative`}>
+            <section className={`${lato.variable} relative`} data-theme={theme}>
                 <UserProvider>
                     <AppHead />
                     <AppBody {...props} />

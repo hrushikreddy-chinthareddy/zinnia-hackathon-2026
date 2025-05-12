@@ -67,16 +67,46 @@ module.exports = {
                 140: '140px',
             },
             fontSize: {
-                '3xs': ['var(--measure-dimension-core-typography-font-size-font-size-3-x-small)', 'var(--measure-dimension-core-typography-font-size-line-height-3-x-small)'],
-                '2xs': ['var(--measure-dimension-core-typography-font-size-font-size-2-x-small)', 'var(--measure-dimension-core-typography-font-size-line-height-2-x-small)'],
-                xs: ['var(--measure-dimension-core-typography-font-size-font-size-x-small)', 'var(--measure-dimension-core-typography-font-size-line-height-x-small)'],
-                sm: ['var(--measure-dimension-core-typography-font-size-font-size-small)', 'var(--measure-dimension-core-typography-font-size-line-height-small)'],
-                md: ['var(--measure-dimension-core-typography-font-size-font-size-medium)', 'var(--measure-dimension-core-typography-font-size-line-height-medium)'],
-                base: ['var(--measure-dimension-core-typography-font-size-font-size-medium)', 'var(--measure-dimension-core-typography-font-size-line-height-medium)'],
-                lg: ['var(--measure-dimension-core-typography-font-size-font-size-large)', 'var(--measure-dimension-core-typography-font-size-line-height-large)'],
-                xl: ['var(--measure-dimension-core-typography-font-size-font-size-x-large)', 'var(--measure-dimension-core-typography-font-size-line-height-x-large)'],
-                '2xl': ['var(--measure-dimension-core-typography-font-size-font-size-2x-large)', 'var(--measure-dimension-core-typography-font-size-line-height-2x-large)'],
-                '3xl': ['var(--measure-dimension-core-typography-font-size-font-size-3x-large)', 'var(--measure-dimension-core-typography-font-size-line-height-3x-large)'],
+                '3xs': [
+                    'var(--measure-dimension-core-typography-font-size-font-size-3-x-small)',
+                    'var(--measure-dimension-core-typography-font-size-line-height-3-x-small)',
+                ],
+                '2xs': [
+                    'var(--measure-dimension-core-typography-font-size-font-size-2-x-small)',
+                    'var(--measure-dimension-core-typography-font-size-line-height-2-x-small)',
+                ],
+                xs: [
+                    'var(--measure-dimension-core-typography-font-size-font-size-x-small)',
+                    'var(--measure-dimension-core-typography-font-size-line-height-x-small)',
+                ],
+                sm: [
+                    'var(--measure-dimension-core-typography-font-size-font-size-small)',
+                    'var(--measure-dimension-core-typography-font-size-line-height-small)',
+                ],
+                md: [
+                    'var(--measure-dimension-core-typography-font-size-font-size-medium)',
+                    'var(--measure-dimension-core-typography-font-size-line-height-medium)',
+                ],
+                base: [
+                    'var(--measure-dimension-core-typography-font-size-font-size-medium)',
+                    'var(--measure-dimension-core-typography-font-size-line-height-medium)',
+                ],
+                lg: [
+                    'var(--measure-dimension-core-typography-font-size-font-size-large)',
+                    'var(--measure-dimension-core-typography-font-size-line-height-large)',
+                ],
+                xl: [
+                    'var(--measure-dimension-core-typography-font-size-font-size-x-large)',
+                    'var(--measure-dimension-core-typography-font-size-line-height-x-large)',
+                ],
+                '2xl': [
+                    'var(--measure-dimension-core-typography-font-size-font-size-2x-large)',
+                    'var(--measure-dimension-core-typography-font-size-line-height-2x-large)',
+                ],
+                '3xl': [
+                    'var(--measure-dimension-core-typography-font-size-font-size-3x-large)',
+                    'var(--measure-dimension-core-typography-font-size-line-height-3x-large)',
+                ],
                 'hl-2': [
                     '26px',
                     {
@@ -268,8 +298,9 @@ module.exports = {
                 border: {
                     light: 'var(--color-base-border-border-light)',
                     selected: 'var(--color-base-border-selected-border)',
-                    hover: 'var(--color-states-hover-border-hover-border)'
+                    hover: 'var(--color-states-hover-border-hover-border)',
                 },
+                link: 'var(--color-base-icon-icon-action-text-link)',
             },
             boxShadow: {
                 xs: 'var(--shadow-elevation-elevation-light-xs)',
@@ -284,17 +315,12 @@ module.exports = {
                 'lg-dark': 'var(--shadow-elevation-elevation-dark-lg)',
                 'xl-dark': 'var(--shadow-elevation-elevation-dark-xl)',
                 '2xl-dark': 'var(--shadow-elevation-elevation-dark-2xl)',
-                'elevation-light-04':
-                    'var(--shadow-elevation-elevation-light-sm)',
-                'elevation-light-08':
-                    'var(--shadow-elevation-elevation-light-md)',
-                'elevation-light-16':
-                    'var(--shadow-elevation-elevation-light-lg)',
-                'elevation-light-32':
-                    'var(--shadow-elevation-elevation-light-2xl)',
+                'elevation-light-04': 'var(--shadow-elevation-elevation-light-sm)',
+                'elevation-light-08': 'var(--shadow-elevation-elevation-light-md)',
+                'elevation-light-16': 'var(--shadow-elevation-elevation-light-lg)',
+                'elevation-light-32': 'var(--shadow-elevation-elevation-light-2xl)',
                 'elevation-04': 'var(--shadow-elevation-elevation-dark-sm)',
-                'elevation-dark-08':
-                    'var(--shadow-elevation-elevation-dark-md)',
+                'elevation-dark-08': 'var(--shadow-elevation-elevation-dark-md)',
             },
             transitionProperty: {
                 height: 'height',

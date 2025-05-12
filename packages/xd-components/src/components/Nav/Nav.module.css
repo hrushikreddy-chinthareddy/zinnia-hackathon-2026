@@ -1,12 +1,12 @@
 .navContainer {
   --nav-expanded-width: 240px;
   z-index: 50;
-  height: 100vmin;
-  background-color: var(--color-grayscale-color-50-gray);
+  min-height: 100vh;
+  background-color: var(--color-base-surface-surface-carrier);
   /* for the sake of the animation hiding text properly we're using a border instead of padding */
   /* that way whatever is overflowing behind the border is hidden */
   border: var(--measure-dimension-z-space-2) solid
-    var(--color-grayscale-color-50-gray);
+    var(--color-base-surface-surface-carrier);
   position: sticky;
   transition: 300ms ease-in-out;
   text-wrap: nowrap;
@@ -52,13 +52,18 @@
   padding-block: var(--measure-dimension-z-space-2);
 }
 
-.zinniaLogo {
+.logo {
+  align-items: center;
   display: flex;
   height: 24px;
   min-width: 90px;
   & img {
     height: 24px;
   }
+}
+
+.carrierLogo {
+  border-radius: 100%;
 }
 
 .searchBar {
@@ -197,10 +202,10 @@ div:has(> .searchInput)::before {
     background-color: var(--color-grayscale-color-white);
     border-radius: var(--measure-dimension-z-space-1);
     box-shadow: var(--shadow-elevation-elevation-light-xs);
-    border-color: var(--color-grayscale-color-600-gray);
+    border-color: var(--color-nav-drawer-2-nav-drawer-item-2-active-border);
     color: var(--color-grayscale-color-900-gray);
     svg {
-      color: var(--color-orange-color-500-orange);
+      color: var(--color-nav-drawer-2-nav-drawer-item-2-active-icon-fill);
     }
   }
 }

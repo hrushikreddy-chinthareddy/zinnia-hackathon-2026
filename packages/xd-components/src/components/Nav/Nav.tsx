@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import {
+  CarrierAvatar,
+  CarrierLogo,
+  CarrierName,
   FieldData,
   FieldSize,
   Tooltip,
@@ -20,8 +23,8 @@ export interface NavProps {
   activeNavItem?: string;
   displaySearch?: boolean;
   onNavigationToggle?: (isExpanded: boolean) => void;
+  theme?: string;
 }
-
 export interface NavGroup {
   heading?: string;
   items: NavItem[];
@@ -62,6 +65,7 @@ export const Nav = ({
   activeNavItem,
   displaySearch = true,
   onNavigationToggle,
+  theme,
 }: NavProps) => {
   const [isExpanded, setExpanded] = useState(true);
   const windowWidth = useWindowResize();
@@ -89,6 +93,54 @@ export const Nav = ({
     onNavigationToggle?.(true);
   };
 
+  const ZinniaLogo = () => {
+    return (
+      <>
+        <button
+          onClick={handleLogoClick}
+          aria-label={isExpanded ? undefined : expandText}
+          disabled={isExpanded}
+        >
+          <img src={zinniaLogo} alt={imageAlt} height={24} width={24} />
+        </button>
+        <img src={zinniaText} alt={imageAlt} height={24} width={66} />{' '}
+      </>
+    );
+  };
+
+  const ExpandedLogo = () => {
+    switch (theme) {
+      case 'farmers':
+        return (
+          <div style={{ minWidth: '127px' }}>
+            <CarrierLogo
+              carrier={CarrierName.FARMERS}
+              height={24}
+              width={127}
+            />
+          </div>
+        );
+      default:
+        return <ZinniaLogo />;
+    }
+  };
+
+  const CollapsedLogo = () => {
+    switch (theme) {
+      case 'faremers':
+        return (
+          <CarrierAvatar
+            carrier={CarrierName.FARMERS}
+            height={20}
+            width={20}
+            className={styles.carrierLogo}
+          />
+        );
+      default:
+        return <ZinniaLogo />;
+    }
+  };
+
   return (
     <section
       className={clsx(
@@ -105,15 +157,18 @@ export const Nav = ({
           style={isExpanded ? { cursor: 'w-resize' } : { cursor: 'e-resize' }}
         ></button>
         <div className={styles.logoRow}>
-          <div className={styles.zinniaLogo}>
-            {isExpanded ? (
-              <img src={zinniaLogo} alt={imageAlt} height={24} width={24} />
+          <div className={styles.logo}>
+            {/* If the theme is Zinnia - just load in the logo component */}
+            {theme === 'zinnia' ? (
+              <ZinniaLogo />
+            ) : // Otherwise check for expanded state to toggle between the two types of logos
+            isExpanded ? (
+              <ExpandedLogo />
             ) : (
               <button onClick={handleLogoClick} aria-label={expandText}>
-                <img src={zinniaLogo} alt={imageAlt} height={24} width={24} />
+                <CollapsedLogo />
               </button>
             )}
-            <img src={zinniaText} alt={imageAlt} height={24} width={66} />
           </div>
           <button
             className={styles.toggleButton}

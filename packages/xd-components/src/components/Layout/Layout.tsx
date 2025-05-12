@@ -17,6 +17,7 @@ interface LayoutType extends PropsWithChildren {
   activeNavItem?: string;
   displaySearch?: boolean;
   onNavigationToggle?: (isExpanded: boolean) => void;
+  theme?: string;
 }
 
 export const Layout: FC<LayoutType> = ({
@@ -24,6 +25,7 @@ export const Layout: FC<LayoutType> = ({
   activeNavItem,
   displaySearch = true,
   onNavigationToggle,
+  theme,
   children,
 }) => {
   const [open, setOpen] = useState(false);
@@ -56,6 +58,7 @@ export const Layout: FC<LayoutType> = ({
             activeNavItem={activeNavItem}
             displaySearch={displaySearch}
             onNavigationToggle={onNavigationToggle}
+            theme={theme}
           />
           <main className={styles.layoutMain}>{children}</main>
         </>
@@ -81,6 +84,7 @@ export const Layout: FC<LayoutType> = ({
               activeNavItem={activeNavItem}
               displaySearch={displaySearch}
               onNavigationToggle={onNavigationToggle}
+              theme={theme}
             />
           </SideSheet>
           <>

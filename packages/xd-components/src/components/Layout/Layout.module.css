@@ -1,6 +1,6 @@
 .container {
   position: relative;
-  background-color: white;
+  background-color: var(--color-base-surface-surface-primary);
 }
 
 .layoutMain {
@@ -41,6 +41,6 @@
 @media (min-width: 1024px) {
   .container {
     display: flex;
-    background-color: var(--color-grayscale-color-50-gray);
+    background-color: var(--color-base-surface-surface-carrier);
   }
 }

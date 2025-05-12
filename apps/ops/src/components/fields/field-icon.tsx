@@ -16,10 +16,14 @@ export default function FieldIcon({ icon, variant, className }: FieldIconProps) 
         {
             'text-gray-300': variant === FieldVariant.Inactive,
             'text-semantic-error': variant === FieldVariant.Error,
-            'text-secondary': variant !== FieldVariant.Inactive && variant !== FieldVariant.Error,
+            'text-link': variant !== FieldVariant.Inactive && variant !== FieldVariant.Error,
         },
         className
     );
 
-    return <div className={classes} data-testid="field-icon">{icon}</div>;
+    return (
+        <div className={classes} data-testid="field-icon">
+            {icon}
+        </div>
+    );
 }

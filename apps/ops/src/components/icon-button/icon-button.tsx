@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
 
+import styles from './icon-button.module.css';
+
 interface IconButtonProps extends HTMLAttributes<HTMLButtonElement> {
     disabled?: boolean;
 }
@@ -8,16 +10,9 @@ interface IconButtonProps extends HTMLAttributes<HTMLButtonElement> {
 export default function IconButton({ children, disabled, onClick, ...rest }: IconButtonProps) {
     const { className, ...newRest } = rest;
 
-    const classes = clsx(
-        'flex h-6 w-6 flex-row items-center justify-center rounded-xl',
-        { 'default-focus-icons text-secondary hover:text-secondary-dark': !disabled },
-        { 'cursor-not-allowed font-primary text-gray-300 hover:text-gray-300': disabled },
-        className
-    );
-
     return (
         <button
-            className={classes}
+            className={clsx(styles.iconButton)}
             disabled={disabled}
             onClick={onClick}
             onKeyDown={e => {
@@ -26,8 +21,6 @@ export default function IconButton({ children, disabled, onClick, ...rest }: Ico
                     onClick;
                 }
             }}
-            role="button"
-            tabIndex={0}
             type="button"
             {...newRest}
         >

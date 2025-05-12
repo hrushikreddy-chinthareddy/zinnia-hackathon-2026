@@ -176,7 +176,7 @@ const SelectComponent = ({
                             variant={disabled ? FieldVariant.Inactive : FieldVariant.Default}
                             className={clsx('simple-transition', {
                                 flip180: isOpen,
-                                'text-secondary': disabled,
+                                'text-link': disabled,
                                 'mr-4': size !== FieldSize.XS,
                                 'mr-2': size === FieldSize.XS,
                             })}

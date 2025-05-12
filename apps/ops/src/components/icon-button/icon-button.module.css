@@ -1,0 +1,22 @@
+.iconButton {
+    align-items: center;
+    border-radius: 0.75rem;
+    color: var(--color-base-icon-icon-action-text-link);
+    display: flex;
+    font-family: var(--string-core-typography-font-family-font-family-primary);
+    height: var(--measure-dimension-z-space-6);
+    justify-content: center;
+    width: var(--measure-dimension-z-space-6);
+
+    &:hover {
+        color: var(--color-states-hover-icon-hover-icon-action);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        color: var(--color-states-inactive-text-inactive-text);
+        :hover {
+            color: var(--color-states-inactive-text-inactive-text);
+        }
+    }
+}

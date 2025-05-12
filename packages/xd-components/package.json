@@ -36,7 +36,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/browser": "^3.1.1",
     "@vitest/coverage-v8": "^3.1.1",
-    "@zinnia/bloom": "^5.8.0",
+    "@zinnia/bloom": "^5.10.0",
     "@zinnia/eslint-config": "workspace:*",
     "@zinnia/prettier-config": "^0.0.1",
     "@zinnia/typescript-config": "^0.0.11",

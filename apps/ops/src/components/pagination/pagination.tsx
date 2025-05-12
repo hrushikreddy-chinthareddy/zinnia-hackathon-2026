@@ -3,6 +3,7 @@ import React, { useCallback, useMemo } from 'react';
 import { generatePageNumbers } from '@deps/utils/pagination';
 
 import { ArrowLeft, ArrowRight } from './arrows/arrows';
+import styles from './pagination.module.css';
 
 export interface PaginationParams {
     limit: number;
@@ -36,10 +37,10 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({ limit, offset, 
     }
 
     return (
-        <div className="flex h-full items-center justify-center">
+        <div className={`${styles.paginationRow}`}>
             <ArrowLeft onClick={goToPreviousPage} disabled={currentPage === 1} />
-            <div className="flex hidden items-center justify-center md:flex">{renderPageNumbers.md}</div>
-            <div className="flex items-center justify-center md:hidden">{renderPageNumbers.sm}</div>
+            <div className="hidden items-center justify-center md:flex gap-2">{renderPageNumbers.md}</div>
+            <div className="flex items-center justify-center md:hidden gap-2">{renderPageNumbers.sm}</div>
             <ArrowRight onClick={goToNextPage} disabled={currentPage === totalPages} />
         </div>
     );

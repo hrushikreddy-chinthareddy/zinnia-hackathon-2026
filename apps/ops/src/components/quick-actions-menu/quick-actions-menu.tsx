@@ -35,15 +35,17 @@ import { ReactComponent as TableIcon } from '@deps/styles/elements/icons/icons_o
 import { DropdownClickedEvent, PolicyClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import styles from './quick-actions-menu.module.css';
+
 interface TranslateProps {
     t: TFunction;
 }
 
 const TextButton = ({ t }: TranslateProps) => {
     return (
-        <div className="items-center justify-center gap-1 text-secondary hover:text-secondary-dark md:flex">
+        <div className={clsx('md:flex', styles.quickActions)}>
             <p className="text-links">{t('label')}</p>
-            <ChevronDown className="simple-transition text-secondary group-data-[state=open]:rotate-180" height={16} width={16} />
+            <ChevronDown className="simple-transition group-data-[state=open]:rotate-180" height={16} width={16} />
         </div>
     );
 };

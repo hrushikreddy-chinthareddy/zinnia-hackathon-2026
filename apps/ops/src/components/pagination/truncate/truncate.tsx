@@ -1,10 +1,12 @@
 import React from 'react';
 
+import styles from '../pagination.module.css';
+
 const Truncate: React.FC = () => {
     return (
-        <span data-testid="truncate" aria-label="truncation ellipsis" className="mx-4 select-none text-lg font-normal text-secondary">
+        <div data-testid="truncate" aria-label="truncation ellipsis" className={`${styles.truncation} ${styles.paginationItem}`}>
             ...
-        </span>
+        </div>
     );
 };
 

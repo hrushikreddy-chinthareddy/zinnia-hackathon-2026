@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import './fonts.css';
 
 :root {
     --color-secondary-color-primary: var(--color-primary-color-primary);
@@ -277,7 +278,14 @@ body {
 
 @layer components {
     .chip {
-        @apply default-focus pointer-events-auto cursor-pointer rounded-full border-2 border-gray-200 bg-white px-4 py-0.5 font-primary text-md font-semibold leading-6 hover:border-primary hover:bg-primary-lightest active:border-primary active:bg-primary-lightest disabled:pointer-events-none disabled:cursor-auto disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-300 aria-checked:border-primary aria-checked:bg-primary-lighter;
+        @apply default-focus pointer-events-auto cursor-pointer rounded-full border-2 border-gray-200 bg-white px-4 py-0.5 font-primary text-md font-semibold leading-6 hover:border-primary hover:bg-primary-lightest disabled:pointer-events-none disabled:cursor-auto disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-300;
+
+        &:active,
+        &[aria-checked='true'] {
+            background-color: var(--color-chip-surface-chip-selected-fill);
+            border-color: var(--color-chip-border-chip-selected-border);
+            color: var(--color-base-text-text-light);
+        }
     }
     .progress-bar {
         --color-progress-total: theme(colors.gray.300);

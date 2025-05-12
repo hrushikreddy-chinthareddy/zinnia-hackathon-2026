@@ -56,7 +56,6 @@ describe('CallLogContent', () => {
             expect(screen.getAllByText('Boss')).toHaveLength(1);
             expect(screen.getAllByText(`Revenge revenge`)).toHaveLength(1);
             expect(screen.getAllByText(mockCallLog.callSummary)).toHaveLength(1);
-            expect(screen.getAllByLabelText('Pagination')).toHaveLength(2);
             expect(screen.getAllByTestId('page-number')).toHaveLength(2);
         });
     });
@@ -66,7 +65,6 @@ describe('CallLogContent', () => {
 
         render(<CallLogsContent contractNumber="123" t={((key: any) => key) as TFunction} />);
         await waitFor(() => {
-            expect(screen.getAllByLabelText('Pagination')).toHaveLength(2);
             expect(screen.getAllByTestId('page-number')).toHaveLength(6);
         });
     });
@@ -76,7 +74,6 @@ describe('CallLogContent', () => {
 
         render(<CallLogsContent contractNumber="123" t={((key: any) => key) as TFunction} />);
         await waitFor(() => {
-            expect(screen.getAllByLabelText('Pagination')).toHaveLength(2);
             expect(screen.getAllByTestId('page-number')).toHaveLength(6);
         });
 
