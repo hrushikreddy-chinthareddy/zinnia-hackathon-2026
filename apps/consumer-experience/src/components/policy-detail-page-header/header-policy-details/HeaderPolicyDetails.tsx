@@ -97,7 +97,7 @@ export const HeaderPolicyDetails = ({
         </p>
         {/* There is the possibility that an agent id is on the policy, but no agent data
           is returned from mcs so null check is on the name rather than on the full object */}
-        {agentData && (
+        {agentData && agentData.fullName && (
           <>
             <span>Agent:</span>
             <AgentSidesheet agentData={agentData} />
