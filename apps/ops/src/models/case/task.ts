@@ -36,6 +36,9 @@ export enum TaskType {
     Prenote_Review = 'NB_PRENOTE_REVIEW',
     Payment_Processing_Review = 'NB_PAYMENT_PROCESSING_REVIEW',
     Suitaibility_DataEntry_Nigo_Review = 'SUITABILITY_DATAENTRY_NIGO_REVIEW',
+    Claims_Stop_Uncashed_Transactions = 'CLAIMS_STOP_UNCASHED_TRANSACTIONS',
+    Claims_Identify_Uncashed_Transactions = 'CLAIMS_IDENTIFY_UNCASHED_TRANSACTIONS',
+    Claims_Reverse_Uncashed_Transactions = 'CLAIMS_REVERSE_UNCASHED_TRANSACTIONS',
     Background_Nigo = 'BACKGROUND_NIGO',
     Background_Review = 'BACKGROUND_REVIEW'
 }

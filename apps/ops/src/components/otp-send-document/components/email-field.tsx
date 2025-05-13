@@ -8,8 +8,9 @@ type EmailAddressProps = {
     email: string;
     error?: FormValidationErrors;
     setEmail: (val: string) => void;
+    name?: string;
 };
-const EmailAddress = ({ email, setEmail, error }: EmailAddressProps) => {
+const EmailAddress = ({ email, setEmail, error, name }: EmailAddressProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
     return (
@@ -20,13 +21,14 @@ const EmailAddress = ({ email, setEmail, error }: EmailAddressProps) => {
                     setEmail(xss(e?.target?.value?.trim() ?? ''));
                 }}
                 value={email as string}
-                size={FieldSize.Default}
+                size={FieldSize.Small}
                 type={FieldType.BaseActive}
                 className="max-w-xs "
                 message={error?.email}
                 variant={error?.email ? FieldVariant.Error : FieldVariant.Default}
                 labelTooltip={t('correspondence.email') as string}
                 labelTooltipBody={t('correspondence.emailTooltip') as string}
+                name={name ?? 'emailField'}
             />
         </div>
     );

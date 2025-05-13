@@ -31,6 +31,7 @@ export default withAuthAndLogging(
         if (v2DocParams.toString()?.length) {
             url += `?${v2DocParams.toString()}`;
         }
+
         const canUnmask = await canUnmaskPii(session?.accessToken, session?.user?.partyId);
 
         if (!canUnmask) {

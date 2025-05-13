@@ -5,6 +5,7 @@ import GlobalValuesNbBar from '@deps/components/global-values/global-values-bar/
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
 
 import { TaskDataContext } from './task-context';
@@ -47,6 +48,17 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
         [steps]
     );
 
+    const isClaimCase = (taskType: TaskType) => {
+        switch (taskType) {
+            case TaskType.Claims_Identify_Uncashed_Transactions:
+            case TaskType.Claims_Stop_Uncashed_Transactions:
+            case TaskType.Claims_Reverse_Uncashed_Transactions:
+                return true;
+            default:
+                return false;
+        }
+    }
+        ;
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] flex-col self-center">
             <div className="flex">
@@ -64,7 +76,7 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
                 onClick={handleProgressBarClick}
                 steps={filteredSteps}
             />
-            <div className="flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">
+            <div className={`flex w-full grow flex-col rounded ${isClaimCase(task.taskType as TaskType) ? '' : 'bg-white shadow-elevation-light-04'}  `}>
                 {filteredSteps[currentStepIndex]?.component}
             </div>
         </div>

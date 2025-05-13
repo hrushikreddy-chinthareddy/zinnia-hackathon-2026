@@ -7,10 +7,11 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 import styles from './field-template.module.css';
 
 export function FieldTemplate(props: FieldTemplateProps) {
-    const { id, label, required, description, errors, children, readonly, formData, classNames, uiSchema, hideError = false } = props;
-
+    const { id, label, required, description, errors, children, readonly, classNames, uiSchema, hideError = false } = props;
+    let { formData } = props;
     const uiOptions = getUiOptions(uiSchema);
     const helpText = uiOptions.help;
+
     const style = uiOptions?.style ?? '';
     let { displayLabel } = props;
 
@@ -41,6 +42,9 @@ export function FieldTemplate(props: FieldTemplateProps) {
         ''
     );
 
+    if (uiOptions.isQuoted && formData && typeof formData === 'string') {
+        formData = `"${formData}"`
+    }
     return (
         <>
             {uiOptions?.templateType === 'table' ? (
@@ -50,7 +54,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                     children
                 )
             ) : (
-                <>
+                <div className={uiOptions?.classNames || ''}>
                     {classNames?.indexOf('divider') !== -1 && (
                         <div className="mb-4">
                             <Divider direction="horizontal" color="subtle" />
@@ -58,7 +62,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                     )}
                     <div className={styles.children}>
                         {displayLabel && (
-                            <div className="mb-2">
+                            <div className="mb-2 ">
                                 <Label labelFor={id} interactiveElements={[helpInformation]}>
                                     <span className={clsx('text-md font-medium', style as string)}>{fieldLabel}</span>
                                 </Label>
@@ -67,7 +71,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                         {readonly && typeof formData === 'string' ? formData : children}
                         {!hideError && errors}
                     </div>
-                </>
+                </div>
             )}
         </>
     );

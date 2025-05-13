@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { PropsWithChildren, ReactNode, useContext, useMemo, useState } from 'react';
+import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
 import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -52,6 +52,7 @@ import {
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
+import { initialDeathClaimExists } from '@deps/queries/api/web-non-financial';
 import { getCasesQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT, FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
@@ -379,6 +380,22 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
         pf => pf.featureType === ('REINSTATEMENT' as PolicyFeatureFeatureType) && pf.approvalDate
     );
 
+    const [isNewDeathClaim, setIsNewDeathClaim] = useState(null);
+    const [zlCaseId, setZlCaseId] = useState(null);
+
+    useEffect(() => {
+        const checkIsNewDeathClaim = async () => {
+            const response = await initialDeathClaimExists(policy.policyNumber, policy?.carrierId);
+            if (response?.isNewRequest) {
+                setIsNewDeathClaim(response.isNewRequest);
+            } else {
+                setIsNewDeathClaim(response?.isNewRequest || null);
+                setZlCaseId(response?.zlCaseId || null);
+            }
+        };
+        checkIsNewDeathClaim();
+    }, [policy.policyNumber, policy?.carrierId]);
+
     return (
         <div className={styles.bannerContainer}>
             {showCaseBanner && (
@@ -425,6 +442,17 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
                         href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,
                         text: t('dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'),
                     }}
+                />
+            )}
+
+            {(!isNewDeathClaim && zlCaseId) && (
+                <BannerAlert
+                    variant={BannerVariant.Warning}
+                    cta={{
+                        href: `/cases/${zlCaseId}/progress`,
+                        text: t('dashboard.search.results.policySummaryCard.initialDeathNotificationLink'),
+                    }}
+                    bodyText={t('dashboard.search.results.policySummaryCard.initialDeathNotification')}
                 />
             )}
         </div>

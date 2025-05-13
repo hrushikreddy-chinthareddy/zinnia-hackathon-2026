@@ -1,8 +1,9 @@
 import { AxiosResponse } from 'axios';
 
+import { NotificationsTransactionData } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab';
 import { TransactionData } from '@deps/models/case/task/doc-matching-payment';
 import { client } from '@deps/queries/api-utils/client';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { baseAppUrl } from '../api-config';
@@ -29,6 +30,21 @@ export const getTransactionsByCorrelationId = async (
         return data;
     } catch (e: any) {
         browserLogError('transactions::getTransactionsByCorrelationId::error', { ...parseErrorInformation(e), correlationId });
+        return null;
+    }
+};
+
+export const getTransactionsByRecordId = async (
+    recordId: string,
+): Promise<NotificationsTransactionData | null> => {
+    const url = `${baseUrl}/transaction/entities/${recordId}`
+
+    try {
+        const { data } = await client.get<any, AxiosResponse<NotificationsTransactionData>>(url);
+        browserLogInfo('transactions::getTransactionsByRecordId::success', { recordId });
+        return data;
+    } catch (e: any) {
+        browserLogError('transactions::getTransactionsByRecordId::error', { ...parseErrorInformation(e), recordId });
         return null;
     }
 };

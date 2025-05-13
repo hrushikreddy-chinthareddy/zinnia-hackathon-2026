@@ -9,20 +9,24 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     id: string;
     label?: string;
     fieldSize?: 'small' | 'large';
-    status?: 'success' | 'error';
+    status?: 'success' | 'error' | '';
     disabled?: boolean;
     placeholder?: string;
     onChange: (value: any, es?: ErrorSchema<any> | undefined, id?: string) => void;
     onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-}
+    hideError?: boolean | undefined;
+};
 
 const TextField = (props: TextFieldProps) => {
-    const { id, label, value, className, disabled, placeholder, onChange, onBlur, onFocus, onKeyDown } = props;
-
+    const { id, label, value, className, disabled, placeholder, onChange, onBlur, onFocus, onKeyDown, hideError } = props;
+    let { status } = props
+    if (hideError && status === 'error') {
+        status = '';
+    }
     const classes = clsx(
         styles.textField,
         styles[props.fieldSize || 'small'],
-        props.status && styles[props.status] ? styles[props.status] : '',
+        status && styles[status] ? styles[status] : '',
         className
     );
 

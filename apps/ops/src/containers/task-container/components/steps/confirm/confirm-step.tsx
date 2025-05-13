@@ -16,8 +16,10 @@ import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/c
 interface ConfirmStepProps {
     taskType: TaskType;
     taskInfoLink: string;
+    isCta?: boolean;
+    ctaLink?: string;
 }
-const ConfirmStep = ({ taskType, taskInfoLink }: ConfirmStepProps) => {
+const ConfirmStep = ({ taskType, taskInfoLink, isCta = false, ctaLink }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.confirmStep` });
     const router = useRouter();
     const formState = useContext(TaskDataContext);
@@ -59,6 +61,12 @@ const ConfirmStep = ({ taskType, taskInfoLink }: ConfirmStepProps) => {
                 icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
                 subtitle={t('subTitle')}
                 title={t('title')}
+                cta={isCta ? {
+                    action: () => {
+                        router.push(ctaLink || taskInfoLink);
+                    },
+                    text: t('cta'),
+                } : undefined}
                 secondaryCta={
                     <NavElement
                         aria-label={t('secondaryCta') as string}

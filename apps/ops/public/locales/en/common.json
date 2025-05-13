@@ -765,7 +765,9 @@
                     "freeLookCancelBannerLink": "Cancel policy",
                     "caseBannerLink": "View cases",
                     "caseBannerText_one": "This policy has {{count}} open case",
-                    "caseBannerText_other": "This policy has {{count}} open cases"
+                    "caseBannerText_other": "This policy has {{count}} open cases",
+                    "initialDeathNotification": "Initial Death Notification",
+                    "initialDeathNotificationLink": "View death claim progress"
                 }
             },
             "empty": {
@@ -1135,8 +1137,12 @@
             "underwritingEvaluation.underwritingDecisionAdverse": "Receive underwriting decision",
             "userDecision.acceptedOffer": "Receive offer decision",
             "userDecision.rejectedOffer": "Receive offer decision",
-            "userDecision.expireOffer": "Receive offer expiration notice",
-            "userDecision.requestedOfferAmendment": "Receive offer decision"
+            "userDecision.expireOffer": "Receive offer decision",
+            "userDecision.requestedOfferAmendment": "Receive offer decision",
+            "verifyFunds.stopUncashedTransactions": "Stop Uncashed Check",
+            "verifyFunds.stopSystematicPrograms": "Stop Systematic Program",
+            "verifyFunds.stopRMD": "Stop RMDs",
+            "verifyFunds.stopSpecialPrograms": "Stop Special Programs"
         },
         "stepDescriptions": {
             "requestAck.nbRequestReceived": "When a {{subType}} document is received, it is indexed and ingested into the system.",
@@ -1470,7 +1476,8 @@
                 "transfer of assets": "Transfer of Assets: {{label}}",
                 "ceding carrier": "Ceding Carrier: {{label}}",
                 "premium source": "Funding Source: {{label}}",
-                "re-illustration": "Re-Illustration: {{label}}"
+                "re-illustration": "Re-Illustration: {{label}}",
+                "bene": "Notify {{label}}"
             },
             "reviewIssues": "Review",
             "suitabilityReview": "suitability",
@@ -1545,6 +1552,17 @@
             "address": "Residential address",
             "requestedRecipients": "Requested Recipients",
             "recipients": "Recipients"
+        },
+        "notifications": {
+            "types": {
+                "email": "Email",
+                "fax": "Fax",
+                "mail": "Mail"
+            },
+            "sendNotification": "Send notification",
+            "receiveBeneficiaryConfirmation": "Receive beneficiary confirmation",
+            "completedStatusTooltipWithDate": "Completed on {{date}}",
+            "notStarted": "Not started"
         }
     },
     "caseRenewal": {
@@ -2397,6 +2415,7 @@
             "mail": "Mail",
             "emailAddress": "Email Address",
             "faxNumber": "Fax Number",
+            "edit": "Edit",
             "mailDetails": {
                 "sendToDifferentAddress": "Send to a different address",
                 "firstName": "First Name",
@@ -4875,7 +4894,8 @@
             "newLoan": "Start a loan",
             "newPremium": "Start a one-time premium",
             "startAWithdrawal": "Start a withdrawal",
-            "cancelPolicy": "Cancel policy"
+            "cancelPolicy": "Cancel policy",
+            "newDeathClaim": "New Death Claim"
         }
     },
     "historyEventCard": {
@@ -5422,7 +5442,8 @@
                 "suitabilityForm": "Suitability form",
                 "summary": "Summary",
                 "matchDocument": "Match Document"
-            }
+            },
+            "nextTask": "Continue to Next Task"
         },
         "formErrors": {
             "caseNotFound": "Case not found",
@@ -5541,9 +5562,177 @@
             "secondaryCta": "Back to home"
         }
     },
+    "claimsIdentifyUncashedTransactions": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Identify Uncashed Transaction was submitted.",
+            "cta": "Go to death claim",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "claimsStopUncashedTransactions": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Stop Uncashed Transaction was submitted.",
+            "cta": "Go to death claim",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "claimsReverseUncashedTransactions": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Reverse Uncashed Transaction was submitted.",
+            "cta": "Go to death claim",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "unauthorized": {
         "title": "Unauthorized",
         "message": "You do not have access to view this information."
+    },
+    "deathClaims": {
+        "tabs": {
+            "deathClaimNotification": "Death Claim Notification",
+            "notificationMethod": "Notification Method",
+            "confirm": "Confirm"
+        },
+        "deathClaimNotification": {
+            "title": "Death Claim Notification",
+            "subTitle": "Provide required details about the notifier, the deceased, and the preferred notification method",
+            "relationshipToInsured": {
+                "associate": "Associate",
+                "aunt": "Aunt",
+                "brother": "Brother",
+                "daughter": "Daughter",
+                "father": "Father",
+                "fiance": "Fiance",
+                "grandfather": "Grandfather",
+                "grandmother": "Grandmother",
+                "grandchild": "Grandchild",
+                "husband": "Husband",
+                "mother": "Mother",
+                "partner": "Partner",
+                "sister": "Sister",
+                "son": "Son",
+                "trustee": "Trustee",
+                "wife": "Wife",
+                "uncle": "Uncle",
+                "niece": "Niece",
+                "nephew": "Nephew",
+                "self": "Self",
+                "estate": "Estate",
+                "trust": "Trust",
+                "spouse": "Spouse",
+                "grandson": "Grandson",
+                "granddaughter": "Granddaughter",
+                "parent": "Parent",
+                "child": "Child",
+                "nonSpouse": "Non Spouse",
+                "childrenEqually": "Children Equally",
+                "childrenPerStirpes": "Children per Stirpes",
+                "perStirpes": "Per Stirpes",
+                "survivingSpouse": "Surviving Spouse",
+                "other": "Other"
+            },
+            "labels": {
+                "notifierDetails": "Notifier Details",
+                "role": "Role",
+                "phoneNumber": "Phone Number",
+                "beneInfoOnFile": "Check this box if the beneficiary list above is incorrect or incomplete, and details should be added to the SOR based on the attached document.",
+                "selectARole": "Select a role...",
+                "listedBenificary": "Listed Beneficiaries",
+                "noBeneficiaries": "Primary beneficiaries not present",
+                "roleType": {
+                    "agent": "Agent",
+                    "beneficiary": "Beneficiary",
+                    "family": "Family",
+                    "owner": "Owner",
+                    "other": "Other",
+                    "jointOwner": "Joint Owner"
+                },
+                "otherNotifier": {
+                    "firstName": "First Name",
+                    "lastName": "Last Name",
+                    "middleName": "Middle Name",
+                    "suffix": "Suffix",
+                    "phoneNumber": "Phone Number",
+                    "ssn": "Social Security Number",
+                    "relationshipToDeceased": "Relationship to Deceased",
+                    "select": "Select"
+                },
+                "other": "Other"
+            },
+            "formErrors": {
+                "formValidation": {
+                    "roleIsRequired": "Role is required.",
+                    "phoneIsInvalid": "Phone number must be 10 digits.",
+                    "firstNameIsRequired": "First name is required",
+                    "middleNameIsRequired": "Middle name is required",
+                    "lastNameIsRequired": "Last name is required",
+                    "suffixIsRequired": "Suffix is required",
+                    "relationshipToInsuredIsRequired": "Select relationship to insured",
+                    "notifierIsRequired": "Select notifier",
+                    "deceasedSelectionIsRequired": "Select deceased person"
+                }
+            }
+        },
+        "deceasedDetails": {
+            "title": "Deceased Details",
+            "labels": {
+                "deceased": "Deceased",
+                "dateOfDeath": "Date of Death",
+                "insuredDiedInForeignCountry": "Did the insured died in foreign country?",
+                "selectionOptions": {
+                    "yes": "Yes",
+                    "no": "No"
+                }
+            }
+        },
+        "notificationMethod": {
+            "title": "Death Claim Notification",
+            "subTitle": "Provide required details about the notifier, the deceased, and the preferred notification method",
+            "notificationMethod": "Notification Method",
+            "noBeneficiaries": "Primary beneficiaries not present",
+            "email": "Email",
+            "fax": "Fax",
+            "paperMail": "Paper Mail",
+            "label": "Where should the document(s) be sent",
+            "emailAddress": "Email Address",
+            "faxNumber": "Fax Number",
+            "edit": "Edit",
+            "mailDetails": {
+                "sendToDifferentAddress": "Send to a different address",
+                "updateAddress": "Update address",
+                "addressType": "Address type"
+            },
+            "formActions": {
+                "continue": "Continue",
+                "cancel": "Cancel"
+            },
+            "errors": {
+                "addressIsRequired": "Select a address to continue.",
+                "emailIsRequired": "Email is required",
+                "inValidDomain": "Only Zinnia emails are allowed",
+                "inValidEmail": "Please enter valid email address",
+                "faxIsRequired": "Fax number is required",
+                "inValidFax": "Please enter valid fax number",
+                "firstName": "First name is required",
+                "lastName": "Last name is required",
+                "address": "Verify & select the address to continue."
+            }
+        },
+        "confirmStep": {
+            "header": "Confirm",
+            "close": "Close",
+            "title": "Done!",
+            "submitClaim": "Submit Claim",
+            "subTitle": "Death claim notification was submitted successfully for {{caseId}}.",
+            "cta": "Go to Death Claim Case",
+            "secondaryCta": "Close"
+        }
     },
     "nbAppDataEntry": {
         "confirmStep": {

@@ -1198,7 +1198,11 @@
             "premiumProcessing.contractInfoValidation": "Nous vérifions que le produit a été vendu dans un état qui autorise les ventes, que les options choisies sont autorisées pour le produit, et que les allocations de fonds sélectionnées respectent les règles du produit.",
             "requestCompletion.caseCompleted": "Le travail de traitement dans le cas du système de gestion des flux de travail a été marqué comme terminé.",
             "requestCompletion.LCContractIssued": "Nous émettons le contrat une fois que tout le travail de traitement est terminé et que la prime a été traitée.",
-            "requestCompletion.policyPagesIssued": "Nous générons les pages de la police pour le demandeur (maintenant propriétaire) du contrat émis."
+            "requestCompletion.policyPagesIssued": "Nous générons les pages de la police pour le demandeur (maintenant propriétaire) du contrat émis.",
+            "verifyFunds.stopUncashedTransactions": "Arrêter un chèque non encaissé",
+            "verifyFunds.stopSystematicPrograms": "Arrêtez le programme systématique",
+            "verifyFunds.stopRMD": "Arrêter les RMD",
+            "verifyFunds.stopSpecialPrograms": "Arrêter les programmes spéciaux"
         },
         "nigoReasons": {
             "EM.035": "La ligne d'activité de l'agent était inactive ou inexistante au moment de la signature de la demande.",
@@ -1476,7 +1480,8 @@
                 "transfer of assets": "Transfert d'actifs: {{label}}",
                 "ceding carrier": "Transporteur cédant: {{label}}",
                 "premium source": "Source de Financement: {{label}}",
-                "re-illustration": "Nouvelle illustration: {{label}}"
+                "re-illustration": "Nouvelle illustration: {{label}}",
+                "bene": "Notifier {{label}}"
             },
             "reviewIssues": "Revoir problèmes",
             "suitabilityReview": "suitability",
@@ -4868,7 +4873,8 @@
             "newLoan": "Démarrer un prêt",
             "newPremium": "Démarrez un abonnement premium unique",
             "startAWithdrawal": "Démarrer un retrait",
-            "cancelPolicy": "Annuler la police"
+            "cancelPolicy": "Annuler la police",
+            "newDeathClaim": "New Death Claim"
         }
     },
     "historyEventCard": {
@@ -5406,6 +5412,7 @@
             "cancel": "Annuler",
             "confirm": "Confirmer",
             "continue": "Continuer",
+            "nextTask": "Continuer au prochain processus",
             "tabs": {
                 "start": "Démarrer",
                 "nigoDetails": "Informations manquantes",
@@ -5582,6 +5589,33 @@
             "subTitle": "Tâche : Traitement de saisie de données de transaction postérieure à la délivrance soumis.",
             "cta": "Aller au dossier",
             "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "claimsIdentifyUncashedTransactions": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Identify Uncashed Transaction was submitted.",
+            "cta": "Go to death claim",
+            "secondaryCta": "Back to home",
+            "submitTask": "Soumettre"
+        }
+    },
+    "claimsStopUncashedTransactions": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Stop Uncashed Transaction was submitted.",
+            "cta": "Go to death claim",
+            "secondaryCta": "Back to home",
+            "submitTask": "Soumettre"
+        }
+    },
+    "claimsReverseUncashedTransactions": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Reverse Uncashed Transaction was submitted.",
+            "cta": "Go to death claim",
+            "secondaryCta": "Back to home",
             "submitTask": "Soumettre"
         }
     },

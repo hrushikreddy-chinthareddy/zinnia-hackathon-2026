@@ -35,6 +35,9 @@ export const SupportedTaskMap = [
     TaskType.Prenote_Review,
     TaskType.Payment_Processing_Review,
     TaskType.Suitaibility_DataEntry_Nigo_Review,
+    TaskType.Claims_Identify_Uncashed_Transactions,
+    TaskType.Claims_Reverse_Uncashed_Transactions,
+    TaskType.Claims_Stop_Uncashed_Transactions,
     TaskType.Background_Nigo,
     TaskType.Background_Review,
 ];
@@ -62,9 +65,8 @@ export function Task({ task }: { task: TaskView }) {
 
     // if the task is part of an exception, add a dot before the task and change the color depending on the status
     if (task.hasParentException) {
-        beforeClasses = `before:text-[32px] before:content-["·"] ${
-            task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
-        }`;
+        beforeClasses = `before:text-[32px] before:content-["·"] ${task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
+            }`;
     }
     return (
         <li className={`flex w-full flex-row items-center gap-2 ${beforeClasses} `}>

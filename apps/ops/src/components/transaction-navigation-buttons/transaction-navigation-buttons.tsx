@@ -20,6 +20,7 @@ export enum ParentPage {
     Premiums = 'premiums',
     Withdrawals = 'withdrawals',
     Funds = 'funds',
+    None = '',
 }
 
 interface TransactionNavigationButtonsProps extends TransactionClickProps {

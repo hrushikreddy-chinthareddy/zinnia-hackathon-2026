@@ -14,16 +14,20 @@ export const mapRoleItemToRoleState = (option: AssociateAddressTableRow): ApplyT
     };
 };
 
-export const mapAddressToAddressCardData = (address: Address | undefined) => ({
-    addressId: address?.addressId,
-    addressLine1: address?.addressLine1,
-    addressLine2: address?.addressLine2,
-    addressLine3: address?.addressLine3,
-    city: address?.city,
-    state: address?.state,
-    zipCode: address?.zipCode,
-    zipCodeExtension: address?.zipCodeExtension,
-});
+export const mapAddressToAddressCardData = (address: Address | undefined) => {
+    if (address) {
+        return {
+            addressId: address?.addressId,
+            addressLine1: address?.addressLine1,
+            addressLine2: address?.addressLine2,
+            addressLine3: address?.addressLine3,
+            city: address?.city,
+            state: address?.state,
+            zipCode: address?.zipCode,
+            zipCodeExtension: address?.zipCodeExtension,
+        }
+    }
+};
 
 export const mapPhoneToAddressCardData = (address: Phone | undefined) => ({
     phoneId: address?.phoneId,

@@ -3,6 +3,9 @@ import { TaskType } from '@deps/models/case/task';
 
 import { getAgentNigoSteps } from './agent-nigo';
 import { getAgentReviewSteps } from './agent-review';
+import { getClaimUncashTxnIdentifySteps } from './claim-uncash-txn-identify';
+import { getClaimReverseUncashTxnSteps } from './claims-reverse-uncashed-transactions';
+import { getClaimStopUncashTxnSteps } from './claims-stop-uncashed-transactions';
 import { getMatchDocumentPaymentReviewSteps } from './match-payment-document-review';
 import { getSuitabilityReviewSteps } from './suitability-review-steps';
 import { getSuitabilitySteps } from './suitability-steps';
@@ -50,6 +53,15 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
         case TaskType.Prenote_Review:
         case TaskType.Payment_Processing_Review:
             steps = getTOANigoSteps(props);
+            break;
+        case TaskType.Claims_Identify_Uncashed_Transactions:
+            steps = getClaimUncashTxnIdentifySteps(props);
+            break;
+        case TaskType.Claims_Stop_Uncashed_Transactions:
+            steps = getClaimStopUncashTxnSteps(props);
+            break;
+        case TaskType.Claims_Reverse_Uncashed_Transactions:
+            steps = getClaimReverseUncashTxnSteps(props);
             break;
         default:
             steps = [];

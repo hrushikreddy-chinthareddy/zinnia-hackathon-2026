@@ -1,0 +1,180 @@
+{
+    "formId": "4212a2fb-a706-48fd-afd5-9c3e6354ec91",
+    "process": "Claims",
+    "taskType": "CLAIMS_REVERSE_UNCASHED_TRANSACTIONS",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Reverse  Transactions",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Reverse all uncashed transactions in LifeCAD."
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "",
+
+                            "properties": {
+                                "uncashTransaction": {
+                                    "type": "object",
+                                    "title": "",
+                                    "properties": {
+                                        "transactions": {
+                                            "type": "array",
+                                            "title": "",
+                                            "items": {
+                                                "type": "object",
+                                                "title": "",
+                                                "properties": {
+                                                    "policyNumber": {
+                                                        "type": "string",
+                                                        "title": "Contract Id"
+                                                    },
+                                                    "transactionNumber": {
+                                                        "type": "string",
+                                                        "title": "LifeCad Id"
+                                                    },
+                                                    "transactionDate": {
+                                                        "type": "string",
+                                                        "title": "Transaction Date"
+                                                    },
+                                                    "checkNumber": {
+                                                        "type": "string",
+                                                        "title": "Check #"
+                                                    },
+                                                    "transactionAmount": {
+                                                        "type": "string",
+                                                        "title": " Amount"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "additionalNote": {
+                                            "type": "string",
+                                            "title": "Additional Notes",
+                                            "readOnly": true
+                                        },
+                                        "stopSorTransaction": {
+                                            "type": "boolean",
+                                            "title": "I have reserved these transaction in LifeCAD"
+                                        }
+                                    },
+                                    "required": ["stopSorTransaction"]
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:order": ["sectionHeader", "details"],
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "uncashTransaction": {
+                            "transactions": {
+                                "ui:options": {
+                                    "label": false,
+                                    "ArrayFieldTemplate": "ArrayFieldTableTemplate",
+                                    "sorting": true
+                                },
+                                "items": {
+                                    "ui:options": {
+                                        "canAdd": false
+                                    },
+                                    "policyNumber": {
+                                        "ui:placeholder": "policyNumber",
+                                        "ui:helpText": "policyNumber",
+                                        "ui:options": {
+                                            "label": false
+                                        }
+                                    },
+                                    "transactionNumber": {
+                                        "ui:options": {
+                                            "label": false
+                                        }
+                                    },
+                                    "transactionDate": {
+                                        "ui:options": {
+                                            "label": false
+                                        }
+                                    },
+                                    "checkNumber": {
+                                        "ui:options": {
+                                            "label": false
+                                        }
+                                    },
+                                    "transactionAmount": {
+                                        "ui:options": {
+                                            "label": false
+                                        }
+                                    },
+
+                                    "stopRequire": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "widget": "hidden"
+                                        }
+                                    },
+                                    "action": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "widget": "hidden"
+                                        }
+                                    },
+                                    "actionStatus": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "widget": "hidden"
+                                        }
+                                    },
+                                    "stopPeoplesoftTransaction": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "widget": "hidden"
+                                        }
+                                    }
+                                }
+                            },
+                            "additionalNote": {
+                                "ui:options": {
+                                    "label": true,
+                                    "isQuoted": true,
+                                    "classNames": "mt-3"
+                                }
+                            },
+                            "stopSorTransaction": {
+                                "ui:hideError": true,
+                                "ui:options": {
+                                    "classNames": "mt-3"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

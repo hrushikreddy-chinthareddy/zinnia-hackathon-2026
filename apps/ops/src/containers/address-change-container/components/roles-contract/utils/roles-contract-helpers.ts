@@ -216,7 +216,7 @@ export const getContractSelectionRadioConfig = (policy: Policy, t: TFunction) =>
     ],
 });
 
-const getAddressLines = (address: AddressBase) => {
+export const getAddressLines = (address: AddressBase) => {
     const addressLines = [address?.addressLine1, address?.addressLine2, address?.addressLine3]
         .filter(Boolean)
         .map(line => toTitleCase(line))

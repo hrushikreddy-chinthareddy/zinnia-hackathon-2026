@@ -5,9 +5,8 @@ import TextField from '@deps/components/dynamic-form/components/text-field/text-
 import { formatValueByDataType } from '../../templates/card-templates/card-template';
 
 export const TextWidget = function (props: WidgetProps) {
-    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder, formContext } = props;
-    const { inline, prefix, inlinetext, dataType } = getUiOptions(uiSchema);
-
+    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder } = props;
+    const { inline, prefix, inlinetext, dataType, hideError } = getUiOptions(uiSchema);
     if (inline) {
         return (
             <div className="grid grid-cols-2 text-md  max-w-screen-sm">
@@ -40,6 +39,7 @@ export const TextWidget = function (props: WidgetProps) {
                 required={required}
                 disabled={disabled}
                 onChange={onChange}
+                hideError={hideError}
                 status={rawErrors && rawErrors?.length > 0 ? 'error' : undefined}
             />
         </div>

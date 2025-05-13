@@ -15,9 +15,10 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 type DifferentAddressProps = {
     carrierId: string;
     handleClose: (selectedAddress: any) => void;
+    showName?: boolean;
 };
 
-const DifferentAddress = ({ carrierId, handleClose }: DifferentAddressProps) => {
+const DifferentAddress = ({ carrierId, handleClose, showName = true }: DifferentAddressProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
     const [firstName, setFirstName] = useState('');
@@ -28,9 +29,9 @@ const DifferentAddress = ({ carrierId, handleClose }: DifferentAddressProps) => 
     const [addresses, setAddressesData] = useState<any | null>({ entered: {}, validated: {} });
     const [addressValidator, setAddressValidator] = useState<FormValidationErrors>();
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
+
     function formatAndSetEnteredAddress(address: any): void {
         const userEnteredAddress = formatAddress(address);
-
         setEnteredAddress({
             Address: [userEnteredAddress],
         });
@@ -42,10 +43,10 @@ const DifferentAddress = ({ carrierId, handleClose }: DifferentAddressProps) => 
 
     const validateAddress = () => {
         const errors: FormValidationErrors = {};
-        if (!firstName) {
+        if (showName && !firstName) {
             errors['firstName'] = t('errors.firstName');
         }
-        if (!lastName) {
+        if (showName && !lastName) {
             errors['lastName'] = t('errors.lastName');
         }
         if (!selectedId) {
@@ -70,7 +71,7 @@ const DifferentAddress = ({ carrierId, handleClose }: DifferentAddressProps) => 
 
     return (
         <CardContainer classNames={'w-full'} containerClassNames="w-full content-divider">
-            <div className="grid w-full grid-cols-2 gap-4">
+            {showName && <div className="grid w-full grid-cols-2 gap-4">
                 <Field
                     label={t(`correspondence.mailDetails.firstName`) as string}
                     onChange={e => setFirstName(e.target.value)}
@@ -89,7 +90,7 @@ const DifferentAddress = ({ carrierId, handleClose }: DifferentAddressProps) => 
                     message={formErrors?.lastName}
                     variant={selectVarientByConfig({ value: lastName, isFormStateReadOnly: false, error: formErrors?.name })}
                 />
-            </div>
+            </div>}
 
             <div className="col-span-4 py-4">
                 <AddressEntry

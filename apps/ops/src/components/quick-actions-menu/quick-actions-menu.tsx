@@ -17,6 +17,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
+    checkInitialDeathClaimExistsQuery,
     checkLoanRepaymentOneTimeEligibilityQuery,
     checkNewLoanEligibilityQuery,
     checkOneTimePremiumEligibilityQuery,
@@ -27,6 +28,7 @@ import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow
 import { ReactComponent as PaymentIcon } from '@deps/styles/elements/icons/content/payment.svg';
 import { ReactComponent as AutopayIcon } from '@deps/styles/elements/icons/currency/autopay.svg';
 import { ReactComponent as BankIcon } from '@deps/styles/elements/icons/icons_outlined/bank.svg';
+import { ReactComponent as BriefcaseIcon } from '@deps/styles/elements/icons/icons_outlined/briefcase.svg';
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
 import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/icons_outlined/clipboard.svg';
 import { ReactComponent as DocumentReportIcon } from '@deps/styles/elements/icons/icons_outlined/document-report.svg';
@@ -162,6 +164,18 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
         },
     });
 
+    const { data: initialDeathClaimEligibility } = useQuery({
+        queryKey: ['checkInitialDeathClaimExistsQuery', policy.policyNumber, policy.carrierId],
+        queryFn: () => checkInitialDeathClaimExistsQuery(policy.policyNumber as string, policy.carrierId as string),
+        placeholderData: previousData => previousData,
+        select: data => {
+            return {
+                ...data,
+                isEligibleNewDeathClaim: data?.isNewRequest,
+            };
+        },
+    });
+
     return (
         <>
             <MenuContextualLabel label={t('transactions.label')}>
@@ -202,7 +216,18 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                             trackClick('New Premium', `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`);
                         }}
                     />
-
+                    <MenuContextualItem
+                        disabled={!initialDeathClaimEligibility?.isEligibleNewDeathClaim}
+                        content={t('transactions.newDeathClaim')}
+                        href={`claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`}
+                        icon={<BriefcaseIcon height={20} width={20} />}
+                        onClick={() => {
+                            trackClick(
+                                'New Death Claim',
+                                `claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                            );
+                        }}
+                    />
                     <MenuContextualItem
                         disabled={!partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime}
                         content={t('transactions.startAWithdrawal')}

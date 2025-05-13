@@ -1,7 +1,7 @@
 import { Button } from '@zinnia/bloom/components';
 import { useTranslation, TFunction } from 'next-i18next';
 
-import { formatTimestamp, formatTimestampTooltip, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
+import { formatTimestampTooltip, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import { ExceptionView, TaskView, GroupedExceptions } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
@@ -13,6 +13,10 @@ import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
+
+import { BeneSideSheetStep } from './bene-notification-tab';
+
+const INITIAL_BENE_NOTIFICATION = 'initiateBeneNotification';
 
 const getStepStatusText = (step: TransformedStep, t: TFunction): { icon: React.ReactNode; text: string } => {
     switch (step.status) {
@@ -89,6 +93,7 @@ function Exceptions({ exceptions, groupedExceptions }: { exceptions: ExceptionVi
     );
 }
 
+
 function SideSheetStep({ step }: { step: TransformedStep }) {
     const { t } = useTranslation();
     const { icon, text } = getStepStatusText(step, t);
@@ -110,16 +115,33 @@ function SideSheetStep({ step }: { step: TransformedStep }) {
 
 export default function MultiInstanceTab({ step, ...rest }: { step: TransformedStep } & React.HTMLAttributes<HTMLDivElement>) {
     const { t } = useTranslation();
+
+    const getSideSheetStep = (entityType: string | undefined, substep: TransformedStep) => {
+        switch(entityType?.toLowerCase()) {
+            case 'bene':
+                return <BeneSideSheetStep step={substep} />
+            default:
+                return <SideSheetStep step={substep} />
+        }
+    };
+
     return (
         <div {...rest}>
             <Typography variant={TypographyVariant.H3}>{t('caseOverview.sidesheet.multiInstance')}</Typography>
-            <ul className="mt-4">
-                {step.substeps?.map(substep => (
-                    <li className="my-4" key={substep.id}>
-                        <SideSheetStep step={substep} />
-                    </li>
-                ))}
-            </ul>
+                <ul className="mt-4">
+                    {step.substeps?.map((substep, index) => {
+                        // need to do this as we are getting substeps with same event id which is showing duplicate ids on UI
+                        if (step.parentStage.id === INITIAL_BENE_NOTIFICATION && index >= 1) {
+                            return;
+                        }
+
+                        return (
+                            <li className="my-4" key={substep.id}>
+                                {getSideSheetStep(step.stepRaw.instanceInfo?.entityType, substep)}
+                            </li>
+                        );
+                    })}
+                </ul>
         </div>
     );
 }

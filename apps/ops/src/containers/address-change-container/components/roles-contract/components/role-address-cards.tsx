@@ -38,7 +38,7 @@ export const RoleAddressCard = ({
             <Typography variant={TypographyVariant.LabelLg}>{title}</Typography>
             <div className="mb-5 grid auto-rows-fr grid-cols-1 gap-2 lg:grid-cols-3">
                 {partyCardsLits.map((card, index) => (
-                    <ClickContainer
+                    card.address && <ClickContainer
                         classes={clsx(
                             ' w-min',
                             {

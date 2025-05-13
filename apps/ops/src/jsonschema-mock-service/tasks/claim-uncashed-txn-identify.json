@@ -1,0 +1,200 @@
+{
+    "formId": "95201e9f-8e7a-459c-8b34-e6ebfb8f1390",
+    "process": "Claims",
+    "taskType": "CLAIMS_IDENTIFY_UNCASHED_TRANSACTIONS",
+    "formSchema": {
+        "type": "object"
+    },
+    "liveValidate": false,
+    "noValidate": true,
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Identify Uncashed Checks",
+                "formSchema": {
+                    "type": "object",
+                    "liveValidate": false,
+                    "noValidate": true,
+
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Enter details for uncashed transactions against this contract."
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "",
+
+                            "properties": {
+                                "uncashTransaction": {
+                                    "type": "object",
+                                    "title": "",
+                                    "properties": {
+                                        "uncashTransactionExists": {
+                                            "type": "boolean",
+                                            "title": "Are there any uncashed transactions against this contract?"
+                                        }
+                                    },
+                                    "allOf": [
+                                        {
+                                            "if": {
+                                                "required": ["uncashTransactionExists"],
+                                                "properties": {
+                                                    "uncashTransactionExists": {
+                                                        "const": true
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "transactions": {
+                                                        "type": "array",
+                                                        "title": "Uncashed Transactions",
+                                                        "minItems": 1,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "policyNumber": {
+                                                                    "type": "string",
+                                                                    "title": "Contract ID"
+                                                                },
+                                                                "transactionNumber": {
+                                                                    "type": "string",
+                                                                    "title": "LifeCAD ID"
+                                                                },
+                                                                "transactionDate": {
+                                                                    "type": "string",
+                                                                    "format": "date",
+                                                                    "title": "Transaction Date"
+                                                                },
+                                                                "checkNumber": {
+                                                                    "type": "string",
+                                                                    "title": "Check #"
+                                                                },
+                                                                "transactionAmount": {
+                                                                    "type": "string",
+                                                                    "title": "Amount"
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "policyNumber",
+                                                                "transactionNumber",
+                                                                "transactionDate",
+                                                                "checkNumber",
+                                                                "transactionAmount"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "additionalNote": {
+                                                        "type": "string",
+                                                        "title": "Additional Notes"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "required": ["uncashTransactionExists"]
+                                },
+                                "required": ["uncashTransaction"]
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:order": ["sectionHeader", "details"],
+                    "ui:submitButtonOptions": {
+                        "norender": true,
+                        "props": {
+                            "noValidate": true
+                        }
+                    },
+                    "ui:options": {
+                        "noValidate": true,
+                        "showErrors": false,
+                        "liveValidate": false
+                    },
+                    "ui:hideError": true,
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "uncashTransaction": {
+                            "ui:hideError": true,
+                            "ui:options": {
+                                "label": true
+                            },
+
+                            "uncashTransactionExists": {
+                                "ui:widget": "radio",
+                                "ui:options": {
+                                    "enumNames": ["Yes", "No"]
+                                }
+                            },
+                            "transactions": {
+                                "ui:hideError": true,
+
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                },
+                                "items": {
+                                    "inline": true,
+                                    "ui:options": {
+                                        "label": false,
+                                        "title": "transactions",
+                                        "minItems": 1
+                                    },
+                                    "policyNumber": {
+                                        "ui:hideError": true,
+
+                                        "ui:options": {
+                                            "label": true
+                                        }
+                                    },
+                                    "transactionNumber": {
+                                        "ui:hideError": true,
+                                        "ui:options": {
+                                            "label": true
+                                        }
+                                    },
+                                    "transactionDate": {
+                                        "ui:hideError": true,
+                                        "ui:options": {
+                                            "label": true
+                                        }
+                                    },
+                                    "checkNumber": {
+                                        "ui:hideError": true,
+                                        "ui:options": {
+                                            "label": true
+                                        }
+                                    },
+                                    "transactionAmount": {
+                                        "ui:hideError": true,
+                                        "ui:options": {
+                                            "label": true,
+
+                                            "widget": "ValueWidget"
+                                        }
+                                    }
+                                }
+                            },
+                            "additionalNote": {
+                                "ui:hideError": true,
+                                "ui:widget": "textarea",
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
