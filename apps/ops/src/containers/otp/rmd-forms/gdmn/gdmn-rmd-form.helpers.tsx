@@ -16,6 +16,8 @@ import {
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     PartyRoles,
@@ -27,8 +29,7 @@ import {
     AccountType,
     FundWithdrawnMethod,
     FormParts,
-    FormValidationErrors,
-    LifeCadPartyRoles,
+    FormValidationErrors
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -112,7 +113,7 @@ export default function getGdmnRmdConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
             shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
-                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
+                return isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[]);
             },
         },
         {
@@ -461,6 +462,13 @@ export default function getGdmnRmdConfig(t: TFunction) {
         },
     ];
 
+    const eSignatureFieldConfig = {
+        type: true,
+        signPresent: true,
+        date: true,
+        auditTrial: true,
+    };
+
     return {
         formPartyConfigs,
         fundWithdrawnMethodOptions,
@@ -469,5 +477,6 @@ export default function getGdmnRmdConfig(t: TFunction) {
         disbursementOptions,
         signaturesConfig,
         formValidation: rmdFormValidation,
+        eSignatureFieldConfig,
     };
 }

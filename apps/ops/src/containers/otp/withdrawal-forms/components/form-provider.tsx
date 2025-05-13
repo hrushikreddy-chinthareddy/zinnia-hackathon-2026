@@ -18,6 +18,7 @@ import {
     FundWithdrawnMethod,
     ProgramSubType,
 } from '@deps/models/case/withdrawal/case';
+import { Party, PolicyParties } from '@deps/models/policy/sor-policy';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
@@ -32,7 +33,8 @@ type FormProviderProps = {
     issueState: string;
     isOpenNigo?: boolean;
     featureFlagDecisions?: FeatureFlags;
-    parties?: LifeCadParty[];
+    parties?: LifeCadParty[] | Party[];
+    partyRoles?: PolicyParties[];
 };
 
 const getFundWithdrawnMethod = (form: ActiveWithdrawalCase) => {
@@ -68,6 +70,7 @@ export const FormProvider = ({
     parties,
     isOpenNigo,
     featureFlagDecisions,
+    partyRoles,
 }: FormProviderProps) => {
     const searchParams = useSearchParams();
     const [formData, setFormData] = useState(form?.data?.formRequest?.formData);
@@ -183,6 +186,7 @@ export const FormProvider = ({
                 contractIssueState,
                 formWarnings,
                 parties,
+                partyRoles,
                 formNigos,
                 formComment,
                 formReindexingData,

@@ -17,6 +17,8 @@ import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import sbgcConfig from '@deps/containers/otp/withdrawal-forms/sbgc-withdrawal-form.helpers';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     AccountType,
@@ -27,12 +29,11 @@ import {
     FormValidationErrors,
     Frequency,
     FundWithdrawnMethod,
-    LifeCadPartyRoles,
     PartyRoles,
     PaymentMailType,
     PaymentMethod,
     PhoneTypes,
-    SSWType,
+    SSWType
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -435,7 +436,7 @@ export default function getUlpcConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
             shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
-                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
+                return isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[]);
             },
         },
         {

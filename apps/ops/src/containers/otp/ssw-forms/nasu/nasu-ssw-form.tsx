@@ -22,6 +22,7 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 import W4pTaxForm from '@deps/components/w4p-tax-form/w4p-tax-form';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 
 export function NassauSSWForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -70,7 +71,7 @@ export function NassauSSWForm() {
     }, [setFormValidator, formValidation]);
 
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
-    const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties);
+    const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties as LifeCadParty[]);
     const shouldStateW4pRender = isAllowedState(contractIssueState ?? '');
 
     return (

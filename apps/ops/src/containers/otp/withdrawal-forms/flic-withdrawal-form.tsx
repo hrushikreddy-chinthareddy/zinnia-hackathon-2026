@@ -22,7 +22,7 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getFlicConfig, { FormSubtype } from './flic-withdrawal-form.helpers';
 
-export default function FlicWithdrawalForm({ qualType }: { qualType: string }) {
+export default function FlicWithdrawalForm({ qualType, isLC }: { qualType: string, isLC: boolean }) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
         cslnCheckStates,
@@ -39,7 +39,7 @@ export default function FlicWithdrawalForm({ qualType }: { qualType: string }) {
         selectOneOptions,
         fullWithdrawalOptions,
         eSignatureFieldConfig,
-    } = getFlicConfig(t, qualType);
+    } = getFlicConfig(t, qualType, isLC);
 
     const {
         formSubtype,

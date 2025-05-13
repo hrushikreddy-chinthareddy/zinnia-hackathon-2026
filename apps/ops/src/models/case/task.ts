@@ -50,6 +50,17 @@ export enum EarlyTaskType {
     RENEWAL_TASK = 'RENEWAL_TASK'
 }
 
+
+export enum TaskToProcessType {
+    OFTFORMINPUTTASK = 'OFT',
+    SSWFORMINPUTTASK = 'SSW',
+    WITHDRAWALFORMINPUTTASK = 'WITHDRAWAL',
+    RMDFORMINPUTTASK = 'RMD',
+    RENEWAL_TASK = 'RENEWAL_TASK',
+    RENEWALTASK = 'RenewalTask',
+}
+
+
 export enum TaskSource {
     ZinniaTaskManagement = 'Zinnia.TaskManagement',
 }

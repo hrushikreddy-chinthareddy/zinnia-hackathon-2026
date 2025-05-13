@@ -21,6 +21,7 @@ import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
+import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { CaseType } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
@@ -38,6 +39,7 @@ import {
 } from '@deps/types/constants';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import { getCaseType, getFormParts } from './form-entry-step.helpers';
 import { useNigoEntry } from '../../nigo-entry-provider';
@@ -54,7 +56,8 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.formEntry' });
     const { t: withdrawalTxt } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const { goToNext } = useWorkflow();
-    const { qualType } = useAccountInfo(document.contract, clientCode);
+
+    //const { qualType } = useAccountInfo(document.contract, clientCode);
     const { user } = useUser();
     const caseType = getCaseType(docType as string);
     const formState = useContext(FormDataContext);
@@ -76,8 +79,12 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
     const [timer] = useState(performance.now());
 
     const { setSubmitFailed } = useNigoEntry();
+    const isLC = !isFastFeatureEnabled(formState?.initialForm?.taskType, formState.featureFlagDecisions);
+    const accountInfo = useAccountInfo(document.contract, clientCode as string);
+    const contractAccountInfo = useContractAccountInfo(document.contract, clientCode as string);
+    const { qualType } = isLC ? accountInfo : contractAccountInfo;
 
-    const formParts = getFormParts(caseType, clientCode, qualType, planCode);
+    const formParts = getFormParts(caseType, clientCode, qualType, planCode, isLC);
     const [taskApiError, setTaskApiError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const carrier = clientCode?.toUpperCase();

@@ -10,6 +10,7 @@ import { Loader } from '@deps/components/page-loader';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { QualTypes } from '@deps/models/case/withdrawal/case';
 import { CalculateRmdBody, RmdParty, RmdQualTypes, RmdRoles, VariableQuoteDescription } from '@deps/models/case/withdrawal/rmd';
 import { RelationshipToInsured } from '@deps/models/policy/sor-policy';
@@ -81,6 +82,17 @@ const calculateAgeDifference = (ownerAge: string, spouseAgee: string): number =>
 interface RMDCalculatorProps {
     isFormStateReadOnly?: boolean;
 }
+
+const getAnnuitants = (parties: LifeCadParty[]) => {
+    return parties?.filter(party => [0, 3].includes(party.SrcRoleOptionId) && [-1, -2].includes(party.SrcRoleType)) || [];
+};
+
+const getOwnerDOB =  (parties: LifeCadParty[]) => {
+    return  parties?.find(
+        owner => owner.SrcRoleOptionId === 0 && owner?.SrcRole?.toLowerCase().includes(RmdRoles.Insured.toLowerCase())
+    )?.DateOfBirth || '';
+};
+
 export default function RMDCalculator({ isFormStateReadOnly }: RMDCalculatorProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.rmdMethod' });
     const { initialForm, parties } = useContext(FormDataContext);
@@ -96,7 +108,7 @@ export default function RMDCalculator({ isFormStateReadOnly }: RMDCalculatorProp
     const [annuitants, setAnnuitants] = useState<RmdParty[]>([]);
 
     useEffect(() => {
-        const annuitants = parties?.filter(party => [0, 3].includes(party.SrcRoleOptionId) && [-1, -2].includes(party.SrcRoleType)) || [];
+        const annuitants = getAnnuitants(parties as LifeCadParty[]);
 
         const filteredAnnuitants = annuitants?.map(party => {
             const annuitant: RmdParty = {
@@ -109,10 +121,7 @@ export default function RMDCalculator({ isFormStateReadOnly }: RMDCalculatorProp
             };
             // Joint life check Spouse, Husband, Wife
             if ([10, 16, 23, 106].includes(Number(party.SrcRelToOwnerId))) {
-                const ownerAgeDateOfBirth =
-                    parties?.find(
-                        owner => owner.SrcRoleOptionId === 0 && owner?.SrcRole?.toLowerCase().includes(RmdRoles.Insured.toLowerCase())
-                    )?.DateOfBirth || '';
+                const ownerAgeDateOfBirth = getOwnerDOB(parties as LifeCadParty[]);
                 const ageDifference = calculateAgeDifference(ownerAgeDateOfBirth, party?.DateOfBirth);
                 if (ageDifference > 10) {
                     annuitant.relationshipToInsured = RelationshipToInsured.SPOUSE;

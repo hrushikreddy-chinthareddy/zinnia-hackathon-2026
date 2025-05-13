@@ -5,12 +5,11 @@ import ButtonGrp from '@deps/components/button-group/button-group';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { LifeCadParty } from '@deps/models/case/lifecad-party';
+import { getBankingDetails, getBankingDetailsLC, isExistingBank, isExistingBankLC } from '@deps/helpers/bank.helpers';
+import { LifeCadBanking, LifeCadParty } from '@deps/models/case/lifecad-party';
 import {
-    FormDisbursement as FormDisbursementType,
-    LifeCadPartyRoles,
-    PaymentMailType,
-    PaymentMethod,
+    FormDisbursement as FormDisbursementType, PaymentMailType,
+    PaymentMethod
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -19,6 +18,8 @@ import {
     PaymentMethodAdditionalOptions,
     PaymentMethodOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
+import { BankAccountBase, Party, PolicyParties } from '@deps/models/policy/sor-policy';
+import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import AutofillAccountToggle, { BankDetailsInputMethod } from './form-disbursement-parts/autofill-account-toggle';
 import { ConsentAvailable } from './form-disbursement-parts/consent-available';
@@ -75,7 +76,7 @@ export default function FormDisbursement({
     isFormStateReadOnly = false,
     defaultValue,
 }: FormDisbursementProps) {
-    const { initialForm, formDisbursement, parties, setFormErrors, setFormDisbursement } = useContext(FormDataContext);
+    const { initialForm, formDisbursement, parties, partyRoles, setFormErrors, setFormDisbursement, featureFlagDecisions } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.distributionMethod' });
     const [selected, setSelected] = useState(selectionIdentifier(formDisbursement) || defaultValue || null);
     const [supplementaryFields, setSupplementaryFields] = useState<DisbursementConfig[] | null>(null);
@@ -84,13 +85,17 @@ export default function FormDisbursement({
     const [isBankSelected, setBankSelected] = useState(false);
     const selectedOption = options.find(val => val.value === selected);
     const selectedBankInfoOption = disbursementInformation?.isDirectDeposit ? BankInfoType.Full : BankInfoType.Masked;
+    const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
 
     const bankingDetails = useMemo(() => {
-        const party = parties?.find((party: LifeCadParty) => party.Role === LifeCadPartyRoles.PrimaryOwner);
-        return party?.Banking || [];
-    }, [parties]);
+        return isLC
+            ? getBankingDetailsLC(parties as LifeCadParty[])
+            : getBankingDetails(parties as Party[], partyRoles as PolicyParties[]);
+    }, [isLC, parties, partyRoles]);
 
-    const existingBankSelected = bankingDetails.map(bank => bank.BankName).includes(formDisbursement.bank[0].bankName || '');
+    const existingBankSelected = isLC
+        ? isExistingBankLC(bankingDetails as LifeCadBanking[], formDisbursement.bank[0].bankName || '')
+        : isExistingBank(bankingDetails as BankAccountBase[], formDisbursement.bank[0].bankName || '');
 
     useEffect(() => {
         selected && setDisbursementOption(selected as PaymentMailType | PaymentMethod);

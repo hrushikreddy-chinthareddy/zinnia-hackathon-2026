@@ -23,6 +23,7 @@ import {
     getOwnerStateOfResidence,
     spousalSignatureOnAnnuitantStateCodes,
     validQualTypesForSpousalSignature,
+    validQualTypesForSpousalSignatureFAST,
 } from '@deps/helpers/otp-withdrawal.helpers';
 import { statesAndTerritories } from '@deps/helpers/states.helpers';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
@@ -78,7 +79,7 @@ export const spousalSignatureStateCodes = [
     statesAndTerritories.WISCONSIN,
 ];
 
-export default function getFlicConfig(t: TFunction, qualType = '') {
+export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:boolean = true) {
     const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
         const programTypeText = formProgram?.programType?.text || '';
         if (programTypeText === ProgramType.TotalFreeAmt) {
@@ -97,11 +98,15 @@ export default function getFlicConfig(t: TFunction, qualType = '') {
         return { selectedOption: null, amount: '' };
     };
 
-    function isValidQualType(qualType: string): boolean {
+    function isValidQualTypeLC(qualType: string): boolean {
         return validQualTypesForSpousalSignature.includes(qualType);
     }
 
-    const shouldCheckSpouseSignatureOnAnnuitantState = isValidQualType(qualType);
+    function isValidQualType(qualType: string): boolean {
+        return validQualTypesForSpousalSignatureFAST.includes(qualType);
+    }
+
+    const shouldCheckSpouseSignatureOnAnnuitantState = isLC ? isValidQualTypeLC(qualType): isValidQualType(qualType);
 
     const isSpousalSignatureRequired = (ownerState: string | null, annuitantState: string | null): boolean => {
         if (shouldCheckSpouseSignatureOnAnnuitantState) {

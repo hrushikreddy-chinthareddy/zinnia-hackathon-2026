@@ -91,7 +91,7 @@ describe('FLIC Form Specific component', () => {
                     setFormData: setMockData,
                 }}
             >
-                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
+                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA}  isLC={true}/>
             </FormDataContext.Provider>
         );
 
@@ -147,7 +147,7 @@ describe('FLIC Form Specific component', () => {
                     setFormData: setMockData,
                 }}
             >
-                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
+                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA}  isLC={true}/>
             </FormDataContext.Provider>
         );
 
@@ -203,7 +203,7 @@ describe('FLIC Form Specific component', () => {
                     setFormData: setMockData,
                 }}
             >
-                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
+                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA}  isLC={true}/>
             </FormDataContext.Provider>
         );
 
@@ -264,7 +264,7 @@ describe('FLIC Form Specific component', () => {
                     },
                 }}
             >
-                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
+                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA} isLC={true}/>
             </FormDataContext.Provider>
         );
 
@@ -315,7 +315,7 @@ describe('FLIC Form Specific component', () => {
                     },
                 }}
             >
-                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA} />
+                <FlicWithdrawalForm qualType={QualTypes.ConvertedRothIRA}  isLC={true}/>
             </FormDataContext.Provider>
         );
 

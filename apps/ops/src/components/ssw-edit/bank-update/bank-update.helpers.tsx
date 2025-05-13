@@ -4,8 +4,10 @@ import { TFunction } from 'next-i18next';
 import { BankingFields, DisbursementFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
 import { createValidator } from '@deps/containers/otp/utils/helper-utils';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
 import { DocumentData } from '@deps/models/case/document';
 import { BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -14,8 +16,7 @@ import {
     ActiveWithdrawalCase,
     Carrier,
     FormSignature,
-    LifeCadPartyRoles,
-    PartyRoles,
+    PartyRoles
 } from '@deps/models/case/withdrawal/case';
 import { DisbursementParts } from '@deps/models/case/withdrawal/disbursement-types';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -237,7 +238,7 @@ export const signaturesConfig = [
         signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
         shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
             // Checking the beneficiary in LC parties
-            return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
+            return isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[]);
         },
     },
 ];

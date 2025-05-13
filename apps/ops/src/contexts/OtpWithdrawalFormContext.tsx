@@ -33,6 +33,7 @@ import {
     FormComment,
     PeriodicPensionFormType,
 } from '@deps/models/case/withdrawal/case';
+import { Party, PolicyParties } from '@deps/models/policy/sor-policy';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 export type WithdrawalTaskStatus = CaseStatus | TaskStatus;
 export interface OtpWithdrawalFormState {
@@ -62,7 +63,8 @@ export interface OtpWithdrawalFormState {
     ownerStateOfResidence: string | null;
     formSurrenderingCompany: FormSurrenderingCompany | null;
     contractIssueState?: string;
-    parties?: LifeCadParty[];
+    parties?: LifeCadParty[] | Party[];
+    partyRoles?: PolicyParties[];
     currentFormState: WithdrawalTaskStatus;
     isFormStateReadOnly: boolean;
     formSpecialInstruction: FormSpecialInstruction;
@@ -139,6 +141,7 @@ export const defaultFormDataContext = {
     formSurrenderingCompany: {} as FormSurrenderingCompany,
     contractIssueState: '',
     parties: [],
+    partyRoles: [],
     currentFormState: CaseStatus.Draft,
     isFormStateReadOnly: false,
     formBeneInfo: {} as FormBeneInfo,

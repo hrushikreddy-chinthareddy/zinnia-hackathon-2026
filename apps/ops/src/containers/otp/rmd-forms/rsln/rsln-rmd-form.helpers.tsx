@@ -16,7 +16,9 @@ import {
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
 import { statesAndTerritories } from '@deps/helpers/states.helpers';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     PartyRoles,
@@ -28,8 +30,7 @@ import {
     AccountType,
     FundWithdrawnMethod,
     FormParts,
-    FormValidationErrors,
-    LifeCadPartyRoles,
+    FormValidationErrors
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -125,7 +126,7 @@ export default function getRslnRmdConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
             shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
-                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
+                return isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[]);
             },
         },
         {

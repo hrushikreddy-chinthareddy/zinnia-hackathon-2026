@@ -52,6 +52,7 @@ import {
     DisbursementParts,
     PaymentMethodOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
+import { PartyRole, PartyType, PolicyParties } from '@deps/models/policy/sor-policy';
 
 import { FormSubtype } from '../flic-withdrawal-form.helpers';
 
@@ -626,13 +627,21 @@ export default function useNasuConfig(t: TFunction) {
         },
     ];
 
-    const handleShouldShowDOBInOl4573 = (parties: LifeCadParty[] | undefined): boolean => {
+    const handleShouldShowDOBInOl4573LC = (parties: LifeCadParty[] | undefined): boolean => {
         // CMW-21591 (Only applicable for NASU)
         const partyDetails = parties?.find((party: LifeCadParty) => party.Role === LifeCadPartyRoles.PrimaryOwner);
 
         const personTypeIndividual = partyDetails?.PersonType === LifeCadPartyPersonType.Individual;
         return personTypeIndividual;
     };
+
+    const handleShouldShowDOBInOl4573 = (parties: any[] | undefined, partyRoles: PolicyParties[]): boolean => {
+        // CMW-21591 (Only applicable for NASU)
+        const owner = partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER);
+        const partyDetails = parties?.find(party => party?.partyRoleId === owner?.partyRoleId);
+        return partyDetails?.partyType === PartyType.INDIVIDUAL;
+    };
+
     const w4pSignaturesConfig = [
         {
             component: SignatureFields.SignatureType,
@@ -670,6 +679,7 @@ export default function useNasuConfig(t: TFunction) {
         reasonOptions,
         defaultValues,
         handleShouldShowDOBInOl4573,
+        handleShouldShowDOBInOl4573LC,
         w4pSignaturesConfig,
         eSignatureFieldConfig,
     };

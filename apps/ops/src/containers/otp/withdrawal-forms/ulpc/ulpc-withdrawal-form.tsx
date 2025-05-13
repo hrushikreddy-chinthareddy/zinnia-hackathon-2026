@@ -19,12 +19,33 @@ import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
+import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getUlpcConfig, { FormSubtype } from './ulpc-withdrawal-form.helpers';
 
 export default function UlpcWithdrawalForm() {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+
+    const {
+        formSubtype,
+        formParty,
+        setFormData,
+        formData,
+        initialForm,
+        setFormValidator,
+        ownerStateOfResidence,
+        setOwnerStateOfResidence,
+        contractIssueState,
+        isFormStateReadOnly,
+        formESignatureData,
+        setFormESignatureData,
+        formErrors,
+        featureFlagDecisions
+    } = useContext(FormDataContext);
+
+    const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
+
     const {
         cslnCheckStates,
         identifySelectedFormProgramOption,
@@ -42,23 +63,9 @@ export default function UlpcWithdrawalForm() {
         validateMaritalStatusAllowances,
         w4pSignaturesConfig,
         eSignatureFieldConfig,
-    } = getUlpcConfig(t);
+    } = getUlpcConfig(t, isLC);
 
-    const {
-        formSubtype,
-        formParty,
-        setFormData,
-        formData,
-        initialForm,
-        setFormValidator,
-        ownerStateOfResidence,
-        setOwnerStateOfResidence,
-        contractIssueState,
-        isFormStateReadOnly,
-        formESignatureData,
-        setFormESignatureData,
-        formErrors,
-    } = useContext(FormDataContext);
+
 
     const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
 
@@ -83,7 +90,7 @@ export default function UlpcWithdrawalForm() {
         if (newOwnerStateOfResidence !== ownerStateOfResidence) {
             setOwnerStateOfResidence(newOwnerStateOfResidence);
         }
-    }, [formParty]);
+    }, [formParty, ownerStateOfResidence]);
 
     const shouldStateW4pRender = isAllowedState(contractIssueState);
 

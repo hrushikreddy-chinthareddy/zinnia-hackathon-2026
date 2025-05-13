@@ -16,7 +16,10 @@ import TaxOL4753Attachment from '@deps/components/otp-withdrawal-form/tax-ol4753
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { Carrier } from '@deps/models/case/withdrawal/case';
+import { PolicyParties } from '@deps/models/policy/sor-policy';
+import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import useNasuConfig from './nasu-withdrawal-form-helpers';
@@ -41,8 +44,8 @@ export default function NasuWithdrawalForm() {
         reasonOptions,
         defaultValues,
         handleShouldShowDOBInOl4573,
+        handleShouldShowDOBInOl4573LC,
         w4pSignaturesConfig,
-        eSignatureFieldConfig,
     } = useNasuConfig(t);
     const {
         formParty,
@@ -54,9 +57,8 @@ export default function NasuWithdrawalForm() {
         contractIssueState,
         isFormStateReadOnly,
         parties,
-        formESignatureData,
-        setFormESignatureData,
-        formErrors,
+        featureFlagDecisions,
+        partyRoles,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -77,7 +79,8 @@ export default function NasuWithdrawalForm() {
 
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
-    const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties);
+    const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
+    const shouldShowDOBInOl4573 = isLC ? handleShouldShowDOBInOl4573LC(parties as LifeCadParty[]) : handleShouldShowDOBInOl4573(parties as any[], partyRoles as PolicyParties[]);
     const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
@@ -111,7 +114,6 @@ export default function NasuWithdrawalForm() {
                 options={disbursementOptions}
                 defaultValue={defaultValues.disbursementOption}
             />
-
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
             {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
             <TaxOL4753Attachment isFormStateReadOnly={isFormStateReadOnly} shouldShowDOBInOl4573={shouldShowDOBInOl4573} />

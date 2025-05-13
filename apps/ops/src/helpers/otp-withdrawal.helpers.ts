@@ -27,14 +27,14 @@ const determinePartyAnnuitant = (parties: Party[] = []): Party | null => {
 };
 
 export const getOwnerStateOfResidence = (formParty: FormParty): string | null => {
-    const owner = determinePartyOwner(formParty?.parties);
+    const owner = determinePartyOwner(formParty?.parties || []);
     if (!owner) return null;
     const ownerPrimaryAddress = determinePrimaryAddress(owner.addresses);
     return ownerPrimaryAddress?.state || null;
 };
 
 export const getAnnuitantStateOfResidence = (formParty: FormParty): string | null => {
-    const annuitant = determinePartyAnnuitant(formParty?.parties);
+    const annuitant = determinePartyAnnuitant(formParty?.parties || []);
     if (!annuitant) return null;
     const annuitantPrimaryAddress = determinePrimaryAddress(annuitant.addresses);
     return annuitantPrimaryAddress?.state || null;
@@ -51,6 +51,12 @@ export const validQualTypesForSpousalSignature = [
     'Custodial IRA-SEP',
     'Custodial QLAC IRA',
     'Custodial Roth IRA',
+];
+
+export const validQualTypesForSpousalSignatureFAST = [
+    "CUSTODIALINDIVIDUALRETIREMENTACCOUNT",
+    "CUSTODIALROTHINDIVIDUALRETIREMENTACCOUNT",
+    "CUSTODIALROLLOVERINDIVIDUALRETIREMENTACCOUNT",
 ];
 
 export const spousalSignatureOnAnnuitantStateCodes: string[] = ['ID', 'NV', 'TX', 'WA'];

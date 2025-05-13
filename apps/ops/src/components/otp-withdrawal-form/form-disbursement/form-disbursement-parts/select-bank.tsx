@@ -1,14 +1,18 @@
 import { useTranslation } from 'next-i18next';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import { getBankingDetails, getBankingDetailsLC, getBankOptions, getBankOptionsLC, getSelectedOption, getSelectedOptionLC } from '@deps/helpers/bank.helpers';
 import { LifeCadBanking, LifeCadParty } from '@deps/models/case/lifecad-party';
 import { AccountType } from '@deps/models/case/withdrawal/case';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
+import { BankAccountBase, Party, PolicyParties } from '@deps/models/policy/sor-policy';
+import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import { SelectedBankContext } from './pre-populate-banking-details';
+
 const SelectBank = ({
     fieldLabel,
     fieldName,
@@ -18,35 +22,58 @@ const SelectBank = ({
     onDataChange,
 }: DisbursementInformation) => {
     const { t } = useTranslation();
-    const { parties } = useContext(FormDataContext);
+    const { parties, partyRoles, initialForm, featureFlagDecisions } = useContext(FormDataContext);
     const { setBankSelected } = useContext(SelectedBankContext);
     const OTHER_BANK_OPTION = 'other';
+    const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
 
-    const bankingDetails = useMemo(
-        () => parties?.filter((party: LifeCadParty) => party.Role === 'Primary Owner')[0]?.Banking || [],
-        [parties]
-    );
+    const bankingDetails = useMemo(() => {
+        return isLC
+            ? getBankingDetailsLC(parties as LifeCadParty[])
+            : getBankingDetails(parties as Party[], partyRoles as PolicyParties[]);
+    }, [isLC, parties, partyRoles]);
 
-    const bankOptions = bankingDetails.map(bank => ({ label: bank.BankName, value: String(bank.BankId) }));
+    const bankOptions = isLC
+        ? getBankOptionsLC(bankingDetails as LifeCadBanking[])
+        : getBankOptions(bankingDetails as BankAccountBase[]);
+
+
     const [selectedBank, setSelectedBank] = useState('');
     if (bankOptions) {
         bankOptions.push({ label: t('caseWithdrawal.request.distributionMethod.other'), value: OTHER_BANK_OPTION });
     }
 
     useEffect(() => {
-        const selectedOption = bankingDetails.length > 0 ? bankingDetails[0] : ({} as LifeCadBanking);
-        if (
-            (disbursementInformation.accountNumber === selectedOption.AccountNumber &&
-                disbursementInformation.bankName === selectedOption.BankName &&
-                disbursementInformation.bankRoutingNumber === selectedOption.RoutingNumber) ||
-            (!disbursementInformation.accountNumber &&
-                !disbursementInformation.bankName &&
-                !disbursementInformation.bankRoutingNumber &&
-                selectedOption.BankId)
-        ) {
-            setBankingOption(String(selectedOption?.BankId), false);
+        if (isLC) {
+            const selectedOption = bankingDetails.length > 0 ? bankingDetails[0] as LifeCadBanking : ({} as LifeCadBanking);
+            if (
+                (disbursementInformation.accountNumber === selectedOption.AccountNumber &&
+                    disbursementInformation.bankName === selectedOption.BankName &&
+                    disbursementInformation.bankRoutingNumber === selectedOption.RoutingNumber) ||
+                (!disbursementInformation.accountNumber &&
+                    !disbursementInformation.bankName &&
+                    !disbursementInformation.bankRoutingNumber &&
+                    selectedOption.BankId)
+            ) {
+                setBankingOption(String(selectedOption?.BankId), false);
+            } else {
+                setBankingOption(OTHER_BANK_OPTION, false);
+            }
         } else {
-            setBankingOption(OTHER_BANK_OPTION, false);
+            const selectedOption = bankingDetails.length > 0 ? bankingDetails[0] as BankAccountBase : ({} as BankAccountBase);
+            if (
+                (disbursementInformation.accountNumber === selectedOption.accountNumber &&
+                    disbursementInformation.bankName === selectedOption.branchName &&
+                    disbursementInformation.bankRoutingNumber === selectedOption.routingNumber) ||
+                (!disbursementInformation.accountNumber &&
+                    !disbursementInformation.bankName &&
+                    !disbursementInformation.bankRoutingNumber &&
+                    selectedOption.bankId)
+            ) {
+                setBankingOption(String(selectedOption?.bankId), false);
+            } else {
+                setBankingOption(OTHER_BANK_OPTION, false);
+            }
         }
     }, []);
 
@@ -73,25 +100,47 @@ const SelectBank = ({
                 bankFurtherCreditName: !userSelectedOption ? disbursementInformation.bankFurtherCreditName : '',
             }));
         } else if (selectedBank !== '') {
-            const selectedOption = bankingDetails.find(bankDetail => String(bankDetail.BankId) === selectedBank);
-            setBankSelected(true);
-            onDataChange(ogData => ({
-                ...ogData,
-                accountType: (selectedOption?.AccountType as AccountType) || '',
-                bankName: selectedOption?.BankName || '',
-                accountNumber: selectedOption?.AccountNumber || '',
-                bankRoutingNumber: selectedOption?.RoutingNumber || '',
-                isVoidCheckAttached: !userSelectedOption ? disbursementInformation.isVoidCheckAttached : null,
-                isWireApprovalPresent: !userSelectedOption ? disbursementInformation.isWireApprovalPresent : false,
-                doesCheckMeetSecurityRequirements: !userSelectedOption ? disbursementInformation.doesCheckMeetSecurityRequirements : null,
-                accountHolder: !userSelectedOption ? disbursementInformation.accountHolder : '',
-                bankFurtherCreditAccount: !userSelectedOption
-                    ? disbursementInformation.bankFurtherCreditAccount
-                    : !userSelectedOption
-                    ? disbursementInformation.bankFurtherCreditAccount
-                    : '',
-                bankFurtherCreditName: !userSelectedOption ? disbursementInformation.bankFurtherCreditName : '',
-            }));
+            if (isLC) {
+                const selectedOption = getSelectedOptionLC(bankingDetails as LifeCadBanking[], selectedBank);
+                setBankSelected(true);
+                onDataChange(ogData => ({
+                    ...ogData,
+                    accountType: (selectedOption?.AccountType as AccountType) || '',
+                    bankName: selectedOption?.BankName || '',
+                    accountNumber: selectedOption?.AccountNumber || '',
+                    bankRoutingNumber: selectedOption?.RoutingNumber || '',
+                    isVoidCheckAttached: !userSelectedOption ? disbursementInformation.isVoidCheckAttached : null,
+                    isWireApprovalPresent: !userSelectedOption ? disbursementInformation.isWireApprovalPresent : false,
+                    doesCheckMeetSecurityRequirements: !userSelectedOption ? disbursementInformation.doesCheckMeetSecurityRequirements : null,
+                    accountHolder: !userSelectedOption ? disbursementInformation.accountHolder : '',
+                    bankFurtherCreditAccount: !userSelectedOption
+                        ? disbursementInformation.bankFurtherCreditAccount
+                        : !userSelectedOption
+                        ? disbursementInformation.bankFurtherCreditAccount
+                        : '',
+                    bankFurtherCreditName: !userSelectedOption ? disbursementInformation.bankFurtherCreditName : '',
+                }));
+            } else {
+                const selectedOption = getSelectedOption(bankingDetails as BankAccountBase[], selectedBank);
+                setBankSelected(true);
+                onDataChange(ogData => ({
+                    ...ogData,
+                    accountType: (selectedOption?.accountType as AccountType) || '',
+                    bankName: selectedOption?.branchName || '',
+                    accountNumber: selectedOption?.accountNumber || '',
+                    bankRoutingNumber: selectedOption?.routingNumber || '',
+                    isVoidCheckAttached: !userSelectedOption ? disbursementInformation.isVoidCheckAttached : null,
+                    isWireApprovalPresent: !userSelectedOption ? disbursementInformation.isWireApprovalPresent : false,
+                    doesCheckMeetSecurityRequirements: !userSelectedOption ? disbursementInformation.doesCheckMeetSecurityRequirements : null,
+                    accountHolder: !userSelectedOption ? disbursementInformation.accountHolder : '',
+                    bankFurtherCreditAccount: !userSelectedOption
+                        ? disbursementInformation.bankFurtherCreditAccount
+                        : !userSelectedOption
+                        ? disbursementInformation.bankFurtherCreditAccount
+                        : '',
+                    bankFurtherCreditName: !userSelectedOption ? disbursementInformation.bankFurtherCreditName : '',
+                }));
+            }
         }
     };
 

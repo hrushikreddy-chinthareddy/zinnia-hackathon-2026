@@ -20,6 +20,8 @@ import {
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
@@ -38,8 +40,7 @@ import {
     FormDisbursement,
     AccountType,
     RestrictionOption,
-    LifeCadPartyRoles,
-    AddressTypes,
+    AddressTypes
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_BANK_DETAILS,
@@ -127,7 +128,7 @@ export default function getNasuOftConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
             shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
                 // Checking the beneficiary in LC parties
-                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
+                return isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[]);
             },
         },
         {

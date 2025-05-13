@@ -2718,6 +2718,7 @@ export type PartyAllOf = {
     /** Party ID at Policy Level that comes in from External source (for Everly it will be Acord 103) */
     partyId?: string;
     phones?: Phone[];
+    partyRoleId?: number;
 };
 
 export type Party = PartyBase & PartyAllOf;
@@ -4984,6 +4985,7 @@ export interface BasePolicy {
     timestamp?: string;
     version?: number;
     withdrawalValues?: WithdrawalValues;
+    planCode?: string;
 }
 
 /**
@@ -5105,6 +5107,7 @@ export interface BankAccountBase {
     routingNumber?: string;
     /** Date (with pattern "yyyy-mm-dd") */
     startDate?: string;
+    bankId?: string;
 }
 
 export interface BankAccountChangeRequest {

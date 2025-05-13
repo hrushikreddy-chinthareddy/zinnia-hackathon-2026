@@ -1,12 +1,14 @@
 import dayjs from 'dayjs';
 
+import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, FormSignature, FormTaxWithholding, LifeCadPartyRoles, PartyRoles } from '@deps/models/case/withdrawal/case';
+import { ActiveWithdrawalCase, FormSignature, FormTaxWithholding, PartyRoles } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { SignatureFields } from '../../otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
@@ -82,7 +84,7 @@ export const signaturesConfig = [
         signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
         shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
             // Checking the beneficiary in LC parties
-            return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
+            return isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[]);
         },
     },
 ];

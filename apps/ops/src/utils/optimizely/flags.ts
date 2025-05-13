@@ -156,4 +156,5 @@ export enum FEATURE_FLAGS {
     FUND_ALLOCATION_TRANSACTION = 'fund_allocation_transaction',
     ENTERPRISE_SEARCH = 'enterprise_search',
     DEPU_4253_FUNDING_SOURCES = 'depu-4253-funding-sources',
+    FAST_WITHDRAWAL = 'fast-withdrawal',
 }

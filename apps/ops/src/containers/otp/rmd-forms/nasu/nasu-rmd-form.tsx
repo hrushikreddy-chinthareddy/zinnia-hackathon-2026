@@ -17,6 +17,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { Processes } from '@deps/models/case/case';
 import { RmdFormType } from '@deps/models/case/enums';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { Carrier, RMDType } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
@@ -94,7 +95,7 @@ export default function NasuRmdWithdrawalForm() {
         }
     }, [formParty]);
 
-    const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties);
+    const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties as LifeCadParty[]);
     const shouldStateW4pRender = isAllowedState(contractIssueState);
     const isRmdForm = rmdFormType === RmdFormType.RMD;
 

@@ -38,12 +38,14 @@ import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
 import { ActiveWithdrawalCase, Carrier, PartyRoles, QualTypes } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
+import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
@@ -61,6 +63,7 @@ interface OftCaseProps extends SegmentTrackedPageProps {
     userId: string;
     formParts: React.ReactNode;
     featureFlagDecisions: FeatureFlags;
+    parties: LifeCadParty[];
 }
 
 const DefaultSidebarContent = {
@@ -86,7 +89,7 @@ const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): R
     [Carrier.PRDN]: <PrdnOftWithdrawalForm />,
 });
 
-export default function OftCase({ document, form, featureFlagDecisions, user }: OftCaseProps) {
+export default function OftCase({ document, form, featureFlagDecisions, user, parties }: OftCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const router = useRouter();
 
@@ -199,6 +202,7 @@ export default function OftCase({ document, form, featureFlagDecisions, user }: 
                                         issueState={issueState}
                                         initialForm={initialForm}
                                         featureFlagDecisions={featureFlagDecisions}
+                                        parties={parties}
                                     >
                                         {
                                             <>
@@ -326,6 +330,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext,
             });
 
+            const parties = document?.contract
+            ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
+            : [];
+
             if (!form) {
                 logWarn('create-case/oft/id::Error initializing task oft form', {
                     ...loggingContext,
@@ -338,6 +346,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             }
+
             return {
                 props: {
                     ...translations,
@@ -346,6 +355,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     locale,
                     featureFlagDecisions,
                     user,
+                    parties,
                 },
             };
         },

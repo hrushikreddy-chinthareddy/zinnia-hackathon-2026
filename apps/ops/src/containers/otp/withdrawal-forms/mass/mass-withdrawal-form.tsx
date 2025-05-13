@@ -18,13 +18,14 @@ import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdin
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
+import { Carrier, FASTQualTypes, QualTypes } from '@deps/models/case/withdrawal/case';
+import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import useMassWithdrawalConfig from './mass-withdrawal-form-helpers';
 import { FormSubtype } from '../flic-withdrawal-form.helpers';
 
 type MassWithdrawalFormProps = {
-    qualType: QualTypes | '';
+    qualType: QualTypes | FASTQualTypes | '';
 };
 const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
@@ -57,6 +58,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         formESignatureData,
         setFormESignatureData,
         formErrors,
+        featureFlagDecisions
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -77,8 +79,10 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         setFormValidator(() => formValidation);
     }, [setFormValidator]);
 
+    const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
     const verificationReason = formSignature?.signVerificationReason ?? [];
-    const isKeogh = qualType === QualTypes.KEOGHHR10;
+    // Fast mapping for  QualTypes.KEOGHHR10 is FASTQualTypes.QUALIFIED
+    const isKeogh = isLC ? qualType === QualTypes.KEOGHHR10 : qualType === FASTQualTypes.QUALIFIED;
     const signaturesConfig = getSignaturesConfig(isKeogh);
     const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
     return (

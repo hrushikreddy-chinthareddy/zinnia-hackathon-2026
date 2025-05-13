@@ -19,7 +19,7 @@ import { RmdFormType } from '@deps/models/case/enums';
 import { Carrier, FundWithdrawnMethod, RMDType } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
-import getGdmnRmdConfig from './gdmn-rmd-form.helper';
+import getGdmnRmdConfig from './gdmn-rmd-form.helpers';
 import DistributionMethodQcd from '../qcd/qcd-distribution-method';
 import SelectFormType from '../rmd-form-type';
 

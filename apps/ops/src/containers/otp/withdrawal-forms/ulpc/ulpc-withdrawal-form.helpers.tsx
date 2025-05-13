@@ -37,8 +37,7 @@ import {
     AccountType,
     FormDisbursement,
     ProgramSubType,
-    LifeCadPartyRoles,
-    AddressTypes,
+    AddressTypes
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -74,7 +73,7 @@ export const spousalSignatureStateCodes = [
     statesAndTerritories.WISCONSIN,
 ];
 
-export default function getUlpcConfig(t: TFunction) {
+export default function getUlpcConfig(t: TFunction, isLC: boolean) {
     const identifySelectedFormProgramOption = (
         formProgram: FormProgram
     ): { selectedOption: string | null; amount: string | null; maturityGuaranteePeriod?: string | null } => {
@@ -245,9 +244,11 @@ export default function getUlpcConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-            shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
-                return !!parties?.find(party => party.Role === LifeCadPartyRoles.Beneficiary);
-            },
+            /*shouldDisplay: ({ parties, partyRoles }: OtpWithdrawalFormState): boolean => {
+                return isLC
+                ? isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[])
+                : isIrrevocableBeneficiaryExists(parties as Party[], partyRoles as PolicyParties[]);
+            },*/
         },
         {
             key: `sig-val-spouse`,

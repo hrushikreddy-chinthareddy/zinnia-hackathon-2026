@@ -47,7 +47,7 @@ import { determineFormToRender } from '@deps/helpers/form-selector.helpers';
 import { CaseType } from '@deps/models/case/case';
 import { DocumentType } from '@deps/models/case/document';
 import { caseTypes } from '@deps/models/case/helpers';
-import { QualTypes, Carrier } from '@deps/models/case/withdrawal/case';
+import { QualTypes, Carrier, FASTQualTypes } from '@deps/models/case/withdrawal/case';
 
 export const getCaseType = (docTypeQuery: string): CaseType => {
     const loweredKeyedObj = Object.keys(caseTypes).reduce((acc, docTypeKey) => {
@@ -58,8 +58,8 @@ export const getCaseType = (docTypeQuery: string): CaseType => {
     return loweredKeyedObj[docTypeQuery?.toLowerCase()];
 };
 
-export const getWithdrawalFormComponentMap = (qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
-    [Carrier.FLIC]: <FlicWithdrawalForm qualType={qualType} />,
+export const getWithdrawalFormComponentMap = (qualType: QualTypes | FASTQualTypes | '', isLC: boolean): Record<string, React.ReactNode> => ({
+    [Carrier.FLIC]: <FlicWithdrawalForm qualType={qualType} isLC={isLC}/>,
     [Carrier.SBGC]: <SbgcWithdrawalForm />,
     [Carrier.DLIC]: <DlicWithdrawalForm />,
     [Carrier.MASS]: <MassWithdrawalForm qualType={qualType} />,
@@ -118,20 +118,20 @@ const getRenewalFormComponentMap = (): Record<string, React.ReactNode> => ({
     [Carrier.DLIC]: <DlicRenewalForm />,
 });
 
-export const getFormParts = (caseType: CaseType, clientCode: string, qualType: QualTypes | '', planCode: string = '') => {
+export const getFormParts = (caseType: CaseType, clientCode: string, qualType: QualTypes | FASTQualTypes | '', planCode: string = '', isLC: boolean = true) => {
     let formParts;
     switch (caseType) {
         case CaseType.Withdrawal:
-            formParts = determineFormToRender(clientCode, getWithdrawalFormComponentMap(qualType));
+            formParts = determineFormToRender(clientCode, getWithdrawalFormComponentMap(qualType, isLC));
             break;
         case CaseType.Oft:
-            formParts = determineFormToRender(clientCode, getOFTFormComponentMap(planCode, qualType));
+            formParts = determineFormToRender(clientCode, getOFTFormComponentMap(planCode, qualType as  QualTypes));
             break;
         case CaseType.SSW:
-            formParts = determineFormToRender(clientCode, getSSWFormComponentMap(qualType, planCode));
+            formParts = determineFormToRender(clientCode, getSSWFormComponentMap(qualType as QualTypes, planCode));
             break;
         case CaseType.Rmd:
-            formParts = determineFormToRender(clientCode, getRMDFormComponentMap(qualType));
+            formParts = determineFormToRender(clientCode, getRMDFormComponentMap(qualType as QualTypes));
             break;
         case CaseType.Renewal:
             formParts = determineFormToRender(clientCode, getRenewalFormComponentMap());
