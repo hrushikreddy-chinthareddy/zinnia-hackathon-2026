@@ -299,6 +299,7 @@ module.exports = {
                     light: 'var(--color-base-border-border-light)',
                     selected: 'var(--color-base-border-selected-border)',
                     hover: 'var(--color-states-hover-border-hover-border)',
+                    subtle: 'var(--color-base-border-border-subtle)',
                 },
                 link: 'var(--color-base-icon-icon-action-text-link)',
             },

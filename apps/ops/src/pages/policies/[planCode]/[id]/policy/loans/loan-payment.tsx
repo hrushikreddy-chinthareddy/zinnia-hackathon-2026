@@ -13,7 +13,7 @@ const LoanPaymentOneTime = ({ policy }: LoanPaymentOneTimeProps) => {
     return (
         <LoanPaymentProvider>
             <PageHead titleKey="loanPayment" />
-            <div className="px-4 py-6 flex justify-center md:px-6 md:py-8 lg:px-8 lg:py-10 xl:px-0 xl:py-16">
+            <div className="px-4 flex justify-center md:px-6 lg:px-8 xl:px-0">
                 <LoanPaymentContainer policy={policy} />
             </div>
         </LoanPaymentProvider>

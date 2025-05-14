@@ -55,7 +55,7 @@ export default function NavElement({ type, ...rest }: NavElementProps) {
     const defaultVariantClass = 'text-links';
     const inactiveVariantClass = 'text-gray-300 cursor-not-allowed';
     const primaryVariantClass = 'rounded-none';
-    const secondaryVariantClass = 'font-secondary text-secondary font-normal';
+    const secondaryVariantClass = 'font-secondary text-link font-normal';
     const textVariantClass = 'font-primary text-gray-900';
 
     let variantClass;

@@ -192,7 +192,7 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
         <>
             <PageHead titleKey="createCaseCreate" />
             <div className="flex flex-col">
-                <div className="mb-4 w-[600px] self-center rounded bg-white p-4 shadow-sm">
+                <div className="mb-4 w-[600px] self-center rounded bg-white p-4">
                     <div className="mb-4 flex flex-col border-b p-4">
                         <Typography variant={TypographyVariant.H1} className="self-center font-primary text-xl font-light">
                             {t('title')}

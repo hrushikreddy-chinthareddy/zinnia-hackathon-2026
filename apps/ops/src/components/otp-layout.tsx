@@ -34,43 +34,41 @@ export default function OtpLayout({ childContainerClasses = '', children }: OTPL
     };
 
     return (
-        <>
-            <div className="static flex h-20 w-full items-center justify-start bg-white shadow-lg">
-                <div className="flex w-full items-center justify-between px-4 md:px-6 lg:px-8">
+        <div className="border-2 rounded-lg border-border-subtle">
+            <div className="flex w-full items-center justify-between h-20 border-border-light border-b-1 px-3">
+                <NavElement
+                    type={NavElementType.Link}
+                    className="flex items-center"
+                    size={NavElementSize.Small}
+                    variant={NavElementVariant.Default}
+                    href={'/create-case'}
+                    startIcon={<ChevronLeftIcon width={16} height={16} />}
+                >
+                    <span className="hidden md:inline">{t('site.navLinks.backToCreateCase.textLargeScreen')}</span>
+                    <span className="md:hidden">{t('site.navLinks.backToCreateCase.textSmallScreen')}</span>
+                </NavElement>
+                <div className="flex flex-row items-center justify-end space-x-8">
+                    <Typography variant={TypographyVariant.FieldLabel} className="hidden md:block">
+                        {t('site.navLinks.relatedActivity.text')}
+                    </Typography>
                     <NavElement
-                        type={NavElementType.Link}
-                        className="flex items-center"
+                        type={NavElementType.Button}
                         size={NavElementSize.Small}
-                        variant={NavElementVariant.Default}
-                        href={'/create-case'}
-                        startIcon={<ChevronLeftIcon width={16} height={16} />}
+                        className="flex items-center"
+                        startIcon={<AnnotationIcon width={16} height={16} />}
+                        onClick={() => openSideSheet()}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                openSideSheet();
+                            }
+                        }}
                     >
-                        <span className="hidden md:inline">{t('site.navLinks.backToCreateCase.textLargeScreen')}</span>
-                        <span className="md:hidden">{t('site.navLinks.backToCreateCase.textSmallScreen')}</span>
+                        {t('site.navLinks.diaryNotes.text')}
                     </NavElement>
-                    <div className="flex flex-row items-center justify-end space-x-8">
-                        <Typography variant={TypographyVariant.FieldLabel} className="hidden md:block">
-                            {t('site.navLinks.relatedActivity.text')}
-                        </Typography>
-                        <NavElement
-                            type={NavElementType.Button}
-                            size={NavElementSize.Small}
-                            className="flex items-center"
-                            startIcon={<AnnotationIcon width={16} height={16} />}
-                            onClick={() => openSideSheet()}
-                            onKeyDown={e => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    openSideSheet();
-                                }
-                            }}
-                        >
-                            {t('site.navLinks.diaryNotes.text')}
-                        </NavElement>
-                    </div>
                 </div>
             </div>
             <div className={`mr-4 md:mr-6 lg:mr-8 ${childContainerClasses}`}>{children}</div>
-        </>
+        </div>
     );
 }

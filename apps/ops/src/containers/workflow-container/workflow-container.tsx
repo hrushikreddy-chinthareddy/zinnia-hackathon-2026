@@ -47,7 +47,7 @@ const WorkflowContent = ({ policy, steps, stepWidth = DEFAULT_STEP_WIDTH }: Work
     const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
 
     return (
-        <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
+        <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col">
             <GlobalValuesBar
                 carrierId={policy?.carrierId}
                 marketingName={marketingName}

@@ -48,10 +48,10 @@ const OpenStatusRow = ({
 }: SidebarContent) => {
     const { t } = useTranslation();
     const BASE_TRANSLATION_KEY = 'caseWithdrawal.sidebar.';
-    const classes = clsx('text-white');
+
     return (
         <div className="w-full" data-testid="open-status-row">
-            <div className={classes}>
+            <>
                 <div className="my-4">
                     <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}contractId`)}</Typography>
                     <div className="flex items-center gap-1">
@@ -198,7 +198,7 @@ const OpenStatusRow = ({
                 )}
 
                 {transactions && transactions.length > 0 && <TransactionHistoryComponent transactions={transactions} />}
-            </div>
+            </>
         </div>
     );
 };
@@ -216,10 +216,9 @@ const ClosedStatusRow: React.FC<SidebarContent> = ({
 }) => {
     const { t } = useTranslation();
     const BASE_TRANSLATION_KEY = 'caseWithdrawal.sidebar.';
-    const classes = clsx('flex w-full flex-col items-center gap-4  p-1 text-white');
 
     return (
-        <div className={classes} data-testid="close-status-row">
+        <div className={'flex w-full flex-col items-center gap-4  p-1'} data-testid="close-status-row">
             <div className="flex w-full flex-col items-center">
                 <Typography variant={TypographyVariant.LabelMd}>{t(`${BASE_TRANSLATION_KEY}abbreviatedContractId`)}</Typography>
                 <ClickWrapper
@@ -332,7 +331,7 @@ const WithdrawalDrawer: React.FC<WithdrawalDrawerProps> = ({ content, isNavDrawe
     useOutsideClick(containerRef, isNavDrawerOpen, handleOverlayClose);
 
     const navbarContainerClass = clsx(
-        'z-10 flex-shrink-0 flex-col overflow-visible bg-gray-900 pt-2 transition-all duration-200 ease-in-out',
+        'z-10 flex-shrink-0 flex-col overflow-visible pt-2 transition-all duration-200 ease-in-out border-r-1 border-border-light',
         {
             'w-[350px] flex-grow p-6': isNavDrawerOpen,
             'w-[52px] pt-2': !isNavDrawerOpen,
@@ -346,7 +345,7 @@ const WithdrawalDrawer: React.FC<WithdrawalDrawerProps> = ({ content, isNavDrawe
                     <button
                         onClick={() => setIsOpenOverride(!isNavDrawerOpen)}
                         aria-label={t('sidenav.collapse') as string}
-                        className="default-focus my-4 flex items-center justify-center rounded text-white"
+                        className="default-focus my-4 flex items-center justify-center rounded"
                     >
                         <ArrowMd width={9.6} height={8} className="simple-transition flex flex-col" />
                     </button>
@@ -356,7 +355,7 @@ const WithdrawalDrawer: React.FC<WithdrawalDrawerProps> = ({ content, isNavDrawe
                     <button
                         onClick={() => setIsOpenOverride(!isNavDrawerOpen)}
                         aria-label={t('sidenav.expand') as string}
-                        className="default-focus mb-6 mt-2 flex h-[32px] w-[32px] items-center justify-center rounded bg-gray-800 text-white"
+                        className="default-focus mb-6 mt-2 flex h-[32px] w-[32px] items-center justify-center"
                     >
                         <ArrowMd width={9.6} height={8} className="simple-transition flip180" />
                     </button>

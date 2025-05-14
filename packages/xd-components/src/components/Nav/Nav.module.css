@@ -1,7 +1,7 @@
 .navContainer {
   --nav-expanded-width: 240px;
   z-index: 50;
-  min-height: 100vh;
+  height: 100vh;
   background-color: var(--color-base-surface-surface-carrier);
   /* for the sake of the animation hiding text properly we're using a border instead of padding */
   /* that way whatever is overflowing behind the border is hidden */

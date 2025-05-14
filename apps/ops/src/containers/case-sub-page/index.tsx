@@ -15,6 +15,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import CasePageHeader from './CasePageHeader';
 import CaseSideNav from './CaseSideNav';
+import styles from './styles.module.css';
 
 interface CaseRedesignProps {
     caseDetails: Case;
@@ -42,7 +43,7 @@ const CaseRedesign = ({ caseDetails, tab }: CaseRedesignProps) => {
     const statusDetails = getStatusDetails({ singleCase: caseDetailsModel, t });
 
     return (
-        <div className="w-full bg-white rounded-[4px]">
+        <div className={styles.container}>
             <CasePageHeader
                 caseId={caseDetailsModel.id}
                 title={caseDetailsModel.processSubType as string}

@@ -123,7 +123,7 @@ export default function RenewalCase({ document, form, featureFlagDecisions, user
         return shouldNavbarOverlay(isLargeScreen, isOpenOverride);
     }, [isLargeScreen, isOpenOverride]);
 
-    const classes = clsx('height-adjusted grid w-full', {
+    const classes = clsx('grid w-full', {
         'grid-cols-[52px,auto]': shouldOverlay,
         'grid-cols-[350px,auto]': !shouldOverlay,
     });
@@ -168,7 +168,7 @@ export default function RenewalCase({ document, form, featureFlagDecisions, user
                                     <PageLoader variant={PageLoaderVariant.Center} />
                                 </div>
                             )}
-                            <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0 shadow-sm">
+                            <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0">
                                 <form className="rounded bg-white p-4 text-gray-900 md:p-6 lg:p-8">
                                     <RenewalFormProvider
                                         initialForm={form}

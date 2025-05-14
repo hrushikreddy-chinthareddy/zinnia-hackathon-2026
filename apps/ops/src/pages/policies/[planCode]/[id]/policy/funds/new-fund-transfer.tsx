@@ -1,4 +1,3 @@
-
 import { PageHead } from '@deps/components/page-title';
 import FundTransferContainer from '@deps/containers/financial-transactions/fund-transfer/fund-transfer-container';
 import { FundTransferProvider } from '@deps/contexts/transactions/FundTransferContext';
@@ -6,18 +5,16 @@ import { Policy } from '@deps/models/policy/sor-policy';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 
-
 interface fundProps {
-    policy : Policy;
+    policy: Policy;
 }
 
 const FundTransfer = ({ policy }: fundProps) => {
-
     return (
         <FundTransferProvider>
             <PageHead titleKey="fundTransfer" />
-            <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
-                <FundTransferContainer policy={policy } />
+            <div className="flex w-full flex-col overflow-auto px-4 md:px-6 lg:px-8">
+                <FundTransferContainer policy={policy} />
             </div>
         </FundTransferProvider>
     );

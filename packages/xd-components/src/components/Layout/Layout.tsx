@@ -11,6 +11,7 @@ import { Nav, NavGroup } from '../Nav/Nav';
 import styles from './Layout.module.css';
 import { useWindowResize } from '../../hooks/useWindowResize';
 import zinniaLogo from '../../styles/icons/zinnia-logo.svg';
+import clsx from 'clsx';
 
 interface LayoutType extends PropsWithChildren {
   navGroups: NavGroup[];
@@ -18,6 +19,7 @@ interface LayoutType extends PropsWithChildren {
   displaySearch?: boolean;
   onNavigationToggle?: (isExpanded: boolean) => void;
   theme?: string;
+  className?: string;
 }
 
 export const Layout: FC<LayoutType> = ({
@@ -26,6 +28,7 @@ export const Layout: FC<LayoutType> = ({
   displaySearch = true,
   onNavigationToggle,
   theme,
+  className,
   children,
 }) => {
   const [open, setOpen] = useState(false);
@@ -60,7 +63,7 @@ export const Layout: FC<LayoutType> = ({
             onNavigationToggle={onNavigationToggle}
             theme={theme}
           />
-          <main className={styles.layoutMain}>{children}</main>
+          <main className={clsx(styles.layoutMain, className)}>{children}</main>
         </>
       ) : (
         // Below 1024px
@@ -108,7 +111,7 @@ export const Layout: FC<LayoutType> = ({
                 <img src={zinniaLogo} alt={imageAlt} height={24} width={90} />
               </div>
             </section>
-            <main className={styles.layoutMain}>{children}</main>
+            <main className={(styles.layoutMain, className)}>{children}</main>
           </>
         </>
       )}
