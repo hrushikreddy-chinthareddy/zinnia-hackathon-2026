@@ -29,13 +29,14 @@ export interface CardPeopleProps {
 
 const PREFERRED_TAG_ORDER = {
     Owner: 1,
-    Insured: 2,
-    Payor: 3,
-    'Primary Beneficiary': 4,
-    'Contingent Beneficiary': 5,
-    Agent: 6,
-    Payee: 7,
-    'Third Party Designee': 8,
+    Annuitant: 2,
+    Insured: 3,
+    Payor: 4,
+    'Primary Beneficiary': 5,
+    'Contingent Beneficiary': 6,
+    Agent: 7,
+    Payee: 8,
+    'Third Party Designee': 9,
 } as { [key: string]: number };
 
 const getBeneficiaryColorByType = (type: BeneficiaryType, index: number) => {
@@ -49,7 +50,6 @@ const sortTags = (tags?: TagKey[]) => {
     const sortedArray = [...tags].sort((a, b) => {
         const indexA = PREFERRED_TAG_ORDER[a.text ?? ''] ?? Number.MAX_SAFE_INTEGER;
         const indexB = PREFERRED_TAG_ORDER[b.text ?? ''] ?? Number.MAX_SAFE_INTEGER;
-
         return indexA - indexB;
     });
 

@@ -112,6 +112,7 @@
     "people": {
         "orderedRoles": [
             "Owner",
+            "Annuitant",
             "Insured",
             "Payor",
             "Primary Beneficiary",
@@ -124,6 +125,7 @@
         ],
         "chipOrderedRoles": [
             "Owner",
+            "Annuitant",
             "Insured",
             "Payor",
             "Beneficiary",

@@ -24,6 +24,8 @@ export const convertToChipText = (text: string | undefined, t: TFunction) => {
     switch (text.toLowerCase()) {
         case PartyRoleChipToText.Insured:
             return t('chipFilter.partyRole.insured');
+        case PartyRoleChipToText.Annuitant:
+            return t('chipFilter.partyRole.annuitant');
         case PartyRoleChipToText.Payee:
             return t('chipFilter.partyRole.payee');
         case PartyRoleChipToText.Payor:
