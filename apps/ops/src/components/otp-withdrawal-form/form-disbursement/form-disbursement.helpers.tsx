@@ -1,4 +1,5 @@
-import { AccountType, FormDisbursement } from '@deps/models/case/withdrawal/case';
+import { AccountType, Carrier, FormDisbursement } from '@deps/models/case/withdrawal/case';
+import { DisbursementParts } from '@deps/models/case/withdrawal/disbursement-types';
 
 import AccountTypes from './form-disbursement-parts/account-type';
 import BankAddress from './form-disbursement-parts/address';
@@ -101,3 +102,62 @@ export const getDefaultFormDisbursementValues = (): FormDisbursement => {
         },
     };
 };
+
+export enum BankDetailsInputMethod {
+    Auto = 'auto',
+    Manual = 'manual',
+    Envison = 'envison',
+}
+
+export const getUpdatedData = (preFillBankInfo: DisbursementParts, method: BankDetailsInputMethod, carrier: string): DisbursementParts => {
+    const bankDetailsMap: Record<string, Record<string, Partial<DisbursementParts>>> = {
+        [Carrier.MASS]: {
+            [BankDetailsInputMethod.Auto]: {
+                payeeName: 'MASSMUTUAL ASCEND LIFE INSURANCE COMPANY',
+                accountNumber: '4206140138',
+                bankName: 'PNC Bank',
+                bankRoutingNumber: '041000124',
+                accountType: AccountType.Checking,
+            },
+            [BankDetailsInputMethod.Envison]: {
+                payeeName: 'MASSACHUSETTS MUTUAL LIFE INS CO',
+                accountNumber: '804788898',
+                bankName: 'JP Morgan Chase Bank, N.A.',
+                bankRoutingNumber: '021000021',
+                accountType: AccountType.Checking,
+            },
+        },
+        [Carrier.FLIC]: {
+            [BankDetailsInputMethod.Auto]: {
+                payeeName: 'FORETHOUGHT LIFE INS RECEIPT ACCOUNT',
+                accountNumber: '4941021958',
+                bankName: 'Wells Fargo Bank, N.A',
+                bankRoutingNumber: '121000248',
+                accountType: AccountType.Checking,
+            },
+        },
+    };
+
+    const carrierDetails = bankDetailsMap[carrier];
+    const methodDetails = carrierDetails?.[method];
+
+    if (methodDetails) {
+        return {
+            ...preFillBankInfo,
+            ...methodDetails,
+        };
+    }
+
+    return preFillBankInfo;
+};
+
+export const SUPPLEMENTARY_FIELDS_FILTERS: string[] = [
+    BankingFields.AccountType,
+    BankingFields.PayeeName,
+    BankingFields.BankName,
+    BankingFields.BankRoutingNumber,
+    BankingFields.AccountNumber,
+    BankingFields.FboDetails,
+    BankingFields.ContractNumber,
+    BankingFields.Address,
+];

@@ -1,8 +1,8 @@
 import { TFunction } from 'next-i18next';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
-import { BankDetailsInputMethod } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement-parts/autofill-account-toggle';
 import {
+    BankDetailsInputMethod,
     BankingFields,
     DisbursementFields,
     getDefaultFormDisbursementValues,
@@ -355,18 +355,16 @@ export default function getMassOftConfig(t: TFunction) {
                         value: BankDetailsInputMethod.Auto,
                     },
                     {
+                        label: t('distributionMethod.mmEnvison'),
+                        value: BankDetailsInputMethod.Envison,
+                    },
+                    {
                         label: t('distributionMethod.other'),
                         value: BankDetailsInputMethod.Manual,
                     },
                 ],
-                defaultPrefillMethod: BankDetailsInputMethod.Auto,
                 prefillBankData: {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    payeeName: 'MASSMUTUAL ASCEND LIFE INSURANCE COMPANY',
-                    accountNumber: '4206140138',
-                    bankName: 'PNC Bank',
-                    bankRoutingNumber: '041000124',
-                    accountType: AccountType.Checking,
                 },
             },
             fields: [
@@ -425,6 +423,7 @@ export default function getMassOftConfig(t: TFunction) {
                     fieldLabel: t('distributionMethod.bankName'),
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
+                    isBankingField: true,
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditName,
@@ -724,6 +723,31 @@ export default function getMassOftConfig(t: TFunction) {
         accordForm: true,
     };
 
+    const getUpdatedData = (preFillBankInfo: DisbursementParts, method: BankDetailsInputMethod): DisbursementParts => {
+        switch (method) {
+            case BankDetailsInputMethod.Auto:
+                return {
+                    ...preFillBankInfo,
+                    payeeName: 'MASSMUTUAL ASCEND LIFE INSURANCE COMPANY',
+                    accountNumber: '4206140138',
+                    bankName: 'PNC Bank',
+                    bankRoutingNumber: '041000124',
+                    accountType: AccountType.Checking,
+                };
+            case BankDetailsInputMethod.Envison:
+                return {
+                    ...preFillBankInfo,
+                    payeeName: 'MASSACHUSETTS MUTUAL LIFE INS CO',
+                    accountNumber: '804788898',
+                    bankName: 'JP Morgan Chase Bank, N.A.',
+                    bankRoutingNumber: '021000021',
+                    accountType: AccountType.Checking,
+                };
+            default:
+                return preFillBankInfo;
+        }
+    };
+
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -736,5 +760,6 @@ export default function getMassOftConfig(t: TFunction) {
         defaultValues,
         qualificationOptions: getQualTypeOptions(t),
         eSignatureFieldConfig,
+        getUpdatedData,
     };
 }

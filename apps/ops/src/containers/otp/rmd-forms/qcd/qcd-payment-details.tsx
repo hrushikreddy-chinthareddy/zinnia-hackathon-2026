@@ -30,7 +30,7 @@ const QcdPaymentDetails: React.FC<QcdPaymentDetailsProps> = ({ qcdDetails, isFor
                     type={FieldType.BaseActive}
                     value={qcdDetails.charityName}
                     data-testid="paymentMethod"
-                    variant={FieldVariant.Default}
+                    variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
                 />
                 <Field
                     className="w-54 my-2"

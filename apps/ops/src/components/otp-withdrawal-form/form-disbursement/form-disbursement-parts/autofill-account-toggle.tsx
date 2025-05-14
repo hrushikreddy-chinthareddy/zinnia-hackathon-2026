@@ -6,77 +6,66 @@ import { DEFAULT_DISBURSEMENT_UPDATE, DisbursementConfig, DisbursementParts } fr
 
 import { SelectedBankContext } from './pre-populate-banking-details';
 import FormDisbursementContainer from '../form-disbursement-section';
-import { BankingFields } from '../form-disbursement.helpers';
-
-export enum BankDetailsInputMethod {
-    Auto = 'auto',
-    Manual = 'manual',
-}
-
-const SUPPLEMENTARY_FIELDS_FILTERS: string[] = [
-    BankingFields.AccountType,
-    BankingFields.PayeeName,
-    BankingFields.BankName,
-    BankingFields.BankRoutingNumber,
-    BankingFields.AccountNumber,
-    BankingFields.FboDetails,
-    BankingFields.ContractNumber,
-    BankingFields.Address,
-];
-
-const isBankingAutoSelected = (initialFormDisbursement: DisbursementParts, preFillBankInfo: DisbursementParts) => {
-    return SUPPLEMENTARY_FIELDS_FILTERS.every(key => {
-        return initialFormDisbursement[key as keyof DisbursementParts] == preFillBankInfo[key as keyof DisbursementParts];
-    });
-};
+import { BankDetailsInputMethod, getUpdatedData, SUPPLEMENTARY_FIELDS_FILTERS } from '../form-disbursement.helpers';
 
 type AutofillAccountToggleProps = {
     initialFormDisbursement: DisbursementParts;
     toggleOptions: Array<{ label: string; value: string }>;
-    selectedPaymentMethod: string | null;
     preFillBankInfo: DisbursementParts;
     defaultFillMethod: BankDetailsInputMethod;
     supplementaryFields: DisbursementConfig[] | null;
     setDisbursementInformation: React.Dispatch<React.SetStateAction<DisbursementParts>>;
     isFormStateReadOnly: boolean;
+    carrier: string;
 };
 
 const AutofillAccountToggle = ({
     toggleOptions,
-    defaultFillMethod,
     preFillBankInfo,
     supplementaryFields,
     setDisbursementInformation,
     initialFormDisbursement,
     isFormStateReadOnly,
+    carrier,
 }: AutofillAccountToggleProps) => {
     const { setBankSelected } = useContext(SelectedBankContext);
-    const [fillType, setFillType] = useState<BankDetailsInputMethod>(defaultFillMethod || BankDetailsInputMethod.Auto);
-
+    const [fillType, setFillType] = useState<BankDetailsInputMethod>(BankDetailsInputMethod.Manual);
     const supplementaryFieldsFiltered = supplementaryFields?.filter((item: DisbursementConfig) =>
         SUPPLEMENTARY_FIELDS_FILTERS.includes(item.fieldName)
     );
-
-    useEffect(() => {
-        const isAutoSelected = isBankingAutoSelected(initialFormDisbursement, preFillBankInfo);
-        isAutoSelected && setBankSelected(true);
-        setFillType(isAutoSelected ? BankDetailsInputMethod.Auto : BankDetailsInputMethod.Manual);
-    }, [initialFormDisbursement, preFillBankInfo]);
-
     const shouldRenderBankInfo = supplementaryFieldsFiltered && supplementaryFieldsFiltered.length > 0;
-
-    const setFillOption = (value: BankDetailsInputMethod) => {
-        setFillType(value);
-        if (value === BankDetailsInputMethod.Auto) {
+    useEffect(() => {
+        if (fillType === BankDetailsInputMethod.Auto) {
             setBankSelected(true);
-
-            setDisbursementInformation(preFillBankInfo);
-        } else {
+            const updatedData = getUpdatedData(preFillBankInfo, fillType, carrier);
+            setDisbursementInformation(updatedData);
+        } else if (fillType === BankDetailsInputMethod.Envison) {
+            setBankSelected(true);
+            const updatedData = getUpdatedData(preFillBankInfo, fillType, carrier);
+            setDisbursementInformation(updatedData);
+        }
+        if (fillType === BankDetailsInputMethod.Manual) {
             setBankSelected(false);
             const disbursementInformation =
-                value === BankDetailsInputMethod.Manual && isFormStateReadOnly ? initialFormDisbursement : DEFAULT_DISBURSEMENT_UPDATE;
+                fillType === BankDetailsInputMethod.Manual && isFormStateReadOnly ? initialFormDisbursement : DEFAULT_DISBURSEMENT_UPDATE;
             setDisbursementInformation(disbursementInformation);
         }
+    }, [fillType]);
+
+    const renderFormDisbursementContainer = () => {
+        if (!shouldRenderBankInfo) return null;
+
+        const disbursementInformation = fillType === BankDetailsInputMethod.Manual ? initialFormDisbursement : preFillBankInfo;
+
+        return (
+            <FormDisbursementContainer
+                fields={fillType === BankDetailsInputMethod.Manual ? supplementaryFields : supplementaryFieldsFiltered}
+                disbursementInformation={disbursementInformation}
+                onDataChange={setDisbursementInformation}
+                isFormStateReadOnly={isFormStateReadOnly}
+                key={fillType}
+            />
+        );
     };
 
     return (
@@ -84,28 +73,11 @@ const AutofillAccountToggle = ({
             <ButtonGrp
                 className="mt-4"
                 activeValue={fillType as BankDetailsInputMethod}
-                toggle={val => setFillOption(val as BankDetailsInputMethod)}
+                toggle={val => setFillType(val as BankDetailsInputMethod)}
                 labels={toggleOptions}
                 disabled={isFormStateReadOnly}
             />
-            {fillType === BankDetailsInputMethod.Auto && shouldRenderBankInfo && (
-                <FormDisbursementContainer
-                    fields={supplementaryFieldsFiltered}
-                    disbursementInformation={preFillBankInfo}
-                    onDataChange={setDisbursementInformation}
-                    isFormStateReadOnly={isFormStateReadOnly}
-                    key={BankDetailsInputMethod.Auto}
-                />
-            )}
-            {fillType === BankDetailsInputMethod.Manual && shouldRenderBankInfo && (
-                <FormDisbursementContainer
-                    fields={supplementaryFields}
-                    disbursementInformation={initialFormDisbursement}
-                    onDataChange={setDisbursementInformation}
-                    isFormStateReadOnly={isFormStateReadOnly}
-                    key={BankDetailsInputMethod.Manual}
-                />
-            )}
+            {renderFormDisbursementContainer()}
         </>
     );
 };

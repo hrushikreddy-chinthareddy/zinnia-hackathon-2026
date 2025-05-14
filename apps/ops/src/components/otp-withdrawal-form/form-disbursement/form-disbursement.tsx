@@ -7,10 +7,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getBankingDetails, getBankingDetailsLC, isExistingBank, isExistingBankLC } from '@deps/helpers/bank.helpers';
 import { LifeCadBanking, LifeCadParty } from '@deps/models/case/lifecad-party';
-import {
-    FormDisbursement as FormDisbursementType, PaymentMailType,
-    PaymentMethod
-} from '@deps/models/case/withdrawal/case';
+import { FormDisbursement as FormDisbursementType, PaymentMailType, PaymentMethod } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementConfig,
@@ -21,12 +18,12 @@ import {
 import { BankAccountBase, Party, PolicyParties } from '@deps/models/policy/sor-policy';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
-import AutofillAccountToggle, { BankDetailsInputMethod } from './form-disbursement-parts/autofill-account-toggle';
+import AutofillAccountToggle from './form-disbursement-parts/autofill-account-toggle';
 import { ConsentAvailable } from './form-disbursement-parts/consent-available';
 import MaskedAccountNumberToggle, { BankInfoType } from './form-disbursement-parts/masked-account-toggle';
 import { SelectedBankContext } from './form-disbursement-parts/pre-populate-banking-details';
 import FormDisbursementSection from './form-disbursement-section';
-import { BankingFields } from './form-disbursement.helpers';
+import { BankDetailsInputMethod, BankingFields } from './form-disbursement.helpers';
 
 // Selection options for payment method
 export const FormDisbursementSelections = { ...PaymentMethod, ...PaymentMailType, SimpleBrokerage: 'SimpleBrokerage' };
@@ -76,7 +73,8 @@ export default function FormDisbursement({
     isFormStateReadOnly = false,
     defaultValue,
 }: FormDisbursementProps) {
-    const { initialForm, formDisbursement, parties, partyRoles, setFormErrors, setFormDisbursement, featureFlagDecisions } = useContext(FormDataContext);
+    const { initialForm, formDisbursement, parties, partyRoles, setFormErrors, setFormDisbursement, featureFlagDecisions } =
+        useContext(FormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.distributionMethod' });
     const [selected, setSelected] = useState(selectionIdentifier(formDisbursement) || defaultValue || null);
     const [supplementaryFields, setSupplementaryFields] = useState<DisbursementConfig[] | null>(null);
@@ -88,9 +86,7 @@ export default function FormDisbursement({
     const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
 
     const bankingDetails = useMemo(() => {
-        return isLC
-            ? getBankingDetailsLC(parties as LifeCadParty[])
-            : getBankingDetails(parties as Party[], partyRoles as PolicyParties[]);
+        return isLC ? getBankingDetailsLC(parties as LifeCadParty[]) : getBankingDetails(parties as Party[], partyRoles as PolicyParties[]);
     }, [isLC, parties, partyRoles]);
 
     const existingBankSelected = isLC
@@ -169,20 +165,14 @@ export default function FormDisbursement({
                 return (
                     <SelectedBankContext.Provider value={{ isBankSelected, setBankSelected }}>
                         <AutofillAccountToggle
-                            selectedPaymentMethod={selected}
                             toggleOptions={additionalOptions?.toggleOptions ?? []}
                             defaultFillMethod={additionalOptions?.defaultPrefillMethod ?? BankDetailsInputMethod.Auto}
-                            preFillBankInfo={{
-                                ...DEFAULT_DISBURSEMENT_UPDATE,
-                                ...additionalOptions.prefillBankData,
-                                fboDetails: disbursementInformation.fboDetails,
-                                contractNumber: disbursementInformation.contractNumber,
-                                address: disbursementInformation.address,
-                            }}
+                            preFillBankInfo={disbursementInformation}
                             supplementaryFields={supplementaryFields}
                             initialFormDisbursement={disbursementInformation}
                             setDisbursementInformation={setDisbursementInformation}
                             isFormStateReadOnly={isFormStateReadOnly}
+                            carrier={initialForm?.carrier}
                         ></AutofillAccountToggle>
                     </SelectedBankContext.Provider>
                 );

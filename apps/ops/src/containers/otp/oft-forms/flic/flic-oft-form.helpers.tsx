@@ -1,8 +1,8 @@
 import { TFunction } from 'next-i18next';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
-import { BankDetailsInputMethod } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement-parts/autofill-account-toggle';
 import {
+    BankDetailsInputMethod,
     BankingFields,
     DisbursementFields,
     getDefaultFormDisbursementValues,
@@ -373,11 +373,6 @@ export default function getFlicOftConfig(t: TFunction, qualType: string) {
                 defaultPrefillMethod: BankDetailsInputMethod.Auto,
                 prefillBankData: {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    payeeName: 'FORETHOUGHT LIFE INS RECEIPT ACCOUNT',
-                    accountNumber: '4941021958',
-                    bankName: 'Wells Fargo Bank, N.A',
-                    bankRoutingNumber: '121000248',
-                    accountType: AccountType.Checking,
                 },
             },
             fields: [
