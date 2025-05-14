@@ -432,6 +432,7 @@ export default function getFlicOftConfig(t: TFunction, qualType: string) {
                     fieldLabel: t('distributionMethod.bankName'),
                     component: DisbursementFields.BankTextField,
                     classNames: 'col-start-1',
+                    isBankingField: true,
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditName,

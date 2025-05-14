@@ -89,6 +89,7 @@ const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
                             label={t('date') as string}
                             testId={'signature-date'}
                             disabled={isFormStateReadOnly}
+                            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
                         />
                     )}
 

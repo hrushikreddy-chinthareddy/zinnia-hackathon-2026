@@ -23,13 +23,14 @@ const AutofillAccountToggle = ({
     toggleOptions,
     preFillBankInfo,
     supplementaryFields,
+    defaultFillMethod,
     setDisbursementInformation,
     initialFormDisbursement,
     isFormStateReadOnly,
     carrier,
 }: AutofillAccountToggleProps) => {
     const { setBankSelected } = useContext(SelectedBankContext);
-    const [fillType, setFillType] = useState<BankDetailsInputMethod>(BankDetailsInputMethod.Manual);
+    const [fillType, setFillType] = useState<BankDetailsInputMethod>(defaultFillMethod ?? BankDetailsInputMethod.Manual);
     const supplementaryFieldsFiltered = supplementaryFields?.filter((item: DisbursementConfig) =>
         SUPPLEMENTARY_FIELDS_FILTERS.includes(item.fieldName)
     );

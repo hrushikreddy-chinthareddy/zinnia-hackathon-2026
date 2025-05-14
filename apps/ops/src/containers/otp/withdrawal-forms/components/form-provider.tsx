@@ -126,11 +126,7 @@ export const FormProvider = ({
     });
     const [formBeneInfo, setFormBeneInfo] = useState(form.data.formRequest?.formBeneInfo || null);
     const [formPeriodicPension, setFormPeriodicPension] = useState(form.data.formRequest?.periodicPensionForm || null);
-    const [formESignatureData, setFormESignatureData] = useState(
-        (form.data.formRequest?.formESignatureData && form.data.formRequest?.formESignatureData.eSignatures.length > 0) ||
-            getESignatureData(formParty) ||
-            null
-    );
+    const [formESignatureData, setFormESignatureData] = useState(form.data.formRequest?.formESignatureData ?? getESignatureData(formParty));
 
     // Update contract issue state when issue state changes
     useEffect(() => {
