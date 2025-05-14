@@ -116,6 +116,7 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
                 ) : null}
             </SignatureValidations>
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

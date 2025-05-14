@@ -100,6 +100,7 @@ export default function UsaaOftWithdrawalForm() {
             />
 
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

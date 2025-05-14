@@ -107,6 +107,7 @@ const OftDlicForm = ({ qualType }: OftDlicFormProps) => {
                 defaultValue={defaultValues.disbursementOption}
             />
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

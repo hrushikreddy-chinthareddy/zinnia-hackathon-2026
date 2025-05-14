@@ -744,14 +744,6 @@ export default function usePrdnOftConfig(t: TFunction) {
         disbursementOption: FormDisbursementSelections.DTCC,
     };
 
-    const eSignatureFieldConfig = {
-        type: true,
-        signPresent: true,
-        date: true,
-        auditTrial: true,
-        accordForm: true,
-    };
-
     return {
         formValidation: oftFormValidation,
         formPartyConfigs,
@@ -763,6 +755,5 @@ export default function usePrdnOftConfig(t: TFunction) {
         qualificationOptions: getQualTypeOptions(t),
         defaultValues,
         showContractReplacement: true,
-        eSignatureFieldConfig,
     };
 }

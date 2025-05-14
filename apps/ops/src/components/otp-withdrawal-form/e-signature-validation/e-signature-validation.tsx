@@ -17,6 +17,7 @@ interface ESignatureValidationProps {
         accordForm?: boolean;
     };
     formErrors: Record<string, string>;
+    isFormStateReadOnly: boolean;
 }
 
 const ESignatureValidation: React.FC<ESignatureValidationProps> = ({
@@ -24,6 +25,7 @@ const ESignatureValidation: React.FC<ESignatureValidationProps> = ({
     setFormESignatureData,
     fieldConfig,
     formErrors,
+    isFormStateReadOnly,
 }) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.eSignatureValidation' });
 
@@ -60,11 +62,12 @@ const ESignatureValidation: React.FC<ESignatureValidationProps> = ({
                                 isFormESignaturePresent: !prev.isFormESignaturePresent,
                             }))
                         }
-                        isDisabled={false}
+                        isDisabled={isFormStateReadOnly}
                     />
                 </div>
                 {formESignatureData?.isFormESignaturePresent && (
                     <ESignatureFields
+                        isFormStateReadOnly={isFormStateReadOnly}
                         eSignatures={formESignatureData.eSignatures}
                         fieldConfig={fieldConfig}
                         formErrors={formErrors}

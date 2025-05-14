@@ -118,6 +118,7 @@ export default function FlicWithdrawalForm({ qualType, isLC }: { qualType: strin
                 )}
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

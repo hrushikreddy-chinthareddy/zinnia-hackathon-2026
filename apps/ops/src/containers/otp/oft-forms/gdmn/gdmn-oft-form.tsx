@@ -105,6 +105,7 @@ export default function GdmnOftWithdrawalForm({ qualType }: GdmnOftWithdrawalFor
                 defaultValue={defaultValues.disbursementOption}
             />
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

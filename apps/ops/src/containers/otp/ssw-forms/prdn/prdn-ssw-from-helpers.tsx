@@ -521,13 +521,6 @@ export default function getPrdnConfig(t: TFunction) {
         },
     ];
 
-    const eSignatureFieldConfig = {
-        type: true,
-        signPresent: true,
-        date: true,
-        auditTrial: true,
-    };
-
     return {
         reasonOptions,
         formValidation: sswFormValidation,
@@ -537,6 +530,5 @@ export default function getPrdnConfig(t: TFunction) {
         signaturesConfig,
         fundWithdrawnMethodOptions,
         w4pSignaturesConfig,
-        eSignatureFieldConfig,
     };
 }

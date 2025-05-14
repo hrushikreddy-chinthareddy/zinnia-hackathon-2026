@@ -106,6 +106,7 @@ export function NassauSSWForm() {
                 config={signaturesNotaryConfig}
             />
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

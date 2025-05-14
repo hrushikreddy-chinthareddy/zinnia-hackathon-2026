@@ -93,12 +93,14 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig}>
                 {isKeogh ? (
                     <SignatureVerificationReasons
+                        isFormStateReadOnly={isFormStateReadOnly}
                         config={signVerificationReasonConfig}
                         checkedItems={verificationReason.length ? verificationReason.map(signReason => signReason.text) : []}
                     ></SignatureVerificationReasons>
                 ) : null}
             </SignatureValidations>
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

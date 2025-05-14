@@ -101,6 +101,7 @@ export default function DlicWithdrawalForm() {
                 config={signaturesNotaryConfig}
             />
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

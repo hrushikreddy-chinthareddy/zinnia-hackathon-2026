@@ -82,6 +82,7 @@ export function UsaaSSWForm() {
             <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

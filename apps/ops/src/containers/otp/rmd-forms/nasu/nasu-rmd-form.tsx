@@ -143,6 +143,7 @@ export default function NasuRmdWithdrawalForm() {
                 config={signaturesNotaryConfig}
             />
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

@@ -101,6 +101,7 @@ export default function MassOftWithdrawalForm() {
                 defaultValue={defaultValues.disbursementOption}
             />
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

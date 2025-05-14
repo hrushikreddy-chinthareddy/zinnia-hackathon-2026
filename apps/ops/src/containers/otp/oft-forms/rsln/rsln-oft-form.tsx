@@ -93,6 +93,7 @@ export default function RSLNOftWithdrawalForm({ qualType }: OftRSLNFormProps) {
                 defaultValue={defaultValues.disbursementOption}
             />
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

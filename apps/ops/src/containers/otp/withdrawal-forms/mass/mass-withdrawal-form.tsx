@@ -123,6 +123,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
             <SignatureValidations config={signaturesConfig} isFormStateReadOnly={isFormStateReadOnly}>
                 {isKeogh ? (
                     <SignatureVerificationReasons
+                        isFormStateReadOnly={isFormStateReadOnly}
                         config={signVerificationReasonConfig}
                         checkedItems={verificationReason.length ? verificationReason.map(signReason => signReason.text) : []}
                     ></SignatureVerificationReasons>
@@ -130,6 +131,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
             </SignatureValidations>
 
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}

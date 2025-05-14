@@ -25,6 +25,7 @@ interface ESignatureFieldsProps {
     selectYesNoOptions: { label: string; value: SelectionStateYesNo }[];
     updateFormESignatureField: (index: number, field: string, value: string | object | boolean) => void;
     t: TFunction;
+    isFormStateReadOnly: boolean;
 }
 
 const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
@@ -33,6 +34,7 @@ const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
     formErrors,
     selectYesNoOptions,
     updateFormESignatureField,
+    isFormStateReadOnly,
     t,
 }) => {
     return (
@@ -48,7 +50,7 @@ const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
                             variant={FieldVariant.Inactive}
                             type={FieldType.BaseActive}
                             data-testid={`${signature?.signType?.text}-type`}
-                            disabled={false}
+                            disabled={isFormStateReadOnly}
                             isReadOnly
                         />
                     )}
@@ -68,7 +70,7 @@ const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
                                     ? SelectionStateYesNo.Yes
                                     : SelectionStateYesNo.No
                             }
-                            disabled={false}
+                            disabled={isFormStateReadOnly}
                             name={`${signature?.isSigned}-signature-present`}
                         />
                     )}
@@ -86,7 +88,7 @@ const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
                             fieldName={SignatureFieldNames.SignatureDate}
                             label={t('date') as string}
                             testId={'signature-date'}
-                            disabled={false}
+                            disabled={isFormStateReadOnly}
                         />
                     )}
 
@@ -104,7 +106,7 @@ const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
                                     ? SelectionStateYesNo.Yes
                                     : SelectionStateYesNo.No
                             }
-                            disabled={false}
+                            disabled={isFormStateReadOnly}
                         />
                     )}
 
@@ -122,7 +124,7 @@ const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
                                     ? SelectionStateYesNo.Yes
                                     : SelectionStateYesNo.No
                             }
-                            disabled={false}
+                            disabled={isFormStateReadOnly}
                         />
                     )}
                 </div>

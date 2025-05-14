@@ -134,6 +134,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 config={signaturesNotaryConfig}
             />
             <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={formESignatureData || ({} as FormEsignatureData)}
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
