@@ -4830,7 +4830,7 @@
         },
         "confirm": {
             "label": "Confirm",
-            "type": "premium repayment autopay"
+            "type": "premium payment autopay"
         }
     },
     "fundTransfer": {

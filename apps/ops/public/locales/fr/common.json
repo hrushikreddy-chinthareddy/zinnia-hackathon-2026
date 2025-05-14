@@ -4809,7 +4809,7 @@
         },
         "confirm": {
             "label": "Confirmer",
-            "type": "prélèvement automatique de remboursement de prime"
+            "type": "paiement automatique des primes"
         }
     },
     "fundTransfer": {

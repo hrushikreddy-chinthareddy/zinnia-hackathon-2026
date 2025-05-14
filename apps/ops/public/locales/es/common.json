@@ -4810,7 +4810,7 @@
         },
         "confirm": {
             "label": "Confirmar",
-            "type": "pago automático de prima"
+            "type": "pago automático de primas"
         }
     },
     "fundTransfer": {
