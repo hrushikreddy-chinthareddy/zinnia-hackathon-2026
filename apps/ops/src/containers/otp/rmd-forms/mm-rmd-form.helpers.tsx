@@ -12,6 +12,7 @@ import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { JointLifeExpectancyConfig } from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
@@ -23,6 +24,7 @@ import {
     AddressTypes,
     AccountType,
     FormDisbursement,
+    SignVerificationReason,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -347,8 +349,11 @@ export default function useMassMutualRmdConfig(t: TFunction) {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: (): boolean => {
-                return isKeogh;
+            shouldDisplay: ({ formSignature }: OtpWithdrawalFormState): boolean => {
+                const isMarriedSelected = !!formSignature.signVerificationReason?.some(
+                    reason => reason.text === SignVerificationReason.MarriedWithERISA
+                );
+                return isKeogh && isMarriedSelected;
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
