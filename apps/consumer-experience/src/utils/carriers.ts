@@ -45,6 +45,8 @@ export const getCarrierSubdomainByName = (
       return Subdomains.EVERLY;
     case CarrierNames.WELLABE:
       return Subdomains.WELLABE;
+    case CarrierNames.FARMERS:
+      return Subdomains.FARMERS;
 
     default:
       return '';
@@ -70,6 +72,8 @@ export const getCarrierNameById = (
       return CarrierNames.EVERLY;
     case CarrierId.WELLABE:
       return CarrierNames.WELLABE;
+    case CarrierId.FARMERS:
+      return CarrierNames.FARMERS;
     default:
       return '';
   }
@@ -132,7 +136,7 @@ export const getCarrierIdsByThemeCookie = (themeCookie: string | undefined) => {
       return [CarrierId.FARMERS];
   }
 
-  return [CarrierId.ELIC, CarrierId.SBUL, CarrierId.WELLABE];
+  return [CarrierId.ELIC, CarrierId.SBUL, CarrierId.WELLABE, CarrierId.FARMERS];
 };
 
 export const hasMultipleCarriers = (
