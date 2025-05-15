@@ -51,3 +51,11 @@ export const getESignatureData = (formParty: FormParty) => {
         isFormESignaturePresent: false,
     };
 };
+
+export const getDefaultESignatureData = (esignData: FormEsignatureData, formParty: FormParty) => {
+    if (esignData?.eSignatures?.length > 0) {
+        return esignData;
+    }
+
+    return getESignatureData(formParty);
+};

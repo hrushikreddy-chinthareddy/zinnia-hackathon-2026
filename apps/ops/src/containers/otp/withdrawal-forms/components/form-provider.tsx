@@ -1,7 +1,10 @@
 import { useSearchParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 
-import { getESignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
+import {
+    FormEsignatureData,
+    getDefaultESignatureData,
+} from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
@@ -126,7 +129,9 @@ export const FormProvider = ({
     });
     const [formBeneInfo, setFormBeneInfo] = useState(form.data.formRequest?.formBeneInfo || null);
     const [formPeriodicPension, setFormPeriodicPension] = useState(form.data.formRequest?.periodicPensionForm || null);
-    const [formESignatureData, setFormESignatureData] = useState(form.data.formRequest?.formESignatureData ?? getESignatureData(formParty));
+    const [formESignatureData, setFormESignatureData] = useState(
+        getDefaultESignatureData(form.data.formRequest?.formESignatureData || ({} as FormEsignatureData), formParty)
+    );
 
     // Update contract issue state when issue state changes
     useEffect(() => {
@@ -147,6 +152,7 @@ export const FormProvider = ({
             setFormIrsData(updatedFormIrsData);
         }
     }, []);
+
     return (
         <FormDataContext.Provider
             value={{
