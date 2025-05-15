@@ -19,10 +19,11 @@ import { TranslationFiles } from '@deps/config/translations';
 import { getFundDetailsViewModel } from '@deps/containers/subpages/funds-sub-page/funds.helpers';
 import { useFundTransfer } from '@deps/contexts/transactions/FundTransferContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { AmountType } from '@deps/models/funds/enums';
+import { AmountType, FundKey } from '@deps/models/funds/enums';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponse } from '@deps/queries/api/bpm';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
+import { DefaultValue } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
@@ -34,20 +35,23 @@ interface TransferProps {
     subtitle?: string;
 }
 
-type Errors = {
-    transferFromFund?: string;
-    transferFromAmount?: string;
-    transferToFund?: string;
-    transferToAmount?: string;
-    totalAmount?: string;
-    totalPercent?: string;
-    effectiveDate?: string;
-};
-
 type FundOption = {
     value: string;
     label: string;
 };
+
+const ErrorKeys = {
+    transferFromFund: 'transferFromFund',
+    transferFromAmount: 'transferFromAmount',
+    transferToFund: 'transferToFund',
+    transferToAmount: 'transferToAmount',
+    totalAmount: 'totalAmount',
+    totalPercent: 'totalPercent',
+    effectiveDate: 'effectiveDate',
+};
+
+type Errors = Partial<Record<keyof typeof ErrorKeys, string>>;
+type ErrorKey = (typeof ErrorKeys)[keyof typeof ErrorKeys];
 
 const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'workflows.transferStep' });
@@ -58,6 +62,7 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
     const today = new Date();
 
     const { fundTransfer, setFundTransfer } = useFundTransfer();
+    const [fetchingFunds, setFetchingFunds] = useState(false);
 
     const { policyNumber, product } = policy;
     const { funds, effectiveDate } = fundTransfer;
@@ -92,6 +97,15 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
         lastTransferToFund?.fundId === '' || lastTransferToFund?.requestedAmount === '' || lastTransferToFund?.requestedAmount === 0;
 
     const translate = (key: string) => t(key, { defaultValue: key });
+    const selectedfundId = fundTransfer?.funds?.transferFrom[0]?.fundId;
+
+    const removeError = (key: ErrorKey) => {
+        setErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors[key as keyof typeof newErrors];
+            return newErrors;
+        });
+    };
 
     const updateTransferFrom = (key: string, fundVal: string) => {
         setFundTransfer(prev => {
@@ -100,22 +114,25 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
 
                 const updatedItem = { ...item, [key]: fundVal };
 
-                if (key === 'fundId') {
-                    delete errors.transferFromFund;
+                if (key === FundKey.FundId) {
+                    setErrors(prevErrors => {
+                        const { effectiveDate } = prevErrors;
+                        return effectiveDate ? { effectiveDate } : {};
+                    });
                     const fundName = transferFromFunds?.find(fund => fund.value === fundVal)?.label || '';
                     return {
                         ...updatedItem,
                         fundName,
                     };
                 }
-                if (fundIdToFind && transferType === 'AMOUNT' && Number(fundVal) > Number(availableValue)) {
+                if (fundIdToFind && transferType === AmountType.Amount && Number(fundVal) > Number(availableValue)) {
                     setErrors(prev => ({
                         ...prev,
                         transferFromAmount: translate('greaterAmountError'),
                     }));
                 } else {
                     if (Number(fundVal) > 0) {
-                        delete errors.transferFromAmount;
+                        removeError(ErrorKeys.transferFromAmount);
                     } else {
                         setErrors(prev => ({
                             ...prev,
@@ -127,13 +144,23 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
                 return updatedItem;
             });
 
-            return {
+            const baseUpdate = {
                 ...prev,
                 funds: {
                     ...prev.funds,
                     transferFrom: updatedTransferFrom,
                 },
             };
+            if (key === FundKey.FundId) {
+                baseUpdate.funds.transferTo = [
+                    {
+                        fundId: '',
+                        fundName: '',
+                        requestedAmount: '',
+                    },
+                ];
+            }
+            return baseUpdate;
         });
     };
 
@@ -144,8 +171,8 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
 
                 const updatedItem = { ...item, [key]: fundVal };
 
-                if (key === 'fundId') {
-                    delete errors.transferToFund;
+                if (key === FundKey.FundId) {
+                    removeError(ErrorKeys.transferToFund);
                     const fundName = transferToFunds?.find(fund => fund.value === fundVal)?.label || '';
                     return {
                         ...updatedItem,
@@ -153,9 +180,9 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
                     };
                 }
 
-                if (index == 0 && key == 'requestedAmount') {
+                if (index == 0 && key == FundKey.RequestedAmount) {
                     if (Number(fundVal) > 0) {
-                        delete errors.transferToAmount;
+                        removeError(ErrorKeys.transferToAmount);
                     } else {
                         setErrors(prev => ({
                             ...prev,
@@ -182,11 +209,11 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
         if (!formattedDate.isValid()) {
             setErrors(prev => ({
                 ...prev,
-                effectiveDate: 'Effective date is required.',
+                effectiveDate: translate('effectiveDateError'),
             }));
             return;
         } else {
-            delete errors.effectiveDate;
+            removeError(ErrorKeys.effectiveDate);
         }
 
         const isReverseInitiator = formattedDate.isBefore(dayjs(today));
@@ -246,10 +273,14 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
             delete newErrors.transferFromFund;
         }
 
-        if (!transferFrom?.requestedAmount) {
+        if (!(Number(transferFrom?.requestedAmount) > 0)) {
             newErrors.transferFromAmount = transferType === AmountType.Percentage ? translate('percentageError') : translate('amountError');
         } else {
             delete newErrors.transferFromAmount;
+        }
+
+        if (Number(transferFrom?.requestedAmount) > Number(availableValue)) {
+            newErrors.transferFromAmount = translate('greaterAmountError');
         }
 
         if (!transferTo?.fundId) {
@@ -258,7 +289,7 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
             delete newErrors.transferToFund;
         }
 
-        if (!transferTo?.requestedAmount) {
+        if (!(Number(transferTo?.requestedAmount) > 0)) {
             newErrors.transferToAmount = transferType === AmountType.Percentage ? translate('percentageError') : translate('amountError');
         } else {
             delete newErrors.transferToAmount;
@@ -314,19 +345,24 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
 
     useEffect(() => {
         const fetchFundsInfo = async () => {
+            setFetchingFunds(true);
             try {
                 const data = await getFundDetailsViewModel(policy as any);
                 const result = [...(data.electedFunds || []), ...(data.notElectedFunds || [])].map(fund => ({
                     value: fund.fundId,
                     label: fund.fundName || fund.fundId,
                 }));
+
                 setTransferToFunds(result as any);
             } catch (error) {
                 browserLogError('Error fetching fund info', {
                     ...parseErrorInformation(error),
                 });
+            } finally {
+                setFetchingFunds(false);
             }
         };
+
         fetchFundsInfo();
     }, [policy?.policyNumber, policy?.product?.planCode]);
 
@@ -351,6 +387,12 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
             },
         }));
     };
+
+    const noAvailableDestinationFunds =
+        (!fetchingFunds && transferToFunds.length === 0) ||
+        (transferToFunds.length === 1 && transferToFunds[0]?.value === transferFromFunds[0]?.value);
+
+    const noAvailableSourceFunds = transferFromFunds.length === 0;
 
     return (
         <>
@@ -403,13 +445,16 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
                                         className="w-full placeholder:text-gray-400"
                                         label=""
                                         options={transferFromFunds}
-                                        onChange={e => updateTransferFrom('fundId', e)}
+                                        onChange={e => updateTransferFrom(FundKey.FundId, e)}
                                         size={FieldSize.Small}
-                                        placeholder={translate('fundPlaceholder')}
+                                        placeholder={
+                                            noAvailableSourceFunds ? translate('noAvailableSourceFunds') : translate('fundPlaceholder')
+                                        }
                                         value={fundTransfer?.funds?.transferFrom[0]?.fundId}
                                         variant={errors.transferFromFund ? FieldVariant.Error : FieldVariant.Default}
                                         message={errors.transferFromFund}
                                         name="form-type"
+                                        disabled={noAvailableSourceFunds}
                                     />
                                 </div>
                                 <div className="w-full">
@@ -417,22 +462,22 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
                                         key={`transferfrom-${transferType}`}
                                         size={FieldSize.Small}
                                         label=""
-                                        leading={transferType == 'AMOUNT' ? '$' : ''}
+                                        leading={transferType == AmountType.Amount ? '$' : ''}
                                         trailing={transferType == AmountType.Percentage ? '%' : ''}
                                         type={FieldType.BaseActive}
                                         value={fundTransfer?.funds?.transferFrom[0]?.requestedAmount as string}
-                                        onChange={e => updateTransferFrom('requestedAmount', e.target.value)}
+                                        onChange={e => updateTransferFrom(FundKey.RequestedAmount, e.target.value)}
                                         formatOptions={{
                                             type: 'number',
                                             format: '',
                                             decimalPlaces: transferType == AmountType.Percentage ? 0 : 2,
                                         }}
                                         variant={errors.transferFromAmount ? FieldVariant.Error : FieldVariant.Default}
-                                        message={errors.transferFromAmount}
-                                        {...(transferType === AmountType.Percentage && { max: 100 })}
+                                        message={errors.transferFromAmount || ''}
+                                        {...(transferType === AmountType.Percentage && { max: DefaultValue.maxPercentage })}
                                     />
 
-                                    {transferType == 'AMOUNT' && (
+                                    {transferType == AmountType.Amount && (
                                         <div className="right-0 mt-1  text-right">
                                             {availableValue !== 0 && (
                                                 <div className="text-xs text-gray-600">
@@ -447,9 +492,9 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
                                                 {funds.transferFrom[0]?.requestedAmount !== ''
                                                     ? `$${Number(fundTransfer.funds.transferFrom[0]?.requestedAmount || 0).toLocaleString(
                                                           undefined,
-                                                          { minimumFractionDigits: 2 }
+                                                          { minimumFractionDigits: DefaultValue.minFractionDigit }
                                                       )}`
-                                                    : '$--.--'}
+                                                    : DefaultValue.nullAmount}
                                             </div>
                                         </div>
                                     )}
@@ -463,95 +508,113 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
                                 <div>{transferType == 'AMOUNT' ? t('amount') : t('percentage')}</div>
                             </div>
                             <div className="grid grid-cols-[7fr_4fr] gap-4 mb-2">
-                                {fundTransfer?.funds?.transferTo.map((fund, index) => (
-                                    <>
-                                        <div className="w-full min-w-[100px] max-w-full">
-                                            <SelectSimple
-                                                className="placeholder:text-gray-400"
-                                                label=""
-                                                options={transferToFunds.filter(
-                                                    option => !funds.transferTo.some((f, i) => f.fundId === option.value && i !== index)
-                                                )}
-                                                onChange={e => updateTransferToFund(index, 'fundId', e)}
-                                                size={FieldSize.Small}
-                                                placeholder={translate('fundPlaceholder')}
-                                                value={fund?.fundId}
-                                                name={`transfer-to-fund-${index}`}
-                                                variant={errors.transferToFund ? FieldVariant.Error : FieldVariant.Default}
-                                                trailing="%"
-                                                message={errors.transferToFund}
-                                            />
-                                            {index == funds.transferTo.length - 1 && (
-                                                <NavElement
-                                                    aria-label={translate('addNewFund')}
-                                                    onClick={!isDisabled ? addTransferToRow : undefined}
-                                                    size={NavElementSize.Small}
-                                                    type={NavElementType.Button}
-                                                    variant={NavElementVariant.Default}
-                                                    disabled={isDisabled ? true : false}
-                                                    className={'mt-8'}
-                                                >
-                                                    {translate('addNewFund')}
-                                                </NavElement>
-                                            )}
-                                        </div>
-                                        <div>
-                                            <div className="flex items-start gap-4 ">
-                                                <div>
-                                                    <Field
-                                                        key={`transferto-${transferType}`}
-                                                        size={FieldSize.Small}
-                                                        label=""
-                                                        leading={transferType == 'AMOUNT' ? '$' : ''}
-                                                        trailing={transferType == AmountType.Percentage ? '%' : ''}
-                                                        type={FieldType.BaseActive}
-                                                        value={fund?.requestedAmount as string}
-                                                        onChange={e => {
-                                                            const val = e.target.value;
-                                                            updateTransferToFund(index, 'requestedAmount', val);
-                                                        }}
-                                                        formatOptions={{
-                                                            type: 'number',
-                                                            format: '',
-                                                            decimalPlaces: transferType == AmountType.Percentage ? 0 : 2,
-                                                        }}
-                                                        variant={
-                                                            errors.transferToAmount && index == 0
-                                                                ? FieldVariant.Error
-                                                                : FieldVariant.Default
-                                                        }
-                                                        message={index == 0 ? errors.transferToAmount || '' : ''}
-                                                        {...(transferType === AmountType.Percentage && { max: 100 })}
-                                                    />
-                                                    {index == funds.transferTo.length - 1 && (
-                                                        <div className="font-bold mt-8 text-700 right-0 text-right">
-                                                            {transferType == 'AMOUNT'
-                                                                ? transferToValue
-                                                                    ? `$${Number(transferToValue).toLocaleString(undefined, {
-                                                                          minimumFractionDigits: 2,
-                                                                      })}`
-                                                                    : '$--.--'
-                                                                : transferToValue
-                                                                ? `${transferToValue || 0}%`
-                                                                : '--%'}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                {index !== 0 ? (
-                                                    <IconButton
-                                                        className="mt-[6px]"
-                                                        aria-label={'remove fund'}
-                                                        onClick={() => deleteTransferToFund(index)}
+                                {fundTransfer?.funds?.transferTo.map((fund, index) => {
+                                    const filteredTransferToFunds = transferToFunds.filter(
+                                        option =>
+                                            !funds.transferTo.some((f, i) => f.fundId === option.value && i !== index) &&
+                                            option.value !== fundTransfer?.funds?.transferFrom?.[0]?.fundId
+                                    );
+
+                                    const disableCondition =
+                                        !fetchingFunds && (noAvailableDestinationFunds || filteredTransferToFunds.length === 0);
+
+                                    return (
+                                        <>
+                                            <div className="w-full min-w-[100px] max-w-full">
+                                                <SelectSimple
+                                                    className="placeholder:text-gray-400"
+                                                    label=""
+                                                    options={filteredTransferToFunds}
+                                                    onChange={e => updateTransferToFund(index, FundKey.FundId, e)}
+                                                    size={FieldSize.Small}
+                                                    placeholder={
+                                                        disableCondition
+                                                            ? translate('noAvailableDestinationFunds')
+                                                            : translate('fundPlaceholder')
+                                                    }
+                                                    disabled={disableCondition}
+                                                    value={fund?.fundId}
+                                                    name={`transfer-to-fund-${index}`}
+                                                    variant={errors.transferToFund ? FieldVariant.Error : FieldVariant.Default}
+                                                    trailing="%"
+                                                    message={errors.transferToFund}
+                                                />
+                                                {index == funds.transferTo.length - 1 && (
+                                                    <NavElement
+                                                        aria-label={translate('addNewFund')}
+                                                        onClick={!isDisabled ? addTransferToRow : undefined}
+                                                        size={NavElementSize.Small}
+                                                        type={NavElementType.Button}
+                                                        variant={NavElementVariant.Default}
+                                                        disabled={isDisabled ? true : false}
+                                                        className={'mt-8'}
                                                     >
-                                                        <TrashIcon height={20} width={20} />
-                                                    </IconButton>
-                                                ) : (
-                                                    <div className="w-[32px] mt-[6px]"></div>
+                                                        {translate('addNewFund')}
+                                                    </NavElement>
                                                 )}
                                             </div>
-                                        </div>
-                                    </>
-                                ))}
+                                            <div>
+                                                <div className="flex items-start gap-4 ">
+                                                    <div>
+                                                        <Field
+                                                            key={`transferto-${transferType}-${selectedfundId}`}
+                                                            size={FieldSize.Small}
+                                                            label=""
+                                                            leading={transferType == AmountType.Amount ? '$' : ''}
+                                                            trailing={transferType == AmountType.Percentage ? '%' : ''}
+                                                            type={FieldType.BaseActive}
+                                                            value={fund?.requestedAmount as string}
+                                                            onChange={e => {
+                                                                const val = e.target.value;
+                                                                updateTransferToFund(index, FundKey.RequestedAmount, val);
+                                                            }}
+                                                            formatOptions={{
+                                                                type: 'number',
+                                                                format: '',
+                                                                decimalPlaces: transferType == AmountType.Percentage ? 0 : 2,
+                                                            }}
+                                                            variant={
+                                                                errors.transferToAmount && index == 0
+                                                                    ? FieldVariant.Error
+                                                                    : disableCondition
+                                                                    ? FieldVariant.Inactive
+                                                                    : FieldVariant.Default
+                                                            }
+                                                            message={index == 0 ? errors.transferToAmount || '' : ''}
+                                                            {...(transferType === AmountType.Percentage && {
+                                                                max: DefaultValue.maxPercentage,
+                                                            })}
+                                                        />
+                                                        {index == funds.transferTo.length - 1 && (
+                                                            <div className="font-bold mt-8 text-700 right-0 text-right">
+                                                                {transferType == AmountType.Amount
+                                                                    ? transferToValue
+                                                                        ? `$${Number(transferToValue).toLocaleString(undefined, {
+                                                                              minimumFractionDigits: DefaultValue.minFractionDigit,
+                                                                          })}`
+                                                                        : DefaultValue.nullAmount
+                                                                    : transferToValue
+                                                                    ? `${transferToValue || 0}%`
+                                                                    : DefaultValue.nullPercentage}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    {index !== 0 ? (
+                                                        <IconButton
+                                                            className="mt-[6px]"
+                                                            aria-label={'remove fund'}
+                                                            onClick={() => deleteTransferToFund(index)}
+                                                        >
+                                                            <TrashIcon height={20} width={20} />
+                                                        </IconButton>
+                                                    ) : (
+                                                        <div className="w-[32px] mt-[6px]"></div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </>
+                                    );
+                                })}
                             </div>
                             {transferType == AmountType.Percentage && errors.totalPercent && (
                                 <AssistiveText
@@ -560,7 +623,7 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
                                     text={errors.totalPercent}
                                 ></AssistiveText>
                             )}
-                            {transferType == 'AMOUNT' && errors.totalAmount && (
+                            {transferType == AmountType.Amount && errors.totalAmount && (
                                 <AssistiveText
                                     variant={AssistiveTextVariant.Error}
                                     className="text-red-500 right-0 text-right"

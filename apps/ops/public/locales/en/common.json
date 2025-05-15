@@ -5251,7 +5251,9 @@
             "percentageLabel": "Percentage (whole numbers only)",
             "addNewFund": "+ Select fund to transfer to",
             "fundPlaceholder": "--Select fund--",
-            "available": "available"
+            "available": "available",
+            "noAvailableDestinationFunds": "No available destination funds",
+            "noAvailableSourceFunds": "No available source funds"
         }
     },
     "tasksListing": {

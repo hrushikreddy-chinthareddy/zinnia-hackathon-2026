@@ -5228,7 +5228,9 @@
             "percentageLabel": "Pourcentage (seulement des nombres entiers)",
             "addNewFund": "+ Sélectionnez un fonds pour transférer à",
             "fundPlaceholder": "--Sélectionnez un fonds--",
-            "available": "disponible"
+            "available": "disponible",
+            "noAvailableDestinationFunds": "Aucun fonds de destination disponible",
+            "noAvailableSourceFunds": "Aucun fonds de source disponible"
         }
     },
     "tasksListing": {

@@ -53,4 +53,11 @@ export const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
 
 export const DEFAULT_STEP_WIDTH = 188;
 export const FUND_TRANSFER_STEP_WIDTH = 280;
+
+export const DefaultValue = {
+    maxPercentage: 100,
+    minFractionDigit: 2,
+    nullAmount: '$--.--',
+    nullPercentage: '--%',
+};
 export const CALL_LOGS_TAB_QUERY_LIMIT = 100;
