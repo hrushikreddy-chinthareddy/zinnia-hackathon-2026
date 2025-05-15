@@ -54,9 +54,15 @@ const CaseRedesign = ({ caseDetails, tab, showAudio, canUnmask }: CaseRedesignPr
                 statusTooltip={statusDetails.statusTooltip}
                 statusVariant={statusDetails.statusVariant as BadgeVariant}
             />
-            <div className="flex w-full flex-col justify-between gap-2 p-2 lg:flex-row">
+            <div className="flex w-full flex-col justify-between gap-2 pt-2 lg:flex-row">
                 <CaseSideNav caseDetails={caseDetailsModel} />
-                <CaseSubPage caseDetails={caseDetailsModel} tab={tabVal} handleTabChange={handleTabChange} showAudio={showAudio} canUnmask={canUnmask} />
+                <CaseSubPage
+                    caseDetails={caseDetailsModel}
+                    tab={tabVal}
+                    handleTabChange={handleTabChange}
+                    showAudio={showAudio}
+                    canUnmask={canUnmask}
+                />
             </div>
         </div>
     );
