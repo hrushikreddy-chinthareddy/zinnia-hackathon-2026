@@ -14,6 +14,8 @@ import { FundInformationByFundId, FundInformationByFundIdResponse, FundInformati
 
 import { FundDetailsViewModel, FundViewModel, MatchViewModel, SegmentViewModel } from './types';
 
+const FundAccountTypesForPolicyDetailsData: FundAccountType[] = [FundAccountType.FIXED, FundAccountType.HOLDING];
+
 // #region First Glance
 
 // export const getFirstGlanceViewModel = (policy: PolicyDetails): FundsFirstGlanceViewModel => {
@@ -161,6 +163,17 @@ const getFundInterestRate = async (fundInfo?: FundInformationByFundId, policy?: 
         return DEFAULT_ERROR_STRING;
     }
 
+    /* DEPU-4944 - Fixed/Holding funds should use the rate from the policy details
+      BPB - policy details only includes rates for elected/allocated fixed funds.
+      Unallocated funds will not show a rate on the funds page.
+    */
+    if (FundAccountTypesForPolicyDetailsData.includes(fundInfo?.fundAccountType as FundAccountType)) {
+        const rate = policy?.policy?.allocation?.funds
+            ?.find(fund => fund.fundId === fundInfo?.fundId)
+            ?.fundSegments?.find(segment => segment.segmentId === '1')?.startingPrice;
+        return percentFormatify(rate, { isInteger: true });
+    }
+
     const fund = fundInfo?.fixedFund || fundInfo?.indexedFund;
 
     if (!fund) {
@@ -201,12 +214,14 @@ interface HoldingFundsViewModelProps {
     allocationFundsMap?: Record<string, Fund>;
     fundsInfoMap?: Record<string, FundInformationByFundId>;
     productFunds?: Funds;
+    policy?: PolicyDetails;
 }
 
 const getHoldingFundsViewModel = async ({
     allocationFundsMap,
     fundsInfoMap,
     productFunds,
+    policy,
 }: HoldingFundsViewModelProps): Promise<FundViewModel[]> => {
     const fundIds = Object.keys(productFunds || {});
 
@@ -230,7 +245,7 @@ const getHoldingFundsViewModel = async ({
 
             const productFund = productFunds?.[fundId as string];
             const allocationFund = allocationFundsMap?.[fundId as string];
-            const holdingFund = await getFundViewModel(allocationFund, fundInfo, productFund);
+            const holdingFund = await getFundViewModel(allocationFund, fundInfo, productFund, undefined, policy);
 
             holdingFunds.push(holdingFund);
         });
@@ -353,7 +368,6 @@ export const getFundDetailsViewModel = async (policy: PolicyDetails): Promise<Fu
         return map;
     }, {} as Record<string, FundAllocation>);
 
-
     const planCode = policy?.planCode || policy?.product?.planCode;
 
     const { data: productFunds } = await getFundInformationByPlanCode(policy?.carrierId, planCode);
@@ -365,11 +379,13 @@ export const getFundDetailsViewModel = async (policy: PolicyDetails): Promise<Fu
             fundAllocationsInvestmentsMap,
             fundsInfoMap: productFundsInfoMap,
             productFunds: productFunds?.funds,
+            policy,
         }),
         getHoldingFundsViewModel({
             allocationFundsMap,
             fundsInfoMap: productFundsInfoMap,
             productFunds: productFunds?.funds,
+            policy,
         }),
         getNotElectedFundsViewModel({
             allocationFundsMap,
