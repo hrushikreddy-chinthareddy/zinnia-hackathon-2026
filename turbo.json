@@ -4,7 +4,12 @@
   "globalEnv": ["NODE_ENV"],
   "tasks": {
     "build": {
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "!.next/standalone/apps/ops/src/jsonschema-mock-service/**"
+      ]
     },
     "consumer-experience#build": {
       "env": [

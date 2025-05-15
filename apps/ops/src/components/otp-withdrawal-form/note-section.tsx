@@ -4,8 +4,8 @@ import React, { useContext } from 'react';
 
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import FormSchema from '@deps/jsonschema-mock-service/process-automation/note-section/form-schema.json';
-import UiSchema from '@deps/jsonschema-mock-service/process-automation/note-section/ui-schema.json';
+import FormSchema from '@deps/react-json-schema/process-automation/note-section/form-schema.json';
+import UiSchema from '@deps/react-json-schema/process-automation/note-section/ui-schema.json';
 
 import DynamicForm from '../dynamic-form/dynamic-form';
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;

@@ -1,4 +1,3 @@
-import { mockService } from '@deps/jsonschema-mock-service/mock-service';
 import { CaseType } from '@deps/models/case/case';
 import { ApiVersion, ProcessType } from '@deps/models/case/enums';
 import { CaseApiVersionMapper } from '@deps/models/case/helpers';
@@ -16,6 +15,20 @@ interface TaskItem {
     createdDate: string;
     updatedDate: string;
 }
+
+// Function to dynamically import mockService in development
+const loadMockService = async () => {
+    if (process.env.NODE_ENV !== 'production') {
+        try {
+            const { mockService } = require('@deps/jsonschema-mock-service/mock-service');
+            return mockService;
+        } catch (error) {
+            console.error('Error loading mockService:', error);
+            return null;
+        }
+    }
+    return null;
+};
 
 export const fetchTasks = async (caseId: string, caseType: CaseType) => {
     let tasks, formattedList;
@@ -74,7 +87,10 @@ export const getTaskFormMetadata = async (
     taskSchemaOverride: boolean = false
 ) => {
     if (taskSchemaOverride) {
-        return mockService.getTaskFormMetadataSSRMock(taskType);
+        const mockService = await loadMockService();
+        if (mockService) {
+            return mockService.getTaskFormMetadataSSRMock(taskType);
+        }
     }
     return getTaskFormMetadataSSR(clientId, taskType, processType, accessToken, logCtx);
 };
@@ -85,7 +101,10 @@ export const getCaseTaskById = async (
     taskType?: TaskType
 ): Promise<ManagementTask<TaskStatus> | null> => {
     if (taskType) {
-        return mockService.getCaseTaskByIdSSRMock(taskType);
+        const mockService = await loadMockService();
+        if (mockService) {
+            return mockService.getCaseTaskByIdSSRMock(taskType);
+        }
     }
     return getCaseTaskByIdSSR(taskId, accessToken, logCtx);
 };

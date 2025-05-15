@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 // @ts-check
+const webpackLib = require('webpack');
 
 /** @type {import('next').NextConfig} */
 // eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
@@ -98,6 +99,13 @@ module.exports = {
                 },
             ],
         });
+        if (process.env.NODE_ENV === 'production') {
+            config.plugins.push(
+                new webpackLib.IgnorePlugin({
+                    resourceRegExp: /jsonschema-mock-service(\/|\\)/, // Matches the folder and its sub-content
+                })
+            );
+        }
 
         return config;
     },

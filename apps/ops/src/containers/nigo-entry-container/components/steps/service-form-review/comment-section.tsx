@@ -4,11 +4,10 @@ import React, { useContext } from 'react';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import CommentSchema from '@deps/jsonschema-mock-service/process-automation/comment-section/form-section.json';
-import CommentUISchema from '@deps/jsonschema-mock-service/process-automation/comment-section/ui-schema.json';
+import CommentSchema from '@deps/react-json-schema/process-automation/comment-section/form-section.json';
+import CommentUISchema from '@deps/react-json-schema/process-automation/comment-section/ui-schema.json';
 
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
-
 
 const CommentSection = React.forwardRef(function CommentSectionComponent() {
     const { formComment, setFormComment } = useContext(FormDataContext);
@@ -24,12 +23,12 @@ const CommentSection = React.forwardRef(function CommentSectionComponent() {
     };
 
     return (
-        <div className='mx-8'>
+        <div className="mx-8">
             <DynamicForm
                 formData={formData}
                 taskMetadata={{
                     formSchema: CommentSchema as RJSFSchema,
-                    uiSchema:  CommentUISchema,
+                    uiSchema: CommentUISchema,
                 }}
                 onChange={handleChange}
                 onSubmit={noop}

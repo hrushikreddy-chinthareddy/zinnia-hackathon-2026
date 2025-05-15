@@ -1,4 +1,13 @@
 {
     "extends": "./tsconfig.json",
-    "exclude": ["node_modules", "**/*.stories.tsx", "**/*.test.*", "src/utils/mock/*", "src/setupTests.ts", "src/utils/storybook.tsx", "e2e"]
+    "exclude": [
+        "node_modules",
+        "**/*.stories.tsx",
+        "**/*.test.*",
+        "src/utils/mock/*",
+        "src/setupTests.ts",
+        "src/utils/storybook.tsx",
+        "e2e",
+        "src/jsonschema-mock-service/**" // Exclude everything in jsonschema-mock-service
+    ]
 }
