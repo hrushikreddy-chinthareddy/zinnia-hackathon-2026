@@ -1,4 +1,4 @@
-import { getAccessToken } from '@auth0/nextjs-auth0';
+import { getAccessToken, getSession } from '@auth0/nextjs-auth0';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -45,6 +45,7 @@ import { logError, logWarn, parseErrorInformation, withPageAuthAndLogging } from
 import nextI18nextConfig from 'next-i18next.config';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 import { FgaRoles } from '@xd/utils/dist';
 
 interface PolicyPageProps extends SegmentTrackedPageProps {
@@ -54,9 +55,11 @@ interface PolicyPageProps extends SegmentTrackedPageProps {
         [UserPermission.AllowEditPolicy]: boolean;
     };
     selectedPolicyParty?: PolicyAllOfPartiesItem;
+    showAudio: boolean;
+    canUnmask: boolean;
 }
 
-const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
+const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user, showAudio, canUnmask }) => {
     const router = useRouter();
     const { query } = router;
     const { id, slug, planCode } = query;
@@ -174,7 +177,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }) => {
                 }
                 break;
             case 'activity':
-                subPageContent = <ActivitySubPage />;
+                subPageContent = <ActivitySubPage showAudio={showAudio} canUnmask={canUnmask} />;
                 subPageTitleKey = 'activity';
                 break;
             case 'documents':
@@ -209,6 +212,8 @@ export const getServerSideProps = withPageAuthAndLogging(
             // Get the user object from the Auth0 Session
             const user = await getUserData(context);
             const { locale = DEFAULT_LOCALE, res, req } = context;
+            const session = await getSession(req, res);
+            const canUnmask = await canUnmaskPii(session?.accessToken, session?.user?.partyId);
             try {
                 (await getAccessToken(req, res)).accessToken;
             } catch (e) {
@@ -220,6 +225,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
 
             const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const showAudio: boolean = featureFlagDecisions?.[FEATURE_FLAGS.CALL_AUDIO_FEATURE];
             const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
                 ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY, loggingContext)
                 : await doesUserHavePagePermissions(
@@ -250,6 +256,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                     props: {
                         ...translations,
                         user,
+                        showAudio,
+                        canUnmask,
                     },
                 };
             } catch (error) {

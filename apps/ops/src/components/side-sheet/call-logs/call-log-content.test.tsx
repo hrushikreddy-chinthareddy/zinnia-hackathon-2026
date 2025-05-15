@@ -20,6 +20,7 @@ const mockCallLog = {
     createdByUser: 'Inigo Montoya',
     createdDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     notes: 'test',
+    sessionId: 'sessionId',
 };
 
 const mockResult = {

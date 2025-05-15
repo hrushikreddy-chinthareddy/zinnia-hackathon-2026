@@ -20,9 +20,11 @@ import styles from './styles.module.css';
 interface CaseRedesignProps {
     caseDetails: Case;
     tab?: string; // The subpath (if any)
+    showAudio: boolean;
+    canUnmask: boolean;
 }
 
-const CaseRedesign = ({ caseDetails, tab }: CaseRedesignProps) => {
+const CaseRedesign = ({ caseDetails, tab, showAudio, canUnmask }: CaseRedesignProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [tabVal, setTabVal] = useState(tab);
     const { featureFlags } = useOptimizely();
@@ -54,7 +56,7 @@ const CaseRedesign = ({ caseDetails, tab }: CaseRedesignProps) => {
             />
             <div className="flex w-full flex-col justify-between gap-2 p-2 lg:flex-row">
                 <CaseSideNav caseDetails={caseDetailsModel} />
-                <CaseSubPage caseDetails={caseDetailsModel} tab={tabVal} handleTabChange={handleTabChange} />
+                <CaseSubPage caseDetails={caseDetailsModel} tab={tabVal} handleTabChange={handleTabChange} showAudio={showAudio} canUnmask={canUnmask} />
             </div>
         </div>
     );

@@ -3517,6 +3517,15 @@
             "heading": "Informations Bancaires",
             "nameOnAccount": "Nom sur le compte",
             "routingNumber": "Numéro d'acheminement"
+        },
+        "audioDetailsContent": {
+            "audioDetailsTitle": "Détails audio",
+            "audioDetails": "Audio details",
+            "callId": "Identification de l'appel",
+            "representative": "Représentant",
+            "date": "Date",
+            "totalCallTime": "Durée totale de l'appel",
+            "error": "Erreur lors de la récupération de l'audio. Actualisez la page pour continuer."
         }
     },
     "globalPolicyInfo": {

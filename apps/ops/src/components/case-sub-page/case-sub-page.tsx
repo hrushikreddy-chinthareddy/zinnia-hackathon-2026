@@ -6,7 +6,7 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { Case } from '@deps/models/case/case';
-import { CaseDetailsTabValues } from '@deps/types/constants';
+import { CALL_LOGS_TAB_QUERY_LIMIT, CaseDetailsTabValues } from '@deps/types/constants';
 import { CaseTabClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import CallLogsTab from './case-tabs/call-logs-tab';
@@ -19,10 +19,14 @@ export default function CaseSubPage({
     caseDetails,
     tab,
     handleTabChange,
+    showAudio,
+    canUnmask,
 }: {
     caseDetails: Case;
     tab?: string;
     handleTabChange: (val: string) => void;
+    showAudio: boolean;
+    canUnmask: boolean
 }) {
     const { t } = useTranslation();
     const { sessionId, partyId } = usePermissionsContext();
@@ -75,7 +79,7 @@ export default function CaseSubPage({
                     <NotesTab caseDetails={caseDetails} />
                 </TabContent>
                 <TabContent className="w-full" value={CaseDetailsTabValues['call-logs']}>
-                    <CallLogsTab queryLimit={100} />
+                    <CallLogsTab policyNumber={caseDetails.policyNumber} queryLimit={CALL_LOGS_TAB_QUERY_LIMIT} showAudio={showAudio} canUnmask={canUnmask} />
                 </TabContent>
             </TabGroup>
         </div>

@@ -11,6 +11,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { AudioDetailsContent } from './audio-details-content';
+import { ReactComponent as VolumeUp } from '@deps/styles/elements/icons/icons_outlined/volume-up.svg';
 import { getCallLogsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 export const NoSummaryCard = ({ content }: { content: string }) => (
     <div className="flex items-center gap-1 rounded-sm border border-dashed border-gray-100 bg-gray-50 p-4">
@@ -27,6 +30,9 @@ const CallLogCard = ({
     createdAt,
     summary,
     notes,
+    sessionID,
+    showAudio,
+    canUnmask,
 }: {
     callEntryId?: number;
     callerName?: string;
@@ -36,6 +42,9 @@ const CallLogCard = ({
     summary?: string;
     className?: string;
     notes?: string;
+    sessionID?: string;
+    showAudio: boolean;
+    canUnmask:  boolean;
 }) => {
     tag = toSentenceCase(tag);
     const displayName = (
@@ -48,6 +57,15 @@ const CallLogCard = ({
     const { t } = useTranslation();
     const timestampText = dayjs(createdAt).format('M/D/YY h:mm a');
     const missingSummaryText = t('sideSheet.noCallLogSummary');
+    // Sidesheet Support
+    const sideSheet = useSideSheetContext();
+    const openSideBar = () => {
+        sideSheet.changeSideSheetContent(
+            t('sideSheet.audioDetailsContent.audioDetailsTitle') as string,
+            <AudioDetailsContent callEntryId={callEntryId} callerName={callerName} createdAt={createdAt} sessionID={sessionID} />
+        );
+        sideSheet.handleOpen(true);
+    };
 
     return (
         <div className="flex w-full flex-col gap-2 border-b-2 border-gray-100 py-6 last:border-b-0">
@@ -62,8 +80,12 @@ const CallLogCard = ({
                             </div>
                         )}
                         {callEntryId && (
-                            <div className="justify-self-end">
+                            <div className="justify-self-end flex gap-4 items-center">
                                 <Typography variant={TypographyVariant.Caption}>{`ID: ${callEntryId}`}</Typography>
+                                {showAudio && canUnmask && (<div className={`flex items-center gap-1 ${sessionID != undefined ? 'text-[#00628B] cursor-pointer' : 'text-[#B3B3B3] cursor-not-allowed'}`} onClick={sessionID ? openSideBar : undefined}>
+                                    <VolumeUp width={16} height={16} />
+                                    <Typography className={sessionID != undefined ? "cursor-pointer" : "cursor-not-allowed"} variant={TypographyVariant.LabelMd}>{t('sideSheet.audioDetailsContent.audioDetails')}</Typography>
+                                </div>)}
                             </div>
                         )}
                     </div>
@@ -99,9 +121,11 @@ const CallLogCard = ({
 interface CallLogsTabProps {
     policyNumber?: string;
     queryLimit: number;
+    showAudio: boolean;
+    canUnmask: boolean
 }
 
-export default function CallLogsTab({ policyNumber, queryLimit = 10 }: CallLogsTabProps) {
+export default function CallLogsTab({ policyNumber, queryLimit = 10, showAudio, canUnmask }: CallLogsTabProps) {
     const { t } = useTranslation();
 
     const { data: callLogsData, isLoading: callLogsLoading } = useQuery({
@@ -131,7 +155,7 @@ export default function CallLogsTab({ policyNumber, queryLimit = 10 }: CallLogsT
             ) : (
                 !!callLogsData?.data.length && (
                     <>
-                        {callLogsData.data.map(({ callEntryID, callerName, callerType, createdDate, callType, callSummary, notes }) => (
+                        {callLogsData.data.map(({ callEntryID, callerName, callerType, createdDate, callType, callSummary, notes, sessionID }) => (
                             <CallLogCard
                                 key={`call-log-${callEntryID}`}
                                 callEntryId={callEntryID}
@@ -141,6 +165,9 @@ export default function CallLogsTab({ policyNumber, queryLimit = 10 }: CallLogsT
                                 tag={callType}
                                 summary={callSummary}
                                 notes={notes}
+                                sessionID={sessionID}
+                                showAudio={showAudio}
+                                canUnmask={canUnmask}
                             />
                         ))}
                     </>

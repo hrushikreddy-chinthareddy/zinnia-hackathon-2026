@@ -9,6 +9,7 @@ export interface CallLog {
     createdByUser: string;
     createdDate: string;
     notes: string;
+    sessionID: string;
 }
 
 export interface CallLogResponse {

@@ -3536,6 +3536,15 @@
             "heading": "Banking Details",
             "nameOnAccount": "Name on account",
             "routingNumber": "Routing number"
+        },
+        "audioDetailsContent": {
+            "audioDetailsTitle": "Audio Details",
+            "audioDetails": "Audio details",
+            "callId": "Call ID",
+            "representative": "Representative",
+            "date": "Date",
+            "totalCallTime": "Total call time",
+            "error": "Error retrieving audio. Refresh the page to continue."
         }
     },
     "globalPolicyInfo": {

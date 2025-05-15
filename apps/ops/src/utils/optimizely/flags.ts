@@ -157,4 +157,5 @@ export enum FEATURE_FLAGS {
     ENTERPRISE_SEARCH = 'enterprise_search',
     DEPU_4253_FUNDING_SOURCES = 'depu-4253-funding-sources',
     FAST_WITHDRAWAL = 'fast-withdrawal',
+    CALL_AUDIO_FEATURE='call-audio-feature',
 }
