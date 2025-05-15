@@ -11,7 +11,7 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
-import { ArrangementType, Frequency, Policy, Reason } from '@deps/models/policy/sor-policy';
+import { ArrangementType, Frequency, Policy, Reason, Status } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkLoanRepaymentOneTimeEligibilityQuery,
@@ -43,7 +43,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
 
     const loanCarryingBalance = !!loanValues?.totalLoanBalance && loanValues?.totalLoanBalance > 0;
     const upcomingLoanRepayment = useMemo(
-        () => systematicPrograms?.find(({ reason }) => reason === Reason.LOANREPAYMENT),
+        () => systematicPrograms?.find(sp => sp.reason === Reason.LOANREPAYMENT && sp.status === Status.ACTIVE),
         [systematicPrograms]
     );
 

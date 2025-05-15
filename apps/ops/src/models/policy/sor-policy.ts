@@ -1047,7 +1047,7 @@ export interface Parties {
     allocationPercentage: number;
     bankId?: string;
     partyId?: string;
-    paymentForm?: PaymentForm; // Assuming PaymentForm is already defined somewhere
+    paymentForm?: PaymentForm;
     addressId?: string;
     forBenefitOfOrForFurtherCredit?: string;
 }

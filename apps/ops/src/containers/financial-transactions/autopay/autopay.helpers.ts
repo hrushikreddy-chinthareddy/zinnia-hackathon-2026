@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
 import { ACH, Autopay } from '@deps/contexts/transactions/AutopayContext';
-import { PaymentForm } from '@deps/models/policy/sor-policy';
+import { Reason, Status, SystematicProgram as SystematicPrograms, PaymentForm } from '@deps/models/policy/sor-policy';
 import { SystematicProgramUpdateRequestQuery } from '@deps/queries/api/bpm';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -33,10 +33,23 @@ export const buildSystematicProgramUpdateRequestBody = (
                 bankId: autopay.paymentBankId,
                 partyId: autopay.payorPartyId,
             },
+            parties: [
+                {
+                    allocationPercentage: 100,
+                    bankId: autopay.paymentBankId,
+                    partyId: autopay.payorPartyId,
+                },
+            ],
         },
     };
 };
 
+export const getSystematicInfo = (systematicPrograms?: SystematicPrograms[], systematicProgramReason?: Reason, isSetUp?: boolean) => {
+    const systematicProgram = systematicPrograms?.find(sp => sp.reason === systematicProgramReason && sp.status === Status.ACTIVE);
+    const arrangementId = isSetUp ? '' : systematicProgram?.arrangementId || '';
+
+    return { systematicProgram, arrangementId };
+};
 export const buildSystematicWithdrawalProgramUpdateRequestBody = (
     autopay: Autopay,
     systematicProgram: SystematicProgram

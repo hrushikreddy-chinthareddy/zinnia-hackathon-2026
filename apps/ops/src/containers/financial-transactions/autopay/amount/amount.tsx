@@ -14,7 +14,7 @@ import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { Policy, Frequency } from '@deps/models/policy/sor-policy';
+import { Policy, Frequency, Status } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import {AmountType as AutopayAmountType} from '@deps/models/policy/sor-policy';
@@ -50,7 +50,7 @@ const Amount = ({ policy }: AmountProps) => {
     const { systematicPrograms, policyDates, policyNumber, product } = policy;
 
     const systematicProgramData = useMemo(
-        () => systematicPrograms?.find(sp => sp.reason === systematicProgramReason),
+        () => systematicPrograms?.find(sp => sp.reason === systematicProgramReason && sp.status === Status.ACTIVE),
         [systematicProgramReason, systematicPrograms]
     );
     const { goToNext } = useWorkflow();

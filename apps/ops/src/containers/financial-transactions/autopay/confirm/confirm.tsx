@@ -9,11 +9,11 @@ import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-ca
 import { TranslationFiles } from '@deps/config/translations';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { Statuses } from '@deps/models/case/case';
-import { ArrangementType, Policy, Status } from '@deps/models/policy/sor-policy';
+import { ArrangementType, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitSystematicProgramUpdate } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
-import { buildSystematicProgramUpdateRequestBody, buildSystematicWithdrawalProgramUpdateRequestBody } from '../autopay.helpers';
+import { buildSystematicProgramUpdateRequestBody, buildSystematicWithdrawalProgramUpdateRequestBody, getSystematicInfo } from '../autopay.helpers';
 
 interface ConfirmProps {
     policy: Policy;
@@ -40,7 +40,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const [submitNigo, setSubmitNigo] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    const { policyNumber, product } = policy;
+    const { policyNumber, product, systematicPrograms } = policy;
     const [newCaseId, setNewCaseId] = useState<string | undefined>(caseId);
 
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
@@ -53,10 +53,9 @@ const Confirm = ({ policy }: ConfirmProps) => {
 
     const submit = async () => {
         setIsLoading(true);
-        const systematicProgram = policy.systematicPrograms?.find(
-            sp => sp.reason === autopay.systematicProgramReason && sp.status === Status.ACTIVE
-        );
-        const arrangementId = isSetUp ? '' : systematicProgram?.arrangementId || '';
+
+        const { systematicProgram, arrangementId } = getSystematicInfo(systematicPrograms, autopay.systematicProgramReason, isSetUp);
+
 
         const query =
             parentPage === 'withdrawals'

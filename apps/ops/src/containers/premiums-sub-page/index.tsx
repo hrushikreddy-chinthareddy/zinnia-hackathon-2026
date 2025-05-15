@@ -13,7 +13,7 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helpers';
-import { ArrangementType, PolicyFeatureFeatureType, ProductType, Reason } from '@deps/models/policy/sor-policy';
+import { ArrangementType, PolicyFeatureFeatureType, ProductType, Reason, Status } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkOneTimePremiumEligibilityQuery,
@@ -48,7 +48,10 @@ export const PremiumsSubPage = () => {
 
     const { isAnnuity } = policyDetails;
     const pendingLapse = policyFeatures?.find(pf => pf.featureType === ('LAPSEASSESSMENT' as PolicyFeatureFeatureType));
-    const upcomingPayment = useMemo(() => systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM), [systematicPrograms]);
+    const upcomingPayment = useMemo(
+        () => systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM && sp.status === Status.ACTIVE),
+        [systematicPrograms]
+    );
 
     const flatExtra = getFlatExtra(coverage);
     const addCharges = getAddCharges({ flatExtra, t });

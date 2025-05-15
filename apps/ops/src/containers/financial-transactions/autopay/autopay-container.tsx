@@ -15,14 +15,18 @@ import WorkflowContainer from '@deps/containers/workflow-container/workflow-cont
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { Processes } from '@deps/models/case/case';
-import { ArrangementType, Policy, Reason, Status } from '@deps/models/policy/sor-policy';
+import { ArrangementType, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { validateSystematicProgramUpdate } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import Amount from './amount/amount';
 import WithdrawalAmount from './amount/withdrawalAmount';
-import { buildSystematicProgramUpdateRequestBody, buildSystematicWithdrawalProgramUpdateRequestBody } from './autopay.helpers';
+import {
+    buildSystematicProgramUpdateRequestBody,
+    getSystematicInfo,
+    buildSystematicWithdrawalProgramUpdateRequestBody,
+} from './autopay.helpers';
 import Confirm from './confirm/confirm';
 import ManageSummary from './summary/manage-summary';
 import SetUpSummary from './summary/set-up-summary';
@@ -46,6 +50,7 @@ const AutopayContainer = ({
 }: AutopayContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: translationKeyPrefix });
     const { autopay, setAutopay } = useAutopay();
+    const { systematicPrograms } = policy;
 
     const startLabel = t('start.label');
     const amountLabel = t('amount.label');
@@ -69,10 +74,8 @@ const AutopayContainer = ({
     }, [arrangementType, isSetUp, parentPage, setAutopay, systematicProgramReason, translationKeyPrefix]);
 
     const validateCall = async () => {
-        const systematicProgram = policy.systematicPrograms?.find(
-            sp => sp.reason === systematicProgramReason && sp.status === Status.ACTIVE
-        );
-        const arrangementId = isSetUp ? '' : systematicProgram?.arrangementId || '';
+        const { systematicProgram, arrangementId } = getSystematicInfo(systematicPrograms, systematicProgramReason, isSetUp);
+
         const query =
             parentPage == ParentPage.Withdrawals
                 ? buildSystematicWithdrawalProgramUpdateRequestBody(autopay, systematicProgram as SystematicProgram)
