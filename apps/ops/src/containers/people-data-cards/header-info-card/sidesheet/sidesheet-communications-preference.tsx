@@ -161,15 +161,18 @@ export const SidesheetCommunicationsPreference = ({
             return;
         }
 
-        const preferredCommunication: { type: CommunicationPreferenceChange.preferredCommunicationType; email?: string } = {
-            type: CommunicationPreferenceChange.preferredCommunicationType.NOPREFERENCE,
+        const preferredCommunication: {
+            preferredCommunicationType: CommunicationPreferenceChange.preferredCommunicationType;
+            email?: string;
+        } = {
+            preferredCommunicationType: CommunicationPreferenceChange.preferredCommunicationType.NOPREFERENCE,
         };
 
         if (selectedOption?.contactType === PreferredCommunicationType.REGULARMAIL) {
-            preferredCommunication.type = CommunicationPreferenceChange.preferredCommunicationType.REGULARMAIL;
+            preferredCommunication.preferredCommunicationType = CommunicationPreferenceChange.preferredCommunicationType.REGULARMAIL;
         }
         if (selectedOption?.contactType === PreferredCommunicationType.EMAIL) {
-            preferredCommunication.type = CommunicationPreferenceChange.preferredCommunicationType.EMAIL;
+            preferredCommunication.preferredCommunicationType = CommunicationPreferenceChange.preferredCommunicationType.EMAIL;
             preferredCommunication.email = (selectedOption.contactInfo as Email)?.emailAddress;
         }
 
