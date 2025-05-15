@@ -38,7 +38,11 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                 children
             ) : (
                 <div className={nobackground ? 'flex' : containerClasses}>
-                    <div className="flex w-full">{children}</div>
+                    <div className="flex w-full">
+                        <div className="w-full">
+                            {children}
+                        </div>
+                    </div>
                     <div className="ml-auto my-3">
                         {hasToolbar && (
                             <div className="d-flex flex-row items-center">
