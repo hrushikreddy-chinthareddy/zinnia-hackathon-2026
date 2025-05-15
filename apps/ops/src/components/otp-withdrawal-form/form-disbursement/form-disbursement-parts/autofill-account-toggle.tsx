@@ -6,13 +6,18 @@ import { DEFAULT_DISBURSEMENT_UPDATE, DisbursementConfig, DisbursementParts } fr
 
 import { SelectedBankContext } from './pre-populate-banking-details';
 import FormDisbursementContainer from '../form-disbursement-section';
-import { BankDetailsInputMethod, getUpdatedData, SUPPLEMENTARY_FIELDS_FILTERS } from '../form-disbursement.helpers';
+import {
+    BankDetailsInputMethod,
+    getPreselectedWireOption,
+    getUpdatedData,
+    SUPPLEMENTARY_FIELDS_FILTERS,
+} from '../form-disbursement.helpers';
 
 type AutofillAccountToggleProps = {
     initialFormDisbursement: DisbursementParts;
     toggleOptions: Array<{ label: string; value: string }>;
     preFillBankInfo: DisbursementParts;
-    defaultFillMethod: BankDetailsInputMethod;
+    defaultFillMethod?: BankDetailsInputMethod;
     supplementaryFields: DisbursementConfig[] | null;
     setDisbursementInformation: React.Dispatch<React.SetStateAction<DisbursementParts>>;
     isFormStateReadOnly: boolean;
@@ -23,14 +28,13 @@ const AutofillAccountToggle = ({
     toggleOptions,
     preFillBankInfo,
     supplementaryFields,
-    defaultFillMethod,
     setDisbursementInformation,
     initialFormDisbursement,
     isFormStateReadOnly,
     carrier,
 }: AutofillAccountToggleProps) => {
     const { setBankSelected } = useContext(SelectedBankContext);
-    const [fillType, setFillType] = useState<BankDetailsInputMethod>(defaultFillMethod ?? BankDetailsInputMethod.Manual);
+    const [fillType, setFillType] = useState<BankDetailsInputMethod>(getPreselectedWireOption(preFillBankInfo?.payeeName || ''));
     const supplementaryFieldsFiltered = supplementaryFields?.filter((item: DisbursementConfig) =>
         SUPPLEMENTARY_FIELDS_FILTERS.includes(item.fieldName)
     );

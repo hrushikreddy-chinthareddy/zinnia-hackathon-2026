@@ -151,6 +151,16 @@ export const getUpdatedData = (preFillBankInfo: DisbursementParts, method: BankD
     return preFillBankInfo;
 };
 
+export const getPreselectedWireOption = (payeeName: string): BankDetailsInputMethod => {
+    const payeeToMethodMap: Record<string, BankDetailsInputMethod> = {
+        'MASSMUTUAL ASCEND LIFE INSURANCE COMPANY': BankDetailsInputMethod.Auto,
+        'MASSACHUSETTS MUTUAL LIFE INS CO': BankDetailsInputMethod.Envison,
+        'FORETHOUGHT LIFE INS RECEIPT ACCOUNT': BankDetailsInputMethod.Auto,
+    };
+
+    return payeeToMethodMap[payeeName] || BankDetailsInputMethod.Manual;
+};
+
 export const SUPPLEMENTARY_FIELDS_FILTERS: string[] = [
     BankingFields.AccountType,
     BankingFields.PayeeName,
