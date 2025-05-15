@@ -14,16 +14,14 @@ const NewWithdrawalAutoPay = ({ policy }: WithdrawalAutopayProps) => {
     return (
         <AutopayProvider>
             <PageHead titleKey="newWithdrawal" />
-            <div className="px-4 py-6 flex justify-center md:px-6 md:py-8 lg:px-8 lg:py-10 xl:px-0 xl:py-16">
-                <AutopayContainer
-                    arrangementType={undefined}
-                    policy={policy}
-                    parentPage={ParentPage.Withdrawals}
-                    systematicProgramReason={undefined}
-                    translationKeyPrefix="withdrawalAutopay"
-                    isSetUp={true}
-                />
-            </div>
+            <AutopayContainer
+                arrangementType={undefined}
+                policy={policy}
+                parentPage={ParentPage.Withdrawals}
+                systematicProgramReason={undefined}
+                translationKeyPrefix="withdrawalAutopay"
+                isSetUp={true}
+            />
         </AutopayProvider>
     );
 };

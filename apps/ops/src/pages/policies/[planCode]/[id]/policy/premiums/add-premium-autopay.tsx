@@ -14,16 +14,14 @@ const AddPremiumAutopay = ({ policy }: UpdateAutopayProps) => {
     return (
         <AutopayProvider>
             <PageHead titleKey="addPremiumAutopay" />
-            <div className="flex w-full flex-col overflow-auto px-4 md:px-6 lg:px-8">
-                <AutopayContainer
-                    arrangementType={ArrangementType.PAYMENT}
-                    isSetUp={true}
-                    policy={policy}
-                    parentPage={ParentPage.Premiums}
-                    systematicProgramReason={Reason.PREMIUM}
-                    translationKeyPrefix="premiumAutopay"
-                />
-            </div>
+            <AutopayContainer
+                arrangementType={ArrangementType.PAYMENT}
+                isSetUp={true}
+                policy={policy}
+                parentPage={ParentPage.Premiums}
+                systematicProgramReason={Reason.PREMIUM}
+                translationKeyPrefix="premiumAutopay"
+            />
         </AutopayProvider>
     );
 };

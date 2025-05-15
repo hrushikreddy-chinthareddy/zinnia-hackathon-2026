@@ -14,16 +14,14 @@ const StartLoanPayment = ({ policy }: StartLoanPaymentProps) => {
     return (
         <AutopayProvider>
             <PageHead titleKey="loanAutopay" />
-            <div className="px-4 flex justify-center md:px-6 lg:px-8 xl:px-0">
-                <AutopayContainer
-                    arrangementType={ArrangementType.LOANREPAYMENT}
-                    isSetUp={true}
-                    policy={policy}
-                    parentPage={ParentPage.Loans}
-                    systematicProgramReason={Reason.LOANREPAYMENT}
-                    translationKeyPrefix="loanAutopay"
-                />
-            </div>
+            <AutopayContainer
+                arrangementType={ArrangementType.LOANREPAYMENT}
+                isSetUp={true}
+                policy={policy}
+                parentPage={ParentPage.Loans}
+                systematicProgramReason={Reason.LOANREPAYMENT}
+                translationKeyPrefix="loanAutopay"
+            />
         </AutopayProvider>
     );
 };

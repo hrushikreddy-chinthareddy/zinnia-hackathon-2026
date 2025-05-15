@@ -13,9 +13,7 @@ const FundTransfer = ({ policy }: fundProps) => {
     return (
         <FundTransferProvider>
             <PageHead titleKey="fundTransfer" />
-            <div className="flex w-full flex-col overflow-auto px-4 md:px-6 lg:px-8">
-                <FundTransferContainer policy={policy} />
-            </div>
+            <FundTransferContainer policy={policy} />
         </FundTransferProvider>
     );
 };

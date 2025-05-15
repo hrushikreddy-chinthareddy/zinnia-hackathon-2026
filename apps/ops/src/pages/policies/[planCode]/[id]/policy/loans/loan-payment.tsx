@@ -13,9 +13,7 @@ const LoanPaymentOneTime = ({ policy }: LoanPaymentOneTimeProps) => {
     return (
         <LoanPaymentProvider>
             <PageHead titleKey="loanPayment" />
-            <div className="px-4 flex justify-center md:px-6 lg:px-8 xl:px-0">
-                <LoanPaymentContainer policy={policy} />
-            </div>
+            <LoanPaymentContainer policy={policy} />
         </LoanPaymentProvider>
     );
 };

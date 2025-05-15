@@ -13,9 +13,7 @@ const NewPremium = ({ policy }: NewPremiumProps) => {
     return (
         <NewPremiumProvider>
             <PageHead titleKey="newPremium" />
-            <div className="flex w-full flex-col overflow-auto px-4 md:px-6 lg:px-8">
-                <NewPremiumContainer policy={policy} />
-            </div>
+            <NewPremiumContainer policy={policy} />
         </NewPremiumProvider>
     );
 };

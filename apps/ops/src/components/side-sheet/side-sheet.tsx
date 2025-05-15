@@ -58,13 +58,11 @@ export default function SideSheet({
                 setIsDelayedMount(true);
             }, 0);
             document.documentElement.style.overflow = 'hidden';
-            document.body.style.overflow = 'hidden';
         }
 
         if (!open) {
             setIsDelayedMount(false);
             document.documentElement.style.overflow = '';
-            document.body.style.overflow = '';
         }
 
         return () => {

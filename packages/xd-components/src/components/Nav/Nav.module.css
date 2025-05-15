@@ -1,17 +1,17 @@
 .navContainer {
   --nav-expanded-width: 240px;
-  z-index: 50;
-  height: 100vh;
   background-color: var(--color-base-surface-surface-carrier);
   /* for the sake of the animation hiding text properly we're using a border instead of padding */
   /* that way whatever is overflowing behind the border is hidden */
   border: var(--measure-dimension-z-space-2) solid
     var(--color-base-surface-surface-carrier);
+  height: 100vh;
   position: sticky;
   transition: 300ms ease-in-out;
   text-wrap: nowrap;
   top: 0;
   width: var(--nav-expanded-width);
+  z-index: 20;
 
   &.collapsed {
     width: 48px;

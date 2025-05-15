@@ -15,9 +15,7 @@ const NewLoan = ({ policy }: NewLoanProps) => {
     return (
         <NewLoanProvider>
             <PageHead titleKey="newLoan" />
-            <div className="px-4 flex justify-center md:px-6 lg:px-8 xl:px-0">
-                <NewLoanContainer policy={policy as Policy} />
-            </div>
+            <NewLoanContainer policy={policy as Policy} />
         </NewLoanProvider>
     );
 };

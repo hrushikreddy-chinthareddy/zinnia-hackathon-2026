@@ -12,19 +12,16 @@ describe('SideSheet', () => {
 
         // Scroll should be enabled initially
         expect(document.documentElement.style.overflow).toBe('');
-        expect(document.body.style.overflow).toBe('');
 
         rerender(<SideSheet open={true} handleClose={() => {}} />);
 
         // Scroll should be disabled when SideSheet is open
         expect(document.documentElement.style.overflow).toBe('hidden');
-        expect(document.body.style.overflow).toBe('hidden');
 
         rerender(<SideSheet open={false} handleClose={() => {}} />);
 
         // Scroll should be enabled when SideSheet is closed
         expect(document.documentElement.style.overflow).toBe('');
-        expect(document.body.style.overflow).toBe('');
     });
 
     test('popovers should be visible when clicked', async () => {
