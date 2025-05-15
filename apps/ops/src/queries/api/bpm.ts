@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
 import {
+    AdhocSystematicProgram,
     FullSurrenderQuoteResponse,
     OneTimePremiumRequest,
     PartialWithdrawalOneTimeQuoteResponse,
@@ -30,6 +31,10 @@ export interface OneTimePremiumRequestQuery extends OneTimePremiumRequest {
 
 export interface SystematicProgramUpdateRequestQuery extends SystematicProgramUpdateRequest {
     caseId: string;
+}
+
+export interface SystematicProgramRequestQuery {
+    systematicProgram: AdhocSystematicProgram;
 }
 
 export interface CancelTransactionRequestQuery {
@@ -210,6 +215,24 @@ export const checkEligibilitySystematicPrograms = async (
     } catch (error: any) {
         console.error('checkEligibilitySystematicPrograms::an error occurred during eligibility check', error);
 
+        return error?.data;
+    }
+};
+
+export const checkEligibilitySystematicProgram = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    arrangementId: string,
+    query: SystematicProgramRequestQuery
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<SystematicProgramRequestQuery, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}/eligibilitycheck`,
+            query
+        );
+        return data;
+    } catch (error: any) {
+        console.error('checkEligibilitySystematicPrograms::an error occurred during eligibility check', error);
         return error?.data;
     }
 };

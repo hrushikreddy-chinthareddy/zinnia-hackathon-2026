@@ -15,7 +15,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { buildFullNameFromParty, toTitleCase } from '@deps/helpers/string.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
-import { Frequency, Policy } from '@deps/models/policy/sor-policy';
+import { ArrangementType, Frequency, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, ValidationResult } from '@deps/queries/api/bpm';
 import { DEFAULT_EXTENDED_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
@@ -37,6 +37,11 @@ const ManageSummary = ({ policy }: SummaryProps) => {
         paymentBranchName,
         payorFullName,
         validationResponse,
+        arrangementType,
+        fboFfc,
+        paymentForm,
+        payeeFullName,
+        paymentAddress,
     } = autopay;
 
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.summary` });
@@ -58,12 +63,34 @@ const ManageSummary = ({ policy }: SummaryProps) => {
     const currentPayor = (systematicProgram?.party || [])[0];
     const currentPayorParty = policy?.parties?.find(party => party.partyId === currentPayor?.partyId);
     const currentPayorBank = currentPayorParty?.bankDetails?.find(bank => bank.bankId === currentPayor?.bankId);
+    const currentAddressPayor = (systematicProgram?.parties || [])[0];
+    const currentPayorAddress = currentPayorParty?.addresses?.find(address => address.addressId == currentAddressPayor?.addressId);
+    const isWithdrawalAutopay = parentPage === ParentPage.Withdrawals;
+
     const comparisonData = [
         {
             header: '',
             new: t('newAutopayDetails'),
             current: t('current'),
         },
+        ...(isWithdrawalAutopay
+            ? [
+                  {
+                      header: t('distributionType'),
+                      new: arrangementType == ArrangementType.WITHDRAWAL ? 'Withdrawal' : 'RMD',
+                      current: systematicProgram?.arrangementType == ArrangementType.WITHDRAWAL ? 'Withdrawal' : 'RMD',
+                  },
+              ]
+            : []),
+        ...(isWithdrawalAutopay
+            ? [
+                  {
+                      header: t('type'),
+                      new: 'Dollar',
+                      current: 'Dollar',
+                  },
+              ]
+            : []),
         {
             header: t('amount'),
             new: numberFormatify(paymentAmount),
@@ -80,32 +107,48 @@ const ManageSummary = ({ policy }: SummaryProps) => {
             current: dayjs(systematicProgram?.nextProgramDate, 'YYYY-MM-DD').format(DEFAULT_EXTENDED_DATE_FORMAT),
         },
         {
+            header: t('fundAllocation'),
+            new: 'Pro rata',
+            current: 'Pro rata',
+        },
+        {
             header: t('payor'),
-            new: payorFullName,
+            new: payorFullName || payeeFullName,
             current: buildFullNameFromParty(currentPayorParty),
         },
+        ...(isWithdrawalAutopay
+            ? [
+                  {
+                      header: t('fbo'),
+                      new: fboFfc ?? 'N/A',
+                      current: systematicProgram?.parties?.[0]?.forBenefitOfOrForFurtherCredit ?? 'N/A',
+                  },
+              ]
+            : []),
         {
             // TODO MG: fix the comparison table so this can be translated
             // comparison table uses 'Banking details' to style
-            header: 'Banking details',
+            header: isWithdrawalAutopay ? 'Payment method' : 'Banking details',
             new: {
-                paymentType: ACH,
+                paymentType: isWithdrawalAutopay ? paymentForm : ACH,
                 branchName: paymentBranchName,
                 accountNumber: paymentAccountNumber,
+                paymentAddress: paymentAddress ?? {},
             },
             current: {
                 paymentType: systematicProgram?.paymentForm,
                 branchName: currentPayorBank?.branchName,
                 accountNumber: currentPayorBank?.accountNumber,
+                paymentAddress: currentPayorAddress ?? {},
             },
         },
     ];
+
     const bannerResults = validationResponse?.validationResult;
 
     const handleContinue = () => {
         if (!validationSucceeded && !isChecked) {
             setShowSelectionError(true);
-
             return;
         } else {
             setShowSelectionError(false);

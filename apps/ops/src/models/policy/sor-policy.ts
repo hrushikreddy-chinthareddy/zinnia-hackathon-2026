@@ -1043,6 +1043,15 @@ export const TransactionStatus = {
     PendingReversal: 'PendingReversal',
 } as const;
 
+export interface Parties {
+    allocationPercentage: number;
+    bankId?: string;
+    partyId?: string;
+    paymentForm?: PaymentForm; // Assuming PaymentForm is already defined somewhere
+    addressId?: string;
+    forBenefitOfOrForFurtherCredit?: string;
+}
+
 /**
  * Optional Reason for this transaction
  */
@@ -1598,9 +1607,12 @@ export const Reason = {
     LOANREPAYMENT: 'LOANREPAYMENT',
     FREEWITHDRAWALAMOUNT: 'FREEWITHDRAWALAMOUNT',
     WITHDRAWAL: 'WITHDRAWAL',
+    RMD: 'RMD',
+    REQUIREDMINIMUMDISTRIBUTION: 'REQUIREDMINIMUMDISTRIBUTION',
 } as const;
 
 export interface SystematicProgram {
+    parties?: Parties[];
     allocationOptionType?: AllocationOption;
     /** The amount paid */
     amount?: number;
@@ -2555,6 +2567,8 @@ export const PaymentForm = {
     DTCC: 'DTCC',
     CREDITCARD: 'CREDITCARD',
     ACH: 'ACH',
+    CHECK: 'CHECK',
+    WIRE: 'WIRE',
 } as const;
 
 export interface PayeeOrBeneficiary {
@@ -3992,6 +4006,7 @@ export const DisbursementPaymentForm = {
     EFT: 'EFT',
     ACH: 'ACH',
     CHECK: 'CHECK',
+    WIRE: 'WIRE',
 } as const;
 
 export interface Disbursement {
@@ -5142,6 +5157,7 @@ export const ArrangementType = {
     REQUIREDMINIMUMDISTRIBUTION: 'REQUIREDMINIMUMDISTRIBUTION',
 } as const;
 
+
 /**
  * Amount Type selected by user. Following is dropdown list 1. Amount -- If selected user should be able to enter Amount for Transaction Amount field 2. Percent -- If selected user should be able to enter Percentage for Transaction Amount field 3. Max -- If selected user should NOT be able to enter Amount. Auto calculated using Maximum Withdrawal Amount. 4. Free Withdrawal Amount -- If selected user should NOT be able to enter Amount. Auto calcualted using Free Withdrawal Amount. 5. Withdraw Until Basis ---- If selected user should NOT be able to enter Amount. Auto calcualted using Cost Basis.
  */
@@ -5154,6 +5170,7 @@ export const AmountType = {
     MAX: 'MAX',
     FREEWITHDRAWALAMOUNT: 'FREEWITHDRAWALAMOUNT',
     WITHDRAWALUNTILBASIS: 'WITHDRAWALUNTILBASIS',
+    EARNINGSONLY: 'EARNINGSONLY',
 } as const;
 
 export interface AllTransactions {
@@ -5312,6 +5329,7 @@ export interface AdhocSystematicProgram {
     previousProgramDate?: string;
     /** Date (with pattern "yyyy-mm-dd") */
     startDate?: string;
+    parties?: Parties[];
 }
 
 export type AdhocPartyAllOf = {

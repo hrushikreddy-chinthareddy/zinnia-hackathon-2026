@@ -103,6 +103,7 @@ export enum Processes {
     SuitabilityReview = 'Suitability Review',
     QCD = 'Qualified Charitable Distribution',
     FundTransfer = 'Fund Management',
+    CancelAutoPay = 'CancelAutoPay',
 }
 
 export enum Actions {

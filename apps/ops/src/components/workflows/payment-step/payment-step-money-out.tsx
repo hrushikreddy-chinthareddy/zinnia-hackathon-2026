@@ -1,8 +1,8 @@
-import { ArrangementType, PaymentForm, Policy } from '@zinnia/api-types/types/sor';
+import { PaymentForm, Policy } from '@zinnia/api-types/types/sor';
 import { FieldData, FieldSize, Radio } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -12,7 +12,7 @@ import AddressDataCard from '@deps/containers/small-data-card/address-data/addre
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
-import { Address as AddressOld, BankAccount } from '@deps/models/policy/sor-policy';
+import { Address as AddressOld, ArrangementType, BankAccount, Status, SystematicProgram } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 
 import { PaymentMethodType, PaymentStepProps } from './types';
@@ -29,11 +29,14 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
         paymentForm,
         paymentAddressId: currentPaymentAddressId,
         fboFfc,
+        arrangementType = ArrangementType.PAYMENT,
     } = state;
     const [formError, setFormError] = useState(false);
 
     const party = policy?.parties?.find(party => party.partyId === payeePartyId);
-    const paymentProgram = systematicPrograms?.find(program => program.arrangementType === ArrangementType.PAYMENT);
+    const paymentProgram = systematicPrograms?.find(
+        program => program.arrangementType === arrangementType && program.status === Status.ACTIVE
+    ) as SystematicProgram;
     const programBankId = paymentProgram?.party?.find(party => party.partyId === payeePartyId);
 
     const bankDetails = useMemo(() => {
@@ -127,7 +130,6 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
 
     const handlePaymentMethodChange = (newPaymentMethod: PaymentForm) => {
         setFormError(false);
-
         setState(prevState => ({
             ...prevState,
             paymentForm: newPaymentMethod,
@@ -139,6 +141,38 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
             fboFfc: undefined,
         }));
     };
+
+    useEffect(() => {
+        if (paymentProgram && paymentProgram?.parties?.[0]) {
+            const party = paymentProgram.parties[0];
+            const selectedBank = bankDetails ? bankDetails?.find(b => b.bankId === party.bankId) || bankDetails[0] : {};
+            const selectedAddress =
+                party.paymentForm === PaymentForm.CHECK && addresses
+                    ? addresses?.find(a => a.addressId === party.addressId) || addresses[0]
+                    : {};
+
+            setState(prevState => ({
+                ...prevState,
+                paymentAccountNumber: selectedBank?.accountNumber,
+                paymentBankId: selectedBank?.bankId,
+                paymentBranchName: selectedBank?.branchName,
+                paymentForm: party.paymentForm as PaymentForm,
+                fboFfc: party.forBenefitOfOrForFurtherCredit ?? undefined,
+                paymentAddressId: selectedAddress?.addressId,
+                paymentAddress: selectedAddress,
+            }));
+        } else if (paymentProgram && paymentProgram?.party?.[0]) {
+            const party = paymentProgram.party[0];
+            const selectedBank = bankDetails ? bankDetails?.find(b => b.bankId === party.bankId) || bankDetails[0] : {};
+            setState(prevState => ({
+                ...prevState,
+                paymentAccountNumber: selectedBank?.accountNumber,
+                paymentBankId: selectedBank?.bankId,
+                paymentBranchName: selectedBank?.branchName,
+                paymentForm: 'ACH' as PaymentForm,
+            }));
+        }
+    }, [paymentProgram]);
 
     const paymentMethodOptions = useMemo(() => {
         return [
@@ -266,8 +300,7 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
                                         }
                                         fieldSize={FieldSize.Small}
                                         onChange={handleFboFfcChange}
-                                        // TODO MG: radio change is clearing this from state but input value is persisting
-                                        value={fboFfc}
+                                        value={fboFfc ?? ''}
                                         maxLength={100}
                                     />
                                 </div>

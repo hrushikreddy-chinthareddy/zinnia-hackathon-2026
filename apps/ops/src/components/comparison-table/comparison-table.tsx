@@ -4,6 +4,11 @@ import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
+import { formatAddress } from '@deps/helpers/address.helpers';
+import { Address } from '@deps/models/policy/sor-policy';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+
+import { PiiWrapper } from '../pii/PiiWrapper';
 
 export interface ComparisonTableProps {
     comparisonData?: any;
@@ -13,6 +18,7 @@ interface BankData {
     paymentType?: string;
     branchName?: string;
     accountNumber?: string;
+    paymentAddress?: Address;
 }
 
 interface RowData {
@@ -31,10 +37,13 @@ const centerCellClasses =
 const rightCellClasses =
     'align-top border-t-2 border-r-2 border-gray-100 py-2 px-4 sm:px-6 text-left max-w-[325px] sm:w-[calc(500px/3)] md:w-fit';
 
-const getRowDataDetails = (rowData: string | BankData[]): string => {
+const getRowDataDetails = (rowData?: string | BankData[]): string => {
+    if (!rowData) {
+        return '';
+    }
     if (typeof rowData === 'string') {
         return rowData;
-    } else if (rowData.length > 0 && typeof rowData[0] === 'object') {
+    } else if (Array.isArray(rowData) && rowData.length > 0 && typeof rowData[0] === 'object') {
         return rowData[0].branchName || '';
     } else {
         return '';
@@ -79,7 +88,7 @@ const TableHeaders: React.FC<TableRowsProps> = ({ rowData }) => {
 
 const TableRows: React.FC<TableRowsProps> = ({ rowData }) => {
     const { t } = useTranslation();
-    const bodyData = rowData.filter(item => item.header !== '' && item.header !== 'Banking details');
+    const bodyData = rowData.filter(item => item.header !== '' && item.header !== 'Banking details' && item.header != 'Payment method');
 
     return (
         <>
@@ -92,7 +101,9 @@ const TableRows: React.FC<TableRowsProps> = ({ rowData }) => {
                         </th>
                         <td key={`new_${index}`} className={clsx(centerCellClasses, 'flex')}>
                             <Content pii={pii} variant={ContentVariant.BodySmBold} details={getRowDataDetails(rowData.new)} />
-                            {isRowDataDifferent(rowData.new as string, rowData.current as string) && <Tag text={t('comparisonTable.new')} variant={TagVariant.Information} />}
+                            {isRowDataDifferent(rowData.new as string, rowData.current as string) && (
+                                <Tag text={t('comparisonTable.new')} variant={TagVariant.Information} />
+                            )}
                         </td>
                         <td key={`current_${index}`} className={`${rightCellClasses} ${index === 0 ? 'rounded-tr' : ''}`}>
                             <Content pii={pii} variant={ContentVariant.BodySmBold} details={getRowDataDetails(rowData.current)} />
@@ -107,7 +118,7 @@ const TableRows: React.FC<TableRowsProps> = ({ rowData }) => {
 const BankDetailsTableRow: React.FC<TableRowsProps> = ({ rowData }) => {
     const { t } = useTranslation();
 
-    const bankingDetails = rowData.find(item => item.header === 'Banking details');
+    const bankingDetails = rowData.find(item => item.header === 'Banking details' || item.header === 'Payment method');
     const newBankDetails = bankingDetails?.new as BankData;
     const currentBankDetails = bankingDetails?.current as BankData;
 
@@ -117,33 +128,90 @@ const BankDetailsTableRow: React.FC<TableRowsProps> = ({ rowData }) => {
     return (
         <tr>
             <th className={`rounded-bl border-b-2 ${leftCellClasses}`} scope="row">
-                <Content variant={ContentVariant.BodySm} details={t('comparisonTable.bankDetails') as string} />
+                <Content
+                    variant={ContentVariant.BodySm}
+                    details={
+                        bankingDetails?.header == 'Payment method'
+                            ? (t('comparisonTable.paymentMethod') as string)
+                            : (t('comparisonTable.bankDetails') as string)
+                    }
+                />
             </th>
-            <td className={`border-2 flex ${centerCellClasses}`}>
-                <div className="flex flex-col">
-                    <span className="pointer-events-none uppercase">
-                        <Tag isSelected={false} text={`${newBankDetails.paymentType}`} variant={TagVariant.White} />
-                    </span>
-                    <Content pii={true} variant={ContentVariant.BodySmBold} details={newBankDetails?.branchName?.toUpperCase()} />
-                    <Content
-                        pii={true}
-                        variant={ContentVariant.BodySm}
-                        details={`${t('comparisonTable.checkingEndingIn')} ${newBankDetails?.accountNumber}`}
-                    />
+            <td className={`border-2  ${centerCellClasses}`}>
+                <div className="flex gap-2 items-center">
+                    <div className="flex flex-col">
+                        <span className="pointer-events-none uppercase">
+                            <Tag isSelected={false} text={`${newBankDetails.paymentType}`} variant={TagVariant.White} />
+                        </span>
+                        {newBankDetails?.paymentType !== 'CHECK' ? (
+                            <>
+                                <Content
+                                    pii={true}
+                                    variant={ContentVariant.BodySmBold}
+                                    details={newBankDetails?.branchName?.toUpperCase()}
+                                />
+                                <Content
+                                    pii={true}
+                                    variant={ContentVariant.BodySm}
+                                    details={`${t('comparisonTable.checkingEndingIn')} ${
+                                        newBankDetails?.accountNumber ?? DEFAULT_ERROR_STRING
+                                    }`}
+                                />
+                            </>
+                        ) : (
+                            <>
+                                {newBankDetails.paymentAddress ? (
+                                    <div className="flex flex-col">
+                                        {formatAddress(newBankDetails.paymentAddress).map(line => (
+                                            <p key={line}>
+                                                <PiiWrapper>{line}</PiiWrapper>
+                                            </p>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    DEFAULT_ERROR_STRING
+                                )}
+                            </>
+                        )}
+                    </div>
+                    {isDifferent && <Tag className="w-fit h-fit" text={t('comparisonTable.new')} variant={TagVariant.Information} />}
                 </div>
-                {isDifferent && <Tag text={t('comparisonTable.new')} variant={TagVariant.Information} />}
             </td>
             <td className={`rounded-br border-b-2 ${rightCellClasses}`}>
                 <div className="flex flex-col">
                     <span className="pointer-events-none uppercase">
                         <Tag isSelected={false} text={`${currentBankDetails.paymentType}`} variant={TagVariant.White} />
                     </span>
-                    <Content pii={true} variant={ContentVariant.BodySmBold} details={newBankDetails?.branchName?.toUpperCase()} />
-                    <Content
-                        pii={true}
-                        variant={ContentVariant.BodySm}
-                        details={`${t('comparisonTable.checkingEndingIn')} ${currentBankDetails?.accountNumber}`}
-                    />
+                    {currentBankDetails?.paymentType !== 'CHECK' ? (
+                        <>
+                            <Content
+                                pii={true}
+                                variant={ContentVariant.BodySmBold}
+                                details={currentBankDetails?.branchName?.toUpperCase()}
+                            />
+                            <Content
+                                pii={true}
+                                variant={ContentVariant.BodySm}
+                                details={`${t('comparisonTable.checkingEndingIn')} ${
+                                    currentBankDetails?.accountNumber ?? DEFAULT_ERROR_STRING
+                                }`}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            {currentBankDetails.paymentAddress ? (
+                                <div className="flex flex-col">
+                                    {formatAddress(currentBankDetails.paymentAddress).map(line => (
+                                        <p key={line}>
+                                            <PiiWrapper>{line}</PiiWrapper>
+                                        </p>
+                                    ))}
+                                </div>
+                            ) : (
+                                DEFAULT_ERROR_STRING
+                            )}
+                        </>
+                    )}
                 </div>
             </td>
         </tr>

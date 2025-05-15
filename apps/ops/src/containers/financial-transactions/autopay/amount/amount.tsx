@@ -17,6 +17,7 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { Policy, Frequency } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import {AmountType as AutopayAmountType} from '@deps/models/policy/sor-policy';
 
 interface AmountProps {
     policy: Policy;
@@ -27,6 +28,7 @@ export type AmountType = {
     initValues: boolean;
     effectiveDate: string;
     paymentAmount: string;
+    amountType ?: AutopayAmountType
 };
 
 export type ReverseInitiatorType = {

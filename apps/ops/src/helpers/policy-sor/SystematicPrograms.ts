@@ -17,7 +17,8 @@ export class SystematicPrograms {
 
     constructor(programs: SysProg[] = []) {
         this.allPrograms = programs;
-        programs.forEach(program => {
+        programs.filter(program => program.status === 'ACTIVE')
+        .forEach(program => {
             const { arrangementType, arrangementId, reason } = program;
             if (arrangementType) {
                 if (!this.systematicProgramsByType[arrangementType]) {

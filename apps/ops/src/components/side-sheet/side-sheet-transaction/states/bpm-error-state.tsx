@@ -13,21 +13,33 @@ import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_ou
 import { ReactComponent as HexExclamationIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 
 import { ViewState } from '../non-financial-transactions/states/states.helpers';
+import React from 'react';
 
 interface BpmErrorStateProps {
-    children: React.ReactNode;
+    children: React.ReactElement;
     onCancel: () => void;
     onContinue: () => void;
     setViewState: Dispatch<SetStateAction<ViewState>>;
     validationResults?: ValidationResult[];
+    showEdit?: boolean;
+    date?: string;
+    label?: string;
 }
 
-const BpmErrorState = ({ children, onCancel, onContinue, setViewState, validationResults }: BpmErrorStateProps) => {
+const BpmErrorState = ({ children, onCancel, onContinue, setViewState, validationResults, showEdit = true, date = '', label }: BpmErrorStateProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'transactions.states.bpmError' });
+    const newChildren = React.cloneElement(children!, { effectiveDate: date, label });
 
     const [isNigoSelected, setIsNigoSelected] = useState(false);
     const [showAcknowledgeNigoError, setShowAcknowledgeNigoError] = useState(false);
     const [stopLoading, setStopLoading] = useState(true);
+
+    const clickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLElement;
+        if (target.id === 'cancel_systematic_withdrawal') {
+            setViewState(ViewState.Default);
+        }
+    };
 
     return (
         <div className="flex flex-col">
@@ -38,18 +50,20 @@ const BpmErrorState = ({ children, onCancel, onContinue, setViewState, validatio
                 title={t('title')}
             />
             <div className="flex flex-col gap-6 px-8">
-                <div className="flex gap-6 rounded border-2 border-gray-200 p-6">
-                    {children}
-                    <NavElement
-                        className="w-fit"
-                        onClick={() => setViewState(ViewState.Default)}
-                        size={NavElementSize.Small}
-                        startIcon={<EditIcon height={16} width={16} />}
-                        type={NavElementType.Button}
-                        variant={NavElementVariant.Default}
-                    >
-                        {t('edit')}
-                    </NavElement>
+                <div className="flex gap-6 rounded border-2 border-gray-200 p-6" onClick={clickHandler}>
+                    {showEdit ? children : newChildren}
+                    {showEdit && (
+                        <NavElement
+                            className="w-fit"
+                            onClick={() => setViewState(ViewState.Default)}
+                            size={NavElementSize.Small}
+                            startIcon={<EditIcon height={16} width={16} />}
+                            type={NavElementType.Button}
+                            variant={NavElementVariant.Default}
+                        >
+                            {t('edit')}
+                        </NavElement>
+                    )}
                 </div>
 
                 {!!validationResults?.length &&

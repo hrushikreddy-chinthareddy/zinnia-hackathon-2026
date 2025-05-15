@@ -2,10 +2,11 @@ import dayjs from 'dayjs';
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import { PayeesType } from '@deps/components/workflows/payees-step/payees-step';
 import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
 import { PayorType } from '@deps/components/workflows/payor-step/payor-step';
 import { AmountType, ReverseInitiatorType } from '@deps/containers/financial-transactions/autopay/amount/amount';
-import { ArrangementType, Frequency, PaymentForm, Reason } from '@deps/models/policy/sor-policy';
+import { ArrangementType, FilingStatus, Frequency, PaymentForm, Reason } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 // ACH is the only supported payment type for MVP
@@ -17,9 +18,9 @@ type AutopayDynamicProps = {
     parentPage?: ParentPage;
     systematicProgramReason?: Reason;
     translationKeyPrefix: string;
-}
+};
 
-export interface Autopay extends AmountType, PayorType, PaymentMethodType, ReverseInitiatorType, AutopayDynamicProps {
+export interface Autopay extends AmountType, PayorType, PayeesType, PaymentMethodType, ReverseInitiatorType, AutopayDynamicProps {
     caseId?: string;
 }
 
@@ -33,7 +34,7 @@ const defaultValue = {
         arrangementType: undefined,
         parentPage: undefined,
         systematicProgramReason: undefined,
-        translationKeyPrefix: '', 
+        translationKeyPrefix: '',
         caseId: undefined,
         frequency: Frequency.MONTHLY,
         initValues: false,
@@ -48,6 +49,13 @@ const defaultValue = {
         validationResponse: undefined,
         reverseInitiator: false,
         isSetUp: false,
+        payeeFullName: '',
+        payeePartyId: '',
+        payeeFilingStatus: FilingStatus.DEFAULT as any,
+        payeeTaxJurisdiction: '',
+        fboFfc: undefined,
+        paymentForm: undefined,
+        amountType: undefined,
     },
     setAutopay: () => {},
 };

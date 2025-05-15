@@ -59,30 +59,31 @@ const SectionCard = ({ children, className, headerContent, footerContent, 'data-
         {footerContent && (
             <div className="flex flex-wrap gap-4 bg-gray-50 py-4 md:flex-row md:gap-8 md:pl-6 lg:w-auto lg:self-stretch lg:pl-8">
                 {footerContent.map(({ text, tempInactive, tooltip, href, isDisabled, onClick }) => (
-                    // https://zinnia.atlassian.net/browse/DEPU-1936
                     <span key={`${text}-wrapper`}>
                         {tempInactive ? (
                             <TempNavInactive key={`${text}-tooltip`} tooltipBody={tooltip}>
                                 {text}
                             </TempNavInactive>
                         ) : isDisabled ? (
-                            tooltip ? (<Tooltip placement={PopoverPlacement.TopRight} body={tooltip} key={`${text}-tooltip`}>
-                                <span
-                                    className="cursor-not-allowed font-primary text-links-sm font-semibold text-gray-300"
-                                    key={`${text}-link`}
-                                >
-                                    {text}
-                                </span>
-                            </Tooltip>) : (
-                                <span
-                                    className="cursor-not-allowed font-primary text-links-sm font-semibold text-gray-300"
-                                    key={`${text}-link`}
-                                >
+                            tooltip ? (
+                                <Tooltip placement={PopoverPlacement.TopRight} body={tooltip} key={`${text}-tooltip`}>
+                                    <span className="cursor-not-allowed font-primary  font-semibold text-gray-300" key={`${text}-link`}>
+                                        {text}
+                                    </span>
+                                </Tooltip>
+                            ) : (
+                                <span className="cursor-not-allowed font-primary font-semibold text-gray-300" key={`${text}-link`}>
                                     {text}
                                 </span>
                             )
                         ) : (
-                            <a href={href} key={`${text}-link`} className="font-primary text-links-sm font-semibold text-cerulean-600" data-testid={text} onClick={onClick}>
+                            <a
+                                href={href}
+                                key={`${text}-link`}
+                                className="font-primary text-links-sm font-semibold text-cerulean-600"
+                                data-testid={text}
+                                onClick={onClick}
+                            >
                                 {text}
                             </a>
                         )}

@@ -3289,6 +3289,15 @@
                 "secondaryCta": "Cancel",
                 "subtitle": "Review the errors below.",
                 "title": "Hm, we found an issue."
+            },
+            "apiErrorWithdrawal": {
+                "title": "Sorry, that didn't work.",
+                "secondaryCta": "Cancel and close",
+                "subtitle1": "Services are down, so we couldn’t update the ",
+                "subtitle2": "You can try updating again. If it’s still not working. ",
+                "subtitle3": "Submit a help desk ticket.",
+                "subtitleWithdrawal": "Systematic withdrawal cancellation. ",
+                "subtitleRmd": "Systematic Rmd cancellation. "
             }
         },
         "cancelAutopay": {
@@ -3300,7 +3309,11 @@
             "loanAutopayCancellation": "Loan autopay cancellation",
             "missingCaseDocument": "Select a document (or proceed without) to continue.",
             "premiumAutopayCancellation": "Premium autopay cancellation",
-            "proceedCancel": "Proceed with canceling {{frequency}} autopay of {{amount}}"
+            "proceedCancel": "Proceed with canceling {{frequency}} autopay of {{amount}}",
+            "withdrawalAutopayCancellation": "Systematic Withdrawal cancellation",
+            "minimumDistributionAutopayCancellation": "Systematic RMD cancellation",
+            "cancelWithdrawal": "Cancel Systematic Withdrawal",
+            "cancelRmd": "Cancel Systematic RMD"
         },
         "loans": {
             "header": {
@@ -4541,7 +4554,9 @@
             "setUpAutopay": "$t(premium.upcoming.setUpAutopay)",
             "noAdditionalCharges": "$t(premium.upcoming.noAdditionalCharges)",
             "withdrawalAutopay": "Upcoming Withdrawal Autopay",
-            "rmdAutopay": "Upcoming RMD Autopay"
+            "rmdAutopay": "Upcoming RMD Autopay",
+            "cancelWithdrawalAutopayTitle": "Cancel Systematic {{type}}",
+            "cancelAutopay": "Cancel autopay"
         },
         "exchange1035": "Start a 1035 Exchange",
         "allTimeWithdrawals": "All-time withdrawals",
@@ -4843,6 +4858,83 @@
             "type": "premium payment autopay"
         }
     },
+    "withdrawalAutopay": {
+        "start": {
+            "label": "Start",
+            "title": "Set Up Systematic Withdrawal",
+            "titleStart": "Set Up Systematic Withdrawal",
+            "titleManage": "Update Systematic"
+        },
+        "amount": {
+            "label": "Amount",
+            "dollar": "Dollar",
+            "earnings": "Earnings only",
+            "paymentAmount": "Amount",
+            "paymentFrequency": "Payment frequency",
+            "paymentStartDate": "Payment start date",
+            "nextPaymentDate": "Next payment date",
+            "casesLabel": "Select a case",
+            "missingFrequencyError": "Payment frequency is missing.",
+            "missingNextPaymentDateError": "Next payment date is missing.",
+            "invalidNextPaymentDateError": "Enter a valid next payment date.",
+            "missingStartDateError": "Payment start date is missing.",
+            "invalidStartDateError": "Enter a valid payment start date.",
+            "missingAmountError": "Amount is missing.",
+            "invalidAmountError": "Amount must be greater than $1.00",
+            "annually": "Annually",
+            "biAnnually": "Bi-Annually",
+            "monthly": "Monthly",
+            "quarterly": "Quarterly",
+            "withdrawal": "Withdrawal",
+            "RMD": "RMD",
+            "distributionType": "Distribution Type",
+            "type": "Type",
+            "withdrawalTypeLabel": "What type of withdrawal is this?",
+            "customFunds": "Custom funds",
+            "proRata": "Pro Rata",
+            "fundDisbursementType": "Fund disbursement type",
+            "fundDisbursementTypeLabel": "How will this amount be taken from funds?",
+            "fundDisbursementTypeTooltip": "The account value is invested in one or more investment funds. When we withdraw the money, we need to know how to take the amount from each investment fund. Pro rata means take an equal amount from each investment fund. Custom allows the owner to choose a certain amount from each investment fund.",
+            "missingDistributionError": "Distribution Type is missing."
+        },
+        "payor": {
+            "label": "Payee"
+        },
+        "payment": {
+            "label": "Payment Method"
+        },
+        "summary": {
+            "amount": "Amount",
+            "bpm500Error": "BPM 500 error",
+            "current": "Current",
+            "frequency": "Frequency",
+            "paymentFrequency": "Payment frequency",
+            "label": "Summary",
+            "autopayAmount": "Amount",
+            "newAutopayDetails": "New systematic withdrawal details",
+            "nextPaymentDate": "Next payment date",
+            "paymentStartDate": "Payment start date",
+            "payor": "Payee",
+            "submit": "Submit payment",
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "updateAutopay": "Update premium autopay",
+            "validationStatusLabel": "Validation status",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
+            "distributionType": "Distribution Type",
+            "type": "Type",
+            "dollar": "Dollar",
+            "fbo": "FBO/FFC",
+            "paymentMethod": "Payment Method",
+            "fundDisbursementType": "Fund disbursement type",
+            "fundAllocation": "Fund allocation"
+        },
+        "confirm": {
+            "label": "Confirm",
+            "type": "Systematic {{program}} "
+        }
+    },
     "fundTransfer": {
         "start": {
             "label": "Start",
@@ -5048,6 +5140,7 @@
         "nextPaymentDate": "Next payment date",
         "payor": "Payor",
         "bankDetails": "Banking details",
+        "paymentMethod": "Payment method",
         "checkingEndingIn": "Checking ending in ",
         "new": "New"
     },

@@ -11,7 +11,6 @@ import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/fiel
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
-import { ACH } from '@deps/contexts/transactions/AutopayContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
@@ -28,6 +27,7 @@ import ApiErrorState from '../states/api-error-state';
 import BpmErrorState from '../states/bpm-error-state';
 import { handleResponse } from '../states/states.helpers';
 import SuccessState from '../states/success-state';
+import WithdrawalApiErrorState from '../states/withdrawal-cancal-autopay-api-error';
 
 interface CancelSystematicProgramBody {
     caseId?: string;
@@ -46,9 +46,20 @@ export type SideSheetCancelAutopayProps = {
     onCancel: () => void;
     policy: Policy;
     systematicProgramReason: Reason;
+    isFromWithdrawals?: boolean;
+    errorContent?: React.ReactElement;
+    date?: string;
 };
 
-const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicProgramReason }: SideSheetCancelAutopayProps) => {
+const SideSheetCancelAutopay = ({
+    arrangementType,
+    onCancel,
+    policy,
+    systematicProgramReason,
+    isFromWithdrawals = false,
+    errorContent,
+    date,
+}: SideSheetCancelAutopayProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'transactions.cancelAutopay' });
     const { t: defaultT } = useTranslation();
 
@@ -114,7 +125,7 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
             systematicProgram: {
                 amount: Number(systematicProgram?.amount),
                 arrangementType: arrangementType,
-                paymentForm: ACH as PaymentForm,
+                paymentForm: (systematicProgram?.paymentForm || PaymentForm.ACH) as PaymentForm,
                 amountType: AmountType.AMOUNT,
                 frequency: systematicProgram?.frequency,
                 startDate: systematicProgram?.startDate,
@@ -125,6 +136,7 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
                     bankId: systematicProgram?.party?.[0]?.bankId,
                     partyId: systematicProgram?.party?.[0]?.partyId,
                 },
+                ...(systematicProgram?.parties && { parties: systematicProgram.parties }),
             },
         };
     };
@@ -175,8 +187,43 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
         return;
     };
 
+    const getArrangementTranslationKey = (type: ArrangementType): string => {
+        switch (type) {
+            case ArrangementType.PAYMENT:
+                return 'premiumAutopayCancellation';
+            case ArrangementType.LOANREPAYMENT:
+                return 'loanAutopayCancellation';
+            case ArrangementType.WITHDRAWAL:
+                return 'withdrawalAutopayCancellation';
+            case ArrangementType.REQUIREDMINIMUMDISTRIBUTION:
+                return 'minimumDistributionAutopayCancellation';
+            default:
+                return '';
+        }
+    };
+
     switch (viewState) {
         case ViewState.BpmError:
+            if (isFromWithdrawals) {
+                return (
+                    <BpmErrorState
+                        onCancel={onCancel}
+                        onContinue={submitUpdate}
+                        setViewState={setViewState}
+                        validationResults={validationResults}
+                        showEdit={!errorContent}
+                        date={effectiveDate}
+                        label={
+                            t('proceedCancel', {
+                                frequency: getFrequency(systematicProgram?.frequency as Frequency, defaultT),
+                                amount: numberFormatify(systematicProgram?.amount),
+                            }) ?? ''
+                        }
+                    >
+                        {errorContent ?? <></>}
+                    </BpmErrorState>
+                );
+            }
             return (
                 <BpmErrorState
                     onCancel={onCancel}
@@ -188,14 +235,15 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
                 </BpmErrorState>
             );
         case ViewState.ApiError:
+            if (isFromWithdrawals) {
+                return <WithdrawalApiErrorState onCancel={onCancel} onContinue={submitUpdate} arrangementType={arrangementType} />;
+            }
             return <ApiErrorState onCancel={onCancel} onContinue={submitUpdate} />;
         case ViewState.Success:
             return (
                 <SuccessState
                     caseId={newCaseId}
-                    transactionType={
-                        arrangementType === ArrangementType.PAYMENT ? t('premiumAutopayCancellation') : t('loanAutopayCancellation')
-                    }
+                    transactionType={t(getArrangementTranslationKey(arrangementType))}
                     isNigo={!!validationResults?.length}
                     onCancel={onCancel}
                 />
@@ -263,6 +311,10 @@ const SideSheetCancelAutopay = ({ arrangementType, onCancel, policy, systematicP
                     type:
                         systematicProgramReason === Reason.LOANREPAYMENT
                             ? TransactionType.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT
+                            : systematicProgramReason === Reason.WITHDRAWAL
+                            ? TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL
+                            : systematicProgramReason === Reason.REQUIREDMINIMUMDISTRIBUTION
+                            ? TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION
                             : TransactionType.SUBSEQUENT_PREMIUM,
                     step: TransactionStep.Cancel,
                 }}

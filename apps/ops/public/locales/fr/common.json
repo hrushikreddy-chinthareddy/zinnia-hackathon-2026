@@ -3268,6 +3268,15 @@
                 "secondaryCta": "Annuler",
                 "subtitle": "Passez en revue les erreurs ci-dessous.",
                 "title": "Hmm, nous avons trouvé un problème."
+            },
+            "apiErrorWithdrawal": {
+                "title": "Désolé, ça n'a pas fonctionné.",
+                "secondaryCta": "Annuler et fermer",
+                "subtitle1": "Les services sont en panne, nous n'avons donc pas pu mettre à jour le ",
+                "subtitle2": "Vous pouvez réessayer la mise à jour si cela ne fonctionne toujours pas. ",
+                "subtitle3": "Soumettre un ticket d’assistance.",
+                "subtitleWithdrawal": "Annulation systématique des retraits. ",
+                "subtitleRmd": "Annulation systématique du Rmd. "
             }
         },
         "cancelAutopay": {
@@ -3279,7 +3288,9 @@
             "loanAutopayCancellation": "Annulation du prélèvement automatique de prêt",
             "missingCaseDocument": "Sélectionnez un document (ou continuez sans) pour continuer.",
             "premiumAutopayCancellation": "Annulation du paiement automatique de la prime",
-            "proceedCancel": "Procédez à l'annulation du prélèvement automatique {{frequency}} de {{amount}}"
+            "proceedCancel": "Procédez à l'annulation du prélèvement automatique {{frequency}} de {{amount}}",
+            "withdrawalAutopayCancellation": "Annulation systématique des retraits",
+            "minimumDistributionAutopayCancellation": "Annulation systématique des Rmd"
         },
         "bpm": {
             "500Error": "Erreur 500 BPM"
@@ -4521,7 +4532,9 @@
             "setUpAutopay": "$t(premium.upcoming.setUpAutopay)",
             "noAdditionalCharges": "$t(premium.upcoming.noAdditionalCharges)",
             "withdrawalAutopay": "Retrait Autopay à venir",
-            "rmdAutopay": "RMD Autopay à venir"
+            "rmdAutopay": "RMD Autopay à venir",
+            "cancelWithdrawalAutopayTitle": "Annuler Systématiquement {{type}}",
+            "cancelAutopay": "Annuler le paiement automatique"
         },
         "exchange1035": "Commencer un échange 1035",
         "allTimeWithdrawals": "Retraits cumulés",
@@ -4822,6 +4835,83 @@
             "type": "paiement automatique des primes"
         }
     },
+    "withdrawalAutopay": {
+        "start": {
+            "label": "Démarrer",
+            "title": "Créer un prélèvement automatique systématique",
+            "titleStart": "Créer un prélèvement automatique systématique",
+            "titleManage": "Gérer le prélèvement automatique systématique RMD"
+        },
+        "amount": {
+            "label": "Montant",
+            "dollar": "Dollar",
+            "earnings": "Versements",
+            "paymentAmount": "Montant",
+            "paymentFrequency": "Fréquence de paiement",
+            "paymentStartDate": "Date de début de paiement",
+            "nextPaymentDate": "Prochaine date de paiement",
+            "casesLabel": "Sélectionner un dossier",
+            "missingFrequencyError": "La fréquence de paiement est manquante.",
+            "missingNextPaymentDateError": "La prochaine date de paiement est manquante.",
+            "invalidNextPaymentDateError": "Entrez une date de paiement valide.",
+            "missingStartDateError": "La date de début de paiement est manquante.",
+            "invalidStartDateError": "Entrez une date de paiement valide.",
+            "missingAmountError": "Le montant est manquant.",
+            "invalidAmountError": "Le montant doit être supérieur à 1,00 $",
+            "annually": "Annuellement",
+            "biAnnually": "Semestriellement",
+            "monthly": "Mensuellement",
+            "quarterly": "Trimestriellement",
+            "withdrawal": "Prélèvement",
+            "RMD": "RMD",
+            "distributionType": "Type de distribution",
+            "type": "Type",
+            "withdrawalTypeLabel": "Quel est le type de prélèvement ?",
+            "customFunds": "Fonds personnalisés",
+            "proRata": "Pro rata",
+            "fundDisbursementType": "Type de remboursement de fonds",
+            "fundDisbursementTypeLabel": "Comment vais-je prendre ce montant des fonds ?",
+            "fundDisbursementTypeTooltip": "La valeur de compte est investie dans un ou plusieurs fonds d'investissement. Lorsque nous prélevons de l'argent, nous devons savoir comment prendre ce montant de chaque fonds d'investissement. Pro rata signifie prendre une quantité égale de chaque fonds d'investissement. Custom permet au propriétaire de choisir un montant spécifique de chaque fonds d'investissement.",
+            "missingDistributionError": "Le type de distribution est manquant."
+        },
+        "payor": {
+            "label": "Bénéficiaire"
+        },
+        "payment": {
+            "label": "Méthode de paiement"
+        },
+        "summary": {
+            "amount": "Montant",
+            "bpm500Error": "Erreur BPM 500",
+            "current": "Actuel",
+            "frequency": "Fréquence",
+            "paymentFrequency": "Fréquence de paiement",
+            "label": "Résumé",
+            "autopayAmount": "Montant",
+            "newAutopayDetails": "Nouveaux détails du prélèvement automatique systématique",
+            "nextPaymentDate": "Prochaine date de paiement",
+            "paymentStartDate": "Date de début de paiement",
+            "payor": "Bénéficiaire",
+            "submit": "Soumettre le paiement",
+            "status200subtitle": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre.",
+            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette police. Consultez l'erreur ci-dessous.",
+            "updateAutopay": "Mettre à jour le prélèvement automatique de la prime",
+            "validationStatusLabel": "État de validation",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée fasse un suivi.",
+            "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO.",
+            "distributionType": "Type de distribution",
+            "type": "Type",
+            "dollar": "Dollar",
+            "fbo": "FBO/FFC",
+            "paymentMethod": "Méthode de paiement",
+            "fundDisbursementType": "Type de remboursement de fonds",
+            "fundAllocation": "Allocation de fonds"
+        },
+        "confirm": {
+            "label": "Confirmer",
+            "type": "Prélèvement automatique systématique {{program}} "
+        }
+    },
     "fundTransfer": {
         "start": {
             "label": "Démarrer",
@@ -5027,6 +5117,7 @@
         "nextPaymentDate": "Prochaine date de paiement",
         "payor": "Payeur",
         "bankDetails": "Informations Bancaires",
+        "paymentMethod": "Méthode de paiement",
         "checkingEndingIn": "Vérification se terminant par ",
         "new": "Nouveau"
     },

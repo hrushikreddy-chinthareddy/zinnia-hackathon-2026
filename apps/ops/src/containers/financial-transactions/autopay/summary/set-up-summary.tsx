@@ -17,7 +17,7 @@ import { ACH, useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
-import { Policy } from '@deps/models/policy/sor-policy';
+import { Address, ArrangementType, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
@@ -38,8 +38,21 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
     const [showSelectionError, setShowSelectionError] = useState<boolean>(false);
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const { goToNext } = useWorkflow();
-    const { isSetUp, paymentAmount, effectiveDate, frequency, paymentAccountNumber, paymentBranchName, payorFullName, validationResponse } =
-        autopay;
+    const {
+        isSetUp,
+        paymentAmount,
+        effectiveDate,
+        frequency,
+        paymentAccountNumber,
+        paymentBranchName,
+        payorFullName,
+        validationResponse,
+        arrangementType,
+        payeeFullName,
+        paymentAddress,
+        paymentForm,
+        fboFfc,
+    } = autopay;
 
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
 
@@ -54,13 +67,15 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
     const handleContinue = async () => {
         if (!validationSucceeded && !isChecked) {
             setShowSelectionError(true);
-
             return;
         } else {
             setShowSelectionError(false);
             goToNext();
         }
     };
+
+    const isWithdrawalAutopay = parentPage === ParentPage.Withdrawals;
+    const conditionalClass = isWithdrawalAutopay ? 'flex flex-col gap-1' : 'hidden';
 
     return (
         <div>
@@ -70,6 +85,16 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                     {validationSucceeded ? t('status200subtitle') : t('status400subtitle')}
                 </Typography>
                 <div className="flex w-full flex-row gap-8">
+                    <div className={conditionalClass}>
+                        <Label variant={LabelVariant.FieldLabel} label={t('distributionType')} />
+                        <Typography variant={TypographyVariant.Value}>
+                            {arrangementType == ArrangementType.WITHDRAWAL ? 'Withdrawal' : 'RMD'}
+                        </Typography>
+                    </div>
+                    <div className={conditionalClass}>
+                        <Label variant={LabelVariant.FieldLabel} label={t('type')} />
+                        <Typography variant={TypographyVariant.Value}>{'Dollar'}</Typography>
+                    </div>
                     <div className="flex flex-col gap-1">
                         <Label variant={LabelVariant.FieldLabel} label={t('autopayAmount')} />
                         <Typography variant={TypographyVariant.Value}>{numberFormatify(paymentAmount)}</Typography>
@@ -84,6 +109,10 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                             {dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(DEFAULT_DATE_FORMAT)}
                         </Typography>
                     </div>
+                    <div className={conditionalClass}>
+                        <Label variant={LabelVariant.FieldLabel} label={t('fundDisbursementType')} />
+                        <Typography variant={TypographyVariant.Value}>{'Pro rata'}</Typography>
+                    </div>
                 </div>
             </CardContainer>
             <CardContainer>
@@ -93,15 +122,27 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                         {t('payor')}
                     </Typography>
                 </div>
-                <PayeeSummaryCard
-                    accountNumber={paymentAccountNumber}
-                    branchName={paymentBranchName}
-                    classNames="max-w-[524px]"
-                    payeeName={payorFullName}
-                    paymentType={ACH}
-                    showFinancialData={false}
-                />
-
+                {isWithdrawalAutopay ? (
+                    <PayeeSummaryCard
+                        address={paymentAddress as Address}
+                        accountNumber={paymentAccountNumber}
+                        branchName={paymentBranchName}
+                        classNames="max-w-[524px]"
+                        payeeName={payeeFullName}
+                        showFinancialData={false}
+                        paymentType={paymentForm as any}
+                        fboFfc={fboFfc}
+                    />
+                ) : (
+                    <PayeeSummaryCard
+                        accountNumber={paymentAccountNumber}
+                        branchName={paymentBranchName}
+                        classNames="max-w-[524px]"
+                        payeeName={payorFullName}
+                        paymentType={ACH}
+                        showFinancialData={false}
+                    />
+                )}
                 {!validationSucceeded && (
                     <div className="mt-10 flex flex-col gap-6">
                         {validationResponse?.validationResult ? (

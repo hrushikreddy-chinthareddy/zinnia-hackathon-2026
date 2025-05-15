@@ -1,4 +1,4 @@
-import { DisbursementPaymentForm, PaymentForm } from "@zinnia/api-types/types/bpm";
+import { DisbursementPaymentForm, PaymentForm } from '@zinnia/api-types/types/bpm';
 
 export const getDisbursementPaymentForm = (paymentForm?: PaymentForm): DisbursementPaymentForm => {
     switch (paymentForm) {
@@ -10,4 +10,4 @@ export const getDisbursementPaymentForm = (paymentForm?: PaymentForm): Disbursem
         default:
             return DisbursementPaymentForm.ACH;
     }
-}
+};

@@ -21,13 +21,19 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
     const router = useRouter();
 
     const { parties, policyNumber, product, systematicPrograms } = policy as Policy;
-    const { paymentBankId, paymentAccountNumber: currentPaymentAccountNumber, payeePartyId, payorPartyId } = state;
+    const {
+        paymentBankId,
+        paymentAccountNumber: currentPaymentAccountNumber,
+        payeePartyId,
+        payorPartyId,
+        arrangementType = ArrangementType.PAYMENT,
+    } = state;
     const [formError, setFormError] = useState(false);
 
     const payPartyId = payeePartyId || payorPartyId;
     const party = parties?.find(party => party.partyId === payPartyId);
 
-    const paymentProgram = systematicPrograms?.find(program => program.arrangementType === ArrangementType.PAYMENT);
+    const paymentProgram = systematicPrograms?.find(program => program.arrangementType === arrangementType);
     const programBankId = paymentProgram?.party?.find(party => party.partyId === payPartyId);
     const bankDetails = useMemo(() => {
         const currentBankDetails = party?.bankDetails?.filter((bank: any) => {

@@ -3,16 +3,17 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { Statuses } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
+import { ArrangementType, Policy, Status } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitSystematicProgramUpdate } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
-import { buildSystematicProgramUpdateRequestBody } from '../autopay.helpers';
+import { buildSystematicProgramUpdateRequestBody, buildSystematicWithdrawalProgramUpdateRequestBody } from '../autopay.helpers';
 
 interface ConfirmProps {
     policy: Policy;
@@ -20,7 +21,17 @@ interface ConfirmProps {
 
 const Confirm = ({ policy }: ConfirmProps) => {
     const { autopay } = useAutopay();
-    const { parentPage, translationKeyPrefix, paymentAmount, caseId, payorFullName, validationResponse } = autopay;
+    const {
+        parentPage,
+        translationKeyPrefix,
+        paymentAmount,
+        caseId,
+        payorFullName,
+        payeeFullName,
+        validationResponse,
+        arrangementType,
+        isSetUp,
+    } = autopay;
 
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.confirm` });
     const { t: defaultT } = useTranslation();
@@ -34,12 +45,23 @@ const Confirm = ({ policy }: ConfirmProps) => {
 
     const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
 
+    let type = '';
+
+    if (parentPage === ParentPage.Withdrawals) {
+        type = arrangementType == ArrangementType.WITHDRAWAL ? 'systematic withdrawal' : 'systematic rmd';
+    }
+
     const submit = async () => {
         setIsLoading(true);
+        const systematicProgram = policy.systematicPrograms?.find(
+            sp => sp.reason === autopay.systematicProgramReason && sp.status === Status.ACTIVE
+        );
+        const arrangementId = isSetUp ? '' : systematicProgram?.arrangementId || '';
 
-        const systematicProgram = policy.systematicPrograms?.find(sp => sp.reason === autopay.systematicProgramReason);
-        const arrangementId = systematicProgram?.arrangementId || '';
-        const query = buildSystematicProgramUpdateRequestBody(autopay, systematicProgram as SystematicProgram);
+        const query =
+            parentPage === 'withdrawals'
+                ? buildSystematicWithdrawalProgramUpdateRequestBody(autopay, systematicProgram as SystematicProgram)
+                : buildSystematicProgramUpdateRequestBody(autopay, systematicProgram as SystematicProgram);
         const response = await submitSystematicProgramUpdate(product?.planCode, policyNumber, arrangementId, query);
 
         if (response.status !== StatusCode.Accepted) {
@@ -50,7 +72,6 @@ const Confirm = ({ policy }: ConfirmProps) => {
             }
             setNewCaseId(response?.data?.caseId);
         }
-
         setIsLoading(false);
     };
 
@@ -85,8 +106,8 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 isNigo={!validationSucceeded || submitNigo}
                 parentPage={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/${parentPage}`}
                 amount={Number(paymentAmount)}
-                payorPayeeName={payorFullName}
-                type={t('type')}
+                payorPayeeName={payeeFullName || payorFullName}
+                type={parentPage === 'withdrawals' ? type : t('type')}
             />
         </div>
     );
