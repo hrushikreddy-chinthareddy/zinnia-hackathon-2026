@@ -1,4 +1,4 @@
-import { getAccessToken, getSession } from '@auth0/nextjs-auth0';
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { FgaRoles } from '@xd/utils/dist';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
@@ -21,26 +21,23 @@ import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-an
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
-import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 
 interface BaseCaseDetailsPageProps {
     caseDetails: Case;
     id?: string;
     tab?: string;
-    showAudio: boolean;
-    canUnmask: boolean;
 }
 
 type CaseDetailsPageProps = BaseCaseDetailsPageProps & SegmentTrackedPageProps;
 
-const CaseDetailsPage = ({ caseDetails, id, tab, user, showAudio, canUnmask }: CaseDetailsPageProps) => {
+const CaseDetailsPage = ({ caseDetails, id, tab, user }: CaseDetailsPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.CaseDetails, { caseId: id });
 
     return (
         <CaseActivityProvider caseDetails={caseDetails}>
             <PageHead titleKey="caseOverview" />
 
-            <CaseOverview caseDetails={caseDetails} tab={tab} showAudio={showAudio} canUnmask={canUnmask} />
+            <CaseOverview caseDetails={caseDetails} tab={tab} />
         </CaseActivityProvider>
     );
 };
@@ -50,8 +47,6 @@ export const getServerSideProps = withPageAuthAndLogging(
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
             const { locale = DEFAULT_LOCALE, params, req, res } = context;
-            const session = await getSession(req, res);
-            const canUnmask = await canUnmaskPii(session?.accessToken, session?.user?.partyId);
 
             let accessToken;
             try {
@@ -65,7 +60,6 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
             const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
-            const showAudio: boolean = featureFlagDecisions?.[FEATURE_FLAGS.CALL_AUDIO_FEATURE];
             const hasPermissionToReadCaseManagement = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
                 ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.CASE_MANAGEMENT_ZL_ENTITY, loggingContext)
                 : await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement, loggingContext);
@@ -116,8 +110,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     id,
                     tab,
                     user,
-                    showAudio,
-                    canUnmask,
                 },
             };
         },

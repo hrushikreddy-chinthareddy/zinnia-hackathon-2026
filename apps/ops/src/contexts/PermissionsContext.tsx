@@ -7,6 +7,7 @@ import {
     checkIfUserHasCaseInsightsAccess,
     checkIfUserHasDashboardAccess,
     checkIfUserIsSuperAdmin,
+    checkRelation,
     createBulkCheckBodyRequest,
     FgaRoles,
 } from '@zinnia/utils';
@@ -35,6 +36,7 @@ export interface PermissionsContextProps {
     isAllowReadCaseManagement: boolean;
     isAllowReadPolicyAdmin: boolean;
     isAllowReadOtpRenewals: boolean;
+    isCallLogAudioPermitted: boolean;
     showToppanMerrill: boolean;
     permissionsLoadingComplete: boolean;
     hasHomeExperience: boolean;
@@ -118,13 +120,14 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             const hasDashboard = checkIfUserHasDashboardAccess(data);
             const hasCaseInsight = checkIfUserHasCaseInsightsAccess(data);
             const hasAdvisorsExcel = checkIfUserHasAdvisorsExcel(data);
-
+            const isCallLogAudioPermitted = !!checkRelation(data, FgaRoles.CALL_LOG_ACCESS, FgaRelation.UiAccess);
             return {
                 fgaRoles: data,
                 isSuperAdmin: !!superAdmin,
                 hasDashboardPermission: !!hasDashboard,
                 hasCaseInsightPermission: !!hasCaseInsight,
                 isAdvisorsExcel: !!hasAdvisorsExcel,
+                isCallLogAudioPermitted,
             };
         },
         enabled: !!partyId,
@@ -152,6 +155,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAllowReadCaseManagement: !!isAllowReadCaseManagement,
                 isAllowReadPolicyAdmin: !!isAllowReadPolicyAdmin,
                 isAllowReadOtpRenewals: !!isAllowReadOtpRenewals,
+                isCallLogAudioPermitted: !!fgaRoleData?.isCallLogAudioPermitted,
                 hasHomeExperience: !!homeCheck?.data,
                 showToppanMerrill: !!showToppanMerrill,
                 permissionsLoadingComplete,

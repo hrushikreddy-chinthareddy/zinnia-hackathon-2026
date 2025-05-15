@@ -9,12 +9,16 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { AudioDetailsContent } from './audio-details-content';
-import { ReactComponent as VolumeUp } from '@deps/styles/elements/icons/icons_outlined/volume-up.svg';
 import { getCallLogsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
+import { ReactComponent as VolumeUp } from '@deps/styles/elements/icons/icons_outlined/volume-up.svg';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+
+import { AudioDetailsContent } from './audio-details-content';
 export const NoSummaryCard = ({ content }: { content: string }) => (
     <div className="flex items-center gap-1 rounded-sm border border-dashed border-gray-100 bg-gray-50 p-4">
         <Icon type={IconType.PHONE} height={16} width={16} />
@@ -31,8 +35,6 @@ const CallLogCard = ({
     summary,
     notes,
     sessionID,
-    showAudio,
-    canUnmask,
 }: {
     callEntryId?: number;
     callerName?: string;
@@ -43,8 +45,6 @@ const CallLogCard = ({
     className?: string;
     notes?: string;
     sessionID?: string;
-    showAudio: boolean;
-    canUnmask:  boolean;
 }) => {
     tag = toSentenceCase(tag);
     const displayName = (
@@ -59,6 +59,10 @@ const CallLogCard = ({
     const missingSummaryText = t('sideSheet.noCallLogSummary');
     // Sidesheet Support
     const sideSheet = useSideSheetContext();
+    const { featureFlags } = useOptimizely();
+    const audioFeatureEnabled = featureFlags[FEATURE_FLAGS.CALL_AUDIO_FEATURE];
+    const { isCallLogAudioPermitted } = usePermissionsContext();
+    const permittedToListen = audioFeatureEnabled && isCallLogAudioPermitted;
     const openSideBar = () => {
         sideSheet.changeSideSheetContent(
             t('sideSheet.audioDetailsContent.audioDetailsTitle') as string,
@@ -82,10 +86,22 @@ const CallLogCard = ({
                         {callEntryId && (
                             <div className="justify-self-end flex gap-4 items-center">
                                 <Typography variant={TypographyVariant.Caption}>{`ID: ${callEntryId}`}</Typography>
-                                {showAudio && canUnmask && (<div className={`flex items-center gap-1 ${sessionID != undefined ? 'text-[#00628B] cursor-pointer' : 'text-[#B3B3B3] cursor-not-allowed'}`} onClick={sessionID ? openSideBar : undefined}>
-                                    <VolumeUp width={16} height={16} />
-                                    <Typography className={sessionID != undefined ? "cursor-pointer" : "cursor-not-allowed"} variant={TypographyVariant.LabelMd}>{t('sideSheet.audioDetailsContent.audioDetails')}</Typography>
-                                </div>)}
+                                {permittedToListen && (
+                                    <div
+                                        className={`flex items-center gap-1 ${
+                                            sessionID != undefined ? 'text-[#00628B] cursor-pointer' : 'text-[#B3B3B3] cursor-not-allowed'
+                                        }`}
+                                        onClick={sessionID ? openSideBar : undefined}
+                                    >
+                                        <VolumeUp width={16} height={16} />
+                                        <Typography
+                                            className={sessionID != undefined ? 'cursor-pointer' : 'cursor-not-allowed'}
+                                            variant={TypographyVariant.LabelMd}
+                                        >
+                                            {t('sideSheet.audioDetailsContent.audioDetails')}
+                                        </Typography>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
@@ -121,11 +137,9 @@ const CallLogCard = ({
 interface CallLogsTabProps {
     policyNumber?: string;
     queryLimit: number;
-    showAudio: boolean;
-    canUnmask: boolean
 }
 
-export default function CallLogsTab({ policyNumber, queryLimit = 10, showAudio, canUnmask }: CallLogsTabProps) {
+export default function CallLogsTab({ policyNumber, queryLimit = 10 }: CallLogsTabProps) {
     const { t } = useTranslation();
 
     const { data: callLogsData, isLoading: callLogsLoading } = useQuery({
@@ -155,21 +169,21 @@ export default function CallLogsTab({ policyNumber, queryLimit = 10, showAudio, 
             ) : (
                 !!callLogsData?.data.length && (
                     <>
-                        {callLogsData.data.map(({ callEntryID, callerName, callerType, createdDate, callType, callSummary, notes, sessionID }) => (
-                            <CallLogCard
-                                key={`call-log-${callEntryID}`}
-                                callEntryId={callEntryID}
-                                callerName={callerName}
-                                callerRole={callerType}
-                                createdAt={createdDate}
-                                tag={callType}
-                                summary={callSummary}
-                                notes={notes}
-                                sessionID={sessionID}
-                                showAudio={showAudio}
-                                canUnmask={canUnmask}
-                            />
-                        ))}
+                        {callLogsData.data.map(
+                            ({ callEntryID, callerName, callerType, createdDate, callType, callSummary, notes, sessionID }) => (
+                                <CallLogCard
+                                    key={`call-log-${callEntryID}`}
+                                    callEntryId={callEntryID}
+                                    callerName={callerName}
+                                    callerRole={callerType}
+                                    createdAt={createdDate}
+                                    tag={callType}
+                                    summary={callSummary}
+                                    notes={notes}
+                                    sessionID={sessionID}
+                                />
+                            )
+                        )}
                     </>
                 )
             )}

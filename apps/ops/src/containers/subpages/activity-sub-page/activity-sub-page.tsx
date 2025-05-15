@@ -10,12 +10,7 @@ import { PolicyActivityTabValues } from '@deps/types/constants';
 
 import TransactionsTab from './transactions-tab';
 
-interface IActivitySubPage {
-    showAudio: boolean;
-    canUnmask: boolean;
-}
-
-const ActivitySubPage: React.FC<IActivitySubPage> = ({ showAudio, canUnmask }) => {
+export default function ActivitySubPage() {
     const { policy } = useContext(PolicyData);
     const { t } = useTranslation();
 
@@ -52,11 +47,9 @@ const ActivitySubPage: React.FC<IActivitySubPage> = ({ showAudio, canUnmask }) =
                 </TabContent>
 
                 <TabContent value={PolicyActivityTabValues['call-logs']}>
-                    <CallLogsTab policyNumber={policy.policyNumber} queryLimit={10} showAudio={showAudio} canUnmask={canUnmask} />
+                    <CallLogsTab policyNumber={policy.policyNumber} queryLimit={10} />
                 </TabContent>
             </TabGroup>
         </div>
     );
-};
-
-export default ActivitySubPage;
+}

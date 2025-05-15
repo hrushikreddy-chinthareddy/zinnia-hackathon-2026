@@ -29,11 +29,14 @@ export const getCasesQuery = async (policyNumber?: string, featureFlags?: Featur
         throw 'No policy number provided';
     }
 
-    const response = await getCases({
-        limit: 5,
-        notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
-        policyNumber,
-    }, featureFlags as FeatureFlags);
+    const response = await getCases(
+        {
+            limit: 5,
+            notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
+            policyNumber,
+        },
+        featureFlags as FeatureFlags
+    );
 
     if (!response) {
         throw 'No data in response';

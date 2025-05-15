@@ -19,14 +19,10 @@ export default function CaseSubPage({
     caseDetails,
     tab,
     handleTabChange,
-    showAudio,
-    canUnmask,
 }: {
     caseDetails: Case;
     tab?: string;
     handleTabChange: (val: string) => void;
-    showAudio: boolean;
-    canUnmask: boolean
 }) {
     const { t } = useTranslation();
     const { sessionId, partyId } = usePermissionsContext();
@@ -79,7 +75,7 @@ export default function CaseSubPage({
                     <NotesTab caseDetails={caseDetails} />
                 </TabContent>
                 <TabContent className="w-full" value={CaseDetailsTabValues['call-logs']}>
-                    <CallLogsTab policyNumber={caseDetails.policyNumber} queryLimit={CALL_LOGS_TAB_QUERY_LIMIT} showAudio={showAudio} canUnmask={canUnmask} />
+                    <CallLogsTab policyNumber={caseDetails.policyNumber} queryLimit={CALL_LOGS_TAB_QUERY_LIMIT} />
                 </TabContent>
             </TabGroup>
         </div>

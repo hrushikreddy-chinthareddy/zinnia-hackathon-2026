@@ -1,7 +1,6 @@
 import { AxiosResponse } from 'axios';
 
 import { CallLogResponse } from '@deps/models/case/call-log';
-import { pullFromCache, writeToCache } from '@deps/utils/cache';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
@@ -17,17 +16,9 @@ export const getCaseCallLogs = async (query: CaseCallLogsQuery): Promise<{ data:
     const queryParams = `?contract=${contract}&limit=${limit}&offset=${offset}`;
 
     try {
-        const cachedResult = pullFromCache('getCallLogs', query);
-
-        if (cachedResult) {
-            return cachedResult;
-        }
-
         const { data, status } = await client.get<CallLogResponse, AxiosResponse>(
             `${baseAppUrl}/api/callcenter/v1/CallEntry${queryParams}`
         );
-
-        writeToCache('getCallLogs', query, { data, status }, 0.5); // These could change frequently, so only cache for 30 seconds for navigating between pages
 
         return { data, status };
     } catch (error: any) {
