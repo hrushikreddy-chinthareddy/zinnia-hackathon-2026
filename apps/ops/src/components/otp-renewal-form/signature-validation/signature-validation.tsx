@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { Signature } from '@deps/models/case/task';
 import { PartyType } from '@deps/models/policy/sor-policy';
 
@@ -64,11 +65,13 @@ export default function SignatureValidations({ configs, isFormStateReadOnly }: S
             {configs?.map((config, index) => {
                 const owner = ownerInformation?.find(owner => owner.type === config.signatureType);
                 if (owner) {
+                    const ownerName = !isNullEmptyOrUndefined(owner.signature?.name) ? owner.signature?.name : owner?.fullName;
+
                     return (
                         <div key={index} className="mb-4">
                             <SingleSignature
                                 fields={config.fields}
-                                signature={{ ...owner.signature, name: owner?.fullName || '', type: owner?.type || '' }}
+                                signature={{ ...owner.signature, name: ownerName || '', type: owner?.type || '' }}
                                 showTitle={shouldShowTitleField(owner.type)}
                                 errors={{
                                     [SignatureFields.SignaturePresent]: formErrors[`${owner?.type}-${SignatureFields.SignaturePresent}`],
