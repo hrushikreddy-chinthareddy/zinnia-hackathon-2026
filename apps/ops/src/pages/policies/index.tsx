@@ -104,7 +104,7 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         enabled: Object.keys(searchValue).length > 0,
     });
 
-    const setSearchFromUrl = (policyNumber: string | string[] | undefined): boolean => {
+    const isSetSearchFromUrl = (policyNumber: string | string[] | undefined): boolean => {
         return (
             !!policyNumber &&
             (!policySearchFilters?.searchValue?.policyNumber || policySearchFilters?.searchValue?.policyNumber !== policyNumber)
@@ -113,7 +113,8 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
 
     useEffect(() => {
         const { policyNumber = '' } = router.query;
-        if (setSearchFromUrl(policyNumber)) {
+
+        if (isSetSearchFromUrl(policyNumber)) {
             const newSearchValue = {
                 ...policySearchFilters.searchValue,
                 policyNumber: policyNumber as string,
@@ -122,8 +123,17 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                 ...policySearchFilters,
                 searchValue: newSearchValue,
             });
+        } else if (!policyNumber && policySearchFilters.searchValue?.policyNumber) {
+            // clear policyNumber from searchValue when URL param is removed
+            const newSearchValue = { ...policySearchFilters.searchValue };
+            delete newSearchValue.policyNumber;
+
+            setPolicySearchFilters({
+                ...policySearchFilters,
+                searchValue: newSearchValue,
+            });
         }
-    }, [router.query?.policyNumber, policySearchFilters]);
+    }, [router.query?.policyNumber]);
 
     const removePolicyNumberFromQuery = async (router: NextRouter) => {
         try {

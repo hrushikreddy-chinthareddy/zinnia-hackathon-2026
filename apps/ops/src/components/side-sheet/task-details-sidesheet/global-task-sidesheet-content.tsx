@@ -41,6 +41,13 @@ import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache, writeToCache } from '@deps/utils/cache';
 import { isProd } from '@deps/utils/environment.helpers';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { getCaseIdentifierValue } from '@deps/helpers/case-management';
+import { CaseIdentifier } from '@deps/models/case/case';
+import { IdentifierInstance } from '@deps/models/case/identifier-instance';
+import { isProd } from '@deps/utils/environment.helper';
+import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
+import { isAPIErrorInformation, isClaimNextTask, RequestData } from './type-guards';
+import { HttpStatusCode } from 'axios';
 
 export enum TabOptions {
     Details = 'Details',
@@ -202,9 +209,13 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     const handleClaimTask = async () => {
         if (task) {
             setClaimTaskLoader(true);
+
+            let response: ClaimNextTask | RequestData | null = null;
+
             try {
-                const response = await claimTask(task.id);
-                if (response.id == task.id && user?.email) {
+                response = await claimTask(task.id);
+
+                if (isClaimNextTask(response) && response?.id == task.id && user?.email) {
                     setTask({
                         ...task,
                         assignee: user.email,
@@ -226,10 +237,10 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 } else {
                     browserLogInfo('task-queue:handleClaimTask::An error occurred while claiming the task', {
                         taskId: taskId,
-                        status: response?.statusCode,
+                        status: isAPIErrorInformation(response) ? response?.statusCode : HttpStatusCode.InternalServerError,
                     });
                     setErrorClaimingTask(true);
-                    setClaimingTaskErrorMessage(response?.message);
+                    setClaimingTaskErrorMessage(isAPIErrorInformation(response) ? response?.message : '');
                 }
             } catch (e) {
                 browserLogError('task-queue:handleClaimTask::Error claiming task', {
@@ -238,7 +249,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     caseId: task.caseId,
                 });
                 setErrorClaimingTask(true);
-                setClaimingTaskErrorMessage(t('sideSheet.task.claimTaskError') as string);
+                setClaimingTaskErrorMessage(isAPIErrorInformation(response) ? response?.message : '');
                 return;
             } finally {
                 setClaimTaskLoader(false);
@@ -443,7 +454,10 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     {t('sideSheet.task.status.label')}{' '}
                 </div>
                 <div className="col-span-2 mt-2 align-self">
-                    {task?.status === TaskStatus.InProgress && task.assignee === user?.email ? (
+                    {task?.status === TaskStatus.InProgress &&
+                    task?.queue &&
+                    task.assignee?.toLowerCase() === user?.email?.toLowerCase() &&
+                    !Object.values(EarlyTaskType).includes(task?.taskType as EarlyTaskType) ? (
                         <Dropdown
                             triggerIcon={
                                 <div className="pb-1">

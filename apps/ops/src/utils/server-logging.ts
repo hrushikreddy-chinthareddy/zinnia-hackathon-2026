@@ -23,7 +23,7 @@ type UserInfo = {
 
 type LoggingFunction = (message: string, serializableValues?: LoggingContext) => void;
 
-type APIErrorInformation = {
+export type APIErrorInformation = {
     requestData?: any;
     requestHost?: string;
     requestMethod?: string;
@@ -33,7 +33,7 @@ type APIErrorInformation = {
     requestUrl?: string;
 };
 
-type MinimumRequiredErrorInformation = {
+export type MinimumRequiredErrorInformation = {
     error: string;
     [key: string]: any;
 };

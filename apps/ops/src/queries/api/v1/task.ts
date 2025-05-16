@@ -276,7 +276,7 @@ export const unassignTask = async (taskId: string, entryDuration?: number): Prom
             taskId,
             function: 'tasks.unassignTask',
         });
-        return null;
+        return error;
     }
 };
 
@@ -298,7 +298,7 @@ export const claimTask = async (taskId: string): Promise<any> => {
             taskId,
             function: 'tasks.claimTask',
         });
-        return null;
+        return error?.data;
     }
 };
 

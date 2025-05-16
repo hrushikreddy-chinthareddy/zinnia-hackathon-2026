@@ -211,7 +211,7 @@ const TaskQueueTableRow = ({ task, getTasks, setErrorMessage }: TaskQueueTableRo
                 {task?.status === TaskStatus.InProgress &&
                 task?.queue &&
                 !Object.values(EarlyTaskType).includes(task?.taskType as EarlyTaskType) ? (
-                    <div className="relative z-100">
+                    <div className="z-5">
                         {task?.status === TaskStatus.InProgress && (
                             <Dropdown
                                 triggerIcon={

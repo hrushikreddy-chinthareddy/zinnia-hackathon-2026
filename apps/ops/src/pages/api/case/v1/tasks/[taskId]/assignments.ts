@@ -5,13 +5,11 @@ import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { HttpMethod } from '@deps/queries/api-utils/serverClientUtils';
-import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import { APIErrorInformation, logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-type error = {
-    error: string;
-};
+type error = APIErrorInformation;
 
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<ClaimNextTask | null | error>, logCtx) => {
@@ -39,7 +37,13 @@ export default withAuthAndLogging(
             } else if (method === HttpMethod.DELETE) {
                 response = await serverApi.delete(baseUrl, config, loggingContext);
             } else {
-                return res.status(HttpStatusCode.MethodNotAllowed).json({ error: `Method ${method} not allowed` });
+                const error: APIErrorInformation = {
+                    requestData: {
+                        message: `Method ${method} not allowed`,
+                    },
+                };
+
+                return res.status(HttpStatusCode.MethodNotAllowed).json(error?.requestData);
             }
 
             logTrace(`serverApiClient::${method}::success`, {
@@ -54,7 +58,7 @@ export default withAuthAndLogging(
                 ...loggingContext,
                 duration: performance.now() - now,
             });
-            return res.status(HttpStatusCode.InternalServerError).json({ error: 'Internal Server Error' });
+            return res.status(HttpStatusCode.InternalServerError).json(parseErrorInformation(error)?.requestData);
         }
     },
     { file: 'case/v1/tasks/[taskId]/assignments', function: 'routeHandler' }
