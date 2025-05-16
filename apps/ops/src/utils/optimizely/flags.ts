@@ -160,4 +160,5 @@ export enum FEATURE_FLAGS {
     SYSTEMATIC_RMD_TRANSACTION = 'systematic_rmd_transaction',
     FAST_WITHDRAWAL = 'fast-withdrawal',
     CALL_AUDIO_FEATURE='call-audio-feature',
+    NEW_DEATH_CLAIM ='new_death_claim',
 }

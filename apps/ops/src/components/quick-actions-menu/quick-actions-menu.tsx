@@ -71,6 +71,7 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
 
     const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
     const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
+    const isNewDeathClaim = featureFlags[FEATURE_FLAGS.NEW_DEATH_CLAIM];
 
     const trackClick = (linkName: string, linkUrl: string) => {
         // TODO MG: do we always want to call both of these?
@@ -216,18 +217,20 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                             trackClick('New Premium', `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`);
                         }}
                     />
-                    <MenuContextualItem
-                        disabled={!initialDeathClaimEligibility?.isEligibleNewDeathClaim}
-                        content={t('transactions.newDeathClaim')}
-                        href={`claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`}
-                        icon={<BriefcaseIcon height={20} width={20} />}
-                        onClick={() => {
-                            trackClick(
-                                'New Death Claim',
-                                `claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
-                            );
-                        }}
-                    />
+                    { isNewDeathClaim &&
+                        <MenuContextualItem
+                            disabled={!initialDeathClaimEligibility?.isEligibleNewDeathClaim}
+                            content={t('transactions.newDeathClaim')}
+                            href={`/claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`}
+                            icon={<BriefcaseIcon height={20} width={20} />}
+                            onClick={() => {
+                                trackClick(
+                                    'New Death Claim',
+                                    `/claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                                );
+                            }}
+                        />
+                    }
                     <MenuContextualItem
                         disabled={!partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime}
                         content={t('transactions.startAWithdrawal')}
