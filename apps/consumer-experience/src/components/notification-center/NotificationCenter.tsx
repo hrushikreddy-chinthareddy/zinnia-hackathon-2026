@@ -1,53 +1,55 @@
 'use client';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 import {
-  AssistiveText,
   AssistiveTextVariant,
   Icon,
   IconType,
   Loader,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import dayjs from 'dayjs';
-import { Suspense, useEffect, useState } from 'react';
-import { useLocalStorage } from 'react-use';
+import { useEffect, useState } from 'react';
 
+import { NotificationCenterSection } from '@/components/notification-center/section/NotificationCenterSection';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
-import { searchCasesByPolicyNumber } from '@/queries/case-queries';
+import {
+  acknowledgeCase,
+  getAcknowledgedCases,
+  searchCasesByPolicyNumber,
+} from '@/queries/case-queries';
 import { QueryKeys } from '@/queries/query-keys';
+import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { default as Styles } from './NotificationCenter.module.css';
 import {
-  acknowledgeNotifications,
   parseNotifications,
   sortNotificationsByDate,
   transformNotifications,
 } from './utils';
-import { SkeletonLoader } from '../skeleton-loader/SkeletonLoader';
-import { NotificationCenterSidesheet } from './side-sheet/NotificatonCenterSidesheet';
-
-const today = dayjs();
 
 export type NotificationCenterNotification = {
   id: string;
   title: string;
   date: Date;
   completed: boolean;
+  stepsToAcknowledge?: string[];
 };
 
 export type NotificationCenterProps = {
   initialNotifications?: Array<CaseInstanceSummary> | null;
+  initialAcknowledgedNotifications?: Array<CaseAcknowledgmentItem>;
   policyNumber: string;
-  planCode?: string;
+  planCode: string;
 };
 
 export const NotificationCenter = ({
+  initialAcknowledgedNotifications,
   initialNotifications,
   policyNumber,
   planCode,
 }: NotificationCenterProps) => {
+  const queryClient = useQueryClient();
   const [isClient, setIsClient] = useState(false);
   const { data: featureFlags } = useFeatureFlags();
   const fetchNotificationsFlag =
@@ -57,11 +59,21 @@ export const NotificationCenter = ({
     setIsClient(true);
   }, []);
 
-  const [acknowledgedNotifications, setAcknowledgedNotifications] =
-    useLocalStorage<string[]>(QueryKeys.NOTIFICATIONS, []);
-
   const shouldFetchClientSideNotifications =
     !!fetchNotificationsFlag && isClient;
+
+  const {
+    data: acknowledgedNotifications = [],
+    isLoading: acknowledgedNotificationsLoading,
+    isError: _acknowledgedNotificationsError,
+  } = useQuery({
+    queryKey: [QueryKeys.NOTIFICATIONS],
+    queryFn: () => {
+      return getAcknowledgedCases({ policyNumber, planCode });
+    },
+    initialData: initialAcknowledgedNotifications,
+    enabled: shouldFetchClientSideNotifications,
+  });
 
   const {
     data: notifications = [],
@@ -75,14 +87,42 @@ export const NotificationCenter = ({
       planCode,
       initialNotifications,
     ],
-    queryFn: () => searchCasesByPolicyNumber(policyNumber, planCode),
-    select: data =>
-      (data || [])
+    queryFn: () => {
+      return searchCasesByPolicyNumber(policyNumber, planCode);
+    },
+    select: data => {
+      return (data || [])
         .map(parseNotifications)
-        .filter(notification => !!notification),
+        .filter(notification => !!notification);
+    },
     initialData: initialNotifications,
     enabled: shouldFetchClientSideNotifications,
   });
+
+  const mutation = useMutation({
+    mutationFn: ({
+      id,
+      stepsToAcknowledge,
+    }: {
+      id: string;
+      stepsToAcknowledge: string[];
+    }) =>
+      acknowledgeCase({
+        acknowledgedIds: stepsToAcknowledge,
+        caseId: id,
+        planCode,
+        policyNumber,
+      }),
+    onSuccess: () => {
+      // refetch the notifications to get the updated list
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.NOTIFICATIONS],
+      });
+    },
+  });
+
+  const handleAcknowledge = (id: string, stepsToAcknowledge: string[]) =>
+    mutation.mutate({ id, stepsToAcknowledge });
 
   const { completedNotifications, actionNeededNotifications } =
     notifications.reduce(transformNotifications, {
@@ -90,12 +130,12 @@ export const NotificationCenter = ({
       actionNeededNotifications: [],
     });
 
-  const handleAcknowledge = (notificationId: string) =>
-    setAcknowledgedNotifications(oldNotifications =>
-      acknowledgeNotifications(oldNotifications, notificationId)
-    );
-
-  const showLoader = isLoading || isFetching || !isClient;
+  const showLoader =
+    acknowledgedNotificationsLoading ||
+    !isClient ||
+    isLoading ||
+    isFetching ||
+    mutation.isPending;
 
   return (
     <div className={Styles.container}>
@@ -111,6 +151,7 @@ export const NotificationCenter = ({
           acknowledgedNotifications={acknowledgedNotifications}
           isLoading={isLoading}
           isClient={isClient}
+          mutatingId={mutation?.variables?.id}
         />
       )}
       {completedNotifications.length > 0 && (
@@ -164,136 +205,3 @@ export const NotificationCenter = ({
     </div>
   );
 };
-
-const NotificationCenterSection = ({
-  notifications: items,
-  isClient,
-  acknowledgedNotifications,
-  isLoading,
-  handleAcknowledge,
-  variant,
-  sectionHeading,
-  className,
-}: {
-  variant: AssistiveTextVariant;
-  sectionHeading: string;
-  notifications: NotificationCenterNotification[];
-  isClient: boolean;
-  acknowledgedNotifications?: string[];
-  isLoading: boolean;
-  className?: string;
-  handleAcknowledge: (id: string) => void;
-}) => {
-  return (
-    <section className={clsx(Styles.list, className?.length && className)}>
-      <h2>
-        <AssistiveText
-          className={Styles.heading}
-          text={sectionHeading}
-          variant={variant}
-        />
-      </h2>
-      <ul>
-        {items.map(notification => (
-          <Suspense
-            key={notification.id}
-            fallback={NotificationCenterItemLoadingState}
-          >
-            <NotificationCenterItem
-              isClient={isClient}
-              onAcknowledge={handleAcknowledge}
-              notification={notification}
-              loading={isLoading}
-              needsAcknowledgement={
-                !notification.completed &&
-                !acknowledgedNotifications?.includes(notification.id)
-              }
-              sidesheetLinkText={
-                notification.completed
-                  ? 'More Info'
-                  : `Case ID ${notification.id}`
-              }
-            />
-          </Suspense>
-        ))}
-      </ul>
-    </section>
-  );
-};
-
-const NotificationCenterItem = ({
-  notification,
-  sidesheetLinkText,
-  loading,
-  needsAcknowledgement,
-  onAcknowledge,
-  isClient,
-}: {
-  onAcknowledge: (id: string) => void;
-  needsAcknowledgement: boolean;
-  notification: NotificationCenterNotification;
-  loading: boolean;
-  isClient: boolean;
-  sidesheetLinkText: string;
-}) => {
-  const notificationDate = dayjs(notification.date);
-  const dateIsToday = notificationDate.isSame(today, 'day');
-  let dateText;
-  if (dateIsToday) {
-    dateText = 'Today';
-  } else {
-    const formatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'short' });
-    dateText = formatter.format(notification.date);
-  }
-
-  if (loading || !isClient) return NotificationCenterItemLoadingState;
-
-  const fieldData = {
-    'Case ID': notification.id,
-    'Completion Date': notificationDate.format('MM/DD/YYYY'),
-    Transaction: notification.title,
-  };
-
-  return (
-    <NotificationCenterSidesheet
-      caseId={notification.id}
-      title={notification.title}
-      fields={Object.entries(fieldData).map(([key, value]) => ({
-        label: key,
-        value,
-      }))}
-    >
-      <button
-        onClick={() => onAcknowledge(notification.id)}
-        className={clsx(
-          Styles.item,
-          needsAcknowledgement && Styles.needsAcknowledgement
-        )}
-      >
-        <h3 className={clsx(Styles.title, 'typography-labels-label-sm')}>
-          {needsAcknowledgement && <div className={Styles.pip}></div>}
-          {notification.title}
-        </h3>
-        <div className={clsx(Styles.date, 'typography-content-caption')}>
-          <Icon small type={IconType.CALENDAR} />
-          {dateText}
-        </div>
-
-        <span className={clsx(Styles.link, 'typography-nav-links-sm')}>
-          {sidesheetLinkText}
-        </span>
-      </button>
-    </NotificationCenterSidesheet>
-  );
-};
-
-const NotificationCenterItemLoadingState = (
-  <div className={Styles.item}>
-    <SkeletonLoader className={Styles.title} width="100%" height="1.5rem" />
-    <div className={Styles.date}>
-      <Icon small type={IconType.CALENDAR} />
-      <SkeletonLoader width="8ch" height="1.5rem" />
-    </div>
-    <SkeletonLoader className={Styles.link} width="50%" height="1.5rem" />
-  </div>
-);

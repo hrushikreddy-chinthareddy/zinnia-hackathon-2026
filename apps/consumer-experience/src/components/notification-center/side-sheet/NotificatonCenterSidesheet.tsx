@@ -24,7 +24,7 @@ export type NotificationCenterSidesheetProps = {
   }[];
 } & PropsWithChildren;
 
-const shouldFetchCaseDetails = false;
+const FETCH_CASE_DETAILS = false;
 
 export const NotificationCenterSidesheet = ({
   caseId,
@@ -37,6 +37,7 @@ export const NotificationCenterSidesheet = ({
       preventCloseOnOutsideClick={false}
       header={'Case Details'}
       trigger={children}
+      description="Case Details"
     >
       <div className={Styles.sidesheet}>
         {fields.map(({ label, value }) => (
@@ -67,9 +68,9 @@ const NotificationSidesheetDetails = ({
   const { data, isLoading, isError } = useQuery({
     queryKey: [QueryKeys.CASE_DETAILS, caseId],
     queryFn: async () => await getCaseDetails(caseId),
-    enabled: caseId.length > 0 && shouldFetchCaseDetails,
+    enabled: caseId.length > 0 && FETCH_CASE_DETAILS,
   });
-  if (!shouldFetchCaseDetails) return null;
+  if (!FETCH_CASE_DETAILS) return null;
 
   return (
     <div className={Styles.details}>

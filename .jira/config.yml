@@ -1,0 +1,8 @@
+deployments:
+  environmentMapping:
+    testing:
+      - '*'
+    staging:
+      - 'dev'
+    production:
+      - 'release-*'

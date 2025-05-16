@@ -70,9 +70,7 @@ export const NavMenu = ({
       }}
       open={isOpen}
     >
-      <Popover.Trigger
-        className={clsx({ [styles.mockOn as string]: isMockOn })}
-      >
+      <Popover.Trigger className={clsx(isMockOn && styles.mockOn)}>
         <UserBadge
           firstName={userName?.firstName}
           lastName={userName?.lastName}

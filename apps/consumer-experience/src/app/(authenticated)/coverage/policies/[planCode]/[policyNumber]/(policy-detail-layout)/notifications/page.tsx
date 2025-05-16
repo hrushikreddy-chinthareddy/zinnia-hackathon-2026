@@ -6,6 +6,10 @@ import { NotificationCenter } from '@/components/notification-center/Notificatio
 import { getPageTitle, RouteKey } from '@/route-map';
 import { searchCasesByPolicyNumber } from '@/services/case';
 import { getFeatureFlags } from '@/services/feature-flags';
+import {
+  CaseAcknowledgmentItem,
+  fetchAcknowledgedCases,
+} from '@/services/terms-and-conditions';
 import { PolicyRequestInputs } from '@/types/policy';
 import { logError } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
@@ -24,6 +28,7 @@ interface Props {
 export default async function NotificationsPage({ params }: Props) {
   const flags = await getFeatureFlags();
   let initialNotifications: Array<CaseInstanceSummary> | undefined;
+  let initialAcknowledgedNotifications: Array<CaseAcknowledgmentItem> = [];
   const notificationViewEnabled =
     flags?.[FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS];
 
@@ -35,6 +40,15 @@ export default async function NotificationsPage({ params }: Props) {
 
   if (cases && cases.length > 0) {
     initialNotifications = cases;
+    const { data: acknowledgedCases, error: acknowledgedCasesError } =
+      await fetchAcknowledgedCases({
+        planCode: params.planCode,
+        policyNumber: params.policyNumber,
+      });
+
+    if (!acknowledgedCasesError && !!acknowledgedCases?.length) {
+      initialAcknowledgedNotifications = acknowledgedCases;
+    }
   }
 
   if (error) {
@@ -47,6 +61,7 @@ export default async function NotificationsPage({ params }: Props) {
       policyNumber={params.policyNumber}
       planCode={params.planCode}
       initialNotifications={initialNotifications}
+      initialAcknowledgedNotifications={initialAcknowledgedNotifications}
     />
   );
 }

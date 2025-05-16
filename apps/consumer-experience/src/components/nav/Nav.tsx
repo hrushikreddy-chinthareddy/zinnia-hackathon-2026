@@ -10,12 +10,15 @@ import {
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './Nav.module.css';
+import { NotificationIcon } from './NotificationIcon';
 import { DevMenu } from '../dev-menu/DevMenu';
 import { NavMenu } from '../nav-menu/NavMenu';
 
 export async function Nav({
-  userName,
+  planCode: _,
+  policyNumber: __,
   themeCookie,
+  userName,
 }: {
   planCode: string;
   policyNumber: string;
@@ -24,11 +27,10 @@ export async function Nav({
 }) {
   const featureFlagDecisions = await getFeatureFlags();
   let carrierDetails;
+  const { data: policyData, error } = await getMyPoliciesByCarrier(
+    baseExperienceCarriers
+  );
   if (featureFlagDecisions?.[FEATURE_FLAGS.ANNUITY_MODE]) {
-    const { data: policyData, error } = await getMyPoliciesByCarrier(
-      baseExperienceCarriers
-    );
-
     if (!error && policyData) {
       carrierDetails = getCarrierListDetails(policyData);
     }
@@ -53,7 +55,10 @@ export async function Nav({
           <CarrierLogo {...carrierConfig.logoProps} data-testid="nav-logo" />
         </Link>
       </div>
-      <NavMenu userName={userName} carrierPolicyDetails={carrierDetails} />
+      <div className={styles.account}>
+        <NotificationIcon />
+        <NavMenu userName={userName} carrierPolicyDetails={carrierDetails} />
+      </div>
     </nav>
   );
 }

@@ -3,14 +3,13 @@ import { CarrierLogos, CarrierName } from '@zinnia/bloom/components';
 import styles from '@/components/nav/Nav.module.css';
 import { CompanyName } from '@/types/carriers';
 
-
 type NavCarrierConfig = {
   homePageHref: string;
   hrefAriaLabel: string;
   image:
-  | React.FunctionComponent<React.SVGProps<SVGSVGElement>>
-  | React.FunctionComponent<React.SVGProps<SVGImageElement>>
-  | React.FunctionComponent<React.ImgHTMLAttributes<HTMLImageElement>>;
+    | React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+    | React.FunctionComponent<React.SVGProps<SVGImageElement>>
+    | React.FunctionComponent<React.ImgHTMLAttributes<HTMLImageElement>>;
   logoProps: {
     className?: string;
     width?: string;

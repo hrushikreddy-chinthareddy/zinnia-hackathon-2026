@@ -37,9 +37,23 @@ export const parseNotifications = (
   const dateString = caseItem.updatedAt || caseItem.createdAt;
   if (!dateString) return null;
   const date = new Date(dateString);
+  let stepsToAcknowledge;
 
   const completed =
     caseItem.caseStatus === 'COMPLETED' || caseItem.caseStatus === 'CANCELED';
+
+  if (!completed) {
+    stepsToAcknowledge = [];
+    // current list of steps to acknowledge
+    // why the case is CURRENTLY in NIGO
+    stepsToAcknowledge = caseItem.stages?.reduce((acc, stage) => {
+      if (stage.stageStatus === 'EXCEPTION') {
+        // @ts-expect-error api spec wrong
+        acc.push(stage.id);
+      }
+      return acc;
+    }, []);
+  }
 
   if (!caseItem.process) return null;
   // @ts-expect-error api spec wrong, this field exists
@@ -50,6 +64,7 @@ export const parseNotifications = (
     date,
     completed,
     title,
+    stepsToAcknowledge,
   };
 };
 

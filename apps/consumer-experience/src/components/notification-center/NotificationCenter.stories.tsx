@@ -9,12 +9,26 @@ const notifications: CaseInstanceSummary[] = [
     process: 'Payment failed',
     updatedAt: new Date().toDateString(),
     caseStatus: 'FAILED',
+    stages: [
+      {
+        stageStatus: 'EXCEPTION',
+        // @ts-expect-error api spec wrong
+        id: '123251-55843',
+      },
+    ],
   },
   {
     id: '659989-32646',
     process: 'Tax documents available',
     updatedAt: new Date(2025, 0, 14).toDateString(),
     caseStatus: 'REVERSED',
+    stages: [
+      {
+        stageStatus: 'EXCEPTION',
+        // @ts-expect-error api spec wrong
+        id: '123251-55843',
+      },
+    ],
   },
   {
     id: '659989-32647',
@@ -64,7 +78,13 @@ export const ActionNeeded: StoryObj<typeof NotificationCenter> = {
   args: {
     initialNotifications: notifications.map(notification => ({
       ...notification,
-      caseStatus: 'IN_PROGRESS',
+      caseStatus: 'EXCEPTION',
+      stages: [
+        {
+          stageStatus: 'EXCEPTION',
+          id: '123251-55843',
+        },
+      ],
     })),
   },
 };

@@ -38,7 +38,7 @@ export const CoverageCard = ({
   }, []);
 
   const { data: requiresAckowledgement, isLoading } = useQuery({
-    queryKey: [QueryKeys.POLICY_ACKNOWLEDGEMENT, policy.policyNumber],
+    queryKey: [QueryKeys.POLICY_ACKNOWLEDGMENT, policy.policyNumber],
     queryFn: !policyIsInAcknowledgedCookie
       ? () =>
           checkIfPolicyRequiresAcknowledgement(
