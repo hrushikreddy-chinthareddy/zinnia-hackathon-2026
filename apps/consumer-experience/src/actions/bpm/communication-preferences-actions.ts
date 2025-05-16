@@ -5,6 +5,7 @@ import { UpdateEDeliveryPreferenceModel } from '@zinnia/api-types/types/preferen
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import { v4 as uuidv4 } from 'uuid';
 
 import { ApiResponse, bpmApiBaseUrl, ServerApi } from '@/services';
 import { BPMResponse } from '@/types/transactions';
@@ -57,26 +58,27 @@ export const updatePreferencesByPlanCode = async ({
     // day to next day
     const central = dayjs().tz('America/Chicago');
     let effectiveDate = dayjs();
-    if ((central.isAfter(central.hour(15), 'hour'))) {
+    if (central.isAfter(central.hour(15), 'hour')) {
       effectiveDate = effectiveDate.add(1, 'day');
     }
 
     // Not sure if there should be a different default besides email
     const prefDetails = isMailPreference
       ? {
-        preferredCommunicationType:
-          CommunicationPreferenceChange.preferredCommunicationType
-            .REGULARMAIL,
-      }
+          preferredCommunicationType:
+            CommunicationPreferenceChange.preferredCommunicationType
+              .REGULARMAIL,
+        }
       : {
-        preferredCommunicationType:
-          CommunicationPreferenceChange.preferredCommunicationType.EMAIL,
-        email: newPreferencesData.email,
-      };
+          preferredCommunicationType:
+            CommunicationPreferenceChange.preferredCommunicationType.EMAIL,
+          email: newPreferencesData.email,
+        };
 
     const reqBody = {
       communicationPreference: prefDetails,
       effectiveDate: dayjs(effectiveDate).format(ZAHARA_DATE_FORMAT),
+      correlationId: uuidv4(),
     };
 
     const rawResponse = await ServerApi.post(url, JSON.stringify(reqBody), {

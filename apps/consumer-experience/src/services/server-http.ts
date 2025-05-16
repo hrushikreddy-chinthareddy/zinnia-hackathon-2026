@@ -29,9 +29,11 @@ function getIp() {
 class ServerHttpRequest extends HttpRequest {
   request = async (
     input: string | URL | Request,
-    init?: RequestInit | undefined
+    init?: RequestInit | undefined,
+    data?: BodyInit | null | undefined
   ): Promise<Response> => {
-    const correlationId = uuid4();
+    const parsedData = data ? JSON.parse(data.toString()) : null;
+    const correlationId = parsedData?.correlationId || uuid4();
     const now = performance.now();
     const { accessToken } = await getAccessToken();
     const session = await getSession();
