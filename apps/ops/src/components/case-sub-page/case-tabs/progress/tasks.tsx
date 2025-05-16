@@ -5,7 +5,6 @@ import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesh
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
-import { ExceptionStatuses } from '@deps/models/case/exception-instance';
 import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
@@ -61,15 +60,8 @@ export function Task({ task }: { task: TaskView }) {
         ? t('caseOverview.tabs.openSince', { date: convertKebabedDateString(task.createdAt) })
         : t('caseOverview.tabs.closedOn', { date: convertKebabedDateString(task.updatedAt) });
 
-    let beforeClasses = '';
-
-    // if the task is part of an exception, add a dot before the task and change the color depending on the status
-    if (task.hasParentException) {
-        beforeClasses = `before:text-[32px] before:content-["·"] ${task.parentExceptionStatus === ExceptionStatuses.Resolved ? 'before:text-semantic-success' : 'before:text-semantic-error'
-            }`;
-    }
     return (
-        <li className={`flex w-full flex-row items-center gap-2 ${beforeClasses} `}>
+        <li className={`flex w-full flex-row items-center gap-2`}>
             <button
                 aria-label={t('caseOverview.tabs.taskSideSheetLabel', { task: task.description }) as string}
                 className="default-focus default-hover flex w-full flex-row items-center gap-4 rounded-md border-2 border-gray-100 px-4 py-2"
