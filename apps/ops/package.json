@@ -19,7 +19,7 @@
         "storybook": "storybook dev -p 6006",
         "build-storybook": "storybook build",
         "typecheck": "tsc --project ./tsconfig.json",
-        "check": "pnpm --filter \"@zinnia/*\" build && pnpm run lint && pnpm run typecheck && pnpm run test",
+        "check": "pnpm --filter \"./apps/**\" --filter \"@zinnia/*\" build && pnpm run lint && pnpm run typecheck && pnpm run test",
         "login:gh-pkg": "pnpm login --scope=@zinnia --registry=https://npm.pkg.github.com",
         "orval": "orval",
         "pre-push": "pnpm check",
