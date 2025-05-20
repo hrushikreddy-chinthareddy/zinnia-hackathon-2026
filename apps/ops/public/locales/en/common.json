@@ -4304,7 +4304,9 @@
         "type": "Type",
         "submissionType": "Submission Type",
         "electronic": "Electronic",
-        "paper": "Paper"
+        "paper": "Paper",
+        "email": "Email",
+        "fax": "Fax"
     },
     "bannerAlert": {
         "close": "Close"

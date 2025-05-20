@@ -4261,7 +4261,9 @@
         "type": "Tipo",
         "submissionType": "Tipo de envío",
         "electronic": "Electrónico",
-        "paper": "Papel"
+        "paper": "Papel",
+        "email": "Correo Electrónico",
+        "fax": "Fax"
     },
     "bannerAlert": {
         "close": "Cerrar"

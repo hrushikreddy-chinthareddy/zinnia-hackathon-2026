@@ -4282,7 +4282,9 @@
         "type": "Type",
         "submissionType": "Type de soumission",
         "electronic": "Électronique",
-        "paper": "Papier"
+        "paper": "Papier",
+        "email": "E-mail",
+        "fax": "Fax"
     },
     "bannerAlert": {
         "close": "Fermer"
