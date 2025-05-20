@@ -43,16 +43,21 @@ export const loginVerificationSuccessUrl = async () => {
   const rootPath = '/coverage';
 
   if (returnUrl) {
+    // pathname with params intact
+    // ex:
+    // /coverage/policies/[planCode]/[policyNumber]/documents/[documentId]?clientCode=zinnia&source=Correspondence&docCategory=documents
+    const returnUrlPath = returnUrl.pathname + returnUrl.search;
+
     await deleteCookie(RETURN_TO_URL_COOKIE_KEY);
     // if return url is something like mypolicyview.com/riders
     if (isRedirectAFriendlyUrl(returnUrl.pathname)) {
       return getFriendlyRedirectUrl({
-        redirectTo: returnUrl.pathname,
+        redirectTo: returnUrlPath,
         policy: singlePolicyUserPolicy,
       });
     } else {
       // if return url is something like mypolicyview.com/coverage/annuities/planCode/policyNumber/riders
-      return returnUrl.pathname;
+      return returnUrlPath;
     }
   } else {
     // if a user only has one policy we want to direct them directly to that policy

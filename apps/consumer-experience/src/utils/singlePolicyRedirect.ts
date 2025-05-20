@@ -27,7 +27,7 @@ export const userSinglePolicy = async () => {
  * @returns {boolean} If the value is a valid redirect friendly url.
  */
 export const isRedirectAFriendlyUrl = (redirectTo: string) =>
-  redirectTo && !!routeMap[redirectTo as RouteKey];
+  !!redirectTo && !!routeMap[redirectTo as RouteKey];
 
 export const getFriendlyRedirectUrl = async ({
   redirectTo,
