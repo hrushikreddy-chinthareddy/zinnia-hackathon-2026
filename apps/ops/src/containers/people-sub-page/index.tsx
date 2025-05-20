@@ -99,9 +99,9 @@ export const PeopleSubPage: React.FC = () => {
 
     const { data: agentData } = useQueries({
         queries: agentParties?.map(agent => ({
-            queryKey: ['agentData', agent.partyId, clientCode, policy?.policyNumber, policy?.product?.planCode],
-            queryFn: () => getAgentDataQuery(agent?.partyId, clientCode, policy?.policyNumber, policy?.product?.planCode),
-            enabled: !!agent.partyId && !!clientCode && !!policy.policyNumber && !!policy.product?.planCode,
+            queryKey: ['agentData', agent.agentExternalId, clientCode, policy?.policyNumber, policy?.product?.planCode],
+            queryFn: () => getAgentDataQuery(agent?.agentExternalId, clientCode, policy?.policyNumber, policy?.product?.planCode),
+            enabled: !!agent.agentExternalId && !!clientCode && !!policy.policyNumber && !!policy.product?.planCode,
             select: (data: AgentData | undefined) => (data ? new AgentParty(data, agent) : undefined),
         })),
         combine: results => {
