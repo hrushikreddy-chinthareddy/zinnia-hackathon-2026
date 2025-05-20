@@ -1,4 +1,4 @@
-import { Label } from '@zinnia/bloom/components';
+import { Label, Loader } from '@zinnia/bloom/components';
 import { useTranslation, TFunction } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -41,8 +41,8 @@ export type NotificationsTransactionIdentifier = {
 };
 
 export type NotificationEntity = {
-    notifications: INotification[];
-}
+    followupDetails: INotification[];
+};
 
 export type NotificationsTransactionData = {
     recordId: string;
@@ -130,20 +130,21 @@ export function SidesheetNotification({ notification }: { notification: INotific
                 );
             default:
                 return '';
-      }
+        }
   }
 
-  return displayNotification(notification);
+    return displayNotification(notification);
 };
 
 export function BeneSideSheetStep({ step }: { step: TransformedStep }) {
     const { t } = useTranslation();
     const [notifications, setNotifications] = useState<INotification[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchTransactions = async (identifier: string) => {
             const transactionResponse = await getTransactionsByRecordId(identifier);
-            const transactions: INotification[] = transactionResponse?.entity?.notifications || [];
+            const transactions: INotification[] = transactionResponse?.entity?.followupDetails || [];
             if (transactions.length > 0) {
                 transactions.sort((transaction1, transaction2) => {
                     const date1 = new Date(transaction1.sendDateTime);
@@ -159,6 +160,7 @@ export function BeneSideSheetStep({ step }: { step: TransformedStep }) {
                 });
                 transactions.reverse();
             }
+            setLoading(false);
             setNotifications(transactions);
         };
         const identifier = step.stepRaw.instanceInfo?.identifier;
@@ -169,40 +171,47 @@ export function BeneSideSheetStep({ step }: { step: TransformedStep }) {
 
     return (
         <div>
-            {notifications?.map((notification, index) => {
-                const { notificationIcon, notificationText } = getNotificationStatusText(notification?.status, t);
-                const { notificationIcon: receiveNotificationIcon, notificationText: receiveNotificationText, contentText: receiveNotificationContextText} =
-                    notification?.status === NotificationStatus.Receive
-                    ? getReceiveNotificationStatusText(notification, t)
-                    : {};
+            {loading ? (
+                <div className="flex justify-center items-center mt-24">
+                    <Loader />
+                </div>
+            ) : (
+                notifications?.map((notification, index) => {
+                    const { notificationIcon, notificationText } = getNotificationStatusText(notification?.status, t);
+                    const {
+                        notificationIcon: receiveNotificationIcon,
+                        notificationText: receiveNotificationText,
+                        contentText: receiveNotificationContextText,
+                    } = notification?.status === NotificationStatus.Receive ? getReceiveNotificationStatusText(notification, t) : {};
 
-                return (
-                    <>
-                        {notification?.status === NotificationStatus.Receive && (
-                            <div className="flex flex-row gap-2 mb-2" key={`notification-${index}`}>
-                                <div className="flex h-6 w-6 shrink-0 items-center justify-center">
-                                    {receiveNotificationIcon}
-                                </div>
-                                <div className="flex w-full flex-col gap-1">
-                                    <Content variant={ContentVariant.BodySm} details={receiveNotificationText} />
-                                    <div>
-                                        <Content className="text-gray-600" variant={ContentVariant.BodySm} details={receiveNotificationContextText} />
+                    return (
+                        <>
+                            {notification?.status === NotificationStatus.Receive && (
+                                <div className="flex flex-row gap-2 mb-2" key={`notification-${index}`}>
+                                    <div className="flex h-6 w-6 shrink-0 items-center justify-center">{receiveNotificationIcon}</div>
+                                    <div className="flex w-full flex-col gap-1">
+                                        <Content variant={ContentVariant.BodySm} details={receiveNotificationText} />
+                                        <div>
+                                            <Content
+                                                className="text-gray-600"
+                                                variant={ContentVariant.BodySm}
+                                                details={receiveNotificationContextText}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
+                            )}
+                            <div className="flex flex-row gap-2 mb-2" key={`receive-notification-${index}`}>
+                                <div className="flex h-6 w-6 shrink-0 items-center justify-center">{notificationIcon}</div>
+                                <div className="flex w-full flex-col gap-1">
+                                    <Content variant={ContentVariant.BodySm} details={notificationText} />
+                                    <SidesheetNotification notification={notification} />
+                                </div>
                             </div>
-                        )}
-                        <div className="flex flex-row gap-2 mb-2" key={`receive-notification-${index}`}>
-                            <div className="flex h-6 w-6 shrink-0 items-center justify-center">
-                                {notificationIcon}
-                            </div>
-                            <div className="flex w-full flex-col gap-1">
-                                <Content variant={ContentVariant.BodySm} details={notificationText} />
-                                <SidesheetNotification notification={notification} />
-                            </div>
-                        </div>
-                    </>
-                );
-            })}
+                        </>
+                    );
+                })
+            )}
         </div>
     );
 }
