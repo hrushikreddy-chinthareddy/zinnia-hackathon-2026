@@ -44,6 +44,8 @@ export const useMainNavItems = (): NavGroup[] => {
     const dashboardText = t('site.navLinks.dashboard.text') || '';
     const dashboardHref = t('site.navLinks.dashboard.link') || '';
     const accessManagement = t('site.navLinks.accessManagement.text');
+    const marketingStorefrontText = t('site.navLinks.marketingStorefront.text');
+    const marketingStorefrontHref = t('site.navLinks.marketingStorefront.link') || '';
 
     const handleAnalytics = (linkText: string) => {
         segmentAnalyticsTrackEvent('navigation_clicked', {
@@ -91,11 +93,16 @@ export const useMainNavItems = (): NavGroup[] => {
     };
 
     const toppanMerrillLink = {
-        id: '/toppan-merrill',
-        display: 'Wellabe Sales Materials',
+        id: marketingStorefrontHref,
+        display: marketingStorefrontText,
         icon: IconType.LIGHTBULB,
         renderComponent: (
-            <NavLink type={NavElementType.Link} href={'/toppan-merrill'} onClick={() => handleAnalytics('Wellabe Sales Materials')} />
+            <NavLink
+                type={NavElementType.Link}
+                href={marketingStorefrontHref}
+                target="_blank"
+                onClick={() => handleAnalytics(marketingStorefrontText)}
+            />
         ),
     };
 

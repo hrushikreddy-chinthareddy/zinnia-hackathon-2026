@@ -180,6 +180,10 @@
                 "link": "/policies/{{planCode}}/{{id}}/activity",
                 "text": "Histoire"
             },
+            "marketingStorefront": {
+                "text": "Espace Marketing",
+                "link": "/toppan-merrill"
+            },
             "notes": {
                 "text": "Remarques"
             },
