@@ -6,6 +6,7 @@ import { getAgentReviewSteps } from './agent-review';
 import { getClaimUncashTxnIdentifySteps } from './claim-uncash-txn-identify';
 import { getClaimReverseUncashTxnSteps } from './claims-reverse-uncashed-transactions';
 import { getClaimStopUncashTxnSteps } from './claims-stop-uncashed-transactions';
+import getDefaultTaskSteps from './default-task-steps';
 import { getMatchDocumentPaymentReviewSteps } from './match-payment-document-review';
 import { getSuitabilityReviewSteps } from './suitability-review-steps';
 import { getSuitabilitySteps } from './suitability-steps';
@@ -64,7 +65,7 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
             steps = getClaimReverseUncashTxnSteps(props);
             break;
         default:
-            steps = [];
+            steps = getDefaultTaskSteps(props);
             break;
     }
     return steps;

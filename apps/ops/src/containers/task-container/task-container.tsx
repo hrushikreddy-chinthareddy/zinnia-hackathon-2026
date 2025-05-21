@@ -7,7 +7,7 @@ import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 
-import { stepsProvider } from './steps-healper/steps-provider';
+import { stepsProvider } from './steps-helper/steps-provider';
 import { TaskDataContext } from './task-context';
 import { TaskWorkflowContent } from './task-workflow-content';
 type TaskContainerProps = {

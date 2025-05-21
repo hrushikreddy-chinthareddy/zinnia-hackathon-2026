@@ -89,7 +89,7 @@ export const getTaskFormMetadata = async (
     if (taskSchemaOverride) {
         const mockService = await loadMockService();
         if (mockService) {
-            return mockService.getTaskFormMetadataSSRMock(taskType);
+            return mockService.getTaskFormMetadataSSRMock(clientId, taskType);
         }
     }
     return getTaskFormMetadataSSR(clientId, taskType, processType, accessToken, logCtx);
@@ -98,12 +98,13 @@ export const getCaseTaskById = async (
     taskId: string,
     accessToken: string | undefined,
     logCtx: LoggingContext,
-    taskType?: TaskType
+    taskType?: TaskType,
+    clientId?: string
 ): Promise<ManagementTask<TaskStatus> | null> => {
     if (taskType) {
         const mockService = await loadMockService();
         if (mockService) {
-            return mockService.getCaseTaskByIdSSRMock(taskType);
+            return mockService.getCaseTaskByIdSSRMock(taskType, clientId);
         }
     }
     return getCaseTaskByIdSSR(taskId, accessToken, logCtx);

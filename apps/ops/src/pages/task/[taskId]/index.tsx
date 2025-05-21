@@ -68,6 +68,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const taskTypeOverride = (query.taskTypeOverride as string) || '';
             const taskUserOverride = Boolean(query.taskUserOverride) || false;
             const taskSchemaOverride = (query.taskSchemaOverride as string) || '';
+            const carrierOverride = (query.taskCarrierOverride as string) || '';
 
             let accessToken;
             try {
@@ -97,7 +98,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             try {
                 const mockedTaskType = taskTypeOverride && !isProd() && taskTypeOverride;
 
-                const task = await getCaseTaskById(taskId, accessToken, loggingContext, mockedTaskType as TaskType);
+                const task = await getCaseTaskById(taskId, accessToken, loggingContext, mockedTaskType as TaskType, carrierOverride);
 
                 if (!task) {
                     logError('Task::Error getting task by id', loggingContext);
