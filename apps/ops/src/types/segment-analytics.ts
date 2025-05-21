@@ -15,7 +15,7 @@ export enum SegmentPageName {
     CaseDetails = 'Case Details',
     CaseManagementDashboard = 'Case Management Dashboard',
     CreateCaseLanding = 'Create Case Landing',
-    DocumentViewer = 'Document Viewer Page',
+    DocumentViewer = 'Form Data',
     FormViewer = 'Form Viewer',
     NigoEntry = 'NIGO Entry',
     OftCase = 'OFT Case',
@@ -100,7 +100,7 @@ export type FilterClickedEvent = BaseSegmentEventProperties & {
 type BaseTransactionClickedEvent = BaseSegmentEventProperties & {
     step?: TransactionStep;
     type?: TransactionType | ContactCenterTransactionType;
-}
+};
 
 export type TransactionContinueClickedEvent = BaseTransactionClickedEvent & {
     correlationId?: string;
@@ -135,11 +135,11 @@ type TransactionTrackEventProps = {
     correlationId?: string;
     type?: TransactionType | ContactCenterTransactionType;
     step?: TransactionStep;
-}
+};
 
 export type TransactionClickProps = {
     trackEventProps?: TransactionTrackEventProps;
-}
+};
 
 export enum SegmentTrackEventState {
     Close = 'close',

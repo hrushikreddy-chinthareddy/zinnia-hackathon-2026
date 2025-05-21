@@ -1,26 +1,42 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
+import { PageHead } from '@deps/components/page-title';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
+import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
-import { supportedTiffExtensions } from '@deps/models/case/document';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
+import { DocumentDownloadV2WithMime, supportedTiffExtensions } from '@deps/models/case/document';
 import documentDownloadV2 from '@deps/queries/server/documents/v2/download';
 import documentDownload from '@deps/queries/server/documents/v3/download';
+import { DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
+import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { TiffConversion } from '@deps/utils/fileviewer/tiffConversion';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import nextI18nextConfig from 'next-i18next.config';
 
-const DocumentViewerPage = () => {
-    return null;
+const DocumentViewerPage = ({ doc, user }: SegmentTrackedPageProps & { doc: DocumentDownloadV2WithMime | DocumentDownloadV3WithMime }) => {
+    useSegmentPageTracker(user, SegmentPageName.DocumentViewer);
+    return (
+        <>
+            <PageHead titleKey="formData" />
+            <div className="h-screen w-screen">
+                <iframe src={`data:${doc.mimeType};base64,${doc.binaryData}`} width="100%" height="100%" />
+            </div>
+        </>
+    );
 };
 
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const { params, res, req, query } = context;
+            const { params, res, req, query, locale = DEFAULT_LOCALE } = context;
             let accessToken;
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
@@ -106,6 +122,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             }
+            const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON], nextI18nextConfig, ALL_LOCALES);
 
             if (docDownload?.mimeType === 'image/tiff' || supportedTiffExtensions.includes(docDownload?.fileExtension)) {
                 const { tiffBuffer, success } = await TiffConversion({ binaryData: docDownload.binaryData });
@@ -114,17 +131,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                     docDownload.mimeType = 'image/png';
                     docDownload.fileExtension = 'png';
                 }
-                finalBuffer = tiffBuffer;
-            } else {
-                finalBuffer = Buffer.from(docDownload.binaryData, 'base64');
+                docDownload.binaryData = tiffBuffer.toString('base64');
             }
 
-            res.setHeader('Content-Type', docDownload.mimeType);
-            res.setHeader('Content-Disposition', `inline; filename=document.${docDownload.fileExtension}`);
-            res.end(finalBuffer);
-
             return {
-                props: {},
+                props: { locale, ...translations, user, doc: docDownload },
             };
         },
     },
