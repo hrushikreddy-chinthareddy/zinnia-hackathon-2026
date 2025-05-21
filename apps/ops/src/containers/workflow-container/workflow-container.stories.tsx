@@ -26,7 +26,6 @@ const { premium, setPremium } = usePremium();
 // TODO: add component steps in workflow to update this entirely if we want to keep a story for this container
 const premiumSteps: Step[] = [
     {
-        ariaLabel: 'Start',
         component: (
             <StartStep
                 parentPage={ParentPage.Premiums}
@@ -43,7 +42,6 @@ const premiumSteps: Step[] = [
         text: 'Start',
     },
     {
-        ariaLabel: 'Payor',
         component: (
             <PayorStep policy={mockPolicy} parentPage={ParentPage.Premiums} state={premium} setState={setPremium as PayorStepSetState} />
         ),
@@ -52,7 +50,6 @@ const premiumSteps: Step[] = [
         text: 'Payor',
     },
     {
-        ariaLabel: 'Payment',
         component: (
             <PaymentStep
                 parentPage={ParentPage.Premiums}
@@ -66,14 +63,12 @@ const premiumSteps: Step[] = [
         text: 'Payment',
     },
     {
-        ariaLabel: 'Summary',
         component: <Summary policy={mockPolicy} />,
         screenReaderLabel: 'Summary',
         index: 3,
         text: 'Summary',
     },
     {
-        ariaLabel: 'Confirm',
         component: <Confirm policy={mockPolicy} />,
         screenReaderLabel: 'Confirm',
         index: 4,

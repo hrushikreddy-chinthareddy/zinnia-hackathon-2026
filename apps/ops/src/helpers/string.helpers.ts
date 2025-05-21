@@ -21,7 +21,7 @@ export const cleanCurrency = (value: string) => {
 export const nameToTwoLetters = (name?: string | null) => {
     if (!name) return name;
 
-    const names = name.split(' ');
+    const names = name.split(' ').filter(n => n.trim() !== '');
 
     if (names.length < 2) return names[0][0];
 
@@ -31,7 +31,7 @@ export const nameToTwoLetters = (name?: string | null) => {
 export const firstNameAndLastInitial = (name?: string | null) => {
     if (!name) return name;
 
-    const names = name.split(' ');
+    const names = name.split(' ').filter(n => n.trim() !== '');
 
     if (names.length < 2) return names[0][0];
 

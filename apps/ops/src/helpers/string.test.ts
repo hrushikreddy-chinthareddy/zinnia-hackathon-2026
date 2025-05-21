@@ -76,6 +76,13 @@ describe('String Helper', () => {
 
             expect(nameLength).toBe('F');
         });
+
+        it('should handle multiple spaces in between first and last name', () => {
+            const name = 'Frank  Frankington';
+            const nameLength = nameToTwoLetters(name);
+
+            expect(nameLength).toBe('FF');
+        });
     });
 
     describe('> firstNameAndLastInitial', () => {
@@ -98,6 +105,13 @@ describe('String Helper', () => {
             const nameLength = firstNameAndLastInitial(name);
 
             expect(nameLength).toBe('F');
+        });
+
+        it('should handle multiple spaces in between first and last name', () => {
+            const name = 'Frank  Smith';
+            const value = firstNameAndLastInitial(name);
+
+            expect(value).toBe('Frank S.');
         });
     });
 
