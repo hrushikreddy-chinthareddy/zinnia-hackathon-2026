@@ -23,29 +23,31 @@ export default function AnnuityQuickView({ policy }: BasePolicyComponentArgs) {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
 
     const Fields: AnnuityQuickViewFields = {
-        BaseDeathBenefit: {
-            label: t('colDefs:policySummary.baseDeathBenefit'),
-            tooltipTitle: t('colDefs:policySummary.baseDeathBenefit') as string,
-            tooltipBody: t('colDefs:policySummary.baseDeathBenefitTooltip') as string,
-            details: numberFormatify(policy.baseDeathBenefit),
-        },
-        IssueDate: {
-            label: t('colDefs:policySummary.issueDate'),
-            details: convertKebabedDateString(policy.issueDate),
-        },
         AccountValue: {
             label: t('colDefs:policySummary.accountValue'),
             details: numberFormatify(policy.accountValue),
             tooltipTitle: t('colDefs:policySummary.accountValue') as string,
             tooltipBody: t('colDefs:policySummary.accountValueTooltip') as string,
         },
-        MaturityDate: {
-            label: t('colDefs:policySummary.maturityDate'),
-            details: convertKebabedDateString(policy.maturityDate),
+        IssueDate: {
+            label: t('colDefs:policySummary.issueDate'),
+            details: convertKebabedDateString(policy.issueDate),
         },
         CostBasis: {
             label: t('colDefs:policySummary.costBasis'),
             details: numberFormatify(policy.costBasis),
+        },
+        MaturityDate: {
+            label: t('colDefs:policySummary.maturityDate'),
+            details: convertKebabedDateString(policy.maturityDate),
+        },
+        BaseDeathBenefit: {
+            label: t('colDefs:policySummary.deathBenefit'),
+            details: numberFormatify(policy.baseDeathBenefit),
+        },
+        qualificationType: {
+            label: t('colDefs:policySummary.qualificationType'),
+            details: t(`dashboard.search.results.policySummaryCard.${policy?.qualificationType}`) ?? '',
         },
     };
 

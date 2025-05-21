@@ -767,7 +767,16 @@
                     "caseBannerText_one": "This policy has {{count}} open case",
                     "caseBannerText_other": "This policy has {{count}} open cases",
                     "initialDeathNotification": "Initial Death Notification",
-                    "initialDeathNotificationLink": "View death claim progress"
+                    "initialDeathNotificationLink": "View death claim progress",
+                    "NONQUALIFIED": "Non-Qualified Investment Account",
+                    "INDIVIDUALRETIREMENTACCOUNTREGULAR": "Traditional IRA",
+                    "INDIVIDUALRETIREMENTACCOUNTSPOUSAL": "Spousal IRA",
+                    "INDIVIDUALRETIREMENTACCOUNTROLLOVER": "Rollover IRA",
+                    "ROTHINDIVIDUALRETIREMENTACCOUNT": "Roth IRA",
+                    "CUSTODIALINDIVIDUALRETIREMENTACCOUNT": "Custodial Traditional IRA",
+                    "CUSTODIALROTHINDIVIDUALRETIREMENTACCOUNT": "Custodial Roth IRA",
+                    "CUSTODIALROLLOVERINDIVIDUALRETIREMENTACCOUNT": "Custodial Rollover IRA",
+                    "IRA-SEP": "SEP IRA"
                 }
             },
             "empty": {

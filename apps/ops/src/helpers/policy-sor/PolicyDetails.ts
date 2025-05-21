@@ -64,6 +64,7 @@ export class PolicyDetails {
     public policyYear: number | undefined;
     public productType: ProductType | undefined;
     public product: Product | undefined;
+    public qualificationType: string | undefined;
     public riders?: Rider[];
     public surrenderValue: number | undefined;
     public systematicPrograms: SystematicPrograms;
@@ -112,6 +113,7 @@ export class PolicyDetails {
         this.policyTerm = policy.policyTerm;
         this.policyYear = policy.policyYear;
         this.productType = policy.product?.productType;
+        this.qualificationType = policy?.qualificationType;
         this.surrenderValue = policy?.accountValues?.surrenderValue;
         this.product = policy?.product;
         this.riders = policy?.riders;

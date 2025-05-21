@@ -19,6 +19,7 @@
         "makePayment": "Effectuer un paiement",
         "maturityDate": "Date d'échéance",
         "baseDeathBenefit": "Capital décès de base",
+        "deathBenefit": "Prestation de décès",
         "baseDeathBenefitTooltip": "C'est le montant du capital décès lié à la couverture de base du propriétaire. Il reflète la valeur actuelle, donc il tient compte de toutes les modifications apportées au capital décès dues aux retraits ou aux prêts. (Note : Cette valeur peut différer du capital décès brut total s'il y a des lignes de couverture supplémentaires ou des avenants qui ajoutent au capital décès)",
         "account": "Cpt",
         "costBasis": "Base de coût",
@@ -38,7 +39,8 @@
         "reinstatementPaymentPeriod": "Délai de paiement de réintégration",
         "reinstatementPaymentPeriodTooltip": "Ces dates vous indiquent combien de temps le propriétaire dispose pour effectuer le paiement de réintégration requis une fois approuvé par la souscription. La première date est celle à laquelle la réintégration du propriétaire a été approuvée, et la seconde est la date limite pour effectuer le paiement de réintégration requis.",
         "reinstatementMinPayment": "Paiement minimum de réintégration",
-        "reinstatementMinPaymentTooltip": "Il s’agit du montant minimum que le propriétaire doit payer en prime pendant la période d’approbation de remise en vigueur pour que sa police redevienne active."
+        "reinstatementMinPaymentTooltip": "Il s’agit du montant minimum que le propriétaire doit payer en prime pendant la période d’approbation de remise en vigueur pour que sa police redevienne active.",
+        "qualificationType": "Type de diplôme"
     },
     "policyDetails": {
         "issueDate": "Date de Publication",
