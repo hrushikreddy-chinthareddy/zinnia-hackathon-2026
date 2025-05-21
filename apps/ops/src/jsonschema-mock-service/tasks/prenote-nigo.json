@@ -129,6 +129,7 @@
                         "issueResolved": {
                             "oneOf": [
                                 {
+                                    "required": ["deliveryMethod"],
                                     "properties": {
                                         "issueResolved": {
                                             "const": true
@@ -454,6 +455,7 @@
                     },
                     "deliveryMethod": {
                         "ui:widget": "radio",
+                        "ui:hideError": true,
                         "ui:dataPath": ["details", "exchangeReplace", "deliveryMethod"]
                     },
                     "address": {
