@@ -105,7 +105,6 @@ const AutopayContainer = ({
 
     const steps: Step[] = [
         {
-            ariaLabel: startLabel,
             component: (
                 <StartStep
                     parentPage={parentPage}
@@ -131,14 +130,12 @@ const AutopayContainer = ({
             text: startLabel,
         },
         {
-            ariaLabel: amountLabel,
             component: parentPage === ParentPage.Withdrawals ? <WithdrawalAmount policy={policy} /> : <Amount policy={policy} />,
             screenReaderLabel: amountLabel,
             index: 1,
             text: amountLabel,
         },
         {
-            ariaLabel: payorLabel,
             component:
                 parentPage == ParentPage.Withdrawals ? (
                     <PayeesStep
@@ -162,7 +159,6 @@ const AutopayContainer = ({
             text: payorLabel,
         },
         {
-            ariaLabel: paymentLabel,
             component:
                 parentPage === ParentPage.Withdrawals ? (
                     wireCheckPaymentsEnabled ? (
@@ -197,14 +193,12 @@ const AutopayContainer = ({
             text: paymentLabel,
         },
         {
-            ariaLabel: summaryLabel,
             component: isSetUp ? <SetUpSummary policy={policy} /> : <ManageSummary policy={policy} />,
             screenReaderLabel: summaryLabel,
             index: 4,
             text: summaryLabel,
         },
         {
-            ariaLabel: confirmLabel,
             component: <Confirm policy={policy} />,
             screenReaderLabel: confirmLabel,
             index: 5,

@@ -36,7 +36,6 @@ const FreeLookCancelContainer = ({ policy }: { policy: PolicyOld }) => {
 
     const steps: Step[] = [
         {
-            ariaLabel: startLabel,
             component: (
                 <StartStep
                     parentPage={ParentPage.Withdrawals}
@@ -53,7 +52,6 @@ const FreeLookCancelContainer = ({ policy }: { policy: PolicyOld }) => {
             text: startLabel,
         },
         {
-            ariaLabel: dateLabel,
             component: (
                 <EffectiveDate
                     effectiveDate={withdrawal.effectiveDate}
@@ -66,7 +64,6 @@ const FreeLookCancelContainer = ({ policy }: { policy: PolicyOld }) => {
             text: dateLabel,
         },
         {
-            ariaLabel: payeeLabel,
             component: (
                 <PayeesStep
                     parentPage={ParentPage.Withdrawals}
@@ -81,38 +78,32 @@ const FreeLookCancelContainer = ({ policy }: { policy: PolicyOld }) => {
             text: payeeLabel,
         },
         {
-            ariaLabel: paymentLabel,
-            component: (
-                wireCheckPaymentsEnabled
-                    ? (
-                        <PaymentStepMoneyOut
-                            parentPage={ParentPage.Withdrawals}
-                            policy={policy}
-                            setState={setWithdrawal as PaymentStepSetState}
-                            state={withdrawal}
-                        />
-                    ) : (
-                        <PaymentStep
-                            parentPage={ParentPage.Withdrawals}
-                            policy={policy}
-                            setState={setWithdrawal as PaymentStepSetState}
-                            state={withdrawal}
-                        />
-                    )
+            component: wireCheckPaymentsEnabled ? (
+                <PaymentStepMoneyOut
+                    parentPage={ParentPage.Withdrawals}
+                    policy={policy}
+                    setState={setWithdrawal as PaymentStepSetState}
+                    state={withdrawal}
+                />
+            ) : (
+                <PaymentStep
+                    parentPage={ParentPage.Withdrawals}
+                    policy={policy}
+                    setState={setWithdrawal as PaymentStepSetState}
+                    state={withdrawal}
+                />
             ),
             screenReaderLabel: paymentLabel,
             index: 3,
             text: paymentLabel,
         },
         {
-            ariaLabel: summaryLabel,
             component: <Summary policy={policy} />,
             screenReaderLabel: summaryLabel,
             index: 4,
             text: summaryLabel,
         },
         {
-            ariaLabel: confirmLabel,
             component: <Confirm policy={policy} />,
             screenReaderLabel: confirmLabel,
             index: 5,

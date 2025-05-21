@@ -43,7 +43,6 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
 
     const steps: Step[] = [
         {
-            ariaLabel: startLabel,
             component: (
                 <StartStep
                     parentPage={ParentPage.Loans}
@@ -61,14 +60,12 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
             text: startLabel,
         },
         {
-            ariaLabel: amountLabel,
             component: <Amount policy={policy} />,
             screenReaderLabel: amountLabel,
             index: 1,
             text: amountLabel,
         },
         {
-            ariaLabel: payorLabel,
             component: (
                 <PayorStep
                     parentPage={ParentPage.Loans}
@@ -83,7 +80,6 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
             text: payorLabel,
         },
         {
-            ariaLabel: paymentLabel,
             component: (
                 <PaymentStep
                     parentPage={ParentPage.Loans}
@@ -99,14 +95,12 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
             text: paymentLabel,
         },
         {
-            ariaLabel: summaryLabel,
             component: <Summary policy={policy} />,
             screenReaderLabel: summaryLabel,
             index: 4,
             text: summaryLabel,
         },
         {
-            ariaLabel: confirmLabel,
             component: <Confirm policy={policy} />,
             screenReaderLabel: confirmLabel,
             index: 5,

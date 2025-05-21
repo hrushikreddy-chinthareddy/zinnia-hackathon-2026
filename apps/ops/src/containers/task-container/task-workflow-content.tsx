@@ -57,8 +57,7 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
             default:
                 return false;
         }
-    }
-        ;
+    };
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] flex-col self-center">
             <div className="flex">
@@ -71,12 +70,16 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
                 </div>
             </div>
             <ProgressBarSteps
-                classNames={`pb-2 grid-cols-${filteredSteps.length}`}
+                classNames={`pb-2`}
                 currentStepIndex={currentStepIndex}
                 onClick={handleProgressBarClick}
                 steps={filteredSteps}
             />
-            <div className={`flex w-full grow flex-col rounded ${isClaimCase(task.taskType as TaskType) ? '' : 'bg-white shadow-elevation-light-04'}  `}>
+            <div
+                className={`flex w-full grow flex-col rounded ${
+                    isClaimCase(task.taskType as TaskType) ? '' : 'bg-white shadow-elevation-light-04'
+                }  `}
+            >
                 {filteredSteps[currentStepIndex]?.component}
             </div>
         </div>

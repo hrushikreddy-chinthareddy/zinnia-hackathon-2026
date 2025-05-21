@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { ProgressBarStepsTest } from '@deps/jest/constants/test-id-constants';
+import { DEFAULT_STEP_WIDTH } from '@deps/types/constants';
 
 import ProgressBarStepsItem from './progress-bar-steps-item';
 
@@ -12,10 +13,10 @@ describe('ProgressBarStepsItem', () => {
         isCompleted: false,
         isDisabled: false,
         href: '',
-        ariaLabel: '',
         clickContainerAriaLabel: 'Step 1',
         screenReaderLabel: '',
         testId: 'test-id',
+        stepWidth: DEFAULT_STEP_WIDTH,
     };
 
     afterEach(() => {
@@ -42,18 +43,5 @@ describe('ProgressBarStepsItem', () => {
         const clickableItem = screen.getByTestId(ProgressBarStepsTest.ClickWrapper);
         fireEvent.click(clickableItem);
         expect(mockProps.onClick).not.toHaveBeenCalled();
-    });
-
-    it('renders disabled styles when the step is disabled', () => {
-        const disabledProps = { ...mockProps, isDisabled: true };
-        render(<ProgressBarStepsItem {...disabledProps} />);
-        expect(screen.getByTestId(ProgressBarStepsTest.StepsContainer)).toHaveClass('bg-gray-50');
-        expect(screen.getByTestId(ProgressBarStepsTest.StepText)).toHaveClass('text-gray-600');
-    });
-
-    it('renders enabled styles when the step is not disabled', () => {
-        render(<ProgressBarStepsItem {...mockProps} />);
-        expect(screen.getByTestId(ProgressBarStepsTest.StepsContainer)).toHaveClass('bg-white');
-        expect(screen.getByTestId(ProgressBarStepsTest.StepText)).not.toHaveClass('text-gray-600');
     });
 });

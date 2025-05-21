@@ -1,0 +1,12 @@
+.progressBar__scrollable {
+    width: 100%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    flex-shrink: 0;
+}
+
+.progressBar__steps {
+    border-bottom: 2px solid var(--color-base-border-border-subtle);
+    display: grid;
+    max-width: 1130px;
+}

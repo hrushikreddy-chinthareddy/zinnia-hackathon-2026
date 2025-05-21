@@ -1,0 +1,51 @@
+.stepButton {
+    align-items: center;
+    border: 2px solid transparent;
+    border-right-color: var(--color-base-border-border-light);
+    display: flex;
+    justify-content: center;
+    height: 56px;
+    position: relative;
+
+    &:hover {
+        border-color: var(--color-states-hover-border-hover-border);
+    }
+
+    &.active {
+        border-color: var(--color-states-selected-border-selected-border);
+    }
+
+    &.disabled {
+        background-color: var(--color-base-surface-surface-secondary);
+        cursor: not-allowed;
+
+        &:hover {
+            border-color: transparent;
+            border-right-color: var(--color-base-border-border-light);
+        }
+
+        & .stepContent {
+            color: var(--color-base-text-text-secondary);
+        }
+    }
+
+    &:focus {
+        border-color: var(--color-semantics-color-semantic-focus);
+        border-radius: 4px;
+    }
+}
+
+.colorBar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    width: 100%;
+    &.active {
+        height: var(--measure-dimension-z-space-1-5);
+        &:not(&.disabled) {
+            background-color: var(--color-progress-bar-steps-item-progress-bar-steps-item-active-border);
+        }
+    }
+}

@@ -36,7 +36,6 @@ const FundTransferContainer = ({ policy }: FundTransferProps) => {
 
     const steps: Step[] = [
         {
-            ariaLabel: startLabel,
             component: (
                 <StartStep
                     parentPage={ParentPage.Funds}
@@ -54,7 +53,6 @@ const FundTransferContainer = ({ policy }: FundTransferProps) => {
             text: startLabel,
         },
         {
-            ariaLabel: transferLabel,
             component: (
                 <Transfer
                     policy={policy}
@@ -68,14 +66,12 @@ const FundTransferContainer = ({ policy }: FundTransferProps) => {
             text: transferLabel,
         },
         {
-            ariaLabel: summaryLabel,
             component: <Summary policy={policy} title={t('summary.title') as string} subtitle={t('summary.subtitle') as string} />,
             screenReaderLabel: summaryLabel,
             index: 2,
             text: summaryLabel,
         },
         {
-            ariaLabel: confirmLabel,
             component: <Confirm policy={policy} />,
             screenReaderLabel: confirmLabel,
             index: 3,

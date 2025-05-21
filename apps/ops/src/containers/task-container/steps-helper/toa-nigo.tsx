@@ -17,7 +17,6 @@ export const getTOANigoSteps = ({ taskType, taskInfoLink, t, taskMetadata = [] }
 
     const staticSteps: Step[] = [
         {
-            ariaLabel: t('confirm'),
             isVisible: () => true,
             component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
             text: t('confirm'),

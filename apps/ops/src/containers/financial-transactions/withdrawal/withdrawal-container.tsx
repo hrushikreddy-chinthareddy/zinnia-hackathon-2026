@@ -45,9 +45,7 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
     const confirmLabel = t('withdrawals.confirm.label');
 
     const transactionType = useMemo(() => {
-        return withdrawal.type === WithdrawalType.Surrender
-            ? TransactionType.FULL_SURRENDER
-            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+        return withdrawal.type === WithdrawalType.Surrender ? TransactionType.FULL_SURRENDER : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
 
     const validateCall = () => {
@@ -60,7 +58,6 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
 
     const steps: Step[] = [
         {
-            ariaLabel: startLabel,
             component: (
                 <StartStep
                     parentPage={ParentPage.Withdrawals}
@@ -78,21 +75,18 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
             text: startLabel,
         },
         {
-            ariaLabel: amountLabel,
             component: <Amount policy={policy} />,
             screenReaderLabel: amountLabel,
             index: 1,
             text: amountLabel,
         },
         {
-            ariaLabel: taxesLabel,
             component: <Taxes policy={policy as Policy} />,
             screenReaderLabel: taxesLabel,
             index: 2,
             text: taxesLabel,
         },
         {
-            ariaLabel: payeeLabel,
             component: (
                 <PayeesStep
                     parentPage={ParentPage.Withdrawals}
@@ -107,40 +101,34 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
             text: payeeLabel,
         },
         {
-            ariaLabel: paymentLabel,
-            component: (
-                wireCheckPaymentsEnabled
-                    ? (
-                        <PaymentStepMoneyOut
-                            parentPage={ParentPage.Withdrawals}
-                            policy={policy}
-                            setState={setWithdrawal as PaymentStepSetState}
-                            state={withdrawal}
-                            validateTransaction={validateCall}
-                        />
-                    ) : (
-                        <PaymentStep
-                            parentPage={ParentPage.Withdrawals}
-                            policy={policy}
-                            setState={setWithdrawal as PaymentStepSetState}
-                            state={withdrawal}
-                            validateTransaction={validateCall}
-                        />
-                    )
+            component: wireCheckPaymentsEnabled ? (
+                <PaymentStepMoneyOut
+                    parentPage={ParentPage.Withdrawals}
+                    policy={policy}
+                    setState={setWithdrawal as PaymentStepSetState}
+                    state={withdrawal}
+                    validateTransaction={validateCall}
+                />
+            ) : (
+                <PaymentStep
+                    parentPage={ParentPage.Withdrawals}
+                    policy={policy}
+                    setState={setWithdrawal as PaymentStepSetState}
+                    state={withdrawal}
+                    validateTransaction={validateCall}
+                />
             ),
             screenReaderLabel: paymentLabel,
             index: 4,
             text: paymentLabel,
         },
         {
-            ariaLabel: summaryLabel,
             component: <Summary policy={policy as Policy} />,
             screenReaderLabel: summaryLabel,
             index: 5,
             text: summaryLabel,
         },
         {
-            ariaLabel: confirmLabel,
             component: <Confirm policy={policy as Policy} />,
             screenReaderLabel: confirmLabel,
             index: 6,

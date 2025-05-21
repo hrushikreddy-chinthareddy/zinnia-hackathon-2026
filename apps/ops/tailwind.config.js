@@ -329,11 +329,6 @@ module.exports = {
                 width: 'width',
             },
         },
-        variants: {
-            extend: {
-                display: ['group-hover'],
-            },
-        },
         translate: {
             216: '216px',
         },

@@ -86,7 +86,6 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     const steps = useMemo(
         () => [
             {
-                ariaLabel: t('tabs.start.tabTitle'),
                 component: <Start parentPage={ParentPage.CreateCase} policy={policy} />,
                 screenReaderLabel: t('tabs.start.tabTitle'),
                 index: 0,
@@ -94,7 +93,6 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                 isVisible: () => true,
             },
             {
-                ariaLabel: t('tabs.amount.tabTitle'),
                 component: <Amount updateProgram={updateProgram} onProgramUpdate={setUpdateProgram} isReadOnly={false} />,
                 screenReaderLabel: t('tabs.amount.tabTitle'),
                 index: 1,
@@ -103,14 +101,12 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             },
 
             {
-                ariaLabel: t('signTabTitle'),
                 component: <Signature />,
                 screenReaderLabel: t('signTabTitle'),
                 isVisible: () => source !== ChannelType.Phone,
                 text: t('signTabTitle'),
             },
             {
-                ariaLabel: t('tabs.summary.tabTitle'),
                 component: <Summary currentProgram={oldProgram?.[0]} updatedProgram={updateProgram} onContinue={handleFormAction} />,
                 screenReaderLabel: t('tabs.summary.tabTitle'),
                 index: 3,
@@ -118,7 +114,6 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                 isVisible: () => true,
             },
             {
-                ariaLabel: t('tabs.confirm.tabTitle'),
                 component: <>{<div></div>}</>,
                 screenReaderLabel: t('tabs.confirm.tabTitle'),
                 index: 4,

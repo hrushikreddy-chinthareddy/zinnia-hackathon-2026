@@ -7,11 +7,14 @@ import ProgressBarStepsItem, { Step } from '@deps/containers/progress-bar-steps/
 import { scrollToElement } from '@deps/helpers/routing.helpers';
 import { DEFAULT_STEP_WIDTH, SCREEN_BREAKPOINTS } from '@deps/types/constants';
 
+import styles from './progress-bar-steps.module.css';
+
 interface ProgressBarStepsProps {
     steps: Step[];
     currentStepIndex: number;
     onClick: (step: Step) => void;
     classNames?: string;
+    // this is fixed width from Figma of each step
     stepWidth?: number;
 }
 
@@ -21,7 +24,6 @@ const ProgressBarSteps = ({ steps, currentStepIndex, onClick, classNames, stepWi
     const [isMounted, setIsMounted] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const STEP_WIDTH = stepWidth; // this is fixed width from Figma of each step
     const MARGIN = 64;
     const [isScrollable, setIsScrollable] = useState(false);
     const windowWidth = useWindowResize();
@@ -32,10 +34,10 @@ const ProgressBarSteps = ({ steps, currentStepIndex, onClick, classNames, stepWi
 
     useEffect(() => {
         if (steps.length > 0) {
-            const stepsWidth = steps.length * STEP_WIDTH;
+            const stepsWidth = steps.length * stepWidth;
             setIsScrollable(stepsWidth + MARGIN > SCREEN_BREAKPOINTS.page || stepsWidth > windowWidth);
         }
-    }, [steps, windowWidth]);
+    }, [stepWidth, steps, windowWidth]);
 
     useEffect(() => {
         let timeoutId: NodeJS.Timeout;
@@ -55,17 +57,12 @@ const ProgressBarSteps = ({ steps, currentStepIndex, onClick, classNames, stepWi
 
     // Need to check the width of the steps to determine if we need to add a scrollbar
     // This is because the scrollbar obscures the box shadow and border radius on the entire container
-    const scrollbarClasses = clsx({
-        'w-full overflow-x-auto scroll-smooth pb-2': isScrollable,
-    });
 
     return (
-        <div className={clsx('flex-shrink-0', scrollbarClasses)} ref={containerRef}>
+        <div className={clsx(isScrollable && styles.progressBar__scrollable)} ref={containerRef}>
             <div
-                className={clsx(
-                    'grid min-w-[940px] max-w-[1130px] gap-0.5 rounded shadow-elevation-light-04 sm:overflow-hidden md:overflow-auto',
-                    classNames
-                )}
+                className={clsx(styles.progressBar__steps, classNames)}
+                style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(${stepWidth}px, 1fr))` }}
             >
                 {steps.map((step, index) => {
                     const isActive = step.index === currentStepIndex;
@@ -81,6 +78,7 @@ const ProgressBarSteps = ({ steps, currentStepIndex, onClick, classNames, stepWi
                             isCompleted={isCompleted}
                             screenReaderLabel={t('progressBarSteps.stepCount', { step: index + 1, endStep: steps.length })}
                             onClick={() => onClick(step)}
+                            stepWidth={stepWidth}
                         />
                     );
                 })}

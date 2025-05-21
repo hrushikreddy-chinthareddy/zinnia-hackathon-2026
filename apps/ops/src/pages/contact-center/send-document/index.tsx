@@ -120,7 +120,6 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
 
     const steps: Step[] = [
         {
-            ariaLabel: formSelectionLabel,
             component: (
                 <FormSelection
                     policy={policy}
@@ -135,14 +134,12 @@ const SendDocument = ({ policy, availableFormsTransactions, shouldShowCaseButton
             text: formSelectionLabel,
         },
         {
-            ariaLabel: CorrespondenceLabel,
             component: <Correspondence communicationOptions={communicationOptions} policy={policy} submitRequest={handleSubmitRequest} />,
             screenReaderLabel: CorrespondenceLabel,
             index: 1,
             text: CorrespondenceLabel,
         },
         {
-            ariaLabel: confirmLabel,
             component: (
                 <ConfirmComponent
                     shouldShowCaseButton={shouldShowCaseButton}

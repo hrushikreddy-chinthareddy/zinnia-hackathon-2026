@@ -72,14 +72,7 @@ const TabGroupContent = ({
                     variant={variant}
                 />
             </div>
-            {isSswUpdateView && (
-                <ProgressBarSteps
-                    classNames={`grid-cols-${steps.length}`}
-                    currentStepIndex={Number(currentStepIndex)}
-                    onClick={handleClick}
-                    steps={steps}
-                />
-            )}
+            {isSswUpdateView && <ProgressBarSteps currentStepIndex={Number(currentStepIndex)} onClick={handleClick} steps={steps} />}
             <div className="my-2 flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">
                 {isLoading ? (
                     <div className="flex justify-center items-center py-20 my-auto">

@@ -6,7 +6,6 @@ import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-f
 export const getSuitabilityReviewSteps = ({ taskType, taskInfoLink, t, taskMetadata }: GetStepsProps) => {
     const steps: Step[] = [
         {
-            ariaLabel: taskMetadata[0]?.title || '',
             isVisible: () => true,
             component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={true} taskMetadata={taskMetadata[0]}></TaskFormStep>,
             text: taskMetadata[0]?.title || '',
@@ -15,7 +14,6 @@ export const getSuitabilityReviewSteps = ({ taskType, taskInfoLink, t, taskMetad
             screenReaderLabel: taskMetadata[0]?.title || '',
         },
         {
-            ariaLabel: t('confirm'),
             isVisible: () => true,
             component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
             text: t('confirm'),

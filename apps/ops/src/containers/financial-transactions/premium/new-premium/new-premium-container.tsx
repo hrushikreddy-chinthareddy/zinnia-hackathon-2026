@@ -42,11 +42,10 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
         const query = buildNewPremiumRequestBody(premium);
 
         return validateOneTimePremium(policy.product?.planCode, policy.policyNumber, query);
-    }
+    };
 
     const steps: Step[] = [
         {
-            ariaLabel: startLabel,
             component: (
                 <StartStep
                     parentPage={ParentPage.Premiums}
@@ -64,14 +63,12 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
             text: startLabel,
         },
         {
-            ariaLabel: amountLabel,
             component: <Amount policy={policy} />,
             screenReaderLabel: amountLabel,
             index: 1,
             text: amountLabel,
         },
         {
-            ariaLabel: payorLabel,
             component: (
                 <PayorStep
                     parentPage={ParentPage.Premiums}
@@ -86,7 +83,6 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
             text: payorLabel,
         },
         {
-            ariaLabel: paymentLabel,
             component: (
                 <PaymentStep
                     parentPage={ParentPage.Premiums}
@@ -102,14 +98,12 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
             text: paymentLabel,
         },
         {
-            ariaLabel: summaryLabel,
             component: <Summary policy={policy} />,
             screenReaderLabel: summaryLabel,
             index: 4,
             text: summaryLabel,
         },
         {
-            ariaLabel: confirmLabel,
             component: <Confirm policy={policy} />,
             screenReaderLabel: confirmLabel,
             index: 5,

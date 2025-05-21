@@ -12,6 +12,7 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { DEFAULT_STEP_WIDTH } from '@deps/types/constants';
 
+import styles from './workflow-container.module.css';
 import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 
@@ -47,7 +48,7 @@ const WorkflowContent = ({ policy, steps, stepWidth = DEFAULT_STEP_WIDTH }: Work
     const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
 
     return (
-        <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col">
+        <div>
             <GlobalValuesBar
                 carrierId={policy?.carrierId}
                 marketingName={marketingName}
@@ -60,15 +61,10 @@ const WorkflowContent = ({ policy, steps, stepWidth = DEFAULT_STEP_WIDTH }: Work
                 tooltip={tooltip}
                 variant={variant}
             />
-
-            <ProgressBarSteps
-                classNames={`grid-cols-${steps.length}`}
-                currentStepIndex={Number(currentStepIndex)}
-                onClick={handleClick}
-                steps={steps}
-                stepWidth={stepWidth}
-            />
-            <div className="flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">{steps[currentStepIndex].component}</div>
+            <div className={styles.contentContainer}>
+                <ProgressBarSteps currentStepIndex={Number(currentStepIndex)} onClick={handleClick} steps={steps} stepWidth={stepWidth} />
+                <div className={styles.stepsContainer}>{steps[currentStepIndex].component}</div>
+            </div>
         </div>
     );
 };

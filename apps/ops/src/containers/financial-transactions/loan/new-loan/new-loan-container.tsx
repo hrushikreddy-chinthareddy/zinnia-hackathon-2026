@@ -48,7 +48,6 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
 
     const steps: Step[] = [
         {
-            ariaLabel: startLabel,
             component: (
                 <StartStep
                     parentPage={ParentPage.Loans}
@@ -66,14 +65,12 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
             text: startLabel,
         },
         {
-            ariaLabel: amountLabel,
             component: <Amount policy={policy} />,
             screenReaderLabel: amountLabel,
             index: 1,
             text: amountLabel,
         },
         {
-            ariaLabel: payeeLabel,
             component: (
                 <PayeesStep
                     parentPage={ParentPage.Loans}
@@ -88,40 +85,34 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
             text: payeeLabel,
         },
         {
-            ariaLabel: paymentLabel,
-            component: (
-                wireCheckPaymentsEnabled
-                    ? (
-                        <PaymentStepMoneyOut
-                            parentPage={ParentPage.Loans}
-                            policy={policy}
-                            setState={setNewLoan as PaymentStepSetState}
-                            state={newLoan}
-                            validateTransaction={validateCall}
-                        />
-                    ) : (
-                        <PaymentStep
-                            parentPage={ParentPage.Loans}
-                            policy={policy}
-                            setState={setNewLoan as PaymentStepSetState}
-                            state={newLoan}
-                            validateTransaction={validateCall}
-                        />
-                    )
+            component: wireCheckPaymentsEnabled ? (
+                <PaymentStepMoneyOut
+                    parentPage={ParentPage.Loans}
+                    policy={policy}
+                    setState={setNewLoan as PaymentStepSetState}
+                    state={newLoan}
+                    validateTransaction={validateCall}
+                />
+            ) : (
+                <PaymentStep
+                    parentPage={ParentPage.Loans}
+                    policy={policy}
+                    setState={setNewLoan as PaymentStepSetState}
+                    state={newLoan}
+                    validateTransaction={validateCall}
+                />
             ),
             screenReaderLabel: paymentLabel,
             index: 3,
             text: paymentLabel,
         },
         {
-            ariaLabel: summaryLabel,
             component: <Summary policy={policy} />,
             screenReaderLabel: summaryLabel,
             index: 4,
             text: summaryLabel,
         },
         {
-            ariaLabel: confirmLabel,
             component: <Confirm policy={policy} />,
             screenReaderLabel: confirmLabel,
             index: 5,

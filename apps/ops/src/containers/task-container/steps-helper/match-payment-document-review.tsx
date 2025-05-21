@@ -32,7 +32,6 @@ export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, 
 
     const staticSteps: Step[] = [
         {
-            ariaLabel: t('confirm'),
             isVisible: () => true,
             component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
             text: t('confirm'),

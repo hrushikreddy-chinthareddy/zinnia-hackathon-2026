@@ -17,7 +17,6 @@ export const getSuitabilitySteps = ({
 }: GetStepsProps) => {
     const steps: Step[] = [
         {
-            ariaLabel: taskMetadata[0]?.title || '',
             isVisible: () => true,
             component: <TaskReviewStep caseId={caseId} clientCode={carrierId} taskInfoLink={taskInfoLink} taskType={taskType} />,
             text: t('tabs.start'),
@@ -26,7 +25,6 @@ export const getSuitabilitySteps = ({
             screenReaderLabel: taskMetadata[0]?.title || '',
         },
         {
-            ariaLabel: t('tabs.suitabilityForm'),
             isVisible: () => isReadyForDataEntry,
             component: (
                 <TaskFormStep
@@ -42,7 +40,6 @@ export const getSuitabilitySteps = ({
             screenReaderLabel: t('tabs.suitabilityForm'),
         },
         {
-            ariaLabel: t('tabs.summary'),
             isVisible: () => isReadyForDataEntry,
             component: (
                 <TaskFormStep taskInfoLink={taskInfoLink} readonly={true} isSubmit={true} taskMetadata={taskMetadata[0]}></TaskFormStep>
@@ -53,7 +50,6 @@ export const getSuitabilitySteps = ({
         },
 
         {
-            ariaLabel: t('confirm'),
             isVisible: () => true,
             component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
             text: t('confirm'),

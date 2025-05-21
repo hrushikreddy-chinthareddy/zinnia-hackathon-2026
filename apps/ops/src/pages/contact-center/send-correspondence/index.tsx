@@ -119,7 +119,6 @@ const SendCorrespondence = ({
 
     const steps: Step[] = [
         {
-            ariaLabel: formSelectionLabel,
             component: (
                 <StatementSelection
                     applicableStatement={applicableStatement}
@@ -133,14 +132,12 @@ const SendCorrespondence = ({
             text: formSelectionLabel,
         },
         {
-            ariaLabel: correspondenceLabel,
             component: <Correspondence communicationOptions={communicationOptions} policy={policy} submitRequest={handleSubmitRequest} />,
             screenReaderLabel: correspondenceLabel,
             index: 1,
             text: correspondenceLabel,
         },
         {
-            ariaLabel: confirmLabel,
             component: <Confirm shouldShowCaseButton={shouldShowCaseButton} />,
             screenReaderLabel: confirmLabel,
             index: 2,

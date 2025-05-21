@@ -38,12 +38,7 @@ const TabGroupContent = ({ steps, policy }: TabGroupContainerProps) => {
                 tooltip={tooltip}
                 variant={variant}
             />
-            <ProgressBarSteps
-                classNames={`grid-cols-${steps.length}`}
-                currentStepIndex={Number(currentStepIndex)}
-                onClick={handleClick}
-                steps={steps}
-            />
+            <ProgressBarSteps currentStepIndex={Number(currentStepIndex)} onClick={handleClick} steps={steps} />
             <div className="my-2 flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">
                 {steps[currentStepIndex].component}
             </div>

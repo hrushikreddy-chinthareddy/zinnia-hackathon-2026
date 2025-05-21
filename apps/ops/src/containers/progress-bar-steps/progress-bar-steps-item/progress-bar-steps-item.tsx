@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 
-import ClickWrapper from '@deps/components/click-container/click-wrapper';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { ProgressBarStepsTest } from '@deps/jest/constants/test-id-constants';
 import { ReactComponent as CheckmarkIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
+import styles from './progress-bar-steps-item.module.css';
+
 export interface Step {
-    ariaLabel: string;
     component?: JSX.Element;
     index: number;
     isVisible?: () => boolean;
@@ -14,6 +14,7 @@ export interface Step {
     isDisabled?: boolean;
     screenReaderLabel: string;
     text: string;
+    stepWidth?: number;
 }
 
 interface ProgressBarStepsItemProps extends Step {
@@ -29,7 +30,7 @@ const ProgressBarStepsItem = ({
     isDisabled,
     isActive,
     screenReaderLabel = '',
-    ariaLabel: clickContainerAriaLabel = '',
+    stepWidth,
 }: ProgressBarStepsItemProps) => {
     const isCompletedAndNotDisabled = isCompleted && !isDisabled;
     const icon = isCompletedAndNotDisabled ? (
@@ -38,44 +39,25 @@ const ProgressBarStepsItem = ({
         `${index + 1}. `
     );
 
-    const stepsContainerClasses = clsx('relative flex h-full flex-row gap-1 items-center justify-center', {
-        'pointer-events-none bg-gray-50': isDisabled,
-        'hover:h-13 bg-white': !isDisabled,
-    });
-
-    const colorBarClasses = clsx('absolute left-0 right-0 top-0 z-10 w-full group-hover:h-1.5 group-active:h-1.5', {
-        'bg-primary': !isDisabled && isActive,
-        'h-1.5': isActive,
-    });
-
-    const contentContainerClasses = clsx(
-        'flex flex-row items-center justify-center sm:focus-visible:outline sm:focus-visible:outline-2 sm:focus-visible:outline-offset-4 sm:focus-visible:outline-semantic-focus sm:focus-visible:rounded'
-    );
-
-    const contentClasses = clsx('text-center', {
-        'text-gray-600': isDisabled,
-    });
-
-    const stepsItemContainer = (
-        <div className={stepsContainerClasses} data-testid={ProgressBarStepsTest.StepsContainer}>
-            <div className={contentContainerClasses} data-testid={ProgressBarStepsTest.ContentContainer} tabIndex={isDisabled ? -1 : 0}>
-                {isCompletedAndNotDisabled && icon}
-                <Content
-                    details={`${!isCompletedAndNotDisabled ? icon : ''}${text}`}
-                    variant={ContentVariant.BodySm}
-                    className={contentClasses}
-                    data-testid={ProgressBarStepsTest.StepText}
-                />
-                <div className="sr-only">{screenReaderLabel}</div>
-            </div>
-        </div>
-    );
-
     return (
-        <ClickWrapper onClick={onClick} classes="h-14 !p-0 focus-within" ariaLabel={clickContainerAriaLabel} isDisabled={isDisabled}>
-            <div className={colorBarClasses}></div>
-            {stepsItemContainer}
-        </ClickWrapper>
+        <button
+            onClick={onClick}
+            className={clsx(styles.stepButton, isActive && styles.active, isDisabled && styles.disabled)}
+            disabled={isDisabled}
+            style={{ width: `${stepWidth}px` }}
+            data-testid={ProgressBarStepsTest.StepsContainer}
+        >
+            <div className={clsx(styles.colorBar, isActive && styles.active, isDisabled && styles.disabled)}></div>
+
+            {isCompletedAndNotDisabled && icon}
+            <Content
+                details={`${!isCompletedAndNotDisabled ? icon : ''}${text}`}
+                variant={ContentVariant.BodySm}
+                className={styles.stepContent}
+                data-testid={ProgressBarStepsTest.StepText}
+            />
+            <div className="sr-only">{screenReaderLabel}</div>
+        </button>
     );
 };
 

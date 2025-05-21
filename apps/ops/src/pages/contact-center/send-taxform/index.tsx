@@ -132,7 +132,6 @@ const SendTaxForms = ({
 
     const steps: Step[] = [
         {
-            ariaLabel: formSelectionLabel,
             component: (
                 <TaxFormsSelection
                     policy={policy}
@@ -148,14 +147,12 @@ const SendTaxForms = ({
             text: formSelectionLabel,
         },
         {
-            ariaLabel: CorrespondenceLabel,
             component: <Correspondence communicationOptions={communicationTypes} policy={policy} submitRequest={handleSubmitRequest} />,
             screenReaderLabel: CorrespondenceLabel,
             index: 1,
             text: CorrespondenceLabel,
         },
         {
-            ariaLabel: confirmLabel,
             component: <ConfirmComponent shouldShowCaseButton={shouldShowCaseButton} formNames={['']} />,
             screenReaderLabel: confirmLabel,
             index: 2,

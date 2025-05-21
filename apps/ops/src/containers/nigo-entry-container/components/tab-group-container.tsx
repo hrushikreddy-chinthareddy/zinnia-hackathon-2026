@@ -47,7 +47,7 @@ const TabGroupContent = ({
     docType = '',
     documentData,
     policyNumber,
-    clientCode
+    clientCode,
 }: TabGroupContainerProps) => {
     const { featureFlags } = useOptimizely();
     const [caseTableData, setCaseTableData] = useState<CaseTableData>({ cases: [], total: 0, loading: true, error: false });
@@ -121,7 +121,9 @@ const TabGroupContent = ({
     };
 
     const openSideSheet = () => {
-        const content = <DocumentPortalPanel policyNumber={policyNumber} clientCode={clientCode} documentNumber={documentNumber} docType={docType} />;
+        const content = (
+            <DocumentPortalPanel policyNumber={policyNumber} clientCode={clientCode} documentNumber={documentNumber} docType={docType} />
+        );
         sideSheet.changeSideSheetContent(t('nigoEntry.documentPanel.documents'), content);
         sideSheet.handleOpen(true);
     };
@@ -162,7 +164,6 @@ const TabGroupContent = ({
 
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
-
             <GlobalValuesBar
                 carrierId={clientCode}
                 marketingName={marketingName}
@@ -232,12 +233,7 @@ const TabGroupContent = ({
                 </NavElement>
             </div>
 
-            <ProgressBarSteps
-                classNames={`grid-cols-${steps.length}`}
-                currentStepIndex={Number(currentStepIndex)}
-                onClick={handleClick}
-                steps={steps}
-            />
+            <ProgressBarSteps currentStepIndex={Number(currentStepIndex)} onClick={handleClick} steps={steps} />
             <div className="my-2 flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">
                 {steps[currentStepIndex].component}
             </div>
@@ -246,7 +242,7 @@ const TabGroupContent = ({
 };
 
 const TabGroupContainer = ({ steps, policy, documentNumber, docType, documentData, policyNumber, clientCode }: TabGroupContainerProps) => {
-    const caseDetails = {policyNumber, carrierId: clientCode }
+    const caseDetails = { policyNumber, carrierId: clientCode };
 
     return (
         <DiaryNotesProvider caseDetails={caseDetails as any}>
