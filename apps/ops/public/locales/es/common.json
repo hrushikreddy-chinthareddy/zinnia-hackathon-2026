@@ -769,7 +769,9 @@
                     "freeLookCancelBannerLink": "Cancelar póliza",
                     "caseBannerLink": "Ver casos",
                     "caseBannerText_one": "Esta póliza tiene {{count}} caso abierto",
-                    "caseBannerText_other": "Esta póliza tiene {{count}} casos abiertos"
+                    "caseBannerText_other": "Esta póliza tiene {{count}} casos abiertos",
+                    "errorTitle": "¡Ups! Nos encontramos con un problema técnico...",
+                    "errorSubtitle": "No pudimos recuperar los datos para la póliza {{policyNumber}}. Intenta refrescar tu navegador."
                 }
             },
             "empty": {

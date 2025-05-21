@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { FASTQualTypes } from '@deps/models/case/withdrawal/case';
-import { searchPolicy } from '@deps/queries/api/policies';
+import { fetchPolicy, searchPolicy } from '@deps/queries/api/policies';
 
 type ContractAccountInfo = {
     qualType: FASTQualTypes | '';
@@ -21,8 +21,12 @@ export const useContractAccountInfo = (contract: string, clientId: string): Cont
     useEffect(() => {
         const getDetails = async () => {
             try {
-                const searchResults = await searchPolicy({ policyNumber: contract , carrierIds: [clientId.toUpperCase()] }, { limit: 1, offset: 0 });
-                const acctInfoResponse = searchResults.results[0];
+                const searchResults = await searchPolicy(
+                    { policyNumber: contract, carrierIds: [clientId.toUpperCase()] },
+                    { limit: 1, offset: 0 }
+                );
+                const acctInfoResponse = await fetchPolicy(searchResults.results[0].policyNumber, searchResults.results[0].planCode);
+
                 setQualType((acctInfoResponse?.qualificationType as FASTQualTypes) || '');
                 setIssueState(acctInfoResponse?.issueState || '');
                 setIssueDate(acctInfoResponse?.policyDates?.issueDate || '');
@@ -31,10 +35,9 @@ export const useContractAccountInfo = (contract: string, clientId: string): Cont
             } catch (e) {
                 console.error('getDetails::FAST::Error retrieving account info', e);
             }
-      };
+        };
 
-
-      getDetails();
+        getDetails();
     }, [contract, clientId]);
 
     return { qualType, issueState, issueDate, contractStatus, planCode };

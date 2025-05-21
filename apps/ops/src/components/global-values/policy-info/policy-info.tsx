@@ -1,3 +1,4 @@
+import { Skeleton } from '@radix-ui/themes';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
@@ -118,6 +119,7 @@ export const PolicyProductMarketingName = ({ marketingName, openSideSheet }: Par
 export interface PolicyInfoProps {
     carrierId?: string;
     highlight?: string;
+    loadingPolicyDetails?: boolean; // Whether details are still loading and we should use partial data
     marketingName?: string;
     openSideSheet?: () => void;
     planCode?: string;
@@ -134,6 +136,7 @@ export interface PolicyInfoProps {
 const PolicyInfo = ({
     carrierId,
     highlight,
+    loadingPolicyDetails = false,
     marketingName,
     openSideSheet,
     planName,
@@ -147,14 +150,19 @@ const PolicyInfo = ({
 }: PolicyInfoProps) => {
     return (
         <div className="flex items-center">
+            <Skeleton loading={loadingPolicyDetails && !carrierId} width="48px" height="48px" className="mr-1" />
             <PolicyCarrierLogo carrierId={carrierId} tooltipPlacements={tooltipPlacements} />
             <div className="flex w-max flex-col">
                 <div className="flex flex-row">
+                    <Skeleton loading={loadingPolicyDetails && !productType} width="36px" height="28px" />
                     <PolicyProductType productType={productType} tooltipPlacements={tooltipPlacements} openSideSheet={openSideSheet} />
+                    <Skeleton loading={loadingPolicyDetails && !marketingName && !planName} width="80px" height="28px" />
                     <PolicyProductMarketingName marketingName={marketingName || planName} openSideSheet={openSideSheet} />
                 </div>
                 <div className="flex items-center">
+                    <Skeleton loading={loadingPolicyDetails && !policyNumber} width="128px" height="24px" />
                     <PolicyNumber policyNumber={policyNumber} highlight={highlight} />
+                    <Skeleton loading={loadingPolicyDetails && !status} width="60px" height="34px" className="ml-2" />
                     <PolicyBadgeStatus
                         status={status}
                         tooltip={tooltip}

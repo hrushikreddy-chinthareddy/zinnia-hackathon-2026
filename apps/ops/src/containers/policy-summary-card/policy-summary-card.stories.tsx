@@ -1,5 +1,6 @@
 import { Meta } from '@storybook/react';
 
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { AllocationOption, ArrangementType, Policy, PolicyFeatureFeatureType, Reason } from '@deps/models/policy/sor-policy';
 
@@ -71,7 +72,7 @@ const mockPendingLapsePolicy: Policy = {
 export const Active = () => {
     return (
         <div className="max-w-[1130px] p-6">
-            <PolicyQuickView policy={mockPolicy} />
+            <PolicyQuickView policyDetails={new PolicyDetails(mockPolicy)} isLoading={false} caseData={undefined} />
         </div>
     );
 };
@@ -79,7 +80,7 @@ export const Active = () => {
 export const Pending = () => {
     return (
         <div className="max-w-[1130px] p-6">
-            <PolicyQuickView policy={mockPendingLapsePolicy} />
+            <PolicyQuickView policyDetails={new PolicyDetails(mockPendingLapsePolicy)} isLoading={false} caseData={undefined} />
         </div>
     );
 };

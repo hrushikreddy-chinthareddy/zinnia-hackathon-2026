@@ -6,6 +6,7 @@ import { MOCK_COOKIE_KEY } from '@deps/queries/api-utils/serverClientUtils';
 import { getMockPolicy } from '@deps/services/mocks/mock-policy.helpers';
 import { SearchViewQuery } from '@deps/types/search';
 
+export const getPolicyQueryKey = 'policyData';
 export const getPolicyQuery = async (id: string, planCode: string) => {
     const isMocked = hasCookie(MOCK_COOKIE_KEY);
     if (isMocked) {

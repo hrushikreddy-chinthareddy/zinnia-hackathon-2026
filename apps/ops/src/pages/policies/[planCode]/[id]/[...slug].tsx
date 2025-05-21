@@ -1,9 +1,8 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { FgaRoles } from '@xd/utils/dist';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useContext } from 'react';
 
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
@@ -27,7 +26,6 @@ import WithdrawalsSubPage from '@deps/containers/withdrawals-sub-page/withdrawal
 import { PeopleRolesFilterProvider } from '@deps/contexts/PeopleRolesFilter';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
@@ -37,10 +35,9 @@ import { PolicyAllOfPartiesItem, Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
-import { getPolicyQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
+import { getPolicyQuery, getPolicyQueryKey } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
-import { PolicySearchResponse } from '@deps/types/search';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -62,10 +59,6 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps)
     const { id, slug, planCode } = query;
     const { partyId } = usePermissionsContext();
 
-    const { policySearchFilters } = useContext(PolicySearchFiltersContext);
-    const { searchValue, limit, offset } = policySearchFilters;
-    const queryClient = useQueryClient();
-
     useSegmentPageTracker(user, SegmentPageName.PolicyDetails, {
         planCode: planCode,
         policyNumber: id,
@@ -78,15 +71,8 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps)
         error: error,
         refetch: refetchPolicy,
     } = useQuery({
-        queryKey: ['policyData', id, planCode],
+        queryKey: [getPolicyQueryKey, id, planCode],
         queryFn: () => getPolicyQuery(id as string, planCode as string),
-        initialData: () => {
-            const initialData = queryClient
-                .getQueryData<PolicySearchResponse>(['policyData', searchValue, limit, offset])
-                ?.results?.find(policy => policy.policyNumber == id);
-
-            return initialData;
-        },
         placeholderData: previousData => previousData,
     });
 

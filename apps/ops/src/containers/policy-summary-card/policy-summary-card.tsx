@@ -1,3 +1,4 @@
+import { Skeleton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
@@ -5,6 +6,7 @@ import { useTranslation } from 'next-i18next';
 import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
 import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
+import CardInfo from '@deps/components/card/card-info/card-info';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize } from '@deps/components/fields/field';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
@@ -55,8 +57,10 @@ import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/
 import { initialDeathClaimExists } from '@deps/queries/api/web-non-financial';
 import { getCasesQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
+import { getPolicyQuery, getPolicyQueryKey } from '@deps/queries/tanstack/policyQueries/policyQueries';
+import { ReactComponent as CogIcon } from '@deps/styles/elements/icons/icons_outlined/cog.svg';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT, FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
-import { SearchViewQuery } from '@deps/types/search';
+import { CaseSearchErrorResponse, CaseSearchResponse, PolicySearchResult, SearchViewQuery } from '@deps/types/search';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import AnnuityQuickView from './active-quick-view/annuity';
@@ -74,11 +78,12 @@ import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header
 import { getPolicyQuickLinks } from '../quick-links/quick-links.helpers';
 
 interface SummaryCardProps extends PropsWithChildren {
-    policy: Policy;
+    policySearchResult: PolicySearchResult;
 }
 
 interface KeyValuesBarProps {
     policy: Policy;
+    loadingPolicyDetails?: boolean;
 }
 
 const getPolicyHighlighter = ({ firstName, lastName, policyNumber, ssn }: SearchViewQuery) => {
@@ -102,12 +107,12 @@ const getPolicyHighlighter = ({ firstName, lastName, policyNumber, ssn }: Search
     return descriptionListHighlighter;
 };
 
-const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
+const QuickViewHeader = ({ policy, loadingPolicyDetails = false }: { loadingPolicyDetails?: boolean } & BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
     const { searchValue } = useContext(DashboardContext);
     const { partyId: userPartyId, sessionId } = usePermissionsContext();
 
-    const { carrierId, marketingName, planCode, planName, policyNumber, policyStatus, productType } = policy;
+    const { carrierId, marketingName, planName, policyNumber, policyStatus, productType } = policy;
     const totalMinRequiredAmount = getTotalMinRequiredAmount(policy);
     const globalValuesData = useMemo(() => policyDataToGlobalValues(policy, t), [policy, t]);
 
@@ -132,6 +137,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
             <div className="flex w-full items-end justify-between">
                 <div className="w-full flex-wrap lg:flex lg:items-end lg:justify-between">
                     <GlobalPolicyInfo
+                        loadingPolicyDetails={loadingPolicyDetails}
                         carrierId={carrierId}
                         marketingName={marketingName}
                         planName={planName}
@@ -151,12 +157,14 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
                         openSideSheet={openDetailsSidesheet}
                     />
                     <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 lg:mt-0">
-                        <QuickLinks
-                            userPartyId={userPartyId}
-                            policy={policy}
-                            links={getPolicyQuickLinks(t, policy)}
-                            sessionId={sessionId}
-                        />
+                        <Skeleton loading={loadingPolicyDetails} maxWidth="550px" height="24px">
+                            <QuickLinks
+                                userPartyId={userPartyId}
+                                policy={policy}
+                                links={getPolicyQuickLinks(t, policy)}
+                                sessionId={sessionId}
+                            />
+                        </Skeleton>
                     </div>
                 </div>
             </div>
@@ -165,7 +173,7 @@ const QuickViewHeader = ({ policy }: BasePolicyComponentArgs) => {
     );
 };
 
-const KeyValuesBar: React.FC<KeyValuesBarProps> = ({ policy }) => {
+function KeyValuesBar({ policy, loadingPolicyDetails = false }: KeyValuesBarProps) {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
     const { partyId: userPartyId, sessionId } = usePermissionsContext();
     const searchableDetailsDto = generatePolicyAnnuityDetailsDto(policy);
@@ -181,23 +189,27 @@ const KeyValuesBar: React.FC<KeyValuesBarProps> = ({ policy }) => {
         <div>
             <hr className="mb-4 h-0.5 border-none bg-gray-100 md:mb-6 lg:mb-4" />
             <div className="relative flex items-center">
-                <SelectSearch
-                    classNames="flex flex-col gap-1 max-w-[328px] w-full"
-                    labelClassNames="mr-4 hidden md:block"
-                    size={FieldSize.Small}
-                    label={t('dashboard.quickSearch.label') || ''}
-                    placeHolder={t('dashboard.quickSearch.placeholder') || ''}
-                    values={searchableDetailsData}
-                    errorMessageLink={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`}
-                    group={true}
-                    dropUp
-                    sessionId={sessionId}
-                    userPartyId={userPartyId}
-                />
+                {loadingPolicyDetails ? (
+                    <Skeleton loading={loadingPolicyDetails} width="300px" height="38px" />
+                ) : (
+                    <SelectSearch
+                        classNames="flex flex-col gap-1 max-w-[328px] w-full"
+                        labelClassNames="mr-4 hidden md:block"
+                        size={FieldSize.Small}
+                        label={t('dashboard.quickSearch.label') || ''}
+                        placeHolder={t('dashboard.quickSearch.placeholder') || ''}
+                        values={searchableDetailsData}
+                        errorMessageLink={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`}
+                        group={true}
+                        dropUp
+                        sessionId={sessionId}
+                        userPartyId={userPartyId}
+                    />
+                )}
             </div>
         </div>
     );
-};
+}
 
 interface QuickViewProp extends PropsWithChildren {
     children: ReactNode;
@@ -445,7 +457,7 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
                 />
             )}
 
-            {(!isNewDeathClaim && zlCaseId) && (
+            {!isNewDeathClaim && zlCaseId && (
                 <BannerAlert
                     variant={BannerVariant.Warning}
                     cta={{
@@ -459,6 +471,27 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
     );
 };
 
+const LabelContentSkeleton = ({ contentLines = 1 }: { contentLines?: number }) => (
+    <div className="flex flex-col gap-1">
+        <Skeleton width="80px" height="16px" />
+        {Array.from({ length: contentLines }).map((_, index) => (
+            <Skeleton key={index} width="130px" height="16px" />
+        ))}
+    </div>
+);
+
+const QuickViewSkeleton = () => {
+    return (
+        <QuickViewRoot title={''}>
+            <LabelContentSkeleton />
+            <LabelContentSkeleton />
+            <LabelContentSkeleton />
+            <LabelContentSkeleton />
+            <LabelContentSkeleton />
+            <LabelContentSkeleton />
+        </QuickViewRoot>
+    );
+};
 const QuickViewModule = ({ policy }: BasePolicyComponentArgs) => {
     if (policy.isLife) {
         switch (policy.policyStatus) {
@@ -478,6 +511,25 @@ enum SideSheetViews {
     EMAIL = 'EMAIL',
     ADDRESS = 'ADDRESS',
 }
+
+const OwnerInfoSkeleton = () => {
+    return (
+        <QuickViewRoot title={' '} gridColumns={1}>
+            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
+                <LabelContentSkeleton />
+                <LabelContentSkeleton />
+            </div>
+            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
+                <LabelContentSkeleton />
+                <LabelContentSkeleton />
+            </div>
+            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
+                <LabelContentSkeleton />
+                <LabelContentSkeleton contentLines={3} />
+            </div>
+        </QuickViewRoot>
+    );
+};
 
 const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
@@ -511,7 +563,7 @@ const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
     const addresses = owner?.bestAvailableAddress ? [owner?.bestAvailableAddress] : undefined;
     const preferredAddressIndicator = owner?.preferredAddress?.addressId;
     const [currentAddresses, setCurrentAddresses] = useState<Address[]>(sortAddressesByType({ addresses, preferredAddressIndicator }));
-    const bestAvailAddresss = currentAddresses[0] as AddressWithPending;
+    const bestAvailAddress = currentAddresses[0] as AddressWithPending;
 
     const sideSheetContent = (type: SideSheetViews) => {
         const action = NonFinancialTransactionActions.Edit;
@@ -567,14 +619,14 @@ const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                 );
                 content = (
                     <SideSheetAddress
-                        isCurrentMailingAddress={preferredAddressIndicator === bestAvailAddresss.addressId}
+                        isCurrentMailingAddress={preferredAddressIndicator === bestAvailAddress.addressId}
                         isOnlyAddress={currentAddresses?.length === 1}
                         onCancel={() => sideSheet.handleOpen(false)}
                         party={owner?.party}
                         planCode={policy.planCode}
                         policyNumber={policy.policyNumber}
                         setCurrentAddresses={setCurrentAddresses}
-                        updateAddress={bestAvailAddresss ?? undefined}
+                        updateAddress={bestAvailAddress ?? undefined}
                     />
                 );
         }
@@ -618,6 +670,7 @@ const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                     <Content details={owner?.formattedBirthDate} variant={ContentVariant.BodySm} pii={true} />
                 </div>
                 <div>
+                    {' '}
                     <div className="flex gap-1">
                         <Label id="policy-owner-phone" variant={LabelVariant.FieldLabel} label={contactNumberLabel} />
                         {bestAvailPhone?.isPending && <PendingTag />}
@@ -647,14 +700,14 @@ const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                 <div>
                     <div className="flex gap-1">
                         <Label id="policy-owner-address" variant={LabelVariant.FieldLabel} label={t('colDefs:owner.mailingAddress')} />
-                        {bestAvailAddresss?.isPending && <PendingTag />}
-                        {canEditPolicy && bestAvailAddresss && (
+                        {bestAvailAddress?.isPending && <PendingTag />}
+                        {canEditPolicy && bestAvailAddress && (
                             <IconButton aria-describedby="policy-owner-address" onClick={() => openSideSheet(SideSheetViews.ADDRESS)}>
                                 <Icon type={IconType.EDIT_ALT} height={16} width={16} />
                             </IconButton>
                         )}
                     </div>
-                    {(bestAvailAddresss && <FormattedAddress address={bestAvailAddresss} />) || DEFAULT_ERROR_STRING}
+                    {(bestAvailAddress && <FormattedAddress address={bestAvailAddress} />) || DEFAULT_ERROR_STRING}
                 </div>
             </div>
         </QuickViewRoot>
@@ -675,25 +728,81 @@ const ActiveQuickView = ({ policy }: BasePolicyComponentArgs) => {
     );
 };
 
-export const PolicyQuickView: React.FC<SummaryCardProps> = ({ policy }) => {
-    const policyDetails = new PolicyDetails(policy);
+export function PolicyQuickView({
+    policyDetails,
+    caseData,
+    isLoading = false,
+}: {
+    policyDetails: PolicyDetails;
+    caseData: CaseSearchResponse | CaseSearchErrorResponse | undefined;
+    isLoading: boolean;
+}) {
+    return (
+        <section data-testid={CardDetailsTest.CARD} className={styles.quickViewCard}>
+            <QuickViewHeader policy={policyDetails} loadingPolicyDetails={isLoading} />
+            {!isLoading && <StatusBanner policy={policyDetails} casesTotal={caseData && 'total' in caseData ? caseData.total : 0} />}
+            <div data-testid={CardColumnsTest.COLUMNS} className={styles.policyQuickColumns}>
+                {isLoading ? <OwnerInfoSkeleton /> : <OwnerInformation policy={policyDetails} />}
+                {isLoading ? <QuickViewSkeleton /> : <QuickViewModule policy={policyDetails} />}
+            </div>
+            <KeyValuesBar policy={policyDetails?.policy} loadingPolicyDetails={isLoading} />
+        </section>
+    );
+}
+
+export default function PolicySummaryCard({ policySearchResult }: SummaryCardProps) {
+    const { t } = useTranslation();
+    const {
+        data: policyDetails = new PolicyDetails(),
+        isLoading: isLoadingPolicyDetails,
+        isError,
+    } = useQuery({
+        queryKey: [getPolicyQueryKey, policySearchResult?.policyNumber, policySearchResult?.planCode],
+        queryFn: () => getPolicyQuery(policySearchResult?.policyNumber, policySearchResult?.planCode),
+        select: data => {
+            return new PolicyDetails(data);
+        },
+    });
+
     const { featureFlags } = useOptimizely();
 
     const { data: caseData } = useQuery({
-        queryKey: ['caseData', policyDetails.policyNumber, featureFlags],
-        queryFn: () => getCasesQuery(policyDetails.policyNumber, featureFlags),
+        queryKey: ['caseData', policySearchResult.policyNumber, featureFlags],
+        queryFn: () => getCasesQuery(policySearchResult.policyNumber, featureFlags),
         placeholderData: previousData => previousData,
     });
 
-    return (
-        <section data-testid={CardDetailsTest.CARD} className={styles.quickViewCard}>
-            <QuickViewHeader policy={policyDetails} />
-            <StatusBanner policy={policyDetails} casesTotal={caseData && 'total' in caseData ? caseData.total : 0} />
-            <div data-testid={CardColumnsTest.COLUMNS} className={styles.policyQuickColumns}>
-                <OwnerInformation policy={policyDetails} />
-                <QuickViewModule policy={policyDetails} />
-            </div>
-            <KeyValuesBar policy={policy} />
-        </section>
-    );
-};
+    const partialPolicyDetails = useMemo(() => {
+        if (!policySearchResult) return new PolicyDetails();
+
+        // Create a partial policy object with available data
+        const partialPolicy: Partial<Policy> = {
+            policyNumber: policySearchResult.policyNumber,
+            carrierId: policySearchResult.carrierId,
+            policyStatus: policySearchResult.policyStatus?.toUpperCase() as PolicyStatus,
+            planCode: policySearchResult.planCode,
+        };
+
+        // Filter out undefined values
+        const filteredPolicy = Object.fromEntries(Object.entries(partialPolicy).filter(([, value]) => value !== undefined));
+
+        return new PolicyDetails(filteredPolicy as Policy);
+    }, [policySearchResult]);
+
+    if (isError) {
+        return (
+            <section className={`${styles.quickViewCard}`}>
+                <CardInfo
+                    icon={<CogIcon className="text-semantic-error" height={50} width={50} />}
+                    title={t('dashboard.search.results.policySummaryCard.errorTitle')}
+                    subtitle={t('dashboard.search.results.policySummaryCard.errorSubtitle', {
+                        policyNumber: policySearchResult?.policyNumber,
+                    })}
+                    className="self-center"
+                />
+            </section>
+        );
+    }
+    const currentPolicyDetails = isLoadingPolicyDetails ? partialPolicyDetails : policyDetails;
+    return <PolicyQuickView policyDetails={currentPolicyDetails} caseData={caseData} isLoading={isLoadingPolicyDetails} />;
+}

@@ -866,7 +866,9 @@
                     "freeLookCancelBannerLink": "Annuler la police",
                     "caseBannerLink": "Voir les cas",
                     "caseBannerText_one": "Cette politique a {{count}} cas ouvert",
-                    "caseBannerText_other": "Cette politique a {{count}} cas ouverts"
+                    "caseBannerText_other": "Cette politique a {{count}} cas ouverts",
+                    "errorTitle": "Oh non ! Nous avons rencontré un problème technique...",
+                    "errorSubtitle": "Nous n'avons pas pu récupérer les données pour la police {{policyNumber}}. Essayez de rafraîchir votre navigateur."
                 }
             },
             "empty": {

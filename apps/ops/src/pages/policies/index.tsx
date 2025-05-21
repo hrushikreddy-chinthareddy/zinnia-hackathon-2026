@@ -11,11 +11,12 @@ import PaginationControls from '@deps/components/pagination/pagination';
 import SearchBar, { SearchBarInitialValues } from '@deps/components/search/search-bar';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
-import { PolicyQuickView } from '@deps/containers/policy-summary-card/policy-summary-card';
+import PolicySummaryCard, { PolicyQuickView } from '@deps/containers/policy-summary-card/policy-summary-card';
 import SearchResults from '@deps/containers/search-results/search-results';
 import { PolicySearchFilters, PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
@@ -98,7 +99,7 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
         isFetching: policyDataFetching,
         error: policyDataError,
     } = useQuery({
-        queryKey: ['policyData', searchValue, limit, offset],
+        queryKey: ['searchPolicyData', searchValue, limit, offset],
         placeholderData: previousData => previousData,
         queryFn: () => getPoliciesQuery(searchValue, limit, offset),
         enabled: Object.keys(searchValue).length > 0,
@@ -213,17 +214,26 @@ const PolicyManagementDashboard = ({ user }: PolicyManagementDashboardProps) => 
                         isEmpty: policyData?.results?.length === 0 || !policyData?.results,
                         isError: !!policyDataError,
                         isIdle,
-                        isLoading: policyDataFetching,
+                        isLoading: false, // SearchResults won't handle loading state; we want to skeletonize policies instead
                         isSuccess:
                             policyDataFetching === false && (!!policyData?.results || (!!policyData && policyData?.results?.length > 0)),
                     }}
                 >
                     <>
-                        {policyData?.results
-                            ?.filter(p => p.policyNumber)
-                            .map(p => {
-                                return <PolicyQuickView key={'policy_' + p.policyNumber} policy={p} />;
-                            })}
+                        {policyDataFetching
+                            ? Array.from({ length: 5 }).map((_, index) => (
+                                  <PolicyQuickView
+                                      key={'policy_skeleton_' + index}
+                                      policyDetails={new PolicyDetails()}
+                                      caseData={undefined}
+                                      isLoading={true}
+                                  />
+                              ))
+                            : policyData?.results
+                                  ?.filter(p => p.policyNumber)
+                                  .map(p => {
+                                      return <PolicySummaryCard key={'policy_' + p.policyNumber} policySearchResult={p} />;
+                                  })}
                         {showPagination && (
                             <PaginationControls total={policyData.total} limit={limit} offset={offset} goToPage={goToPage} />
                         )}

@@ -15,9 +15,9 @@ import {
 } from '@deps/models/policy/sor-policy';
 import { client } from '@deps/queries/api-utils/client';
 import { isMockPolicyDetailsRequestEnabled, isMockPolicySearchRequestEnabled } from '@deps/services/api-config';
-import { mockPolicy } from '@deps/services/mocks/sor-policy';
+import { mockPolicy, mockPolicySearchResult } from '@deps/services/mocks/sor-policy';
 import { CheckTupleResponse } from '@deps/types/fga';
-import { PolicySearchResponse, SearchViewQuery } from '@deps/types/search';
+import { PolicyReferenceSearchResponse, SearchViewQuery } from '@deps/types/search';
 import { browserLogError, browserLogInfo, browserLogWarn } from '@deps/utils/browser-logging';
 import { fullyMaskPolicyResponse, lcPartyResponseSanitizer, policySanitizer, policySanitizerWithoutSSN } from '@deps/utils/sanitizers';
 import { logError, LoggingContext, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
@@ -86,17 +86,15 @@ export interface PolicyNotesInfoResponse {
 
 const baseUrl = baseAppUrl + '/api/policy/v1/policies';
 
-export const searchPolicy = async (query: SearchViewQuery, pagination?: PaginationParams): Promise<PolicySearchResponse> => {
+export const searchPolicy = async (query: SearchViewQuery, pagination?: PaginationParams): Promise<PolicyReferenceSearchResponse> => {
     const queries = new URLSearchParams();
-
     if (isMockPolicySearchRequestEnabled()) {
         return {
             count: 1,
             total: 1,
             next: '/policy/v1/policies/search?offset=5&limit=5',
             previous: '',
-            results: [mockPolicy],
-            failures: [],
+            results: [mockPolicySearchResult],
         };
     }
 
@@ -108,14 +106,14 @@ export const searchPolicy = async (query: SearchViewQuery, pagination?: Paginati
     }
 
     if (Object.keys(query).length >= 0) {
-        const { data } = await client.post<SearchViewQuery, AxiosResponse<PolicySearchResponse>>(
+        const { data } = await client.post<SearchViewQuery, AxiosResponse<PolicyReferenceSearchResponse>>(
             `${baseAppUrl}/api/policies/search?${queries.toString()}`,
             query
         );
         return data;
     }
 
-    return {} as PolicySearchResponse;
+    return {} as PolicyReferenceSearchResponse;
 };
 
 export const fetchPolicy = async (id?: string, planCode?: string): Promise<Policy | null> => {
@@ -377,33 +375,6 @@ export const getPolicyAccountInfoSSR = async (
         console.error('policies::getPolicyAccountInfoSSR::error', e);
         return null;
     }
-};
-
-/**
- * Makes an attempt to find a unique policy based on the policy number
- * If there is no planCode, it will try and search for a policy using the policy number
- * Only returns policyData if searching by policy number provides exactly one result
- * @param policyNumber
- * @param planCode
- * @returns
- */
-export const findUniquePolicy = async (policyNumber: string, planCode?: string): Promise<Policy | null> => {
-    if (!policyNumber) {
-        return null;
-    }
-
-    if (planCode) {
-        return await fetchPolicy(policyNumber, planCode);
-    } else {
-        // BPB - TODO: Remove once all cases have planCode
-        const searchResults = await searchPolicy({ policyNumber: policyNumber });
-        if (searchResults?.results?.length === 1) {
-            return searchResults.results[0];
-        }
-    }
-
-    // either no policy was found, or multiple policies were found.  Don't return a policy
-    return null;
 };
 
 type PolicyNotesQuery = {

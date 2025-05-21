@@ -291,7 +291,7 @@
         },
         "start": {
             "label": "Start",
-            "subtitle": "Here you can make changes to this policy’s beneficiary.",
+            "subtitle": "Here you can make changes to this policy's beneficiary.",
             "title": "Manage Beneficiaries"
         },
         "ownerInfo": {
@@ -770,6 +770,8 @@
                     "caseBannerLink": "View cases",
                     "caseBannerText_one": "This policy has {{count}} open case",
                     "caseBannerText_other": "This policy has {{count}} open cases",
+                    "errorTitle": "Uh oh!  We ran into a technical issue...",
+                    "errorSubtitle": "Data for policy {{policyNumber}} couldn't be retrieved.  Try refreshing your browser.",
                     "initialDeathNotification": "Initial Death Notification",
                     "initialDeathNotificationLink": "View death claim progress",
                     "NONQUALIFIED": "Non-Qualified Investment Account",
@@ -784,7 +786,7 @@
                 }
             },
             "empty": {
-                "title": "We couldn’t find a policy that matches your search.",
+                "title": "We couldn't find a policy that matches your search.",
                 "paragraph": "Don't worry, it's probably just a typo. Check your input and try again.",
                 "paragraphWithReset": "Don't worry, it's probably just a typo! Check your input and try again or reset search.",
                 "action": {
@@ -798,7 +800,7 @@
             },
             "start": {
                 "title": "Find a policy.",
-                "paragraph": "Search for a policy using the policy number, or owner’s name or Social Security number. We’ll return matches here."
+                "paragraph": "Search for a policy using the policy number, or owner's name or Social Security number. We'll return matches here."
             },
             "error": {
                 "title": "Uh oh! We ran into a technical issue...",
@@ -1356,10 +1358,10 @@
             "UI.EM.001": "Age of insured is greater than the maximum allowed.",
             "UI.EM.002": "Age of insured is less than the minimum allowed.",
             "UI.EM.003": "Sex of insured is missing.",
-            "UI.EM.004": "Product was sold in a state that doesn’t allow sales.",
+            "UI.EM.004": "Product was sold in a state that doesn't allow sales.",
             "UI.EM.006": "Coverage amount is greater than the maximum coverage for this product.",
             "UI.EM.007": "Coverage amount is less than the minimum coverage for this product.",
-            "UI.EM.008": "Product doesn’t allow this risk class.",
+            "UI.EM.008": "Product doesn't allow this risk class.",
             "UI.EM.010": "For this product, owner must be an individual.",
             "UI.EM.013": "There is a mismatch between the client code and plan code."
         }
@@ -2798,11 +2800,11 @@
                 "ytd": "YTD"
             },
             "contestability": {
-                "activeBadgeTooltip": "If there’s a death claim during the contestability period, the carrier will take extra care to verify the insured was honest during their application. Carrier may even contest the claim.",
+                "activeBadgeTooltip": "If there's a death claim during the contestability period, the carrier will take extra care to verify the insured was honest during their application. Carrier may even contest the claim.",
                 "activeBadgeLabel": "Active",
                 "contestability": "Contestability Period",
                 "endDate": "End date",
-                "inactiveBadgeTooltip": "If there’s a death claim during the contestability period, the carrier will take extra care to verify the insured was honest during their application. Carrier may even contest the claim. This policy’s contestability period ended on contestability end date after contestability period year(s).",
+                "inactiveBadgeTooltip": "If there's a death claim during the contestability period, the carrier will take extra care to verify the insured was honest during their application. Carrier may even contest the claim. This policy's contestability period ended on contestability end date after contestability period year(s).",
                 "inactiveBadgeLabel": "Inactive",
                 "startDate": "Start date"
             },
@@ -2851,7 +2853,7 @@
                 "productDetails": "Product Details",
                 "productMarketingName": "Product marketing name",
                 "productName": "Product name",
-                "productNameTooltip": "This is the product name that you’ll see referenced in internal documentation. It’s different from the product marketing name that’s used in correspondence and will be familiar to the owner.",
+                "productNameTooltip": "This is the product name that you'll see referenced in internal documentation. It's different from the product marketing name that's used in correspondence and will be familiar to the owner.",
                 "productType": "Product type"
             },
             "agentDetails": {
@@ -2901,7 +2903,7 @@
             "documentId": "Document/ID",
             "documentDate": "Document date",
             "documentIdentifier": "Document identifier",
-            "documentIdentifierTooltip": "This is the name of the document along with the document identifier, a unique set of characters assigned to each document. Tip: The document identifier for received documents can tell you a bit about the document itself. The first set of characters in a received document’s identifier is the date it was received in YYYYMMDD format. The capital letters is how it was received (e.g., DS = Docusign, EM = Email, F = Fax, M = EApp, 1-8 = Mailroom scan, etc.)",
+            "documentIdentifierTooltip": "This is the name of the document along with the document identifier, a unique set of characters assigned to each document. Tip: The document identifier for received documents can tell you a bit about the document itself. The first set of characters in a received document's identifier is the date it was received in YYYYMMDD format. The capital letters is how it was received (e.g., DS = Docusign, EM = Email, F = Fax, M = EApp, 1-8 = Mailroom scan, etc.)",
             "documentNumber": "Document number",
             "download": "Download",
             "id": "ID",
@@ -2966,17 +2968,17 @@
             },
             "segmentsTable": {
                 "segmentID": "Segment ID",
-                "segmentIDTooltip": "This a unique numeric identifier for each segment. Segment IDs start with 1 for the first-ever segment and count up from there. Policies with segment IDs in the hundreds are older policies. At most, there will be 13 segments open at a time, which you’ll see in this table.",
+                "segmentIDTooltip": "This a unique numeric identifier for each segment. Segment IDs start with 1 for the first-ever segment and count up from there. Policies with segment IDs in the hundreds are older policies. At most, there will be 13 segments open at a time, which you'll see in this table.",
                 "startDate": "Start date",
                 "startDateTooltip": "This is the date the segment opens, and the index period begins. The index period is a set time during which the money within the segment can earn interest based on the rules of the fund. The start date is always the day that money was “swept” or moved into the segment.",
                 "endDate": "End date",
                 "endDateTooltip": "This is the date the segment closes, and the index period ends. The index period is a set time during which the money within the segment can earn interest based on the rules of the fund. In most cases, the end date is 12 months from the start date.",
                 "depositAmount": "Deposit amount",
-                "depositAmountTooltip": "This is the amount that was deposited into the fund. It’s the amount of premium paid into the policy minus any applicable charges, including cost of insurance and fees.",
+                "depositAmountTooltip": "This is the amount that was deposited into the fund. It's the amount of premium paid into the policy minus any applicable charges, including cost of insurance and fees.",
                 "segmentCap": "Segment cap",
-                "segmentCapTooltip": "This is the rate ceiling of what this fund can earn. Each of the funds in the policy will follow a certain stock market index (like S&P 500 or Dow Jones Average) during the segment’s index period. The money in the segment can earn interest based on the performance of this tracked index fund during this time, but earnings can be limited by a segment cap. For example, even the supporting index grows a lot, the earnings can not exceed the segment cap rate.",
+                "segmentCapTooltip": "This is the rate ceiling of what this fund can earn. Each of the funds in the policy will follow a certain stock market index (like S&P 500 or Dow Jones Average) during the segment's index period. The money in the segment can earn interest based on the performance of this tracked index fund during this time, but earnings can be limited by a segment cap. For example, even the supporting index grows a lot, the earnings can not exceed the segment cap rate.",
                 "participationRate": "Participation rate",
-                "participationRateTooltip": "This is the rate ceiling of what this fund can earn. Each of the funds in the policy will follow a certain stock market index (like S&P or Dow Jones Average) during the segment’s index period. The money in the segment can earn interest based on the performance of this tracked index fund during this time, but earnings can be limited by a participation rate. For example, if the participation cap is 80% and the tracked index fund increases by 15% during the segment period, the interest credit will be limited to 80% of the 15% gain, so the money will only earn 12% (80% × 15% = 12%)."
+                "participationRateTooltip": "This is the rate ceiling of what this fund can earn. Each of the funds in the policy will follow a certain stock market index (like S&P or Dow Jones Average) during the segment's index period. The money in the segment can earn interest based on the performance of this tracked index fund during this time, but earnings can be limited by a participation rate. For example, if the participation cap is 80% and the tracked index fund increases by 15% during the segment period, the interest credit will be limited to 80% of the 15% gain, so the money will only earn 12% (80% × 15% = 12%)."
             }
         },
         "extras": {
@@ -3133,7 +3135,7 @@
                 "lapseProcessDate": "Process date",
                 "lapseProcessDateTooltip": "This is the date when the transaction went through processing. It tells you when the transaction was included in the batch cycle. Process date may differ from the effective date (the date the transaction is actually applied to the policy).",
                 "lapseDate": "Lapse date",
-                "lapseDateTooltip": "This is the date when the policy lapsed. The owner didn’t make a grace payment, so now the policy is officially inactive.",
+                "lapseDateTooltip": "This is the date when the policy lapsed. The owner didn't make a grace payment, so now the policy is officially inactive.",
                 "lapseGracePeriod": "Grace period",
                 "lapseGracePeriodValue": "{{startDate}} through {{endDate}}",
                 "lapseGracePeriodTooltip": "These dates tell you how long the owner has to make the required grace payment to keep the policy active. The first date is when the policy went into pending lapse status, and the second is the deadline to make the required grace payment.",
@@ -3147,14 +3149,14 @@
                 "surrenderAmount": "Surrender amount",
                 "surrenderAmountTooltip": "",
                 "requestedWithdrawalAmount": "Requested withdrawal amount",
-                "requestedWithdrawalAmountTooltip": "This is how much the owner is requesting to withdraw from the account value. This number can differ from the actual total payment or the actual withdrawal amount depending on the disbursement type (gross or net) selected and the policy’s rules around withdrawal fees.",
+                "requestedWithdrawalAmountTooltip": "This is how much the owner is requesting to withdraw from the account value. This number can differ from the actual total payment or the actual withdrawal amount depending on the disbursement type (gross or net) selected and the policy's rules around withdrawal fees.",
                 "totalCharges": "Total charges",
                 "totalChargesTooltip": "This is how much will be charged from this withdrawal.",
                 "actualWithdrawalAmount": "Actual withdrawal amount",
                 "actualWithdrawalAmountTooltip": "This is how much will actually be withdrawn from the account value. If the owner selected net disbursement, we will withdraw any transaction fees (if applicable) in addition to the requested withdrawal amount. If gross was selected, the actual and requested withdrawal amounts will match.",
                 "actualTransactionAmount": "Actual {{transactionType}} amount",
                 "effectiveDate": "Effective date",
-                "effectiveDateTooltip": "This is the date used to calculate all the available account values for this withdrawal. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point  to effectively withdraw the funds, even if we’re processing the transaction some days before or after.",
+                "effectiveDateTooltip": "This is the date used to calculate all the available account values for this withdrawal. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point  to effectively withdraw the funds, even if we're processing the transaction some days before or after.",
                 "processDate": "Process date",
                 "processDateTooltip": "This is the date when the transaction went through processing. It tells you when the transaction was included in the batch cycle. Process date may differ from the effective date (the date the transaction is actually applied to the policy).",
                 "fundDisbursementType": "Fund disbursement type",
@@ -3196,7 +3198,7 @@
                 "loanInterestRate": "Loan interest rate",
                 "loanInterestRateTooltip": "This is the rate at which interest accrues annually. A loan from a cash value life insurance policy is a loan from the insurance carrier with the account value on the policy used as collateral. When an owner borrows from their account value, the loan principal will accrue interest at an annual percentage rate. The total accrued for the year is then applied to the principal on the interest date. The interest accrued must be paid back to close the loan . Many owners choose to leave loans open indefinitely, and accept the risk of a lower death benefit.",
                 "loanInterestRateType": "Loan interest rate type",
-                "loanInterestRateTypeTooltip": "This describes whether the interest rate on the loan can change over time or not. Fixed interest rates don’t change, while variable, indexed, and adjustable interest rates may change over time.",
+                "loanInterestRateTypeTooltip": "This describes whether the interest rate on the loan can change over time or not. Fixed interest rates don't change, while variable, indexed, and adjustable interest rates may change over time.",
                 "effectiveDate": "Effective date",
                 "effectiveDateTooltip": "This is the date used to calculate all the available account values for this loan. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point to effectively withdraw the funds, even if we're processing the transaction some days before or after.",
                 "processDate": "Process date",
@@ -3341,7 +3343,7 @@
                 "loanRules": {
                     "headline": "Loan Rules",
                     "loanInterestMethod": "Loan interest method",
-                    "loanInterestMethodTooltip": "This tells you how the loan’s interest is applied. Arrears means the interest is charged at the end of the policy year. This means a payment that occurs mid-year can reduce the daily interest amount and thus, the interest owed at the end of the year. Advance means the insurance carrier charges annual interest for the loan up front on the day the loan starts. So if the loan is taken halfway through the policy year, interest for the remaining half the year is charged when the loan starts. If loan repayment occurs within a policy year, there’s typically no refund for the interest paid in advance.",
+                    "loanInterestMethodTooltip": "This tells you how the loan's interest is applied. Arrears means the interest is charged at the end of the policy year. This means a payment that occurs mid-year can reduce the daily interest amount and thus, the interest owed at the end of the year. Advance means the insurance carrier charges annual interest for the loan up front on the day the loan starts. So if the loan is taken halfway through the policy year, interest for the remaining half the year is charged when the loan starts. If loan repayment occurs within a policy year, there's typically no refund for the interest paid in advance.",
                     "maxLoanAmt": "Max loan amount",
                     "minLoanAmt": "Min loan amount"
                 },
@@ -3359,7 +3361,7 @@
                 },
                 "additionalInformation": {
                     "creditRate": "Credit rate",
-                    "creditRateTooltip": "This is how much the loan principal is still earning in interest gains. (Yes, earning!) A loan from a cash value life insurance policy is a loan from the insurance carrier with the account value on the policy used as collateral. When an owner borrows from their policy, the principal loan amount is kept separate but remains invested and continues to earn  gains at an annual percentage rate, which is shown here as a credit rate. The credit earned on the loan amount doesn’t need to be paid back.",
+                    "creditRateTooltip": "This is how much the loan principal is still earning in interest gains. (Yes, earning!) A loan from a cash value life insurance policy is a loan from the insurance carrier with the account value on the policy used as collateral. When an owner borrows from their policy, the principal loan amount is kept separate but remains invested and continues to earn  gains at an annual percentage rate, which is shown here as a credit rate. The credit earned on the loan amount doesn't need to be paid back.",
                     "glLoanCode": "GL loan code",
                     "header": "View additional loan information",
                     "interestFirst": "Interest first",
@@ -3425,12 +3427,12 @@
         "diaryNotesEmptyText": "Looks like there are no related diary notes assigned to this contract.",
         "documents": "Documents",
         "documentsEmptyTitle": "No documents yet.",
-        "documentsEmptyText": "Looks like there aren’t any documents attached to this case.",
+        "documentsEmptyText": "Looks like there aren't any documents attached to this case.",
         "documentUnsupported": "Content Type {{extension}} is unsupported.",
         "documentNotFound": "Oops! Something went wrong getting the document.",
         "notes": "Notes ({{count}})",
         "notesEmptyTitle": "No notes yet.",
-        "notesEmptyText": "Looks like there aren’t any notes attached to this case.",
+        "notesEmptyText": "Looks like there aren't any notes attached to this case.",
         "callLogsEmptyTitle": "No related calls yet.",
         "callLogsEmptyText": "Looks like there are no related calls assigned to this case.",
         "callID": "Call ID",
@@ -3527,7 +3529,7 @@
             "noAssignee": "Only the assignee can start this task",
             "startTask": "Start task",
             "claimTask": "Claim task",
-            "claimTaskError": "You don’t have the necessary permissions to access this feature. Please reach out to the administrator for assistance.",
+            "claimTaskError": "You don't have the necessary permissions to access this feature. Please reach out to the administrator for assistance.",
             "taskHeading": "Task"
         },
         "suitability": {
@@ -3575,7 +3577,7 @@
     },
     "globalPolicyInfo": {
         "productName": "Product name",
-        "productNameTooltip": "This is the product name that you’ll see referenced in internal documentation. It’s different from the product marketing name that’s used in correspondence and will be familiar to the owner.",
+        "productNameTooltip": "This is the product name that you'll see referenced in internal documentation. It's different from the product marketing name that's used in correspondence and will be familiar to the owner.",
         "productCode": "GL product code",
         "productCodeTooltip": "GL product code Tooltip",
         "planCode": "Plan code",
@@ -3705,7 +3707,7 @@
                 "numOfLoans_one": " loan",
                 "numOfLoans_other": " loans",
                 "eligibleForLoan": "Eligible for loan",
-                "eligibleForLoanPopover": "This amount is how much the owner may borrow from the account value of their policy. Loans have consequences. Aside from incurring interest, a loan may reduce the owner’s death benefit.",
+                "eligibleForLoanPopover": "This amount is how much the owner may borrow from the account value of their policy. Loans have consequences. Aside from incurring interest, a loan may reduce the owner's death benefit.",
                 "estimatedNetDeathBenefit": "Estimated net death benefit",
                 "estimatedNetDeathBenefitPopover": "This is roughly how much the beneficiaries will receive from a death claim. The amount reflects the total gross death benefit minus outstanding loans. It doesn't include interest charges that can only be calculated at the time a death claim processes. Consider it a helpful, but inexact amount.",
                 "availableLoanInterestRate": "Available loan interest rate",
@@ -3792,7 +3794,7 @@
                 },
                 "mailingAddressAssitiveText": {
                     "add": "Mail will be sent to this address going forward.",
-                    "remove": "If you remove the policy’s mailing address, one will be chosen for you."
+                    "remove": "If you remove the policy's mailing address, one will be chosen for you."
                 },
                 "mainCta": {
                     "add": "Save {{type}} address",
@@ -3905,7 +3907,7 @@
                             "1": "{{name}}'s ",
                             "2": "request to",
                             "3": " {{action}} {{type}} {{transaction}}",
-                            "4": " was received. It should be complete shortly unless there’s an issue. You can track the progress by viewing the case."
+                            "4": " was received. It should be complete shortly unless there's an issue. You can track the progress by viewing the case."
                         },
                         "nigo": "We submitted this request for NIGO processing."
                     },
@@ -3918,12 +3920,12 @@
                 },
                 "apiError": {
                     "cta": "{{action}} {{type}} {{transaction}}",
-                    "title": "Sorry, that didn’t work.",
+                    "title": "Sorry, that didn't work.",
                     "secondaryCta": "Cancel and close",
                     "subtitle": {
-                        "1": "Services are down, so we couldn’t {{action}} ",
-                        "2": "{{name}}’s {{type}} {{transaction}}",
-                        "3": ". You can try updating again. If it’s still not working, ",
+                        "1": "Services are down, so we couldn't {{action}} ",
+                        "2": "{{name}}'s {{type}} {{transaction}}",
+                        "3": ". You can try updating again. If it's still not working, ",
                         "4": "submit a help desk ticket."
                     }
                 },
@@ -3943,7 +3945,7 @@
                     "subtitle": {
                         "mailingAddress": "If you remove the policy's mailing address, one will be chosen for you.",
                         "default": {
-                            "1": "{{name}}’s {{type}} {{transaction}}",
+                            "1": "{{name}}'s {{type}} {{transaction}}",
                             "2": " will be archived."
                         }
                     }
@@ -4255,7 +4257,7 @@
                 },
                 "basis": {
                     "label": "Guideline basis",
-                    "tooltipBody": "This is how much the owner has paid in premiums (minus any withdrawals) so far during the life of the policy. It’s the amount that’s counting against the policy’s current guideline premium limit. By law, carriers must use the guideline premium test to determine if the policy meets the definition of life insurance. To do so, the sum of all premiums paid minus withdrawals cannot exceed the currently applicable guideline limit."
+                    "tooltipBody": "This is how much the owner has paid in premiums (minus any withdrawals) so far during the life of the policy. It's the amount that's counting against the policy's current guideline premium limit. By law, carriers must use the guideline premium test to determine if the policy meets the definition of life insurance. To do so, the sum of all premiums paid minus withdrawals cannot exceed the currently applicable guideline limit."
                 },
                 "title": "Guideline premium test",
                 "cardLabel": "Premium remaining until limit",
@@ -4269,15 +4271,15 @@
             },
             "sevenPay": {
                 "amountExcessMec": "Amount excess to MEC",
-                "amountExcessMecTooltip": "This is how much premium was applied beyond the policy’s 7-pay limit. This overage amount makes the policy a modified endowment contract (MEC), which is a specific type of life insurance contract with fewer tax advantages. Once a policy becomes a MEC, the change cannot be reverted.",
+                "amountExcessMecTooltip": "This is how much premium was applied beyond the policy's 7-pay limit. This overage amount makes the policy a modified endowment contract (MEC), which is a specific type of life insurance contract with fewer tax advantages. Once a policy becomes a MEC, the change cannot be reverted.",
                 "amountRemaining": "Amount remaining until current 7-pay limit",
-                "amountRemainingTooltip": "This is how much the owner could pay in premium right now without the policy becoming a modified endowment contract (MEC). Most owners do not want their policy to become a MEC because that means they lose important tax advantages of owning a cash value policy. Once the 7-year period is over for the policy’s 7-pay premium test, the owner won’t have to worry about this limit unless there is a material change. A material change, like a coverage increase, can reactivate the 7-pay test for another 7 years.",
+                "amountRemainingTooltip": "This is how much the owner could pay in premium right now without the policy becoming a modified endowment contract (MEC). Most owners do not want their policy to become a MEC because that means they lose important tax advantages of owning a cash value policy. Once the 7-year period is over for the policy's 7-pay premium test, the owner won't have to worry about this limit unless there is a material change. A material change, like a coverage increase, can reactivate the 7-pay test for another 7 years.",
                 "annualPremium": "Annual 7-pay premium",
                 "annualPremiumTooltip": "This is the annual amount for this policy set by law. The formula carriers must use to do the 7-pay premium test is (annual 7-pay premium x year in 7-year period) + any rollover amount from the year before. (This is calculated for you in current 7-pay premium limit.)",
                 "basis": "7-pay premium basis",
                 "basisTooltip": "This is how much the owner has paid in premiums (minus any withdrawals) during the active 7-pay premium test window. By law, carriers must use the 7-pay premium test to determine MEC status. To prevent the policy from becoming a MEC, the sum of all premiums paid minus any withdrawals during an active 7-pay period cannot exceed the current 7-pay premium limit. The 7-pay premium basis reflects the amount currently being counted against the 7-pay premium limit.",
                 "inactiveEndText": ". It may restart for another 7-year window if a material change occurs.",
-                "inactiveStartText": "This policy’s 7-pay premium test period ended ",
+                "inactiveStartText": "This policy's 7-pay premium test period ended ",
                 "inactiveTitle": "The 7-pay premium period is closed.",
                 "isMec": "MEC",
                 "isMecTooltip": "This policy is a modified endowment contract (MEC). A MEC is a life insurance policy that has lost tax advantages because it contains too much cash value. A policy becomes a MEC when the owner pays too much premium in too short of a period to pass the 7-pay premium test.",
@@ -4288,7 +4290,7 @@
                 "testPeriodTooltip": "These are the start and end dates for the active 7-pay premium test period. During this time, there are certain limits to how much an owner can pay in premium before the policy becomes a modified endowment contract (MEC). To prevent becoming MEC, the sum of the premiums minus withdrawals in the initial seven years after issue or a subsequent material change cannot exceed the sum of the annual 7-pay premium limit for those seven years.",
                 "title": "7-pay premium test",
                 "totalLimit": "Total current 7-pay premium limit",
-                "totalLimitTooltip": "This is the maximum amount the owner can pay in premium this year without the policy becoming a MEC. It reflects the formula carriers must use to do the 7-pay premium test: (Annual 7-pay premium limit x year in 7-year period) + any rollover amount from the year before. Once the 7-year period is over for the policy’s 7-pay premium test, the owner won’t have to worry about this limit unless there is a material change (like a coverage increase) that reactivates the 7-pay test for another 7-year period."
+                "totalLimitTooltip": "This is the maximum amount the owner can pay in premium this year without the policy becoming a MEC. It reflects the formula carriers must use to do the 7-pay premium test: (Annual 7-pay premium limit x year in 7-year period) + any rollover amount from the year before. Once the 7-year period is over for the policy's 7-pay premium test, the owner won't have to worry about this limit unless there is a material change (like a coverage increase) that reactivates the 7-pay test for another 7-year period."
             }
         }
     },
@@ -4522,7 +4524,7 @@
             "payee": "Payee",
             "proRata": "Pro rata",
             "requestedWithdrawal": "Requested withdrawal amount",
-            "requestedWithdrawalTooltip": "This is how much the owner is requesting to withdraw from the account value. This number can differ from the actual total payment or the actual withdrawal amount depending on the disbursement type (gross or net) selected and the policy’s rules around withdrawal fees.",
+            "requestedWithdrawalTooltip": "This is how much the owner is requesting to withdraw from the account value. This number can differ from the actual total payment or the actual withdrawal amount depending on the disbursement type (gross or net) selected and the policy's rules around withdrawal fees.",
             "stateTaxes": "State tax ({{state}})",
             "stateTaxesTooltip": "Withdrawals in amounts greater than what the owner has paid in premiums are taxable. We can \"withhold\" the state tax, if applicable, meaning we can pay a certain amount to the state tax authority on behalf of the owner from the amount they withdraw. Or the owner can decide to pay the taxes themselves later.",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
@@ -4721,7 +4723,7 @@
                 "customError": "Loan amount must be at least 1$",
                 "exceedMaximum": "Loan amount can not exceed {{maxLoanAmount}}.",
                 "maximum": "Max loan amount",
-                "maximumTooltip": "This amount is how much the owner may borrow from the account value of their policy. It’s the total amount eligible for loan. Loans have consequences. Aside from incurring interest, a loan may reduce the owner's death benefit.",
+                "maximumTooltip": "This amount is how much the owner may borrow from the account value of their policy. It's the total amount eligible for loan. Loans have consequences. Aside from incurring interest, a loan may reduce the owner's death benefit.",
                 "title": "How much do you want to borrow?"
             }
         },
@@ -4805,7 +4807,7 @@
             "effectiveDateLabel": "Effective date",
             "payorTitle": "Payor",
             "validationStatusLabel": "Validation status",
-            "internal500Error": "Services are down, so we can’t continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
+            "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Submit a help desk ticket",
             "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
@@ -4954,7 +4956,7 @@
         "start": {
             "label": "Start",
             "title": "Start a fund transfer",
-            "subtitle": "First up, let’s make sure we can keep track of this transaction in Zinnia Live."
+            "subtitle": "First up, let's make sure we can keep track of this transaction in Zinnia Live."
         },
         "transfer": {
             "label": "Transfer",
@@ -4969,7 +4971,7 @@
             "subtitle": "Looking good! Be sure to review all the transfers and resulting fund values before submitting.",
             "effectiveDateLabel": "Effective date",
             "validationStatusLabel": "Validation status",
-            "internal500Error": "Services are down, so we can’t continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
+            "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Submit a help desk ticket",
             "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
@@ -5931,10 +5933,10 @@
         "checkingInfo": "We're checking this policy's business rules...",
         "requestTo": "request to",
         "editAllocations": "edit allocations",
-        "editSuccessMsg": "was received. It should complete shortly unless there’s an issue. You can track the progress by viewing the case.",
+        "editSuccessMsg": "was received. It should complete shortly unless there's an issue. You can track the progress by viewing the case.",
         "goToCase": "Go to case",
-        "systemErrorTitle": "Sorry, that didn’t work.",
-        "systemErrorDes1": "We couldn’t update fund allocations because the system is down. You can try updating again. If it’s still not working, ",
+        "systemErrorTitle": "Sorry, that didn't work.",
+        "systemErrorDes1": "We couldn't update fund allocations because the system is down. You can try updating again. If it's still not working, ",
         "systemErrorDes2": "submit a help desk ticket.",
         "cancelAndClose": "Cancel and close",
         "editAllocationsTitle": "Edit Allocations",
