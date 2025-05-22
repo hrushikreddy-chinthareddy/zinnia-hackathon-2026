@@ -6,13 +6,16 @@ import { requestHandler } from '@deps/queries/api-utils/server';
 import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 import { ErrorResponse } from '@deps/types/api';
 import { caseSearchFullMasker, caseSearchSanitizer } from '@deps/utils/sanitizers';
-import { withAuthAndLogging } from '@deps/utils/server-logging';
+import { LoggingContext, withAuthAndLogging } from '@deps/utils/server-logging';
+
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 // Will proxy any request made to the next server directly to the gateway apis
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>, loggingContext) => {
+
+    async (req: NextApiRequest, res: NextApiResponse<AxiosResponse<any> | ErrorResponse>, loggingContext: LoggingContext) => {
+
         const re = new RegExp('^.*?/api');
         const proxyUrl = req.url?.replace(re, apiServerBaseUrl as string);
 
