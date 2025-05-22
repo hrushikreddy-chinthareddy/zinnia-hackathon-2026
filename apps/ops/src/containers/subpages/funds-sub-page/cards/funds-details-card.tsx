@@ -28,7 +28,6 @@ const FundsDetailsCard = ({ policy }: FundsDetailsCardProps) => {
             setViewModel(fundsPageViewModel);
             setLoading(false);
         };
-
         getViewModel();
     }, [policy]);
 
@@ -37,13 +36,15 @@ const FundsDetailsCard = ({ policy }: FundsDetailsCardProps) => {
             <div className="flex flex-col gap-6">
                 <Typography variant={TypographyVariant.H2}>{t('title')}</Typography>
                 <div className="flex flex-col gap-10">
-                    <FundsCard
-                        funds={viewModel?.holdingFunds}
-                        loading={loading}
-                        title={t('holdingFunds') as string}
-                        titleTooltip={t('holdingFundsTooltip') as string}
-                        policy={policy}
-                    />
+                    {viewModel?.holdingFunds && viewModel?.holdingFunds.length > 0 && (
+                        <FundsCard
+                            funds={viewModel?.holdingFunds}
+                            loading={loading}
+                            title={t('holdingFunds') as string}
+                            titleTooltip={t('holdingFundsTooltip') as string}
+                            policy={policy}
+                        />
+                    )}
                     <FundsCard
                         funds={viewModel?.electedFunds}
                         loading={loading}
@@ -52,13 +53,15 @@ const FundsDetailsCard = ({ policy }: FundsDetailsCardProps) => {
                         policy={policy}
                         notElectedfunds={viewModel?.notElectedFunds}
                     />
-                    <FundsCard
-                        funds={viewModel?.notElectedFunds}
-                        loading={loading}
-                        title={t('notElectedFunds') as string}
-                        titleTooltip={t('notElectedFundsTooltip') as string}
-                        policy={policy}
-                    />
+                    {viewModel?.notElectedFunds && viewModel?.notElectedFunds.length > 0 && (
+                        <FundsCard
+                            funds={viewModel?.notElectedFunds}
+                            loading={loading}
+                            title={t('notElectedFunds') as string}
+                            titleTooltip={t('notElectedFundsTooltip') as string}
+                            policy={policy}
+                        />
+                    )}
                 </div>
             </div>
         </CardContainer>
