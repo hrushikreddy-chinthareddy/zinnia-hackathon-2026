@@ -38,6 +38,7 @@ export const buildSystematicProgramUpdateRequestBody = (
                     allocationPercentage: 100,
                     bankId: autopay.paymentBankId,
                     partyId: autopay.payorPartyId,
+                    paymentForm: ACH,
                 },
             ],
         },

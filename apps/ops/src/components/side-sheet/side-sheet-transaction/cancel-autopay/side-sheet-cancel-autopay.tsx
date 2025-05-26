@@ -120,7 +120,7 @@ const SideSheetCancelAutopay = ({
         return {
             caseId: caseId || '',
             correlationId: uuidV4(),
-            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+            effectiveDate: effectiveDateFormatted,
             reverseInitiator: false,
             systematicProgram: {
                 amount: Number(systematicProgram?.amount),
