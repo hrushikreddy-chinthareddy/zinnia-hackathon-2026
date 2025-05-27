@@ -4,8 +4,9 @@ import clsx from 'clsx';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
-import styles from './field-template/field-template.module.css';
-import { calculateDifference } from '../../helpers/object.helpers';
+import classes from "./difference-template.module.css";
+import { calculateDifference } from '../../../helpers/object.helpers';
+import styles from '../field-template/field-template.module.css';
 
 type FormContextOptions = {
     keyName: string;
@@ -48,12 +49,12 @@ const DifferenceTemplate = (props: FieldTemplateProps): JSX.Element => {
                     {fieldLabel && (
                         <div className="mb-2">
                             <Label labelFor={props.id} interactiveElements={[helpInformation]}>
-                                <span className={clsx('text-md font-medium', style as string)}>{fieldLabel}</span>
+                                <span className={clsx('text-[14px] font-bold', style as string)}>{fieldLabel}</span>
                             </Label>
                         </div>
                     )}
                     {description}
-                    <div className={'text-field_textField__d9daI max-w-sm'}>{difference}</div>
+                    <div className={readonly ? 'max-w-sm' : `${classes.field} max-w-sm`}>{difference}</div>
                     {!hideError && errors}
                 </div>
             </>

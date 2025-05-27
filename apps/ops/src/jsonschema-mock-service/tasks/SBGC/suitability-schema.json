@@ -843,8 +843,12 @@
                                             "title": "Annual income"
                                         },
                                         "netWorth": {
+                                            "type": "object",
+                                            "title": "Approximate net worth"
+                                        },
+                                        "liquidNetWorth": {
                                             "type": "string",
-                                            "title": "Net worth"
+                                            "title": "Liquid Asset after annuity purchase"
                                         },
                                         "sourceOfIncome": {
                                             "type": "array",
@@ -953,7 +957,7 @@
                                     },
                                     "required": [
                                         "annualIncome",
-                                        "netWorth",
+                                        "liquidNetWorth",
                                         "sourceOfIncome",
                                         "totalAssets",
                                         "totalDebt",
@@ -1328,7 +1332,26 @@
                                                 "required": ["otherDependents"]
                                             }
                                         }
-                                    }
+                                    },
+                                    "allOf": [
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "extraFundAvailable": {
+                                                        "const": "NO"
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "extraFundAvailableDetails": {
+                                                        "type": "string",
+                                                        "title": "If no, please explain"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
                                 },
                                 "signatureInfo": {
                                     "type": "array",
@@ -1433,8 +1456,12 @@
                             "items": {
                                 "ui:order": ["partyType", "roleType", "fullName", "person", "govtIdInfo", "addresses", "employment"],
                                 "ui:options": {
-                                    "title": "party",
-                                    "label": false
+                                    "nobackground": true,
+                                    "title": "{{roleType}}",
+                                    "defaultItemLabel": "New Party",
+                                    "minItems": 1,
+                                    "label": true,
+                                    "expandable": true
                                 },
                                 "partyType": {
                                     "ui:options": {
@@ -1474,7 +1501,8 @@
                                     "items": {
                                         "ui:options": {
                                             "title": "govt Id",
-                                            "label": false
+                                            "label": false,
+                                            "minItems": 1
                                         },
                                         "govtId": {},
                                         "govtIdType": {
@@ -1532,7 +1560,8 @@
                         },
                         "policyData": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "classNames": "divider",
+                                "expandable": true
                             },
                             "productType": {},
                             "qualPlanType": {
@@ -1548,7 +1577,8 @@
                         },
                         "applicationInfo": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "classNames": "divider",
+                                "expandable": true
                             },
                             "replacementInd": {
                                 "ui:widget": "select",
@@ -1567,12 +1597,13 @@
                             "ui:order": [
                                 "annualIncome",
                                 "annualExpenses",
-                                "netWorth",
+                                "disposableIncome",
+                                "liquidNetWorth",
                                 "sourceOfIncome",
                                 "sourceOfIncomeOther",
                                 "totalAssets",
                                 "totalDebt",
-                                "disposableIncome",
+                                "netWorth",
                                 "sourceOfFunds",
                                 "sourceOfFundsOther",
                                 "federalTaxBand",
@@ -1580,7 +1611,8 @@
                                 "surrPeriodMaterialChangeReason"
                             ],
                             "ui:options": {
-                                "classNames": "divider"
+                                "classNames": "divider",
+                                "expandable": true
                             },
                             "annualIncome": {
                                 "ui:options": {
@@ -1589,6 +1621,20 @@
                                 }
                             },
                             "netWorth": {
+                                "ui:options": {
+                                    "label": true,
+                                    "ObjectFieldTemplate": "DifferenceTemplate",
+                                    "formContext": {
+                                        "keyName": "customData",
+                                        "details": "details",
+                                        "mainObject": "fiscalData",
+                                        "minuend": "totalAssets",
+                                        "subtrahend": "totalDebt"
+                                    },
+                                    "omitValue": true
+                                }
+                            },
+                            "liquidNetWorth": {
                                 "ui:options": {
                                     "widget": "ValueWidget"
                                 }
@@ -1685,7 +1731,8 @@
                         },
                         "financialExperience": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "classNames": "divider",
+                                "expandable": true
                             },
                             "rateChangeAcknowledgment": {
                                 "ui:widget": "select",
@@ -1765,7 +1812,8 @@
                         },
                         "investmentRiskInfo": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "classNames": "divider",
+                                "expandable": true
                             },
                             "riskTolerance": {
                                 "ui:options": {
@@ -1784,7 +1832,8 @@
                         "financialObjectives": {
                             "ui:order": ["purchaseReason", "otherPurchaseReason", "annuityMeetsFinancialNeeds"],
                             "ui:options": {
-                                "classNames": "divider"
+                                "classNames": "divider",
+                                "expandable": true
                             },
                             "purchaseReason": {
                                 "ui:options": {
@@ -1814,7 +1863,8 @@
                         },
                         "liquidityOptions": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "classNames": "divider",
+                                "expandable": true
                             },
                             "fundsAccessExplanation": {
                                 "ui:widget": "select",
@@ -1910,7 +1960,8 @@
                         },
                         "agentAcknowledgment": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "classNames": "divider",
+                                "expandable": true
                             },
                             "maApplicationQuestionnaire": {
                                 "soldPoliciesToApplicant": {
@@ -2006,8 +2057,10 @@
                             }
                         },
                         "additionalInfo": {
+                            "ui:order": ["currentResidenceOption", "extraFundAvailable", "extraFundAvailableDetails", "resideInNursingHomeOrAssistedLiving"],
                             "ui:options": {
-                                "classNames": "divider"
+                                "classNames": "divider",
+                                "expandable": true
                             },
                             "currentResidenceOption": {
                                 "ui:options": {
@@ -2020,6 +2073,7 @@
                                     "enumNames": ["Yes", "No"]
                                 }
                             },
+                            "extraFundAvailableDetails": {},
                             "resideInNursingHomeOrAssistedLiving": {
                                 "ui:widget": "select",
                                 "ui:options": {
@@ -2029,7 +2083,8 @@
                         },
                         "californiaResidentQuestions": {
                             "ui:options": {
-                                "classNames": "divider"
+                                "classNames": "divider",
+                                "expandable": true
                             },
                             "applyForMeansTestedBenefits": {
                                 "ui:options": {
@@ -2043,9 +2098,12 @@
                             },
                             "items": {
                                 "ui:options": {
-                                    "title": "Signature Information",
+                                    "title": "{{signatureRoleCode}} Signature",
+                                    "defaultItemLabel": "New Signature",
                                     "minItems": 1,
-                                    "label": false
+                                    "label": true,
+                                    "expandable": true,
+                                    "nobackground": true
                                 },
                                 "signatureRoleCode": {
                                     "ui:options": {

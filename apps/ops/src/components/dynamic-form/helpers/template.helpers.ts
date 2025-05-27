@@ -4,7 +4,7 @@ import AddressFieldTemplate from '../customization/templates/address-field-templ
 import ArrayFieldTableTemplate from '../customization/templates/array-field-template/array-field-table-template';
 import ArrayFieldTemplate from '../customization/templates/array-field-template/array-field-template';
 import { CardTemplate } from '../customization/templates/card-templates/card-template';
-import DifferenceTemplate from '../customization/templates/difference-template';
+import DifferenceTemplate from '../customization/templates/difference-template/difference-template';
 import InstructionsTemplate from '../customization/templates/instructions-template/instructions-template';
 import FileInfoTemplate from '../customization/templates/object-field-template/file-info-template';
 import ObjectRowFieldTemplate from '../customization/templates/object-field-template/object-row-template';

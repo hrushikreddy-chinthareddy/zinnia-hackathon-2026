@@ -6,7 +6,7 @@ import AddButton from './button-templates/add-button/add-button';
 import RemoveButton from './button-templates/remove-button/remove-button';
 import SubmitButton from './button-templates/submit-button/submit-button';
 import { CardTemplate } from './card-templates/card-template';
-import DifferenceTemplate from './difference-template';
+import DifferenceTemplate from './difference-template/difference-template';
 import FieldErrorTemplate from './field-error-template/field-error-template';
 import { FieldTemplate } from './field-template/field-template';
 import InstructionsTemplate from './instructions-template/instructions-template';

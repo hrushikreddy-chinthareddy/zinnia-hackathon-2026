@@ -132,7 +132,10 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         placeholder = options.placeholder || '';
     }
 
-    if (readonly) return <>{Object.values(selectedValues).join(', ')}</>;
+    if (readonly) return <>
+        {multiple ? Object.values(selectedValues).join(', ')
+        : enumOptions?.find(option => option.value === value)?.label}
+    </>;
 
     return (
         <>

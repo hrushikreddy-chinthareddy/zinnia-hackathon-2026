@@ -17,7 +17,8 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     value,
     onChange,
     disabled,
-    uiSchema
+    uiSchema,
+    readonly
 }: WidgetProps<T, S, F>) {
     const { futureDateEnabled } = getUiOptions(uiSchema);
     const disableAfterDate = futureDateEnabled ? undefined : new Date();
@@ -31,8 +32,9 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     return (disabled as boolean) ? (
         <div>{value}</div>
     ) : (
-        <div className="max-w-sm flex w-full flex-col">
-            <FieldDate name={id} id={id} onDateSelect={_onSelectDate} defaultDate={value} disableAfterDate={disableAfterDate} />
-        </div>
+        readonly ? <>{value}</> :
+            <div className="max-w-sm flex w-full flex-col">
+                <FieldDate name={id} id={id} onDateSelect={_onSelectDate} defaultDate={value} disableAfterDate={disableAfterDate} />
+            </div>
     );
 }
