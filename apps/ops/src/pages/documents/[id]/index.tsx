@@ -14,6 +14,7 @@ import documentDownloadV2 from '@deps/queries/server/documents/v2/download';
 import documentDownload from '@deps/queries/server/documents/v3/download';
 import { DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import { b64ToBlob } from '@deps/utils/blob';
 import { TiffConversion } from '@deps/utils/fileviewer/tiffConversion';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -22,11 +23,14 @@ import nextI18nextConfig from 'next-i18next.config';
 
 const DocumentViewerPage = ({ doc, user }: SegmentTrackedPageProps & { doc: DocumentDownloadV2WithMime | DocumentDownloadV3WithMime }) => {
     useSegmentPageTracker(user, SegmentPageName.DocumentViewer);
+    const blob = b64ToBlob(doc.binaryData || '', doc.mimeType || 'application/pdf');
+
+    const url = blob ? URL.createObjectURL(blob) : '';
     return (
         <>
             <PageHead titleKey="formData" />
             <div className="h-screen w-screen">
-                <iframe src={`data:${doc.mimeType};base64,${doc.binaryData}`} width="100%" height="100%" />
+                <iframe src={url} width="100%" height="100%" />
             </div>
         </>
     );
