@@ -1,0 +1,74 @@
+{
+    "id": "TA000000019793",
+    "caseId": "CA0000394985",
+    "source": "BPM.AppProcessing",
+    "templateId": "20fea287-ba75-4c31-ac22-7532f6b1a806",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_PAYMENT_FOLLOW_UP",
+    "taskName": "Payment Follow up",
+    "status": "NEW",
+    "data": {
+        "issuesList": [
+            {
+                "processingInstruction": "Resolution: Sixty days have elapsed without a response; please confirm the next steps.",
+                "processingResolution": "Sixty days have elapsed without a response; please confirm the next steps."
+            }
+        ],
+        "details": {
+            "documents": [
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac69",
+                    "documentName": "WELB_080094943_R_20250228_00001.pdf",
+                    "documentType": "LI APPOINTMENT"
+                },
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac6a",
+                    "documentName": "WELB_080094943_R_20250228_00002.pdf",
+                    "documentType": "LI APPOINTMENT"
+                }
+            ],
+            "paymentRecord": {
+                "paymentRecordId": "69350298-9ec1-4733-af41-89a6418d8488"
+            }
+        },
+        "uploadRequired": true
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "new_business",
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-02-24T08:37:59Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-02-24T08:37:59Z",
+    "identifiers": [
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2501907"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000394985"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2501907"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "410289"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67bc2fdb05bed22312f9a8a4"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI011280282025020124"
+        }
+    ],
+    "externalId": "1e24e341-568a-4e68-b6b7-d09dbfcbf4f0"
+}

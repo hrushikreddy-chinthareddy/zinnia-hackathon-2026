@@ -33,6 +33,7 @@ export const SupportedTaskMap = [
     TaskType.TOA_Review,
     TaskType.Prenote_Review,
     TaskType.Payment_Processing_Review,
+    TaskType.Payment_Follow_Up,
     TaskType.Suitaibility_DataEntry_Nigo_Review,
     TaskType.Claims_Identify_Uncashed_Transactions,
     TaskType.Claims_Reverse_Uncashed_Transactions,

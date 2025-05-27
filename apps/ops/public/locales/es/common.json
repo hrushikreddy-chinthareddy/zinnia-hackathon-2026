@@ -5608,6 +5608,15 @@
             "submitTask": "Enviar"
         }
     },
+    "nbPaymentFollowUp": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Entrada de Datos de Nuevos Negocios fue enviada.",
+            "cta": "Ir a transferencia entrante",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
     "fundAllocation": {
         "submitted": "¡Enviado!",
         "editAllocationNigoSummary1": "Hemos enviado esta solicitud para ",

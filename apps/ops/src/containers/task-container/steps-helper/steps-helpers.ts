@@ -40,6 +40,7 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
         case TaskType.ReturnPayment:
         case TaskType.Send_Nigo_Communication:
         case TaskType.Initiate_Postissue_Transaction:
+        case TaskType.Payment_Follow_Up:
         case TaskType.Background_Nigo:
         case TaskType.Background_Review:
             steps = getAgentNigoSteps(props);

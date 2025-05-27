@@ -158,7 +158,13 @@ export const formatValueByDataType = (dataType: string, value: any) => {
         case DataFormattingTypes.Amount:
             return numberFormatify(Math.abs(value));
         case DataFormattingTypes.DirtyAddress: {
-            return formatDirtyAddress(JSON.parse(value));
+            if (!value) return null;
+            try {
+                return formatDirtyAddress(JSON.parse(value));
+            } catch (err) {
+                console.error('Invalid JSON:', value, err);
+                return null;
+            }
         }
         default:
             return value;

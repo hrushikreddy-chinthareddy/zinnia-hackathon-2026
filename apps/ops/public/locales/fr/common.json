@@ -5672,6 +5672,15 @@
             "secondaryCta": "Retour à l'accueil"
         }
     },
+    "nbPaymentFollowUp": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Le transfert de révision a été soumis",
+            "cta": "Aller au transfert entrant ",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
     "unauthorized": {
         "title": "Non autorisé",
         "message": "Vous n'avez pas accès à cette information."
