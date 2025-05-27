@@ -99,7 +99,7 @@ module.exports = {
                 },
             ],
         });
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NEXT_PUBLIC_BACKEND_URL === 'https://api.zinnia.io') {
             config.plugins.push(
                 new webpackLib.IgnorePlugin({
                     resourceRegExp: /jsonschema-mock-service(\/|\\)/, // Matches the folder and its sub-content

@@ -5,6 +5,7 @@ import { TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { getCaseTaskInstances, getCaseTasks, getTaskFormMetadataSSR } from '@deps/queries/api/v1/task';
 import { getCaseTaskByIdSSR, updateTask } from '@deps/queries/api/v2/task';
+import { isProd } from '@deps/utils/environment.helpers';
 import { LoggingContext } from '@deps/utils/server-logging';
 
 interface TaskItem {
@@ -18,7 +19,7 @@ interface TaskItem {
 
 // Function to dynamically import mockService in development
 const loadMockService = async () => {
-    if (process.env.NODE_ENV !== 'production') {
+    if (!isProd()) {
         try {
             const { mockService } = require('@deps/jsonschema-mock-service/mock-service');
             return mockService;
