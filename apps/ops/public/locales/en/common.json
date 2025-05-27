@@ -85,7 +85,8 @@
             "sendTaxForm": "Send Tax Form",
             "updatePremium": "Update Premium Autopay",
             "viewDocument": "View Document",
-            "withdrawals": "Withdrawals"
+            "withdrawals": "Withdrawals",
+            "defaultCase": "Service Request Form"
         },
         "navLinks": {
             "accessManagement": {
@@ -5006,6 +5007,10 @@
             "sendStatements": "Send statements",
             "sendTaxForms": "Send tax forms"
         },
+        "additionalActions": {
+            "label": "Additional Actions",
+            "serviceRequestForm": "Raise a Service Request"
+        },
         "transactions": {
             "label": "Transactions",
             "loanPayment": "Start a one-time loan payment",
@@ -5558,6 +5563,7 @@
             "cancel": "Cancel",
             "confirm": "Confirm",
             "continue": "Continue",
+            "cases": "Go to Cases",
             "tabs": {
                 "start": "Start",
                 "nigoDetails": "Missing Information",
@@ -5983,6 +5989,15 @@
             "title": "Got It!",
             "subTitle": "Task: Validate Background Check was submitted.",
             "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "defaultCaseDataEntry": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Service Request Form was submitted.",
+            "cta": "Go to case ",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }

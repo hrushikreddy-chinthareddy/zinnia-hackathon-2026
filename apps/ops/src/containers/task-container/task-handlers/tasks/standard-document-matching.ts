@@ -1,28 +1,25 @@
-import { getReferenceDataSSR } from '@deps/queries/api/cases';
+import { ProcessReferenceData } from '@deps/models/case/case';
+import { FormMetadata } from '@deps/models/case/task';
 
 import { TaskHandler } from '../types';
-interface PurchaseDocumentMatchingPayload {
-    carrier: string[];
-    keys: ('processList' | 'requestSubType' | 'productName')[];
-}
+import { processReferenceDataAdapter } from './default-case-data-entry';
 
-const DocumentMatchingHandler: TaskHandler<PurchaseDocumentMatchingPayload, any> = {
-    api: getReferenceDataSSR,
-    getPayload: (task: any) => ({
-        carrier: [task?.carrier],
-        keys: ['processList'],
-    }),
+const DEFAULT_CASE_TYPE = 'Case Type Not Found';
 
+export const DocumentMatchingHandler: TaskHandler<Record<string, never>, ProcessReferenceData[]> = {
+    api: processReferenceDataAdapter,
+    getPayload: () => ({}),
     transformResponse: (response, metadata) => {
-        if (!response || response.length === 0) return;
+        if (!response?.length) return;
 
-        const caseTypeOptions = response;
+        const schema = metadata[0] as FormMetadata;
+        if (!schema?.formSchema?.definitions) return;
 
-        if (metadata[0]?.formSchema?.definitions) {
-            metadata[0].formSchema.definitions.caseTypeEnum = {
-                enum: caseTypeOptions?.referenceData.processList || ['Case Type Not Found'],
-            };
-        }
+        schema.formSchema.definitions.caseTypeEnum = {
+            enum: response.map(item => item.key) || [DEFAULT_CASE_TYPE],
+        };
+
+        schema.uiSchema.caseType['ui:options'] = { enumNames: response.map(item => item.value) };
     },
 };
 

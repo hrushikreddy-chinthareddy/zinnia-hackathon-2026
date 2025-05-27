@@ -156,9 +156,10 @@ export enum FEATURE_FLAGS {
     FUND_ALLOCATION_TRANSACTION = 'fund_allocation_transaction',
     ENTERPRISE_SEARCH = 'enterprise_search',
     DEPU_4253_FUNDING_SOURCES = 'depu-4253-funding-sources',
+    DEFAULT_CASE_DATA_ENTRY = 'contact-center-default-case-data-entry',
     SYSTEMATIC_WITHDRAWAL_TRANSACTION = 'systematic_withdrawal_transaction',
     SYSTEMATIC_RMD_TRANSACTION = 'systematic_rmd_transaction',
     FAST_WITHDRAWAL = 'fast-withdrawal',
-    CALL_AUDIO_FEATURE='call-audio-feature',
-    NEW_DEATH_CLAIM ='new_death_claim',
+    CALL_AUDIO_FEATURE = 'call-audio-feature',
+    NEW_DEATH_CLAIM = 'new_death_claim',
 }

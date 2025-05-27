@@ -49,9 +49,31 @@
                             "type": "string",
                             "title": "Payment record ID"
                         },
+                        "onwerDetails": {
+                            "type": "object",
+                            "title": "Supporting Information",
+                            "properties": {
+                                "firstName": {
+                                    "type": "string",
+                                    "title": "First Name",
+                                    "ui:field": "title"
+                                },
+                                "ssn": {
+                                    "type": "string",
+                                    "title": "SSN",
+                                    "ui:field": "subTitle",
+                                    "dataType": "ssn"
+                                },
+                                "lastName": {
+                                    "type": "string",
+                                    "title": "Last Name",
+                                    "ui:field": "title"
+                                }
+                            }
+                        },
                         "documents": {
                             "type": "array",
-                            "title": "Supporting Information",
+                            "title": "",
                             "items": {
                                 "type": "object",
                                 "properties": {
@@ -341,6 +363,7 @@
                         "issuesList",
                         "details",
                         "paymentRecordId",
+                        "onwerDetails",
                         "documents",
                         "issueResolved",
                         "surrenderCompanyName",
@@ -408,6 +431,16 @@
                         },
                         "ui:dataPath": ["details", "exchangeReplace", "paymentRecordId"]
                     },
+                    "onwerDetails": {
+                        "ui:options": {
+                            "cardtype": "Detailed",
+                            "icon": "CIRCLE_USER",
+                            "label": true,
+                            "ObjectFieldTemplate": "CardTemplate",
+                            "key": "onwerDetails"
+                        },
+                        "ui:dataPath": ["details", "onwerDetails"]
+                    },
                     "documents": {
                         "props": {
                             "readonly": true
@@ -433,7 +466,8 @@
                             }
                         },
                         "ui:options": {
-                            "addable": false
+                            "addable": false,
+                            "label": false
                         },
                         "ui:dataPath": ["details", "documents"]
                     },

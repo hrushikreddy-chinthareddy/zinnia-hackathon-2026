@@ -10,6 +10,7 @@ export enum ProcessType {
     ADDRESS_CHANGE = 'ADDRESS_CHANGE',
     REREG = 'REREG',
     SUITABILITY = 'Suitability',
+    DEFAULT_CASE = 'Operations Review',
 }
 
 export enum TypeOfPayment {

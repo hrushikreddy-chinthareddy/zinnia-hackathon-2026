@@ -1,0 +1,792 @@
+{
+    "formId": "dc7dbfdd-7ff7-4c04-89ed-6e59b9959a8d",
+    "process": "Operations Review",
+    "carrier": "WELB",
+    "taskType": "DEFAULT_CASE_DATA_ENTRY",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "New Service Request",
+                "formSchema": {
+                    "type": "object",
+                    "definitions": {
+                        "caseTypeEnum": {},
+                        "caseSubTypeEnum": {}
+                    },
+                    "properties": {
+                        "caseDetails": {
+                            "type": "object",
+                            "title": "Request Details",
+                            "required": ["caseType", "caseSubType"],
+                            "properties": {
+                                "caseType": {
+                                    "type": "string",
+                                    "title": "Case Type",
+                                    "$ref": "#/definitions/caseTypeEnum"
+                                },
+                                "caseSubType": {
+                                    "type": "string",
+                                    "title": "Case Sub Type",
+                                    "$ref": "#/definitions/caseSubTypeEnum"
+                                },
+                                "contractNumber": {
+                                    "type": "string",
+                                    "title": "Contract #"
+                                },
+                                "carrier": {
+                                    "type": "string",
+                                    "title": "Carrier"
+                                },
+                                "customerDetails": {
+                                    "type": "object",
+                                    "title": "Customer Details",
+                                    "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "First Name"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Last Name"
+                                        },
+                                        "taxId": {
+                                            "type": "string",
+                                            "title": "SSN / Tax ID"
+                                        }
+                                    }
+                                },
+                                "callDetails": {
+                                    "type": "object",
+                                    "title": "Call Details",
+                                    "required": ["callerRole", "callerName", "callerPhone"],
+                                    "properties": {
+                                        "callerRole": {
+                                            "type": "string",
+                                            "title": "Caller Role",
+                                            "enum": ["Owner", "Agent", "Others"]
+                                        },
+                                        "associateName": {
+                                            "type": "string",
+                                            "title": "Customer Service Associate Name"
+                                        },
+                                        "callerName": {
+                                            "type": "string",
+                                            "title": "Caller Name",
+                                            "minLength": 1
+                                        },
+                                        "callerPhoneNumber": {
+                                            "type": "string",
+                                            "title": "Caller Phone #"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "attachment": {
+                            "type": "array",
+                            "title": "Attach Document",
+                            "items": {
+                                "title": "upload",
+                                "type": "string",
+                                "format": "data-url"
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "caseDetails": {
+                        "caseType": {
+                            "ui:placeholder": "Select Case Type",
+                            "ui:props": {
+                                "apiUrl": "case/v1/refdata/PROCESS_SUB_TYPE?",
+                                "apiPayload": {
+                                    "parentKey": ["{{value}}"]
+                                },
+                                "apiMethod": "get",
+                                "dataKey": "caseSubTypeEnum",
+                                "response": {
+                                    "enum": "key",
+                                    "enumNames": "value"
+                                }
+                            },
+                            "ui:hideError": true
+                        },
+                        "caseSubType": {
+                            "ui:widget": "SelectWidget",
+                            "ui-options": {
+                                "label": true,
+                                "dependentField": "caseType"
+                            },
+                            "ui:placeholder": "Select Case Sub Type",
+                            "ui:hideError": true
+                        },
+                        "contractNumber": {},
+                        "carrier": {
+                            "ui:widget": "hidden"
+                        },
+                        "customerDetails": {
+                            "firstName": {
+                                "ui:disabled": false
+                            },
+                            "lastName": {
+                                "ui:disabled": false
+                            },
+                            "taxId": {
+                                "ui:disabled": false
+                            }
+                        },
+                        "callDetails": {
+                            "callerRole": {
+                                "ui:placeholder": "Select Caller Role",
+                                "ui:hideError": true
+                            },
+                            "associateName": {
+                                "ui:disabled": false
+                            },
+                            "callerName": {
+                                "ui:disabled": false,
+                                "ui:hideError": true
+                            },
+                            "callerPhoneNumber": {}
+                        }
+                    },
+                    "attachment": {
+                        "ui:options": {
+                            "label": false,
+                            "showFiles": false,
+                            "omitValue": true
+                        },
+                        "ui:props": {
+                            "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                            "apiMethod": "get"
+                        }
+                    },
+                    "attachments": {
+                        "ui:options": {
+                            "label": true,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate",
+                            "formContext": {
+                                "keyName": "customData",
+                                "listName": "attachments"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "title": "Details",
+                "formSchema": {
+                    "definitions": {
+                        "countryCodeEnum": {
+                            "enum": [
+                                "AA",
+                                "AE",
+                                "AK",
+                                "AL",
+                                "AP",
+                                "AR",
+                                "AZ",
+                                "CA",
+                                "CD",
+                                "CO",
+                                "CT",
+                                "DC",
+                                "DE",
+                                "FL",
+                                "FN",
+                                "GA",
+                                "GU",
+                                "HI",
+                                "IA",
+                                "ID",
+                                "IL",
+                                "IN",
+                                "KS",
+                                "KY",
+                                "LA",
+                                "MA",
+                                "MD",
+                                "ME",
+                                "MI",
+                                "MN",
+                                "MO",
+                                "MS",
+                                "MT",
+                                "NC",
+                                "ND",
+                                "NE",
+                                "NH",
+                                "NJ",
+                                "NM",
+                                "NV",
+                                "NY",
+                                "OH",
+                                "OK",
+                                "OR",
+                                "PA",
+                                "PR",
+                                "RI",
+                                "SC",
+                                "SD",
+                                "TN",
+                                "TX",
+                                "UT",
+                                "VA",
+                                "VI",
+                                "VT",
+                                "WA",
+                                "WI",
+                                "WV",
+                                "WY"
+                            ]
+                        },
+                        "stateEnum": {
+                            "enum": [
+                                "AA",
+                                "AE",
+                                "AK",
+                                "AL",
+                                "AP",
+                                "AR",
+                                "AZ",
+                                "CA",
+                                "CD",
+                                "CO",
+                                "CT",
+                                "DC",
+                                "DE",
+                                "FL",
+                                "FN",
+                                "GA",
+                                "GU",
+                                "HI",
+                                "IA",
+                                "ID",
+                                "IL",
+                                "IN",
+                                "KS",
+                                "KY",
+                                "LA",
+                                "MA",
+                                "MD",
+                                "ME",
+                                "MI",
+                                "MN",
+                                "MO",
+                                "MS",
+                                "MT",
+                                "NC",
+                                "ND",
+                                "NE",
+                                "NH",
+                                "NJ",
+                                "NM",
+                                "NV",
+                                "NY",
+                                "OH",
+                                "OK",
+                                "OR",
+                                "PA",
+                                "PR",
+                                "RI",
+                                "SC",
+                                "SD",
+                                "TN",
+                                "TX",
+                                "UT",
+                                "VA",
+                                "VI",
+                                "VT",
+                                "WA",
+                                "WI",
+                                "WV",
+                                "WY"
+                            ]
+                        }
+                    },
+                    "properties": {
+                        "caseDetails": {
+                            "type": "object",
+                            "title": "Case Details",
+                            "properties": {
+                                "additionalDetails": {
+                                    "type": "object",
+                                    "title": "Additional Information",
+                                    "properties": {
+                                        "comments": {
+                                            "type": "string",
+                                            "title": "Comments",
+                                            "minLength": 1
+                                        }
+                                    },
+                                    "required": ["comments"]
+                                }
+                            }
+                        }
+                    },
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "caseDetails": {
+                                        "properties": {
+                                            "caseSubType": {
+                                                "const": "LI Representative Address and Phone Change"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "caseDetails": {
+                                        "properties": {
+                                            "additionalDetails": {
+                                                "type": "object",
+                                                "title": "Additional Information",
+                                                "properties": {
+                                                    "address": {
+                                                        "type": "object",
+                                                        "title": "",
+                                                        "properties": {
+                                                            "country": {
+                                                                "type": "string",
+                                                                "title": "Country Code",
+                                                                "$ref": "#/definitions/countryCodeEnum"
+                                                            },
+                                                            "addressLine1": {
+                                                                "type": "string",
+                                                                "title": "Address"
+                                                            },
+                                                            "addressLine2": {
+                                                                "type": ["string", "null"],
+                                                                "title": "Address 2"
+                                                            },
+                                                            "addressLine3": {
+                                                                "type": ["string", "null"],
+                                                                "title": "Address 3"
+                                                            },
+                                                            "city": {
+                                                                "type": "string",
+                                                                "title": "City"
+                                                            },
+                                                            "state": {
+                                                                "type": "string",
+                                                                "title": "State",
+                                                                "$ref": "#/definitions/stateEnum"
+                                                            },
+                                                            "zip": {
+                                                                "type": "string",
+                                                                "title": "Zip"
+                                                            },
+                                                            "zipPlusFour": {
+                                                                "type": "string",
+                                                                "title": "Zip+4"
+                                                            }
+                                                        }
+                                                    },
+                                                    "newAddressEffectiveDate": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "title": "New Address Effective Date"
+                                                    },
+                                                    "currentPhoneNumber": {
+                                                        "type": "string",
+                                                        "title": "Current Phone Number"
+                                                    },
+                                                    "businessPhone": {
+                                                        "type": "string",
+                                                        "title": "Business Phone"
+                                                    },
+                                                    "faxNumber": {
+                                                        "type": "string",
+                                                        "title": "Fax Number"
+                                                    },
+                                                    "newPhoneNumber": {
+                                                        "type": "string",
+                                                        "title": "New Phone Number"
+                                                    },
+                                                    "newBusinessPhone": {
+                                                        "type": "string",
+                                                        "title": "New Business Phone"
+                                                    },
+                                                    "newFaxNumber": {
+                                                        "type": "string",
+                                                        "title": "New Fax Number"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "if": {
+                                "properties": {
+                                    "caseDetails": {
+                                        "properties": {
+                                            "caseSubType": {
+                                                "const": "NB Supporting Document"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "caseDetails": {
+                                        "properties": {
+                                            "additionalDetails": {
+                                                "type": "object",
+                                                "title": "Additional Information",
+                                                "properties": {
+                                                    "lineOfBusiness": {
+                                                        "type": "string",
+                                                        "title": "Line of Business",
+                                                        "enum": ["Life", "Annuity", "Health", "Other"]
+                                                    },
+                                                    "contractNumber": {
+                                                        "type": "string",
+                                                        "title": "Contract #"
+                                                    },
+                                                    "contractOwnerTaxID": {
+                                                        "type": "string",
+                                                        "title": "Contract Owner Tax ID"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "if": {
+                                "properties": {
+                                    "caseDetails": {
+                                        "properties": {
+                                            "caseSubType": {
+                                                "const": "NF Fix"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "properties": {
+                                        "caseDetails": {
+                                            "additionalDetails": {
+                                                "type": "object",
+                                                "title": "Additional Information",
+                                                "properties": {
+                                                    "lineOfBusiness": {
+                                                        "type": "string",
+                                                        "title": "Line of Business",
+                                                        "enum": ["Life", "Annuity", "Health", "Other"]
+                                                    },
+                                                    "contractNumber": {
+                                                        "type": "string",
+                                                        "title": "Contract #"
+                                                    },
+                                                    "taxId": {
+                                                        "type": "string",
+                                                        "title": "SSN/Tax ID"
+                                                    },
+                                                    "callDateTime": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "title": "Call Date and Time"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "if": {
+                                "properties": {
+                                    "caseDetails": {
+                                        "properties": {
+                                            "caseSubType": {
+                                                "const": "Stop Pay Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "caseDetails": {
+                                        "properties": {
+                                            "additionalDetails": {
+                                                "type": "object",
+                                                "title": "Additional Information",
+                                                "properties": {
+                                                    "lineOfBusiness": {
+                                                        "type": "string",
+                                                        "title": "Line of Business",
+                                                        "enum": ["Life", "Annuity", "Health", "Other"]
+                                                    },
+                                                    "contractNumber": {
+                                                        "type": "string",
+                                                        "title": "Contract Number"
+                                                    },
+                                                    "taxId": {
+                                                        "type": "string",
+                                                        "title": "SSN/Tax ID"
+                                                    },
+                                                    "additionalContractNumbers": {
+                                                        "type": "string",
+                                                        "title": "Additional Contract Number(s)"
+                                                    },
+                                                    "externalId": {
+                                                        "type": "string",
+                                                        "title": "External ID"
+                                                    },
+                                                    "callDateTime": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "title": "Call Date and Time"
+                                                    },
+                                                    "callersRelationship": {
+                                                        "type": "string",
+                                                        "title": "Caller's Relationship to Contract"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                "uiSchema": {
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "attachment": {
+                        "ui:options": {
+                            "omitValue": true
+                        }
+                    },
+                    "caseDetails": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "additionalDetails": {
+                            "address": {
+                                "ui:options": {
+                                    "label": false,
+                                    "ObjectFieldTemplate": "AddressFieldTemplate"
+                                },
+                                "addressLine1": {
+                                    "ui:widget": "text",
+                                    "ui:options": {
+                                        "width": 100
+                                    },
+                                    "ui:hideError": true
+                                },
+                                "addressLine2": {
+                                    "ui:widget": "text",
+                                    "ui:options": {
+                                        "width": 100
+                                    }
+                                },
+                                "city": {
+                                    "ui:widget": "text",
+                                    "ui:options": {
+                                        "width": 40
+                                    },
+                                    "ui:hideError": true
+                                },
+                                "state": {
+                                    "ui:widget": "select",
+                                    "ui:options": {
+                                        "width": 60,
+                                        "enumNames": [
+                                            "Armed Forces Americas (except Canada)",
+                                            "Armed Forces Canada, Africa, Europe, Middle East",
+                                            "Alaska",
+                                            "Alabama",
+                                            "US Armed Forces Pacific",
+                                            "Arkansas",
+                                            "Arizona",
+                                            "California",
+                                            "Chad",
+                                            "Colorado",
+                                            "Connecticut",
+                                            "District of Columbia",
+                                            "Delaware",
+                                            "Florida",
+                                            "Estonia",
+                                            "Georgia",
+                                            "Guam",
+                                            "Hawaii",
+                                            "Iowa",
+                                            "Idaho",
+                                            "Illinois",
+                                            "Indiana",
+                                            "Kansas",
+                                            "Kentucky",
+                                            "Louisiana",
+                                            "Massachusetts",
+                                            "Maryland",
+                                            "Maine",
+                                            "Michigan",
+                                            "Minnesota",
+                                            "Missouri",
+                                            "Mississippi",
+                                            "Montana",
+                                            "North Carolina",
+                                            "North Dakota",
+                                            "Nebraska",
+                                            "New Hampshire",
+                                            "New Jersey",
+                                            "New Mexico",
+                                            "Nevada",
+                                            "New York",
+                                            "Ohio",
+                                            "Oklahoma",
+                                            "Oregon",
+                                            "Pennsylvania",
+                                            "Puerto Rico",
+                                            "Rhode Island",
+                                            "South Carolina",
+                                            "South Dakota",
+                                            "Tennessee",
+                                            "Texas",
+                                            "Utah",
+                                            "Virginia",
+                                            "Virgin Islands",
+                                            "Vermont",
+                                            "Washington",
+                                            "Wisconsin",
+                                            "West Virginia",
+                                            "Wyoming"
+                                        ]
+                                    },
+                                    "ui:hideError": true
+                                },
+                                "zip": {
+                                    "ui:widget": "text",
+                                    "ui:options": {
+                                        "width": 25
+                                    },
+                                    "ui:hideError": true
+                                },
+                                "zipPlusFour": {
+                                    "ui:widget": "text",
+                                    "ui:options": {
+                                        "width": 25
+                                    },
+                                    "ui:hideError": true
+                                },
+                                "country": {
+                                    "uniqueItems": true,
+                                    "ui:options": {
+                                        "width": 100,
+                                        "enumNames": [
+                                            "Armed Forces Americas (except Canada)",
+                                            "Armed Forces Canada, Africa, Europe, Middle East",
+                                            "Alaska",
+                                            "Alabama",
+                                            "US Armed Forces Pacific",
+                                            "Arkansas",
+                                            "Arizona",
+                                            "California",
+                                            "Chad",
+                                            "Colorado",
+                                            "Connecticut",
+                                            "District of Columbia",
+                                            "Delaware",
+                                            "Florida",
+                                            "Estonia",
+                                            "Georgia",
+                                            "Guam",
+                                            "Hawaii",
+                                            "Iowa",
+                                            "Idaho",
+                                            "Illinois",
+                                            "Indiana",
+                                            "Kansas",
+                                            "Kentucky",
+                                            "Louisiana",
+                                            "Massachusetts",
+                                            "Maryland",
+                                            "Maine",
+                                            "Michigan",
+                                            "Minnesota",
+                                            "Missouri",
+                                            "Mississippi",
+                                            "Montana",
+                                            "North Carolina",
+                                            "North Dakota",
+                                            "Nebraska",
+                                            "New Hampshire",
+                                            "New Jersey",
+                                            "New Mexico",
+                                            "Nevada",
+                                            "New York",
+                                            "Ohio",
+                                            "Oklahoma",
+                                            "Oregon",
+                                            "Pennsylvania",
+                                            "Puerto Rico",
+                                            "Rhode Island",
+                                            "South Carolina",
+                                            "South Dakota",
+                                            "Tennessee",
+                                            "Texas",
+                                            "Utah",
+                                            "Virginia",
+                                            "Virgin Islands",
+                                            "Vermont",
+                                            "Washington",
+                                            "Wisconsin",
+                                            "West Virginia",
+                                            "Wyoming"
+                                        ]
+                                    }
+                                }
+                            },
+                            "comments": {
+                                "ui:widget": "textarea",
+                                "ui:hideError": true
+                            },
+                            "ui:order": ["*", "comments"]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

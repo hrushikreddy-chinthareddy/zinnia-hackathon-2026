@@ -11,7 +11,7 @@ export enum TaskType {
     RMD = 'RMDFormInputTask',
     SSW = 'SSWFormInputTask',
     RENEWAL = 'RenewalTask',
-    RENEWAL_TASK= 'RENEWAL_TASK',
+    RENEWAL_TASK = 'RENEWAL_TASK',
     REG60 = 'NBReg60Comparision',
     SuitabilityDataEntry = 'SUITABILITY_DATA_ENTRY',
     SuitabilityReview = 'SUITABILITY_REVIEW',
@@ -42,6 +42,7 @@ export enum TaskType {
     Claims_Reverse_Uncashed_Transactions = 'CLAIMS_REVERSE_UNCASHED_TRANSACTIONS',
     Background_Nigo = 'BACKGROUND_NIGO',
     Background_Review = 'BACKGROUND_REVIEW',
+    Default_Case_DataEntry = 'DEFAULT_CASE_DATA_ENTRY',
 }
 
 export enum EarlyTaskType {
@@ -51,9 +52,8 @@ export enum EarlyTaskType {
     SSW = 'SSWFormInputTask',
     RENEWAL = 'RenewalTask',
     REG60 = 'NBReg60Comparision',
-    RENEWAL_TASK = 'RENEWAL_TASK'
+    RENEWAL_TASK = 'RENEWAL_TASK',
 }
-
 
 export enum TaskToProcessType {
     OFTFORMINPUTTASK = 'OFT',
@@ -63,7 +63,6 @@ export enum TaskToProcessType {
     RENEWAL_TASK = 'RENEWAL_TASK',
     RENEWALTASK = 'RenewalTask',
 }
-
 
 export enum TaskSource {
     ZinniaTaskManagement = 'Zinnia.TaskManagement',

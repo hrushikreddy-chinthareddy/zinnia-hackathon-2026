@@ -34,6 +34,7 @@ import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/ico
 import { ReactComponent as DocumentReportIcon } from '@deps/styles/elements/icons/icons_outlined/document-report.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
 import { ReactComponent as TableIcon } from '@deps/styles/elements/icons/icons_outlined/table.svg';
+import { ReactComponent as TicketIcon } from '@deps/styles/elements/icons/icons_outlined/ticket.svg';
 import { DropdownClickedEvent, PolicyClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -308,6 +309,18 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                             'Send Tax Forms',
                             `/contact-center/send-taxform?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
                         );
+                    }}
+                    openInNewTab={true}
+                />
+            </MenuContextualLabel>
+
+            <MenuContextualLabel label={t('additionalActions.label')}>
+                <MenuContextualItem
+                    content={t('additionalActions.serviceRequestForm')}
+                    href={`/policies/${policy.planCode}/${policy.policyNumber}/default-case/`}
+                    icon={<TicketIcon height={20} width={20} />}
+                    onClick={() => {
+                        trackClick('Raise a Service Request', `/policies/${policy.planCode}/${policy.policyNumber}/default-case/`);
                     }}
                     openInNewTab={true}
                 />

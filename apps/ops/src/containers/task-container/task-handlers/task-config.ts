@@ -11,6 +11,8 @@ export const allowedTaskTypes = new Set<TaskType>([
     TaskType.Payment_Processing_Review,
     TaskType.Application_Review,
     TaskType.Agent_Onboarding_Review,
+    TaskType.Background_Review,
+    TaskType.Default_Case_DataEntry,
     TaskType.Claims_Identify_Uncashed_Transactions,
     TaskType.Claims_Stop_Uncashed_Transactions,
     TaskType.Claims_Reverse_Uncashed_Transactions,

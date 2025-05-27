@@ -18,8 +18,9 @@ interface ConfirmStepProps {
     taskInfoLink: string;
     isCta?: boolean;
     ctaLink?: string;
+    ctaText?: string;
 }
-const ConfirmStep = ({ taskType, taskInfoLink, isCta = false, ctaLink }: ConfirmStepProps) => {
+const ConfirmStep = ({ taskType, taskInfoLink, isCta = false, ctaLink, ctaText }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.confirmStep` });
     const router = useRouter();
     const formState = useContext(TaskDataContext);
@@ -61,12 +62,16 @@ const ConfirmStep = ({ taskType, taskInfoLink, isCta = false, ctaLink }: Confirm
                 icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
                 subtitle={t('subTitle')}
                 title={t('title')}
-                cta={isCta ? {
-                    action: () => {
-                        router.push(ctaLink || taskInfoLink);
-                    },
-                    text: t('cta'),
-                } : undefined}
+                cta={
+                    isCta
+                        ? {
+                              action: () => {
+                                  router.push(ctaLink || taskInfoLink);
+                              },
+                              text: ctaText || t('cta'),
+                          }
+                        : undefined
+                }
                 secondaryCta={
                     <NavElement
                         aria-label={t('secondaryCta') as string}

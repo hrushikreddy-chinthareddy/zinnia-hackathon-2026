@@ -11,6 +11,7 @@ import {
     CreateCaseResponse,
     DashboardStatsElementResponse,
     Metadata,
+    ProcessReferenceData,
 } from '@deps/models/case/case';
 import { CaseDocument } from '@deps/models/case/document';
 import { NoteInstance } from '@deps/models/case/note-instance';
@@ -84,11 +85,12 @@ export const createCase = async (query: CreateCaseBody): Promise<CreateCaseRespo
     }
 };
 
-export const getCases = async (query: CaseSearchBody, featureFlags: FeatureFlags): Promise<CaseSearchResponse | CaseSearchErrorResponse> => {
-    try {        
-        const searchUrl = featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH] 
-            ? baseSearchUrl
-            : `${baseCasesUrl}/search`;
+export const getCases = async (
+    query: CaseSearchBody,
+    featureFlags: FeatureFlags
+): Promise<CaseSearchResponse | CaseSearchErrorResponse> => {
+    try {
+        const searchUrl = featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH] ? baseSearchUrl : `${baseCasesUrl}/search`;
         const { data } = await client.post<CaseSearchBody, AxiosResponse>(searchUrl, query);
 
         return data;
@@ -326,16 +328,49 @@ export const getReferenceDataSSR = async (
     }
 };
 
+export const getProcessReferenceDataSSR = async (
+    key: string,
+    queryString: string = '',
+    accessToken: string | undefined,
+    loggingContext: LoggingContext
+): Promise<ProcessReferenceData[] | null> => {
+    try {
+        let refUrl = `${se2ApiServerUrl}/refdata/${key}`;
+        if (queryString) {
+            refUrl += `?${queryString}`;
+        }
+        const { data } = await serverApi.get<any>(
+            refUrl,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            },
+            loggingContext
+        );
+
+        return data;
+    } catch (error: any) {
+        logError('getProcessReferenceData::An error occurred while getting reference data', {
+            ...parseErrorInformation(error),
+            ...loggingContext,
+        });
+        return error.response;
+    }
+};
+
 export const searchCasesSSR = async (
     formData: CaseSearchBody,
     accessToken: string | undefined,
     loggingContext: LoggingContext,
-    featureFlags: FeatureFlags,
+    featureFlags: FeatureFlags
 ): Promise<CaseSearchResponse | null> => {
     try {
-        const searchUrl = featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH] 
-            ? ssrSearchUrl
-            : `${ssrCasesUrl}/search`;
+        const searchUrl = featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH] ? ssrSearchUrl : `${ssrCasesUrl}/search`;
 
         logInfo('searchCasesSSR', { ...loggingContext, file: 'queries/api/cases', function: 'searchCasesSSR', url: searchUrl });
 

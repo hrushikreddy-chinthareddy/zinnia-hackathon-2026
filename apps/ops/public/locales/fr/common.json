@@ -85,7 +85,8 @@
             "sendTaxForm": "Formulaire de taxes envoyé",
             "updatePremium": "Gérer Paiement Automatique",
             "viewDocument": "Voir le document",
-            "withdrawals": "Retraits"
+            "withdrawals": "Retraits",
+            "defaultCase": "Formulaire de demande de service"
         },
         "navLinks": {
             "accessManagement": {
@@ -4974,6 +4975,10 @@
             "sendStatements": "Envoyer des relevés",
             "sendTaxForms": "Envoyer des formulaires fiscaux"
         },
+        "additionalActions": {
+            "label": "Actions supplémentaires",
+            "serviceRequestForm": "Soumettre une demande de service"
+        },
         "transactions": {
             "label": "Transactions",
             "loanPayment": "Commencer un paiement unique de prêt",
@@ -5523,6 +5528,7 @@
             "cancel": "Annuler",
             "confirm": "Confirmer",
             "continue": "Continuer",
+            "cases": "Aller aux cas",
             "nextTask": "Continuer au prochain processus",
             "tabs": {
                 "start": "Démarrer",
@@ -5803,6 +5809,15 @@
             "title": "Compris!",
             "subTitle": "Tâche : Validation de la vérification des antécédents a été soumise.",
             "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "defaultCaseDataEntry": {
+        "confirmStep": {
+            "title": "C'est fait !",
+            "subTitle": "Tâche : Le formulaire de demande de service a été soumis.",
+            "cta": "Aller au cas",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }

@@ -85,7 +85,8 @@
             "sendTaxForm": "Enviar Formulario de Impuestos",
             "updatePremium": "Actualizar Pago Automático de Prima",
             "viewDocument": "Ver Documento",
-            "withdrawals": "Retiros"
+            "withdrawals": "Retiros",
+            "defaultCase": "Formulario de Solicitud de Servicio"
         },
         "navLinks": {
             "accessManagement": {
@@ -4875,6 +4876,10 @@
             "sendStatements": "Enviar estados de cuenta",
             "sendTaxForms": "Enviar formularios fiscales"
         },
+        "additionalActions": {
+            "label": "Acciones adicionales",
+            "serviceRequestForm": "Soumettre une demande de service"
+        },
         "transactions": {
             "label": "Transacciones",
             "loanPayment": "Iniciar un pago único del préstamo",
@@ -5425,6 +5430,7 @@
             "cancel": "Cancelar",
             "confirm": "Confirmar",
             "continue": "Continuar",
+            "cases": "Ir a Casos",
             "tabs": {
                 "start": "Iniciar",
                 "nigoDetails": "Información Faltante",
@@ -5681,6 +5687,15 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Validar Verificación de Antecedentes fue enviada.",
             "cta": "Ir a transferencia entrante",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
+    "defaultCaseDataEntry": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: El formulario de solicitud de servicio fue enviado",
+            "cta": "Ir al caso",
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
         }

@@ -210,22 +210,19 @@
                         }
                     },
                     "caseType": {
-                        "ui:widget": "SelectWidget",
-                        "ui:placeholder": "Select",
+                        "ui:placeholder": "Select Case Type",
+
                         "ui:props": {
-                            "apiUrl": "case/v1/refdata",
+                            "apiUrl": "case/v1/refdata/PROCESS_SUB_TYPE?",
                             "apiPayload": {
-                                "carrier": ["{{carrier}}"],
-                                "keys": ["requestSubType"],
-                                "process": ["{{value}}"]
+                                "parentKey": ["{{value}}"]
                             },
-                            "apiMethod": "post",
+                            "apiMethod": "get",
                             "dataKey": "caseSubTypeEnum",
                             "response": {
-                                "enum": [],
-                                "enumNames": []
-                            },
-                            "responseData": "{{data.referenceData.requestSubType}}"
+                                "enum": "key",
+                                "enumNames": "value"
+                            }
                         },
                         "ui:hideError": true
                     },
@@ -235,7 +232,8 @@
                             "label": true,
                             "dependentField": "caseType"
                         },
-                        "ui:placeholder": "Select"
+                        "ui:placeholder": "Select Case Sub Type",
+                        "ui:hideError": true
                     }
                 }
             },

@@ -233,6 +233,12 @@ export interface CaseReferenceResponse {
     };
 }
 
+export interface ProcessReferenceData {
+    type: string;
+    key: string;
+    value: string;
+}
+
 export interface Nigo {
     createdDate: string | null;
     createdBy: string | null;
