@@ -236,7 +236,7 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                     <Field
                         data-testid={t('paymentAmount') as string}
                         size={FieldSize.Small}
-                        className="max-w-[155px]"
+                        className="max-w-[160px]"
                         label={t('paymentAmount') as string}
                         leading="$"
                         type={FieldType.BaseActive}
@@ -261,7 +261,7 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
 
                 <FieldDateSelect
                     data-testid={dateLabel}
-                    className="flex max-w-[155px]"
+                    className="flex max-w-[160px]"
                     label={dateLabel}
                     value={String(autopay.effectiveDate)}
                     onChange={handleDateChange}

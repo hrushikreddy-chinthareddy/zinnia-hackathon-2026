@@ -14,10 +14,9 @@ import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { Policy, Frequency, Status } from '@deps/models/policy/sor-policy';
+import { Policy, Frequency, Status, AmountType as AutopayAmountType } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import {AmountType as AutopayAmountType} from '@deps/models/policy/sor-policy';
 
 interface AmountProps {
     policy: Policy;
@@ -28,7 +27,7 @@ export type AmountType = {
     initValues: boolean;
     effectiveDate: string;
     paymentAmount: string;
-    amountType ?: AutopayAmountType
+    amountType?: AutopayAmountType;
 };
 
 export type ReverseInitiatorType = {
@@ -159,7 +158,7 @@ const Amount = ({ policy }: AmountProps) => {
                 <Field
                     data-testid={t('paymentAmount') as string}
                     size={FieldSize.Small}
-                    className="max-w-[155px]"
+                    className="max-w-[160px]"
                     label={t('paymentAmount') as string}
                     leading="$"
                     type={FieldType.BaseActive}
@@ -184,7 +183,7 @@ const Amount = ({ policy }: AmountProps) => {
 
                 <FieldDateSelect
                     data-testid={dateLabel}
-                    className="flex max-w-[155px]"
+                    className="flex max-w-[160px]"
                     label={dateLabel}
                     value={String(autopay.effectiveDate)}
                     onChange={handleDateChange}

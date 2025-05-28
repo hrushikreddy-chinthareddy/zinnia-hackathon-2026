@@ -317,7 +317,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
                 )}
             </div>
 
-            <div className="gap-3 max-w-[155px] pt-10">
+            <div className="gap-3 max-w-[160px] pt-10">
                 <FieldDateSelect
                     variant={effectiveDateError ? FieldVariant.Error : FieldVariant.Default}
                     label={t('fundAllocation.effectivedate') as string}

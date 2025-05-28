@@ -204,7 +204,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
                                 <FieldDateSelect
                                     isFutureDateDisabled={false}
                                     formatOptions={{ format: '##/##/####' }}
-                                    className="flex max-w-[155px]"
+                                    className="flex max-w-[160px]"
                                     labelTooltip={t('effectiveDate') as string}
                                     labelTooltipBody={t('effectiveDateTooltip') as string}
                                     label={t('effectiveDate') as string}

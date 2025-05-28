@@ -269,7 +269,7 @@ const SideSheetCancelAutopay = ({
                 />
                 <FieldDateSelect
                     data-testid={t('effectiveDate') as string}
-                    className="flex max-w-[155px]"
+                    className="flex max-w-[160px]"
                     label={t('effectiveDate') as string}
                     value={String(effectiveDate)}
                     onChange={handleDateChange}

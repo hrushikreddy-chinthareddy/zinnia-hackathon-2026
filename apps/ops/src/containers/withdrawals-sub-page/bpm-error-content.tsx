@@ -13,7 +13,7 @@ export const BPMErrorContent = ({ effectiveDate, label, type }: { effectiveDate?
                 {type === ArrangementType.WITHDRAWAL ? t('cancelWithdrawal') : t('cancelRmd')}
             </div>
             <div>
-                <div className="gap-3 max-w-[155px] pt-6">
+                <div className="gap-3 max-w-[160px] pt-6">
                     <FieldDateSelect
                         label={t('effectiveDate') as string}
                         id="effectiveDate"

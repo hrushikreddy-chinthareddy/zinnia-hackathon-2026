@@ -148,7 +148,7 @@ const Amount = ({ policy }: AmountProps) => {
             <div className="flex flex-col gap-6">
                 <FieldDateSelect
                     formatOptions={{ format: '##/##/####' }}
-                    className="flex max-w-[155px]"
+                    className="flex max-w-[160px]"
                     label={t('dateLabel') as string}
                     value={dayjs(effectiveDate, DATE_PICKER_FORMAT).format(DATE_PICKER_FORMAT)}
                     onChange={handleDateChange}
@@ -161,7 +161,7 @@ const Amount = ({ policy }: AmountProps) => {
                 />
                 <Field
                     size={FieldSize.Small}
-                    className="max-w-[155px]"
+                    className="max-w-[160px]"
                     label={t('paymentLabel') as string}
                     leading="$"
                     type={FieldType.BaseActive}

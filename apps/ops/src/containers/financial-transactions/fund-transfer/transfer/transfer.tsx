@@ -410,7 +410,7 @@ const Transfer = ({ policy, validateTransaction, title, subtitle }: TransferProp
             >
                 <FieldDateSelect
                     formatOptions={{ format: '##/##/####' }}
-                    className="flex max-w-[155px]"
+                    className="flex max-w-[160px]"
                     label={t('dateLabel') as string}
                     value={dayjs(fundTransfer?.effectiveDate, DATE_PICKER_FORMAT).format(DATE_PICKER_FORMAT)}
                     onChange={handleDateChange}

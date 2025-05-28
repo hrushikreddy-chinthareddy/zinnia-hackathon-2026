@@ -217,7 +217,7 @@ const Amount = ({ policy }: AmountProps) => {
                 <FieldDateSelect
                     isFutureDateDisabled={false}
                     formatOptions={{ format: '##/##/####' }}
-                    className="flex max-w-[155px]"
+                    className="flex max-w-[160px]"
                     labelTooltip={t('effectiveDate.label') as string}
                     labelTooltipBody={t('effectiveDate.tooltip') as string}
                     label={t('effectiveDate.label') as string}
@@ -239,7 +239,7 @@ const Amount = ({ policy }: AmountProps) => {
                     )}
                 </div>
                 <SelectSimple
-                    className="flex max-w-[155px]"
+                    className="flex max-w-[160px]"
                     labelTooltip={t('disbursementType.label') as string}
                     labelTooltipBody={t('disbursementType.tooltip') as string}
                     label={t('disbursementType.label') as string}
