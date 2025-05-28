@@ -1,10 +1,9 @@
+import { Loader } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
-import loaderImage from '@deps/styles/images/loader.png';
 
 export interface SpinnerButtonProps {
     size?: ButtonSize;
@@ -46,8 +45,10 @@ const SpinnerButton = ({ size, stopLoading = false, text, onClick }: SpinnerButt
         >
             {text}
             {!!isLoading && (
-                <div data-testid="test-loader" className="animate-spin">
-                    <Image alt={t('site.loader')} height={16} src={loaderImage} width={16} />
+                <div data-testid="test-loader">
+                    {/* to do - add optional alt text? */}
+                    {/* alt={t('site.loader')} */}
+                    <Loader />
                 </div>
             )}
         </Button>

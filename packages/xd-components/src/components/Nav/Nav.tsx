@@ -127,7 +127,7 @@ export const Nav = ({
 
   const CollapsedLogo = () => {
     switch (theme) {
-      case 'faremers':
+      case 'farmers':
         return (
           <CarrierAvatar
             carrier={CarrierName.FARMERS}

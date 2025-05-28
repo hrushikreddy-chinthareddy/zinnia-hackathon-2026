@@ -1,7 +1,6 @@
 import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
-import { Icon, IconType } from '@zinnia/bloom/components';
+import { Icon, IconType, Loader } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { MetadataSearchResponse } from 'node_modules/@zinnia/api-types/dist/generated-types/documents-v3/models/MetadataSearchResponse';
 
@@ -18,7 +17,6 @@ import { formatSSN } from '@deps/helpers/string.helpers';
 import { formatDirtyAddress, replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { CardTypes, DataFormattingTypes, TaskFieldTypes } from '@deps/models/case/task';
-import loadingImage from '@deps/styles/images/loader.png';
 
 import style from './card-template.module.css';
 
@@ -295,13 +293,9 @@ const DocumentActions = ({ document, t }: any) => {
                     variant={NavElementVariant.Secondary}
                 >
                     {loading ? (
-                        <Image
-                            alt={t('general.downloading')}
-                            className="transform-origin-center duration-2000 animate-spin ease-linear"
-                            height={20}
-                            src={loadingImage}
-                            width={20}
-                        />
+                        // to do - add optional alt text?
+                        // alt={t('general.downloading')}
+                        <Loader />
                     ) : (
                         <Icon width={20} height={20} type={IconType.DOWNLOAD} />
                     )}

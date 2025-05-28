@@ -1,8 +1,6 @@
-import Image from 'next/image';
+import { Loader } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-
-import loadingImage from '@deps/styles/images/loader.png';
 
 export enum PageLoaderVariant {
     Left = 'left',
@@ -21,13 +19,11 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ showText = false, varian
     const { t } = useTranslation();
 
     return (
-        <div className={`mx-auto flex items-center font-primary ${variant === PageLoaderVariant.Center ? 'justify-center' : 'ml-2'}`}>
-            <div data-testid="test-loader" className="transform-origin-center duration-2000 animate-spin ease-linear">
-                <Image src={loadingImage} alt={t('site.loader')} height={33.33} width={33.33} />
-            </div>
+        <div className={`flex items-center ${variant === PageLoaderVariant.Center ? 'justify-center' : 'ml-2'}`} data-testid="test-loader">
+            <Loader />
             {showText && (
                 <span
-                    className="ml-2"
+                    className="ml-2 font-primary"
                     style={{
                         color:
                             variant === PageLoaderVariant.LeftWhiteText || variant === PageLoaderVariant.CenterWhiteText

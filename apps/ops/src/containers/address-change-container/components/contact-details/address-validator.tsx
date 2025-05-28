@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { Loader } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect } from 'react';
 
@@ -7,7 +7,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import AddressDataCard from '@deps/containers/small-data-card/address-data/address-data';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { ReactComponent as ShieldIcon } from '@deps/styles/elements/icons/icons_outlined/shield-check.svg';
-import loadingImage from '@deps/styles/images/loader.png';
 
 import { AddressError } from './address-error';
 import { getAddressCardDetails, useVerifyAddress, validateAddressFields } from './contact-details.helpers';
@@ -87,13 +86,9 @@ export default function VerifyAddress({
             >
                 {!loading && <ShieldIcon key="verify-address-btn" className="shrink-0" role="presentation" width={20} height={20} />}
                 {loading && (
-                    <Image
-                        alt={t('actionButtons.verifyAddress')}
-                        className="transform-origin-center duration-2000 animate-spin ease-linear"
-                        height={20}
-                        src={loadingImage}
-                        width={20}
-                    />
+                    // to do - add optional alt text?
+                    // alt={t('actionButtons.verifyAddress')}
+                    <Loader />
                 )}
                 {t('actionButtons.verifyAddress')}
             </NavElement>

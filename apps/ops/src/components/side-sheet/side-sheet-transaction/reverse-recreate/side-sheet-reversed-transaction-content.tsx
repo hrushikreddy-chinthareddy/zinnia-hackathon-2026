@@ -1,10 +1,9 @@
-import Image from 'next/image';
+import { Loader } from '@zinnia/bloom/components';
 
 import FieldData, { FieldDataProps } from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import loadingImage from '@deps/styles/images/loader.png';
 
 import { SideSheetReversedTransactionModel } from './types';
 
@@ -13,13 +12,9 @@ const SideSheetReversedTransactionContent = ({ t, loading, values }: SideSheetRe
         transactionType: {
             label: t('policy.history.sidesheet.transactionType'),
             children: loading ? (
-                <Image
-                    alt={t('policy.history.sidesheet.general.downloading')}
-                    className="transform-origin-center duration-2000 animate-spin ease-linear"
-                    height={20}
-                    src={loadingImage}
-                    width={20}
-                />
+                // to do - add optional alt text?
+                // alt={t('policy.history.sidesheet.general.downloading')}
+                <Loader />
             ) : (
                 values?.transactionType
             ),
@@ -29,13 +24,9 @@ const SideSheetReversedTransactionContent = ({ t, loading, values }: SideSheetRe
             tooltipBody: t('policy.history.sidesheet.newAppliedAmountTooltip'),
             tooltipTitle: t('policy.history.sidesheet.newAppliedAmount'),
             children: loading ? (
-                <Image
-                    alt={t('policy.history.sidesheet.general.downloading')}
-                    className="transform-origin-center duration-2000 animate-spin ease-linear"
-                    height={20}
-                    src={loadingImage}
-                    width={20}
-                />
+                // to do - add optional alt text?
+                // alt={t('policy.history.sidesheet.general.downloading')}
+                <Loader />
             ) : (
                 numberFormatify(`${values?.newAppliedAmount}`)
             ),

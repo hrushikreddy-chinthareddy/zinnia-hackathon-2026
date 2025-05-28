@@ -2,6 +2,7 @@ import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 import {
     Icon,
     IconType,
+    Loader,
     Table,
     TableBody,
     TableCell,
@@ -11,7 +12,6 @@ import {
     TableStickyColumn,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import Image from 'next/image';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
@@ -26,7 +26,6 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { isPreviewSupported, useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { ReactComponent as LinkIcon } from '@deps/styles/elements/icons/actions/link.svg';
-import loadingImage from '@deps/styles/images/loader.png';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { CaseDocumentClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
@@ -75,13 +74,9 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource | Metadata
             variant={NavElementVariant.Secondary}
         >
             {loading ? (
-                <Image
-                    alt={t('general.downloading')}
-                    className="transform-origin-center duration-2000 animate-spin ease-linear"
-                    height={20}
-                    src={loadingImage}
-                    width={20}
-                />
+                // to do - add optional alt text?
+                // alt={t('general.downloading')}
+                <Loader />
             ) : (
                 t('policy.documents.download')
             )}

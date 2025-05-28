@@ -16,10 +16,3 @@
         padding: var(--measure-dimension-z-space-6);
     }
 }
-
-[data-theme='farmers'] {
-    .bodyContainer {
-        background-color: var(--color-base-surface-surface-carrier);
-        box-shadow: none;
-    }
-}

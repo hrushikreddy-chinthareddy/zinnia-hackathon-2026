@@ -108,11 +108,9 @@ const App = (props: AppProps) => {
         initializeBrowserLogging();
     }
 
-    const theme = process.env.NEXT_PUBLIC_THEME;
-
     return (
         <QueryClientProvider client={queryClient}>
-            <section className={`${lato.variable} relative`} data-theme={theme}>
+            <section className={`${lato.variable} relative`}>
                 <UserProvider>
                     <AppHead />
                     <AppBody {...props} />

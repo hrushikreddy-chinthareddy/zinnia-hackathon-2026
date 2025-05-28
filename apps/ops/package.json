@@ -62,7 +62,7 @@
         "@types/xml2js": "^0.4.14",
         "@typescript-eslint/eslint-plugin": "^6.18.1",
         "@zinnia/api-types": "workspace:*",
-        "@zinnia/bloom": "^5.10.0",
+        "@zinnia/bloom": "^5.11.2",
         "@zinnia/pom": "workspace:*",
         "@zinnia/utils": "workspace:*",
         "@zinnia/xd-components": "workspace:*",

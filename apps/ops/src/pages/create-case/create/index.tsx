@@ -1,6 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { Loader } from '@zinnia/bloom/components';
 import { setCookie } from 'cookies-next';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -24,7 +24,6 @@ import { getCases } from '@deps/queries/api/cases';
 import { getDocumentV2 } from '@deps/queries/api/documents';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { ReactComponent as SuccessIcon } from '@deps/styles/elements/icons/icons_outlined/refresh-2.svg';
-import loadingImage from '@deps/styles/images/loader.png';
 import { browserLogInfo, browserLogWarn } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
@@ -87,7 +86,7 @@ export default function CaseCreate({ featureFlagDecisions }: CaseCreateProps) {
             setCardProps({
                 title: t('momentPlease') as string,
                 subtitle: t('creatingCase', { clientCode, documentNumber }) as string,
-                icon: <Image src={loadingImage} alt={t('momentPlease') as string} className="text-semantic-info" height={50} width={50} />,
+                icon: <Loader />,
             });
             initializeCaseCreation();
         }

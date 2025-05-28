@@ -2,6 +2,8 @@ import { FC, PropsWithChildren, useState } from 'react';
 
 import {
   Button,
+  CarrierLogo,
+  CarrierName,
   Icon,
   IconType,
   SideSheet,
@@ -49,6 +51,23 @@ export const Layout: FC<LayoutType> = ({
   const handleOpenSidesheet = () => {
     setOpen(true);
     onNavigationToggle?.(true);
+  };
+
+  const Logo = () => {
+    switch (theme) {
+      case 'farmers':
+        return (
+          <div style={{ minWidth: '127px' }}>
+            <CarrierLogo
+              carrier={CarrierName.FARMERS}
+              height={24}
+              width={127}
+            />
+          </div>
+        );
+      default:
+        return <img src={zinniaLogo} alt={imageAlt} height={24} width={90} />;
+    }
   };
 
   return (
@@ -107,9 +126,7 @@ export const Layout: FC<LayoutType> = ({
                   width={24}
                 />
               </Button>
-              <div className={styles.zinniaLogo}>
-                <img src={zinniaLogo} alt={imageAlt} height={24} width={90} />
-              </div>
+              <Logo />
             </section>
             <main className={(styles.layoutMain, className)}>{children}</main>
           </>

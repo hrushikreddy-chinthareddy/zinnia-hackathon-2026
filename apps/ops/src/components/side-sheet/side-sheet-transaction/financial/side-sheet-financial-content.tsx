@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { Loader } from '@zinnia/bloom/components';
 import { TFunction } from 'next-i18next';
 
 import FieldData from '@deps/components/fields/field-data/field-data';
@@ -6,7 +6,6 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { TransactionStatus } from '@deps/models/policy/sor-policy';
-import loadingImage from '@deps/styles/images/loader.png';
 
 import { TransactionSideSheetValues } from '../types';
 
@@ -29,13 +28,9 @@ const SideSheetFinancialTransactionContent = ({ loading, values, t }: SideSheetF
             <div className="grid grid-cols-2 gap-8">
                 <FieldData label={t('policy.history.sidesheet.transactionType')}>
                     {loading ? (
-                        <Image
-                            alt={t('policy.history.sidesheet.general.downloading')}
-                            className="transform-origin-center duration-2000 animate-spin ease-linear"
-                            height={20}
-                            src={loadingImage}
-                            width={20}
-                        />
+                        // to do - add optional alt text?
+                        // alt={t('policy.history.sidesheet.general.downloading')}
+                        <Loader />
                     ) : (
                         transactionType
                     )}

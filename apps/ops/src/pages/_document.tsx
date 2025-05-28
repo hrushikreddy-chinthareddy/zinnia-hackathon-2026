@@ -8,11 +8,13 @@ interface DocumentContextProps extends DocumentProps {
     company: string;
 }
 
+const theme = process.env.NEXT_PUBLIC_THEME;
+
 const Document = ({ company }: DocumentContextProps) => {
     const currentLocale = i18nextConfig.i18n.defaultLocale;
 
     return (
-        <Html lang={currentLocale}>
+        <Html lang={currentLocale} data-theme={theme}>
             <Head>
                 <link rel="stylesheet" href={`/styles/themes/${company?.toLowerCase()}/theme.css`} />
             </Head>

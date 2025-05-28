@@ -13,12 +13,14 @@
 
 @layer base {
     h1 {
+        color: var(--color-base-text-text-carrier);
         font: var(--typography-desktop-headline-1-d);
         @media screen and (max-width: 768px) {
             font: var(--typography-mobile-headline-1-m);
         }
     }
     h2 {
+        color: var(--color-base-text-text-carrier);
         font: var(--typography-desktop-headline-2-d);
         @media screen and (max-width: 768px) {
             font: var(--typography-mobile-headline-2-m);
@@ -26,6 +28,7 @@
     }
     h3 {
         font: var(--typography-desktop-headline-3-d);
+
         @media screen and (max-width: 768px) {
             font: var(--typography-mobile-headline-3-m);
         }
@@ -278,7 +281,14 @@ body {
 
 @layer components {
     .chip {
-        @apply default-focus pointer-events-auto cursor-pointer rounded-full border-2 border-gray-200 bg-white px-4 py-0.5 font-primary text-md font-semibold leading-6 hover:border-primary hover:bg-primary-lightest disabled:pointer-events-none disabled:cursor-auto disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-300;
+        @apply default-focus pointer-events-auto cursor-pointer rounded-full border-2 px-4 py-0.5 font-primary text-md font-semibold leading-6 disabled:pointer-events-none disabled:cursor-auto disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-300;
+
+        background-color: var(--color-chip-surface-chip-default-fill);
+
+        &:hover {
+            background-color: var(--color-chip-surface-chip-hover-fill);
+            border-color: var(--color-chip-border-chip-hover-border);
+        }
 
         &:active,
         &[aria-checked='true'] {

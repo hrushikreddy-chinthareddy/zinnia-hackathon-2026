@@ -1,3 +1,4 @@
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
@@ -5,7 +6,6 @@ import React from 'react';
 import ClickContainer from '@deps/components/click-container/click-container';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 
 export interface TransactionCardProps {
     href: string;
@@ -32,7 +32,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ href, fieldLabel, sum
         >
             <div className="flex justify-between" data-testid="transaction-card">
                 <Label className="text-gray-900" label={cardTitle} variant={LabelVariant.LabelLg} />
-                <ChevronRightIcon width="18px" height="18px" className="text-secondary" />
+                <Icon type={IconType.CHEVRON_RIGHT} height={18} width={18} color="var(--color-base-text-text-link)" />
             </div>
             <dl className="mt-4">
                 <Label className="text-gray-900" label={fieldLabel} variant={LabelVariant.FieldLabel} />

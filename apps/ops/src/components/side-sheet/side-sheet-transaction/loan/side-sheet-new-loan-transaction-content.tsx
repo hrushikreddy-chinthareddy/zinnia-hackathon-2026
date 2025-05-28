@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { Loader } from '@zinnia/bloom/components';
 import { TFunction } from 'next-i18next';
 import { Key } from 'react';
 
@@ -8,7 +8,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
-import loadingImage from '@deps/styles/images/loader.png';
 
 import { NewLoanTransactionSideSheetValues } from './types';
 
@@ -55,13 +54,9 @@ const SideSheetNewLoanTransactionContent = ({ loading, values, t }: SideSheetNew
                     tooltipTitle={t('policy.history.newLoanSideSheet.loanInterestRate')}
                 >
                     {loading ? (
-                        <Image
-                            alt={t('policy.history.sidesheet.general.downloading')}
-                            className="transform-origin-center duration-2000 animate-spin ease-linear"
-                            height={20}
-                            src={loadingImage}
-                            width={20}
-                        />
+                        // to do - add optional alt text?
+                        // alt={t('policy.history.sidesheet.general.downloading')}
+                        <Loader />
                     ) : (
                         percentFormatify(interestRate, { isInteger: true })
                     )}

@@ -1,5 +1,4 @@
-import { Label } from '@zinnia/bloom/components';
-import Image from 'next/image';
+import { Label, Loader } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { ReactNode, useEffect, useState } from 'react';
 
@@ -10,7 +9,6 @@ import { AccessibleFormattedAmount } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { Case, CaseIdentifier, Processes } from '@deps/models/case/case';
 import { getPolicyTransaction } from '@deps/queries/api/policies';
-import loadingImage from '@deps/styles/images/loader.png';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 type TransactionDetails = {
@@ -99,9 +97,9 @@ export default function Transactions({ caseDetails }: { caseDetails: Case }) {
             </Title>
             {loading ? (
                 <div className="mt-2 flex h-[104px] w-full items-center justify-center">
-                    <div data-testid="test-loader" className="transform-origin-center duration-2000 animate-spin ease-linear">
-                        <Image src={loadingImage} alt={t('site.loader')} height={33.33} width={33.33} />
-                    </div>
+                    {/* to do - add optional alt text? */}
+                    {/* alt={t('site.loader')} */}
+                    <Loader />
                 </div>
             ) : (
                 <div className="mt-2 grid w-full grid-cols-2 gap-x-8 gap-y-2 md:grid-cols-4 lg:grid-cols-2">
