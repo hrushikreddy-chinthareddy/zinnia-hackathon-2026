@@ -119,6 +119,7 @@ const withdrawalTransactions = [
     TransactionType.FullSurrender,
     TransactionType.PartialWithdrawalOneTime,
     TransactionType.SystematicPartialWithdrawal,
+    TransactionType.RequiredMinimumDistributionOneTime,
 ];
 
 export const financialTransactions = {

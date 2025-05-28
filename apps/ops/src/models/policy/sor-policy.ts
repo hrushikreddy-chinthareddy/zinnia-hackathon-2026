@@ -959,6 +959,7 @@ export const TransactionType = {
     SystematicProgramUpdate: 'SystematicProgramUpdate',
     TPDChange: 'TPDChange',
     UnitExpenseCharge: 'UnitExpenseCharge',
+    RequiredMinimumDistributionOneTime: 'RequiredMinimumDistributionOneTime',
 } as const;
 
 export type TransactionErrorResponseAllOf = {
@@ -2618,7 +2619,7 @@ export const PartyRole = {
     JOINTAANUITANT: 'ANNUITANT / INSURED',
     ANNUITANT: 'ANNUITANT',
     ADDITIONALSERVICINGAGENT: 'ADDITIONALSERVICINGAGENT',
-    ADDITIONALWRITINGAGENT: 'ADDITIONALWRITINGAGENT'
+    ADDITIONALWRITINGAGENT: 'ADDITIONALWRITINGAGENT',
 } as const;
 
 export type PartyNameChangeRequestPartyNameAllOf = {
@@ -5156,7 +5157,6 @@ export const ArrangementType = {
     LOANREPAYMENT: 'LOANREPAYMENT',
     REQUIREDMINIMUMDISTRIBUTION: 'REQUIREDMINIMUMDISTRIBUTION',
 } as const;
-
 
 /**
  * Amount Type selected by user. Following is dropdown list 1. Amount -- If selected user should be able to enter Amount for Transaction Amount field 2. Percent -- If selected user should be able to enter Percentage for Transaction Amount field 3. Max -- If selected user should NOT be able to enter Amount. Auto calculated using Maximum Withdrawal Amount. 4. Free Withdrawal Amount -- If selected user should NOT be able to enter Amount. Auto calcualted using Free Withdrawal Amount. 5. Withdraw Until Basis ---- If selected user should NOT be able to enter Amount. Auto calcualted using Cost Basis.
