@@ -5702,5 +5702,14 @@
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
         }
+    },
+    "opsReview": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Validar Operaciones fue enviada.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
     }
 }

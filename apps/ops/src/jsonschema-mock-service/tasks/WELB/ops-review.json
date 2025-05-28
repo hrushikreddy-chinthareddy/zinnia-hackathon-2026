@@ -1,0 +1,304 @@
+{
+    "formId": "87f1a2e5-6740-4f00-9169-9fd50efda9d0",
+    "process": "Operations Review",
+    "carrier": "WELB",
+    "taskType": "OPS_REVIEW",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Operation Review",
+                "formSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "type": "object",
+                    "definitions": {
+                        "declineReasonEnum": {},
+                        "outcomeEnum": {
+                            "enum": [
+                                "Support Ticket Raised",
+                                "Processed Transaction Manually",
+                                "Processed Transaction via Support Ticket",
+                                "Transaction No Longer Required",
+                                "Transaction Withdrawn",
+                                "Client Communication Sent"
+                            ]
+                        }
+                    },
+                    "required": ["issueResolved"],
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "This task is to handle a {{customData.details.processSubtype}}. The required document is attached in the task for your review. Please review and complete the task with the appropriate selection."
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting Information",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Supporting Information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Document ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "title": "Have you completed the action or review for this task?",
+                            "enum": [true, false],
+                            "enumNames": ["Yes", "No"]
+                        },
+                        "uploadDocuments": {
+                            "type": "object",
+                            "title": "Link or upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "upload",
+                                    "items": {
+                                        "title": "upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "issueResolved": {
+                                        "const": true
+                                    }
+                                },
+                                "required": ["issueResolved"]
+                            },
+                            "then": {
+                                "properties": {
+                                    "outcome": {
+                                        "type": "string",
+                                        "title": "Outcome",
+                                        "enum": [
+                                            "Support Ticket Raised",
+                                            "Processed Transaction Manually",
+                                            "Processed Transaction via Support Ticket",
+                                            "Transaction No Longer Required",
+                                            "Transaction Withdrawn",
+                                            "Client Communication Sent"
+                                        ]
+                                    }
+                                },
+                                "required": ["outcome"]
+                            }
+                        },
+                        {
+                            "if": {
+                                "properties": {
+                                    "issueResolved": {
+                                        "const": false
+                                    }
+                                },
+                                "required": ["issueResolved"]
+                            },
+                            "then": {
+                                "properties": {
+                                    "declineReason": {
+                                        "type": "array",
+                                        "title": "Reason for decline",
+                                        "items": {
+                                            "type": "string",
+                                            "$ref": "#/definitions/declineReasonEnum"
+                                        },
+                                        "minItems": 1,
+                                        "uniqueItems": true
+                                    },
+                                    "reviewFailureReasonDisplay": {
+                                        "type": "array",
+                                        "title": "These issues will be created for the case:",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": ["declineReason"]
+                            }
+                        }
+                    ]
+                },
+                "uiSchema": {
+                    "ui:order": [
+                        "sectionHeader",
+                        "details",
+                        "issueResolved",
+                        "declineReason",
+                        "reviewFailureReasonDisplay",
+                        "outcome",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "documents": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": false,
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                }
+                            }
+                        }
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:hideError": true
+                    },
+
+                    "outcome": {
+                        "ui:widget": "SelectWidget",
+                        "ui:placeholder": "Select Outcome",
+                        "ui:hideError": true
+                    },
+                    "declineReason": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:placeholder": "Select Issues",
+                        "ui:hideError": true
+                    },
+                    "reviewFailureReasonDisplay": {
+                        "ui:options": {
+                            "label": true,
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "hasBg": true,
+                            "formContext": {
+                                "keyName": "customData",
+                                "listName": "declineReason",
+                                "parseKey": "detailedReason"
+                            },
+                            "omitValue": true
+                        }
+                    },
+
+                    "uploadDocuments": {
+                        "inline": true,
+                        "ui:options": {
+                            "label": true,
+                            "omitValue": true
+                        },
+                        "upload": {
+                            "ui:widget": "AutoCompleteWidget",
+                            "ui:placeholder": "Find existing documents...",
+                            "ui:options": {
+                                "label": false,
+                                "icon": "Search"
+                            }
+                        },
+                        "or": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "attachment": {
+                            "ui:options": {
+                                "label": false,
+                                "showFiles": false
+                            },
+                            "ui:props": {
+                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiMethod": "get"
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

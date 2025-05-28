@@ -1,0 +1,40 @@
+{
+    "id": "TA000000028406",
+    "caseId": "CA0000419722",
+    "source": "BPM.IndexationOrkestr",
+    "templateId": "911593f4-d861-4cb5-93a9-922c6c5f9e90",
+    "process": "Operations Review",
+    "carrier": "WELB",
+    "taskType": "OPS_REVIEW",
+    "taskName": "OPS Review",
+    "status": "NEW",
+    "data": {
+        "details": {
+            "processSubtype": "Legal",
+            "processType": "Compliance",
+            "documentDetails": [
+                {
+                    "documentId": "682ef5cc6ca3de7db583e46b",
+                    "docType": "Ops Review",
+                    "documentName": "Ops Review Form"
+                }
+            ]
+        }
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-05-22T10:00:45Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-05-22T10:00:45Z",
+    "identifiers": [
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000419722"
+        }
+    ],
+    "externalId": "5cc8390f-babc-4444-a271-74fe47bb02ef"
+}

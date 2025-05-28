@@ -2,6 +2,7 @@ import { ArrayFieldTemplateProps } from '@rjsf/utils';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import { parseJsonValue } from '@deps/helpers/csr-api-helpers';
 
 const variantMap: { [key: string]: AssistiveTextVariant } = {
     error: AssistiveTextVariant.Error,
@@ -38,7 +39,9 @@ export default function TextListTemplate(props: ArrayFieldTemplateProps): JSX.El
             const data = props.formContext[formContextOptions?.keyName][formContextOptions?.listName];
             const parseKey: string = formContextOptions?.parseKey ?? '';
 
-            list = parseKey ? data.map((item: string) => (typeof item !== 'object' ? JSON.parse(item)[parseKey] : item[parseKey])) : data;
+            list = parseKey
+                ? data.map((item: string) => (typeof item !== 'object' ? parseJsonValue(item)[parseKey] : item[parseKey]))
+                : data;
         }
     }
 

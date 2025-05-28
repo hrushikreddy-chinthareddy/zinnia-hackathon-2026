@@ -54,6 +54,7 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
         case TaskType.TOA_Review:
         case TaskType.Prenote_Review:
         case TaskType.Payment_Processing_Review:
+        case TaskType.Ops_Review:
             steps = getTOANigoSteps(props);
             break;
         case TaskType.Claims_Identify_Uncashed_Transactions:
