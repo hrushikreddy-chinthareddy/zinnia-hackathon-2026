@@ -747,7 +747,10 @@
         "unapproved": "Unapproved",
         "submit": "Submit",
         "uploadDocument": "Upload Document",
-        "fileUploaded": "File uploaded successfully"
+        "fileUploadToastMessages": {
+            "fileUploadError": "Failed to upload following files ({{failedUploads}})",
+            "fileUploadSuccess": "File uploaded successfully"
+        }
     },
     "dashboard": {
         "h1": "Policies",

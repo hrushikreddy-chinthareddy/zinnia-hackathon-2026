@@ -68,15 +68,16 @@
                                         "type": "object",
                                         "properties": {
                                             "documentName": {
-                                                "type": "string",
-                                                "ui:field": "title"
+                                                "type": "string"
                                             },
                                             "documentId": {
-                                                "type": "string"
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Document ID: "
                                             },
                                             "documentType": {
                                                 "type": "string",
-                                                "ui:field": "subTitle"
+                                                "ui:field": "title"
                                             },
                                             "documentExt": {
                                                 "type": "string"
@@ -236,6 +237,11 @@
                                     "ObjectFieldTemplate": "CardTemplate",
                                     "nobackground": true
                                 }
+                            },
+                            "carrier": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
                             }
                         }
                     },
@@ -250,7 +256,8 @@
                     "uploadDocuments": {
                         "inline": true,
                         "ui:options": {
-                            "label": true
+                            "label": true,
+                            "omitValue": true
                         },
                         "upload": {
                             "ui:widget": "AutoCompleteWidget",

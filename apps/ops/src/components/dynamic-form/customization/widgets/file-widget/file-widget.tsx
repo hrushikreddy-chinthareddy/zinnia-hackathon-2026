@@ -88,8 +88,6 @@ function getFileSubtype(blob: Blob) {
 
 export function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
     filesInfo,
-    registry,
-    options,
 }: {
     filesInfo: FileInfoType[];
     registry: Registry<T, S, F>;
@@ -100,9 +98,6 @@ export function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     if (filesInfo.length === 0) {
         return null;
     }
-    const { translateString } = registry;
-
-    const { RemoveButton } = getTemplate<'ButtonTemplates', T, S, F>('ButtonTemplates', registry, options);
 
     return (
         <ul className="file-info mt-2">
@@ -114,9 +109,6 @@ export function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
                             <UploadIcon height={25} width={25} />
                             {name !== undefined ? name : 'No file chosen'}
                         </div>
-                        {/* <div>{translateString(TranslatableString.FilesInfo, [name, type, String(size)])}</div> */}
-                        {/* {preview && <FileInfoPreview<T, S, F> fileInfo={fileInfo} registry={registry} />} */}
-                        {/* <RemoveButton onClick={handleRemove} registry={registry} /> */}
                     </li>
                 );
             })}
@@ -159,10 +151,12 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     const { props, showFiles } = getUiOptions<T, S, F>(uiSchema);
 
     const { apiUrl, apiMethod } = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
-    const [success, setSuccess] = useState<boolean>(false);
+    const [toastMessage, setToastMessage] = useState<any>(undefined);
+    const [toastVariant, setToastVariant] = useState<any>(undefined);
 
     const onSubmit = (data: any, files: any) => {
         const attachments = [...(formContext?.customData?.attachments || [])];
+        const failedUploads: string[] = []; // Track failed uploads
 
         const uploadPromises = Object.keys(files).map(async (key: string) => {
             const { blob, name } = dataURItoBlob(files[key]);
@@ -189,21 +183,32 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
                     const task = formContext?.customData?.task;
                     return await attachFilesToMappedDocuments(attachment, task, formContext?.correlationId || '');
+                } else {
+                    failedUploads.push(name); // Add the file name to the failed uploads list
                 }
-                return null;
             } catch (error) {
+                // Log the error and track the failed file
                 browserLogError('FileWidget: Error uploading document:', {
                     ...parseErrorInformation(error),
                 });
-                return false;
+                failedUploads.push(name); // Add the file name to the failed uploads list
             }
         });
 
-        Promise.allSettled(uploadPromises).then(results => {
+        Promise.allSettled(uploadPromises).then(() => {
             if (formContext?.setCustomData) {
                 formContext.setCustomData({ attachments: attachments });
             }
-            setSuccess(true);
+
+            if (failedUploads.length > 0) {
+                // Notify the user about failed uploads
+                setToastVariant(ToastVariant.Error);
+                setToastMessage(t(`fileUploadToastMessages.fileUploadError`, { failedUploads: failedUploads.join(', ') }));
+            } else {
+                setToastVariant(ToastVariant.Success);
+                setToastMessage(t(`fileUploadToastMessages.fileUploadSuccess`, {}));
+            }
+
             sideSheet.onClose();
         });
     };
@@ -226,7 +231,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
                 setAttachmentSchema(data);
             } catch (err) {
-                console.log('🚀 ~ getAttachmentSchema ~ err:', err);
+                browserLogError('🚀 ~ getAttachmentSchema ~ err:', { err });
             } finally {
                 setLoader(false);
             }
@@ -284,13 +289,14 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     );
 
     useEffect(() => {
-        if (success) {
+        if (toastMessage && toastVariant) {
             const timer = setTimeout(() => {
-                setSuccess(false);
+                setToastMessage(undefined);
+                setToastVariant(undefined);
             }, INTERVAL);
             return () => clearTimeout(timer);
         }
-    }, [success]);
+    }, [toastMessage, toastVariant]);
 
     const rmFile = useCallback(
         (index: number) => {
@@ -334,11 +340,9 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                     options={options}
                 />
             )}
-            {success && (
+            {toastMessage && toastVariant && (
                 <div className="fixed bottom-4 right-10 z-50">
-                    <button onClick={() => setSuccess(false)} type="button">
-                        <Toast variant={ToastVariant.Success}>{t('fileUploaded')}</Toast>
-                    </button>
+                    <Toast variant={toastVariant}>{toastMessage}</Toast>
                 </div>
             )}
         </>

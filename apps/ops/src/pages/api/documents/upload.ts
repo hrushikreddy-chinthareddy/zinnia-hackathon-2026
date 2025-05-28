@@ -9,6 +9,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 const baseUrl = `${apiServerBaseUrl}/document/v3`;
 
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: '20mb',
+        },
+    },
+};
+
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<any | null>, loggingContext) => {
         const accessToken = (await getAccessToken(req, res)).accessToken;

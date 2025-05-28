@@ -747,7 +747,10 @@
         "unapproved": "No aprobado",
         "submit": "Enviar",
         "uploadDocument": "Subir Documento",
-        "fileUploaded": "Archivo subido correctamente"
+        "fileUploadToastMessages": {
+            "fileUploadError": "Error al subir los siguientes archivos ({{failedUploads}})",
+            "fileUploadSuccess": "Archivo subido exitosamente"
+        }
     },
     "dashboard": {
         "h1": "Pólizas",

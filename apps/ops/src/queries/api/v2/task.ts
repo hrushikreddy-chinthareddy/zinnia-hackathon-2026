@@ -10,7 +10,6 @@ import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { CaseSearchErrorResponse, CaseTaskSearchResponse } from '@deps/types/search';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import { logError, LoggingContext, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
 const baseCasesV2Url = `${baseAppUrl}/api/case/v2/cases`;
@@ -49,15 +48,8 @@ export const getCaseTaskByIdSSR = async (
 
 export const getTaskInstance = async (query: any): Promise<ManagementTask | null> => {
     try {
-        const cachedResult = pullFromCache('getTaskInstance', query);
-
-        if (cachedResult) {
-            return cachedResult;
-        }
-
+        // removing the cache logic for fetching task instance as we try to upload a new document to the task and then open the task sidesheet, we want the newly uploaded document to be shown in the task sidesheet without refreshing the page
         const { data } = await client.get<any, AxiosResponse>(`${tasksV2Url}/${query.taskId}`, query);
-
-        writeToCache('getTaskInstance', query, data);
 
         return data;
     } catch (error: any) {
@@ -143,10 +135,10 @@ export const createTask = async (
         const logTime = entryDuration ? performance.now() - entryDuration : 0;
         const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
         const url = `${baseCasesV2Url}/${caseId}/tasks`;
-        const { data } = await client.post<CreateTaskBody<TaskStatus, Reg60FormData | ActiveWithdrawalCaseData | RenewalsFormData>, AxiosResponse>(
-            url,
-            payload
-        );
+        const { data } = await client.post<
+            CreateTaskBody<TaskStatus, Reg60FormData | ActiveWithdrawalCaseData | RenewalsFormData>,
+            AxiosResponse
+        >(url, payload);
         browserLogInfo('Successfully created task using v2', { caseId, url, function: 'tasks.createTask' });
 
         datadogLogs.logger.info('CreateTask::Form Entry time', {

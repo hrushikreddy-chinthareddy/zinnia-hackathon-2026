@@ -99,7 +99,8 @@
                                         },
                                         "issueReason": {
                                             "type": "object",
-                                            "title": "The status reason for the task will be set to:"
+                                            "title": "The status reason for the task will be set to:",
+                                            "description": "NIGO's unable to be resolved"
                                         }
                                     }
                                 }
@@ -162,7 +163,8 @@
                     "uploadDocuments": {
                         "inline": true,
                         "ui:options": {
-                            "label": true
+                            "label": true,
+                            "omitValue": true
                         },
                         "upload": {
                             "ui:widget": "AutoCompleteWidget",
@@ -198,9 +200,6 @@
                         }
                     },
                     "issueReason": {
-                        "props": {
-                            "description": "NIGO's unable to be resolved"
-                        },
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "InstructionsTemplate"
