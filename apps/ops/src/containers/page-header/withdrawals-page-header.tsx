@@ -60,7 +60,8 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
         marketValueAdjustmentAmount,
         marketValueAdjustmentIndicator,
         allTimeWithdrawalCount,
-        freeWithdrawalAmount,
+        yearToDateFreeWithdrawalAmount,
+        totalYearToDateWithdrawalTaken,
     } = withdrawalsValues ?? {};
 
     const headerRowFlexClassNames = clsx('flex-col', 'xs:gap-4 lg:gap-0');
@@ -87,9 +88,17 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
     );
 
     const isPlural = allTimeWithdrawalCount !== 1;
-    const withdrawalCaption = `${allTimeWithdrawalCount} ${
-        isPlural ? t('withdrawals.withdrawals').toLowerCase() : t('withdrawals.withdrawal')
-    }`;
+    const withdrawalText = t(`withdrawals.withdrawal${isPlural ? 's' : ''}`).toLowerCase();
+
+    const hasWithdrawalCount = allTimeWithdrawalCount != null || allTimeWithdrawalCount !== undefined;
+    const withdrawalCaption = hasWithdrawalCount ? `${allTimeWithdrawalCount} ${withdrawalText}` : DEFAULT_ERROR_STRING;
+
+    const isAnnuity = policyDetails?.isAnnuity ?? false;
+    const ytdFreeWithdrawalFormatted = isAnnuity ? numberFormatify(yearToDateFreeWithdrawalAmount as number) : '';
+    const ytdFreeWithdrawalCaption = isAnnuity ? `${t('withdrawals.ytdFreeWithdrawalAmount')}: ${ytdFreeWithdrawalFormatted}` : '';
+    const ytdWithdrawalsForAnnuity = isAnnuity
+        ? `${t('withdrawals.ytdWithdrawals')}: ${numberFormatify(totalYearToDateWithdrawalTaken as number)}`
+        : '';
 
     const belowHeaderTextChildren = (
         <>
@@ -112,7 +121,7 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
                         )}
                         <div className="w-[224px] xl:w-fit">
                             <Label
-                                label={t('withdrawals.netSurrenderValue')}
+                                label={policyDetails?.isAnnuity ? t('withdrawals.surrenderValue') : t('withdrawals.netSurrenderValue')}
                                 tooltipTitle={t('withdrawals.netSurrenderValue')}
                                 tooltipBody={t('withdrawals.netSurrenderValueTooltip')}
                                 variant={LabelVariant.FieldLabel}
@@ -128,7 +137,7 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
                             {policyDetails.isAnnuity ? (
                                 <>
                                     <Label
-                                        label={t('withdrawals.maximumWithdrawalAmount')}
+                                        label={t('withdrawals.freeWithdrawalAmount')}
                                         tooltipTitle={t('withdrawals.maximumWithdrawalAmount')}
                                         tooltipBody={t('withdrawals.maximumWithdrawalAmountTooltip')}
                                         variant={LabelVariant.FieldLabel}
@@ -139,9 +148,7 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
                                     />
                                     <Content
                                         className="text-gray-600"
-                                        details={`${t('withdrawals.freeWithdrawalAmount', {
-                                            amount: numberFormatify(freeWithdrawalAmount as number),
-                                        })}`}
+                                        details={ytdFreeWithdrawalCaption}
                                         variant={ContentVariant.Caption}
                                     />
                                 </>
@@ -175,7 +182,9 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
                         </div>
                         <div className="w-[224px] xl:w-fit">
                             <Label
-                                label={t('withdrawals.allTimeWithdrawals')}
+                                label={
+                                    policyDetails?.isAnnuity ? t('withdrawals.cumulativeWithdrawals') : t('withdrawals.allTimeWithdrawals')
+                                }
                                 tooltipTitle={t('withdrawals.allTimeWithdrawals')}
                                 tooltipBody={t('withdrawals.allTimeWithdrawalsTooltip')}
                                 variant={LabelVariant.FieldLabel}
@@ -186,7 +195,7 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
                             />
                             <Content
                                 className="text-gray-600"
-                                details={allTimeWithdrawalCount === null ? DEFAULT_ERROR_STRING : withdrawalCaption}
+                                details={policyDetails?.isAnnuity ? ytdWithdrawalsForAnnuity : withdrawalCaption}
                                 variant={ContentVariant.Caption}
                             />
                         </div>

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
+import { convertToCamelCase } from '@zinnia/utils';
 
 import Footnote from '@deps/components/footnote/footnote';
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -12,6 +13,9 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatDate } from '@deps/helpers/string.helpers';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
+import { PopoverPlacement } from '@deps/components/popover/popover';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 
 export type WithdrawalRulesProps = {
     policy: Policy;
@@ -55,13 +59,38 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
               });
     }
 
+    const totalAnnualAmount = policyDetails.requiredMinimumDistribution.totalAnnualAmount;
+
+    let badgeLabel: string;
+    let badgeTooltipText: string;
+
+    if (totalAnnualAmount && totalAnnualAmount > 0) {
+        badgeLabel = t('withdrawals.eligible');
+        badgeTooltipText = t('withdrawals.eligibleForRmdsTooltip');
+    } else if (totalAnnualAmount === 0 || totalAnnualAmount === null) {
+        badgeLabel = t('withdrawals.ineligible');
+        badgeTooltipText = t('withdrawals.ineligibleForRmdsTooltip');
+    } else {
+        badgeLabel = t('withdrawals.notAvailable');
+        badgeTooltipText = '';
+    }
+
     return (
         <CardContainer classNames="flex w-full flex-col items-start" containerClassNames="rounded-b">
             <div className="flex w-full flex-col">
-                <div className="mb-4">
+                <div className="flex items-center mb-4">
                     <Typography variant={TypographyVariant.H2} className="mr-5">
                         {policyDetails.isAnnuity ? t('withdrawals.rmd.title') : t('withdrawals.rules.title')}
                     </Typography>
+                    {policyDetails.isAnnuity && (
+                        <BadgeWithTooltip
+                            className="mb-2 mt-2 self-center"
+                            label={badgeLabel}
+                            tooltip={badgeTooltipText}
+                            tooltipPlacement={PopoverPlacement.BottomRight}
+                            variant={BadgeVariant.Info}
+                        />
+                    )}
                 </div>
 
                 <div className="flex flex-col gap-8 xl:flex-row">
@@ -101,7 +130,7 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
                             </div>
 
                             <div className="flex flex-col gap-8 md:flex-row">
-                                <div className="flex w-[208px] flex-col items-start">
+                                <div className="flex w-[208px] flex-col items-start xl:w-fit">
                                     <Label
                                         variant={LabelVariant.FieldLabel}
                                         tooltipTitle={t('withdrawals.rmd.calculationDate')}
@@ -123,7 +152,11 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
                                     />
                                     <Typography variant={TypographyVariant.BodySm} className="mt-[5px]">
                                         {policyDetails.requiredMinimumDistribution.calculationOption
-                                            ? `${policyDetails.requiredMinimumDistribution.calculationOption}`
+                                            ? t(
+                                                  `withdrawals.${convertToCamelCase(
+                                                      policyDetails.requiredMinimumDistribution.calculationOption
+                                                  )}`
+                                              )
                                             : DEFAULT_ERROR_STRING}
                                     </Typography>
                                 </div>

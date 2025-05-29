@@ -17,6 +17,8 @@ export interface WithdrawalsValues {
     maximumWithdrawalAmount?: number;
     marketValueAdjustmentIndicator?: boolean;
     marketValueAdjustmentAmount?: number;
+    yearToDateFreeWithdrawalAmount?: number;
+    totalYearToDateWithdrawalTaken?: number;
 }
 
 export const mapWithdrawalsSubPage = ({ isEligible, policy }: MapWithdrawalsSubPage): WithdrawalsValues => {
@@ -44,5 +46,7 @@ export const mapWithdrawalsSubPage = ({ isEligible, policy }: MapWithdrawalsSubP
         maximumWithdrawalAmount: withdrawalValues?.maximumWithdrawalAmount,
         marketValueAdjustmentIndicator: marketValueAdjustment?.marketValueAdjustmentIndicator,
         marketValueAdjustmentAmount: marketValueAdjustment?.marketValueAdjustmentAmount,
+        yearToDateFreeWithdrawalAmount: withdrawalValues?.yearToDateFreeWithdrawalAmount,
+        totalYearToDateWithdrawalTaken: withdrawalValues?.totalYearToDateWithdrawalTaken,
     };
 };
