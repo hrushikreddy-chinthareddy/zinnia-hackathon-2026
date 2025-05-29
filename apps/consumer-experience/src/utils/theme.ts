@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { CompanyName } from '@/types/carriers';
+
 import { getCookie, setCookie } from './auth';
 import { isVercelEnvironment } from './environment';
 import { THEME_COOKIE } from './serverClientUtils';
 import { getSubdomain } from './url';
 
-export const themes = ['everly', 'wellabe'];
+export const themes = Object.values(CompanyName).map(company =>
+  company.toLowerCase()
+);
 
 export const isValidTheme = (theme: string) => themes.includes(theme);
 

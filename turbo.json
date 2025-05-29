@@ -40,6 +40,7 @@
         "OPTIMIZELY_SDK_KEY",
         "PINO_LOG_LEVEL",
         "SESSION_DURATION_IN_MINUTES",
+        "SSO_FARMERS_REDIRECT_BASE_URL",
         "VERCEL_BRANCH_URL"
       ],
       "dependsOn": ["^build"]
