@@ -6013,5 +6013,14 @@
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }
+    },
+    "opsNigo": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Operation Review was submitted.",
+            "cta": "Go to Case ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     }
 }

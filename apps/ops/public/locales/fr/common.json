@@ -5833,5 +5833,14 @@
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }
+    },
+    "opsNigo": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Opération Review a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }

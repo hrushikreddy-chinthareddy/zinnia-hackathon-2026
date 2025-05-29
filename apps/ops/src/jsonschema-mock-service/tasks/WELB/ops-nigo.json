@@ -1,8 +1,8 @@
 {
-    "formId": "87f1a2e5-6740-4f00-9169-9fd50efda9d0",
+    "formId": "c6443de1-8a08-4ebd-a785-9b3870489625",
     "process": "Operations Review",
     "carrier": "WELB",
-    "taskType": "OPS_REVIEW",
+    "taskType": "OPS_NIGO",
     "formSchema": {
         "type": "object"
     },
@@ -14,26 +14,29 @@
             {
                 "title": "Operation Review",
                 "formSchema": {
-                    "$schema": "http://json-schema.org/draft-07/schema#",
                     "type": "object",
-                    "definitions": {
-                        "declineReasonEnum": {},
-                        "outcomeEnum": {
-                            "enum": [
-                                "Processed Transaction Manually",
-                                "Processed Transaction via Support Ticket",
-                                "Transaction No Longer Required",
-                                "Transaction Withdrawn",
-                                "Client Communication Sent"
-                            ]
-                        }
-                    },
-                    "required": ["issueResolved"],
                     "properties": {
-                        "sectionHeader": {
-                            "type": "object",
-                            "title": "Processing Instructions",
-                            "description": "This task is to handle a {{customData.details.processSubtype}}. The required document is attached in the task for your review. Please review and complete the task with the appropriate selection."
+                        "issuesList": {
+                            "type": "array",
+                            "title": "",
+                            "items": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "processingReason": {
+                                        "type": "string",
+                                        "title": "Issues"
+                                    },
+                                    "processingResolution": {
+                                        "type": "string",
+                                        "title": "Processing Instructions"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
+                                    }
+                                }
+                            }
                         },
                         "details": {
                             "type": "object",
@@ -41,18 +44,16 @@
                             "properties": {
                                 "documents": {
                                     "type": "array",
-                                    "title": "Supporting Information",
                                     "items": {
                                         "type": "object",
                                         "properties": {
                                             "documentId": {
                                                 "type": "string",
                                                 "ui:field": "subTitle",
-                                                "ui:placeholder": "Document ID: "
+                                                "ui:placeholder": "Documemt ID: "
                                             },
                                             "documentType": {
-                                                "type": "string",
-                                                "ui:field": "title"
+                                                "type": "string"
                                             },
                                             "documentName": {
                                                 "type": "string",
@@ -75,7 +76,7 @@
                         },
                         "issueResolved": {
                             "type": "boolean",
-                            "title": "Have you completed the action or review for this task?",
+                            "title": "Can you resolve the issue",
                             "enum": [true, false],
                             "enumNames": ["Yes", "No"]
                         },
@@ -115,102 +116,85 @@
                             }
                         }
                     },
-                    "allOf": [
-                        {
-                            "if": {
-                                "properties": {
-                                    "issueResolved": {
-                                        "const": true
-                                    }
-                                },
-                                "required": ["issueResolved"]
-                            },
-                            "then": {
-                                "properties": {
-                                    "outcome": {
-                                        "type": "string",
-                                        "title": "Outcome",
-                                        "$ref": "#/$defs/outcomeEnum"
-                                    }
-                                },
-                                "required": ["outcome"]
-                            }
-                        },
-                        {
-                            "if": {
-                                "properties": {
-                                    "issueResolved": {
-                                        "const": false
-                                    }
-                                },
-                                "required": ["issueResolved"]
-                            },
-                            "then": {
-                                "properties": {
-                                    "declineReason": {
-                                        "type": "array",
-                                        "title": "Reason for decline",
-                                        "items": {
-                                            "type": "string",
-                                            "$ref": "#/definitions/declineReasonEnum"
-                                        },
-                                        "minItems": 1,
-                                        "uniqueItems": true
-                                    },
-                                    "reviewFailureReasonDisplay": {
-                                        "type": "array",
-                                        "title": "These issues will be created for the case:",
-                                        "items": {
-                                            "type": "string"
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": true
                                         }
                                     }
                                 },
-                                "required": ["declineReason"]
-                            }
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": false
+                                        }
+                                    }
+                                }
+                            ]
                         }
-                    ]
+                    },
+                    "definitions": {
+                        "declineReason": {
+                            "enum": ["DEFAULT"]
+                        }
+                    },
+                    "required": ["issueResolved"]
                 },
                 "uiSchema": {
-                    "ui:order": [
-                        "sectionHeader",
-                        "details",
-                        "issueResolved",
-                        "declineReason",
-                        "reviewFailureReasonDisplay",
-                        "outcome",
-                        "uploadDocuments",
-                        "attachments"
-                    ],
-                    "ui:globalOptions": {
-                        "duplicateKeySuffixSeparator": "_",
-                        "orderable": false,
-                        "copyable": false
-                    },
-                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:order": ["issuesList", "details", "issueResolved", "uploadDocuments", "attachments"],
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "sectionHeader": {
+                    "issuesList": {
+                        "ui:readonly": true,
                         "ui:options": {
-                            "label": true,
-                            "ObjectFieldTemplate": "InstructionsTemplate"
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                            },
+                            "processingReason": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "processingResolution": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "resolved": {
+                                "ui:options": {
+                                    "label": false
+                                }
+                            }
                         }
                     },
+
                     "details": {
                         "ui:options": {
                             "label": true
                         },
                         "documents": {
                             "ui:options": {
-                                "canAdd": false,
                                 "label": false,
                                 "addable": false
                             },
                             "items": {
                                 "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
                                     "cardType": "Document",
                                     "icon": "DOCUMENT_TEXT",
-                                    "ObjectFieldTemplate": "CardTemplate",
                                     "nobackground": true
                                 }
                             }
@@ -219,35 +203,9 @@
                     "issueResolved": {
                         "ui:widget": "radio",
                         "ui:options": {
-                            "label": true
+                            "inline": true
                         },
                         "ui:hideError": true
-                    },
-
-                    "outcome": {
-                        "ui:widget": "SelectWidget",
-                        "ui:placeholder": "Select Outcome",
-                        "ui:hideError": true
-                    },
-                    "declineReason": {
-                        "ui:options": {
-                            "label": true
-                        },
-                        "ui:placeholder": "Select Issues",
-                        "ui:hideError": true
-                    },
-                    "reviewFailureReasonDisplay": {
-                        "ui:options": {
-                            "label": true,
-                            "ArrayFieldTemplate": "TextListTemplate",
-                            "hasBg": true,
-                            "formContext": {
-                                "keyName": "customData",
-                                "listName": "declineReason",
-                                "parseKey": "detailedReason"
-                            },
-                            "omitValue": true
-                        }
                     },
 
                     "uploadDocuments": {

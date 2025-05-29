@@ -1,0 +1,78 @@
+{
+    "id": "TA000000018888",
+    "caseId": "CA0000393720",
+    "source": "BPM.AgentCheck",
+    "templateId": "930ff760-bf59-4fbf-bc3e-46016c533dc3",
+    "process": "Operations Review",
+    "carrier": "WELB",
+    "taskType": "OPS_NIGO",
+    "taskName": "Operations Review",
+    "status": "INPROGRESS",
+    "data": {
+        "details": {
+            "documents": [
+                {
+                    "documentId": "67b70d0dd55e9201cecf6552",
+                    "documentName": "WELLANI041120241125012987_001_Replacement of Life Insurance or Annuities_5.pdf",
+                    "documentSource": "EDS",
+                    "documentExt": "pdf",
+                    "documentType": "NB State Replacement"
+                }
+            ]
+        },
+        "issuesList": [
+            {
+                "id": "1501bd77-3cc9-43d2-ae38-e3f44d78df6d",
+                "externalId": "1501bd77-3cc9-43d2-ae38-e3f44d78df6d",
+                "nmid": "EM.061",
+                "type": "NIGO",
+                "category": "AGENT",
+                "reason": "AGENT STATE TRAINING STATUS",
+                "detailedReason": "STATE TRAINING NOT COMPLETED",
+                "processingInstruction": "Reason: Agent's Best Interest and Supplemental Best Interest Training were incomplete for the state where the product was sold at time of sale. Resolution: Review the identified state training issue and confirm if we can resolve it. ",
+                "processingReason": "Agent's Best Interest and Supplemental Best Interest Training were incomplete for the state where the product was sold at time of sale.",
+                "processingResolution": "Review the identified state training issue and confirm if we can resolve it. "
+            }
+        ]
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "new_business",
+    "escalated": false,
+    "assignee": "vikram.prasad@zinnia.com",
+    "assigneePartyId": "16c400819fa14b26a6fd89aab0684e48",
+    "assignedAt": "2025-02-20T10:56:06Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-02-18T08:07:06Z",
+    "updatedBy": "vikram.prasad@zinnia.com",
+    "updatedByPartyId": "16c400819fa14b26a6fd89aab0684e48",
+    "updatedAt": "2025-02-20T10:56:09Z",
+    "identifiers": [
+        {
+            "identifier": "businessKey",
+            "value": "409459"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67b43fa5e8d16e60977dbf46"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2501677"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000393720"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI041120242020251880"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2501677"
+        }
+    ],
+    "externalId": "feaab733-674f-460d-9fae-43d9e2924aee"
+}

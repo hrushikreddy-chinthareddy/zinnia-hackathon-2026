@@ -5711,5 +5711,14 @@
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
         }
+    },
+    "opsNigo": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Operación Review fue enviada.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
     }
 }

@@ -337,13 +337,13 @@
                                     "type": "object",
                                     "title": "Additional Information",
                                     "properties": {
-                                        "comments": {
+                                        "comment": {
                                             "type": "string",
                                             "title": "Comments",
                                             "minLength": 1
                                         }
                                     },
-                                    "required": ["comments"]
+                                    "required": ["comment"]
                                 }
                             }
                         }
@@ -778,11 +778,11 @@
                                     }
                                 }
                             },
-                            "comments": {
+                            "comment": {
                                 "ui:widget": "textarea",
                                 "ui:hideError": true
                             },
-                            "ui:order": ["*", "comments"]
+                            "ui:order": ["*", "comment"]
                         }
                     }
                 }

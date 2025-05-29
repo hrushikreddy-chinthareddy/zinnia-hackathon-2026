@@ -42,6 +42,7 @@ export enum TaskType {
     Claims_Reverse_Uncashed_Transactions = 'CLAIMS_REVERSE_UNCASHED_TRANSACTIONS',
     Background_Nigo = 'BACKGROUND_NIGO',
     Background_Review = 'BACKGROUND_REVIEW',
+    Ops_Nigo = 'OPS_NIGO',
     Ops_Review = 'OPS_REVIEW',
     Default_Case_DataEntry = 'DEFAULT_CASE_DATA_ENTRY',
 }
