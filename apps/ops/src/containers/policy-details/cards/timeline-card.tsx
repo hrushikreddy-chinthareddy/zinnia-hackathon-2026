@@ -10,6 +10,7 @@ import { ProductType } from '@deps/models/policy/sor-policy';
 import { mapPolicyTimelineValues } from '../policy-details.helpers';
 import EverlyIul from './policy-timeline-details/everly-iul';
 import EverlyUl from './policy-timeline-details/everly-ul';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 const BASE_KEY = 'policy.detailCards.policyTimeline.';
 export interface PolicyTimelineCardData {
@@ -41,12 +42,12 @@ function PolicyTimelineCard({ policy }: BasePolicyComponentArgs) {
 
 function ContractTimelineCard({ policy }: BasePolicyComponentArgs) {
     const { t } = useTranslation();
-    const { maturityDate, issueDate, policyAge } = mapPolicyTimelineValues(policy, t);
+    const { maturityDate, issueDate, policyAge, freeLookCancelDate } = mapPolicyTimelineValues(policy, t);
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-200">
             <Typography variant={TypographyVariant.H2}>{t(`${BASE_KEY}contractTimeline`)}</Typography>
-            <div className="mt-4 grid grid-cols-[repeat(2,max-content)] gap-8 sm:grid-cols-[repeat(3,max-content)]">
+            <div className="mt-4 grid grid-cols-[repeat(2,max-content)] gap-8 sm:grid-cols-[repeat(4,max-content)]">
                 <div>
                     <Label label={t(`${BASE_KEY}ageOfContract`)} variant={LabelVariant.FieldLabel} />
                     <Content details={policyAge} variant={ContentVariant.BodySm} />
@@ -61,6 +62,10 @@ function ContractTimelineCard({ policy }: BasePolicyComponentArgs) {
                         <Content details={maturityDate} variant={ContentVariant.BodySm} />
                     </div>
                 )}
+                <div>
+                    <Label label={t(`${BASE_KEY}freeLookExpiration`)} variant={LabelVariant.FieldLabel} />
+                    <Content details={convertKebabedDateString(freeLookCancelDate)} variant={ContentVariant.BodySm} />
+                </div>
             </div>
         </CardContainer>
     );

@@ -226,6 +226,10 @@
                 "text": "TransactionOps Suite",
                 "link": "/create-case"
             },
+            "cancelFreeLook": {
+                "href": "/policies/{{planCode}}/{{id}}/policy/freelook/cancel-freelook/",
+                "text": "Free look cancel"
+            },
             "transactions": {
                 "text": "Transactions",
                 "link": "/policies/{{planCode}}/{{id}}/policy/premiums",
@@ -2841,7 +2845,8 @@
                 "oneYearLeft": "1 year left",
                 "policyLength": "Policy length",
                 "policyLengthTooltip": "Policy length is just what it sounds like: it's how long the policy lasts. Some policies have a set term (shown in number of years) and end date, while others last until death of the insured.",
-                "policyTimeline": "Policy Timeline"
+                "policyTimeline": "Policy Timeline",
+                "freeLookExpiration": "Free look expiration"
             },
             "salesChannel": {
                 "salesChannel": "Sales Channel",
@@ -4590,6 +4595,7 @@
         "eligibleForWithdrawal": "Eligible for withdrawal",
         "eligibleForWithdrawalTooltip": "Withdrawals from the account value are allowed right now. Withdrawals may reduce the death benefit.",
         "freeWithdrawalAmount": "Free withdrawal amount: {{ amount }}",
+        "freeLookCancel": "Free look cancel",
         "ineligible": "Ineligible",
         "maximumWithdrawalAmount": "Maximum withdrawal amount",
         "netSurrenderValue": "Net surrender value",
@@ -5022,6 +5028,7 @@
             "newPremium": "Start a one-time premium",
             "startAWithdrawal": "Start a withdrawal",
             "cancelPolicy": "Cancel policy",
+            "freeLookCancel": "Free look cancel",
             "newDeathClaim": "New Death Claim"
         }
     },

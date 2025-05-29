@@ -184,12 +184,12 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                 <>
                     {freeLookEnabled && policy.freeLookPeriodDetails.isInFreeLookPeriod && (
                         <MenuContextualItem
-                            content={t('transactions.cancelPolicy')}
+                            content={t('transactions.freeLookCancel')}
                             href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`}
                             icon={<CashIcon height={20} width={20} />}
                             onClick={() => {
                                 trackClick(
-                                    'Cancel Policy',
+                                    'Free Look Cancel',
                                     `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`
                                 );
                             }}
@@ -218,7 +218,7 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                             trackClick('New Premium', `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`);
                         }}
                     />
-                    { isNewDeathClaim &&
+                    {isNewDeathClaim && (
                         <MenuContextualItem
                             disabled={!initialDeathClaimEligibility?.isEligibleNewDeathClaim}
                             content={t('transactions.newDeathClaim')}
@@ -231,7 +231,7 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                                 );
                             }}
                         />
-                    }
+                    )}
                     <MenuContextualItem
                         disabled={!partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime}
                         content={t('transactions.startAWithdrawal')}

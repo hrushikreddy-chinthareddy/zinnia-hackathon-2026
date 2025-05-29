@@ -11,6 +11,7 @@ import IssueDate from '../display-fields/issue-date';
 import PolicyAge from '../display-fields/policy-age';
 import PolicyLength from '../display-fields/policy-length';
 import { PolicyTimelineCardData } from '../timeline-card';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 interface EverlyIulProps {
     policyTimelineCardData: PolicyTimelineCardData;
@@ -25,7 +26,7 @@ const EverlyIul = ({ policyTimelineCardData, productType }: EverlyIulProps) => {
         policyTimelineCardData;
 
     return (
-        <div className="mt-4 grid grid-cols-[repeat(3,max-content)] gap-8 lg:grid-cols-[repeat(6,max-content)]">
+        <div className="mt-4 grid grid-cols-[repeat(3,max-content)] gap-8 lg:grid-cols-[repeat(7,max-content)]">
             <PolicyLength productType={productType} policyLength={policyLength} policyYearsLeft={policyYearsLeft} />
             <PolicyAge policyAge={policyAge} />
             <IssueDate issueDate={issueDate} />
@@ -42,6 +43,10 @@ const EverlyIul = ({ policyTimelineCardData, productType }: EverlyIulProps) => {
                 </div>
             )}
             <FixedCostPeriod fixedCostPeriod={fixedCostPeriod} fixedCostPeriodLeft={fixedCostPeriodLeft} />
+            <div>
+                <Label label={t('freeLookExpiration')} tooltipTitle={t('freeLookExpiration')} variant={LabelVariant.FieldLabel} />
+                <Content details={convertKebabedDateString(freeLookCancelDate)} variant={ContentVariant.BodySm} />
+            </div>
         </div>
     );
 };

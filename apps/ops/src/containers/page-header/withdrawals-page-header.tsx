@@ -233,6 +233,14 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
                 >
                     {t('withdrawals.surrenderPolicy')}
                 </NavElement>
+                <NavElement
+                    href={t('site.navLinks.cancelFreeLook.href', { id: policyNumber, planCode }) || ''}
+                    size={NavElementSize.Small}
+                    type={NavElementType.Link}
+                    data-testid="cancel-free-look-link"
+                >
+                    {t('withdrawals.freeLookCancel')}
+                </NavElement>
                 {isStillInactive.withdrawalPageexchange1035.length ? (
                     <TempNavInactive tooltipBody={isStillInactive.withdrawalPageexchange1035}>
                         {t('withdrawals.exchange1035')}
