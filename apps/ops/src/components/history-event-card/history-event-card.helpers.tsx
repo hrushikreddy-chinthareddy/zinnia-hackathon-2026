@@ -191,7 +191,8 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
             break;
         }
 
-        case TransactionType.PartialWithdrawalOneTime: {
+        case TransactionType.PartialWithdrawalOneTime:
+        case TransactionType.RequiredMinimumDistributionOneTime: {
             const bankAccount = getBankAccount({ policy, payorsOrPayees: payeeOrBeneficiaries });
             const eventBankingBody = t('historyEventCard.toBanking', {
                 accountType: mapAccountTypeToTranslation(bankAccount?.accountType, t).toLowerCase(),

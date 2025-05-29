@@ -21,12 +21,12 @@ export const getPaymentMethod = (policy: Policy, payors: TransactionPayor[], t: 
 
     return paymentMethod
         ? t('historyEventCard.bankingBody', {
-            accountType: t(
-                `historyEventCard.bankAccountTypes.${paymentMethod.accountType?.toLowerCase()}`,
-                paymentMethod.accountType ?? DEFAULT_ERROR_STRING
-            ),
-            lastFour: formatAccountNumber(paymentMethod.internationalBankAccountNumber ?? paymentMethod.accountNumber, true),
-        })
+              accountType: t(
+                  `historyEventCard.bankAccountTypes.${paymentMethod.accountType?.toLowerCase()}`,
+                  paymentMethod.accountType ?? DEFAULT_ERROR_STRING
+              ),
+              lastFour: formatAccountNumber(paymentMethod.internationalBankAccountNumber ?? paymentMethod.accountNumber, true),
+          })
         : DEFAULT_ERROR_STRING;
 };
 
@@ -50,6 +50,7 @@ export const getFinancialTransactionSideSheetValues = (
             return getAutopayPremiumSideSheetValues(policy, transaction, t, featureFlags || {});
         case TransactionType.FullSurrender:
         case TransactionType.PartialWithdrawalOneTime:
+        case TransactionType.RequiredMinimumDistributionOneTime:
             return getWithdrawalSideSheetValues(policy, transaction, t);
         case TransactionType.FreeLookCancellation:
             return getFreeLookCancellationSideSheetValues(policy, transaction, t);

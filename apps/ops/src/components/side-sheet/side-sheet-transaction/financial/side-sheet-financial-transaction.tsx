@@ -48,6 +48,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     const [sideSheetValues, setSideSheetValues] = useState<TransactionSideSheetValues | WithdrawalSideSheetValues>(
         getFinancialTransactionSideSheetValues(policy, transaction, t, featureFlags)
     );
+
     const {
         cancelCta,
         effectiveDate,
@@ -135,6 +136,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
         case TransactionType.FullSurrender:
         case TransactionType.PartialWithdrawalOneTime:
         case TransactionType.FreeLookCancellation:
+        case TransactionType.RequiredMinimumDistributionOneTime:
             SidesheetContent = <SideSheetWithdrawalContent t={t} values={sideSheetValues as WithdrawalSideSheetValues} loading={loading} />;
             break;
         default:
@@ -193,7 +195,8 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                             {transactionType !== TransactionType.FullSurrender &&
                                 transactionType !== TransactionType.PartialWithdrawalOneTime &&
                                 transactionType !== TransactionType.FreeLookCancellation &&
-                                transactionType !== TransactionType.NewLoan && (
+                                transactionType !== TransactionType.NewLoan &&
+                                transactionType !== TransactionType.RequiredMinimumDistributionOneTime && (
                                     <div className={cancelCta ? 'mb-4' : ''}>
                                         <Content details={numberFormatify(transactionValue)} variant={ContentVariant.Value} />
                                         <Content

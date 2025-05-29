@@ -17,4 +17,5 @@ export const FinancialTransactionTypes: TransactionType[] = [
     TransactionType.PartialWithdrawalOneTime,
     TransactionType.FreeLookCancellation,
     TransactionType.NewLoan,
+    TransactionType.RequiredMinimumDistributionOneTime,
 ];

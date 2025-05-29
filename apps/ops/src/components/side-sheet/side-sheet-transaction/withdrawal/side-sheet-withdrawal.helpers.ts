@@ -140,7 +140,10 @@ const getWithdrawalDetails = (values: WithdrawalDetailsValues, t: TFunction): Wi
                 value: fundDisbursementType,
             },
         ];
-    } else if (transactionType === TransactionType.PartialWithdrawalOneTime) {
+    } else if (
+        transactionType === TransactionType.PartialWithdrawalOneTime ||
+        transactionType === TransactionType.RequiredMinimumDistributionOneTime
+    ) {
         return [
             {
                 label: t('policy.history.withdrawalSidesheet.requestedWithdrawalAmount') as string,
@@ -221,7 +224,10 @@ const getActualWithdrawalAmount = (
         } else {
             withdrawalAmount = amount || 0;
         }
-    } else if (transaction.transactionType === TransactionType.PartialWithdrawalOneTime) {
+    } else if (
+        transaction.transactionType === TransactionType.PartialWithdrawalOneTime ||
+        transaction.transactionType == TransactionType.RequiredMinimumDistributionOneTime
+    ) {
         if (quote?.transactionAmounts?.appliedAmount) {
             withdrawalAmount = quote?.transactionAmounts?.appliedAmount;
         } else {
@@ -241,9 +247,9 @@ const getActualWithdrawalAmount = (
 
     const totalChargesWithoutTaxes = transaction.charges
         ? transaction.charges.reduce((acc, charge) => {
-            const amount = charge.chargeAmount;
-            return acc + (typeof amount === 'number' ? amount : 0);
-        }, 0)
+              const amount = charge.chargeAmount;
+              return acc + (typeof amount === 'number' ? amount : 0);
+          }, 0)
         : 0;
 
     return Math.abs(withdrawalAmount + federalTaxWithheld + stateTaxWithheld + totalChargesWithoutTaxes);

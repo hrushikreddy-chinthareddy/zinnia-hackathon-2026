@@ -34,7 +34,10 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
 
     if (transactionType === TransactionType.FullSurrender) {
         transactionTypeLabel = t('historyEventCard.surrender');
-    } else if (transactionType === TransactionType.PartialWithdrawalOneTime) {
+    } else if (
+        transactionType === TransactionType.PartialWithdrawalOneTime ||
+        transactionType === TransactionType.RequiredMinimumDistributionOneTime
+    ) {
         transactionTypeLabel = t('historyEventCard.withdrawal');
     } else if (transactionType == TransactionType.FreeLookCancellation) {
         transactionTypeLabel = t('historyEventCard.transactionTypes.FreeLookCancellation');
