@@ -25,6 +25,7 @@ declare global {
       NEXT_PUBLIC_AUTH0_BASE_URL: string;
       AUTH0_COOKIE_SECURE: string;
       AUTH0_MANAGEMENT_API_AUDIENCE: string;
+      NEXT_PUBLIC_CALL_LOG_X_API_KEY: string;
     }
   }
 }

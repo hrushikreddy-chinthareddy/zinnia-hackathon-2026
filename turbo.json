@@ -73,7 +73,8 @@
         "OPTIMIZELY_SDK_KEY",
         "PINO_LOG_LEVEL",
         "TOPPAN_MERRILL_POST_URL",
-        "WELLABE_TOPPAN_MERRILL_KEY"
+        "WELLABE_TOPPAN_MERRILL_KEY",
+        "NEXT_PUBLIC_CALL_LOG_X_API_KEY"
       ],
       "dependsOn": ["^build"]
     },
