@@ -775,11 +775,12 @@
                                                             },
                                                             "required": ["employmentStatus"]
                                                         }
-                                                    }
+                                                    },
+                                                    "required": ["employment"]
                                                 }
                                             }
                                         ],
-                                        "required": ["partyType", "roleType", "govtIdInfo", "addresses"]
+                                        "required": ["partyType", "roleType"]
                                     }
                                 },
                                 "policyData": {
@@ -843,7 +844,7 @@
                                             "title": "Annual income"
                                         },
                                         "netWorth": {
-                                            "type": "object",
+                                            "type": "string",
                                             "title": "Approximate net worth"
                                         },
                                         "liquidNetWorth": {
@@ -853,6 +854,7 @@
                                         "sourceOfIncome": {
                                             "type": "array",
                                             "title": "Source of income",
+                                            "minItems": 1,
                                             "items": {
                                                 "type": "string",
                                                 "$ref": "#/definitions/fiscalData_sourceOfIncome"
@@ -872,12 +874,13 @@
                                             "title": "Annual expenses"
                                         },
                                         "disposableIncome": {
-                                            "type": "object",
+                                            "type": "string",
                                             "title": "Disposable income"
                                         },
                                         "sourceOfFunds": {
                                             "type": "array",
                                             "title": "Source of funds",
+                                            "minItems": 1,
                                             "items": {
                                                 "type": "string",
                                                 "$ref": "#/definitions/fiscalData_sourceOfFunds"
@@ -958,6 +961,7 @@
                                     "required": [
                                         "annualIncome",
                                         "liquidNetWorth",
+                                        "netWorth",
                                         "sourceOfIncome",
                                         "totalAssets",
                                         "totalDebt",
@@ -1031,7 +1035,7 @@
                                             }
                                         }
                                     },
-                                    "required": ["rateChangeAcknowledgment", "totalAnnuityValue", "financialProducts"]
+                                    "required": ["rateChangeAcknowledgment", "totalAnnuityValue"]
                                 },
                                 "investmentRiskInfo": {
                                     "type": "object",
@@ -1291,7 +1295,8 @@
                                                 }
                                             }
                                         }
-                                    }
+                                    },
+                                    "required": ["maApplicationQuestionnaire"]
                                 },
                                 "additionalInfo": {
                                     "type": "object",
@@ -1311,26 +1316,6 @@
                                             "type": "string",
                                             "title": "Reside in nursing home or assisted living",
                                             "$ref": "#/definitions/additionalInfo_resideInNursingHomeOrAssistedLiving"
-                                        }
-                                    },
-                                    "dependencies": {
-                                        "noOfDependents": {
-                                            "if": {
-                                                "properties": {
-                                                    "noOfDependents": {
-                                                        "const": "OTHERS"
-                                                    }
-                                                }
-                                            },
-                                            "then": {
-                                                "properties": {
-                                                    "otherDependents": {
-                                                        "type": "string",
-                                                        "title": "Other dependents"
-                                                    }
-                                                },
-                                                "required": ["otherDependents"]
-                                            }
                                         }
                                     },
                                     "allOf": [
@@ -1426,7 +1411,8 @@
                                         }
                                     }
                                 }
-                            ]
+                            ],
+                            "required": ["applicationInfo", "investmentRiskInfo"]
                         }
                     }
                 },
@@ -1594,6 +1580,7 @@
                             }
                         },
                         "fiscalData": {
+                            "ui:hideError": true,
                             "ui:order": [
                                 "annualIncome",
                                 "annualExpenses",
@@ -1615,31 +1602,34 @@
                                 "expandable": true
                             },
                             "annualIncome": {
+                                "ui:hideError": false,
                                 "ui:options": {
                                     "inline": true,
                                     "widget": "ValueWidget"
                                 }
                             },
                             "netWorth": {
+                                "ui:hideError": false,
+                                "ui:widget": "ArithmeticOperationWidget",
                                 "ui:options": {
-                                    "label": true,
-                                    "ObjectFieldTemplate": "DifferenceTemplate",
                                     "formContext": {
                                         "keyName": "customData",
                                         "details": "details",
                                         "mainObject": "fiscalData",
-                                        "minuend": "totalAssets",
-                                        "subtrahend": "totalDebt"
-                                    },
-                                    "omitValue": true
+                                        "field1": "totalAssets",
+                                        "field2": "totalDebt",
+                                        "operation": "subtraction"
+                                    }
                                 }
                             },
                             "liquidNetWorth": {
+                                "ui:hideError": false,
                                 "ui:options": {
                                     "widget": "ValueWidget"
                                 }
                             },
                             "sourceOfIncome": {
+                                "ui:hideError": false,
                                 "ui:options": {
                                     "label": true,
                                     "enumNames": [
@@ -1666,45 +1656,55 @@
                                     ]
                                 }
                             },
-                            "sourceOfIncomeOther": {},
+                            "sourceOfIncomeOther": {
+                                "ui:hideError": false
+                            },
                             "surrPeriodMaterialChangeExp": {
+                                "ui:hideError": false,
                                 "ui:widget": "select",
                                 "ui:options": {
                                     "inline": true,
                                     "enumNames": ["Yes", "No"]
                                 }
                             },
-                            "surrPeriodMaterialChangeReason": {},
+                            "surrPeriodMaterialChangeReason": {
+                                "ui:hideError": false
+                            },
                             "totalAssets": {
+                                "ui:hideError": false,
                                 "ui:options": {
                                     "widget": "ValueWidget"
                                 }
                             },
                             "totalDebt": {
+                                "ui:hideError": false,
                                 "ui:options": {
                                     "widget": "ValueWidget"
                                 }
                             },
                             "annualExpenses": {
+                                "ui:hideError": false,
                                 "ui:options": {
                                     "widget": "ValueWidget"
                                 }
                             },
                             "disposableIncome": {
+                                "ui:hideError": false,
+                                "ui:widget": "ArithmeticOperationWidget",
                                 "ui:options": {
-                                    "label": true,
-                                    "ObjectFieldTemplate": "DifferenceTemplate",
+                                    "omitValue": true,
                                     "formContext": {
                                         "keyName": "customData",
                                         "details": "details",
                                         "mainObject": "fiscalData",
-                                        "minuend": "annualIncome",
-                                        "subtrahend": "annualExpenses"
-                                    },
-                                    "omitValue": true
+                                        "field1": "annualIncome",
+                                        "field2": "annualExpenses",
+                                        "operation": "subtraction"
+                                    }
                                 }
                             },
                             "sourceOfFunds": {
+                                "ui:hideError": false,
                                 "ui:options": {
                                     "label": true,
                                     "enumNames": [
@@ -1726,8 +1726,12 @@
                                     ]
                                 }
                             },
-                            "sourceOfFundsOther": {},
-                            "federalTaxBand": {}
+                            "sourceOfFundsOther": {
+                                "ui:hideError": false
+                            },
+                            "federalTaxBand": {
+                                "ui:hideError": false
+                            }
                         },
                         "financialExperience": {
                             "ui:options": {

@@ -1,5 +1,6 @@
 import { RegistryWidgetsType } from '@rjsf/utils';
 
+import ArithmeticOperationWidget from './arithmetic-operation-widget/arithmetic-operation-widget';
 import CheckboxWidget from './checkbox-widget/checkbox-widget';
 import CheckboxesWidget from './checkboxes-widget/checkboxes-widget';
 import DateWidget from './date-widget/date-widget';
@@ -28,6 +29,7 @@ export function generateWidgets(): RegistryWidgetsType {
         HyperLinkWidget,
         AutoCompleteWidget,
         NotesWidget,
+        ArithmeticOperationWidget
     };
 }
 
