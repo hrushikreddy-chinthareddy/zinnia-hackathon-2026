@@ -14,6 +14,7 @@ import { getMyPoliciesByCarrier } from '@/services/policy';
 import { SearchParams } from '@/types/url';
 import { getCarrierIdsByThemeCookie } from '@/utils/carriers';
 import { isVercelEnvironment } from '@/utils/environment';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { getThemeCookies } from '@/utils/theme';
 
@@ -36,8 +37,11 @@ export default async function Page({
 
   const carrierIds = getCarrierIdsByThemeCookie(themeCookie);
 
-  const { data: policyReferenceData, error } =
-    await getMyPoliciesByCarrier(carrierIds);
+  const loggingContext = await buildCommonLogContext();
+  const { data: policyReferenceData, error } = await getMyPoliciesByCarrier(
+    carrierIds,
+    loggingContext
+  );
 
   const CoveragePageHeader = (
     <AnalyticsPageHeader analyticsProps={{}} pageTitle={pageTitle} />

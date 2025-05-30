@@ -17,7 +17,10 @@ import { getPremiumEligibility } from '@/services/bpm';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
-import { logError } from '@/utils/logging/server-logging';
+import {
+  buildCommonLogContext,
+  logError,
+} from '@/utils/logging/server-logging';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
@@ -36,11 +39,15 @@ export const UpcomingPremium = async ({
   extended?: boolean;
   title?: string;
 }) => {
+  const loggingContext = await buildCommonLogContext();
   const [upcomingResult, ottpResult] = await Promise.allSettled([
-    getUpcomingPremium({
-      planCode,
-      policyNumber,
-    }),
+    getUpcomingPremium(
+      {
+        planCode,
+        policyNumber,
+      },
+      loggingContext
+    ),
     getPremiumEligibility({
       planCode,
       policyNumber,

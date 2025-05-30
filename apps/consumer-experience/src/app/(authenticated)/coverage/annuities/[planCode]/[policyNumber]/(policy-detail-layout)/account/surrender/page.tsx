@@ -10,6 +10,7 @@ import { RouteKey, getPageTitle } from '@/route-map';
 import { getPolicySurrenderDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 const CASH_SURRENDER_VALUE = 'Cash surrender value';
@@ -27,10 +28,14 @@ export default async function SurrenderPolicy({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-  const { data, error } = await getPolicySurrenderDetails({
-    planCode,
-    policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data, error } = await getPolicySurrenderDetails(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
 
   const surrenderData = () => {
     if (error || !data) {

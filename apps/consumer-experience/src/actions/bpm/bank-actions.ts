@@ -19,7 +19,10 @@ import {
   getBankAccountByBankId,
 } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
-import { logError } from '@/utils/logging/server-logging';
+import {
+  buildCommonLogContext,
+  logError,
+} from '@/utils/logging/server-logging';
 
 /**
  * Posts a bank account to the BPM API.
@@ -44,11 +47,22 @@ export const postAddBankAccount = async (
     } = options;
     const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/parties/${partyId}/bankaccount`;
 
+    // @TODO: move this outside of this function
+    const loggingContext = await buildCommonLogContext();
+
     // We have to get the check that this bank hasn't already been added previously.
-    const banks = await getUnsanitizedBanksByPolicyPlanCodeAndId({
-      planCode,
-      policyNumber,
-    });
+    const { data: banks, error } =
+      await getUnsanitizedBanksByPolicyPlanCodeAndId(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingContext
+      );
+
+    if (error || !banks) {
+      throw new Error('Failed to fetch banks', { cause: error });
+    }
 
     const filteredBanks = filterItemsWithPastEndDate(banks);
 
@@ -143,13 +157,24 @@ export const putEndDateBankAccount = async (
   const { planCode, policyNumber, partyId, bankId } = options;
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/parties/${partyId}/bankaccount/${bankId}`;
 
+  // @TODO: move this outside of this function
+  const loggingContext = await buildCommonLogContext();
+
   try {
     // We have to get the full bank account number serverside, because we scrub this data on the client side.
     let bankAccount;
-    const banks = await getUnsanitizedBanksByPolicyPlanCodeAndId({
-      planCode,
-      policyNumber,
-    });
+    const { data: banks, error } =
+      await getUnsanitizedBanksByPolicyPlanCodeAndId(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingContext
+      );
+
+    if (error || !banks) {
+      throw new Error('Failed to fetch banks', { cause: error });
+    }
 
     if (banks && options.bankId) {
       bankAccount = getBankAccountByBankId(options.bankId, banks || []);

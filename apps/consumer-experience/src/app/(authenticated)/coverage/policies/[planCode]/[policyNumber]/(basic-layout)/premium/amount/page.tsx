@@ -7,23 +7,44 @@ import {
   getCarrierProductOneTimePaymentFee,
 } from '@/services/product-rate';
 import { PolicyRequestInputs } from '@/types/policy';
+import {
+  buildCommonLogContext,
+  LoggingFn,
+  logTrace,
+} from '@/utils/logging/server-logging';
 
-export default async function SelectBankPage({
+const currentFilePath = new URL(import.meta.url).pathname;
+
+export default async function SelectAmountPage({
   params,
 }: {
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-  const { data: policyDetails } = await getPolicyDetails({
-    planCode: params.planCode,
-    policyNumber: params.policyNumber,
+  const commonLog = await buildCommonLogContext();
+
+  logTrace('Page::policies::SelectAmountPage', {
+    ...commonLog,
+    file: currentFilePath,
+    function: LoggingFn.SELECT_AMOUNT_PAGE,
   });
 
-  const [policyStatusRes, ottpFeeRes] = await Promise.allSettled([
-    getPolicyStatusDetails({
+  const { data: policyDetails } = await getPolicyDetails(
+    {
       planCode: params.planCode,
       policyNumber: params.policyNumber,
-    }),
+    },
+    commonLog
+  );
+
+  const [policyStatusRes, ottpFeeRes] = await Promise.allSettled([
+    getPolicyStatusDetails(
+      {
+        planCode: params.planCode,
+        policyNumber: params.policyNumber,
+      },
+      commonLog
+    ),
     getCarrierProductOneTimePaymentFee({
       configuredItemCode: ConfiguredSettingId.ONE_TIME_PREMIUM_PAYMENT_GUAR_FEE,
       carrierId: policyDetails?.carrierId || '',

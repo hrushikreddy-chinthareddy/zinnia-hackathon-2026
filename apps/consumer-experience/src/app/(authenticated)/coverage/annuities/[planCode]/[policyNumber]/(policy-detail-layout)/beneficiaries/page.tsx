@@ -20,6 +20,7 @@ import { RouteKey, getPageTitle } from '@/route-map';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getBeneficiaries } from '@/services/policy';
 import { Beneficiary } from '@/types/policy';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 const pageTitle = getPageTitle(RouteKey.BENEFICIARIES);
@@ -75,11 +76,14 @@ export default async function Beneficiaries({
   const policyNumber = params.policyNumber || '';
   const flags = await getFeatureFlags();
   const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
-
-  const { data, error } = await getBeneficiaries({
-    planCode,
-    policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data, error } = await getBeneficiaries(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
 
   const groupedBenes = data?.beneficiaries?.reduce(
     (grouped, bene) => {

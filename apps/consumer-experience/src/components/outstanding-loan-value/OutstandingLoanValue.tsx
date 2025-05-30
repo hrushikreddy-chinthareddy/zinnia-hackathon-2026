@@ -6,6 +6,7 @@ import { getPolicyDetails } from '@/services';
 import { getFundsTotalValue } from '@/services/funds';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 import { LabelPopover } from '../label-popover/LabelPopover';
 
@@ -23,9 +24,10 @@ export const OutstandingLoanValue = async ({
   planCode,
   policyNumber,
 }: Props) => {
+  const loggingContext = await buildCommonLogContext();
   const [totalFunds, policyData] = await Promise.allSettled([
-    getFundsTotalValue({ planCode, policyNumber }),
-    getPolicyDetails({ planCode, policyNumber }),
+    getFundsTotalValue({ planCode, policyNumber }, loggingContext),
+    getPolicyDetails({ planCode, policyNumber }, loggingContext),
   ]);
   let outstandingLoan;
   if (totalFunds.status === 'rejected' || policyData.status === 'rejected') {

@@ -5,48 +5,46 @@ import { ServerApi } from '@/services/server-http';
 import { UserClaims } from '@/types/auth';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { getAccessToken } from '@/utils/auth';
-import { logError } from '@/utils/logging/server-logging';
+import { CommonLogContext } from '@/utils/logging/server-logging';
+import { withLogging } from '@/utils/logging/with-logging';
 
-export const getPreferencesByPlanCode = async ({
-  planCode,
-  policyNumber,
-}: {
-  planCode: string;
-  policyNumber: string;
-}) => {
-  const { accessToken } = await getAccessToken();
-  const decodedToken = jose.decodeJwt(accessToken ?? '') as UserClaims;
-  const partyId = decodedToken.partyId;
+const FILE_NAME =
+  'src/services/preferences/v1/[partyId]/e-delivery/[planCode]/[policyNumber]/index.ts';
 
-  const url = new URL(
-    `${preferencesBaseUrl}/${partyId}/e-delivery/${planCode}/${policyNumber}`
-  );
-  const rawResponse = await ServerApi.get(url);
-  const response = await parseAPIResponse(rawResponse);
+export const getPreferencesByPlanCode = withLogging(
+  async (
+    {
+      planCode,
+      policyNumber,
+    }: {
+      planCode: string;
+      policyNumber: string;
+    },
+    loggingContext: CommonLogContext
+  ) => {
+    const { accessToken } = await getAccessToken();
+    const decodedToken = jose.decodeJwt(accessToken ?? '') as UserClaims;
+    const partyId = decodedToken.partyId;
 
-  if (!rawResponse?.ok) {
-    logError(
-      `Error fetching list of prefences for ${planCode} ${policyNumber}`,
-      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+    const url = new URL(
+      `${preferencesBaseUrl}/${partyId}/e-delivery/${planCode}/${policyNumber}`
     );
+    const rawResponse = await ServerApi.get(url, undefined, loggingContext);
+    const response = await parseAPIResponse(rawResponse);
 
-    // It's always assumed that the user has preferences set, so if we get a 404, we return an empty array
-    if (response.statusCode === 404) {
-      return {
-        data: [],
-        error: null,
-      };
+    if (!rawResponse?.ok) {
+      throw new Error(
+        `Error fetching list of prefences for ${planCode} ${policyNumber}`,
+        {
+          cause: await logApiNotOkDetails({
+            rawResponse,
+            parsedResponse: response,
+          }),
+        }
+      );
     }
 
-    return {
-      data: null,
-      error: {
-        message: 'Something went wrong',
-        status: 500,
-        name: 'getPreferencesByPlanCode error',
-      },
-    };
-  }
-
-  return { data: response, error: null };
-};
+    return response;
+  },
+  { file: FILE_NAME, functionName: 'getPreferencesByPlanCode' }
+);

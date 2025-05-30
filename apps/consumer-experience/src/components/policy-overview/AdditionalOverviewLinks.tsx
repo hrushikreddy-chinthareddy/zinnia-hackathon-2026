@@ -4,6 +4,7 @@ import { FC } from 'react';
 
 import { getCoverage } from '@/services';
 import { lineOfBusinessUrlPath } from '@/utils/data';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 import { GenerateClickableContainerList } from '../clickable-card-container/GenerateClickableContainerList';
 
@@ -19,10 +20,14 @@ const AdditionalLinks: FC<AdditionalLinksProps> = async ({
   policyNumber,
 }) => {
   const lineOfBusinessURL = lineOfBusinessUrlPath(lineOfBusiness);
-  const { data, error } = await getCoverage({
-    planCode,
-    policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data, error } = await getCoverage(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
 
   if (error) {
     return null;

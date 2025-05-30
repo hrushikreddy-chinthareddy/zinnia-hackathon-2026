@@ -1,5 +1,13 @@
+import { v4 as uuid4 } from 'uuid';
+
 import { logApiNotOkDetails } from '@/utils/api';
-import { logError } from '@/utils/logging/server-logging';
+import { getSession } from '@/utils/auth';
+import {
+  CommonLogContext,
+  getUserInfoFromSession,
+  logError,
+  logTrace,
+} from '@/utils/logging/server-logging';
 
 import { HttpRequest } from './http';
 
@@ -19,11 +27,24 @@ class EnterpriseTokenHttp extends HttpRequest {
 
   public request = async (
     input: string | URL | Request,
-    init?: RequestInit | undefined
+    init?: RequestInit | undefined,
+    loggingCtx?: CommonLogContext
   ): Promise<Response> => {
     if (!this.token || !this.tokenExp || this.isTokenExpired()) {
       await this.refreshToken();
     }
+    const correlationId = loggingCtx?.correlationId || uuid4();
+    const now = performance.now();
+    const session = await getSession();
+    const loggingContext = {
+      userInfo: getUserInfoFromSession(session),
+      url: input?.toString(),
+      method: init?.method,
+      correlationId,
+      file: 'enterprise-api-token-http.ts',
+      function: 'request',
+    };
+    logTrace('enterprise-api-token-http::request::start', loggingContext);
 
     const requestInit: RequestInit = init || {};
 
@@ -32,12 +53,20 @@ class EnterpriseTokenHttp extends HttpRequest {
     }
 
     requestInit.headers = {
+      'x-correlation-id': correlationId,
       ...requestInit.headers,
       credentials: 'include',
       Authorization: `Bearer ${this.token}`,
     };
 
-    return fetch(input, requestInit);
+    const result = await fetch(input, requestInit);
+    logTrace('enterprise-api-token-http::request::complete', {
+      ...loggingContext,
+      duration: performance.now() - now,
+      requestStatus: result.status,
+    });
+
+    return result;
   };
 
   /**

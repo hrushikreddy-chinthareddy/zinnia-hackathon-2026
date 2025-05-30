@@ -7,47 +7,87 @@ import {
   getCarrierProductOneTimePaymentFee,
 } from '@/services/product-rate';
 import { PolicyRequestInputs } from '@/types/policy';
+import {
+  buildCommonLogContext,
+  LoggingModule,
+  LoggingStage,
+  logTrace,
+} from '@/utils/logging/server-logging';
 
-export default async function SelectBankPage({
+const currentFilePath = new URL(import.meta.url).pathname;
+
+export default async function SelectAmountPage({
   params,
 }: {
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-  const { data: policyDetails } = await getPolicyDetails({
-    planCode: params.planCode,
-    policyNumber: params.policyNumber,
+
+  logTrace(`${LoggingModule.PAGE}::SelectAmountPage::${LoggingStage.START}`, {
+    file: currentFilePath,
+    function: 'SelectAmountPage',
   });
 
-  const [policyStatusRes, ottpFeeRes] = await Promise.allSettled([
-    getPolicyStatusDetails({
-      planCode: params.planCode,
-      policyNumber: params.policyNumber,
-    }),
-    getCarrierProductOneTimePaymentFee({
-      configuredItemCode: ConfiguredSettingId.ONE_TIME_PREMIUM_PAYMENT_GUAR_FEE,
-      carrierId: policyDetails?.carrierId || '',
-      planCode: planCode,
-      benefitId: 'Base_Coverage',
-    }),
-  ]);
+  const commonLog = await buildCommonLogContext();
 
-  const policyStatusDetails =
-    policyStatusRes.status === 'fulfilled' ? policyStatusRes.value.data : null;
-  const data = ottpFeeRes.status === 'fulfilled' ? ottpFeeRes.value.data : null;
+  try {
+    const { data: policyDetails } = await getPolicyDetails(
+      {
+        planCode: params.planCode,
+        policyNumber: params.policyNumber,
+      },
+      commonLog
+    );
 
-  return (
-    <SelectAmount
-      policyNumber={policyNumber}
-      planCode={planCode}
-      paymentFee={data?.fee || 0}
-      lineOfBusiness={LineOfBusiness.ANNUITY}
-      minimumPaymentDue={
-        policyStatusDetails?.policyStatus === PolicyStatus.PENDINGLAPSE &&
-        policyStatusDetails?.minimumPaymentDue
-          ? policyStatusDetails?.minimumPaymentDue
-          : 0
-      }
-    />
-  );
+    if (!policyDetails) {
+      throw new Error('Failed to fetch policy details');
+    }
+
+    const [policyStatusRes, ottpFeeRes] = await Promise.allSettled([
+      getPolicyStatusDetails(
+        {
+          planCode: params.planCode,
+          policyNumber: params.policyNumber,
+        },
+        commonLog
+      ),
+      getCarrierProductOneTimePaymentFee({
+        configuredItemCode:
+          ConfiguredSettingId.ONE_TIME_PREMIUM_PAYMENT_GUAR_FEE,
+        carrierId: policyDetails.carrierId || '',
+        planCode: planCode,
+        benefitId: 'Base_Coverage',
+      }),
+    ]);
+
+    const policyStatusDetails =
+      policyStatusRes.status === 'fulfilled'
+        ? policyStatusRes.value.data
+        : null;
+    const data =
+      ottpFeeRes.status === 'fulfilled' ? ottpFeeRes.value.data : null;
+
+    return (
+      <SelectAmount
+        policyNumber={policyNumber}
+        planCode={planCode}
+        paymentFee={data?.fee || 0}
+        lineOfBusiness={LineOfBusiness.ANNUITY}
+        minimumPaymentDue={
+          policyStatusDetails?.policyStatus === PolicyStatus.PENDINGLAPSE &&
+          policyStatusDetails?.minimumPaymentDue
+            ? policyStatusDetails?.minimumPaymentDue
+            : 0
+        }
+      />
+    );
+  } catch (error) {
+    logTrace('SelectAmountPage error', {
+      file: currentFilePath,
+      function: 'SelectAmountPage',
+      error,
+    });
+
+    throw error;
+  }
 }

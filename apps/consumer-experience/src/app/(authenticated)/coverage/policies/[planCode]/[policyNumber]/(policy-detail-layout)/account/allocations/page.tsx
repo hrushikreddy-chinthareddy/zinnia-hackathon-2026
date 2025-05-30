@@ -9,6 +9,10 @@ import accountValueStyles from '@/components/policy-overview/PolicyOverview.modu
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
+import {
+  buildCommonLogContext,
+  logTrace,
+} from '@/utils/logging/server-logging';
 
 import { IULFundsView } from './IULFundsView';
 import { ULFundsView } from './ULFundsView';
@@ -20,21 +24,38 @@ export const metadata: Metadata = {
   title: pageTitle,
 };
 
+// file path used for logging, determined on the module url
+const currentFilePath = new URL(import.meta.url).pathname;
+
 export default async function FundsPage({
   params,
 }: {
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-  const { data, error } = await getPolicyDetails({
-    planCode,
-    policyNumber,
+  const commonLog = await buildCommonLogContext();
+
+  logTrace('Page::policies::FundsPage', {
+    ...commonLog,
+    file: currentFilePath,
+    function: 'FundsPage',
   });
 
-  const { data: policyStatusDetails } = await getPolicyStatusDetails({
-    planCode,
-    policyNumber,
-  });
+  const { data, error } = await getPolicyDetails(
+    {
+      planCode,
+      policyNumber,
+    },
+    commonLog
+  );
+
+  const { data: policyStatusDetails } = await getPolicyStatusDetails(
+    {
+      planCode,
+      policyNumber,
+    },
+    commonLog
+  );
 
   if (!data || error) {
     return <NoDataAvailable />;

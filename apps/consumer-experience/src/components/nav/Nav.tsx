@@ -7,6 +7,7 @@ import {
   baseExperienceCarriers,
   getCarrierListDetails,
 } from '@/utils/carriers';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './Nav.module.css';
@@ -27,8 +28,10 @@ export async function Nav({
 }) {
   const featureFlagDecisions = await getFeatureFlags();
   let carrierDetails;
+  const loggingContext = await buildCommonLogContext();
   const { data: policyData, error } = await getMyPoliciesByCarrier(
-    baseExperienceCarriers
+    baseExperienceCarriers,
+    loggingContext
   );
   if (featureFlagDecisions?.[FEATURE_FLAGS.ANNUITY_MODE]) {
     if (!error && policyData) {

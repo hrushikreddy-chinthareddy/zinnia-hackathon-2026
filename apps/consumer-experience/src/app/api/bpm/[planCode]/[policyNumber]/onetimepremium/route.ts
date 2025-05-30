@@ -9,6 +9,11 @@ import {
   submitOneTimePremiumPayment,
 } from '@/services/bpm';
 import { PolicyRequestInputs } from '@/types/policy';
+import {
+  buildNextReqLoggingContext,
+  logTrace,
+  logError,
+} from '@/utils/logging/server-logging';
 
 dayjs.extend(utc);
 
@@ -16,10 +21,18 @@ export async function POST(
   _request: NextRequest,
   { params }: { params: PolicyRequestInputs }
 ) {
+  const loggingContext = buildNextReqLoggingContext(_request);
+  logTrace('bpm::onetimepremium::POST::start', {
+    ...loggingContext,
+    planCode: params.planCode,
+    policyNumber: params.policyNumber,
+  });
+
   const { planCode, policyNumber } = params;
 
   const paymentDetails = await _request.json();
 
+  // @Anssam: investigate this
   // TODO: should this go here or into the function that calls it?
   const ottpRequest = {
     // TODO: do we need to check for current caseId?
@@ -64,8 +77,21 @@ export async function POST(
       { planCode, policyNumber },
       ottpRequest
     );
+
+    logTrace('bpm::onetimepremium::POST::complete', {
+      ...loggingContext,
+      planCode,
+      policyNumber,
+    });
+
     return NextResponse.json(response);
   } catch (error) {
+    logError('bpm::onetimepremium::POST::error', {
+      ...loggingContext,
+      planCode: params.planCode,
+      policyNumber: params.policyNumber,
+      error,
+    });
     return NextResponse.json({ data: null, error: (error as Error).cause });
   }
 }

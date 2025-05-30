@@ -16,6 +16,7 @@ import { LineOfBusinessPath } from '@/types';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 import styles from './account.module.css';
 
@@ -32,17 +33,24 @@ export default async function AccountValuePage({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
+  const loggingContext = await buildCommonLogContext();
 
   const { data: accountValueData, error: accountValueError } =
-    await getPolicyAccountValue({
-      planCode,
-      policyNumber,
-    });
+    await getPolicyAccountValue(
+      {
+        planCode,
+        policyNumber,
+      },
+      loggingContext
+    );
 
-  const { data: fundData } = await getFundDetails({
-    carrierId: accountValueData?.carrierId,
-    fundId: accountValueData?.fundId,
-  });
+  const { data: fundData } = await getFundDetails(
+    {
+      carrierId: accountValueData?.carrierId,
+      fundId: accountValueData?.fundId,
+    },
+    loggingContext
+  );
 
   if (accountValueError || !accountValueData) {
     return null;

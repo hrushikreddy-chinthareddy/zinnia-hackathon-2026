@@ -3,6 +3,7 @@ import { getMyPoliciesByCarrier } from '@/services';
 
 import { baseExperienceCarriers } from './carriers';
 import { lineOfBusinessUrlPath } from './data';
+import { buildCommonLogContext } from './logging/server-logging';
 import { REDIRECT_TO_URL_KEY } from './serverClientUtils';
 
 /**
@@ -12,8 +13,10 @@ import { REDIRECT_TO_URL_KEY } from './serverClientUtils';
  * @returns {Policy | null} The user's policy
  */
 export const userSinglePolicy = async () => {
+  const loggingContext = await buildCommonLogContext();
   const { data: allPolicies } = await getMyPoliciesByCarrier(
-    baseExperienceCarriers
+    baseExperienceCarriers,
+    loggingContext
   );
 
   return allPolicies && allPolicies.length === 1 ? allPolicies[0] : null;

@@ -5,6 +5,7 @@ import { Footer } from '@/components/footer/Footer';
 import { PolicyDetailPageHeader } from '@/components/policy-detail-page-header/PolicyDetailPageHeader';
 import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
 import { getPolicyStatusDetails } from '@/services';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components
@@ -26,7 +27,11 @@ export default async function AuthenticatedLayout({
   };
 }) {
   const { planCode, policyNumber } = params;
-  const { data } = await getPolicyStatusDetails({ planCode, policyNumber });
+  const loggingContext = await buildCommonLogContext();
+  const { data } = await getPolicyStatusDetails(
+    { planCode, policyNumber },
+    loggingContext
+  );
   return (
     <>
       <PolicyStatusAlertBanner

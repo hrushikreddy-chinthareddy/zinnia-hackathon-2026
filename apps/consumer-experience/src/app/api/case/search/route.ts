@@ -1,16 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { searchCasesByPolicyNumber } from '@/services/case';
+import {
+  buildNextReqLoggingContext,
+  logTrace,
+  logError,
+} from '@/utils/logging/server-logging';
 
 export async function POST(_request: NextRequest) {
-  const { policyNumber, carrierCode } = await _request.json();
-  const { data, error } = await searchCasesByPolicyNumber({
-    policyNumber,
-    carrierCode
-  });
+  const loggingContext = buildNextReqLoggingContext(_request);
+  logTrace('case::search::POST::start', loggingContext);
 
-  return NextResponse.json({
-    data,
-    error,
-  });
+  try {
+    const { policyNumber, carrierCode } = await _request.json();
+    const { data, error } = await searchCasesByPolicyNumber({
+      policyNumber,
+      carrierCode,
+    });
+
+    logTrace('case::search::POST::complete', {
+      ...loggingContext,
+    });
+
+    return NextResponse.json({
+      data,
+      error,
+    });
+  } catch (error) {
+    logError('case::search::POST::error', {
+      ...loggingContext,
+      error,
+    });
+    throw error;
+  }
 }

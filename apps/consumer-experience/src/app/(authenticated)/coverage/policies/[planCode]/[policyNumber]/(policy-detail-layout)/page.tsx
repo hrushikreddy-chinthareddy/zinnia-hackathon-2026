@@ -16,6 +16,7 @@ import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
 import { LineOfBusinessPath } from '@/types';
 import { ExtendedPolicyProductType } from '@/types/policy';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -32,10 +33,14 @@ export default async function Page({
   };
 }) {
   const { planCode, policyNumber } = params;
-  const { data, error } = await getPolicyForHeaderDetails({
-    planCode,
-    policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data, error } = await getPolicyForHeaderDetails(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
 
   if (error) {
     return (

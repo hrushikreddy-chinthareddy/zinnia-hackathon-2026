@@ -8,6 +8,7 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { Rider } from '@/components/rider/Rider';
 import { getRiders } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -19,10 +20,14 @@ export default async function Riders({
 }: {
   params: PolicyRequestInputs;
 }) {
-  const { data, error } = await getRiders({
-    planCode: params.planCode,
-    policyNumber: params.policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data, error } = await getRiders(
+    {
+      planCode: params.planCode,
+      policyNumber: params.policyNumber,
+    },
+    loggingContext
+  );
 
   const electedRiders = data?.riders?.filter(rider => rider.isElected);
   const additionalRiders = data?.riders?.filter(rider => !rider.isElected);

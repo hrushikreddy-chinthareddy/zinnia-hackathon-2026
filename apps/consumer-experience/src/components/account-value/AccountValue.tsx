@@ -8,6 +8,7 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from '../policy-overview/PolicyOverview.module.css';
@@ -31,10 +32,14 @@ export const AccountValue = async ({
   policyNumber,
   showIcon,
 }: Props) => {
-  const { data, error } = await getPolicyAccountValueWith30DayChange({
-    planCode,
-    policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data, error } = await getPolicyAccountValueWith30DayChange(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
 
   if (error || !data) {
     return null;

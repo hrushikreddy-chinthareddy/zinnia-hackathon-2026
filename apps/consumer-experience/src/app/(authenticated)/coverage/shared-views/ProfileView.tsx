@@ -16,6 +16,7 @@ import { getFeatureFlags } from '@/services/feature-flags';
 import { getPreferencesByPlanCode } from '@/services/preferences/v1/[partyId]/e-delivery/[planCode]/[policyNumber]';
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 export const ProfileView = async ({
@@ -39,12 +40,16 @@ export const ProfileView = async ({
   const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
 
   let preferencesData = [] as EDeliveryPreferenceModel[];
+  const loggingContext = await buildCommonLogContext();
 
   if (showCommunicationPreferences) {
-    const { data } = await getPreferencesByPlanCode({
-      planCode,
-      policyNumber,
-    });
+    const { data } = await getPreferencesByPlanCode(
+      {
+        planCode,
+        policyNumber,
+      },
+      loggingContext
+    );
 
     preferencesData = data;
   }

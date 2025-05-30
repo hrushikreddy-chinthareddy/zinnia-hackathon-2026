@@ -17,6 +17,7 @@ import { getLoanEligibility } from '@/services/bpm';
 import { PolicyLoans, PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 const pageTitle = getPageTitle(RouteKey.LOANS);
@@ -39,20 +40,27 @@ export default async function Loans({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
+  const loggingContext = await buildCommonLogContext();
   const [loanDetails, loanEligibility, policyStatus] = await Promise.allSettled(
     [
-      getPolicyLoanDetails({
-        planCode,
-        policyNumber,
-      }),
+      getPolicyLoanDetails(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingContext
+      ),
       getLoanEligibility({
         planCode,
         policyNumber,
       }),
-      getPolicyStatusDetails({
-        planCode,
-        policyNumber,
-      }),
+      getPolicyStatusDetails(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingContext
+      ),
     ]
   );
 

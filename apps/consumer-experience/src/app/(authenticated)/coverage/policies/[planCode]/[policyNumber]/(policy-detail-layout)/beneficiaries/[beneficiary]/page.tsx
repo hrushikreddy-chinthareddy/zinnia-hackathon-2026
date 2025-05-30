@@ -19,6 +19,7 @@ import {
   isNullEmptyOrUndefined,
   filterItemsWithPastEndDate,
 } from '@/utils/data';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { toSentenceCase } from '@/utils/strings';
 
@@ -47,11 +48,16 @@ export default async function Beneficiary({
   const policyNumber = params.policyNumber || '';
   const partyId = params.beneficiary || '';
 
-  const { data, error } = await getBeneficiary({
-    planCode,
-    policyNumber,
-    partyId,
-  });
+  const loggingContext = await buildCommonLogContext();
+
+  const { data, error } = await getBeneficiary(
+    {
+      planCode,
+      policyNumber,
+      partyId,
+    },
+    loggingContext
+  );
 
   const flags = await getFeatureFlags();
   const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];

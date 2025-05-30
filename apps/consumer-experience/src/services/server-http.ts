@@ -8,7 +8,10 @@ import {
 } from '@/types/auth';
 import { getAccessToken, getSession } from '@/utils/auth';
 import {
-  getUserInfoFromSession,
+  CommonLogContext,
+  getUserInfoForLogging,
+  LoggingModule,
+  LoggingStage,
   logTrace,
 } from '@/utils/logging/server-logging';
 import { AUTH0_SCOPE } from '@/utils/serverClientUtils';
@@ -30,22 +33,22 @@ class ServerHttpRequest extends HttpRequest {
   request = async (
     input: string | URL | Request,
     init?: RequestInit | undefined,
-    data?: BodyInit | null | undefined
+    loggingCtx?: CommonLogContext
   ): Promise<Response> => {
-    const parsedData = data ? JSON.parse(data.toString()) : null;
-    const correlationId = parsedData?.correlationId || uuid4();
+    const correlationId = loggingCtx?.correlationId || uuid4();
     const now = performance.now();
     const { accessToken } = await getAccessToken();
-    const session = await getSession();
     const loggingContext = {
-      ...getUserInfoFromSession(session),
+      user: await getUserInfoForLogging(),
       url: input?.toString(),
       method: init?.method,
-      correlationId,
       file: 'server-http.ts',
       function: 'request',
     };
-    logTrace('request::start', loggingContext);
+    logTrace(
+      `${LoggingModule.SERVER_HTTP_REQUEST}::request::${LoggingStage.START}`,
+      loggingContext
+    );
 
     const requestInit: RequestInit = init || {};
     if (!requestInit.headers) {
@@ -53,13 +56,18 @@ class ServerHttpRequest extends HttpRequest {
     }
 
     requestInit.headers = {
-      'x-correlation-id': correlationId,
+      // all backend services should be using this as the way to pass
+      // correlationId through the system. Enterprise api at least is
+      // definitely using this
+      // TODO: verify that bpm is using this header
+      // TODO: if not in log, check req body? but then what about GET requests?
+      'x-correlation-id': correlationId || uuid4(),
       ...requestInit.headers,
       Authorization: `Bearer ${accessToken}`,
     };
 
     const result = await fetch(input, requestInit);
-    logTrace('request::complete', {
+    logTrace('server-http::request::complete', {
       ...loggingContext,
       duration: performance.now() - now,
       requestStatus: result.status,

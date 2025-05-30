@@ -19,6 +19,7 @@ import {
   DocumentV3SearchItem,
   ExtendedDocumentMeta,
 } from '@/types/document';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { DocumentsTabs } from './DocumentsTabs';
@@ -49,10 +50,14 @@ export const DocumentsView = async ({
   currentView?: DocumentCategory;
 }) => {
   const flags = await getFeatureFlags();
-  const { data: policyData, error: policyError } = await getPolicyDetails({
-    planCode,
-    policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data: policyData, error: policyError } = await getPolicyDetails(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
   const showTaxDocuments = flags?.[FEATURE_FLAGS.VIEW_TAX_DOCUMENTS];
   const shouldUseV3 = flags?.[FEATURE_FLAGS.DOCUMENTS_V3];
   const [correspondenceDocsRes, taxDocsRes] = await Promise.allSettled([

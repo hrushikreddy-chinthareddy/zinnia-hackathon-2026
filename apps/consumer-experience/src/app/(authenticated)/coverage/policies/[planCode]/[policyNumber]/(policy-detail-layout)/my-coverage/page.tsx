@@ -11,6 +11,7 @@ import { RouteKey, getPageTitle } from '@/route-map';
 import { getCoverage } from '@/services/policy';
 import { ExtendedPolicyProductType } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 const pageTitle = getPageTitle(RouteKey.MY_COVERAGE);
 // disable because NextJS needs this to be exported from this file
@@ -29,11 +30,14 @@ export default async function Coverage({
 }) {
   const planCode = params.planCode;
   const policyNumber = params.policyNumber;
-
-  const { data, error } = await getCoverage({
-    planCode,
-    policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data, error } = await getCoverage(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
 
   if (error || data === null) {
     return (

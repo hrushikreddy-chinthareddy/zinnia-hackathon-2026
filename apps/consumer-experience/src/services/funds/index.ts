@@ -7,13 +7,15 @@ import { FundSegment } from '@zinnia/api-types/types/sor';
 import { z } from 'zod';
 
 import { PolicyFund, PolicyRequestInputs } from '@/types/policy';
-import { logTrace, logWarn } from '@/utils/logging/server-logging';
+import { CommonLogContext, logTrace } from '@/utils/logging/server-logging';
+import { withLogging } from '@/utils/logging/with-logging';
 
-import { ApiResponse } from '..';
 import { combineFundData, transformFundsTotalValue } from './transformers';
 import { EnterpriseTokenApi } from '../enterprise-api-token-http';
 import { getPolicyByPlanCodeAndId } from '../policy';
 import { transformPolicyForFundDetails } from '../policy/transformers';
+
+const FILE_NAME = '/src/services/funds/index.ts';
 
 export interface FundDetails extends FundDescriptor {
   fundId: string;
@@ -75,12 +77,15 @@ interface getFundsArgs {
  * @param param0
  * @returns
  */
-export const getFundDetails = async ({
-  carrierId,
-  fundId,
-  queryParams: { fundDetailsAsOfDate, amount } = {},
-}: GetFundDetailsArgs): Promise<ApiResponse<FundDetails>> => {
-  try {
+export const getFundDetails = withLogging(
+  async (
+    {
+      carrierId,
+      fundId,
+      queryParams: { fundDetailsAsOfDate, amount } = {},
+    }: GetFundDetailsArgs,
+    loggingCtx: CommonLogContext
+  ): Promise<FundDetails> => {
     const url = new URL(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/funds/v1/carriers/${carrierId}/funds/${fundId}`
     );
@@ -89,36 +94,31 @@ export const getFundDetails = async ({
       url.searchParams.set('fundDetailsAsOfDate', fundDetailsAsOfDate);
     if (amount) url.searchParams.set('amount', amount.toString());
 
-    const response = await EnterpriseTokenApi.get(url);
+    const response = await EnterpriseTokenApi.get(url, undefined, loggingCtx);
 
     if (!response.ok) {
-      throw response;
+      const errorData = await response
+        .json()
+        .catch(() => ({ message: response.statusText }));
+      const error = new Error(
+        `Error fetching fund details: ${errorData.message || response.statusText}`
+      );
+      // @ts-expect-error TODO: find a better way to pass status
+      error.status = response.status;
+      throw error;
     }
 
     const data = await response.json();
     return {
-      data: {
-        ...data,
-        fundId,
-      },
-      error: null,
+      ...data,
+      fundId,
     };
-  } catch (error) {
-    logTrace('Error getting fund details', {
-      data: { carrierId, fundId },
-      reqStatus: (error as Response)?.status,
-    });
-    return {
-      data: null,
-      error: {
-        cause: error,
-        status: (error as Response)?.status ?? 502,
-        name: 'getFundDetails: error',
-        message: 'error getting fund details',
-      },
-    };
+  },
+  {
+    file: FILE_NAME,
+    functionName: 'getFundDetails',
   }
-};
+);
 
 /**
  * Loops through a list of funds and hits the fund details endpoint.
@@ -130,35 +130,46 @@ export const getFundDetails = async ({
  */
 const collectAllFundDetails = async (
   funds: (PolicyFund | Fund)[],
-  carrierId?: string
+  carrierId: string | undefined,
+  loggingCtx: CommonLogContext
 ) => {
-  // Loop through each fund and get details like interest rate and product type
   const fundDetailsResponses = funds.map(
     async ({ fundId, fundAccountType, fundSegments }) => {
-      // Fixed/holding funds interest rates depend on the originalDepositDate of the first fundSegment
       if (
         fundAccountType === FundAccountTypeEnum.FIXED ||
         fundAccountType === FundAccountTypeEnum.HOLDING
       ) {
         const fundDetailsAsOfDate = fundSegments?.find(
-          // in case a number is returned by the api
           ({ segmentId }) => segmentId == '1'
         )?.originalDepositDate;
 
-        return getFundDetails({
-          carrierId,
-          fundId,
-          queryParams: {
-            fundDetailsAsOfDate,
+        return getFundDetails(
+          {
+            carrierId,
+            fundId,
+            queryParams: {
+              fundDetailsAsOfDate,
+            },
           },
-        });
+          loggingCtx
+        );
       }
-      return getFundDetails({ carrierId, fundId });
+      return getFundDetails({ carrierId, fundId }, loggingCtx);
     }
   );
 
-  // wait for the fund details promises to resolve
-  const fundDetails = (await Promise.allSettled(fundDetailsResponses))
+  const settledPromises = await Promise.allSettled(fundDetailsResponses);
+
+  settledPromises.forEach(promise => {
+    if (promise.status === 'rejected') {
+      logTrace('collectAllFundDetails: A fund detail promise was rejected', {
+        correlationId: loggingCtx.correlationId,
+        reason: promise.reason,
+      });
+    }
+  });
+
+  const fundDetails = settledPromises
     .filter(promise => promise.status === 'fulfilled')
     .map(promise => promise.value.data);
 
@@ -170,97 +181,89 @@ const collectAllFundDetails = async (
  * @param param0
  * @returns
  */
-
-export const getProductDetails = async ({
-  carrierId,
-  planCode,
-}: getProductDetailsArgs): Promise<ApiResponse<ProductRules>> => {
-  try {
+export const getProductDetails = withLogging(
+  async (
+    { carrierId, planCode }: getProductDetailsArgs,
+    loggingCtx: CommonLogContext
+  ): Promise<ProductRules> => {
     const response = await EnterpriseTokenApi.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/funds/v1/carriers/${carrierId}/products/${planCode}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/funds/v1/carriers/${carrierId}/products/${planCode}`,
+      undefined,
+      loggingCtx
     );
 
     if (!response.ok) {
-      throw response;
+      const errorData = await response
+        .json()
+        .catch(() => ({ message: response.statusText }));
+      const error = new Error(
+        `Error fetching product details: ${errorData.message || response.statusText}`
+      );
+      // @ts-expect-error
+      error.status = response.status;
+      throw error;
     }
 
     const data = await response.json();
-
-    return {
-      data,
-      error: null,
-    };
-  } catch (error) {
-    return {
-      data: null,
-      error: {
-        cause: error,
-        status: (error as Response)?.status ?? 502,
-        name: 'getProductDetails: error',
-        message: 'error getting product details',
-      },
-    };
+    return data;
+  },
+  {
+    file: FILE_NAME,
+    functionName: 'getProductDetails',
   }
-};
+);
 
 /**
  * Gets funds for a policy and then builds information for each of them by calling product details and fund details endpoints. Returns what it can.
  * @param param0
  * @returns
  */
-export const getFunds = async ({
-  planCode,
-  policyNumber,
-}: getFundsArgs): Promise<ApiResponse<Fund[] | PolicyFund[]>> => {
-  try {
-    // Get the user policy
-    const policyData = await getPolicyByPlanCodeAndId({
-      planCode,
-      policyNumber,
-    });
+export const getFunds = withLogging(
+  async (
+    { planCode, policyNumber }: getFundsArgs,
+    loggingCtx: CommonLogContext
+  ): Promise<Fund[] | PolicyFund[]> => {
+    const { data: policyData } = await getPolicyByPlanCodeAndId(
+      {
+        planCode,
+        policyNumber,
+      },
+      loggingCtx
+    );
+
+    if (!policyData) {
+      throw new Error('Policy data is null');
+    }
+
     const { carrierId } = policyData;
 
-    // Get the funds off the policy and build a list of fund obects
     const policyFunds = transformPolicyForFundDetails(policyData);
 
     if (!policyFunds) {
-      logTrace('transformedResults object was returned null', {});
-
-      return {
-        data: null,
-        error: {
-          message: 'Something went wrong',
-          status: 500,
-          name: 'getFunds Error',
-        },
-      };
+      throw new Error('Transformed policy funds are null');
     }
 
-    // We hit the product endpoint to retrieve a list of funds, as well as get information on the sweepDate of the holding funds.
     const { data: productsDetails, error: productDetailsError } =
-      await getProductDetails({
-        carrierId,
-        planCode,
-      });
+      await getProductDetails(
+        {
+          carrierId,
+          planCode,
+        },
+        loggingCtx
+      );
 
-    if (productDetailsError) {
-      logTrace('getProductDetails returned an error', productDetailsError);
-    }
-
-    // If the product endpoint fails to return good data, we just return the funds that come back from the policy.
     if (!productsDetails?.funds || productDetailsError) {
-      return {
-        data: policyFunds,
-        error: null,
-      };
+      logTrace('getFunds: fallback to policyFunds', {
+        correlationId: loggingCtx.correlationId,
+        productDetailsError: productDetailsError ? true : false,
+        hasFundsInProductDetails: productsDetails?.funds ? true : false,
+      });
+      return policyFunds;
     }
 
-    // Get all fund details based on fundIds. Returns interestRate and productType from the fund detail API
     const fundIds = Object.keys(productsDetails.funds);
-
     const productFundMap = new Map<string, PolicyFund | Fund>();
 
-    // Combine both product and policy fund data
     fundIds.forEach(fundId => {
       productFundMap.set(fundId, {
         ...policyFunds?.find(fund => fund.fundId === fundId),
@@ -268,83 +271,56 @@ export const getFunds = async ({
       });
     });
 
-    // Call api to get the details for each fund
     const fundDetails = await collectAllFundDetails(
       Array.from(productFundMap.values()),
-      carrierId
+      carrierId,
+      loggingCtx
     );
 
-    // Take all of the information and pass it to a combiner function.
-    // This function also loops through each fund and calls a separate
-    // endpoint to get the interestRate and productType values
     const { data: combinedData, error: combineError } = combineFundData({
       fundDetails,
       productsDetails,
       policyFunds,
     });
 
-    // If something fails here, ust return the user policy funds?
     if (combineError || !combinedData) {
-      logTrace('combineFundData returned an error', combineError);
-      return {
-        data: policyFunds,
-        error: null,
-      };
+      throw new Error(combineError?.message || 'Failed to combine fund data');
     }
 
-    return {
-      data: combinedData,
-      error: null,
-    };
-  } catch (e) {
-    return {
-      data: null,
-      error: {
-        cause: e,
-        status: (e as Response)?.status ?? 502,
-        name: 'getFundsInfo: error',
-        message: 'error getting funds info',
-      },
-    };
+    return combinedData;
+  },
+  {
+    file: FILE_NAME,
+    functionName: 'getFunds',
   }
-};
+);
 
-export const getFundsTotalValue = async (policyInputs: PolicyRequestInputs) => {
-  logTrace('getFundsTotalValue', {
-    planCode: policyInputs.planCode,
-    policyNumber: policyInputs.policyNumber,
-  });
+interface FundsTotalValue {
+  fundsTotalValue: number | null;
+}
 
-  // if (isMockPolicyOverviewRequestEnabled()) {
-  //   const transformedResults =
-  //     transformPolicyProductDetails(mockPolicyResponse);
+export const getFundsTotalValue = withLogging(
+  async (
+    policyInputs: PolicyRequestInputs,
+    loggingCtx: CommonLogContext
+  ): Promise<FundsTotalValue> => {
+    const fundsResponse = await getFunds(policyInputs, loggingCtx);
 
-  //   return {
-  //     data: transformedResults,
-  //     error: null,
-  //   };
-  // }
+    if (fundsResponse.error || !fundsResponse.data) {
+      throw (
+        fundsResponse.error ||
+        new Error('Failed to retrieve funds or funds data is null.')
+      );
+    }
 
-  try {
-    const funds = await getFunds(policyInputs);
-    const fundsTotalValue = transformFundsTotalValue(funds.data);
-
-    return {
-      data: {
-        fundsTotalValue,
-      },
-      error: null,
-    };
-  } catch (error) {
-    logWarn('getFundsTotalValue Error', { error });
+    const fundsTotalValue = transformFundsTotalValue(fundsResponse.data);
 
     return {
-      data: null,
-      error: {
-        message: 'Something went wrong',
-        status: 400,
-        name: 'getFundsTotalValue Error',
-      },
+      fundsTotalValue,
     };
+  },
+  {
+    file: FILE_NAME,
+    functionName: 'getFundsTotalValue',
   }
-};
+);

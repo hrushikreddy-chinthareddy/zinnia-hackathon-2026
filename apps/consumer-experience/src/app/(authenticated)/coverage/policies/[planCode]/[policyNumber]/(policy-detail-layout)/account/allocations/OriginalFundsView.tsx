@@ -8,6 +8,7 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { getPolicyFundDetails, getPolicyStatusDetails } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 export const OriginalFundsView = async ({
   planCode,
@@ -16,15 +17,24 @@ export const OriginalFundsView = async ({
   planCode: string;
   policyNumber: string;
 }) => {
-  const { data, error } = await getPolicyFundDetails({
-    planCode,
-    policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
 
-  const { data: statusData } = await getPolicyStatusDetails({
-    planCode,
-    policyNumber,
-  });
+  const { data, error } = await getPolicyFundDetails(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
+
+  const { data: statusData } = await getPolicyStatusDetails(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
+
   const isFreelook = statusData?.policyStatus === FeatureType.FREELOOK;
 
   const allocationData = () => {

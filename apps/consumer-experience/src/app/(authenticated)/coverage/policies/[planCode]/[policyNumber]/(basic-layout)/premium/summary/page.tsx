@@ -3,6 +3,7 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { PaymentSummary } from '@/components/one-time-premium-payment/payment-summary/PaymentSummary';
 import { getPolicyAccountValue } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 export default async function Summary({
   params,
@@ -10,10 +11,14 @@ export default async function Summary({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-  const { data } = await getPolicyAccountValue({
-    planCode: params.planCode,
-    policyNumber: params.policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data } = await getPolicyAccountValue(
+    {
+      planCode: params.planCode,
+      policyNumber: params.policyNumber,
+    },
+    loggingContext
+  );
 
   return (
     <>

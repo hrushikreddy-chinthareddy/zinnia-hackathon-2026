@@ -18,6 +18,7 @@ import { PolicyRequestInputs, PolicyWithdrawals } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import {
   DEFAULT_ERROR_STRING,
   DEFAULT_UNAVAILABLE_STRING,
@@ -47,21 +48,27 @@ export default async function Withdrawals({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-
+  const loggingContext = await buildCommonLogContext();
   const [withdrawalDetails, withdrawalEligibility, policyStatus] =
     await Promise.allSettled([
-      getPolicyWithdrawalDetails({
-        planCode,
-        policyNumber,
-      }),
+      getPolicyWithdrawalDetails(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingContext
+      ),
       getWithdrawalEligibility({
         planCode,
         policyNumber,
       }),
-      getPolicyStatusDetails({
-        planCode,
-        policyNumber,
-      }),
+      getPolicyStatusDetails(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingContext
+      ),
     ]);
 
   const summaryData =

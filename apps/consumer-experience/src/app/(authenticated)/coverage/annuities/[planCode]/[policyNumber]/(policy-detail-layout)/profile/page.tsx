@@ -10,6 +10,7 @@ import { QueryKeys } from '@/queries/query-keys';
 import { getPageTitle, RouteKey } from '@/route-map';
 import { getPolicyProfileData } from '@/services';
 import { PolicyProfile, PolicyRequestInputs } from '@/types/policy';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 const pageTitle = getPageTitle(RouteKey.PROFILE);
 // disable because NextJS needs this to be exported from this file
@@ -26,10 +27,14 @@ export default async function Profile({ params }: Props) {
   let profileData = {} as PolicyProfile;
   let isError = false;
 
-  const { data, error } = await getPolicyProfileData({
-    planCode: params.planCode,
-    policyNumber: params.policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data, error } = await getPolicyProfileData(
+    {
+      planCode: params.planCode,
+      policyNumber: params.policyNumber,
+    },
+    loggingContext
+  );
 
   profileData = data!;
   isError = !!error;

@@ -51,7 +51,7 @@ We swap themes based on subdomain. You can get subdomains locally by doing the f
 From your user directory:
 
 ```
-sudo nano /etc/hosts
+sudo nano /etc/hosts or open the file from terminal
 ```
 
 Add the following lines to the bottom of your file
@@ -61,6 +61,7 @@ Add the following lines to the bottom of your file
 127.0.0.1 wellabe.zinniatech.local
 127.0.0.1 everly.mypolicyview.local
 127.0.0.1 wellabe.mypolicyview.local
+127.0.0.1 farmers.mypolicyview.local
 ```
 
 Then go to `.env.local` and change these values to match:

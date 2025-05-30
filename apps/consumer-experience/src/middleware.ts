@@ -6,6 +6,7 @@
 
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { NextResponse, type NextRequest } from 'next/server';
+import { v4 as uuid4 } from 'uuid';
 
 import { RouteKey } from '@/route-map';
 import { isMockAllowed } from '@/utils';
@@ -151,10 +152,16 @@ export async function middleware(req: NextRequest) {
         return resNext;
       }
 
-      const { data: policyData } = await getPolicyDetails({
-        planCode,
-        policyNumber,
-      });
+      const { data: policyData } = await getPolicyDetails(
+        {
+          planCode,
+          policyNumber,
+        },
+        {
+          user: session?.user,
+          correlationId: uuid4(),
+        }
+      );
 
       // if the user is not on a valid subdomain, redirect them to the correct subdomain based on the
       // policy they have selected. Prevents someone from being going to like `wellabe.com/123everlyCode/456everlyPolicyNumber`

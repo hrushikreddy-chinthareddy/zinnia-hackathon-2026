@@ -13,6 +13,7 @@ import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/L
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
 import { getPolicyForHeaderDetails } from '@/services';
 import { LineOfBusinessPath } from '@/types';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -30,10 +31,14 @@ export default async function Page({
   };
 }) {
   const { planCode, policyNumber } = params;
-  const { data, error } = await getPolicyForHeaderDetails({
-    planCode,
-    policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data, error } = await getPolicyForHeaderDetails(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
 
   if (error) {
     return (

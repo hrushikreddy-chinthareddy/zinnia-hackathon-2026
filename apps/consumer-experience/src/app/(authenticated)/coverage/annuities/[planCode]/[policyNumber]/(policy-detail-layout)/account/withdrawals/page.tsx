@@ -17,6 +17,7 @@ import {
 import { PolicyRequestInputs, PolicyWithdrawals } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 import styles from './withdrawals.module.css';
 
@@ -33,17 +34,23 @@ export default async function Withdrawals({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-
+  const loggingContext = await buildCommonLogContext();
   const [withdrawalDetails, policyStatus] = await Promise.allSettled([
-    getPolicyWithdrawalDetails({
-      planCode,
-      policyNumber,
-    }),
+    getPolicyWithdrawalDetails(
+      {
+        planCode,
+        policyNumber,
+      },
+      loggingContext
+    ),
 
-    getPolicyStatusDetails({
-      planCode,
-      policyNumber,
-    }),
+    getPolicyStatusDetails(
+      {
+        planCode,
+        policyNumber,
+      },
+      loggingContext
+    ),
   ]);
 
   const summaryData =

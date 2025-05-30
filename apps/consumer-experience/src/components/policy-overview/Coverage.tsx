@@ -10,6 +10,7 @@ import { ExtendedPolicyProductType } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined, lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import styles from './PolicyOverview.module.css';
@@ -27,10 +28,14 @@ export const Coverage = async ({
   policyNumber,
   lineOfBusiness,
 }: Props) => {
-  const { data, error } = await getCoverage({
-    planCode,
-    policyNumber,
-  });
+  const loggingContext = await buildCommonLogContext();
+  const { data, error } = await getCoverage(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
 
   if (error) {
     return null;

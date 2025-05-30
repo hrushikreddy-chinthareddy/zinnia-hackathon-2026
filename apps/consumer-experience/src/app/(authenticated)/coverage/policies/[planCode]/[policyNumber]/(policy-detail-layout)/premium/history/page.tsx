@@ -15,6 +15,7 @@ import { getPaymentHistory } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatBankAccountTypeText } from '@/utils/data';
 import { sortByDate } from '@/utils/dates';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { toSentenceCase } from '@/utils/strings';
 
 const displayWithRequested = [
@@ -38,7 +39,8 @@ interface Props {
 }
 
 export default async function PaymentHistory({ params }: Props) {
-  const { data, error } = await getPaymentHistory(params);
+  const loggingContext = await buildCommonLogContext();
+  const { data, error } = await getPaymentHistory(params, loggingContext);
 
   if (
     error ||

@@ -1,12 +1,17 @@
 import { getPolicyStatusDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 export const LapsedPolicy = async ({
   planCode,
   policyNumber,
 }: PolicyRequestInputs) => {
-  const { data } = await getPolicyStatusDetails({ planCode, policyNumber });
+  const loggingContext = await buildCommonLogContext();
+  const { data } = await getPolicyStatusDetails(
+    { planCode, policyNumber },
+    loggingContext
+  );
 
   return (
     <div className="card">

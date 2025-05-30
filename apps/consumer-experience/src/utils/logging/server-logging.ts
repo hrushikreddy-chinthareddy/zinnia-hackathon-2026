@@ -1,14 +1,108 @@
+import { headers } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
+import { v4 as uuid4 } from 'uuid';
+
 import { Session } from '@/types/auth';
+import { LoggingContext, UserInfo } from '@/types/logging';
 
 import pino, { complianceLogger } from './pino-server';
+import { getSession } from '../auth';
+
+export enum LoggingModule {
+  SERVER_HTTP_REQUEST = 'server-http',
+  ENTERPRISE_API_TOKEN_HTTP = 'enterprise-api-token-http',
+  PAGE = 'page',
+}
+
+export enum LoggingFn {
+  FUNDS_PAGE = 'FundsPage',
+  SELECT_AMOUNT_PAGE = 'SelectAmountPage',
+}
+
+export enum LoggingStage {
+  START = 'start',
+  COMPLETE = 'complete',
+  ERROR = 'error',
+}
 
 type LoggingFunction = (message: string, serializableValues: any) => void;
 
-export const getUserInfoFromSession = (session: Session | null | undefined) => {
+export const getUserInfoFromSession = (
+  session: Session | null | undefined
+): UserInfo => {
   return {
     partyId: session?.user?.partyId,
     sessionId: session?.user?.sid,
     userId: session?.user?.sub,
+    email: session?.user?.email,
+  };
+};
+
+export const getUserInfoForLogging = async (
+  res?: NextResponse
+): Promise<UserInfo | undefined> => {
+  try {
+    const session = await getSession(res);
+    return getUserInfoFromSession(session);
+  } catch (error) {
+    pino.warn('getUserInfoForLogging:: error', {
+      // TODO: set this up
+      // ...parseErrorInformation(error),
+      file: 'utils/server-logging',
+      function: 'getUserInfoForLogging',
+      user: undefined,
+    });
+    return undefined;
+  }
+};
+
+const getContextFromRequest = (req: NextRequest): Partial<LoggingContext> => {
+  if (!req) {
+    return {
+      method: '',
+      url: '',
+      inputs: undefined,
+      page: '',
+      params: undefined,
+      referrer: undefined,
+    };
+  }
+  return {
+    method: req.method || 'GET',
+    url: req.url,
+    params: req.nextUrl.searchParams,
+    // TODO: scrub this of pii
+    // inputs: req.body,
+    referrer: req.headers.get('referer') || '',
+  };
+};
+
+export const buildNextReqLoggingContext = async (
+  req: NextRequest,
+  res?: NextResponse
+): Promise<CommonLogContext> => {
+  return {
+    ...getContextFromRequest(req),
+    user: (await getUserInfoForLogging(res)) || {},
+    correlationId: uuid4(),
+  };
+};
+
+export interface CommonLogContext {
+  user: UserInfo;
+  correlationId: string;
+}
+
+export const buildCommonLogContext = async (
+  currentLogContext?: CommonLogContext
+): Promise<CommonLogContext> => {
+  if (currentLogContext?.user && currentLogContext?.correlationId) {
+    return currentLogContext;
+  }
+
+  return {
+    user: (await getUserInfoForLogging()) || {},
+    correlationId: uuid4(),
   };
 };
 
@@ -23,25 +117,31 @@ export const logCompliance: LoggingFunction = (
 };
 
 export const logFatal: LoggingFunction = (message, serializableValues = {}) => {
-  pino.fatal(serializableValues, message);
+  const referrer = headers()?.get('referer');
+  pino.fatal({ ...serializableValues, referrer }, message);
 };
 
 export const logError: LoggingFunction = (message, serializableValues = {}) => {
-  pino.error(serializableValues, message);
+  const referrer = headers()?.get('referer');
+  pino.error({ ...serializableValues, referrer }, message);
 };
 
 export const logWarn: LoggingFunction = (message, serializableValues = {}) => {
-  pino.warn(serializableValues, message);
+  const referrer = headers()?.get('referer');
+  pino.warn({ ...serializableValues, referrer }, message);
 };
 
 export const logInfo: LoggingFunction = (message, serializableValues = {}) => {
-  pino.info(serializableValues, message);
+  const referrer = headers()?.get('referer');
+  pino.info({ ...serializableValues, referrer }, message);
 };
 
 export const logDebug: LoggingFunction = (message, serializableValues = {}) => {
-  pino.debug(serializableValues, message);
+  const referrer = headers()?.get('referer');
+  pino.debug({ ...serializableValues, referrer }, message);
 };
 
 export const logTrace: LoggingFunction = (message, serializableValues = {}) => {
-  pino.trace(serializableValues, message);
+  const referrer = headers()?.get('referer');
+  pino.trace({ ...serializableValues, referrer }, message);
 };
