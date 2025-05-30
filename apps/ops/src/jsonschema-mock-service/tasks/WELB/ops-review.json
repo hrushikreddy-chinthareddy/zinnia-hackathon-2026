@@ -130,7 +130,7 @@
                                     "outcome": {
                                         "type": "string",
                                         "title": "Outcome",
-                                        "$ref": "#/$defs/outcomeEnum"
+                                        "$ref": "#/definitions/outcomeEnum"
                                     }
                                 },
                                 "required": ["outcome"]

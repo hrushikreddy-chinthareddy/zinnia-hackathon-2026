@@ -65,7 +65,8 @@
                                             },
                                             "documentId": {
                                                 "type": "string",
-                                                "ui:field": "subTitle"
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
                                             },
                                             "carrier": {
                                                 "type": "string",
@@ -94,9 +95,9 @@
                                 },
                                 "attachment": {
                                     "type": "array",
-                                    "title": "upload",
+                                    "title": "Upload",
                                     "items": {
-                                        "title": "upload",
+                                        "title": "Upload",
                                         "type": "string",
                                         "format": "data-url"
                                     }

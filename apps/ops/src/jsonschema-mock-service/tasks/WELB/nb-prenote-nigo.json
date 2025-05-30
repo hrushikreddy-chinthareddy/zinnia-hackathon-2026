@@ -83,14 +83,11 @@
                                         "ui:placeholder": "Documemt ID: "
                                     },
                                     "documentType": {
-                                        "type": "string",
-                                        "ui:field": "title",
-                                        "ui:separator": " - "
+                                        "type": "string"
                                     },
-                                    "documentName": {
+                                    "documentTypeDescription": {
                                         "type": "string",
-                                        "ui:field": "title",
-                                        "ui:separator": " - "
+                                        "ui:field": "title"
                                     },
                                     "documentSource": {
                                         "type": "string"
@@ -455,7 +452,7 @@
                             "documentId": {
                                 "ui:widget": "text"
                             },
-                            "documentName": {
+                            "documentTypeDescription": {
                                 "ui:widget": "text"
                             },
                             "documentSource": {
@@ -463,6 +460,11 @@
                             },
                             "documentType": {
                                 "ui:widget": "text"
+                            },
+                            "carrier": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
                             }
                         },
                         "ui:options": {

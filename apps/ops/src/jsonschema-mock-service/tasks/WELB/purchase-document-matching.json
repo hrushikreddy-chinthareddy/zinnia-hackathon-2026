@@ -68,7 +68,7 @@
                                     "type": "object",
                                     "title": "",
                                     "properties": {
-                                        "docType": {
+                                        "documentName": {
                                             "type": "string",
                                             "ui:field": "title"
                                         },
@@ -192,6 +192,11 @@
                                 "cardType": "Document",
                                 "icon": "DOCUMENT_TEXT",
                                 "ObjectFieldTemplate": "CardTemplate"
+                            },
+                            "carrier": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
                             }
                         },
                         "caseOverview": {
@@ -306,7 +311,7 @@
                                     "type": "object",
                                     "title": "",
                                     "properties": {
-                                        "docType": {
+                                        "documentName": {
                                             "type": "string",
                                             "ui:field": "title"
                                         },
@@ -384,6 +389,11 @@
                                 "cardType": "Document",
                                 "icon": "DOCUMENT_TEXT",
                                 "ObjectFieldTemplate": "CardTemplate"
+                            },
+                            "carrier": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
                             }
                         }
                     },

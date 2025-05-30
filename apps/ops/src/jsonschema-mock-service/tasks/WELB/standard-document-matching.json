@@ -41,7 +41,7 @@
                                                 "ui:field": "subTitle",
                                                 "ui:placeholder": "Document ID: "
                                             },
-                                            "docType": {
+                                            "documentName": {
                                                 "type": "string",
                                                 "ui:field": "title"
                                             },
@@ -159,6 +159,11 @@
                                     "icon": "DOCUMENT_TEXT",
                                     "ObjectFieldTemplate": "CardTemplate",
                                     "nobackground": true
+                                },
+                                "carrier": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
                                 }
                             }
                         }
@@ -254,7 +259,7 @@
                                     "items": {
                                         "type": "object",
                                         "properties": {
-                                            "docType": {
+                                            "documentName": {
                                                 "type": "string",
                                                 "ui:field": "title"
                                             },
@@ -383,6 +388,11 @@
                                     "icon": "DOCUMENT_TEXT",
                                     "ObjectFieldTemplate": "CardTemplate",
                                     "nobackground": true
+                                },
+                                "carrier": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
                                 }
                             }
                         }

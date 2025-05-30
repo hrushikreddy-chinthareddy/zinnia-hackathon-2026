@@ -57,11 +57,12 @@
                                         "properties": {
                                             "documentId": {
                                                 "type": "string",
-                                                "ui:field": "title"
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
                                             },
                                             "documentName": {
                                                 "type": "string",
-                                                "ui:field": "subTitle"
+                                                "ui:field": "title"
                                             },
                                             "documentSource": {
                                                 "type": "string",

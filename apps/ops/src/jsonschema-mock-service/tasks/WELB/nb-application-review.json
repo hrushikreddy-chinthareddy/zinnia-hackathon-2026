@@ -48,14 +48,19 @@
                                     "properties": {
                                         "documentId": {
                                             "type": "string",
-                                            "ui:field": "title"
+                                            "ui:field": "subTitle",
+                                            "ui:placeholder": "Document ID: "
                                         },
-                                        "documentSource": {
+                                        "documentTypeDescription": {
                                             "type": "string",
-                                            "ui:field": "subTitle"
+                                            "ui:field": "title"
                                         },
                                         "createdDate": {
                                             "type": "string"
+                                        },
+                                        "carrier": {
+                                            "type": "string",
+                                            "default": "{{carrier}}"
                                         }
                                     }
                                 },
@@ -150,6 +155,7 @@
                                         },
                                         "reviewFailureReasonDisplay": {
                                             "type": "array",
+                                            "title": "These issues will be created for the case:",
                                             "items": {
                                                 "type": "string"
                                             }
@@ -226,6 +232,11 @@
                                 "cardType": "Document",
                                 "icon": "DOCUMENT_TEXT",
                                 "ObjectFieldTemplate": "CardTemplate"
+                            },
+                            "carrier": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
                             }
                         }
                     },
@@ -251,10 +262,9 @@
                     },
                     "reviewFailureReasonDisplay": {
                         "ui:options": {
-                            "label": false,
+                            "label": true,
                             "ArrayFieldTemplate": "TextListTemplate",
                             "hasBg": true,
-                            "textListTitle": "These issues will be created for the case:",
                             "formContext": {
                                 "keyName": "customData",
                                 "listName": "declineReason",

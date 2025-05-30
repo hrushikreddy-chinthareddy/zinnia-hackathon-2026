@@ -82,6 +82,41 @@
                             "type": "string",
                             "title": "Can you proceed?",
                             "enum": ["YES", "NO"]
+                        },
+                        "uploadDocuments": {
+                            "type": "object",
+                            "title": "Link or upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "Upload",
+                                    "items": {
+                                        "title": "Upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
                         }
                     },
                     "dependencies": {
@@ -91,41 +126,6 @@
                                     "properties": {
                                         "issuesResolved": {
                                             "enum": ["YES"]
-                                        },
-                                        "uploadDocuments": {
-                                            "type": "object",
-                                            "title": "Link or upload document",
-                                            "properties": {
-                                                "upload": {
-                                                    "type": "string"
-                                                },
-                                                "or": {
-                                                    "type": "string",
-                                                    "title": "or"
-                                                },
-                                                "attachment": {
-                                                    "type": "array",
-                                                    "title": "upload",
-                                                    "items": {
-                                                        "title": "upload",
-                                                        "type": "string",
-                                                        "format": "data-url"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "attachments": {
-                                            "type": "array",
-                                            "items": {
-                                                "documentName": {
-                                                    "title": "Name",
-                                                    "type": "string"
-                                                },
-                                                "documentId": {
-                                                    "title": "Document Id",
-                                                    "type": "string"
-                                                }
-                                            }
                                         }
                                     }
                                 },
@@ -148,41 +148,6 @@
                                             "items": {
                                                 "type": "string"
                                             }
-                                        },
-                                        "uploadDocuments": {
-                                            "type": "object",
-                                            "title": "Link or upload document",
-                                            "properties": {
-                                                "upload": {
-                                                    "type": "string"
-                                                },
-                                                "or": {
-                                                    "type": "string",
-                                                    "title": "or"
-                                                },
-                                                "attachment": {
-                                                    "type": "array",
-                                                    "title": "upload",
-                                                    "items": {
-                                                        "title": "upload",
-                                                        "type": "string",
-                                                        "format": "data-url"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "attachments": {
-                                            "type": "array",
-                                            "items": {
-                                                "documentName": {
-                                                    "title": "Name",
-                                                    "type": "string"
-                                                },
-                                                "documentId": {
-                                                    "title": "Document Id",
-                                                    "type": "string"
-                                                }
-                                            }
                                         }
                                     }
                                 }
@@ -191,6 +156,18 @@
                     }
                 },
                 "uiSchema": {
+                    "ui:order": [
+                        "issuesList",
+                        "detail",
+                        "backgroundRequestResult",
+                        "backgroundRequestId",
+                        "details",
+                        "issuesResolved",
+                        "declineReason",
+                        "reviewFailureReasonDisplay",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
                         "orderable": false,
