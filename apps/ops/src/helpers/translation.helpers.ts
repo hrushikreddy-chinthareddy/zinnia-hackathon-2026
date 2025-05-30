@@ -1,6 +1,7 @@
 import { TFunction } from 'next-i18next';
 
 import { AccountType, AddressType, EmailType, PhoneType, ProductType } from '@deps/models/policy/sor-policy';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 // ToDo - BPB: Once the SOR ProductTypes spec has been updated to include the below types, we can remove anticipatedProductTypes logic.
 export type AnticipatedProductTypesType = (typeof AnticipatedProductTypes)[keyof typeof AnticipatedProductTypes];
@@ -191,9 +192,13 @@ interface MapAddressTypeToTranslation {
 }
 
 export function mapAddressTypeToTranslation({ addressType, lowercase, t }: MapAddressTypeToTranslation) {
+    if (!addressType) {
+        return DEFAULT_ERROR_STRING;
+    }
+
     const translationString = 'people.card.address.addressOptions.';
 
-    switch (addressType) {
+    switch (addressType?.toUpperCase()) {
         default:
         case AddressType.RESIDENCE:
             return lowercase ? t(translationString + 'residence').toLocaleLowerCase() : t(translationString + 'residence');

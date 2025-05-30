@@ -1,4 +1,16 @@
-import { Address, Country, Email, EmailType, Gender, Party, Phone, Prefix, State, Suffix } from '@deps/models/policy/sor-policy';
+import {
+    Address,
+    AddressType,
+    Country,
+    Email,
+    EmailType,
+    Gender,
+    Party,
+    Phone,
+    Prefix,
+    State,
+    Suffix,
+} from '@deps/models/policy/sor-policy';
 import { AgentData } from '@deps/types/agents';
 
 import { PolicyParty } from './Parties';
@@ -20,6 +32,7 @@ export const transformAgentDataToParty = (agentData: AgentData | undefined, part
                 state: (address.stateCode as State) || undefined,
                 zipCode: address.zip || undefined,
                 addressId: address.id || undefined, // BPB - this won't work with anything policyDetails, since it's a different system
+                addressType: (address.addressType as AddressType) || undefined,
             };
         }),
         identifications: [
