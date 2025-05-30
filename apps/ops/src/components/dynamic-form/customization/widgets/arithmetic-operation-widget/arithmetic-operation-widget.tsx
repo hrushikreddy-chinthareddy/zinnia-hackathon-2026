@@ -77,7 +77,7 @@ const ArithmeticOperationWidget = function (props: WidgetProps) {
               className={"text-right"}
               value={value || ''}
               required={required}
-              disabled={disabled}
+              disabled={true}
               onChange={() => onChange(value.toString())}
               hideError={hideError}
               status={rawErrors && rawErrors?.length > 0 ? 'error' : undefined}
