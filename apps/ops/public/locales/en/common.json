@@ -2378,7 +2378,8 @@
                 "dob": "Date of birth",
                 "isYourSpouseYoungerThanYou": "Is your spouse 10 years younger than you?"
             },
-            "formType": "Form type"
+            "formType": "Form type",
+            "hasPreviousNigo": "Has Previous NIGO sent"
         },
         "sidebar": {
             "contractStatusCode": "Policy status",

@@ -11,6 +11,7 @@ import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/f
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
+import HasPreviousNigo from '@deps/components/previous-nigo-check/has-previous-nigo-check';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
@@ -18,7 +19,7 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import useDlicConfig from './dlic-withdrawal-form-helpers';
 
-export default function DlicWithdrawalForm() {
+export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
 
     const {
@@ -35,8 +36,11 @@ export default function DlicWithdrawalForm() {
         cslnCheckStates,
         w4pSignaturesConfig,
         eSignatureFieldConfig,
+        hasPreviousNigoPlanCodes,
     } = useDlicConfig(t);
     const {
+        formProgram,
+        setFormProgram,
         formParty,
         setFormValidator,
         setFormData,
@@ -66,6 +70,7 @@ export default function DlicWithdrawalForm() {
 
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const showHasPreviousNigo = hasPreviousNigoPlanCodes.includes(planCode);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -77,6 +82,14 @@ export default function DlicWithdrawalForm() {
                 selectOneOptions={selectOneOptions}
                 title={t('amountDetails.partialWithdrawal.withdrawalAmount') as string}
             />
+            {showHasPreviousNigo && (
+                <HasPreviousNigo
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    t={t}
+                    isNigoChecked={formProgram?.isPrevNigoChecked ?? false}
+                    onIsNigoChange={setFormProgram}
+                />
+            )}
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
@@ -94,6 +107,7 @@ export default function DlicWithdrawalForm() {
                 [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
                     <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
                 )}
+
             <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}

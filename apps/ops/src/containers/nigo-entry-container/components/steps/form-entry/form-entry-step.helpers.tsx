@@ -58,10 +58,14 @@ export const getCaseType = (docTypeQuery: string): CaseType => {
     return loweredKeyedObj[docTypeQuery?.toLowerCase()];
 };
 
-export const getWithdrawalFormComponentMap = (qualType: QualTypes | FASTQualTypes | '', isLC: boolean): Record<string, React.ReactNode> => ({
-    [Carrier.FLIC]: <FlicWithdrawalForm qualType={qualType} isLC={isLC}/>,
+export const getWithdrawalFormComponentMap = (
+    planCode: string | '',
+    qualType: QualTypes | FASTQualTypes | '',
+    isLC: boolean
+): Record<string, React.ReactNode> => ({
+    [Carrier.FLIC]: <FlicWithdrawalForm qualType={qualType} isLC={isLC} />,
     [Carrier.SBGC]: <SbgcWithdrawalForm />,
-    [Carrier.DLIC]: <DlicWithdrawalForm />,
+    [Carrier.DLIC]: <DlicWithdrawalForm planCode={planCode} />,
     [Carrier.MASS]: <MassWithdrawalForm qualType={qualType} />,
     [Carrier.NASU]: <NasuWithdrawalForm />,
     [Carrier.GDMN]: <GdmnWithdrawalForm />,
@@ -74,7 +78,7 @@ export const getOFTFormComponentMap = (planCode: string | '', qualType: QualType
     [Carrier.FLIC]: <FlicOftWithdrawalForm qualType={qualType} />,
     [Carrier.MASS]: <MassOftWithdrawalForm />,
     [Carrier.SBGC]: <SbgcOftWithdrawalForm planCode={planCode} />,
-    [Carrier.DLIC]: <OftDlicForm qualType={qualType} />,
+    [Carrier.DLIC]: <OftDlicForm qualType={qualType} planCode={planCode} />,
     [Carrier.RSLN]: <RSLNOftWithdrawalForm qualType={qualType} />,
     [Carrier.GDMN]: <GdmnOftWithdrawalForm qualType={qualType} />,
     [Carrier.GLCO]: <GlcoOftWithdrawalForm />,
@@ -118,14 +122,20 @@ const getRenewalFormComponentMap = (): Record<string, React.ReactNode> => ({
     [Carrier.DLIC]: <DlicRenewalForm />,
 });
 
-export const getFormParts = (caseType: CaseType, clientCode: string, qualType: QualTypes | FASTQualTypes | '', planCode: string = '', isLC: boolean = true) => {
+export const getFormParts = (
+    caseType: CaseType,
+    clientCode: string,
+    qualType: QualTypes | FASTQualTypes | '',
+    planCode: string = '',
+    isLC: boolean = true
+) => {
     let formParts;
     switch (caseType) {
         case CaseType.Withdrawal:
-            formParts = determineFormToRender(clientCode, getWithdrawalFormComponentMap(qualType, isLC));
+            formParts = determineFormToRender(clientCode, getWithdrawalFormComponentMap(planCode, qualType, isLC));
             break;
         case CaseType.Oft:
-            formParts = determineFormToRender(clientCode, getOFTFormComponentMap(planCode, qualType as  QualTypes));
+            formParts = determineFormToRender(clientCode, getOFTFormComponentMap(planCode, qualType as QualTypes));
             break;
         case CaseType.SSW:
             formParts = determineFormToRender(clientCode, getSSWFormComponentMap(qualType as QualTypes, planCode));

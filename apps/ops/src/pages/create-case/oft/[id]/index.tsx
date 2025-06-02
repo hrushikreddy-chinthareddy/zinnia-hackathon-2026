@@ -80,7 +80,7 @@ const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): R
     [Carrier.GLCO]: <GlcoOftWithdrawalForm />,
     [Carrier.MASS]: <MassOftWithdrawalForm />,
     [Carrier.SBGC]: <SbgcOftWithdrawalForm planCode={planCode} />,
-    [Carrier.DLIC]: <OftDlicForm qualType={qualType} />,
+    [Carrier.DLIC]: <OftDlicForm qualType={qualType} planCode={planCode} />,
     [Carrier.RSLN]: <RSLNOftWithdrawalForm qualType={qualType} />,
     [Carrier.GDMN]: <GdmnOftWithdrawalForm qualType={qualType} />,
     [Carrier.USAA]: <UsaaOftWithdrawalForm />,
@@ -331,8 +331,8 @@ export const getServerSideProps = withPageAuthAndLogging(
             });
 
             const parties = document?.contract
-            ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
-            : [];
+                ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
+                : [];
 
             if (!form) {
                 logWarn('create-case/oft/id::Error initializing task oft form', {

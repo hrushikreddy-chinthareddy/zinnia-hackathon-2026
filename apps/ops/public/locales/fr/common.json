@@ -2356,7 +2356,8 @@
                 "dob": "Date de naissance",
                 "isYourSpouseYoungerThanYou": "Votre conjoint a-t-il 10 ans de moins que vous?"
             },
-            "formType": "Form type"
+            "formType": "Type de formulaire",
+            "hasPreviousNigo": "Un NIGO précédent a été envoyé"
         },
         "sidebar": {
             "contractStatusCode": "Statut de la politique",

@@ -68,6 +68,7 @@ interface WithdrawalCaseProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
     parties: LifeCadParty[] | Party[];
     partyRoles: PolicyParties[];
+    planCode: string;
 }
 
 const DefaultSidebarContent = {
@@ -77,10 +78,14 @@ const DefaultSidebarContent = {
     transactions: [],
 };
 
-const getFormComponentMap = (qualType: QualTypes | FASTQualTypes| '', isLC: boolean ): Record<string, React.ReactNode> => ({
+const getFormComponentMap = (
+    qualType: QualTypes | FASTQualTypes | '',
+    isLC: boolean,
+    planCode: string
+): Record<string, React.ReactNode> => ({
     [Carrier.FLIC]: <FlicWithdrawalForm qualType={qualType} isLC={isLC} />,
     [Carrier.SBGC]: <SbgcWithdrawalForm />,
-    [Carrier.DLIC]: <DlicWithdrawalForm />,
+    [Carrier.DLIC]: <DlicWithdrawalForm planCode={planCode} />,
     [Carrier.MASS]: <MassWithdrawalForm qualType={qualType} />,
     [Carrier.NASU]: <NasuWithdrawalForm />,
     [Carrier.GDMN]: <GdmnWithdrawalForm />,
@@ -89,7 +94,16 @@ const getFormComponentMap = (qualType: QualTypes | FASTQualTypes| '', isLC: bool
     [Carrier.GLCO]: <GilicoWithdrawalForm />,
 });
 
-export default function WithdrawalCase({ document, form, isNigoCase, featureFlagDecisions, parties, user, partyRoles }: WithdrawalCaseProps) {
+export default function WithdrawalCase({
+    document,
+    form,
+    isNigoCase,
+    featureFlagDecisions,
+    parties,
+    user,
+    partyRoles,
+    planCode,
+}: WithdrawalCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const router = useRouter();
     const { clientId, clientIdOverride, getLastSaved } = router.query;
@@ -127,7 +141,7 @@ export default function WithdrawalCase({ document, form, isNigoCase, featureFlag
     const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const isUsedLastSaved = shouldShowNewExperience && isLastSaved;
 
-    const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(qualType, isLC));
+    const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(qualType, isLC, planCode));
     if (!formParts) {
         console.error('WithdrawalCase::No form parts', {
             documentNumber: document?.documentNumber,
@@ -362,7 +376,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-
             const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
 
             if (isLC) {
@@ -384,7 +397,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             } else {
-                const policies = await searchPolicySSR(document?.contract, [clientId?.toUpperCase() as Carrier], accessToken, 1, 0, loggingContext);
+                const policies = await searchPolicySSR(
+                    document?.contract,
+                    [clientId?.toUpperCase() as Carrier],
+                    accessToken,
+                    1,
+                    0,
+                    loggingContext
+                );
                 const planCode = policies?.[0]?.planCode || null;
                 if (!planCode) {
                     logInfo('create-case/withdrawal/:id::Plan code not found', loggingContext);
@@ -422,6 +442,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         parties: Array.isArray(parties) ? parties : [],
                         partyRoles,
                         user,
+                        planCode,
                     },
                 };
             }

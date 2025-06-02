@@ -711,6 +711,8 @@ export default function useDlicConfig(t: TFunction) {
         auditTrial: true,
     };
 
+    const hasPreviousNigoPlanCodes = ['674', '722'];
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -725,5 +727,6 @@ export default function useDlicConfig(t: TFunction) {
         cslnCheckStates,
         w4pSignaturesConfig,
         eSignatureFieldConfig,
+        hasPreviousNigoPlanCodes,
     };
 }

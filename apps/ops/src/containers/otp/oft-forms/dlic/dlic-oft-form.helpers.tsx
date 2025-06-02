@@ -824,6 +824,8 @@ export default function getOftDlicConfig(t: TFunction) {
         accordForm: true,
     };
 
+    const hasPreviousNigoPlanCodes = ['674', '722'];
+
     return {
         signaturesConfig,
         formPartyConfigs,
@@ -837,5 +839,6 @@ export default function getOftDlicConfig(t: TFunction) {
         qualificationOptions: getQualTypeOptions(t),
         showContractReplacement: true,
         eSignatureFieldConfig,
+        hasPreviousNigoPlanCodes,
     };
 }

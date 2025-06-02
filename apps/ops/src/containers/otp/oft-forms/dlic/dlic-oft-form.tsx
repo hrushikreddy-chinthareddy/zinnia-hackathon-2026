@@ -9,6 +9,7 @@ import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disburse
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import HasPreviousNigo from '@deps/components/previous-nigo-check/has-previous-nigo-check';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
@@ -18,9 +19,10 @@ import getOftDlicConfig from './dlic-oft-form.helpers';
 
 type OftDlicFormProps = {
     qualType: QualTypes | '';
+    planCode: string;
 };
 
-const OftDlicForm = ({ qualType }: OftDlicFormProps) => {
+const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
         signaturesConfig,
@@ -35,6 +37,7 @@ const OftDlicForm = ({ qualType }: OftDlicFormProps) => {
         qualificationOptions,
         showContractReplacement,
         eSignatureFieldConfig,
+        hasPreviousNigoPlanCodes,
     } = getOftDlicConfig(t);
 
     const {
@@ -42,6 +45,8 @@ const OftDlicForm = ({ qualType }: OftDlicFormProps) => {
         setFormData,
         formData,
         initialForm,
+        formProgram,
+        setFormProgram,
         setFormValidator,
         ownerStateOfResidence,
         isFormStateReadOnly,
@@ -76,6 +81,8 @@ const OftDlicForm = ({ qualType }: OftDlicFormProps) => {
         }
     }, [formParty, ownerStateOfResidence]);
 
+    const showHasPreviousNigo = hasPreviousNigoPlanCodes.includes(planCode);
+
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -88,6 +95,14 @@ const OftDlicForm = ({ qualType }: OftDlicFormProps) => {
                 selectOneOptions={selectOneOptions}
                 showContractReplacement={showContractReplacement}
             />
+            {showHasPreviousNigo && (
+                <HasPreviousNigo
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    t={t}
+                    isNigoChecked={formProgram?.isPrevNigoChecked ?? false}
+                    onIsNigoChange={setFormProgram}
+                />
+            )}
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}

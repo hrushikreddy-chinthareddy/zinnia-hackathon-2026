@@ -2110,7 +2110,7 @@
                     "otherEligibleDistributedPermittedPlan": "Otras distribuciones elegibles permitidas por el plan",
                     "qualifiedReservist": "Distribución calificada para reservistas",
                     "hardship": "Dificultad",
-                    "financialHardship": "Dificultad financiera",
+                    "deathdeferredsettlement": "FALLECIMIENTO Liquidación diferida",
                     "other": "Otro"
                 },
                 "unforeseeableEmergency": "Emergencia imprevista",
@@ -2345,7 +2345,8 @@
                 "dob": "Fecha de nacimiento",
                 "isYourSpouseYoungerThanYou": "¿Es su cónyuge 10 años menor que usted?"
             },
-            "formType": "Tipo de formulario"
+            "formType": "Tipo de formulario",
+            "hasPreviousNigo": "Se ha enviado un NIGO previo"
         },
         "sidebar": {
             "contractStatusCode": "Estado de la póliza",
