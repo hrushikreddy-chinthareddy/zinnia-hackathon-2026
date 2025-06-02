@@ -12,7 +12,7 @@ const opsReviewHandler: TaskHandler<ReviewPayload, NigoExceptionResponse[]> = {
         category: [
             'Client Information',
             'Beneficiary Info',
-            'Signature',
+            'Ops Review Signature',
             'Banking Details',
             'Form Submission',
             'Authorization Docs',

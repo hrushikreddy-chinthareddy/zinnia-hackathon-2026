@@ -12,7 +12,7 @@
     "schemaContent": {
         "tabSchemas": [
             {
-                "title": "Operation Review",
+                "title": "Operation Review NIGO",
                 "formSchema": {
                     "type": "object",
                     "properties": {
@@ -40,10 +40,10 @@
                         },
                         "details": {
                             "type": "object",
-                            "title": "Supporting Information",
                             "properties": {
                                 "documents": {
                                     "type": "array",
+                                    "title": "Supporting Information",
                                     "items": {
                                         "type": "object",
                                         "properties": {
@@ -76,7 +76,7 @@
                         },
                         "issueResolved": {
                             "type": "boolean",
-                            "title": "Can you resolve the issue",
+                            "title": "Can you resolve the issue?",
                             "enum": [true, false],
                             "enumNames": ["Yes", "No"]
                         },
@@ -183,11 +183,11 @@
 
                     "details": {
                         "ui:options": {
-                            "label": true
+                            "label": false
                         },
                         "documents": {
                             "ui:options": {
-                                "label": false,
+                                "label": true,
                                 "addable": false
                             },
                             "items": {

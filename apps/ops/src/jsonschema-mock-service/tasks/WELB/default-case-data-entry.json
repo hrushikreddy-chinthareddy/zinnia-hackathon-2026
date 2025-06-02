@@ -355,7 +355,7 @@
                                     "caseDetails": {
                                         "properties": {
                                             "caseSubType": {
-                                                "const": "LI Representative Address and Phone Change"
+                                                "const": "LI_REPRESENTATIVE_ADDRESS_AND_PHONE_CHANGE"
                                             }
                                         }
                                     }
@@ -451,7 +451,7 @@
                                     "caseDetails": {
                                         "properties": {
                                             "caseSubType": {
-                                                "const": "NB Supporting Document"
+                                                "const": "NB_SUPPORTING_DOCUMENT"
                                             }
                                         }
                                     }
@@ -491,7 +491,7 @@
                                     "caseDetails": {
                                         "properties": {
                                             "caseSubType": {
-                                                "const": "NF Fix"
+                                                "const": "NON_FINANCIAL_FIX"
                                             }
                                         }
                                     }
@@ -499,8 +499,8 @@
                             },
                             "then": {
                                 "properties": {
-                                    "properties": {
-                                        "caseDetails": {
+                                    "caseDetails": {
+                                        "properties": {
                                             "additionalDetails": {
                                                 "type": "object",
                                                 "title": "Additional Information",
@@ -536,7 +536,7 @@
                                     "caseDetails": {
                                         "properties": {
                                             "caseSubType": {
-                                                "const": "Stop Pay Request"
+                                                "const": "STOP_PAY_REQUEST"
                                             }
                                         }
                                     }

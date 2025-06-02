@@ -37,7 +37,6 @@
                         },
                         "details": {
                             "type": "object",
-                            "title": "Supporting Information",
                             "properties": {
                                 "documents": {
                                     "type": "array",
@@ -198,12 +197,12 @@
                     },
                     "details": {
                         "ui:options": {
-                            "label": true
+                            "label": false
                         },
                         "documents": {
                             "ui:options": {
                                 "canAdd": false,
-                                "label": false,
+                                "label": true,
                                 "addable": false
                             },
                             "items": {
