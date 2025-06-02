@@ -81,7 +81,7 @@
                         "issuesResolved": {
                             "type": "string",
                             "title": "Can you proceed?",
-                            "enum": ["YES", "NO"]
+                            "enum": ["NO"]
                         },
                         "uploadDocuments": {
                             "type": "object",
@@ -122,13 +122,6 @@
                     "dependencies": {
                         "issuesResolved": {
                             "oneOf": [
-                                {
-                                    "properties": {
-                                        "issuesResolved": {
-                                            "enum": ["YES"]
-                                        }
-                                    }
-                                },
                                 {
                                     "properties": {
                                         "issuesResolved": {
@@ -240,10 +233,7 @@
                         "ui:widget": "radio",
                         "ui:options": {
                             "label": true,
-                            "enumNames": [
-                                "Yes, I can proceed to the next step.",
-                                "No, there are one or more issues that need to be logged."
-                            ]
+                            "enumNames": ["No, there are one or more issues that need to be logged."]
                         }
                     },
                     "declineReason": {
