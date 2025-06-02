@@ -85,7 +85,7 @@ const NigoEntry = ({
     isNigoCase,
     user,
     caseType,
-    partyRoles
+    partyRoles,
 }: NigoEntryProps) => {
     useSegmentPageTracker(user, SegmentPageName.NigoEntry, {
         policyNumber,
@@ -105,59 +105,58 @@ const NigoEntry = ({
 
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
-            { caseType === CaseType.Renewal
-                ? (
-                    <RenewalFormProvider
-                        initialForm={form}
-                        parties={Array.isArray(parties) ? parties as LifeCadParty[] : [] as LifeCadParty[]}
-                        form={form}
-                        userId={''}
-                        document={document}
-                        action={'' as string}
-                        planCode={planCode}
-                        featureFlagDecisions={featureFlagDecisions as FeatureFlags}
-                    >
-                        <NigoEntryProvider>
-                            <NigoEntryContainer
-                                documentNumber={documentNumber}
-                                policyNumber={document?.contract}
-                                planCode={planCode}
-                                docType={docType}
-                                clientCode={clientCode}
-                                nigoExceptions={nigoExceptions}
-                                nigoSubExceptions={nigoSubExceptions}
-                                documentData={document}
-                                taskInfoLink={taskInfoLink}
-                                prevTransactionDetails={prevTransactionDetails}
-                            />
-                        </NigoEntryProvider>
-                    </RenewalFormProvider>
-                ) : (
-                    <FormProvider
-                        form={form}
-                        initialForm={form}
-                        issueState={issueState}
-                        isOpenNigo={isNigoCase}
-                        featureFlagDecisions={featureFlagDecisions}
-                        parties={parties}
-                        partyRoles={partyRoles}
-                    >
-                        <NigoEntryProvider>
-                            <NigoEntryContainer
-                                documentNumber={documentNumber}
-                                policyNumber={policyNumber}
-                                planCode={planCode}
-                                docType={docType}
-                                clientCode={clientCode}
-                                nigoExceptions={nigoExceptions}
-                                nigoSubExceptions={nigoSubExceptions}
-                                documentData={document}
-                                taskInfoLink={taskInfoLink}
-                                prevTransactionDetails={prevTransactionDetails}
-                            />
-                        </NigoEntryProvider>
-                    </FormProvider>
-                )}
+            {caseType === CaseType.Renewal ? (
+                <RenewalFormProvider
+                    initialForm={form}
+                    parties={Array.isArray(parties) ? (parties as LifeCadParty[]) : ([] as LifeCadParty[])}
+                    form={form}
+                    userId={''}
+                    document={document}
+                    action={'' as string}
+                    planCode={planCode}
+                    featureFlagDecisions={featureFlagDecisions as FeatureFlags}
+                >
+                    <NigoEntryProvider>
+                        <NigoEntryContainer
+                            documentNumber={documentNumber}
+                            policyNumber={document?.contract}
+                            planCode={planCode}
+                            docType={docType}
+                            clientCode={clientCode}
+                            nigoExceptions={nigoExceptions}
+                            nigoSubExceptions={nigoSubExceptions}
+                            documentData={document}
+                            taskInfoLink={taskInfoLink}
+                            prevTransactionDetails={prevTransactionDetails}
+                        />
+                    </NigoEntryProvider>
+                </RenewalFormProvider>
+            ) : (
+                <FormProvider
+                    form={form}
+                    initialForm={form}
+                    issueState={issueState}
+                    isOpenNigo={isNigoCase}
+                    featureFlagDecisions={featureFlagDecisions}
+                    parties={parties}
+                    partyRoles={partyRoles}
+                >
+                    <NigoEntryProvider>
+                        <NigoEntryContainer
+                            documentNumber={documentNumber}
+                            policyNumber={policyNumber}
+                            planCode={planCode}
+                            docType={docType}
+                            clientCode={clientCode}
+                            nigoExceptions={nigoExceptions}
+                            nigoSubExceptions={nigoSubExceptions}
+                            documentData={document}
+                            taskInfoLink={taskInfoLink}
+                            prevTransactionDetails={prevTransactionDetails}
+                        />
+                    </NigoEntryProvider>
+                </FormProvider>
+            )}
         </div>
     );
 };
@@ -365,9 +364,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                 });
 
                 const latestForm =
-                !isNullEmptyOrUndefined(docType) &&
-                searchCasesResponse?.data?.find(item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase());
-
+                    !isNullEmptyOrUndefined(docType) &&
+                    searchCasesResponse?.data?.find(item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase());
 
                 const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
 

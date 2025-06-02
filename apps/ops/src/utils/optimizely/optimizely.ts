@@ -1,10 +1,27 @@
 import { Client, createInstance, OptimizelyDecideOption } from '@optimizely/optimizely-sdk';
 
+import { ENVIRONMENT_NAME, isQA, isUat } from '../environment.helpers';
 import { FEATURE_FLAGS } from './flags';
 import { logError, LoggingContext, parseErrorInformation } from '../server-logging';
 
 export type FeatureFlags = Record<FEATURE_FLAGS, boolean> | Record<string, never>;
 
+const getVeriableByEnviroment = (variableName: string): string => {
+    const envSuffix = isQA() ? `-${ENVIRONMENT_NAME.QA}` : isUat() ? `-${ENVIRONMENT_NAME.UAT}` : '';
+    return variableName + envSuffix;
+};
+
+export const getFeatureFlagByKey = async (
+    featureFlag: string,
+    variableKey: string,
+    variableValue: string,
+    userId: string,
+    loggingContext: LoggingContext
+) => {
+    const flagVariableWithEnv = getVeriableByEnviroment(variableKey);
+    const featureFlagVariables = await optimizelyService.getFeatureFlagVariables(featureFlag, flagVariableWithEnv, userId, loggingContext);
+    return featureFlagVariables?.[variableValue] ?? false;
+};
 export class OptimizelyService {
     private optimizelyClient: Client | null = null;
     private onReadyCalled: boolean = false;
@@ -78,6 +95,18 @@ export class OptimizelyService {
             }
 
             await this.ensureOnReady();
+            const isFeatureEnabled = this.optimizelyClient.isFeatureEnabled(featureKey, userId);
+
+            if (!isFeatureEnabled) {
+                logError('getFeatureFlagVariable::Feature is not enabled', {
+                    ...loggingContext,
+                    file: 'utils/optimizely/optimizely',
+                    function: 'getFeatureFlagVariables',
+                    featureKey,
+                    userId,
+                });
+                return {} as Record<string, unknown>;
+            }
 
             const attributes = { userId: userId };
             return this.optimizelyClient.getFeatureVariableJSON(featureKey, variableName, userId, attributes) as Record<string, unknown>;

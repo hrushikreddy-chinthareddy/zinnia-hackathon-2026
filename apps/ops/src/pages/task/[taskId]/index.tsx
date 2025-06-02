@@ -18,7 +18,7 @@ import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/tas
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getCaseDetailsSSR } from '@deps/queries/api/cases';
 import { isProd } from '@deps/utils/environment.helpers';
-import { optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { getFeatureFlagByKey } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { logError, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helpers';
@@ -141,14 +141,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                             },
                         };
                     }
-                    const isTaskEnabled = await optimizelyService.getFeatureFlagVariables(
+                    const enabledTask = await getFeatureFlagByKey(
                         FEATURE_FLAG_VARIABLES.TASK_MANAGEMENT,
                         carrier?.toLowerCase(),
+                        flag,
                         user.sub,
                         loggingContext
                     );
 
-                    const enabledTask = Object.keys(isTaskEnabled).includes(flag);
                     if (!enabledTask) {
                         logWarn('task/:id::feature flag not enabled', { ...loggingContext, carrier });
                         return {
@@ -160,23 +160,16 @@ export const getServerSideProps = withPageAuthAndLogging(
                     }
                 }
 
-                const featureFlags = await optimizelyService.getFeatureFlagVariables(
-                    FEATURE_FLAG_VARIABLES.TASK_SAVE_AS_DRAFT,
-                    carrier?.toLowerCase(),
-                    user.sub,
-                    loggingContext
-                );
-
-                const isSaveAsDraftEnabled = Boolean(featureFlags?.[flag]);
-
-                const continueButtonFeatureFlags = await optimizelyService.getFeatureFlagVariables(
-                    FEATURE_FLAG_VARIABLES.TASK_CONTINUE_BUTTON_ENABLE,
-                    carrier?.toLowerCase(),
-                    user.sub,
-                    loggingContext
-                );
-
-                const isContinueButtonEnabled = Boolean(continueButtonFeatureFlags?.[flag]);
+                const [isSaveAsDraftEnabled, isContinueButtonEnabled] = await Promise.all([
+                    getFeatureFlagByKey(FEATURE_FLAG_VARIABLES.TASK_SAVE_AS_DRAFT, carrier?.toLowerCase(), flag, user.sub, loggingContext),
+                    getFeatureFlagByKey(
+                        FEATURE_FLAG_VARIABLES.TASK_CONTINUE_BUTTON_ENABLE,
+                        carrier?.toLowerCase(),
+                        flag,
+                        user.sub,
+                        loggingContext
+                    ),
+                ]);
 
                 const nigoFilters = {
                     categoryIds: ['Form', 'Signature', 'Account Information'],

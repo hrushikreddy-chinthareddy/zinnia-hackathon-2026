@@ -28,7 +28,8 @@ import { getApplicableStatementsSSR, sendCommunication } from '@deps/queries/api
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { FeatureFlags, getFeatureFlagByKey, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES, FEATURE_VARIABLES_CORRESPONDENCE_KEYS } from '@deps/utils/optimizely/variables';
 import { logWarn, logError, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -40,11 +41,6 @@ interface SendCorrespondenceProps extends SegmentTrackedPageProps {
     shouldShowMailOption: FeatureFlags;
     applicableStatement: StatementTypes[];
 }
-
-const getFeatureFlagKey = (carrierId: string, type: 'EMAIL' | 'FAX' | 'MAIL') => {
-    return `SEND_STATEMENT_${type}_${carrierId}` as keyof typeof FEATURE_FLAGS;
-};
-
 const SendCorrespondence = ({
     policy,
     shouldShowCaseButton,
@@ -205,9 +201,30 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
                 const applicableStatements = (await getApplicableStatementsSSR(planCode, accessToken, loggingContext)) || [];
-                const shouldShowEmailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(carrierId, 'EMAIL')]];
-                const shouldShowFaxOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(carrierId, 'FAX')]];
-                const shouldShowMailOption = featureFlagDecisions?.[FEATURE_FLAGS[getFeatureFlagKey(carrierId, 'MAIL')]];
+
+                const [shouldShowMailOption, shouldShowEmailOption, shouldShowFaxOption] = await Promise.all([
+                    getFeatureFlagByKey(
+                        FEATURE_FLAG_VARIABLES.SEND_STATEMENT,
+                        FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Mail,
+                        carrierId,
+                        user.sub,
+                        loggingContext
+                    ),
+                    getFeatureFlagByKey(
+                        FEATURE_FLAG_VARIABLES.SEND_STATEMENT,
+                        FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Email,
+                        carrierId,
+                        user.sub,
+                        loggingContext
+                    ),
+                    getFeatureFlagByKey(
+                        FEATURE_FLAG_VARIABLES.SEND_STATEMENT,
+                        FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Fax,
+                        carrierId,
+                        user.sub,
+                        loggingContext
+                    ),
+                ]);
 
                 return {
                     props: {

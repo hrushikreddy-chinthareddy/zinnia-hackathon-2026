@@ -29,7 +29,7 @@ import { sendCommunication } from '@deps/queries/api/c2web';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { FeatureFlags, getFeatureFlagByKey, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES, FEATURE_VARIABLES_CORRESPONDENCE_KEYS } from '@deps/utils/optimizely/variables';
 import { logWarn, logError, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
@@ -68,7 +68,7 @@ const SendTaxForms = ({
 
     const [selectedYears, setSelectedYears] = useState<{ [key: string]: string }>({ [currentYear.toString()]: currentYear.toString() });
 
-    useSegmentPageTracker(user, SegmentPageName.SendTaxForms, { ctiCallNumber, correlationId, policyNumber: policy.policyNumber });
+    useSegmentPageTracker(user, SegmentPageName.SendTaxForms, { ctiCallNumber, correlationId, policyNumber: policy?.policyNumber });
 
     const formSelectionLabel = t('contactCenter.sendTaxForms.tabs.taxFormsSelection');
     const CorrespondenceLabel = t('contactCenter.sendTaxForms.tabs.correspondence');
@@ -212,27 +212,29 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
 
-                const mailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
-                    FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
-                    FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Mail,
-                    user.sub,
-                    loggingContext
-                );
-                const emailOptionEnabled = await optimizelyService.getFeatureFlagVariables(
-                    FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
-                    FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Email,
-                    user.sub,
-                    loggingContext
-                );
-                const faxOptionEnabled = await optimizelyService.getFeatureFlagVariables(
-                    FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
-                    FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Fax,
-                    user.sub,
-                    loggingContext
-                );
-                const shouldShowMailOption = Object.keys(mailOptionEnabled).includes(carrierId);
-                const shouldShowEmailOption = Object.keys(emailOptionEnabled).includes(carrierId);
-                const shouldShowFaxOption = Object.keys(faxOptionEnabled).includes(carrierId);
+                const [shouldShowMailOption, shouldShowEmailOption, shouldShowFaxOption] = await Promise.all([
+                    getFeatureFlagByKey(
+                        FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
+                        FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Mail,
+                        carrierId,
+                        user.sub,
+                        loggingContext
+                    ),
+                    getFeatureFlagByKey(
+                        FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
+                        FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Email,
+                        carrierId,
+                        user.sub,
+                        loggingContext
+                    ),
+                    getFeatureFlagByKey(
+                        FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
+                        FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Fax,
+                        carrierId,
+                        user.sub,
+                        loggingContext
+                    ),
+                ]);
 
                 return {
                     props: {
