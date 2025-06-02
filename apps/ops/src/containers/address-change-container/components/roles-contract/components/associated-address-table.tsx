@@ -1,3 +1,4 @@
+import { Policy, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
@@ -9,7 +10,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useAddressChange } from '@deps/containers/address-change-container/address-change-provider';
 import { ApplyToRolesState, ContractUpdateOptions } from '@deps/containers/address-change-container/types/address-change-types';
 import { useFetchAssociatedAddresses } from '@deps/hooks/useFetchAssociatedAddress';
-import { Policy, PolicyParties } from '@deps/models/policy/sor-policy';
 
 import { EmptyAssociatedAddress } from './empty-associated-address';
 import { AssociatedAddressTableColumns } from '../utils/roles-contract-constants';
@@ -19,7 +19,7 @@ import { AssociateAddressTableRow } from '../utils/roles-contract-types';
 
 interface AssociatedAddressTableProps {
     policy: Policy;
-    extractedPartyRoles?: PolicyParties[];
+    extractedPartyRoles?: PolicyPartyRoles[];
 }
 
 export const AssociatedAddressTable = ({ policy }: AssociatedAddressTableProps) => {

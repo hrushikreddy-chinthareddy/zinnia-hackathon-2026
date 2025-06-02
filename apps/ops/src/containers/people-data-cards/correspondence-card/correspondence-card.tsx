@@ -1,18 +1,17 @@
+import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
 
 import AdditionalRecipient from '@deps/components/otp-send-document/components/additional-recipient';
 import ContactCenterAddress from '@deps/components/otp-send-document/components/contact-address';
 import FaxNumber from '@deps/components/otp-send-document/components/fax-field';
-import { validateEmail } from '@deps/components/otp-send-document/correspondence';
 import Radio, { RadioItem } from '@deps/components/radio/radio';
 import { Correspondence } from '@deps/models/case/correspondence';
 import { CommunicationTypes } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { PartyRole, PartyType, Policy } from '@deps/models/policy/sor-policy';
 
 const getPrimaryEmail = (policy: Policy) => {
-    const eDeliveryRoleId = policy.partyRoles?.find(party => party.partyRole === PartyRole.EDELIVERY)?.partyId;
+    const eDeliveryRoleId = policy.partyRoles?.find(party => party.partyRole === ('E-DELIVERY' as PartyRole))?.partyId;
     const primaryEmails =
         policy.parties?.find(policy => policy.partyType === PartyType.INDIVIDUAL && policy.partyId === eDeliveryRoleId)?.emails || [];
     return primaryEmails?.length > 0 ? primaryEmails[0].emailAddress || '' : '';
@@ -50,7 +49,6 @@ const CorrespondenceCard = ({
     const [address, setAddress] = useState(correspondenceData?.mailDetails);
     const [ccEmails, setCCEmails] = useState<string[]>([]);
 
-
     const communicationTypes = [
         {
             label: t('correspondence.email'),
@@ -75,7 +73,6 @@ const CorrespondenceCard = ({
         });
     }, [emails, fax, address, setCorrespondenceData, communicationType]);
 
-   
     function renderReceiptComponent(communicationType: string): React.ReactNode {
         switch (communicationType) {
             case CommunicationTypes.Email:

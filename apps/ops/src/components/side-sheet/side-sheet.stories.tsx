@@ -1,10 +1,10 @@
 import { Meta } from '@storybook/react';
+import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
 import Button from '@deps/components/button/button';
 import { formatDate } from '@deps/helpers/string.helpers';
-import { PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 
 import SideSheet from './side-sheet';
 import '@deps/styles/styles.css';

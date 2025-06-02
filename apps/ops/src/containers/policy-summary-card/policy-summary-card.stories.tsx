@@ -1,8 +1,27 @@
 import { Meta } from '@storybook/react';
+import {
+    AllocationOption,
+    ArrangementType,
+    LineOfBusiness,
+    ProductType,
+    DistributionType,
+    Policy,
+    Reason,
+    HoldingForm,
+    QualificationType,
+    PolicyStatus,
+    IssueType,
+    Currency,
+    State,
+    FeatureType,
+    Status,
+    PaymentForm,
+    Frequency,
+    AmountType,
+} from '@zinnia/api-types/types/sor';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
-import { AllocationOption, ArrangementType, Policy, PolicyFeatureFeatureType, Reason } from '@deps/models/policy/sor-policy';
 
 import { PolicyQuickView } from './policy-summary-card';
 
@@ -13,24 +32,24 @@ export default {
 
 const mockPendingLapsePolicy: Policy = {
     product: {
-        lineOfBusiness: 'LIFE',
+        lineOfBusiness: LineOfBusiness.LIFE,
         planName: 'SB UL Premium Match',
-        productType: 'UNIVERSALLIFE',
+        productType: ProductType.UNIVERSALLIFE,
         marketingName: 'Everly Life',
         shortName: 'SB UL',
-        distribution: 'THIRDPARTYDIRECTTOCONSUMER',
+        distribution: DistributionType.THIRDPARTYDIRECTTOCONSUMER,
         planCode: 'SBFIXUL1',
         generalLedgerPlanCode: 'V2201',
-        holdingForm: 'INDIVIDUAL',
+        holdingForm: HoldingForm.INDIVIDUAL,
     },
-    qualificationType: 'NONQUALIFIED',
+    qualificationType: QualificationType.QUALIFIED,
     policyYear: 1,
     monthOfYear: 1,
     policyNumber: 'AU29035902',
-    policyStatus: 'PENDINGLAPSE',
-    issueType: 'FULLUNDERWRITING',
-    issueState: 'NJ',
-    currency: 'USD',
+    policyStatus: PolicyStatus.PENDINGLAPSE,
+    issueType: IssueType.FULLUNDERWRITING,
+    issueState: State.NJ,
+    currency: Currency.USD,
     coverage: {
         coverageLayers: [
             {
@@ -40,7 +59,7 @@ const mockPendingLapsePolicy: Policy = {
     },
     policyFeatures: [
         {
-            featureType: 'LAPSEASSESSMENT' as PolicyFeatureFeatureType,
+            featureType: FeatureType.LAPSEASSESSMENT,
             startDate: '2024-03-07',
             endDate: '2024-05-07',
             status: true,
@@ -50,19 +69,19 @@ const mockPendingLapsePolicy: Policy = {
     ],
     systematicPrograms: [
         {
-            arrangementType: 'PAYMENT' as ArrangementType,
+            arrangementType: ArrangementType.PAYMENT,
             arrangementId: 'Arr_1',
-            allocationOptionType: 'DOLLAR' as AllocationOption,
+            allocationOptionType: AllocationOption.DOLLAR,
             reason: Reason.PREMIUM,
-            status: 'ACTIVE',
-            paymentForm: 'ACH',
-            frequency: 'MONTHLY',
+            status: Status.ACTIVE,
+            paymentForm: PaymentForm.ACH,
+            frequency: Frequency.MONTHLY,
             requestedDate: '2024-03-07',
             startDate: '2024-04-07',
             endDate: '2044-02-07',
             previousProgramDate: '2024-03-07',
             nextProgramDate: '2024-04-07',
-            amountType: 'AMOUNT',
+            amountType: AmountType.AMOUNT,
             amount: 50,
             party: [],
         },

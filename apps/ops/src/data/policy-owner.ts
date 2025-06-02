@@ -1,6 +1,7 @@
+import { Address, Email, EmailType, IdentificationType, Party, Phone } from '@zinnia/api-types/types/sor';
+
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { convertKebabedDateString, toTitleCase, buildFullName } from '@deps/helpers/string.helpers';
-import { Address, Email, EmailType, IdentificationType, Phone, PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { DataDefinition } from '@deps/types/data';
 
 export interface PolicyOwnerDto {
@@ -23,7 +24,7 @@ export const toPolicyOwnerDto = ({
     phones,
     addresses,
     emails,
-}: PolicyAllOfPartiesItem): PolicyOwnerDto => {
+}: Party): PolicyOwnerDto => {
     return {
         fullName: buildFullName(firstName, middleName, lastName, suffix),
         ssn: identifications?.find(ids => ids.identificationType === IdentificationType.SSN)?.identificationValue,

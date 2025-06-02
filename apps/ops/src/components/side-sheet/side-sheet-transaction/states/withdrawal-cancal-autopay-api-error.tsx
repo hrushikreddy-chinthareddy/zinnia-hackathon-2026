@@ -1,10 +1,10 @@
+import { ArrangementType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { ArrangementType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CogIcon } from '@deps/styles/elements/icons/icons_outlined/cog.svg';
 
 export const HELP_DESK_LINK = 'https://zinnia.atlassian.net/servicedesk/customer/portal/6';

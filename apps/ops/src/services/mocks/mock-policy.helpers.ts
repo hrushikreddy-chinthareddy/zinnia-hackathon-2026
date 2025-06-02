@@ -1,7 +1,7 @@
-import { Policy } from "@deps/models/policy/sor-policy";
+import { Policy } from '@zinnia/api-types/types/sor';
 
-import { mockPolicy } from "./sor-policy";
-import { mockPolicy as mockIulPolicy } from "./sor-policy-iul";
+import { mockPolicy } from './sor-policy';
+import { mockPolicy as mockIulPolicy } from './sor-policy-iul';
 
 export const getMockPolicy = (isIul = false): Policy => {
     if (isIul) {
@@ -9,4 +9,4 @@ export const getMockPolicy = (isIul = false): Policy => {
     }
 
     return mockPolicy;
-}
+};

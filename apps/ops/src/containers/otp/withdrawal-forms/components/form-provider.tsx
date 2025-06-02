@@ -1,3 +1,4 @@
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useSearchParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 
@@ -21,7 +22,6 @@ import {
     FundWithdrawnMethod,
     ProgramSubType,
 } from '@deps/models/case/withdrawal/case';
-import { Party, PolicyParties } from '@deps/models/policy/sor-policy';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
@@ -37,7 +37,7 @@ type FormProviderProps = {
     isOpenNigo?: boolean;
     featureFlagDecisions?: FeatureFlags;
     parties?: LifeCadParty[] | Party[];
-    partyRoles?: PolicyParties[];
+    partyRoles?: PolicyPartyRoles[];
 };
 
 const getFundWithdrawnMethod = (form: ActiveWithdrawalCase) => {

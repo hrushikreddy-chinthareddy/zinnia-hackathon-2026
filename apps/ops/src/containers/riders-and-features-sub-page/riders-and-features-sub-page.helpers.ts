@@ -1,7 +1,7 @@
+import { PolicyFeature, Rider } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
-import { PolicyFeature, Rider } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { RIDER_NOT_ELECTED } from '../policy-extras-cards/policy-extras-cards-helpers';

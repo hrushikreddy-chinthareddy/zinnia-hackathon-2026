@@ -5,12 +5,14 @@ import {
     Email,
     EmailType,
     Gender,
+    IdentificationType,
     Party,
     Phone,
     Prefix,
     State,
     Suffix,
-} from '@deps/models/policy/sor-policy';
+} from '@zinnia/api-types/types/sor';
+
 import { AgentData } from '@deps/types/agents';
 
 import { PolicyParty } from './Parties';
@@ -37,7 +39,7 @@ export const transformAgentDataToParty = (agentData: AgentData | undefined, part
         }),
         identifications: [
             {
-                identificationType: 'SSN',
+                identificationType: IdentificationType.SSN,
                 identificationValue: agentData?.taxId || firstAgent?.taxId || undefined,
             },
         ],

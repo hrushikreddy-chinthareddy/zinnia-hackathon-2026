@@ -1,3 +1,4 @@
+import { AddressBase } from '@zinnia/api-types/types/sor';
 import { Label, Loader } from '@zinnia/bloom/components';
 import { useTranslation, TFunction } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -6,7 +7,6 @@ import { formatTimestamp, TransformedStep } from '@deps/components/case-sub-page
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { AddressBase } from '@deps/models/policy/sor-policy';
 import { getTransactionsByRecordId } from '@deps/queries/api/transactions';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
@@ -15,13 +15,13 @@ export enum DeliveryMethods {
     Email = 'EMAIL',
     Fax = 'FAX',
     Mail = 'MAIL',
-};
+}
 
 export enum NotificationStatus {
     Send = 'SEND',
     Receive = 'RECEIVE',
     Overdue = 'OVERDUE',
-};
+}
 
 export interface INotification {
     notificationName: string;
@@ -33,7 +33,7 @@ export interface INotification {
     sendDateTime: string;
     overdueDateTime: string | null;
     receiveDateTime: string | null;
-};
+}
 
 export type NotificationsTransactionIdentifier = {
     identifier: string;
@@ -61,7 +61,10 @@ export type NotificationsTransactionData = {
     identifiers?: NotificationsTransactionIdentifier[];
 };
 
-export const getNotificationStatusText = (status: NotificationStatus, t: TFunction): { notificationIcon: React.ReactNode; notificationText: string } => {
+export const getNotificationStatusText = (
+    status: NotificationStatus,
+    t: TFunction
+): { notificationIcon: React.ReactNode; notificationText: string } => {
     switch (status) {
         case NotificationStatus.Send:
         case NotificationStatus.Overdue:
@@ -73,22 +76,29 @@ export const getNotificationStatusText = (status: NotificationStatus, t: TFuncti
         default:
             return {
                 notificationText: '',
-                notificationIcon: null
+                notificationIcon: null,
             };
     }
 };
 
-export const getReceiveNotificationStatusText = (notification: INotification, t: TFunction): { notificationIcon: React.ReactNode; notificationText: string, contentText: string } => {
+export const getReceiveNotificationStatusText = (
+    notification: INotification,
+    t: TFunction
+): { notificationIcon: React.ReactNode; notificationText: string; contentText: string } => {
     const contentText = isNullEmptyOrUndefined(notification?.receiveDateTime)
         ? t('caseOverview.notifications.notStarted')
-        : t('caseOverview.notifications.completedStatusTooltipWithDate', { date: notification?.receiveDateTime ? formatTimestamp(notification?.receiveDateTime) : '' });
+        : t('caseOverview.notifications.completedStatusTooltipWithDate', {
+              date: notification?.receiveDateTime ? formatTimestamp(notification?.receiveDateTime) : '',
+          });
 
     return {
         notificationText: t('caseOverview.notifications.receiveBeneficiaryConfirmation'),
-        notificationIcon: isNullEmptyOrUndefined(notification?.receiveDateTime)
-            ? <NotStartedIcon className="text-gray-300" width={16} height={16} />
-            : <CompletedIcon className="text-semantic-success" width={16} height={16} />,
-        contentText: contentText
+        notificationIcon: isNullEmptyOrUndefined(notification?.receiveDateTime) ? (
+            <NotStartedIcon className="text-gray-300" width={16} height={16} />
+        ) : (
+            <CompletedIcon className="text-semantic-success" width={16} height={16} />
+        ),
+        contentText: contentText,
     };
 };
 
@@ -99,7 +109,7 @@ export function SidesheetNotification({ notification }: { notification: INotific
         : '';
 
     const displayNotification = (notification: any) => {
-        switch(notification.deliveryMethod) {
+        switch (notification.deliveryMethod) {
             case DeliveryMethods.Mail:
                 return (
                     <div>
@@ -112,12 +122,10 @@ export function SidesheetNotification({ notification }: { notification: INotific
                 return (
                     <div>
                         <Label>{t('caseOverview.notifications.types.email')}</Label>
-                        <p className="typography-content-body-sm">
-                            {notification?.email}
-                        </p>
+                        <p className="typography-content-body-sm">{notification?.email}</p>
                         <Content className="text-gray-600" variant={ContentVariant.BodySm} details={text} />
                     </div>
-                )
+                );
             case DeliveryMethods.Fax:
                 return (
                     <div>
@@ -131,10 +139,10 @@ export function SidesheetNotification({ notification }: { notification: INotific
             default:
                 return '';
         }
-  }
+    };
 
     return displayNotification(notification);
-};
+}
 
 export function BeneSideSheetStep({ step }: { step: TransformedStep }) {
     const { t } = useTranslation();

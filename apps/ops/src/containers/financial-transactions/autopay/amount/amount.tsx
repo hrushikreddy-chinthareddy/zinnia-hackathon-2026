@@ -1,4 +1,4 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, Frequency, Status, AmountType as AutopayAmountType, TransactionType } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -14,7 +14,6 @@ import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { Policy, Frequency, Status, AmountType as AutopayAmountType } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 

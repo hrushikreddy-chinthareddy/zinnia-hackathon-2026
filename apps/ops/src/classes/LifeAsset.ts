@@ -1,4 +1,5 @@
-import { LineOfBusiness, Policy, ProductType, Reason } from '@deps/models/policy/sor-policy';
+import { LineOfBusiness, Policy, ProductType, Reason } from '@zinnia/api-types/types/sor';
+
 import {
     checkEligibilityOneTimePremium,
     checkEligibilityPartialWithdrawalOneTime,

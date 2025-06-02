@@ -2,7 +2,7 @@ import { Meta } from '@storybook/react';
 
 import '@deps/styles/styles.css';
 
-import { ProductType } from '@deps/models/policy/sor-policy';
+import { ProductType } from '@zinnia/api-types/types/sor';
 
 import Footnote from './footnote';
 

@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
-
-import { DistributionType, Party, PartyRole, Policy, PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
+import { DistributionType, Party, PartyRole, Policy, PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
 export default function generatePolicy(): Policy {
     return {

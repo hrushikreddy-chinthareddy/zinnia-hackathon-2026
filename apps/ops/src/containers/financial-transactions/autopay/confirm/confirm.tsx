@@ -1,4 +1,4 @@
-import { SystematicProgram } from '@zinnia/api-types/types/sor';
+import { ArrangementType, Policy , SystematicProgram } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -9,11 +9,14 @@ import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-ca
 import { TranslationFiles } from '@deps/config/translations';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { Statuses } from '@deps/models/case/case';
-import { ArrangementType, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitSystematicProgramUpdate } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
-import { buildSystematicProgramUpdateRequestBody, buildSystematicWithdrawalProgramUpdateRequestBody, getSystematicInfo } from '../autopay.helpers';
+import {
+    buildSystematicProgramUpdateRequestBody,
+    buildSystematicWithdrawalProgramUpdateRequestBody,
+    getSystematicInfo,
+} from '../autopay.helpers';
 
 interface ConfirmProps {
     policy: Policy;
@@ -55,7 +58,6 @@ const Confirm = ({ policy }: ConfirmProps) => {
         setIsLoading(true);
 
         const { systematicProgram, arrangementId } = getSystematicInfo(systematicPrograms, autopay.systematicProgramReason, isSetUp);
-
 
         const query =
             parentPage === 'withdrawals'

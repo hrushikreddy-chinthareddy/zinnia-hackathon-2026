@@ -1,4 +1,5 @@
 import { policyOwner } from '@xd/utils/dist';
+import { Party, PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
@@ -10,7 +11,6 @@ import ConfirmStep from '@deps/containers/task-container/components/steps/confir
 import { useDefaultCase } from '@deps/contexts/DefaultCaseContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
-import { Party, PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 
 import { MemoizedDefaultCaseFormStep } from './steps/default-case-form-step';
 

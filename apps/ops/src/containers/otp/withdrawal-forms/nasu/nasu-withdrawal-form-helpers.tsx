@@ -1,3 +1,4 @@
+import { PartyRole, PartyType, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
@@ -52,7 +53,6 @@ import {
     DisbursementParts,
     PaymentMethodOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { PartyRole, PartyType, PolicyParties } from '@deps/models/policy/sor-policy';
 
 import { FormSubtype } from '../flic-withdrawal-form.helpers';
 
@@ -635,7 +635,7 @@ export default function useNasuConfig(t: TFunction) {
         return personTypeIndividual;
     };
 
-    const handleShouldShowDOBInOl4573 = (parties: any[] | undefined, partyRoles: PolicyParties[]): boolean => {
+    const handleShouldShowDOBInOl4573 = (parties: any[] | undefined, partyRoles: PolicyPartyRoles[]): boolean => {
         // CMW-21591 (Only applicable for NASU)
         const owner = partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER);
         const partyDetails = parties?.find(party => party?.partyRoleId === owner?.partyRoleId);

@@ -1,4 +1,4 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy , TransactionType } from '@zinnia/api-types/types/sor';
 import { AssistiveTextVariant, FieldSize } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import router from 'next/router';
@@ -20,7 +20,6 @@ import { getFundDetailsViewModel } from '@deps/containers/subpages/funds-sub-pag
 import { useFundTransfer } from '@deps/contexts/transactions/FundTransferContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { AmountType, FundKey } from '@deps/models/funds/enums';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponse } from '@deps/queries/api/bpm';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 import { DefaultValue } from '@deps/types/constants';

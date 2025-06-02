@@ -1,10 +1,10 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { Loader, LoaderVariant, Tag, TagVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import { Content, ContentVariant } from '@deps/components/content/content';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { TransactionType } from '@deps/models/policy/sor-policy';
 
 import SideSheetReversedTransactionContent from './side-sheet-reversed-transaction-content';
 import { SideSheetTransactionProps } from '../types';
@@ -56,9 +56,9 @@ export const SideSheetReversedTransaction = ({ policy, transaction }: SideSheetT
                             text={t('status.reversedOn', { date: sidesheetValues?.reversalDate }) as string}
                         ></Tag>
                     )}
-                    {transactionType !== TransactionType.FullSurrender &&
-                        transactionType !== TransactionType.PartialWithdrawalOneTime &&
-                        transactionType !== TransactionType.FreeLookCancellation && (
+                    {transactionType !== TransactionType.FULL_SURRENDER &&
+                        transactionType !== TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME &&
+                        transactionType !== TransactionType.FREE_LOOK_CANCELLATION && (
                             <div>
                                 <Content details={numberFormatify(sidesheetValues?.transactionValue)} variant={ContentVariant.Value} />
                                 <Content

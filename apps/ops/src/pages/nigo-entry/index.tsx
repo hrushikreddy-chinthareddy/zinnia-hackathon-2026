@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
@@ -20,7 +21,6 @@ import { CaseType, Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
-import { Party, PolicyParties } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { mapTaskToActiveRenewalCaseTask, mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
 import { searchCasesSSR } from '@deps/queries/api/cases';
@@ -59,7 +59,7 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     taskInfoLink: string;
     prevTransactionDetails: TransactionDetails | null;
     isNigoCase?: boolean;
-    partyRoles?: PolicyParties[];
+    partyRoles?: PolicyPartyRoles[];
 }
 
 const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags) => {

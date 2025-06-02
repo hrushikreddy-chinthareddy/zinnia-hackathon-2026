@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
@@ -10,7 +11,6 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Processes, Statuses } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { getCases } from '@deps/queries/api/cases';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
@@ -64,12 +64,15 @@ const StartStep = ({
                 caseId: '',
                 value: PROCESS_WITHOUT_CASE_DOCUMENT,
             };
-            const response = await getCases({
-                limit: 25,
-                notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
-                policyNumber: policyNumber,
-                process: [processType],
-            }, featureFlags);
+            const response = await getCases(
+                {
+                    limit: 25,
+                    notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
+                    policyNumber: policyNumber,
+                    process: [processType],
+                },
+                featureFlags
+            );
 
             if (response && 'total' in response) {
                 const mappedCaseOptions: CaseDocumentOption[] = response.data.map(caseDetails => {

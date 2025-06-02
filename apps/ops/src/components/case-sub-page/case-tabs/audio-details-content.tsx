@@ -1,11 +1,13 @@
-import Content, { ContentVariant } from '@deps/components/content/content';
-import CallAudioPlayer from './call-audio-player';
-import { useState } from 'react';
-import { useTranslation } from 'next-i18next';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
+
+import Content, { ContentVariant } from '@deps/components/content/content';
+
+import CallAudioPlayer from './call-audio-player';
 import { AUDIO_DATE_FORMAT, PLAYER_INITIAL_TIME } from './call-log-utils';
 
 dayjs.extend(utc);

@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
+import { AccountType, BankAccountBase } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
-
-import { AccountType, BankAccountBase } from '@deps/models/policy/sor-policy';
 
 import { BankDetails, getFormErrors } from './side-sheet-bank.helpers';
 

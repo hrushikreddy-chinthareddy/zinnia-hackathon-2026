@@ -1,4 +1,5 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
+import { ArrangementType, FeatureType, ProductType, Reason, Status } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
@@ -13,7 +14,6 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helpers';
-import { ArrangementType, PolicyFeatureFeatureType, ProductType, Reason, Status } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkOneTimePremiumEligibilityQuery,
@@ -47,7 +47,7 @@ export const PremiumsSubPage = () => {
     const { planCode } = product ?? {};
 
     const { isAnnuity } = policyDetails;
-    const pendingLapse = policyFeatures?.find(pf => pf.featureType === ('LAPSEASSESSMENT' as PolicyFeatureFeatureType));
+    const pendingLapse = policyFeatures?.find(pf => pf.featureType === FeatureType.LAPSEASSESSMENT);
     const upcomingPayment = useMemo(
         () => systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM && sp.status === Status.ACTIVE),
         [systematicPrograms]

@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
@@ -42,8 +43,7 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
-import { ActiveWithdrawalCase, Carrier, QualTypes, TransactionStatus, SortOrder, FASTQualTypes } from '@deps/models/case/withdrawal/case';
-import { Party, PolicyParties } from '@deps/models/policy/sor-policy';
+import { ActiveWithdrawalCase, Carrier, QualTypes, SortOrder, FASTQualTypes, TransactionStatus } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
@@ -67,7 +67,7 @@ interface WithdrawalCaseProps extends SegmentTrackedPageProps {
     isNigoCase?: boolean;
     featureFlagDecisions: FeatureFlags;
     parties: LifeCadParty[] | Party[];
-    partyRoles: PolicyParties[];
+    partyRoles: PolicyPartyRoles[];
     planCode: string;
 }
 

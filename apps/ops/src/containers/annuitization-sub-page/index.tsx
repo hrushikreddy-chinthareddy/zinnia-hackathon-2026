@@ -1,3 +1,4 @@
+import { ArrangementType, FeatureType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
@@ -17,7 +18,6 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { ArrangementType, PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, checkEligibilitySystematicPrograms } from '@deps/queries/api/bpm';
 
 import { AnnuitizationPageHeader } from './annuitization-page-header';
@@ -32,7 +32,7 @@ export const AnnuitizationSubPage = () => {
 
     const { parties, planCode, features, policyNumber, systematicPrograms } = policyDetails;
     const upcomingPayout = useMemo(() => systematicPrograms.getNextProgramByType('PAYMENT' as ArrangementType), [systematicPrograms]);
-    const annuitizationFeature = features.getFirstFeatureByType('ANNUITIZATION' as PolicyFeatureFeatureType);
+    const annuitizationFeature = features.getFirstFeatureByType(FeatureType.ANNUITIZATION);
 
     // BPB - this is assuming there's one payee per systematic program.  If not, we need to figure out how to handle multiple payees
     const payeeInfo = upcomingPayout?.party?.[0];

@@ -1,5 +1,6 @@
+import { Policy } from '@zinnia/api-types/types/sor';
+
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { DataDefinition } from '@deps/types/data';
 
 export interface CostBasisDto {

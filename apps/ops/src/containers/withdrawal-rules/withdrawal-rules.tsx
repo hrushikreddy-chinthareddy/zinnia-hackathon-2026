@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
@@ -11,7 +12,6 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatDate } from '@deps/helpers/string.helpers';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
 import { PopoverPlacement } from '@deps/components/popover/popover';

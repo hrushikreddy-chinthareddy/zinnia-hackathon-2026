@@ -1,4 +1,4 @@
-import { SystematicProgram, TransactionType, Policy as PolicyView } from '@zinnia/api-types/types/sor';
+import { ArrangementType, Policy, Reason, SystematicProgram, TransactionType, Policy as PolicyView } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo } from 'react';
 
@@ -15,7 +15,6 @@ import WorkflowContainer from '@deps/containers/workflow-container/workflow-cont
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { Processes } from '@deps/models/case/case';
-import { ArrangementType, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { validateSystematicProgramUpdate } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -94,9 +93,9 @@ const AutopayContainer = ({
                 return TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP;
             }
             if (arrangementType === ArrangementType.WITHDRAWAL) {
-                return TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_UPDATE;
+                return TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL;
             }
-            return TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_UPDATE;
+            return TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION;
         }
         return isSetUp ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [isSetUp, parentPage, arrangementType]);

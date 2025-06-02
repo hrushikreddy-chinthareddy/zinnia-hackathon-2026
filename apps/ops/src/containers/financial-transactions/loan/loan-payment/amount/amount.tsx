@@ -1,4 +1,4 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy , TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { ChangeEvent, useState } from 'react';
@@ -11,7 +11,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 

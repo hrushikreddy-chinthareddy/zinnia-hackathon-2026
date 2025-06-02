@@ -13,14 +13,13 @@ import WorkflowContainer from '@deps/containers/workflow-container/workflow-cont
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Processes } from '@deps/models/case/case';
-import { Policy as PolicyOld } from '@deps/models/policy/sor-policy';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import Confirm from './confirm/confirm';
 import Summary from './summary/summary';
 
-const FreeLookCancelContainer = ({ policy }: { policy: PolicyOld }) => {
+const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
     const { t } = useTranslation();
     const { withdrawal, setWithdrawal } = useWithdrawal();
     const { featureFlags } = useOptimizely();

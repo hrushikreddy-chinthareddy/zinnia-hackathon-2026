@@ -1,4 +1,5 @@
 import { Transition } from '@headlessui/react';
+import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import { useTranslation } from 'next-i18next';
 
@@ -7,7 +8,6 @@ import FieldSelect from '@deps/components/fields/field-select/field-select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { countryOptions, frequentCountryOptions } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
-import { Phone, PhoneType } from '@deps/models/policy/sor-policy';
 
 import { useAddressChange } from '../../address-change-provider';
 

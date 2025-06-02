@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
+import { Gender, PartyType, PreferredCommunicationType, State, Country, TrustType, EntityType } from '@zinnia/api-types/types/sor';
 
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
-import { Gender, PartyType, PolicyAllOfPartiesItem, PreferredCommunicationType, State } from '@deps/models/policy/sor-policy';
+import { Party } from '@deps/models/policy-sor-touchups/Party';
 
 import { generateAddress } from './mockAddresses';
 import { generateBankDetails } from './mockBankDetails';
@@ -9,7 +10,7 @@ import { generateEmail } from './mockEmails';
 import { generateIdentification } from './mockIdentifications';
 import { generatePhone } from './mockPhones';
 
-export const generateParty = (partyId: string): PolicyAllOfPartiesItem => {
+export const generateParty = (partyId: string): Party => {
     const gender = faker.person.sexType();
     const firstName = faker.person.firstName(gender);
     const lastName = faker.person.lastName(gender);
@@ -28,10 +29,10 @@ export const generateParty = (partyId: string): PolicyAllOfPartiesItem => {
     );
 
     return {
-        timestamp: faker.date.recent().toISOString(),
         partyId: partyId,
         beneficiaryPercentage: faker.number.int(100),
-        partyType: 'Individual' as PartyType,
+        partyPercentage: faker.number.int(100),
+        partyType: PartyType.INDIVIDUAL,
         firstName: firstName,
         middleName: faker.person.middleName(gender),
         lastName: lastName,
@@ -39,14 +40,14 @@ export const generateParty = (partyId: string): PolicyAllOfPartiesItem => {
         gender: gender.toUpperCase() as Gender,
         dateOfBirth: dateOfBirth,
         attainedAge: new Date().getFullYear() - new Date(dateOfBirth).getFullYear(),
-        birthCountry: 'US',
+        birthCountry: Country.US,
         birthState: faker.location.state({ abbreviated: true }) as State,
         trustDate: faker.date.past({ years: 20 }).toISOString().split('T')[0],
-        trustType: 'Living Trust',
+        trustType: TrustType.INDIVIDUALTRUST,
         doingBusinessAs: `${firstName} Enterprises`,
         abbreviatedName: firstName,
         organizationCode: `${faker.number.int({ min: 100, max: 999 })}-${faker.string.alpha(3)}`,
-        entityType: 'SOLEPROPRIETORSHIP',
+        entityType: EntityType.SOLEPROPRIETORSHIP,
         preferredCommunicationType: faker.helpers.arrayElement(Object.values(PreferredCommunicationType)),
         identifications: identifications,
         addresses: addresses,

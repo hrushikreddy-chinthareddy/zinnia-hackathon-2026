@@ -1,6 +1,5 @@
+import { Gender } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
-
-import { Gender } from '@deps/models/policy/sor-policy';
 
 export interface Errors {
     firstName?: string;

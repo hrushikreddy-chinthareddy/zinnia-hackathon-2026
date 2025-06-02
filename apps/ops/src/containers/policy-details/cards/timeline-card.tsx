@@ -1,3 +1,4 @@
+import { ProductType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -5,7 +6,6 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
-import { ProductType } from '@deps/models/policy/sor-policy';
 
 import { mapPolicyTimelineValues } from '../policy-details.helpers';
 import EverlyIul from './policy-timeline-details/everly-iul';

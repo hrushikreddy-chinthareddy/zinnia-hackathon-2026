@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
+import { PartyRole, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
-import { PartyRole, PolicyParties } from '@deps/models/policy/sor-policy';
 import { generateClassParty, generateParty } from '@deps/utils/mock/mockParty';
 
 import AddressCard from './address-card/address-card';
@@ -14,7 +14,7 @@ export default {
     component: AddressCard,
 } as Meta<typeof AddressCard>;
 
-const partyRoles: PolicyParties[] = [{ partyId: '789', partyRole: PartyRole.INSURED }];
+const partyRoles: PolicyPartyRoles[] = [{ partyId: '789', partyRole: PartyRole.INSURED }];
 
 const policyParty = generateParty('789');
 const policyParty2 = generateClassParty('789');

@@ -1,7 +1,7 @@
+import { Policy, Transaction, Transaction_Payor, TransactionStatus, TransactionType } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { Policy, Transaction, TransactionPayor, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
 import { getPolicyTransaction } from '@deps/queries/api/policies';
 
 import { getPaymentMethod } from '../side-sheet-transaction.helpers';
@@ -15,10 +15,10 @@ export const getReverseRecreateTransactionSideSheetValues = (
     const { effectiveDate, payors, status, transactionId, transactionType, originalTransactionId } = transaction ?? {};
     const { appliedAmount, paymentAmount, requestedAmount } = transaction.transactionAmounts ?? {};
 
-    const isPending = transaction.status === TransactionStatus.Pending;
-    const amount = transactionType === TransactionType.PaymentOneTimePremium ? paymentAmount : appliedAmount;
+    const isPending = transaction.status === TransactionStatus.PENDING;
+    const amount = transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM ? paymentAmount : appliedAmount;
 
-    const paymentMethod = getPaymentMethod(policy, payors as TransactionPayor[], t);
+    const paymentMethod = getPaymentMethod(policy, payors as Transaction_Payor[], t);
 
     const getOriginalTransactionValues = async () => {
         const { policyNumber, product } = policy;
@@ -38,9 +38,9 @@ export const getReverseRecreateTransactionSideSheetValues = (
         }
         const { appliedAmount, paymentAmount, requestedAmount } = transactionAmounts;
 
-        const isPending = status === TransactionStatus.Pending;
+        const isPending = status === TransactionStatus.PENDING;
 
-        const amount = transactionType === TransactionType.PaymentOneTimePremium ? paymentAmount : appliedAmount;
+        const amount = transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM ? paymentAmount : appliedAmount;
 
         return {
             submittedAmount: amount || requestedAmount,
@@ -55,8 +55,9 @@ export const getReverseRecreateTransactionSideSheetValues = (
         effectiveDate: convertKebabedDateString(effectiveDate),
         status,
         transactionId: transactionId + '-reverse',
-        transactionType: `${isPending ? t('policy.history.sidesheet.paymentOneTimePremium') : t('policy.history.sidesheet.oneTimePremium')
-            }`,
+        transactionType: `${
+            isPending ? t('policy.history.sidesheet.paymentOneTimePremium') : t('policy.history.sidesheet.oneTimePremium')
+        }`,
         newAppliedAmount: amount || requestedAmount,
         paymentMethod: paymentMethod,
         getAsyncSideSheetValues: getOriginalTransactionValues,

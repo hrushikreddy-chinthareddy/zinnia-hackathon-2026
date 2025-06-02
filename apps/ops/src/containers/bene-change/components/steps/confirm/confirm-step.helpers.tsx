@@ -1,3 +1,4 @@
+import { Policy, EmailType, Email, PartyType, PhoneType, IdentificationType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuid4 } from 'uuid';
 
@@ -6,7 +7,6 @@ import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
 import { isNullEmptyOrUndefined, toTitleCase } from '@deps/helpers/string.helpers';
 import { SignatureDesignation, SignatureValidationTypeWithdrawal, SignValidated } from '@deps/models/case/renewal/signature-validation';
 import { AddressTypes, Carrier, SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
-import { Policy, IdentificationType, PhoneType, EmailType, Email, PartyType } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import {

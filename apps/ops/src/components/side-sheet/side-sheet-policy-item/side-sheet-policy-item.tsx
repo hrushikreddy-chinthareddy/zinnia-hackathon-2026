@@ -1,3 +1,4 @@
+import { Policy, PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 import { ValueGetterParams } from 'ag-grid-community';
 import { TFunction, useTranslation } from 'next-i18next';
 
@@ -15,7 +16,6 @@ import { getTotalMinRequiredAmount } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatDate } from '@deps/helpers/string.helpers';
-import { Policy, PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CirclePlusIcon } from '@deps/styles/elements/icons/circles/circle-plus.svg';
 
 export interface SideSheetPolicyItemProps {

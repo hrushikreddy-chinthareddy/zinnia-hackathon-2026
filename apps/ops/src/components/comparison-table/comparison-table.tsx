@@ -1,3 +1,4 @@
+import { Address } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -5,7 +6,6 @@ import React from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { formatAddress } from '@deps/helpers/address.helpers';
-import { Address } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { PiiWrapper } from '../pii/PiiWrapper';

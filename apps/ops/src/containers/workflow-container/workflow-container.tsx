@@ -1,3 +1,4 @@
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
@@ -9,7 +10,6 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { DEFAULT_STEP_WIDTH } from '@deps/types/constants';
 
 import styles from './workflow-container.module.css';

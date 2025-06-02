@@ -1,6 +1,7 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQuery } from '@tanstack/react-query';
 import { SearchRequest, TaxformResponse } from '@zinnia/api-types/types/documents-v3';
+import { Policy } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -17,7 +18,6 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import { PolicyDocument } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';

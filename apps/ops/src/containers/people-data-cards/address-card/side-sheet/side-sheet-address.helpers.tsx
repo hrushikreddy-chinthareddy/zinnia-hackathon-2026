@@ -1,4 +1,5 @@
 import { Transition } from '@headlessui/react';
+import { Address, AddressType } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
@@ -7,7 +8,6 @@ import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import { Address, AddressType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 
 interface AdditionalAddressLineProps {

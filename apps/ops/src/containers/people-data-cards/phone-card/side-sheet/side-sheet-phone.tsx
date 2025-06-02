@@ -1,4 +1,5 @@
 import { Transition } from '@headlessui/react';
+import { Phone, PhoneType, Party } from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -39,7 +40,6 @@ import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
 import { mapPhoneTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Processes } from '@deps/models/case/case';
-import { Phone, PhoneType, PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
     addNonFinancialTransaction,
@@ -52,7 +52,7 @@ import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 type SideSheetPhoneProps = {
     onCancel: () => void;
-    party?: PolicyAllOfPartiesItem;
+    party?: Party;
     planCode?: string;
     policyNumber?: string;
     setCurrentPhones: Dispatch<SetStateAction<Phone[]>>;

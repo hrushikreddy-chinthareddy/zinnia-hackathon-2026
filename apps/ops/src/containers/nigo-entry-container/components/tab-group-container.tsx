@@ -1,3 +1,4 @@
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState, useCallback } from 'react';
 
@@ -19,7 +20,6 @@ import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useDiaryNotes } from '@deps/hooks/useDiaryNotes';
 import { DocumentData } from '@deps/models/case/document';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { getCases } from '@deps/queries/api/cases';
 import { CaseSearchQuery } from '@deps/queries/cases';
 import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/icons_outlined/annotation.svg';

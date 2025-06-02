@@ -1,3 +1,4 @@
+import { Reason } from '@zinnia/api-types/types/sor';
 import { PopoverPlacement } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -15,7 +16,6 @@ import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatAccountNumber, toTitleCase } from '@deps/helpers/string.helpers';
-import { Reason } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
 export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({ policy }: BasePolicyComponentArgs) => {

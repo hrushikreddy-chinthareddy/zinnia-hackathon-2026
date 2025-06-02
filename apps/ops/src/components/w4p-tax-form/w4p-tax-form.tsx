@@ -6,8 +6,7 @@ import { PartyRoles } from '@deps/containers/otp/reg60-forms/reg60.types';
 import { numberFormat } from '@deps/containers/otp/reg60-forms/utils/reg60-constants';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { Address, AmountType, maritalStatusType, SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
-import { PartyRole } from '@deps/models/policy/sor-policy';
+import { Address, AmountType, PartyRoles as PartyRole, maritalStatusType, SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 
 import IncomeDisclosure from './income-disclosure';
 import { maritalStatusOptions, w4pPeriodicPaymentDefault } from './w4p-tax-form.helpers';

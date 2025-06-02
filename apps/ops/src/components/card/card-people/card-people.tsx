@@ -1,3 +1,4 @@
+import { PartyStatus } from '@zinnia/api-types/types/sor';
 import { useEffect, useRef } from 'react';
 
 import ClickContainer from '@deps/components/click-container/click-container';
@@ -7,7 +8,6 @@ import Title, { TitleVariant } from '@deps/components/title/title';
 import { getBeneficiaryColor, getContigentColor } from '@deps/containers/people-card-container/people-card-container.helpers';
 import { BeneficiaryType } from '@deps/containers/people-card-container/people-card-container.types';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { PartyStatus } from '@deps/models/policy/sor-policy';
 import { TagKey } from '@deps/types/components';
 
 export interface CardPeopleProps {

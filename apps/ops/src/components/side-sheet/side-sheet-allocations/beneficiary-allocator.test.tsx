@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { Matcher, SelectorMatcherOptions, fireEvent, render } from '@testing-library/react';
-
-import { PartyRole } from '@deps/models/policy/sor-policy';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import BeneficiaryAllocator, { BeneficiaryAllocatorProps } from './beneficiary-allocator';
 import { Beneficiary } from './side-sheet-allocations-helpers';

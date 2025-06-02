@@ -1,3 +1,4 @@
+import { Email, EmailType, Party, PreferredCommunicationType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -30,7 +31,6 @@ import {
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Processes } from '@deps/models/case/case';
-import { Email, EmailType, PolicyAllOfPartiesItem, PreferredCommunicationType } from '@deps/models/policy/sor-policy';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
     NonFinancialTransactionActions,
@@ -44,7 +44,7 @@ import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 export type SideSheetEmailProps = {
     isOnlyEmail: boolean;
     onCancel: () => void;
-    party?: PolicyAllOfPartiesItem;
+    party?: Party;
     planCode?: string;
     policyNumber?: string;
     setCurrentEmails: Dispatch<SetStateAction<Email[]>>;

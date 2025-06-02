@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 
 import { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import BannerAlert, { BannerVariant } from '@deps/components/banner-alert/banner-alert';
@@ -13,7 +13,6 @@ import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_ou
 import { ReactComponent as HexExclamationIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 
 import { ViewState } from '../non-financial-transactions/states/states.helpers';
-import React from 'react';
 
 interface BpmErrorStateProps {
     children: React.ReactElement;

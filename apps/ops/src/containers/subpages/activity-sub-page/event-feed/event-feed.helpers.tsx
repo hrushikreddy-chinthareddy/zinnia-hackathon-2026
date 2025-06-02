@@ -1,3 +1,5 @@
+import { Transaction } from '@zinnia/api-types/types/sor';
+
 import { hasFilter } from '@deps/components/history/filters/filter.helpers';
 import { EventFilterKeys, EventFilters, PeopleFilters, PolicyFilters, TransactionFilters } from '@deps/contexts/HistoryFiltersContext';
 import {
@@ -7,7 +9,6 @@ import {
     peopleTransactions,
     policyTransactions,
 } from '@deps/helpers/transaction-types.helpers';
-import { Transaction } from '@deps/models/policy/sor-policy';
 
 export interface Transactions {
     completed: Transaction[] | [];

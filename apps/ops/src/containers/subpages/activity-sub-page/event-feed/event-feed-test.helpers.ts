@@ -1,4 +1,4 @@
-import { Policy, Reason, Transaction, TransactionStatus } from '@deps/models/policy/sor-policy';
+import { Policy, Reason, Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
 
 export const basePolicy = {
     parties: [

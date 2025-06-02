@@ -1,6 +1,7 @@
+import { Policy } from '@zinnia/api-types/types/sor';
+
 import { Case } from '@deps/models/case/case';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 import { Order, SortObject } from './sort';
 
@@ -19,7 +20,6 @@ export type PolicySearchKeys =
     | 'agentFirstName'
     | 'agentLastName'
     | 'documentNumber';
-
 
 export interface PolicySearchResult {
     carrierId: string;

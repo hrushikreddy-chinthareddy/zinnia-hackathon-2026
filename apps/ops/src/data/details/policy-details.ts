@@ -1,4 +1,5 @@
-import { Policy, Product } from '@deps/models/policy/sor-policy';
+import { Policy, Product } from '@zinnia/api-types/types/sor';
+
 import { DataDefinition } from '@deps/types/data';
 
 export interface PolicyDetailsDto extends Policy, Product {}
@@ -69,10 +70,6 @@ export const PolicyDetailsInfo = (): DataDefinition<PolicyDetailsDto>[] => [
     {
         key: 'monthOfYear',
         label: 'Policy Months',
-    },
-    {
-        key: 'nonForfeitureOption',
-        label: 'Nonforfeiture Option',
     },
     {
         key: 'issueType',

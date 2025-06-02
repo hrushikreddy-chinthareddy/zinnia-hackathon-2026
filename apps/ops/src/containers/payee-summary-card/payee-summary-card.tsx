@@ -1,3 +1,4 @@
+import { Address, DisbursementPaymentForm, DisbursementType } from '@zinnia/api-types/types/sor';
 import { Label, Tag, TagVariant, TooltipPlacement } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
@@ -10,7 +11,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { formatAddress } from '@deps/helpers/address.helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import { getPaymentType } from '@deps/helpers/systematic-program.helpers';
-import { Address, DisbursementPaymentForm, DisbursementType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import PayeeSummaryCardRow from './payee-summary-card-row/payee-summary-card-row';

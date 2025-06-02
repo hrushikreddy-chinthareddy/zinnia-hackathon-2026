@@ -6,7 +6,9 @@ import { v4 as uuidv4 } from 'uuid';
 import TransactionDocumentSelection from '@deps/containers/nigo-entry-container/components/steps/form-selection.tsx/transaction-document-selection';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { AvailableFormsTransaction, SendDocumentFormParts, SendDocumentFormPartsAdditionData } from '@deps/models/case/send-document';
-import { Policy } from '@deps/models/policy/sor-policy';
+
+import { Policy } from '@zinnia/api-types/types/sor';
+
 import { ReactComponent as AddDocumentIcon } from '@deps/styles/elements/icons/icons_outlined/add.svg';
 import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
@@ -15,7 +17,6 @@ import SendDocumentNavigationButtons from './action-components/navigation-button
 import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../nav-element/nav-element';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
-
 
 const mapIdToFormDetails = (value: SendDocumentFormParts[]): SendDocumentFormPartsAdditionData[] => {
     return value.map(formDetail => {

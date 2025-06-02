@@ -1,8 +1,7 @@
 import { Meta } from '@storybook/react';
+import { AccountStatus, AccountType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-
-import { AccountStatus, AccountType } from '@deps/models/policy/sor-policy';
 
 import BankDataCard from './bank-data';
 

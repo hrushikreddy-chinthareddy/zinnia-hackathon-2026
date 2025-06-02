@@ -1,6 +1,7 @@
+import { FeatureType } from '@zinnia/api-types/types/sor';
+
 import FixedCostPeriod from '@deps/containers/policy-details/cards/display-fields/fixed-cost-period';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
-import { PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
 
 import AccountValue from '../display-fields/account-value';
 import BaseDeathBenefit from '../display-fields/base-death-benefit';
@@ -11,7 +12,7 @@ import SurrenderValue from '../display-fields/surrender-value';
 import UpcomingPremiumDisplayField from '../display-fields/upcoming-premium';
 
 const EverlyIul = ({ policy }: BasePolicyComponentArgs) => {
-    const freeLookFeature = policy.features.getFirstFeatureByType(PolicyFeatureFeatureType.freelook);
+    const freeLookFeature = policy.features.getFirstFeatureByType(FeatureType.FREELOOK);
 
     return (
         <>

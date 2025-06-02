@@ -1,5 +1,6 @@
 import '@deps/styles/styles.css';
 import { Meta } from '@storybook/react';
+import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
 import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
 import Button from '@deps/components/button/button';
@@ -7,11 +8,10 @@ import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/glob
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import { SideSheetProvider, useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 
 import SideSheetProductDetails from './side-sheet-product-details';
 
-const Status = 'ACTIVE';
+const Status = PolicyStatus.ACTIVE;
 
 const globalValues: GlobalValues = {
     carrierOrganizationName: 'Everly',

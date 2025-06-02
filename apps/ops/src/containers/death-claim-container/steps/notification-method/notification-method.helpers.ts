@@ -1,11 +1,11 @@
+import { Policy, EmailType, AddressType, PartyRole, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
-import { isNullEmptyOrUndefined } from "@deps/helpers/string.helpers";
-import { Policy, EmailType, AddressType, PartyRole, PolicyParties } from "@deps/models/policy/sor-policy";
-import { isNonProductionEnvironment } from "@deps/utils/environment.helpers";
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 
-import { ClaimActionTypes, NotificationMethod } from "../../death-claim.types";
+import { ClaimActionTypes, NotificationMethod } from '../../death-claim.types';
 
-export const getExtractedPartyRoles = (policy: Policy, roles: PartyRole[]):  PolicyParties[] => {
+export const getExtractedPartyRoles = (policy: Policy, roles: PartyRole[]): PolicyPartyRoles[] => {
     return policy?.partyRoles?.filter(role => role.partyRole && roles.includes(role.partyRole)) || [];
 };
 
@@ -30,12 +30,12 @@ const getTransformEmail = (email: any) => {
         action: ClaimActionTypes.NONE,
         emailType: email?.emailType || EmailType.PERSONAL,
         emailAddress: email?.emailAddress || null,
-        emailId: email?.emailId || null
-    }
-}
+        emailId: email?.emailId || null,
+    };
+};
 
 export const getBeneficiariesByRole = (policy: Policy, roles: PartyRole[]): NotificationMethod[] => {
-    const extractedPartyRoles: PolicyParties[] = getExtractedPartyRoles(policy, roles);
+    const extractedPartyRoles: PolicyPartyRoles[] = getExtractedPartyRoles(policy, roles);
     const beneficiaries: NotificationMethod[] = [];
 
     extractedPartyRoles?.map(correspondingRole => {
@@ -43,12 +43,8 @@ export const getBeneficiariesByRole = (policy: Policy, roles: PartyRole[]): Noti
 
         if (party && correspondingRole) {
             const { addresses, emails } = party;
-            const personalEmail = emails?.filter(
-                email => email.emailType === EmailType.PERSONAL
-            )?.[0] || {};
-            const residentialAddresse = addresses?.filter(
-                address => address.addressType === AddressType.RESIDENCE
-            )?.[0] || {};
+            const personalEmail = emails?.filter(email => email.emailType === EmailType.PERSONAL)?.[0] || {};
+            const residentialAddresse = addresses?.filter(address => address.addressType === AddressType.RESIDENCE)?.[0] || {};
 
             const beneficiary = {
                 party: {
@@ -64,18 +60,18 @@ export const getBeneficiariesByRole = (policy: Policy, roles: PartyRole[]): Noti
                     fullName: party?.fullName || '',
                     gender: party?.gender || '',
                     dateOfBirth: party?.dateOfBirth || '',
-                    relationshipToInsured: correspondingRole?.relationshipToInsured || ''
+                    relationshipToInsured: correspondingRole?.relationshipToInsured || '',
                 },
                 email: {
-                    ...getTransformEmail(personalEmail)
+                    ...getTransformEmail(personalEmail),
                 },
-                faxNumber : null,
+                faxNumber: null,
                 address: {
-                    ...getTransformAddress(residentialAddresse)
+                    ...getTransformAddress(residentialAddresse),
                 },
-                notificationMethod: null
+                notificationMethod: null,
             } as NotificationMethod;
-            beneficiaries.push(beneficiary)
+            beneficiaries.push(beneficiary);
         }
     });
     return beneficiaries;
@@ -109,12 +105,17 @@ export const validateFax = (fax: string) => {
         return 'errors.faxIsRequired';
     }
     if (!isNullEmptyOrUndefined(fax) && !faxRegex.test(fax)) {
-        return 'errors.inValidFax'
+        return 'errors.inValidFax';
     }
 };
 
 export const validateAddress = (address: any) => {
-    if (isNullEmptyOrUndefined(address?.addressLine1) || isNullEmptyOrUndefined(address?.city) || isNullEmptyOrUndefined(address?.state) || isNullEmptyOrUndefined(address?.zipCode)) {
+    if (
+        isNullEmptyOrUndefined(address?.addressLine1) ||
+        isNullEmptyOrUndefined(address?.city) ||
+        isNullEmptyOrUndefined(address?.state) ||
+        isNullEmptyOrUndefined(address?.zipCode)
+    ) {
         return 'errors.addressIsRequired';
     }
-}
+};

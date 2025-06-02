@@ -1,4 +1,13 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import {
+    AdhocSystematicProgram,
+    AmountType,
+    ArrangementType,
+    Frequency,
+    PaymentForm,
+    Policy,
+    Reason,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 import { AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -15,7 +24,6 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
 import { Processes } from '@deps/models/case/case';
-import { AmountType, ArrangementType, Frequency, PaymentForm, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { submitSystematicProgramUpdate, validateSystematicProgramUpdate, ValidationResult } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -137,7 +145,7 @@ const SideSheetCancelAutopay = ({
                     partyId: systematicProgram?.party?.[0]?.partyId,
                 },
                 ...(systematicProgram?.parties && { parties: systematicProgram.parties }),
-            },
+            } as AdhocSystematicProgram,
         };
     };
 

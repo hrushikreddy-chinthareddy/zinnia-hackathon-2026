@@ -1,4 +1,4 @@
-import { PaymentForm, Policy } from '@zinnia/api-types/types/sor';
+import { PaymentForm, Policy, ArrangementType, BankAccount, Status, SystematicProgram } from '@zinnia/api-types/types/sor';
 import { FieldData, FieldSize, Radio } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -12,7 +12,6 @@ import AddressDataCard from '@deps/containers/small-data-card/address-data/addre
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
-import { Address as AddressOld, ArrangementType, BankAccount, Status, SystematicProgram } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 
 import { PaymentMethodType, PaymentStepProps } from './types';
@@ -239,7 +238,7 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
                                         {addresses?.map(address => (
                                             <AddressDataCard
                                                 key={address.addressId}
-                                                address={address as AddressOld}
+                                                address={address}
                                                 accessibilityClickText={t('ariaLabel.select')}
                                                 selectedId={currentPaymentAddressId}
                                                 onCardClick={() => {

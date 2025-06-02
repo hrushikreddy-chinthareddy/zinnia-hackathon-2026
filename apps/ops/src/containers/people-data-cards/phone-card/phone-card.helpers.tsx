@@ -1,3 +1,4 @@
+import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { v4 as uuid4 } from 'uuid';
@@ -11,7 +12,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { SideSheetPeopleHeaderProps } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { formatPhoneNumberWithExtension } from '@deps/helpers/phone.helpers';
-import { Phone, PhoneType } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 

@@ -1,4 +1,5 @@
-import { Party, PartyRole, PolicyParties } from '@deps/models/policy/sor-policy';
+import { Party, PartyRole, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+
 import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
@@ -103,7 +104,7 @@ describe('Parties', () => {
         });
 
         it('should add a party role properly', () => {
-            const roleToAdd = mockPolicy.partyRoles?.[0] as PolicyParties;
+            const roleToAdd = mockPolicy.partyRoles?.[0] as PolicyPartyRoles;
             party.addPartyRole(roleToAdd);
             expect(party.partyRoles).toHaveLength(1);
             expect(party.partyRoles[0]).toEqual(roleToAdd);

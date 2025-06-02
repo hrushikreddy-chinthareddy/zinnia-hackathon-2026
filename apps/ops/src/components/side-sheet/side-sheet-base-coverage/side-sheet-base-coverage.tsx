@@ -1,9 +1,9 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import CardColumns, { CardColumnsVariant } from '@deps/components/card/card-columns/card-columns';
 import DescriptionLists from '@deps/components/description-list/description-lists';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 import { SideSheetCoverageColDto, toSideSheetCoverageDto, getSideSheetCoverageColDefs } from '../../../data/side-sheet-coverage-details';
 

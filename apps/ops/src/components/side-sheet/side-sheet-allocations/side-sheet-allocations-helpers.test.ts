@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
-
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import {
     Beneficiary,

@@ -1,3 +1,4 @@
+import { LoanSegment, LoanType } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -6,7 +7,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import { rateFormatted } from '@deps/helpers/data-transform.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { LoanSegment, LoanType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 export type SideSheetLoanAdditionalInfoProps = {

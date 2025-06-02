@@ -1,15 +1,15 @@
-import { TFunction } from "next-i18next";
+import { PartyType } from '@xd/api-types/dist/generated-types/sor';
+import { TFunction } from 'next-i18next';
 
-import { FormValidationErrors } from "@deps/models/case/withdrawal/case";
-import { PartyType } from "@deps/models/policy/sor-policy";
+import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
-export const validateBeneData = ( beneData: any, t: TFunction) => {
+export const validateBeneData = (beneData: any, t: TFunction) => {
     const errors = {} as FormValidationErrors;
     let firstNameErrors: number = 0;
     let addressErrors: number = 0;
 
     beneData.map((item: any) => {
-        if (['ADD', 'UPDATE'].includes(item.action) ) {
+        if (['ADD', 'UPDATE'].includes(item.action)) {
             const { partyType } = item.party.info;
             const address = item.party.addresses?.[0] || {};
             if (partyType === PartyType.INDIVIDUAL) {
@@ -32,7 +32,7 @@ export const validateBeneData = ( beneData: any, t: TFunction) => {
                     addressErrors++;
                 }
                 if (!address.city) {
-                    addressErrors++
+                    addressErrors++;
                 }
             }
         }

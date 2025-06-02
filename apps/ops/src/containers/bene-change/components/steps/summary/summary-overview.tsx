@@ -1,3 +1,4 @@
+import { PartyRole } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
@@ -6,7 +7,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import { PartyRole } from '@deps/models/policy/sor-policy';
 
 import { getTagVariant } from './summary-step.helpers';
 

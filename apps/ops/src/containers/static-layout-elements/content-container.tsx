@@ -1,3 +1,4 @@
+import { LineOfBusiness, PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { PropsWithChildren } from 'react';
 
@@ -11,7 +12,6 @@ import { generatePolicyAnnuityDetailsDto } from '@deps/data/details-view';
 import { PolicyDetailsViewInfo, PolicyViewDetailsDto } from '@deps/data/policy-details-view';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { LineOfBusiness, PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 import styles from './content-container.module.css';
 import QuickLinks from '../quick-links/quick-links';

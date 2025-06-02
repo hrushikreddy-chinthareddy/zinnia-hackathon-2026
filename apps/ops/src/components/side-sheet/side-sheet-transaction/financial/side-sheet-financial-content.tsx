@@ -1,3 +1,4 @@
+import { TransactionStatus } from '@xd/api-types/dist/generated-types/sor';
 import { Loader } from '@zinnia/bloom/components';
 import { TFunction } from 'next-i18next';
 
@@ -5,7 +6,6 @@ import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { TransactionStatus } from '@deps/models/policy/sor-policy';
 
 import { TransactionSideSheetValues } from '../types';
 
@@ -20,7 +20,7 @@ const SideSheetFinancialTransactionContent = ({ loading, values, t }: SideSheetF
 
     return (
         <div className="mt-8 border-t-2 border-gray-200 pt-8">
-            {status === TransactionStatus.Canceled && (
+            {status === TransactionStatus.CANCELED && (
                 <Typography variant={TypographyVariant.H4} className="mb-8">
                     {t('policy.history.sidesheet.originalTransactionDetails')}
                 </Typography>
@@ -49,7 +49,7 @@ const SideSheetFinancialTransactionContent = ({ loading, values, t }: SideSheetF
                 >
                     {numberFormatify(submittedAmount)}
                 </FieldData>
-                {status !== TransactionStatus.Canceled && (
+                {status !== TransactionStatus.CANCELED && (
                     <FieldData
                         label={t('policy.history.sidesheet.appliedAmount')}
                         tooltipBody={t('policy.history.sidesheet.appliedAmountTooltip')}

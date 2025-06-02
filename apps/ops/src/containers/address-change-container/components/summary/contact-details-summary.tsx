@@ -1,3 +1,4 @@
+import { Address as PolicyAddress, Policy } from '@zinnia/api-types/types/sor';
 import { Address, AddressProps, Tag, TagVariant } from '@zinnia/bloom/components';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'next-i18next';
@@ -7,7 +8,6 @@ import { ReactNode } from 'react';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { formatPhone } from '@deps/helpers/string.helpers';
-import { Address as PolicyAddress, Policy } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { useAddressChange } from '../../address-change-provider';

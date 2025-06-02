@@ -1,8 +1,8 @@
 import { UserProfile } from '@auth0/nextjs-auth0/client';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { AttachmentDetails, CorrespondenceFormParts, SendCommunicationRequestBody } from '@deps/models/case/correspondence';
 import { CommunicationTypes, SendDocumentFormType } from '@deps/models/case/send-document';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 export const generateCommunicationRequest = (
     policy: Policy,

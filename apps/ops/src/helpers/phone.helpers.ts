@@ -1,4 +1,4 @@
-import { Party, Phone, PhoneType } from '@deps/models/policy/sor-policy';
+import { Party, Phone, PhoneType } from '@zinnia/api-types/types/sor';
 
 import { isEndDated } from './date.helpers';
 

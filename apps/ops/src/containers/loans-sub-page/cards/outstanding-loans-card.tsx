@@ -1,3 +1,4 @@
+import { LoanSegment } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
 
@@ -14,7 +15,6 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { rateFormatted } from '@deps/helpers/data-transform.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { LoanSegment } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CircleExclamationIcon } from '@deps/styles/elements/icons/circles/circle-exclamation.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 

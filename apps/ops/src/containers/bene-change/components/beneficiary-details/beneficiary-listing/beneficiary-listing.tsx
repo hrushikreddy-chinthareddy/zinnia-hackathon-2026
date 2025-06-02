@@ -1,4 +1,5 @@
 import { Transition } from '@headlessui/react';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -8,7 +9,6 @@ import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 
@@ -105,9 +105,9 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
                 return newState;
             });
         }
-    }
+    };
 
-    const handleContingentBeneInfoOnFile = (value: boolean)  => {
+    const handleContingentBeneInfoOnFile = (value: boolean) => {
         if (value) {
             const deletedBenes: any = [];
             setBeneData((prevState: any) => {
@@ -140,9 +140,7 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
         } else {
             const undoDeletedBenes: any = [];
             setBeneData((prevState: any) => {
-                const primaryBeneItems = prevState.filter(
-                    (element: any) => element.partyRole.partyRole === PartyRole.PRIMARYBENEFICIARY
-                );
+                const primaryBeneItems = prevState.filter((element: any) => element.partyRole.partyRole === PartyRole.PRIMARYBENEFICIARY);
                 const contingentBeneItems = prevState.filter(
                     (element: any) => element.partyRole.partyRole === PartyRole.CONTINGENTBENEFICIARY
                 );
@@ -162,7 +160,7 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
                 return newState;
             });
         }
-    }
+    };
 
     const handlePrimaryBeneficiaryClick = (id: string) => {
         setPrimaryCount(prevState => [...prevState, id]);

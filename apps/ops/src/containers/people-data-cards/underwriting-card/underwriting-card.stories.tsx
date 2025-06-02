@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/react';
+import { EmploymentStatus, Gender, PolicyCoverage, RiskClass, SubStandardRating } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import {
@@ -8,7 +9,6 @@ import {
     getSexAtBirth,
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
-import { PolicyCoverage } from '@deps/models/policy/sor-policy';
 
 import UnderwritingCard from './underwriting-card';
 
@@ -31,17 +31,17 @@ export const UnderwritingCardContainer = () => {
                         flatExtra: [],
                         issueAge: 18,
                         partyId: 'Party_PI_1',
-                        riskClass: 'STANDARDTOBACCO',
-                        substandardRating: 'NONETABLE',
+                        riskClass: RiskClass.STANDARDNONTOBACCO,
+                        substandardRating: SubStandardRating.NONETABLE,
                     },
                 ],
             },
         ],
     };
     const coverageParticipant = findCoverageParticipant(coverage, policyPartyID);
-    const sexAtBirth = 'MALE';
+    const sexAtBirth = Gender.MALE;
     const employed = true;
-    const employmentStatus = 'RETIRED';
+    const employmentStatus = EmploymentStatus.RETIRED;
 
     return (
         <div className="p-6">

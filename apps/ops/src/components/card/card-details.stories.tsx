@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
+import { Status } from '@zinnia/api-types/types/sor';
 
-import { Status } from '@deps/models/policy/sor-policy';
 import { ReactComponent as EverlyLogo } from '@deps/styles/elements/logos/everly-logo.svg';
 import { CardInfoVariant } from '@deps/types/components';
 import { mockPolicyData } from '@deps/utils/mockData';

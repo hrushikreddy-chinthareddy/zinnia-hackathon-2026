@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useState } from 'react';
@@ -9,15 +10,13 @@ import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-ca
 import { TranslationFiles } from '@deps/config/translations';
 import { buildClaimPaylod } from '@deps/containers/death-claim-container/death-claim.helpers';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 
-
 interface ConfirmStepProps {
-    policy: Policy
-};
+    policy: Policy;
+}
 
 const ConfirmStep = ({ policy }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims.confirmStep' });
@@ -30,7 +29,7 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
         const payload = buildClaimPaylod(policy, null, notifiers, owners, beneficiaries);
         browserLogInfo('ConfirmStep::Submit claim payload', {
             payload,
-            policy: policy?.policyNumber
+            policy: policy?.policyNumber,
         });
         const successfulSubmit = await submitDeathClaim(payload);
 
@@ -38,12 +37,12 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
             setCaseId(successfulSubmit?.id);
             setSubmitFailed(false);
         } else {
-            setCaseId('')
+            setCaseId('');
             setSubmitFailed(true);
         }
 
         setIsLoading(false);
-    }, [ setSubmitFailed, notifiers, owners, beneficiaries, policy, setCaseId]);
+    }, [setSubmitFailed, notifiers, owners, beneficiaries, policy, setCaseId]);
 
     if (isLoading) {
         return (
@@ -69,7 +68,7 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             <CardInfo
                 icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
-                subtitle={t('subTitle', { caseId: caseId})}
+                subtitle={t('subTitle', { caseId: caseId })}
                 title={t('title')}
                 cta={{
                     action: () => {
@@ -80,9 +79,7 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
                 secondaryCta={
                     <NavElement
                         aria-label={t('secondaryCta') as string}
-                        onClick={() =>
-                            router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}`)
-                        }
+                        onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}`)}
                         size={NavElementSize.Small}
                         type={NavElementType.Button}
                         variant={NavElementVariant.Default}
@@ -96,4 +93,3 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
 };
 
 export default ConfirmStep;
-

@@ -1,4 +1,4 @@
-import { BankAccount } from '@deps/models/policy/sor-policy';
+import { BankAccount } from '@zinnia/api-types/types/sor';
 
 import { BasePartyItems } from './BasePartyItems';
 

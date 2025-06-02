@@ -1,3 +1,4 @@
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { BadgeVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
@@ -8,7 +9,6 @@ import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
-import { PolicyStatus } from '@deps/models/policy/sor-policy';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 

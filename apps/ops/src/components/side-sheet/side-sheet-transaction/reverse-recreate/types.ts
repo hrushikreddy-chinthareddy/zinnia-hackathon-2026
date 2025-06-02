@@ -1,4 +1,4 @@
-import { TransactionStatus } from '@deps/models/policy/sor-policy';
+import { TransactionStatus } from '@zinnia/api-types/types/sor';
 
 import { BaseCardModel } from '../types';
 

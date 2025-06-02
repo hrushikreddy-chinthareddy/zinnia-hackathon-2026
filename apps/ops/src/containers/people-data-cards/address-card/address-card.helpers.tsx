@@ -1,4 +1,5 @@
 import { Skeleton } from '@radix-ui/themes';
+import { Address, AddressType, Party } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { HTMLAttributes } from 'react';
@@ -16,7 +17,6 @@ import { formatCityStateZip } from '@deps/helpers/address.helpers';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
-import { Address, AddressType, PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 
@@ -34,7 +34,7 @@ interface FormattedAddressProps {
     isLoading?: boolean;
 }
 
-type SortAddressesByType = Pick<PolicyAllOfPartiesItem, 'addresses' | 'preferredAddressIndicator'>;
+type SortAddressesByType = Pick<Party, 'addresses' | 'preferredAddressIndicator'>;
 
 export const Addresses = ({ addresses, editable, infoOnly, onEditClick, preferredAddressIndicator, showAdditional }: AddressesProps) => {
     const { t } = useTranslation();

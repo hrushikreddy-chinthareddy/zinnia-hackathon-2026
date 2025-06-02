@@ -1,3 +1,4 @@
+import { BankAccount } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
@@ -7,7 +8,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import { formatAccountNumber, toTitleCase } from '@deps/helpers/string.helpers';
-import { BankAccount } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CircleExclamationIcon } from '@deps/styles/elements/icons/circles/circle-exclamation.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 

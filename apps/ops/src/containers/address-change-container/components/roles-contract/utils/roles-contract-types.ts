@@ -1,4 +1,5 @@
-import { Address, Phone, PolicyParties } from '@deps/models/policy/sor-policy';
+import { Address, Phone, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+
 import { TagKey } from '@deps/types/components';
 
 export interface PartyAddressCard {
@@ -7,7 +8,7 @@ export interface PartyAddressCard {
     address?: Address;
     homePhone?: Phone;
     partyRoles: string[];
-    roleIdentifiers: PolicyParties[];
+    roleIdentifiers: PolicyPartyRoles[];
     tags: TagKey[];
     email?: string;
 }

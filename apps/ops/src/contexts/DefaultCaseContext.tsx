@@ -1,5 +1,5 @@
+import { IdentificationType, Policy } from '@xd/api-types/dist/generated-types/sor';
 import { policyOwner } from '@xd/utils/dist';
-import { IdentificationType, Policy } from '@zinnia/api-types/types/sor';
 import { createContext, useContext, useState } from 'react';
 
 import { formatSSN } from '@deps/helpers/string.helpers';

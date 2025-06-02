@@ -1,6 +1,7 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
 import { FgaRoles } from '@xd/utils/dist';
+import { Party, Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
@@ -31,7 +32,6 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { PolicyAllOfPartiesItem, Policy } from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
@@ -50,7 +50,7 @@ interface PolicyPageProps extends SegmentTrackedPageProps {
         [UserPermission.AllowReadPolicyAdmin]: boolean;
         [UserPermission.AllowEditPolicy]: boolean;
     };
-    selectedPolicyParty?: PolicyAllOfPartiesItem;
+    selectedPolicyParty?: Party;
 }
 
 const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps) => {

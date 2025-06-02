@@ -1,8 +1,8 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import PolicyTestCard from '@deps/containers/mec-card/policy-test-card/policy-test-card';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 interface GuidelineCardProps {
     policy: Policy;

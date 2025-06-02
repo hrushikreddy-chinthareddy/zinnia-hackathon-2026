@@ -1,4 +1,4 @@
-import { Policy, Product } from '@deps/models/policy/sor-policy';
+import { Policy, Product } from '@zinnia/api-types/types/sor';
 
 export interface FundDetailsViewModel {
     electedFunds: FundViewModel[];

@@ -1,10 +1,10 @@
+import { PaymentForm } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react';
 
 import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
 import { PayorType } from '@deps/components/workflows/payor-step/payor-step';
 import { AmountType, ReverseInitiatorType } from '@deps/containers/financial-transactions/premium/new-premium/amount/amount';
-import { PaymentForm } from '@deps/models/policy/sor-policy';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 // ACH is the only supported payment type for MVP

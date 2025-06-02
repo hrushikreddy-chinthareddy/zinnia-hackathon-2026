@@ -1,5 +1,6 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { CommunicationPreferenceChange, CommunicationPreferenceChangeRequest } from '@zinnia/api-types/types/bpm';
+import { PreferredCommunicationType, Email, Address } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -32,7 +33,6 @@ import {
     SideSheetCommnunicationPreferenceProps,
 } from '@deps/containers/people-data-cards/header-info-card/sidesheet/sidesheet-communications-preference.helpers';
 import { Processes } from '@deps/models/case/case';
-import { PreferredCommunicationType, Email, Address } from '@deps/models/policy/sor-policy';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
     NonFinancialTransactionActions,

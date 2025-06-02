@@ -1,3 +1,4 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -10,7 +11,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { Case, Statuses } from '@deps/models/case/case';
-import { LineOfBusiness } from '@deps/models/policy/sor-policy';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as TimeIcon } from '@deps/styles/elements/icons/icons_outlined/clock.svg';

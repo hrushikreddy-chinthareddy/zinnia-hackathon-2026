@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
+import { Status } from '@zinnia/api-types/types/sor';
 
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
-import { Status } from '@deps/models/policy/sor-policy';
 
 import CardBarPolicyHolder from './card-bar-policy-holder';
 

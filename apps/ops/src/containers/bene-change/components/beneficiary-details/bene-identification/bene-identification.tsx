@@ -1,3 +1,4 @@
+import { PartyType } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -8,7 +9,6 @@ import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/fie
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
-import { PartyType } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { Errors, genderOption, prefixOption, trustOption, TrustType } from './bene-identification.helpers';

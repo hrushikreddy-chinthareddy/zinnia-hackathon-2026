@@ -1,7 +1,8 @@
+import { Policy } from '@zinnia/api-types/types/sor';
+
 import { PageHead } from '@deps/components/page-title';
 import FundTransferContainer from '@deps/containers/financial-transactions/fund-transfer/fund-transfer-container';
 import { FundTransferProvider } from '@deps/contexts/transactions/FundTransferContext';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 

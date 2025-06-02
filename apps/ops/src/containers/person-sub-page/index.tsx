@@ -1,3 +1,4 @@
+import { PartyRole } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
@@ -12,7 +13,6 @@ import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card'
 import UnderwritingCard from '@deps/containers/people-data-cards/underwriting-card/underwriting-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { findCoverageParticipant, getRiskClass, getSexAtBirth, getSubstandardRating } from '@deps/helpers/party-info-helpers';
-import { PartyRole } from '@deps/models/policy/sor-policy';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
 

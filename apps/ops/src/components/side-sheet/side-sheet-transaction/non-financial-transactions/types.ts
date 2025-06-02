@@ -1,6 +1,6 @@
+import { Address, BankAccount, Email, Phone } from '@zinnia/api-types/types/sor';
 import { Dispatch, SetStateAction } from 'react';
 
-import { Address, BankAccount, Email, Phone } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions } from '@deps/queries/api/bpm-non-financial';
 
 import { BaseTransactionSideSheetValues } from '../types';

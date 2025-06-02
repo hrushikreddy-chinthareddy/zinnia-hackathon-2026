@@ -1,4 +1,4 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy , TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useTranslation } from 'next-i18next';
@@ -15,7 +15,6 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { Processes } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { validateOneTimePremium } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 

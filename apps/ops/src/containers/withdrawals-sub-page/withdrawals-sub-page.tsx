@@ -1,4 +1,5 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
+import { ArrangementType, Policy, Reason } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
@@ -14,7 +15,6 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helpers';
 import { TempAnnuityArrangementTypes } from '@deps/helpers/policy-sor/SystematicPrograms';
-import { ArrangementType, Policy, Reason } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkSystematicProgramEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';

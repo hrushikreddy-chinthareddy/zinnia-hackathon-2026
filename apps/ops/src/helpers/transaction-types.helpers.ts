@@ -1,5 +1,6 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
+
 import { EventFilterKeys, PeopleFilters, PolicyFilters, TransactionFilters } from '@deps/contexts/HistoryFiltersContext';
-import { TransactionType } from '@deps/models/policy/sor-policy';
 
 enum MissingTransactionTypes {
     CalendarProcessing = 'CalendarProcessing',
@@ -8,10 +9,10 @@ enum MissingTransactionTypes {
 }
 
 export const PeopleChangeTransactionTypes = [
-    TransactionType.AddressChange as TransactionType,
-    TransactionType.EmailChange as TransactionType,
-    TransactionType.PhoneNumberChange as TransactionType,
-    TransactionType.BankAccountChange as TransactionType,
+    TransactionType.ADDRESS_CHANGE as TransactionType,
+    TransactionType.EMAIL_CHANGE as TransactionType,
+    TransactionType.PHONE_NUMBER_CHANGE as TransactionType,
+    TransactionType.BANK_ACCOUNT_CHANGE as TransactionType,
 ];
 
 // BPB - ToDo: Remove these once the Sor spec has been updated to include them.
@@ -23,15 +24,15 @@ export const TransactionTypesNotInTheSpecYet = [
 
 export const allTransactionTypes = [...Object.values(TransactionType), ...TransactionTypesNotInTheSpecYet];
 
-const addressTransactions = [TransactionType.AddressChange, TransactionType.PreferredMailingAddressChange];
-const bankAccountTransactions = [TransactionType.BankAccountChange];
-const beneficiaryTransactions = [TransactionType.BeneficiaryChange];
-const communicationPreferenceTransactions = [TransactionType.CommunicationPreferenceChange];
-const emailTransactions = [TransactionType.EmailChange];
-const nameTransactions = [TransactionType.ExistingPartyNameChange];
-const phoneNumberTransactions = [TransactionType.PhoneNumberChange];
-const roleTransactions = [TransactionType.OwnerChange, TransactionType.PayeeChange, TransactionType.PayorChange];
-const tpdTransactions = [TransactionType.TPDChange];
+const addressTransactions = [TransactionType.ADDRESS_CHANGE, TransactionType.PREFERRED_MAILING_ADDRESS_CHANGE];
+const bankAccountTransactions = [TransactionType.BANK_ACCOUNT_CHANGE];
+const beneficiaryTransactions = [TransactionType.BENEFICIARY_CHANGE];
+const communicationPreferenceTransactions = [TransactionType.COMMUNICATION_PREFERENCE_CHANGE];
+const emailTransactions = [TransactionType.EMAIL_CHANGE];
+const nameTransactions = [TransactionType.EXISTING_PARTY_NAME_CHANGE];
+const phoneNumberTransactions = [TransactionType.PHONE_NUMBER_CHANGE];
+const roleTransactions = [TransactionType.OWNER_CHANGE, TransactionType.PAYEE_CHANGE, TransactionType.PAYOR_CHANGE];
+const tpdTransactions = [TransactionType.TPDCHANGE];
 
 export const peopleTransactions = {
     [PeopleFilters.Address]: addressTransactions,
@@ -56,32 +57,32 @@ export const peopleTransactions = {
     ],
 };
 
-const anniversaryTransactions = [TransactionType.Anniversary, TransactionType.LapseAssessment, TransactionType.MatchBonusVesting];
-const coverageTransactions = [TransactionType.CancelNoPremium, TransactionType.DeathClaim];
+const anniversaryTransactions = [TransactionType.ANNIVERSARY, TransactionType.LAPSE_ASSESSMENT, TransactionType.MATCH_BONUS_VESTING];
+const coverageTransactions = [TransactionType.CANCEL_NO_PREMIUM, TransactionType.DEATH_CLAIM];
 const feesTransactions = [
-    TransactionType.CostOfInsurance,
-    TransactionType.ExpenseCharge,
-    TransactionType.InterestCredit,
-    TransactionType.InterestCreditLoan,
-    TransactionType.InterestCreditMatch,
-    TransactionType.InterestLoan,
-    TransactionType.UnitExpenseCharge,
+    TransactionType.COST_OF_INSURANCE,
+    TransactionType.EXPENSE_CHARGE,
+    TransactionType.INTEREST_CREDIT,
+    TransactionType.INTEREST_CREDIT_LOAN,
+    TransactionType.INTEREST_CREDIT_MATCH,
+    TransactionType.INTEREST_LOAN,
+    TransactionType.UNIT_EXPENSE_CHARGE,
 ];
 const keyDateTransaction = [
-    TransactionType.Activation,
-    TransactionType.ConversionActivation,
-    TransactionType.DeliveryDateSetup,
-    TransactionType.FaceAmountChange,
-    TransactionType.FaceAmountDecrease,
-    TransactionType.FaceAmountIncrease,
-    TransactionType.ForceOut,
-    TransactionType.FreeLookExpiration,
-    TransactionType.Issuance,
-    TransactionType.Lapse,
-    TransactionType.NotificationOfDeathClaim,
-    TransactionType.Reinstatement,
-    TransactionType.ReinstatementApproved,
-    TransactionType.ValueAdjustment,
+    TransactionType.ACTIVATION,
+    TransactionType.CONVERSION_ACTIVATION,
+    TransactionType.DELIVERY_DATE_SETUP,
+    TransactionType.FACE_AMOUNT_CHANGE,
+    TransactionType.FACE_AMOUNT_DECREASE,
+    TransactionType.FACE_AMOUNT_INCREASE,
+    TransactionType.FORCE_OUT,
+    TransactionType.FREE_LOOK_EXPIRATION,
+    TransactionType.ISSUANCE,
+    TransactionType.LAPSE,
+    TransactionType.NOTIFICATION_OF_DEATH_CLAIM,
+    TransactionType.REINSTATEMENT,
+    TransactionType.REINSTATEMENT_APPROVED,
+    TransactionType.VALUE_ADJUSTMENT,
 ];
 
 export const policyTransactions = {
@@ -92,34 +93,34 @@ export const policyTransactions = {
     all: [...anniversaryTransactions, ...coverageTransactions, ...feesTransactions, ...keyDateTransaction],
 };
 const loanTransactions = [
-    TransactionType.LoanRepaymentOneTime,
-    TransactionType.NewLoan,
-    TransactionType.PaymentLoanRepaymentOneTime,
-    TransactionType.PaymentSystematicLoanRepayment,
-    TransactionType.SystematicLoanRepayment,
+    TransactionType.LOAN_REPAYMENT_ONE_TIME,
+    TransactionType.NEW_LOAN,
+    TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
+    TransactionType.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT,
+    TransactionType.SYSTEMATIC_LOAN_REPAYMENT,
 ];
 
 const premiumTransactions = [
-    TransactionType.InitialPremium,
-    TransactionType.OneTimePremium,
-    TransactionType.PaymentInitialPremium,
-    TransactionType.PaymentOneTimePremium,
-    TransactionType.SubsequentPayment,
-    TransactionType.SubsequentPremium,
+    TransactionType.INITIAL_PREMIUM,
+    TransactionType.ONE_TIME_PREMIUM,
+    TransactionType.PAYMENT_INITIAL_PREMIUM,
+    TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+    TransactionType.SUBSEQUENT_PAYMENT,
+    TransactionType.SUBSEQUENT_PREMIUM,
 ];
 const systematicProgramTransactions = [
-    TransactionType.SystematicProgramUpdate,
-    TransactionType.SystematicLoanRepaymentSetup,
-    TransactionType.SystematicPartialWithdrawalSetup,
+    TransactionType.SYSTEMATIC_PROGRAM_UPDATE,
+    TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP,
+    TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
 ];
 const withdrawalTransactions = [
-    TransactionType.ClaimPayout,
-    TransactionType.Disbursement,
-    TransactionType.FreeLookCancellation,
-    TransactionType.FullSurrender,
-    TransactionType.PartialWithdrawalOneTime,
-    TransactionType.SystematicPartialWithdrawal,
-    TransactionType.RequiredMinimumDistributionOneTime,
+    TransactionType.CLAIM_PAYOUT,
+    TransactionType.DISBURSEMENT,
+    TransactionType.FREE_LOOK_CANCELLATION,
+    TransactionType.FULL_SURRENDER,
+    TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
+    TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
 ];
 
 export const financialTransactions = {

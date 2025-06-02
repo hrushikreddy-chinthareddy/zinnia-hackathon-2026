@@ -1,4 +1,5 @@
 import useDebounce from '@xd/hooks/useDebounce';
+import { RelationshipToParty } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState, useContext, ChangeEvent } from 'react';
@@ -13,7 +14,6 @@ import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { QualTypes } from '@deps/models/case/withdrawal/case';
 import { CalculateRmdBody, RmdParty, RmdQualTypes, RmdRoles, VariableQuoteDescription } from '@deps/models/case/withdrawal/rmd';
-import { RelationshipToInsured } from '@deps/models/policy/sor-policy';
 import { getVariableQuote } from '@deps/queries/api/policies';
 import { calculateRmd } from '@deps/queries/api/rmd-calculation';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -87,10 +87,11 @@ const getAnnuitants = (parties: LifeCadParty[]) => {
     return parties?.filter(party => [0, 3].includes(party.SrcRoleOptionId) && [-1, -2].includes(party.SrcRoleType)) || [];
 };
 
-const getOwnerDOB =  (parties: LifeCadParty[]) => {
-    return  parties?.find(
-        owner => owner.SrcRoleOptionId === 0 && owner?.SrcRole?.toLowerCase().includes(RmdRoles.Insured.toLowerCase())
-    )?.DateOfBirth || '';
+const getOwnerDOB = (parties: LifeCadParty[]) => {
+    return (
+        parties?.find(owner => owner.SrcRoleOptionId === 0 && owner?.SrcRole?.toLowerCase().includes(RmdRoles.Insured.toLowerCase()))
+            ?.DateOfBirth || ''
+    );
 };
 
 export default function RMDCalculator({ isFormStateReadOnly }: RMDCalculatorProps) {
@@ -124,7 +125,7 @@ export default function RMDCalculator({ isFormStateReadOnly }: RMDCalculatorProp
                 const ownerAgeDateOfBirth = getOwnerDOB(parties as LifeCadParty[]);
                 const ageDifference = calculateAgeDifference(ownerAgeDateOfBirth, party?.DateOfBirth);
                 if (ageDifference > 10) {
-                    annuitant.relationshipToInsured = RelationshipToInsured.SPOUSE;
+                    annuitant.relationshipToInsured = RelationshipToParty.SPOUSE;
                 }
             }
 

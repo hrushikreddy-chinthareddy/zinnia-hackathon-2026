@@ -1,3 +1,4 @@
+import { BankAccountBase, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
@@ -15,7 +16,6 @@ import {
     PaymentMethodAdditionalOptions,
     PaymentMethodOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { BankAccountBase, Party, PolicyParties } from '@deps/models/policy/sor-policy';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import AutofillAccountToggle from './form-disbursement-parts/autofill-account-toggle';
@@ -86,7 +86,9 @@ export default function FormDisbursement({
     const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
 
     const bankingDetails = useMemo(() => {
-        return isLC ? getBankingDetailsLC(parties as LifeCadParty[]) : getBankingDetails(parties as Party[], partyRoles as PolicyParties[]);
+        return isLC
+            ? getBankingDetailsLC(parties as LifeCadParty[])
+            : getBankingDetails(parties as Party[], partyRoles as PolicyPartyRoles[]);
     }, [isLC, parties, partyRoles]);
 
     const existingBankSelected = isLC

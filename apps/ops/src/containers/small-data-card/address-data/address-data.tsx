@@ -1,3 +1,4 @@
+import { Address } from '@zinnia/api-types/types/sor';
 import { Tag } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -8,7 +9,6 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import { formatAddress, formatAddressV2 } from '@deps/helpers/address.helpers';
 import { getAddressType } from '@deps/helpers/party-info-helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import { Address } from '@deps/models/policy/sor-policy';
 
 export interface AddressDataCardProps {
     address: Address;

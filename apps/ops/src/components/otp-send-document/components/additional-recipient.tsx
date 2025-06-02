@@ -1,3 +1,4 @@
+import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 import { ChipX, Label, AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import React, { useState, useMemo, useEffect } from 'react';
@@ -10,7 +11,6 @@ import { partyCardsEmail } from '@deps/containers/address-change-container/compo
 import { PartyAddressCard } from '@deps/containers/address-change-container/components/roles-contract/utils/roles-contract-types';
 import { AllowedRoleTypesEmail } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { PartyRole, PartyType, Policy } from '@deps/models/policy/sor-policy';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 
 import { validateEmail } from '../correspondence';

@@ -1,4 +1,4 @@
-import { AddressType, Country, Policy, State } from '@deps/models/policy/sor-policy';
+import { AddressType, Country, Policy, State } from '@zinnia/api-types/types/sor';
 
 export enum ContactTypes {
     Address = 'address',
@@ -9,7 +9,7 @@ export interface ContactDetailsProps {
     policy: Policy;
 }
 
-export const initialContactSelection= {
+export const initialContactSelection = {
     isAddressChangeRequire: false,
     isPhoneChangeRequire: false,
 };
@@ -31,4 +31,4 @@ export interface PolicyAddress {
     Zip: string;
     /** Zip code extension of the party address */
     ZipPlusFour?: string;
-};
+}

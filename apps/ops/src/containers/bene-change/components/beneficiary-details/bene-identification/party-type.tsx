@@ -1,9 +1,9 @@
+import { PartyType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { PartyType } from '@deps/models/policy/sor-policy';
 
 export enum ContactTypes {
     Address = 'address',

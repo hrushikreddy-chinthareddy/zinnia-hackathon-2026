@@ -1,6 +1,7 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Button, Icon, IconType, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import { HttpStatusCode } from 'axios';
 import dayjs from 'dayjs';
 import router from 'next/router';
 import { TFunction, useTranslation } from 'next-i18next';
@@ -21,12 +22,14 @@ import { DocumentsLimit } from '@deps/constants/case';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime } from '@deps/helpers/string.helpers';
 import { CaseIdentifier } from '@deps/models/case/case';
 import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { EarlyTaskType, TaskSource } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus, TaskLabel, DocumentData, TaskSideSheetProps, TaskComment } from '@deps/models/case/task-instance';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
+import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { claimTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
@@ -40,10 +43,8 @@ import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache, writeToCache } from '@deps/utils/cache';
 import { isProd } from '@deps/utils/environment.helpers';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { getCaseIdentifierValue } from '@deps/helpers/case-management';
-import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
+
 import { isAPIErrorInformation, isClaimNextTask, RequestData } from './type-guards';
-import { HttpStatusCode } from 'axios';
 
 export enum TabOptions {
     Details = 'Details',

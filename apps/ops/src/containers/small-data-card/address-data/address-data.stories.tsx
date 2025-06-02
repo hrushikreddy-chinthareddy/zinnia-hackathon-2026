@@ -1,8 +1,7 @@
 import { Meta } from '@storybook/react';
+import { Address, AddressType, State, Country } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-
-import { Address, AddressType } from '@deps/models/policy/sor-policy';
 
 import AddressDataCard from './address-data';
 
@@ -21,10 +20,10 @@ const addresses: Address[] = [
         addressLine2: 'Apt #2456',
         addressLine3: '',
         city: 'Village of Grosse Pointe Shores',
-        state: 'MI',
+        state: State.MI,
         zipCode: '48236',
         zipCodeExtension: '6789',
-        country: 'KI',
+        country: Country.KI,
     },
     {
         addressId: '2',
@@ -35,10 +34,10 @@ const addresses: Address[] = [
         addressLine2: '',
         addressLine3: '',
         city: 'Business City',
-        state: 'SC',
+        state: State.SC,
         zipCode: '12345',
         zipCodeExtension: '6789',
-        country: 'US',
+        country: Country.US,
     },
 ];
 

@@ -1,7 +1,8 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQueries } from '@tanstack/react-query';
-import { useTranslation } from 'next-i18next';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { useContext, useMemo, useState } from 'react';
 
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
@@ -19,12 +20,9 @@ import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { sortByAndThenBy } from '@deps/helpers/sort.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { PartyRole } from '@deps/models/policy/sor-policy';
 import { getAgentDataQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { AgentData } from '@deps/types/agents';
 
-import SideSheetAllocations from '../../components/side-sheet/side-sheet-allocations/side-sheet-allocations';
-import PeoplePageHeaderContainer from '../page-header/people-page-header';
 import {
     NameTag,
     beneficiaryDataByType,
@@ -33,6 +31,8 @@ import {
     countPartyRoles,
     normalizePartyRole,
 } from './people-sub-page.helpers';
+import SideSheetAllocations from '../../components/side-sheet/side-sheet-allocations/side-sheet-allocations';
+import PeoplePageHeaderContainer from '../page-header/people-page-header';
 
 export interface CardActionData {
     filteredData: NameTag[];

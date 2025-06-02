@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
-
-import { Phone, PhoneType } from '@deps/models/policy/sor-policy';
+import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 
 export const generatePhone = (): Phone => {
     const phoneType = faker.helpers.arrayElement(Object.values(PhoneType));

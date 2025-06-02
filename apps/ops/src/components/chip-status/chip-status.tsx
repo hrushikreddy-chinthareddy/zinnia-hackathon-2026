@@ -1,3 +1,4 @@
+import { TransactionStatus } from '@zinnia/api-types/types/sor';
 import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -6,7 +7,6 @@ import { FC } from 'react';
 import { TranslationFiles } from '@deps/config/translations';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
-import { TransactionStatus } from '@deps/models/policy/sor-policy';
 import { isObjectKey } from '@deps/utils/types';
 
 type ChipStatusText = Statuses | TransactionStatus;
@@ -30,8 +30,8 @@ const variantMap: Partial<Record<ChipStatusText, BadgeVariant>> = {
     [Statuses.Exception]: BadgeVariant.ERROR,
     [Statuses.InProgress]: BadgeVariant.INFO,
     [Statuses.Withdrawn]: BadgeVariant.DEFAULT,
-    [TransactionStatus.Canceled]: BadgeVariant.ERROR,
-    [TransactionStatus.Reversed]: BadgeVariant.ERROR,
+    [TransactionStatus.CANCELED]: BadgeVariant.ERROR,
+    [TransactionStatus.REVERSED]: BadgeVariant.ERROR,
 };
 
 const ChipStatus: FC<ChipStatusProps> = ({ status, statusText, classNames }) => {

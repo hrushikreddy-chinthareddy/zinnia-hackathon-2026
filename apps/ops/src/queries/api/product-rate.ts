@@ -1,10 +1,10 @@
 import { datadogRum } from '@datadog/browser-rum';
+import { Rider, RiderType } from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { Rider } from '@deps/models/policy/sor-policy';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -48,8 +48,9 @@ const buildClientSideProductRatePathUrl = (
     resource?: ConfiguredSettingId,
     querySearchParams?: string
 ): string => {
-    return `${appUrlCarriers}/${carrierCode}/products/${planCode}/benefits/${benefitCode}/configured-settings/${resource}${querySearchParams ? `?${querySearchParams}` : ''
-        }`;
+    return `${appUrlCarriers}/${carrierCode}/products/${planCode}/benefits/${benefitCode}/configured-settings/${resource}${
+        querySearchParams ? `?${querySearchParams}` : ''
+    }`;
 };
 
 // Makes an attempt to retrieve the value from a product-rates response.
@@ -120,7 +121,7 @@ const getInsuredGenderFromPolicy = (policy: PolicyDetails): string | null => {
 const getCoverageValuesFromPolicy = (
     policy: PolicyDetails
 ): { coverageAmount: number | null; issueAge: number | null; riskClass: string | null } => {
-    const coverageLayer = policy.coverage.getCoverageLayerByType('BASE');
+    const coverageLayer = policy.coverage.getCoverageLayerByType(RiderType.BASE);
     const coverageValues = {
         coverageAmount: <number | null>null,
         issueAge: <number | null>null,

@@ -1,9 +1,9 @@
 import { act, cleanup, render } from '@testing-library/react';
+import { RiderType, PolicyFeature, Rider, Status } from '@zinnia/api-types/types/sor';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { BadgeTest, RidersCardsTest } from '@deps/jest/constants/test-id-constants';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
-import { IndicatorCode, PolicyFeature, Rider, Status } from '@deps/models/policy/sor-policy';
 import { mockT } from '@deps/setupTests';
 import { BenefitId, CoverageId, ConfiguredSettingId, CoverageToBenefitId } from '@deps/types/product-rate';
 
@@ -52,7 +52,7 @@ const availableRider = {
     riderName: 'Available Rider 1',
     riderParticipant: [{ insuredId: 'Party_PI_1' }, { insuredId: 'Party_PI_2' }],
     status: 'ACTIVE' as Status,
-    type: IndicatorCode.RIDER,
+    type: RiderType.RIDER,
 };
 
 const activeRider = {
@@ -61,7 +61,7 @@ const activeRider = {
     riderName: 'Pending Rider 1',
     riderParticipant: [{}],
     status: 'PENDING' as Status,
-    type: IndicatorCode.RIDERINCREASE,
+    type: RiderType.RIDERINCREASE,
 };
 
 const termIllnessRider = {
@@ -70,7 +70,7 @@ const termIllnessRider = {
     riderName: 'TermIllness Rider 1',
     riderParticipant: [{}],
     status: 'ACTIVE' as Status,
-    type: IndicatorCode.RIDER,
+    type: RiderType.RIDER,
 };
 
 const notElectedRider = {
@@ -79,7 +79,7 @@ const notElectedRider = {
     riderElected: RIDER_NOT_ELECTED,
     riderName: 'Not Elected Rider 1',
     riderParticipant: [{ insuredId: 'Party_PI_1' }, { insuredId: 'Party_PI_2' }, { insuredId: 'Party_PI_3' }],
-    type: IndicatorCode.RIDER,
+    type: RiderType.RIDER,
 };
 
 const terminatedRider = {
@@ -88,7 +88,7 @@ const terminatedRider = {
     riderName: 'Terminated Rider 1',
     riderParticipant: [{ insuredId: 'Party_PI_1' }, { insuredId: 'Party_PI_2' }, { insuredId: 'Party_PI_3' }],
     status: 'TERMINATED' as Status,
-    type: IndicatorCode.INTEGRATEDRIDER,
+    type: RiderType.INTEGRATEDRIDER,
 };
 
 let ogRiders: Rider[] | undefined;

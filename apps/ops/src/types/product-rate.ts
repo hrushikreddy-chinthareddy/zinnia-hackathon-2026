@@ -1,4 +1,4 @@
-import { CoverageLayer, Party, PolicyParties } from '@deps/models/policy/sor-policy';
+import { CoverageLayer, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 export enum ConfiguredSettingId {
     BorrowingInterestRate = 'pBorrIntRate',
@@ -86,7 +86,7 @@ export interface ProductRateQueryProps {
     effectiveDate: string;
     errorMessage?: string;
     planCode?: string;
-    partyRoles?: PolicyParties[];
+    partyRoles?: PolicyPartyRoles[];
     parties?: Party[];
     policyYear?: number;
     resourceId?: ConfiguredSettingId;

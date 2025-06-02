@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback } from 'react';
@@ -6,7 +7,6 @@ import TransactionNavigationButtons, { ParentPage } from '@deps/components/trans
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 import { validateBeneData } from './bene-details-step.helpers';
 import { useBeneChange } from '../../../bene-change-provider';

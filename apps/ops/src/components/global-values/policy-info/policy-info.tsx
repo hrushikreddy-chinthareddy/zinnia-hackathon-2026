@@ -1,4 +1,5 @@
 import { Skeleton } from '@radix-ui/themes';
+import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
@@ -12,7 +13,6 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { mapProductTypeToTranslation } from '@deps/helpers/translation.helpers';
-import { PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 
 export const PolicyNumber = ({ policyNumber, highlight }: Partial<GlobalValues>) => {

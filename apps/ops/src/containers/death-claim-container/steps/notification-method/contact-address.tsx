@@ -1,3 +1,4 @@
+import { Address, AddressType, Policy } from '@zinnia/api-types/types/sor';
 import { Link } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -10,11 +11,9 @@ import { isEqualObjects } from '@deps/containers/death-claim-container/steps/not
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
-import { Address, AddressType, Policy } from '@deps/models/policy/sor-policy';
 
 import EditAddress from './edit-address';
 import { ClaimActionTypes } from '../../death-claim.types';
-
 
 type ContactCenterAddressProps = {
     policy: Policy;
@@ -23,7 +22,7 @@ type ContactCenterAddressProps = {
 };
 const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'deathClaims.notificationMethod' });
-    const [partyCardsData, setPartyCardsData] = useState<PartyAddressCard[] >([]);
+    const [partyCardsData, setPartyCardsData] = useState<PartyAddressCard[]>([]);
     const [prevAddress, setPrevAddress] = useState<Address>({});
     const [selectedAddress, setSelectedAddress] = useState<number>(-1);
     const [selectedNewAddress, setSelectedNewAddress] = useState(false);
@@ -31,17 +30,19 @@ const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps
 
     useEffect(() => {
         const currentParty = policy?.parties?.find(item => item.partyId === party?.partyId);
-        const data = [{
-            firstName: party?.firstName ?? '',
-            lastName: party?.lastName ?? '',
-            address: currentParty?.addresses?.[0] ?? {},
-            partyRoles: [party?.roleType],
-            roleIdentifiers: [],
-            tags: [],
-        }];
+        const data = [
+            {
+                firstName: party?.firstName ?? '',
+                lastName: party?.lastName ?? '',
+                address: currentParty?.addresses?.[0] ?? {},
+                partyRoles: [party?.roleType],
+                roleIdentifiers: [],
+                tags: [],
+            },
+        ];
         setPartyCardsData(data);
-        setPrevAddress( currentParty?.addresses?.[0] || {});
-    }, [party, policy?.parties])
+        setPrevAddress(currentParty?.addresses?.[0] || {});
+    }, [party, policy?.parties]);
 
     function handleClick(id: number): void {
         setSelectedAddress(id);
@@ -53,15 +54,12 @@ const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps
             zipCode = `${address?.zipCode}${address?.zipCodeExtension}`;
         }
         let action = ClaimActionTypes.NONE;
-        if ( address?.addressId !== prevAddress?.addressId) {
+        if (address?.addressId !== prevAddress?.addressId) {
             action = ClaimActionTypes.ADD;
-        } else if  (address?.addressId === prevAddress?.addressId) {
+        } else if (address?.addressId === prevAddress?.addressId) {
             const isEqual = isEqualObjects(address, prevAddress);
-            //console.log("??isEqualObjects", isEqual);
-            //console.log("??address", address);
-            //console.log("??prevAddress", prevAddress);
-            action = isEqual ? ClaimActionTypes.NONE :  ClaimActionTypes.UPDATE;
-            //console.log("??action", action);
+
+            action = isEqual ? ClaimActionTypes.NONE : ClaimActionTypes.UPDATE;
         }
         setAddress({
             action: action,
@@ -105,14 +103,16 @@ const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps
             return;
         }
         const { firstName, lastName, addressType, addressId, country, zipCodeExtension, ...address } = val;
-        const newData = [{
-            firstName,
-            lastName,
-            address: { ...address, addressType, addressId, country, zipCodeExtension },
-            partyRoles: [party?.roleType],
-            roleIdentifiers: [],
-            tags: [],
-        }];
+        const newData = [
+            {
+                firstName,
+                lastName,
+                address: { ...address, addressType, addressId, country, zipCodeExtension },
+                partyRoles: [party?.roleType],
+                roleIdentifiers: [],
+                tags: [],
+            },
+        ];
         setPartyCardsData(newData);
         setSelectedNewAddress(true);
         setSelectedAddress(address.id);
@@ -134,27 +134,30 @@ const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps
     return (
         <>
             {partyCardsData.map((partyCard, index) => {
-                return !isEmptyObject(partyCard.address) &&
-                    <div className='card-container' key={`select-address-section${index}`}>
-                        <ClickContainer
-                            classes={clsx(
-                                'flex w-min py-4',
-                                {
-                                    'border-primary hover:border-primary ': selectedAddress === index,
-                                },
-                                'min-h-[120px] min-w-[300px]'
-                            )}
-                            ariaLabel={`Select address`}
-                            onClick={() => handleClick(index)}
-                            key={`select-address-${index}`}
-                            isSelected={selectedAddress === index}
-                        >
-                            <FormattedAddress address={partyCard?.address || {}} />
-                        </ClickContainer>
-                        <div className="my-1 ml-[-11px] p-3">
-                            <Link text={t('edit')} href="#" onClick={() => editAddress(partyCard)} />
+                return (
+                    !isEmptyObject(partyCard.address) && (
+                        <div className="card-container" key={`select-address-section${index}`}>
+                            <ClickContainer
+                                classes={clsx(
+                                    'flex w-min py-4',
+                                    {
+                                        'border-primary hover:border-primary ': selectedAddress === index,
+                                    },
+                                    'min-h-[120px] min-w-[300px]'
+                                )}
+                                ariaLabel={`Select address`}
+                                onClick={() => handleClick(index)}
+                                key={`select-address-${index}`}
+                                isSelected={selectedAddress === index}
+                            >
+                                <FormattedAddress address={partyCard?.address || {}} />
+                            </ClickContainer>
+                            <div className="my-1 ml-[-11px] p-3">
+                                <Link text={t('edit')} href="#" onClick={() => editAddress(partyCard)} />
+                            </div>
                         </div>
-                    </div>
+                    )
+                );
             })}
             {!selectedNewAddress && (
                 <ClickContainer

@@ -1,4 +1,4 @@
-import { Address } from '@deps/models/policy/sor-policy';
+import { Address } from '@zinnia/api-types/types/sor';
 
 import { getCountryByCode } from './countries.helpers';
 import { getStateCode } from './states.helpers';
@@ -53,7 +53,8 @@ export const formatAddress = (address: Address): string[] => {
 
     const formatted = [
         addressLines,
-        `${toTitleCase(address?.city)}, ${address?.state} ${address?.zipCode}${address?.zipCodeExtension ? `-${address?.zipCodeExtension}` : ''
+        `${toTitleCase(address?.city)}, ${address?.state} ${address?.zipCode}${
+            address?.zipCodeExtension ? `-${address?.zipCodeExtension}` : ''
         }`,
         getCountryByCode(address?.country),
     ];
@@ -72,7 +73,8 @@ export const formatAddressV2 = (address: Address): string[] => {
 
     const formatted = [
         addressLines.toUpperCase(),
-        `${address?.city?.toUpperCase()}, ${address?.state?.toUpperCase()} ${address?.zipCode || ''} ${address?.zipCodeExtension ? `-${address?.zipCodeExtension}` : ''
+        `${address?.city?.toUpperCase()}, ${address?.state?.toUpperCase()} ${address?.zipCode || ''} ${
+            address?.zipCodeExtension ? `-${address?.zipCodeExtension}` : ''
         }`,
     ];
 

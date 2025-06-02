@@ -1,12 +1,11 @@
 import { faker } from '@faker-js/faker';
-
-import { AccountType, BankAccount } from '@deps/models/policy/sor-policy';
+import { AccountStatus, AccountType, BankAccount } from '@zinnia/api-types/types/sor';
 
 export const generateBankDetails = (partyId: string, fullName: string): BankAccount => {
     return {
         accountNumber: faker.finance.accountNumber(16),
 
-        accountStatus: 'ACTIVEBANKACCOUNT',
+        accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
         accountType: faker.helpers.arrayElement(Object.values(AccountType)),
         appliesToPartyId: partyId,
         branchName: faker.company.name(),

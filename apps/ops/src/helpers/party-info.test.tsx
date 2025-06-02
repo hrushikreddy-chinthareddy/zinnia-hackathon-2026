@@ -1,6 +1,25 @@
 import { render } from '@testing-library/react';
+import {
+    PartyType,
+    PolicyCoverage,
+    Prefix,
+    RelationshipToParty,
+    Suffix,
+    Gender,
+    Country,
+    State,
+    PreferredCommunicationType,
+    AddressType,
+    PhoneType,
+    EmailType,
+    AccountStatus,
+    AccountType,
+    RiskClass,
+    SubStandardRating,
+    EmploymentStatus,
+} from '@zinnia/api-types/types/sor';
 
-import { PolicyAllOfPartiesItem, PolicyCoverage, RelationshipToInsured } from '@deps/models/policy/sor-policy';
+import { Party } from '@deps/models/policy-sor-touchups/Party';
 import { mockT as t } from '@deps/setupTests';
 
 import {
@@ -18,36 +37,36 @@ import {
     getFullName,
 } from './party-info-helpers';
 
-const partyInfo: PolicyAllOfPartiesItem = {
+const partyInfo: Party = {
     partyId: 'Party_PI_1',
     beneficiaryPercentage: 0,
-    partyType: 'INDIVIDUAL',
+    partyType: PartyType.INDIVIDUAL,
     firstName: 'PRASHANT',
     middleName: 'KISHOR',
     lastName: 'SINGH-TC03',
     fullName: '',
-    prefix: 'MR',
-    suffix: 'JR',
-    gender: 'MALE',
+    prefix: Prefix.MR,
+    suffix: Suffix.JR,
+    gender: Gender.MALE,
     dateOfBirth: '2004-10-05',
-    birthCountry: 'US',
-    birthState: 'CA',
-    trustType: '',
-    preferredCommunicationType: 'EMAIL',
+    birthCountry: Country.US,
+    birthState: State.CA,
+    trustType: undefined,
+    preferredCommunicationType: PreferredCommunicationType.EMAIL,
     addresses: [
         {
             addressId: '1',
             startDate: '2023-05-11',
             endDate: '',
-            addressType: 'RESIDENCE',
+            addressType: AddressType.RESIDENCE,
             addressLine1: '675 RHOADS DR',
             addressLine2: '',
             addressLine3: '',
             city: 'Hillsborugh',
-            state: 'PA',
+            state: State.PA,
             zipCode: '08844',
             zipCodeExtension: '',
-            country: 'US',
+            country: Country.US,
         },
     ],
     phones: [
@@ -55,7 +74,7 @@ const partyInfo: PolicyAllOfPartiesItem = {
             phoneId: '1',
             startDate: '2023-05-11',
             endDate: '',
-            phoneType: 'MOBILE',
+            phoneType: PhoneType.MOBILE,
             countryCode: '1',
             areaCode: '318',
             dialNumber: '9873960',
@@ -68,15 +87,15 @@ const partyInfo: PolicyAllOfPartiesItem = {
             emailId: '1',
             startDate: '2023-05-11',
             endDate: '',
-            emailType: 'PERSONAL',
+            emailType: EmailType.PERSONAL,
             emailAddress: 'Prashant.Singh@gmail.com',
         },
     ],
     bankDetails: [
         {
             accountNumber: '123x456789006569',
-            accountStatus: 'ACTIVEBANKACCOUNT',
-            accountType: 'CHECKING',
+            accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
+            accountType: AccountType.CHECKING,
             appliesToPartyId: 'Party_PI_1',
             branchName: 'BANK OF AMERICA',
             endDate: '',
@@ -89,7 +108,7 @@ const partyInfo: PolicyAllOfPartiesItem = {
     ],
     insured: {
         employed: true,
-        employmentStatus: 'RETIRED',
+        employmentStatus: EmploymentStatus.RETIRED,
         existingLifeInsurance: false,
         existingLifeInsuranceAmount: 0,
         householdIncome: 0,
@@ -111,8 +130,8 @@ const coverage: PolicyCoverage = {
                     flatExtra: [],
                     issueAge: 18,
                     partyId: 'Party_PI_1',
-                    riskClass: 'STANDARDTOBACCO',
-                    substandardRating: 'NONETABLE',
+                    riskClass: RiskClass.STANDARDTOBACCO,
+                    substandardRating: SubStandardRating.NONETABLE,
                 },
             ],
         },
@@ -153,7 +172,7 @@ describe('getPrefCommunicationType', () => {
 
 describe('getRelationshipToInsured', () => {
     it('should return correct relationship to insured', () => {
-        const relationshipToInsured = getRelationshipToInsured(RelationshipToInsured.STEPFATHER, t);
+        const relationshipToInsured = getRelationshipToInsured(RelationshipToParty.STEPFATHER, t);
 
         expect(relationshipToInsured).toBe(t('relationshipToInsured.stepfather'));
     });

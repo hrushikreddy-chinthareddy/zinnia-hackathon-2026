@@ -1,3 +1,4 @@
+import { AccountValues, PolicyCoverage } from '@zinnia/api-types/types/sor';
 import { useContext } from 'react';
 
 import Accordion from '@deps/components/accordion/accordion';
@@ -35,7 +36,6 @@ import { PolicyTestsGPTInfo, PolicyTestsMECInfo, TestValuesDto, toTestValuesDto 
 import { PolicyValuesDto, PolicyValuesInfo, toPolicyValuesDto } from '@deps/data/details/policy-values';
 import { PolicyWithdrawalsInfo, WithdrawalValuesDto, toWithdrawalValuesDto } from '@deps/data/details/policy-withdrawals';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
-import { AccountValues, PolicyCoverage } from '@deps/models/policy/sor-policy';
 import { ReactComponent as ShieldMagnify } from '@deps/styles/elements/icons/icons_outlined/shield-magnify.svg';
 import { CardInfoVariant } from '@deps/types/components';
 

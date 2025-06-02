@@ -1,9 +1,8 @@
 import { datadogRum } from '@datadog/browser-rum';
-import { Party } from '@zinnia/api-types/types/sor';
+import { Phone, Party } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
-import { Phone, PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { calculateAgeNumber } from './age.helpers';
@@ -48,7 +47,7 @@ export const buildFullName = (firstName?: string, middleName?: string, lastName?
     return `${first}${space}${middle} ${last} ${suffixString}`;
 };
 
-export const buildFullNameFromParty = (party?: PolicyAllOfPartiesItem | Party | null) => {
+export const buildFullNameFromParty = (party?: Party | Party | null) => {
     if (!party) return DEFAULT_ERROR_STRING;
 
     if (party.fullName) return party.fullName;
@@ -189,10 +188,10 @@ export const getFormattedDateTime = (date: Date) => {
         timeZone: 'CST',
     });
     return formatter.format(date);
-}
+};
 
 // Format SSN return ****-**-1234
-export const formatSSN = (ssn?: string): string => {
+export const formatSSN = (ssn?: string | null): string => {
     if (!ssn) return DEFAULT_ERROR_STRING;
 
     // Remove any non-numeric characters except asterisks
@@ -327,4 +326,4 @@ export const getSlug = (val: string): string => {
 
 export const reverseNameOrder = (name: string) => {
     return name.split(', ').reverse().join(' ');
-}
+};

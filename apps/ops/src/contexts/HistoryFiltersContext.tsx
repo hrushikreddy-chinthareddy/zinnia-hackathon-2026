@@ -1,6 +1,6 @@
+import { TransactionStatus } from '@zinnia/api-types/types/sor';
 import { Dispatch, SetStateAction, createContext, useContext, useMemo, useState } from 'react';
 
-import { TransactionStatus } from '@deps/models/policy/sor-policy';
 import { NOOP } from '@deps/types/constants';
 
 export enum EventFilterKeys {
@@ -62,7 +62,7 @@ interface HistoryFiltersProps {
     setHistoryFilters: SetHistoryFilters;
 }
 
-export const initialFilter: HistoryFilters = { statusFilter: TransactionStatus.Completed };
+export const initialFilter: HistoryFilters = { statusFilter: TransactionStatus.COMPLETED };
 
 export const HistoryFiltersContext = createContext<HistoryFiltersProps>({
     historyFilters: initialFilter,

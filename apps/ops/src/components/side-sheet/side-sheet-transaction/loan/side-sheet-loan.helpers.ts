@@ -1,8 +1,8 @@
+import { AccountType, Policy, Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { AccountType, Policy, Transaction, TransactionStatus } from '@deps/models/policy/sor-policy';
 import { getLoanInterestRate } from '@deps/queries/api/product-rate';
 
 import { calculateProcessDate, calculateProcessedAmount } from './side-sheet-new-loan-transaction.helpers';
@@ -31,7 +31,7 @@ const getLoanPayeePaymentDetails = (policy: Policy, transaction: Transaction): P
                     accountNumber: bankDetails?.accountNumber as string,
                     accountType: bankDetails?.accountType as AccountType,
                 },
-                disbursementAmount: status === TransactionStatus.Pending ? transactionAmounts?.requestedAmount : payee?.disbursementAmount,
+                disbursementAmount: status === TransactionStatus.PENDING ? transactionAmounts?.requestedAmount : payee?.disbursementAmount,
                 partyId: party.partyId as string,
             });
         }

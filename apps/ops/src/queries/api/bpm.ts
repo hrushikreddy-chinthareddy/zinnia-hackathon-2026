@@ -1,16 +1,15 @@
 import { FreeLookCancellationRequest, FullSurrenderRequest, PartialWithdrawalOneTimeRequest } from '@zinnia/api-types/types/bpm';
-import { LoanRepaymentOneTimeRequest, NewLoanRequest } from '@zinnia/api-types/types/sor';
-import { AxiosResponse } from 'axios';
-import dayjs from 'dayjs';
-import { v4 as uuidV4 } from 'uuid';
-
 import {
     AdhocSystematicProgram,
     FullSurrenderQuoteResponse,
     OneTimePremiumRequest,
     PartialWithdrawalOneTimeQuoteResponse,
     SystematicProgramUpdateRequest,
-} from '@deps/models/policy/sor-policy';
+ LoanRepaymentOneTimeRequest, NewLoanRequest } from '@zinnia/api-types/types/sor';
+import { AxiosResponse } from 'axios';
+import dayjs from 'dayjs';
+import { v4 as uuidV4 } from 'uuid';
+
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';

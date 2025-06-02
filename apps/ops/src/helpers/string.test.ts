@@ -1,4 +1,5 @@
-import { Phone } from '@deps/models/policy/sor-policy';
+import { Phone } from '@zinnia/api-types/types/sor';
+
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import {
@@ -19,7 +20,7 @@ import {
     toSentenceCase,
     toTitleCase,
     trimStringByCharacterCount,
-    hasDigitsRegex
+    hasDigitsRegex,
 } from './string.helpers';
 
 describe('String Helper', () => {
@@ -356,20 +357,20 @@ describe('String Helper', () => {
     describe('> hasDigitsRegex', () => {
         it('should return false date is not in format YYYY', () => {
             const str = 'This string has no digits';
-            const result = hasDigitsRegex.test(str)
-            expect(result).toBe(false)
-        })
+            const result = hasDigitsRegex.test(str);
+            expect(result).toBe(false);
+        });
 
         it('should return true if string is date', () => {
             const str = '1999-09-09';
-            const result = hasDigitsRegex.test(str)
-            expect(result).toBe(true)
-        })
+            const result = hasDigitsRegex.test(str);
+            expect(result).toBe(true);
+        });
 
         it('should return true for dates with "/" as a separator', () => {
             const str = '1999/09/09';
-            const result = hasDigitsRegex.test(str)
-            expect(result).toBe(true)
-        })
-    })
+            const result = hasDigitsRegex.test(str);
+            expect(result).toBe(true);
+        });
+    });
 });

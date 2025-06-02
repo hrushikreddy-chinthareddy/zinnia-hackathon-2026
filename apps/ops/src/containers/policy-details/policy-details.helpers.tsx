@@ -1,3 +1,4 @@
+import { DistributionType, FeatureType } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { SalesChannelCardData } from '@deps/containers/policy-details/cards/sales-channel-card';
@@ -7,7 +8,6 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { getStateName } from '@deps/helpers/states.helpers';
 import { convertKebabedDateString, isNullEmptyOrUndefined, translateYearOrYears } from '@deps/helpers/string.helpers';
-import { DistributionType, PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 const distributionMapping: { [key: DistributionType | string]: string } = {
@@ -86,7 +86,7 @@ export const buildTransactionCards = (policy: PolicyDetails, t: TFunction): Tran
 export const mapPolicyTimelineValues = (policy: PolicyDetails, t: TFunction): PolicyTimelineCardData => {
     const { policyTerm, policyYear, fixedCostPeriod, issueDate, maturityDate } = policy;
 
-    const freeLookFeature = policy.features.getFirstFeatureByType(PolicyFeatureFeatureType.freelook);
+    const freeLookFeature = policy.features.getFirstFeatureByType(FeatureType.FREELOOK);
 
     const policyLength = !policyTerm
         ? !maturityDate

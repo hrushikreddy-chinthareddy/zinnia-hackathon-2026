@@ -1,7 +1,7 @@
+import { Policy, Transaction, Transaction_Payor, TransactionStatus, TransactionType } from '@zinnia/api-types/types/sor';
 import { i18n, TFunction } from 'next-i18next';
 
 import { convertKebabedDateString, toSentenceCase } from '@deps/helpers/string.helpers';
-import { Policy, Transaction, TransactionPayor, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
 import { fetchVersionedPolicy, getPolicyTransaction } from '@deps/queries/api/policies';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
@@ -19,10 +19,10 @@ export const getAutopayPremiumSideSheetValues = (
     const { appliedAmount, paymentAmount, requestedAmount } = transactionAmounts ?? {};
 
     try {
-        const isPending = status === TransactionStatus.Pending;
-        const isCanceled = status === TransactionStatus.Canceled;
-        const paymentMethod = getPaymentMethod(policy, payors as TransactionPayor[], t);
-        const isPayment = transactionType === TransactionType.SubsequentPayment;
+        const isPending = status === TransactionStatus.PENDING;
+        const isCanceled = status === TransactionStatus.CANCELED;
+        const paymentMethod = getPaymentMethod(policy, payors as Transaction_Payor[], t);
+        const isPayment = transactionType === TransactionType.SUBSEQUENT_PAYMENT;
         const reverseRecreateEnabled = featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED];
 
         return {
@@ -38,7 +38,7 @@ export const getAutopayPremiumSideSheetValues = (
             paymentMethod,
             processDate: convertKebabedDateString(processDate),
             reverseCta:
-                reverseRecreateEnabled && transaction.status === TransactionStatus.Completed
+                reverseRecreateEnabled && transaction.status === TransactionStatus.COMPLETED
                     ? (t('policy.history.reverseRecreateSidesheet.reversePayment') as string)
                     : undefined,
             reversalTransactionId: isPayment ? transactionId : transaction.parentId,
@@ -57,12 +57,12 @@ export const getAutopayPremiumSideSheetValues = (
 export const getInitialPremiumSideSheetValues = (policy: Policy, transaction: Transaction, t: TFunction): TransactionSideSheetValues => {
     const { effectiveDate, payors, processDate, status, transactionAmounts, transactionId, transactionType } = transaction ?? {};
     const { appliedAmount, paymentAmount, requestedAmount } = transactionAmounts ?? {};
-    const isPending = status === TransactionStatus.Pending;
-    const isCanceled = status === TransactionStatus.Canceled;
+    const isPending = status === TransactionStatus.PENDING;
+    const isCanceled = status === TransactionStatus.CANCELED;
 
-    const amount = isCanceled || transactionType === TransactionType.PaymentInitialPremium ? paymentAmount : appliedAmount;
+    const amount = isCanceled || transactionType === TransactionType.PAYMENT_INITIAL_PREMIUM ? paymentAmount : appliedAmount;
 
-    const paymentMethod = getPaymentMethod(policy, payors as TransactionPayor[], t);
+    const paymentMethod = getPaymentMethod(policy, payors as Transaction_Payor[], t);
 
     return {
         appliedAmount: isPending ? status : appliedAmount,
@@ -89,7 +89,7 @@ export const getOneTimePremiumSideSheetValues = (
 
         const isPending = status === ('Pending' as TransactionStatus);
         const isCanceled = status === ('Canceled' as TransactionStatus);
-        const isPayment = transactionType === TransactionType.PaymentOneTimePremium;
+        const isPayment = transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM;
 
         const amount = isCanceled || isPayment ? paymentAmount : appliedAmount;
 
@@ -99,10 +99,10 @@ export const getOneTimePremiumSideSheetValues = (
             appliedAmount: isPending ? status : appliedAmount,
             cancelCta: isPending ? (t('policy.history.sidesheet.cancelPayment') as string) : undefined,
             effectiveDate: convertKebabedDateString(effectiveDate),
-            paymentMethod: getPaymentMethod(policy, payors as TransactionPayor[], t),
+            paymentMethod: getPaymentMethod(policy, payors as Transaction_Payor[], t),
             processDate: convertKebabedDateString(processDate),
             reverseCta:
-                reverseRecreateEnabled && transaction.status === TransactionStatus.Completed
+                reverseRecreateEnabled && transaction.status === TransactionStatus.COMPLETED
                     ? (t('policy.history.reverseRecreateSidesheet.reversePayment') as string)
                     : undefined,
             // Payment One Time Premium and One Time Premium are different - we'll need the parentId for Premiums
@@ -110,7 +110,7 @@ export const getOneTimePremiumSideSheetValues = (
             status,
             submittedAmount: isCanceled || isPending ? paymentAmount : requestedAmount,
             transactionId,
-            transactionType: isPending ? TransactionType.PaymentOneTimePremium : TransactionType.OneTimePremium,
+            transactionType: isPending ? TransactionType.PAYMENT_ONE_TIME_PREMIUM : TransactionType.ONE_TIME_PREMIUM,
             transactionValue: amount || requestedAmount,
         };
     } catch (error) {
@@ -124,9 +124,9 @@ const getTransactionType = async (policy: Policy, transaction: Transaction, t: T
     const { parentId, version } = transaction;
     const [policyForFrequency, parentTransaction] = version
         ? await Promise.all([
-            fetchVersionedPolicy(policy.policyNumber as string, policy.product?.planCode as string, version),
-            getPolicyTransaction(policy.product?.planCode as string, policy.policyNumber as string, parentId as string),
-        ])
+              fetchVersionedPolicy(policy.policyNumber as string, policy.product?.planCode as string, version),
+              getPolicyTransaction(policy.product?.planCode as string, policy.policyNumber as string, parentId as string),
+          ])
         : [policy, transaction];
 
     const frequency =

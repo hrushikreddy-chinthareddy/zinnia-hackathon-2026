@@ -1,6 +1,5 @@
+import { FlatExtra } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
-
-import { FlatExtra } from '@deps/models/policy/sor-policy';
 
 export interface AddChargesProps {
     flatExtra?: FlatExtra[];

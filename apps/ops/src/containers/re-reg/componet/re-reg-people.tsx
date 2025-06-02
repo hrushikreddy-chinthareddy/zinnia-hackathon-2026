@@ -1,4 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
@@ -19,7 +20,6 @@ import {
 import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
 import { sortByAndThenBy } from '@deps/helpers/sort.helpers';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 import { useBeneChange } from '../../bene-change/bene-change-provider';
 

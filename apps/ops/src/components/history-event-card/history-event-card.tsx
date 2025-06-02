@@ -1,4 +1,5 @@
 // TODO MG: why is this warning that TagProps isnt in bloom?
+import { Policy, Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
 import { Tag, TagProps, TagVariant } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
@@ -12,7 +13,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { AccessibleFormattedAmount } from '@deps/helpers/numbers.helpers';
 import { Statuses } from '@deps/models/case/case';
-import { Policy, Transaction, TransactionStatus } from '@deps/models/policy/sor-policy';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { DEFAULT_DATE_FORMAT } from '@deps/types/constants';
 
@@ -72,11 +72,11 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
             variant: TagVariant.Information,
             text: `${t('status.canceledOn', { date: getDate(processDate) })}`,
         },
-        [TransactionStatus.Canceled]: {
+        [TransactionStatus.CANCELED]: {
             variant: TagVariant.Information,
             text: `${t('status.canceledOn', { date: getDate(processDate) })}`,
         },
-        [TransactionStatus.Reversed]: {
+        [TransactionStatus.REVERSED]: {
             variant: TagVariant.Default,
             text: `${t('status.reversed')}`,
         },

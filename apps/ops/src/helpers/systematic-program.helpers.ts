@@ -1,6 +1,5 @@
+import { DisbursementPaymentForm, Frequency } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
-
-import { DisbursementPaymentForm, Frequency } from '@deps/models/policy/sor-policy';
 
 export const getPaymentType = (paymentType: DisbursementPaymentForm | null, t: TFunction): string | null => {
     switch (paymentType) {
@@ -32,4 +31,4 @@ export const getFrequency = (frequency: Frequency, t: TFunction): string => {
         default:
             return '';
     }
-}
+};

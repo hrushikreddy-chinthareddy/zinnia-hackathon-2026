@@ -1,3 +1,4 @@
+import { Address as PolicyAddress, Policy, Transaction, TransactionType, FeatureType } from '@zinnia/api-types/types/sor';
 import { Address, AddressProps, Tag } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
@@ -17,7 +18,6 @@ import {
     mapEmailTypeToTranslation,
     mapPhoneTypeToTranslation,
 } from '@deps/helpers/translation.helpers';
-import { Address as PolicyAddress, Policy, Transaction, TransactionType, PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DAY_DATE_FORMAT } from '@deps/types/constants';
 
 import { SideSheetTransactionProps } from '../types';
@@ -326,8 +326,8 @@ const getPhoneChanges = (policy: Policy, transaction: Transaction, t: TFunction)
 
 const getPolicyLapse = (policy: Policy, transaction: Transaction, t: TFunction): ReactNode => {
     const { policyFeatures } = policy;
-    const reinstatement = policyFeatures?.find(pf => pf.featureType === ('REINSTATEMENT' as PolicyFeatureFeatureType));
-    const pendingLapse = policyFeatures?.find(pf => pf.featureType === ('LAPSEASSESSMENT' as PolicyFeatureFeatureType));
+    const reinstatement = policyFeatures?.find(pf => pf.featureType === FeatureType.REINSTATEMENT);
+    const pendingLapse = policyFeatures?.find(pf => pf.featureType === FeatureType.LAPSEASSESSMENT);
 
     const gracePeriodText = t('policy.history.sidesheet.lapseGracePeriodValue', {
         startDate: dayjs(pendingLapse?.startDate).format(DEFAULT_EXTENDED_DAY_DATE_FORMAT),
@@ -396,15 +396,15 @@ const getChanges = (policy: Policy, transaction: Transaction, t: TFunction): Rea
     }
 
     switch (transaction.transactionType) {
-        case TransactionType.AddressChange:
+        case TransactionType.ADDRESS_CHANGE:
             return getAddressChanges(policy, transaction, t);
-        case TransactionType.BankAccountChange:
+        case TransactionType.BANK_ACCOUNT_CHANGE:
             return getBankAccountChanges(policy, transaction, t);
-        case TransactionType.EmailChange:
+        case TransactionType.EMAIL_CHANGE:
             return getEmailChanges(policy, transaction, t);
-        case TransactionType.PhoneNumberChange:
+        case TransactionType.PHONE_NUMBER_CHANGE:
             return getPhoneChanges(policy, transaction, t);
-        case TransactionType.Lapse:
+        case TransactionType.LAPSE:
             return getPolicyLapse(policy, transaction, t);
         default:
             return null;
@@ -418,7 +418,7 @@ const SideSheetNonFinancialTransaction = ({ policy, transaction }: SideSheetTran
     return (
         <div className="p-8">
             <div className="flex flex-col gap-8">
-                {!TransactionType.Lapse && (
+                {!TransactionType.LAPSE && (
                     <>
                         <FieldData label={t('policy.history.sidesheet.effectiveDate')}>{effectiveDate}</FieldData>
                         <div className="flex flex-col gap-1">

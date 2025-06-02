@@ -1,6 +1,3 @@
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
-import dayjs from 'dayjs';
-
 import {
     DistributionType,
     DeathBenefitOptionType,
@@ -8,14 +5,16 @@ import {
     PartyRole,
     Policy,
     PolicyFeature,
-    PolicyFeatureFeatureType,
-    PolicyParties,
+    FeatureType,
     PolicyStatus,
     Product,
     ProductType,
     Rider,
     LoanValues,
-} from '@deps/models/policy/sor-policy';
+} from '@zinnia/api-types/types/sor';
+import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+import dayjs from 'dayjs';
+
 import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 
@@ -32,7 +31,7 @@ export type BasePolicyComponentArgs = {
 export class PolicyDetails {
     private policyRaw: Policy;
     public accountValue: number | undefined;
-    public allParties: PolicyParties[] = [];
+    public allParties: PolicyParty[] = [];
     public carrierId: string | undefined;
     public contestabilityStartDate: string | undefined;
     public contestabilityEndDate: string | undefined;
@@ -185,7 +184,7 @@ export class PolicyDetails {
         return this.parties.getPartiesWithRole(role);
     }
 
-    public getFeaturesByType(featureType: PolicyFeatureFeatureType | undefined): PolicyFeature[] {
+    public getFeaturesByType(featureType: FeatureType | undefined): PolicyFeature[] {
         if (!featureType) {
             return [];
         }
@@ -211,7 +210,7 @@ export class PolicyDetails {
      *          - `endDate`: The date the free look period ends.
      */
     public get freeLookPeriodDetails(): { isInFreeLookPeriod: boolean; endDate: any } {
-        const freeLookCancellationDate = this.features.getFirstFeatureByType(PolicyFeatureFeatureType.freelook)?.endDate;
+        const freeLookCancellationDate = this.features.getFirstFeatureByType(FeatureType.FREELOOK)?.endDate;
         const hadEndDate = !isNullEmptyOrUndefined(freeLookCancellationDate);
 
         return {
@@ -227,29 +226,25 @@ export class PolicyDetails {
     public get requiredMinimumDistribution(): {
         // placeholder types
         calculationOption?: string;
-        calculationDate?: Date;
         totalAnnualAmount?: number;
         remainingAmount?: number;
-        priorYearValue?: number;
         actuarialPresentValue?: number;
+        calculationDate?: string;
     } {
         const {
             requiredMinimumDistributionCalculationOption: calculationOption,
-            requiredMinimumDistributionCalculationDate: calculationDate,
             totalRequiredMinimumDistributionAnnualAmount: totalAnnualAmount,
             remainingRequiredMinimumDistributionAmount: remainingAmount,
-            totalRequiredMinimumDistributionPriorYearEndAccountValue: priorYearValue,
             actuarialPresentValue,
-            // @ts-expect-error waiting for requiredMinimumDistribution to be added to Policy
+            requiredMinimumDistributionRecalculationDate: calculationDate,
         } = this.policy?.requiredMinimumDistribution || {};
 
         return {
             calculationOption,
-            calculationDate,
             totalAnnualAmount,
             remainingAmount,
-            priorYearValue,
             actuarialPresentValue,
+            calculationDate,
         };
     }
 }

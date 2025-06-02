@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -7,7 +8,6 @@ import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-ca
 import { TranslationFiles } from '@deps/config/translations';
 import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { Statuses } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitOneTimePremium } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 

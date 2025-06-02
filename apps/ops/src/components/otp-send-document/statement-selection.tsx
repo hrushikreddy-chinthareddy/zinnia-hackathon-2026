@@ -8,7 +8,9 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { DocumentDisplayCode, PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
 import { StatementStartYear, StatementTypes } from '@deps/models/case/send-statement';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { Policy } from '@deps/models/policy/sor-policy';
+
+import { Policy } from '@zinnia/api-types/types/sor';
+
 import { getCorrespondenceDocsV2 } from '@deps/queries/api/documents';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';

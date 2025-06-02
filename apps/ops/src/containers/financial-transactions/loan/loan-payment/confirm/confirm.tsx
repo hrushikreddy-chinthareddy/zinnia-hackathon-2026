@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -7,7 +8,6 @@ import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-ca
 import { TranslationFiles } from '@deps/config/translations';
 import { useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
 import { Statuses } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, submitLoanPayment } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
@@ -34,7 +34,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const submit = useCallback(async () => {
         const paymentBody = buildLoanPaymentRequestBody(loanPayment);
         const response = await submitLoanPayment(policy.product?.planCode, policy.policyNumber, paymentBody);
-      
+
         if (response.status !== StatusCode.Accepted) {
             setSubmitFailed(true);
         } else {

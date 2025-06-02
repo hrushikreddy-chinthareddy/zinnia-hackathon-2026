@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -8,7 +9,6 @@ import { AdditionalDataInstance } from '@deps/models/case/additional-data-instan
 import { Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { AvailableFormsTransaction, SearchTransactionRequestBody } from '@deps/models/case/send-document';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionDetails } from '@deps/pages/nigo-entry';
 import { getSearchTransactions, getTransactionSubTypes, searchForms } from '@deps/queries/api/c2web';
 import { getCases } from '@deps/queries/api/cases';
@@ -87,7 +87,7 @@ const NigoEntryContainer = ({
             } catch (error) {
                 browserLogInfo('nigo-entry-container::getPolicy', {
                     message: 'Error occurred in policy retrieval',
-                    payload: { policyNumber, planCode},
+                    payload: { policyNumber, planCode },
                     file: 'nigo-entry-container',
                 });
             }
@@ -104,7 +104,6 @@ const NigoEntryContainer = ({
     }, [policy]);
 
     useEffect(() => {
-
         const searchCases = async () => {
             const filters = {
                 policyNumber: policyNumber,
@@ -129,7 +128,7 @@ const NigoEntryContainer = ({
             } catch (error) {
                 browserLogInfo('nigo-entry-container::searchCases', {
                     message: 'Error occurred in policy retrieval',
-                    payload: { policyNumber, planCode},
+                    payload: { policyNumber, planCode },
                     file: 'nigo-entry-container',
                 });
                 setPrevTransactionDetails(null);
@@ -217,7 +216,14 @@ const NigoEntryContainer = ({
             {
                 ariaLabel: t('tabs.formEntry'),
                 isVisible: () => sectionOption === SelOptionType.DATA_ENTRY,
-                component: <FormEntryStep document={documentData} clientCode={clientCode} docType={docType} planCode={policy?.product?.planCode || planCode} />,
+                component: (
+                    <FormEntryStep
+                        document={documentData}
+                        clientCode={clientCode}
+                        docType={docType}
+                        planCode={policy?.product?.planCode || planCode}
+                    />
+                ),
                 screenReaderLabel: t('tabs.formEntry'),
                 index: 1,
                 text: t('tabs.formEntry'),
@@ -233,7 +239,14 @@ const NigoEntryContainer = ({
             {
                 ariaLabel: t('tabs.documentSelection'),
                 isVisible: () => sectionOption === SelOptionType.NIGO_ENTRY,
-                component: <FormSelectionStep availableFormsTransactions={availableFormsTransactions} policy={policy} documentData={documentData} clientCode={clientCode}/>,
+                component: (
+                    <FormSelectionStep
+                        availableFormsTransactions={availableFormsTransactions}
+                        policy={policy}
+                        documentData={documentData}
+                        clientCode={clientCode}
+                    />
+                ),
                 screenReaderLabel: t('tabs.documentSelection'),
                 index: 2,
                 text: t('tabs.documentSelection'),
@@ -249,7 +262,21 @@ const NigoEntryContainer = ({
                 text: t('tabs.confirm'),
             },
         ],
-        [availableFormsTransactions, clientCode, docType, documentData, documentNumber, nigoExceptions, nigoSubExceptions, planCode, policy, policyNumber, sectionOption, t, taskInfoLink]
+        [
+            availableFormsTransactions,
+            clientCode,
+            docType,
+            documentData,
+            documentNumber,
+            nigoExceptions,
+            nigoSubExceptions,
+            planCode,
+            policy,
+            policyNumber,
+            sectionOption,
+            t,
+            taskInfoLink,
+        ]
     );
 
     const filteredSteps: Step[] = useMemo(

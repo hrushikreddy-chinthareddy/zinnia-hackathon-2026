@@ -1,4 +1,4 @@
-import { Address, AddressType } from '@deps/models/policy/sor-policy';
+import { Address, AddressType } from '@zinnia/api-types/types/sor';
 
 import { sortAddressesByType } from './address-card.helpers';
 

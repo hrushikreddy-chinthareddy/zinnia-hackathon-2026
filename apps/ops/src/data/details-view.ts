@@ -1,6 +1,4 @@
-import { Policy, LineOfBusiness } from '@zinnia/api-types/types/sor';
-
-import { Policy as OpsPolicy } from '@deps/models/policy/sor-policy';
+import { Policy as OpsPolicy , Policy, LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { AnnuityViewDetailsDto, toAnnuityViewDetailsDto } from './annuity-details-view';
 import { PolicyViewDetailsDto, toPolicyViewDetailsDto } from './policy-details-view';

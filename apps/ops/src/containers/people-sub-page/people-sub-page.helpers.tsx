@@ -1,8 +1,8 @@
+import { PartyRole, PartyType, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { PartyRoleChipToText } from '@deps/constants/party-roles';
 import { orderObjectsByFirstString, orderObjectsByString, sortByAndThenBy } from '@deps/helpers/sort.helpers';
-import { PartyRole, PartyType, PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
 import { TagKey } from '@deps/types/components';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
@@ -106,7 +106,7 @@ export const simplifyPartyRoles = (partyRole: PartyRole): string => {
 
 // Count the occurrence of each partyRole or generalized category, and create an array of RoleCountItems
 // arranged in hierarchical order
-export const countPartyRoles = (arr: Array<PolicyParties>, t: TFunction): Array<RoleCountItem> => {
+export const countPartyRoles = (arr: Array<PolicyPartyRoles>, t: TFunction): Array<RoleCountItem> => {
     const roleCount: Record<string, number> = {};
 
     arr.forEach(obj => {
@@ -134,17 +134,13 @@ export const countPartyRoles = (arr: Array<PolicyParties>, t: TFunction): Array<
 };
 
 // Name Tag
-export interface NameTag extends PolicyAllOfPartiesItem {
+export interface NameTag extends Party {
     tags: TagKey[];
     partyRoles: string[];
     partyRoleIds: any[];
 }
 
-export const combineNameAndRoles = (
-    policyPartiesArr: PolicyAllOfPartiesItem[],
-    partyRolesArr: PolicyParties[],
-    t: TFunction
-): NameTag[] => {
+export const combineNameAndRoles = (policyPartiesArr: Party[], partyRolesArr: PolicyPartyRoles[], t: TFunction): NameTag[] => {
     let nameTags: NameTag[] = [];
     const orderedTags: string[] = t('colDefs:people.orderedRoles', { returnObjects: true });
 

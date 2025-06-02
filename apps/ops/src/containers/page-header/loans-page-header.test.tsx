@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, act } from '@testing-library/react';
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import { LoansTest } from '@deps/jest/constants/test-id-constants';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
-import { Status } from '@deps/models/policy/sor-policy';
 import * as BpmQueries from '@deps/queries/api/bpm';
 import * as ProductRateQueries from '@deps/queries/api/product-rate';
 
@@ -120,7 +120,7 @@ describe('verify quick links render appropriately', () => {
         mockedCreditRate.mockResolvedValue(Promise.resolve(3));
         const modifiedMockPolicy = {
             ...mockPolicy,
-            policyStatus: Status.ACTIVE,
+            policyStatus: PolicyStatus.ACTIVE,
             loanValues: {
                 ...mockPolicy.loanValues,
                 totalNumberOfLoan: 0,

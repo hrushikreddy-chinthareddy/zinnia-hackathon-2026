@@ -1,3 +1,4 @@
+import { Policy, FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { PopoverPlacement } from '@zinnia/bloom/components';
 import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import clsx from 'clsx';
@@ -12,7 +13,6 @@ import PageHeader from '@deps/components/page-header/page-header';
 import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { Policy, PolicyFeatureFeatureType, PolicyStatus } from '@deps/models/policy/sor-policy';
 
 interface AnnuitizationPageHeaderProps {
     policy: Policy;
@@ -27,7 +27,7 @@ export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({ poli
     const { features, policyStatus } = policyDetails;
     const { deathBenefit } = policy;
     const isPayoutStage = policyStatus === PolicyStatus.PAYOUT;
-    const annuitizationFeature = features.getFirstFeatureByType('ANNUITIZATION' as PolicyFeatureFeatureType);
+    const annuitizationFeature = features.getFirstFeatureByType(FeatureType.ANNUITIZATION);
     const headerRowFlexClassNames = clsx('flex-col', 'xs:gap-4 lg:gap-0');
     const groupOneFlexClassNames = 'flex gap-4';
     const generateBadgeText = useCallback(

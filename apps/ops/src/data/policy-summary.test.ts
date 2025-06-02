@@ -1,3 +1,5 @@
+import { AccountStatus, AccountType } from '@zinnia/api-types/types/sor';
+
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { mockT as t } from '@deps/setupTests';
 
@@ -18,20 +20,20 @@ describe('toPolicySummaryColDto', () => {
                 paymentDate: '2024-10-14',
                 bankAccount: {
                     accountNumber: '******1234',
-                    accountStatus: 'ACTIVEBANKACCOUNT',
-                    accountType: 'CHECKING',
-                    appliesToPartyId: "Party_PI_2",
-                    bankId: "BANK_1",
-                    branchName: "CITIZEN BANK",
-                    endDate: "null",
+                    accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
+                    accountType: AccountType.CHECKING,
+                    appliesToPartyId: 'Party_PI_2',
+                    bankId: 'BANK_1',
+                    branchName: 'CITIZEN BANK',
+                    endDate: 'null',
                     internationalBankAccountNumber: undefined,
-                    nameOnAccount: "NAELA SAFI Number 2",
-                    routingNumber: "000111222333",
-                    startDate: "2023-11-17",
+                    nameOnAccount: 'NAELA SAFI Number 2',
+                    routingNumber: '000111222333',
+                    startDate: '2023-11-17',
                 },
             },
-            fixedCostPeriod: "temporal.nYears",
-            fixedCostPeriodLeft: "temporal.timeLeft",
+            fixedCostPeriod: 'temporal.nYears',
+            fixedCostPeriodLeft: 'temporal.timeLeft',
         };
 
         const result = toPolicySummaryColDto(mockPolicy, t);

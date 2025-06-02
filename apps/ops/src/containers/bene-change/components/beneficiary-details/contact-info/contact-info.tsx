@@ -1,8 +1,8 @@
+import { PreferredCommunicationType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Radio, { RadioItem } from '@deps/components/radio/radio';
 import { TranslationFiles } from '@deps/config/translations';
-import { PreferredCommunicationType } from '@deps/models/policy/sor-policy';
 
 export default function ContactInfo() {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.contactInfo' });
@@ -15,15 +15,7 @@ export default function ContactInfo() {
 
     return (
         <div>
-            <Radio 
-                label={t('labels.preferredContactMethod') as string}
-                items={items} required={true}
-                value={''} 
-                onChange={() => {}} 
-            />
+            <Radio label={t('labels.preferredContactMethod') as string} items={items} required={true} value={''} onChange={() => {}} />
         </div>
     );
 }
-
-
-

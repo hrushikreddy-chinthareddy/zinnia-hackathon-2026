@@ -1,3 +1,4 @@
+import { LoanValues } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -7,7 +8,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helpers';
-import { LoanValues } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 export interface LoanRulesCardProps {

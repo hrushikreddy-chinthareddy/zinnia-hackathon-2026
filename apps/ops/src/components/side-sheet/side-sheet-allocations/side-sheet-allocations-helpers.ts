@@ -1,5 +1,6 @@
+import { PartyRole, Policy, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
-import { PartyRole, Policy, PolicyParties } from '@deps/models/policy/sor-policy';
 
 export interface AllocationPercentage {
     allocationPercentage: number;
@@ -41,7 +42,7 @@ export const convertBenefitPercentagesToAllocationPercentages = (bp: BennyPercen
     });
 };
 
-export const determinePartyBeneficiaryRole = (partyRoles: PolicyParties[] = [], partyID: PartyId): PartyRole | undefined => {
+export const determinePartyBeneficiaryRole = (partyRoles: PolicyPartyRoles[] = [], partyID: PartyId): PartyRole | undefined => {
     const focusedParty = partyRoles.find(party => {
         return party.partyId === partyID && beneficiaryRoles.includes(party.partyRole);
     });

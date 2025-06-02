@@ -1,8 +1,8 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { ColumnType, TableColumn } from '@deps/components/table-v2/table.types';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 import { ApplyToRolesState } from '../../types/address-change-types';
 import { getRoleToLabelKeyMap } from '../../utils/address-change-helpers';
@@ -23,7 +23,7 @@ export const getRolesRecordForCurrentContract = (t: TFunction, policy: Policy, a
         .filter(item => item.policyNumber === policy.policyNumber)
         .map(item => {
             const partyRole = t(`${getRoleToLabelKeyMap(item.partyRole)}`);
-            return ({ ...item, partyRole: toTitleCase(partyRole) })
+            return { ...item, partyRole: toTitleCase(partyRole) };
         });
 };
 

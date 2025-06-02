@@ -1,13 +1,14 @@
+import { PartyRole } from '@zinnia/api-types/types/sor';
+
 import { ColumnType } from '@deps/components/table-v2/table.types';
-import { PartyRole } from '@deps/models/policy/sor-policy';
 
 export const AllowedRoleTypes: string[] = [
     PartyRole.JOINTOWNER,
     PartyRole.OWNER,
     PartyRole.PAYEE,
     PartyRole.INSURED,
-    PartyRole.JOINTAANUITANT,
-    PartyRole.ANNUITANT
+    PartyRole.JOINTANNUITANT,
+    PartyRole.ANNUITANT,
 ];
 
 export const AddressFieldsToMatchForRoleGroup = [

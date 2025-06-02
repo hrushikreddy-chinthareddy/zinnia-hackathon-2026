@@ -1,4 +1,5 @@
 import { Transition } from '@headlessui/react';
+import { Address, AddressType, Country, Party, State } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -36,7 +37,6 @@ import { getStateCodes } from '@deps/helpers/states.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Processes } from '@deps/models/case/case';
-import { Address, AddressType, PolicyAllOfPartiesItem, State } from '@deps/models/policy/sor-policy';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
     NonFinancialTransactionActions,
@@ -53,7 +53,7 @@ export interface SideSheetAddressProps {
     isCurrentMailingAddress: boolean;
     isOnlyAddress: boolean;
     onCancel: () => void;
-    party?: PolicyAllOfPartiesItem;
+    party?: Party;
     planCode?: string;
     policyNumber?: string;
     setCurrentAddresses: Dispatch<SetStateAction<Address[]>>;
@@ -75,7 +75,7 @@ const SideSheetAddress = ({
 
     const INITIAL_ADDRESS: Address = {
         addressType: AddressType.RESIDENCE,
-        country: 'US',
+        country: Country.US,
     };
 
     const INITIAL_BODY: NonFinancialTransactionBody = {

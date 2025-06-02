@@ -28,7 +28,7 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
-import { ActiveWithdrawalCase, Carrier, QualTypes, Transaction, TransactionStatus } from '@deps/models/case/withdrawal/case';
+import { ActiveWithdrawalCase, Carrier, QualTypes, Transaction } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
@@ -68,15 +68,6 @@ interface SSWCaseProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
     planCode?: string;
 }
-
-// Return the first 5 transactions that are either done or pending
-export const getFilteredTransactions = (transactions: Transaction[]) => {
-    const condition = (record: Transaction) => [TransactionStatus.Done, 'Pending' as TransactionStatus].includes(record.Status);
-    return transactions
-        .filter(condition)
-        .sort((a, b) => b.TransactionDate.localeCompare(a.TransactionDate))
-        .slice(0, 5);
-};
 
 const DefaultSidebarContent = {
     contractId: '',

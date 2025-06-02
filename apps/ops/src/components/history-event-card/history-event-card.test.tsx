@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
+import { Transaction, TransactionStatus, TransactionType } from '@zinnia/api-types/types/sor';
 import { toTitleCase } from '@zinnia/utils';
 
 import { SideSheetContext } from '@deps/contexts/SideSheetContext';
 import { mockPolicy, mockPremiumSystematicProgram } from '@deps/jest/data/mockPolicy';
-import { Transaction, TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
 
 import HistoryEventCard from './history-event-card';
 import { getHistoryEventCardValues } from './history-event-card.helpers';
@@ -77,7 +77,7 @@ describe('getEventCardValues', () => {
             const { amount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Pending' as TransactionStatus,
-                transactionType: TransactionType.PaymentInitialPremium,
+                transactionType: TransactionType.PAYMENT_INITIAL_PREMIUM,
             });
 
             expect(amount).toBe(86753.09);
@@ -92,7 +92,7 @@ describe('getEventCardValues', () => {
             const { amount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Pending' as TransactionStatus,
-                transactionType: TransactionType.PaymentOneTimePremium,
+                transactionType: TransactionType.PAYMENT_ONE_TIME_PREMIUM,
             });
 
             expect(amount).toBe(86753.09);
@@ -107,7 +107,7 @@ describe('getEventCardValues', () => {
             const { amount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Pending' as TransactionStatus,
-                transactionType: TransactionType.SubsequentPayment,
+                transactionType: TransactionType.SUBSEQUENT_PAYMENT,
             });
 
             expect(amount).toBe(86753.09);
@@ -122,7 +122,7 @@ describe('getEventCardValues', () => {
             const { amount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Completed' as TransactionStatus,
-                transactionType: TransactionType.InitialPremium,
+                transactionType: TransactionType.INITIAL_PREMIUM,
             });
 
             expect(amount).toBe(100000.0);
@@ -137,7 +137,7 @@ describe('getEventCardValues', () => {
             const { amount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Completed' as TransactionStatus,
-                transactionType: TransactionType.OneTimePremium,
+                transactionType: TransactionType.ONE_TIME_PREMIUM,
             });
 
             expect(amount).toBe(100000.0);
@@ -152,7 +152,7 @@ describe('getEventCardValues', () => {
             const { amount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Completed' as TransactionStatus,
-                transactionType: TransactionType.SubsequentPremium,
+                transactionType: TransactionType.SUBSEQUENT_PREMIUM,
             });
 
             expect(amount).toBe(100000);
@@ -167,7 +167,7 @@ describe('getEventCardValues', () => {
             const { amount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Completed' as TransactionStatus,
-                transactionType: TransactionType.Anniversary,
+                transactionType: TransactionType.ANNIVERSARY,
             });
 
             expect(amount).toBeUndefined();
@@ -182,7 +182,7 @@ describe('getEventCardValues', () => {
             const { amount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Pending' as TransactionStatus,
-                transactionType: TransactionType.Activation,
+                transactionType: TransactionType.ACTIVATION,
             });
 
             expect(amount).toBeUndefined();

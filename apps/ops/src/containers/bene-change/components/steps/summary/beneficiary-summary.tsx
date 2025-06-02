@@ -1,3 +1,4 @@
+import { Gender, PartyRole } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
@@ -10,7 +11,6 @@ import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { percentFormatify } from '@deps/helpers/numbers.helpers';
 import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
-import { Gender, PartyRole } from '@deps/models/policy/sor-policy';
 
 import { DEFAULT_BENE_ADDRESS, getTagVariant, isEqualObjects } from './summary-step.helpers';
 import { getAddresses } from '../../beneficiary-details/address-details/address-details.helpers';

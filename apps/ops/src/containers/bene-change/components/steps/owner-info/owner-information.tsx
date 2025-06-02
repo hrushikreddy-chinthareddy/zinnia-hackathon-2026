@@ -1,3 +1,4 @@
+import { IdentificationType, PhoneBase, Policy } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -11,7 +12,6 @@ import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider
 import CardContainer from '@deps/containers/card-container/card-container';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { Address, AddressTypes, Party, PartyRoles, Phone, PhoneTypes } from '@deps/models/case/withdrawal/case';
-import { IdentificationType, PhoneBase, Policy } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { ENTERPRISE_ADDRESS_TYPE, EnterpriseAddress } from '../../beneficiary-details/address-details/address-details.helpers';

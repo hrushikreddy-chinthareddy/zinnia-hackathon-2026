@@ -1,7 +1,3 @@
-import { I18n, i18n, TFunction } from 'next-i18next';
-
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import {
     AccountType,
     Address,
@@ -11,13 +7,17 @@ import {
     Gender,
     PartyType,
     Policy,
-    PolicyAllOfPartiesItem,
+    Party,
     PolicyCoverage,
     PreferredCommunicationType,
-    RelationshipToInsured,
+    RelationshipToParty,
     RiskClass,
     SubStandardRating,
-} from '@deps/models/policy/sor-policy';
+} from '@zinnia/api-types/types/sor';
+import { I18n, i18n, TFunction } from 'next-i18next';
+
+import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { ReactComponent as User } from '@deps/styles/elements/icons/actions/user.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
 import { ReactComponent as OfficeBuildingIcon } from '@deps/styles/elements/icons/icons_outlined/office-building.svg';
@@ -40,7 +40,7 @@ export const getHeaderIcon = (partyType: string | undefined): JSX.Element => {
     }
 };
 
-export const getPartyFullName = (partyInfo: PolicyAllOfPartiesItem | undefined): string => {
+export const getPartyFullName = (partyInfo: Party | undefined): string => {
     const { partyType } = partyInfo || {};
     switch (partyType) {
         case PartyType.INDIVIDUAL:
@@ -54,7 +54,7 @@ export const getPartyFullName = (partyInfo: PolicyAllOfPartiesItem | undefined):
     }
 };
 
-export const getHeaderText = (partyInfo: PolicyAllOfPartiesItem | undefined): string | JSX.Element => {
+export const getHeaderText = (partyInfo: Party | undefined): string | JSX.Element => {
     const { partyType } = partyInfo || {};
     switch (partyType) {
         case PartyType.INDIVIDUAL:
@@ -83,7 +83,7 @@ export const getHeaderText = (partyInfo: PolicyAllOfPartiesItem | undefined): st
     }
 };
 
-export const getSelectedPolicyParty = (policy: Policy, personId: string | string[] | undefined): PolicyAllOfPartiesItem | null => {
+export const getSelectedPolicyParty = (policy: Policy, personId: string | string[] | undefined): Party | null => {
     if (!personId || typeof personId !== 'string') return null;
     return policy.parties?.find(person => person.partyId === personId) ?? null;
 };
@@ -101,7 +101,7 @@ function formatAddress(address: Address) {
     return formatted.join('<br/>');
 }
 
-export const getPrefCommunicationType = (partyInfo: PolicyAllOfPartiesItem | null, t: TFunction): JSX.Element | null => {
+export const getPrefCommunicationType = (partyInfo: Party | null, t: TFunction): JSX.Element | null => {
     const { preferredCommunicationType } = partyInfo || {};
     let text: string | null = null;
     let contactValue = '';
@@ -149,41 +149,41 @@ export const getPrefCommunicationType = (partyInfo: PolicyAllOfPartiesItem | nul
     }
 };
 
-export const getRelationshipToInsured = (relationshipToInsured: RelationshipToInsured | null, t: TFunction): string | null => {
+export const getRelationshipToInsured = (relationshipToInsured: RelationshipToParty | null, t: TFunction): string | null => {
     switch (relationshipToInsured) {
-        case RelationshipToInsured.CHILD:
+        case RelationshipToParty.CHILD:
             return t('relationshipToInsured.child');
-        case RelationshipToInsured.SON:
+        case RelationshipToParty.SON:
             return t('relationshipToInsured.son');
-        case RelationshipToInsured.DAUGHTER:
+        case RelationshipToParty.DAUGHTER:
             return t('relationshipToInsured.daughter');
-        case RelationshipToInsured.GRANDCHILD:
+        case RelationshipToParty.GRANDCHILD:
             return t('relationshipToInsured.grandchild');
-        case RelationshipToInsured.BROTHER:
+        case RelationshipToParty.BROTHER:
             return t('relationshipToInsured.brother');
-        case RelationshipToInsured.SISTER:
+        case RelationshipToParty.SISTER:
             return t('relationshipToInsured.sister');
-        case RelationshipToInsured.FATHER:
+        case RelationshipToParty.FATHER:
             return t('relationshipToInsured.father');
-        case RelationshipToInsured.MOTHER:
+        case RelationshipToParty.MOTHER:
             return t('relationshipToInsured.mother');
-        case RelationshipToInsured.STEPFATHER:
+        case RelationshipToParty.STEPFATHER:
             return t('relationshipToInsured.stepfather');
-        case RelationshipToInsured.STEPMOTHER:
+        case RelationshipToParty.STEPMOTHER:
             return t('relationshipToInsured.stepmother');
-        case RelationshipToInsured.SPOUSE:
+        case RelationshipToParty.SPOUSE:
             return t('relationshipToInsured.spouse');
-        case RelationshipToInsured.DOMESTICPARTNER:
+        case RelationshipToParty.DOMESTICPARTNER:
             return t('relationshipToInsured.domesticPartner');
-        case RelationshipToInsured.LIFEPARTNER:
+        case RelationshipToParty.LIFEPARTNER:
             return t('relationshipToInsured.lifePartner');
-        case RelationshipToInsured.FIANCE:
+        case RelationshipToParty.FIANCE:
             return t('relationshipToInsured.fiance');
-        case RelationshipToInsured.EXECUTORS:
+        case RelationshipToParty.EXECUTORS:
             return t('relationshipToInsured.executors');
-        case RelationshipToInsured.SELF:
+        case RelationshipToParty.SELF:
             return t('relationshipToInsured.self');
-        case RelationshipToInsured.OTHER:
+        case RelationshipToParty.OTHER:
             return t('relationshipToInsured.other');
         default:
             return relationshipToInsured;
@@ -334,7 +334,7 @@ export const getAddressType = (addressType: AddressType | undefined, t: TFunctio
     }
 };
 
-export const getFullName = (party: PolicyAllOfPartiesItem | undefined): string => {
+export const getFullName = (party: Party | undefined): string => {
     if (!party) {
         return DEFAULT_ERROR_STRING;
     }
@@ -347,13 +347,13 @@ export const getFullName = (party: PolicyAllOfPartiesItem | undefined): string =
 /**
  * Constructs a First and Last name string from a party object.
  *
- * @param {PolicyAllOfPartiesItem} party - The party object
+ * @param {Party} party - The party object
  * @returns {string} A string representation of the party's first and last name in title case. If party is not provided, returns DEFAULT_ERROR_STRING.
  * @example
  * const party = { prefix: 'Mr.', firstName: 'John', middleName: 'Jacob', lastName: 'Doe', suffix: 'Jr.' };
  * const firstLastName = getFirstLastName(party); // Returns: "Mr. John Doe Jr."
  */
-export const getFirstLastName = (party: PolicyAllOfPartiesItem | undefined): string => {
+export const getFirstLastName = (party: Party | undefined): string => {
     if (!party) {
         return DEFAULT_ERROR_STRING;
     }
@@ -363,7 +363,7 @@ export const getFirstLastName = (party: PolicyAllOfPartiesItem | undefined): str
     return toTitleCase([prefix, firstName, lastName, suffix].filter(Boolean).join(' '));
 };
 
-export const getName = (party: PolicyAllOfPartiesItem | undefined): string => {
+export const getName = (party: Party | undefined): string => {
     if (!party) {
         return DEFAULT_ERROR_STRING;
     }

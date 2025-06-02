@@ -1,10 +1,3 @@
-import dayjs from 'dayjs';
-import { TFunction } from 'next-i18next';
-
-import { forcePositiveNumber, numberFormatify } from '@deps/helpers/numbers.helpers';
-import { convertKebabedDateString, toSentenceCase } from '@deps/helpers/string.helpers';
-import { getRequestedWithheldTaxesDisplay, getTaxWithheldByType } from '@deps/helpers/tax-withholdings.helpers';
-import { getOwnersTaxJurisdictionState } from '@deps/helpers/transactions/taxes.helpers';
 import {
     AddressType,
     AllocationOption,
@@ -14,11 +7,17 @@ import {
     Policy,
     TaxWithholdingType,
     Transaction,
-    TransactionChargesItem,
-    TransactionPayeeOrBeneficiariesItem,
     TransactionStatus,
     TransactionType,
-} from '@deps/models/policy/sor-policy';
+} from '@zinnia/api-types/types/sor';
+import dayjs from 'dayjs';
+import { TFunction } from 'next-i18next';
+
+import { forcePositiveNumber, numberFormatify } from '@deps/helpers/numbers.helpers';
+import { convertKebabedDateString, toSentenceCase } from '@deps/helpers/string.helpers';
+import { getRequestedWithheldTaxesDisplay, getTaxWithheldByType } from '@deps/helpers/tax-withholdings.helpers';
+import { getOwnersTaxJurisdictionState } from '@deps/helpers/transactions/taxes.helpers';
+import { Charge, PayeeOrBeneficiary } from '@deps/models/policy-sor-touchups/Transaction';
 import { policyWithdrawalQuote } from '@deps/queries/api/policies';
 import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -34,7 +33,7 @@ import { PayeePaymentDetails } from '../types';
 const getPayeePaymentDetails = (
     policy: Policy,
     t: TFunction,
-    payeeOrBeneficiaries?: TransactionPayeeOrBeneficiariesItem[]
+    payeeOrBeneficiaries?: PayeeOrBeneficiary[] | undefined
 ): PayeePaymentDetails[] => {
     const results: PayeePaymentDetails[] = [];
 
@@ -106,7 +105,7 @@ const getWithdrawalDetails = (values: WithdrawalDetailsValues, t: TFunction): Wi
         actualWithdrawalAmount,
     } = values;
 
-    if (transactionType === TransactionType.FullSurrender) {
+    if (transactionType === TransactionType.FULL_SURRENDER) {
         return [
             {
                 label: t('policy.history.withdrawalSidesheet.surrenderAmount') as string,
@@ -131,7 +130,7 @@ const getWithdrawalDetails = (values: WithdrawalDetailsValues, t: TFunction): Wi
                 label: t('policy.history.withdrawalSidesheet.processDate') as string,
                 tooltipTitle: t('policy.history.withdrawalSidesheet.processDate') as string,
                 tooltipBody: t('policy.history.withdrawalSidesheet.processDateTooltip') as string,
-                value: status === TransactionStatus.Completed ? processDate : DEFAULT_ERROR_STRING,
+                value: status === TransactionStatus.COMPLETED ? processDate : DEFAULT_ERROR_STRING,
             },
             {
                 label: t('policy.history.withdrawalSidesheet.fundDisbursementType') as string,
@@ -141,8 +140,8 @@ const getWithdrawalDetails = (values: WithdrawalDetailsValues, t: TFunction): Wi
             },
         ];
     } else if (
-        transactionType === TransactionType.PartialWithdrawalOneTime ||
-        transactionType === TransactionType.RequiredMinimumDistributionOneTime
+        transactionType === TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME ||
+        transactionType === TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME
     ) {
         return [
             {
@@ -184,7 +183,7 @@ const getWithdrawalDetails = (values: WithdrawalDetailsValues, t: TFunction): Wi
                 label: t('policy.history.withdrawalSidesheet.processDate') as string,
                 tooltipTitle: t('policy.history.withdrawalSidesheet.processDate') as string,
                 tooltipBody: t('policy.history.withdrawalSidesheet.processDateTooltip') as string,
-                value: status === TransactionStatus.Completed ? processDate : DEFAULT_ERROR_STRING,
+                value: status === TransactionStatus.COMPLETED ? processDate : DEFAULT_ERROR_STRING,
             },
         ];
     }
@@ -199,8 +198,8 @@ const getRequestedWithdrawalAmount = (
 ): number => {
     let requestedAmount: number | undefined = 0;
 
-    if (status === TransactionStatus.Pending && quote?.transactionAmounts) {
-        requestedAmount = TransactionType.FullSurrender
+    if (status === TransactionStatus.PENDING && quote?.transactionAmounts) {
+        requestedAmount = TransactionType.FULL_SURRENDER
             ? quote?.transactionAmounts?.requestedAmount
             : quote?.transactionAmounts?.appliedAmount;
     } else {
@@ -218,15 +217,15 @@ const getActualWithdrawalAmount = (
 ): number => {
     let withdrawalAmount = 0;
 
-    if (transaction.transactionType === TransactionType.FullSurrender) {
+    if (transaction.transactionType === TransactionType.FULL_SURRENDER) {
         if (quote?.transactionAmounts?.requestedAmount) {
             withdrawalAmount = quote?.transactionAmounts?.requestedAmount;
         } else {
             withdrawalAmount = amount || 0;
         }
     } else if (
-        transaction.transactionType === TransactionType.PartialWithdrawalOneTime ||
-        transaction.transactionType == TransactionType.RequiredMinimumDistributionOneTime
+        transaction.transactionType === TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME ||
+        transaction.transactionType === TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME
     ) {
         if (quote?.transactionAmounts?.appliedAmount) {
             withdrawalAmount = quote?.transactionAmounts?.appliedAmount;
@@ -258,7 +257,7 @@ const getActualWithdrawalAmount = (
 const getWithdrawalDetailsValues = (transaction: Transaction, t: TFunction, quote?: WithdrawalQuoteResponse): WithdrawalDetailsValues => {
     const { effectiveDate, processDate, status, transactionAmounts, transactionType } = transaction;
     const { appliedAmount, disbursementType, requestedAmount, totalChargeAmount } = transactionAmounts ?? {};
-    const amount = transactionType === TransactionType.FullSurrender ? requestedAmount : appliedAmount;
+    const amount = transactionType === TransactionType.FULL_SURRENDER ? requestedAmount : appliedAmount;
     const actualWithdrawalAmount = getActualWithdrawalAmount(appliedAmount, disbursementType, transaction, quote);
 
     return {
@@ -364,7 +363,7 @@ export const getWithdrawalSideSheetValues = (policy: Policy, transaction: Transa
     return {
         actualWithdrawalAmount: detailsValues.actualWithdrawalAmount,
         cancelCta:
-            transaction?.status === TransactionStatus.Pending && transactionType === TransactionType.FullSurrender
+            transaction?.status === TransactionStatus.PENDING && transactionType === TransactionType.FULL_SURRENDER
                 ? (t('policy.history.sidesheet.cancelSurrender') as string)
                 : undefined,
         disbursementType: detailsValues.disbursementType,
@@ -374,7 +373,7 @@ export const getWithdrawalSideSheetValues = (policy: Policy, transaction: Transa
         payeePaymentDetails: getPayeePaymentDetails(policy, t, payeeOrBeneficiaries),
         transactionType,
         getAsyncSideSheetValues: async () => {
-            if (status !== TransactionStatus.Pending) {
+            if (status !== TransactionStatus.PENDING) {
                 return {};
             }
             const quote = await callWithdrawalQuote(policy, transaction);
@@ -424,14 +423,14 @@ export const getFreeLookCancellationSideSheetValues = (
                 label: t('policy.history.withdrawalSidesheet.processDate') as string,
                 tooltipTitle: t('policy.history.withdrawalSidesheet.processDate') as string,
                 tooltipBody: t('policy.history.withdrawalSidesheet.processDateTooltip') as string,
-                value: status === TransactionStatus.Completed ? processDate : DEFAULT_ERROR_STRING,
+                value: status === TransactionStatus.COMPLETED ? processDate : DEFAULT_ERROR_STRING,
             },
         ],
         payeePaymentDetails: getPayeePaymentDetails(policy, t, transaction.payeeOrBeneficiaries),
     };
 };
 
-const getChargesWithoutTaxes = (charges?: TransactionChargesItem[]): number => {
+const getChargesWithoutTaxes = (charges?: Charge[]): number => {
     if (!charges) return 0;
 
     return charges.reduce((acc, charge) => {

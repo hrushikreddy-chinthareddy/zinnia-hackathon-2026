@@ -1,8 +1,8 @@
+import { AllocationOption } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
 import { FundTransfer } from '@deps/contexts/transactions/FundTransferContext';
-import { AllocationOption } from '@deps/models/policy/sor-policy';
 import { FundTransferRequest } from '@deps/queries/api/fund-transfer';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -16,7 +16,7 @@ export const buildfundTransferRequestBody = (fundTransfer: FundTransfer): FundTr
         reverseInitiator,
         transactionAmounts,
         fundAllocation: {
-            allocationOption: AllocationOption.SPECIFIEDFUNDS
+            allocationOption: AllocationOption.SPECIFIEDFUNDS,
         },
         funds: {
             ...funds,

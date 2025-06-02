@@ -1,4 +1,4 @@
-import { CoverageLayer, CoverageParticipants, IndicatorCode, Policy, PolicyCoverage } from '@deps/models/policy/sor-policy';
+import { CoverageLayer, CoverageParticipants, RiderType, Policy, PolicyCoverage } from '@zinnia/api-types/types/sor';
 
 export class Coverage {
     private coverage: PolicyCoverage;
@@ -33,7 +33,7 @@ export class Coverage {
         return this.coverageLayerById[id];
     }
 
-    public getCoverageLayerByType(coverageType: IndicatorCode | undefined): CoverageLayer | undefined {
+    public getCoverageLayerByType(coverageType: RiderType | undefined): CoverageLayer | undefined {
         if (!coverageType) {
             return undefined;
         }

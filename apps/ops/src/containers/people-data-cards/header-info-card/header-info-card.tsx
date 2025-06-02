@@ -1,4 +1,4 @@
-import { Phone } from '@zinnia/api-types/types/sor';
+import { Party, Address, Email , Phone } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 import { FC, useContext, useMemo, useState } from 'react';
 
@@ -6,7 +6,6 @@ import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { PolicyAllOfPartiesItem, Address, Email } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 
 import SideSheetPeopleHeader from '../side-sheet-people-header/side-sheet-people-header';
@@ -14,7 +13,7 @@ import { SidesheetCommunicationsPreference } from './sidesheet/sidesheet-communi
 import { FormattedAddress } from '../address-card/address-card.helpers';
 
 type HeaderInfoCardProps = {
-    selectedPolicyParty?: PolicyAllOfPartiesItem;
+    selectedPolicyParty?: Party;
     children: React.ReactNode;
     t: TFunction;
     editable?: boolean;
@@ -30,7 +29,7 @@ export const HeaderInfoCard: FC<HeaderInfoCardProps> = ({ children, selectedPoli
 };
 
 type CommunicationPreferenceFieldProps = {
-    partyInfo?: PolicyAllOfPartiesItem;
+    partyInfo?: Party;
     t: TFunction;
     editable?: boolean;
 };

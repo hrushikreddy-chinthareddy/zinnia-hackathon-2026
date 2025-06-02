@@ -1,4 +1,4 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy , TransactionType } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
@@ -15,7 +15,6 @@ import { useFundTransfer } from '@deps/contexts/transactions/FundTransferContext
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
 import { AmountType } from '@deps/models/funds/enums';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, ValidationResult } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';

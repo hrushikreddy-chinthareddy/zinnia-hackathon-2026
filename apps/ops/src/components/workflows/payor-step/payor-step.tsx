@@ -1,3 +1,4 @@
+import { Address, PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
@@ -11,7 +12,6 @@ import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-p
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { buildFullNameFromParty, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { Address, PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { TransactionClickProps } from '@deps/types/segment-analytics';

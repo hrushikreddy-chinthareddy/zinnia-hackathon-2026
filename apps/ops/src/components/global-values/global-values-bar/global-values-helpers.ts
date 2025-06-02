@@ -1,4 +1,5 @@
-import { PolicyStatus } from '@deps/models/policy/sor-policy';
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
+
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 export const getPolicyBadgeStatusTooltip = (status: PolicyStatus | undefined) => {

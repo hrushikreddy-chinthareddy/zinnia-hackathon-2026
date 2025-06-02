@@ -1,5 +1,6 @@
+import { AccountValues, Policy } from '@zinnia/api-types/types/sor';
+
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { AccountValues, Policy } from '@deps/models/policy/sor-policy';
 import { DataDefinition } from '@deps/types/data';
 
 export type PolicyValuesDto = AccountValues;

@@ -1,3 +1,4 @@
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
@@ -8,7 +9,6 @@ import IconButton from '@deps/components/icon-button/icon-button';
 import { TranslationFiles } from '@deps/config/translations';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import { getName } from '@deps/helpers/party-info-helpers';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 

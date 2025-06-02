@@ -1,7 +1,8 @@
+import { PartyRole } from '@zinnia/api-types/types/sor';
+
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 
 import { Correspondence } from './correspondence';
-import { PartyRole } from '../policy/sor-policy';
 
 export const sendDocumentTabs = {
     formSelection: 'Form Selection',

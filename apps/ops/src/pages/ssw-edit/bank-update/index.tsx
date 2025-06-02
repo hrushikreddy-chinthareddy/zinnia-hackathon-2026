@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { Policy } from '@zinnia/api-types/types/sor';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import BankUpdateContainer from '@deps/components/ssw-edit/bank-update/bank-update-container';
@@ -9,7 +10,6 @@ import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ActiveWithdrawalCase, Carrier } from '@deps/models/case/withdrawal/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';

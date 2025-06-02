@@ -1,9 +1,9 @@
+import { Phone, PhoneType, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useContext, useState } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import { AddressChangeContext } from '@deps/contexts/AddressChangeContext';
 import { FormValidationErrors, Address } from '@deps/models/case/withdrawal/case';
-import { Phone, PhoneType, PolicyParties } from '@deps/models/policy/sor-policy';
 
 import { ApplyToRolesState, ContractUpdateOptions, SignatureState } from './types/address-change-types';
 
@@ -33,7 +33,7 @@ export const AddressChangeProvider = ({ children }: AddressChangeProviderProps) 
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [signatureData, setSignatureData] = useState<SignatureState>({ signatures: [] });
     const [contractUpdateOption, setContractUpdateOption] = useState<ContractUpdateOptions>(ContractUpdateOptions.currentContract);
-    const [roleIdentifier, setRoleIdentifier] = useState<PolicyParties>({});
+    const [roleIdentifier, setRoleIdentifier] = useState<PolicyPartyRoles>({});
     const [applyToRoles, setApplyToRoles] = useState<ApplyToRolesState[]>([]);
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
     const [formWarnings, setFormWarnings] = useState<FormValidationErrors>({});
@@ -66,7 +66,7 @@ export const AddressChangeProvider = ({ children }: AddressChangeProviderProps) 
                 setPhone,
                 setAddress,
                 setSelectedIds,
-                setSubmitSuccess
+                setSubmitSuccess,
             }}
         >
             {children}

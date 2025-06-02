@@ -1,5 +1,6 @@
 import 'react-pdf/dist/Page/TextLayer.css';
 import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
+import { Policy } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
@@ -9,7 +10,6 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaxForm, TaxFormSelectionDetails } from '@deps/models/case/send-tax-forms';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';

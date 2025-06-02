@@ -1,10 +1,10 @@
+import { Email, EmailBase, EmailType } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helpers';
-import { Email, EmailBase, EmailType } from '@deps/models/policy/sor-policy';
 
 interface GetEmailTypes {
     t: TFunction;

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { LoanInterestMethod, LoanValues } from '@zinnia/api-types/types/sor';
 
 import { PopoverTest } from '@deps/jest/constants/test-id-constants';
-import { LoanInterestMethod, LoanValues } from '@deps/models/policy/sor-policy';
 
 import LoanRulesCard from './loan-rules-card';
 

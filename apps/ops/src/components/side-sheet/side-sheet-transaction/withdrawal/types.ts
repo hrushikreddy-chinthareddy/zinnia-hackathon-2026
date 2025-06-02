@@ -1,14 +1,14 @@
-import { TFunction } from 'next-i18next';
-
 import {
     BankAccount,
     FullSurrenderQuoteResponse,
     PartialWithdrawalOneTimeQuoteResponse,
     Policy,
     Transaction,
-    TransactionChargesItem,
     TransactionType,
-} from '@deps/models/policy/sor-policy';
+} from '@zinnia/api-types/types/sor';
+import { TFunction } from 'next-i18next';
+
+import { Charge as TransactionCharge } from '@deps/models/policy-sor-touchups/Transaction';
 
 import { BaseTransactionSideSheetValues, PayeePaymentDetails } from '../types';
 
@@ -49,7 +49,7 @@ export interface WithdrawalSideSheetValues extends BaseTransactionSideSheetValue
 }
 
 export type WithdrawalChargesValues = {
-    charges?: TransactionChargesItem[];
+    charges?: TransactionCharge[];
     federalTaxWithheld?: string;
     state?: string;
     stateTaxWithheld?: string;

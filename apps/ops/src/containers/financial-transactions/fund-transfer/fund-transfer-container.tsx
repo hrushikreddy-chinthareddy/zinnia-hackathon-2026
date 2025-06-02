@@ -1,4 +1,4 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy , TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -9,7 +9,6 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { useFundTransfer } from '@deps/contexts/transactions/FundTransferContext';
 import { Processes } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { validateFundTransfer } from '@deps/queries/api/fund-transfer';
 import { FUND_TRANSFER_STEP_WIDTH } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';

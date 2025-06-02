@@ -1,5 +1,6 @@
+import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
+
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
-import { PolicyStatus, ProductType } from '@deps/models/policy/sor-policy';
 
 import { PopoverPlacement } from '../popover/popover';
 

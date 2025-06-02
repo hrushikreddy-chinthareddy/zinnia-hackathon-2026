@@ -14,7 +14,6 @@ import WorkflowContainer from '@deps/containers/workflow-container/workflow-cont
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { WithdrawalType, useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Processes } from '@deps/models/case/case';
-import { Policy as PolicyOld } from '@deps/models/policy/sor-policy';
 import { validateFullSurrenderWithdrawal, validatePartialWithdrawalOneTime } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -26,7 +25,7 @@ import Taxes from './taxes/taxes';
 import { buildWithdrawalsRequestBody } from './withdrawals.helpers';
 
 export type WithdrawalContainerProps = {
-    policy: PolicyOld;
+    policy: Policy;
 };
 
 const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {

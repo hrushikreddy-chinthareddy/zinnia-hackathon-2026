@@ -1,4 +1,4 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { ArrangementType, Frequency, Policy , TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -15,7 +15,6 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { buildFullNameFromParty, toTitleCase } from '@deps/helpers/string.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
-import { ArrangementType, Frequency, Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus, ValidationResult } from '@deps/queries/api/bpm';
 import { DEFAULT_EXTENDED_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';

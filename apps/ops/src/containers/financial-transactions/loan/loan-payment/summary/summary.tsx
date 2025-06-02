@@ -1,4 +1,4 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { DisbursementPaymentForm, Policy , TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -12,10 +12,9 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
-import { ACH, useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
+import { useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
@@ -80,7 +79,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     branchName={paymentBranchName}
                     classNames="max-w-[524px]"
                     payeeName={payorFullName}
-                    paymentType={ACH}
+                    paymentType={DisbursementPaymentForm.ACH}
                     showFinancialData={false}
                 />
 

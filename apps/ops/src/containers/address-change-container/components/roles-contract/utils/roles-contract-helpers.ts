@@ -1,27 +1,23 @@
+import { Address, AddressBase, PartyRole, Phone, PhoneType, Policy, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { RadioItem } from '@deps/components/radio/radio';
 import { hasSameProperties } from '@deps/helpers/objects.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import {
-    Address,
-    AddressBase,
-    PartyRole,
-    Phone,
-    PhoneType,
-    Policy,
-    PolicyAllOfPartiesItem,
-    PolicyParties,
-} from '@deps/models/policy/sor-policy';
 import { TagKey } from '@deps/types/components';
 
-import { AddressFieldsToMatchForRoleGroup, AllowedRoleTypes, custodialQualTypes, PhoneFieldsToMatchForRoleGroup } from './roles-contract-constants';
+import {
+    AddressFieldsToMatchForRoleGroup,
+    AllowedRoleTypes,
+    custodialQualTypes,
+    PhoneFieldsToMatchForRoleGroup,
+} from './roles-contract-constants';
 import { mapAddressToAddressCardData, mapPhoneToAddressCardData } from './roles-contract-mappers';
 import { AssociateAddressTableRow, PartyAddressCard } from './roles-contract-types';
 import { ApplyToRolesState, ContractUpdateOptions } from '../../../types/address-change-types';
 import { getRoleToLabelKeyMap } from '../../../utils/address-change-helpers';
 
-const isAddressAndPhoneMatch = (address: Address | undefined, homePhone: Phone | undefined, policyParty: PolicyAllOfPartiesItem) => {
+const isAddressAndPhoneMatch = (address: Address | undefined, homePhone: Phone | undefined, policyParty: Party) => {
     const partyAddress = mapAddressToAddressCardData(policyParty?.addresses?.[0]);
     const partyHomePhone = mapPhoneToAddressCardData(policyParty.phones?.find(phone => phone.phoneType === PhoneType.HOME));
     const noPhoneExists = !partyHomePhone && !homePhone;
@@ -32,12 +28,12 @@ const isAddressAndPhoneMatch = (address: Address | undefined, homePhone: Phone |
     );
 };
 
-const isExistingEmail = (email: string, policyParty: PolicyAllOfPartiesItem) => {
+const isExistingEmail = (email: string, policyParty: Party) => {
     return (
         typeof policyParty?.emails?.[0]?.emailAddress === 'string' &&
         email.toLowerCase().trim() === policyParty.emails[0].emailAddress.toLowerCase().trim()
     );
-}
+};
 
 export const isRowAlreadySelected = (row: AssociateAddressTableRow, applyToRolesData: ApplyToRolesState) => {
     return (
@@ -48,10 +44,9 @@ export const isRowAlreadySelected = (row: AssociateAddressTableRow, applyToRoles
     );
 };
 
-
 export const groupPartiesByAddress = (
-    roles: PolicyParties[],
-    parties: PolicyAllOfPartiesItem[],
+    roles: PolicyPartyRoles[],
+    parties: Party[],
     qualificationType: string,
     t: TFunction,
     getDefaultAddress: boolean = true
@@ -136,8 +131,8 @@ export const groupPartiesByAddress = (
 };
 
 export const partyCardsEmail = (
-    roles: PolicyParties[],
-    parties: PolicyAllOfPartiesItem[],
+    roles: PolicyPartyRoles[],
+    parties: Party[],
     qualificationType: string,
     t: TFunction
 ): PartyAddressCard[] => {
@@ -198,8 +193,7 @@ export const partyCardsEmail = (
     return partyCards;
 };
 
-
-export const getRolesRadioConfig = (roles: PolicyParties[], t: TFunction): RadioItem[] => {
+export const getRolesRadioConfig = (roles: PolicyPartyRoles[], t: TFunction): RadioItem[] => {
     return (
         roles?.map(item => ({
             label: t(getRoleToLabelKeyMap(item?.partyRole ?? '')),

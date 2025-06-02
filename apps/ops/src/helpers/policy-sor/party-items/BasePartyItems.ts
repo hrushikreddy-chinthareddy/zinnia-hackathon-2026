@@ -1,5 +1,6 @@
+import { Address, BankAccount, Email, Phone } from '@zinnia/api-types/types/sor';
+
 import { isEndDated } from '@deps/helpers/date.helpers';
-import { Address, BankAccount, Email, Phone } from '@deps/models/policy/sor-policy';
 
 export abstract class BasePartyItems<T extends Address | BankAccount | Email | Phone> {
     private contactsList: T[];

@@ -1,5 +1,6 @@
+import { Address, Phone } from '@zinnia/api-types/types/sor';
+
 import { ApplyToRolesState } from '@deps/containers/address-change-container/types/address-change-types';
-import { Address, Phone } from '@deps/models/policy/sor-policy';
 
 import { AssociateAddressTableRow } from './roles-contract-types';
 
@@ -25,7 +26,7 @@ export const mapAddressToAddressCardData = (address: Address | undefined) => {
             state: address?.state,
             zipCode: address?.zipCode,
             zipCodeExtension: address?.zipCodeExtension,
-        }
+        };
     }
 };
 

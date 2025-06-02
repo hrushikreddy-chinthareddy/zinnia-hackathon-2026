@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
+import { Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
 
-import { Transaction, TransactionStatus } from '@deps/models/policy/sor-policy';
 import { mockPolicy } from '@deps/services/mocks/sor-policy';
 
 import DividerLabel, { DividerLabelProps } from './divider-label';

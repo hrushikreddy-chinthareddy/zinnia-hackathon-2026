@@ -1,3 +1,4 @@
+import { ArrangementType, Policy, Status } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -9,7 +10,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
-import { ArrangementType, Policy, Status } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 
 import { PaymentMethodType, PaymentStepProps } from './types';

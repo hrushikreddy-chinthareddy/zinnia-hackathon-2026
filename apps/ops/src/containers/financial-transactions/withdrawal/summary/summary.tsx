@@ -1,5 +1,5 @@
 import { DisbursementType, TaxWithholdingType } from '@zinnia/api-types/types/bpm';
-import { DisbursementPaymentForm, Policy, TaxWithheldAmount, TransactionType } from '@zinnia/api-types/types/sor';
+import { Address , DisbursementPaymentForm, Policy, TaxWithheldAmount, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -20,7 +20,6 @@ import { toTitleCase } from '@deps/helpers/string.helpers';
 import { getRequestedWithheldTaxesDisplay } from '@deps/helpers/tax-withholdings.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { getReturnedWithheldTaxesDisplay } from '@deps/helpers/transactions/tax-withholdings.helpers';
-import { Address } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';

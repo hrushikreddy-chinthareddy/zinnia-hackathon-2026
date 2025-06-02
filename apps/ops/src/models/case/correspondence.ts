@@ -1,6 +1,7 @@
+import { Address } from '@zinnia/api-types/types/sor';
+
 import { CommunicationTypes, SendDocumentActions } from './send-document';
 import { Confirm } from './send-statement';
-import { Address } from '../policy/sor-policy';
 
 export const domainValidation = /^[a-zA-Z0-9](\.?[a-zA-Z0-9]){3,}@zinnia\.com$/;
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

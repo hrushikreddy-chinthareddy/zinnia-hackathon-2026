@@ -1,3 +1,4 @@
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -8,7 +9,6 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import TabGroupContainer from '@deps/containers/tab-group-container/tab-group';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 import { RoleType } from './death-claim.types';
 import ConfirmStep from './steps/confirm/confirm-step';
@@ -17,23 +17,18 @@ import NotificationMethodStep from './steps/notification-method/notification-met
 
 interface DeathClaimContainerProps {
     policy: Policy;
-};
+}
 
-const DeathClaimContainer = ({
-    policy
-}: DeathClaimContainerProps) => {
+const DeathClaimContainer = ({ policy }: DeathClaimContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims' });
-    const { notifiers} = useDeathClaim();
+    const { notifiers } = useDeathClaim();
 
-    const communicationTypes = useMemo(
-        () => getCommunicationTypes(t),
-        [t]
-    );
+    const communicationTypes = useMemo(() => getCommunicationTypes(t), [t]);
     const [communicationOptions] = useState<RadioItem[]>(communicationTypes);
     const [showNotificationMethod, setShowNotificationMethod] = useState<boolean>(true);
 
     useEffect(() => {
-        if (notifiers?.notifierRole === RoleType.Other ) {
+        if (notifiers?.notifierRole === RoleType.Other) {
             setShowNotificationMethod(false);
         } else if (notifiers.isPrimaryBeneInfoOnFile === true) {
             setShowNotificationMethod(false);
@@ -53,9 +48,7 @@ const DeathClaimContainer = ({
             {
                 ariaLabel: t('tabs.deathClaimNotification'),
                 isVisible: () => true,
-                component: (
-                    <DeathClaimNotificationStep policy={policy} showNotification={showNotificationMethod} />
-                ),
+                component: <DeathClaimNotificationStep policy={policy} showNotification={showNotificationMethod} />,
                 screenReaderLabel: t('tabs.deathClaimNotification'),
                 index: 0,
                 text: t('tabs.deathClaimNotification'),
@@ -71,9 +64,7 @@ const DeathClaimContainer = ({
             {
                 ariaLabel: t('tabs.confirm'),
                 isVisible: () => true,
-                component: (
-                    <ConfirmStep policy={policy} />
-                ),
+                component: <ConfirmStep policy={policy} />,
                 screenReaderLabel: t('tabs.confirm'),
                 index: 2,
                 text: t('tabs.confirm'),
@@ -87,10 +78,7 @@ const DeathClaimContainer = ({
         [steps]
     );
 
-    return (
-        <TabGroupContainer steps={filteredSteps} policy={new PolicyDetails(policy)}></TabGroupContainer>
-    );
+    return <TabGroupContainer steps={filteredSteps} policy={new PolicyDetails(policy)}></TabGroupContainer>;
 };
 
 export default DeathClaimContainer;
-

@@ -27,7 +27,7 @@ export const useContractAccountInfo = (contract: string, clientId: string): Cont
                 );
                 const acctInfoResponse = await fetchPolicy(searchResults.results[0].policyNumber, searchResults.results[0].planCode);
 
-                setQualType((acctInfoResponse?.qualificationType as FASTQualTypes) || '');
+                setQualType((acctInfoResponse?.qualificationType as unknown as FASTQualTypes) || ''); // BPB - Assuming FAST isn't in here yet, so this is a temporary fix
                 setIssueState(acctInfoResponse?.issueState || '');
                 setIssueDate(acctInfoResponse?.policyDates?.issueDate || '');
                 setContractStatus(acctInfoResponse?.policyStatus || '');

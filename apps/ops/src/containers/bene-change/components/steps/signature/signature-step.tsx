@@ -1,3 +1,4 @@
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState, useCallback, useEffect, ChangeEvent } from 'react';
 
@@ -12,7 +13,6 @@ import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { SignatureDesignation, SignatureValidationTypeWithdrawal, SignPresent } from '@deps/models/case/renewal/signature-validation';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 import { useReRegSignatureStepConfig } from './signature-step-helpers';
 import { useBeneChange } from '../../../bene-change-provider';

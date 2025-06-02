@@ -7,7 +7,8 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-import { AddressBase, BankAccountBase, EmailBase, PhoneBase } from '@deps/models/policy/sor-policy';
+import { AddressBase, BankAccountBase, EmailBase, PhoneBase } from '@zinnia/api-types/types/sor';
+
 import { baseAppUrl } from '@deps/queries/api-config';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { client } from '@deps/queries/api-utils/client';

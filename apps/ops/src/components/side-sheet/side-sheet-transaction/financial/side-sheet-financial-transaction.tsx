@@ -1,3 +1,4 @@
+import { TransactionStatus, TransactionType } from '@zinnia/api-types/types/sor';
 import { Button, Loader, LoaderVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -10,7 +11,6 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
-import { TransactionStatus, TransactionType } from '@deps/models/policy/sor-policy';
 import { getPolicyTransactions } from '@deps/queries/api/policies';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -84,7 +84,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
             const reverseInitiators = await getPolicyTransactions({
                 id: policy.policyNumber,
                 planCode: policy?.product?.planCode,
-                status: TransactionStatus.Reversed,
+                status: TransactionStatus.REVERSED,
                 reverseInitiatorOnly: true,
             });
 
@@ -128,15 +128,15 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     let SidesheetContent;
 
     switch (transactionType) {
-        case TransactionType.NewLoan:
+        case TransactionType.NEW_LOAN:
             SidesheetContent = (
                 <SideSheetNewLoanTransactionContent t={t} values={sideSheetValues as NewLoanTransactionSideSheetValues} loading={loading} />
             );
             break;
-        case TransactionType.FullSurrender:
-        case TransactionType.PartialWithdrawalOneTime:
-        case TransactionType.FreeLookCancellation:
-        case TransactionType.RequiredMinimumDistributionOneTime:
+        case TransactionType.FULL_SURRENDER:
+        case TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME:
+        case TransactionType.FREE_LOOK_CANCELLATION:
+        case TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
             SidesheetContent = <SideSheetWithdrawalContent t={t} values={sideSheetValues as WithdrawalSideSheetValues} loading={loading} />;
             break;
         default:
@@ -192,24 +192,26 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                 <div className="p-8">
                     <div className={`flex flex-col gap-4`}>
                         <div className="flex flex-col">
-                            {transactionType !== TransactionType.FullSurrender &&
-                                transactionType !== TransactionType.PartialWithdrawalOneTime &&
-                                transactionType !== TransactionType.FreeLookCancellation &&
-                                transactionType !== TransactionType.NewLoan &&
-                                transactionType !== TransactionType.RequiredMinimumDistributionOneTime && (
-                                    <div className={cancelCta ? 'mb-4' : ''}>
-                                        <Content details={numberFormatify(transactionValue)} variant={ContentVariant.Value} />
-                                        <Content
-                                            className="text-gray-600"
-                                            details={
-                                                t('policy.history.sidesheet.effective', {
-                                                    date: convertKebabedDateString(effectiveDate),
-                                                }) as string
-                                            }
-                                            variant={ContentVariant.Caption}
-                                        />
-                                    </div>
-                                )}
+                            {![
+                                TransactionType.FULL_SURRENDER,
+                                TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
+                                TransactionType.FREE_LOOK_CANCELLATION,
+                                TransactionType.NEW_LOAN,
+                                TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
+                            ].includes(transactionType as TransactionType) && (
+                                <div className={cancelCta ? 'mb-4' : ''}>
+                                    <Content details={numberFormatify(transactionValue)} variant={ContentVariant.Value} />
+                                    <Content
+                                        className="text-gray-600"
+                                        details={
+                                            t('policy.history.sidesheet.effective', {
+                                                date: convertKebabedDateString(effectiveDate),
+                                            }) as string
+                                        }
+                                        variant={ContentVariant.Caption}
+                                    />
+                                </div>
+                            )}
                             {reverseCta && (
                                 <div>
                                     <Button
@@ -235,7 +237,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                                         size="small"
                                         className={clsx(
                                             '!justify-start !p-0',
-                                            transactionType === TransactionType.FullSurrender ? 'mb-6' : ''
+                                            transactionType === TransactionType.FULL_SURRENDER ? 'mb-6' : ''
                                         )}
                                     >
                                         {cancelCta}
@@ -243,7 +245,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                                 </div>
                             )}
 
-                            {status === TransactionStatus.Canceled && (
+                            {status === TransactionStatus.CANCELED && (
                                 <ChipStatus
                                     classNames="mb-4"
                                     status={'Canceled' as Statuses}

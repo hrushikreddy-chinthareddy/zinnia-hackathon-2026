@@ -1,3 +1,4 @@
+import { Party } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useRef, useState } from 'react';
 
@@ -5,7 +6,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
-import { PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 
 import NavElement, { NavElementSize, NavElementType } from '../nav-element/nav-element';
@@ -31,8 +31,8 @@ export const Breadcrumb = ({ breadcrumbUrl, breadcrumbText, onClick }: PageHeade
 
     const { policy } = useContext(PolicyData);
 
-    const checkBreadcrumbForPartyPii = (breadcrumbText?: string, policyParties?: PolicyAllOfPartiesItem[]) => {
-        const partyNames = policyParties?.map(
+    const checkBreadcrumbForPartyPii = (breadcrumbText?: string, PolicyPartyRoles?: Party[]) => {
+        const partyNames = PolicyPartyRoles?.map(
             party => `${toSentenceCase(party.firstName)} ${toSentenceCase(party.middleName)} ${toSentenceCase(party.lastName)}`
         );
         const matchedName = partyNames?.find(name => breadcrumbText?.includes(name));

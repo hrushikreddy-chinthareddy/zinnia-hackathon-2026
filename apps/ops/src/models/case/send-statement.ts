@@ -1,4 +1,4 @@
-import { PartyRole } from '../policy/sor-policy';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 export const SendStatementTabs = {
     formSelection: 'Statement Selection',

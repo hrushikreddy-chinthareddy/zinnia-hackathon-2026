@@ -1,4 +1,4 @@
-import { PolicyFeature, PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
+import { PolicyFeature, FeatureType } from '@zinnia/api-types/types/sor';
 
 export class Features {
     public featuresByType: Record<string, PolicyFeature[]> = {};
@@ -18,14 +18,14 @@ export class Features {
         });
     }
 
-    public getFeaturesByType(featureType: PolicyFeatureFeatureType): PolicyFeature[] {
+    public getFeaturesByType(featureType: FeatureType): PolicyFeature[] {
         if (!featureType) {
             return [];
         }
         return this.featuresByType[featureType.toUpperCase()] ?? [];
     }
 
-    public getFirstFeatureByType(featureType: PolicyFeatureFeatureType): PolicyFeature | undefined {
+    public getFirstFeatureByType(featureType: FeatureType): PolicyFeature | undefined {
         if (!featureType) {
             return undefined;
         }

@@ -1,8 +1,8 @@
+import { PartyRole, PartyType, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import { TFunction } from 'next-i18next';
 
 import { PartyRoleChipToText, partyRoleOrder, TitleCasedPartyRole } from '@deps/constants/party-roles';
-import { PartyRole, PartyType, PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
 
 import { combineNameAndRoles, convertToChipText } from './people-sub-page.helpers';
 
@@ -13,7 +13,7 @@ jest.mock('next-i18next', () => ({
 }));
 
 describe('combineNameAndRoles', () => {
-    const mockPolicyPartiesArr: PolicyAllOfPartiesItem[] = [
+    const mockPolicyPartiesArr: Party[] = [
         {
             partyId: '1',
             partyType: PartyType.INDIVIDUAL,
@@ -32,7 +32,7 @@ describe('combineNameAndRoles', () => {
         },
     ];
 
-    const mockPartyRolesArr: PolicyParties[] = [
+    const mockPartyRolesArr: PolicyPartyRoles[] = [
         {
             partyId: '1',
             partyRole: PartyRole.COVERAGEINSURED,

@@ -1,4 +1,6 @@
-import { PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
+import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+
+import { Party } from '@deps/models/policy-sor-touchups/Party';
 
 export interface EditableCardProps {
     editable?: boolean;
@@ -6,8 +8,8 @@ export interface EditableCardProps {
 }
 
 export interface PersonCardProps extends EditableCardProps {
-    party?: PolicyAllOfPartiesItem;
-    partyRoles: PolicyParties[];
+    party?: Party;
+    partyRoles: PolicyPartyRoles[];
     planCode?: string;
     policyNumber?: string;
 }

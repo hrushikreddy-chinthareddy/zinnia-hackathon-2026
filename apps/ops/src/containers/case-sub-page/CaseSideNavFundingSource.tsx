@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Address, Country, State } from '@zinnia/api-types/types/sor';
 import { TransactionModelResponse } from '@zinnia/api-types/types/transaction-store';
 import { Tag, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { TFunction, useTranslation } from 'next-i18next';
@@ -9,7 +10,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { CaseAdditionalData } from '@deps/models/case/case';
-import { Address, Country, State } from '@deps/models/policy/sor-policy';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';

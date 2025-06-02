@@ -1,3 +1,4 @@
+import { PartyRole, PartyStatus, PartyType, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
@@ -11,7 +12,6 @@ import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { getHeaderText, getPrefCommunicationType } from '@deps/helpers/party-info-helpers';
 import { orderObjectsByString } from '@deps/helpers/sort.helpers';
 import { formatDate } from '@deps/helpers/string.helpers';
-import { PartyRole, PartyStatus, PartyType, PolicyAllOfPartiesItem, PolicyParties } from '@deps/models/policy/sor-policy';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { ReactComponent as UserGroup } from '@deps/styles/elements/icons/icons_outlined/user-group.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -22,8 +22,8 @@ import { convertToChipText } from '../people-sub-page/people-sub-page.helpers';
 interface InteriorPeoplePageHeaderContainerProps {
     breadcrumbText?: string;
     breadcrumbUrl?: string;
-    selectedPolicyParty?: PolicyAllOfPartiesItem;
-    selectedPolicyPartyRoles?: PolicyParties[];
+    selectedPolicyParty?: Party;
+    selectedPolicyPartyRoles?: PolicyPartyRoles[];
     editable: boolean;
     partyStatus?: PartyStatus;
 }
@@ -114,7 +114,7 @@ const InteriorPeoplePageHeaderContainer = ({
 
     // for below header text children
     // header party roles and add/remove button
-    const getPartyRoles = (partyRoleTextsToConvert: PolicyParties[], t: TFunction) => {
+    const getPartyRoles = (partyRoleTextsToConvert: PolicyPartyRoles[], t: TFunction) => {
         const orderedTags: string[] = t('colDefs:people.orderedRoles', { returnObjects: true });
         const convertedPartyRoles = (partyRoleTextsToConvert || []).map(partyRoleTextToConvert => ({
             text: convertToChipText(partyRoleTextToConvert.partyRole, t),

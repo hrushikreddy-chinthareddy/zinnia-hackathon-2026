@@ -1,14 +1,21 @@
+import { BankAccount, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getBankingDetails, getBankingDetailsLC, getBankOptions, getBankOptionsLC, getSelectedOption, getSelectedOptionLC } from '@deps/helpers/bank.helpers';
+import {
+    getBankingDetails,
+    getBankingDetailsLC,
+    getBankOptions,
+    getBankOptionsLC,
+    getSelectedOption,
+    getSelectedOptionLC,
+} from '@deps/helpers/bank.helpers';
 import { LifeCadBanking, LifeCadParty } from '@deps/models/case/lifecad-party';
 import { AccountType } from '@deps/models/case/withdrawal/case';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
-import { BankAccountBase, Party, PolicyParties } from '@deps/models/policy/sor-policy';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import { SelectedBankContext } from './pre-populate-banking-details';
@@ -30,13 +37,10 @@ const SelectBank = ({
     const bankingDetails = useMemo(() => {
         return isLC
             ? getBankingDetailsLC(parties as LifeCadParty[])
-            : getBankingDetails(parties as Party[], partyRoles as PolicyParties[]);
+            : getBankingDetails(parties as Party[], partyRoles as PolicyPartyRoles[]);
     }, [isLC, parties, partyRoles]);
 
-    const bankOptions = isLC
-        ? getBankOptionsLC(bankingDetails as LifeCadBanking[])
-        : getBankOptions(bankingDetails as BankAccountBase[]);
-
+    const bankOptions = isLC ? getBankOptionsLC(bankingDetails as LifeCadBanking[]) : getBankOptions(bankingDetails as BankAccount[]);
 
     const [selectedBank, setSelectedBank] = useState('');
     if (bankOptions) {
@@ -45,7 +49,7 @@ const SelectBank = ({
 
     useEffect(() => {
         if (isLC) {
-            const selectedOption = bankingDetails.length > 0 ? bankingDetails[0] as LifeCadBanking : ({} as LifeCadBanking);
+            const selectedOption = bankingDetails.length > 0 ? (bankingDetails[0] as LifeCadBanking) : ({} as LifeCadBanking);
             if (
                 (disbursementInformation.accountNumber === selectedOption.AccountNumber &&
                     disbursementInformation.bankName === selectedOption.BankName &&
@@ -60,7 +64,7 @@ const SelectBank = ({
                 setBankingOption(OTHER_BANK_OPTION, false);
             }
         } else {
-            const selectedOption = bankingDetails.length > 0 ? bankingDetails[0] as BankAccountBase : ({} as BankAccountBase);
+            const selectedOption = bankingDetails.length > 0 ? (bankingDetails[0] as BankAccount) : ({} as BankAccount);
             if (
                 (disbursementInformation.accountNumber === selectedOption.accountNumber &&
                     disbursementInformation.bankName === selectedOption.branchName &&
@@ -111,7 +115,9 @@ const SelectBank = ({
                     bankRoutingNumber: selectedOption?.RoutingNumber || '',
                     isVoidCheckAttached: !userSelectedOption ? disbursementInformation.isVoidCheckAttached : null,
                     isWireApprovalPresent: !userSelectedOption ? disbursementInformation.isWireApprovalPresent : false,
-                    doesCheckMeetSecurityRequirements: !userSelectedOption ? disbursementInformation.doesCheckMeetSecurityRequirements : null,
+                    doesCheckMeetSecurityRequirements: !userSelectedOption
+                        ? disbursementInformation.doesCheckMeetSecurityRequirements
+                        : null,
                     accountHolder: !userSelectedOption ? disbursementInformation.accountHolder : '',
                     bankFurtherCreditAccount: !userSelectedOption
                         ? disbursementInformation.bankFurtherCreditAccount
@@ -121,17 +127,19 @@ const SelectBank = ({
                     bankFurtherCreditName: !userSelectedOption ? disbursementInformation.bankFurtherCreditName : '',
                 }));
             } else {
-                const selectedOption = getSelectedOption(bankingDetails as BankAccountBase[], selectedBank);
+                const selectedOption = getSelectedOption(bankingDetails as BankAccount[], selectedBank);
                 setBankSelected(true);
                 onDataChange(ogData => ({
                     ...ogData,
-                    accountType: (selectedOption?.accountType as AccountType) || '',
+                    accountType: (selectedOption?.accountType as AccountType | undefined) || '',
                     bankName: selectedOption?.branchName || '',
                     accountNumber: selectedOption?.accountNumber || '',
                     bankRoutingNumber: selectedOption?.routingNumber || '',
                     isVoidCheckAttached: !userSelectedOption ? disbursementInformation.isVoidCheckAttached : null,
                     isWireApprovalPresent: !userSelectedOption ? disbursementInformation.isWireApprovalPresent : false,
-                    doesCheckMeetSecurityRequirements: !userSelectedOption ? disbursementInformation.doesCheckMeetSecurityRequirements : null,
+                    doesCheckMeetSecurityRequirements: !userSelectedOption
+                        ? disbursementInformation.doesCheckMeetSecurityRequirements
+                        : null,
                     accountHolder: !userSelectedOption ? disbursementInformation.accountHolder : '',
                     bankFurtherCreditAccount: !userSelectedOption
                         ? disbursementInformation.bankFurtherCreditAccount

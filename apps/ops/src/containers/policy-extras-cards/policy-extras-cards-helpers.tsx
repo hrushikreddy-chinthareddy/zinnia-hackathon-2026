@@ -1,4 +1,5 @@
 import { Skeleton } from '@radix-ui/themes';
+import { PartyStatus, PolicyFeature, FeatureType, Rider } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 import React, { ReactElement } from 'react';
@@ -14,7 +15,6 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertKebabedDateString, isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helpers';
 import { FeaturesCardsTest, RidersCardsTest } from '@deps/jest/constants/test-id-constants';
-import { PartyStatus, PolicyFeature, PolicyFeatureFeatureType, Rider } from '@deps/models/policy/sor-policy';
 import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ConfiguredSettingId } from '@deps/types/product-config-settings';
 import { BenefitId, CoverageId, CoverageToBenefitId, RiderBenefit } from '@deps/types/product-rate';
@@ -251,7 +251,7 @@ const getRiderSubheader = (rider: Rider, riderBenefitData: RiderBenefit, t: TFun
 
 const getFeatureHeader = (feature: PolicyFeature, t: TFunction): string => {
     switch (feature.featureType) {
-        case 'LAPSEPROTECTION' as PolicyFeatureFeatureType:
+        case FeatureType.LAPSEPROTECTION:
             return t('features.lapseProtection') as string;
         default:
             return feature.featureType ?? '';
@@ -260,7 +260,7 @@ const getFeatureHeader = (feature: PolicyFeature, t: TFunction): string => {
 
 const getFeatureSubheader = (feature: PolicyFeature, t: TFunction): (string | null)[] => {
     switch (feature.featureType) {
-        case 'LAPSEPROTECTION' as PolicyFeatureFeatureType:
+        case FeatureType.LAPSEPROTECTION:
             return [
                 toSentenceCase(
                     t(feature.period === 1 ? 'features.oneYearProtectionGuarantee' : 'features.nYearsProtectionGuarantee', {

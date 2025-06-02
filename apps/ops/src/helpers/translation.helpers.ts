@@ -1,6 +1,6 @@
+import { AccountType, AddressType, EmailType, PhoneType, ProductType } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
-import { AccountType, AddressType, EmailType, PhoneType, ProductType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 // ToDo - BPB: Once the SOR ProductTypes spec has been updated to include the below types, we can remove anticipatedProductTypes logic.
@@ -8,7 +8,6 @@ export type AnticipatedProductTypesType = (typeof AnticipatedProductTypes)[keyof
 
 const AnticipatedProductTypes = {
     TERMLIFE: 'TERMLIFE',
-    FIXEDANNUITY: 'FIXEDANNUITY',
     DELAYEDIMMEDIATEFIXEDANDVARIABLEANNUITY: 'Delayed Immediate Fixed and Variable Annuity',
     DELAYEDIMMEDIATEFIXEDANNUITY: 'Delayed Immediate Fixed Annuity',
     DELAYEDIMMEDIATEVARIABLEANNUITY: 'Delayed Immediate Variable Annuity',

@@ -1,4 +1,4 @@
-import { PolicyStatus } from '@deps/models/policy/sor-policy';
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
 export enum BadgeVariant {
     Default = 'default',
@@ -78,6 +78,6 @@ export const getBadgeStatusVariant = (status: PolicyStatus | undefined): BadgeVa
         case PolicyStatus.DEATHCLAIMPAID:
             return BadgeVariant.Neutral;
         default:
-            return status as BadgeVariant;
+            return status as unknown as BadgeVariant;
     }
 };

@@ -1,10 +1,10 @@
+import { Party } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuid4 } from 'uuid';
 
 import { buildFullName } from '@deps/helpers/string.helpers';
 import { SignValidated } from '@deps/models/case/renewal/signature-validation';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
-import { PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { getChannel } from './address-change-helpers';
@@ -85,7 +85,7 @@ const transformPartyToPayload = (params: any) => {
     return party;
 };
 
-const toPartyPayload = ({ firstName, middleName, lastName, suffix, prefix, identifications, partyId }: PolicyAllOfPartiesItem) => ({
+const toPartyPayload = ({ firstName, middleName, lastName, suffix, prefix, identifications, partyId }: Party) => ({
     partyId: partyId,
     firstName: firstName,
     middleName: middleName,

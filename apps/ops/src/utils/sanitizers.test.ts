@@ -1,6 +1,7 @@
+import { Party, Policy } from '@zinnia/api-types/types/sor';
+
 import { Case } from '@deps/models/case/case';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
-import { Party , Policy } from '@deps/models/policy/sor-policy';
 
 import { caseSanitizer, caseSearchSanitizer, lcPartyResponseSanitizer, policyResponseSanitizer, policySanitizer } from './sanitizers';
 

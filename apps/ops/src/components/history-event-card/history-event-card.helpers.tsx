@@ -1,3 +1,4 @@
+import { BankAccount, Policy, Party, Reason, Transaction, TransactionStatus, TransactionType } from '@zinnia/api-types/types/sor';
 import { toSentenceCase, toTitleCase } from '@zinnia/utils';
 import { I18n, TFunction, i18n } from 'next-i18next';
 
@@ -5,25 +6,17 @@ import { getFullName } from '@deps/helpers/party-info-helpers';
 import { convertKebabedDateString, formatAccountNumber, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { PeopleChangeTransactionTypes } from '@deps/helpers/transaction-types.helpers';
 import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helpers';
-import {
-    BankAccount,
-    Policy,
-    PolicyAllOfPartiesItem,
-    Reason,
-    Transaction,
-    TransactionStatus,
-    TransactionType,
-} from '@deps/models/policy/sor-policy';
+import { Payor } from '@deps/models/policy-sor-touchups/Transaction';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { GetBankAccount, PeopleChangeType } from './types';
 
 const typeByTransactionType = {
-    [TransactionType.AddressChange]: 'address',
-    [TransactionType.EmailChange]: 'email',
-    [TransactionType.PhoneNumberChange]: 'phoneNumber',
-    [TransactionType.BankAccountChange]: 'bankAccount',
-    [TransactionType.CommunicationPreferenceChange]: 'correspondencePreference',
+    [TransactionType.ADDRESS_CHANGE]: 'address',
+    [TransactionType.EMAIL_CHANGE]: 'email',
+    [TransactionType.PHONE_NUMBER_CHANGE]: 'phoneNumber',
+    [TransactionType.BANK_ACCOUNT_CHANGE]: 'bankAccount',
+    [TransactionType.COMMUNICATION_PREFERENCE_CHANGE]: 'correspondencePreference',
 };
 
 const changeTypeKey = {
@@ -32,7 +25,7 @@ const changeTypeKey = {
     [PeopleChangeType.Update]: 'xUpdate',
 };
 
-export const getPaymentMethods = (policy: Policy, payors: Transaction['payors']): BankAccount[] => {
+export const getPaymentMethods = (policy: Policy, payors: Payor[] | undefined): BankAccount[] => {
     if (!policy?.parties?.length || !payors?.length) return [];
     const accounts: BankAccount[] = [];
     // payors is an array.  Grabbing all payment methods associated with any payor here in favor of truncation afterwards.
@@ -84,7 +77,7 @@ export const getPeopleChangeEventTitle = (transaction: Transaction, t: TFunction
 };
 
 // uses the transaction to find the affected party in a policy for a people transaction
-export const getChangedParty = (policy: Policy, transaction: Transaction): PolicyAllOfPartiesItem | null => {
+export const getChangedParty = (policy: Policy, transaction: Transaction): Party | null => {
     return policy?.parties?.find(p => p.partyId === transaction.partyId) ?? null;
 };
 
@@ -114,8 +107,8 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
     const { systematicPrograms } = policy;
     const { effectiveDate, payors, payeeOrBeneficiaries, status, transactionAmounts, transactionType } = transaction ?? {};
     const { appliedAmount, paymentAmount, requestedAmount } = transactionAmounts ?? {};
-    const isPending = status === TransactionStatus.Pending;
-    const isCompleted = status === TransactionStatus.Completed;
+    const isPending = status === TransactionStatus.PENDING;
+    const isCompleted = status === TransactionStatus.COMPLETED;
 
     const caption =
         status === ('Processing' as TransactionStatus) ? t('historyEventCard.processing') : convertKebabedDateString(effectiveDate);
@@ -141,21 +134,21 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
     const eventTitle = getEventTitle(transaction, t);
 
     switch (transactionType) {
-        case TransactionType.PaymentInitialPremium:
-        case TransactionType.InitialPremium:
-            amount = transactionType === TransactionType.PaymentInitialPremium ? paymentAmount : appliedAmount;
+        case TransactionType.PAYMENT_INITIAL_PREMIUM:
+        case TransactionType.INITIAL_PREMIUM:
+            amount = transactionType === TransactionType.PAYMENT_INITIAL_PREMIUM ? paymentAmount : appliedAmount;
             eventBody = bankingBody ?? '';
             isClickable = true;
             break;
 
-        case TransactionType.PaymentOneTimePremium:
-        case TransactionType.OneTimePremium:
-            amount = transactionType === TransactionType.PaymentOneTimePremium ? paymentAmount : appliedAmount;
+        case TransactionType.PAYMENT_ONE_TIME_PREMIUM:
+        case TransactionType.ONE_TIME_PREMIUM:
+            amount = transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM ? paymentAmount : appliedAmount;
             eventBody = bankingBody ?? '';
             isClickable = true;
             break;
 
-        case TransactionType.SubsequentPremium: {
+        case TransactionType.SUBSEQUENT_PREMIUM: {
             const systematicProgram = systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
 
             amount = appliedAmount;
@@ -166,7 +159,7 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
             break;
         }
 
-        case TransactionType.SubsequentPayment: {
+        case TransactionType.SUBSEQUENT_PAYMENT: {
             const systematicProgram = systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
 
             amount = paymentAmount;
@@ -177,7 +170,7 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
             break;
         }
 
-        case TransactionType.FullSurrender: {
+        case TransactionType.FULL_SURRENDER: {
             // try to cache this so isnt being called so many times
             const bankAccount = getBankAccount({ policy, payorsOrPayees: payeeOrBeneficiaries });
             const eventBankingBody = t('historyEventCard.toBanking', {
@@ -191,8 +184,8 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
             break;
         }
 
-        case TransactionType.PartialWithdrawalOneTime:
-        case TransactionType.RequiredMinimumDistributionOneTime: {
+        case TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME:
+        case TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME: {
             const bankAccount = getBankAccount({ policy, payorsOrPayees: payeeOrBeneficiaries });
             const eventBankingBody = t('historyEventCard.toBanking', {
                 accountType: mapAccountTypeToTranslation(bankAccount?.accountType, t).toLowerCase(),
@@ -204,48 +197,48 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
             break;
         }
 
-        case TransactionType.PaymentLoanRepaymentOneTime:
-        case TransactionType.LoanRepaymentOneTime: {
-            amount = isPending || transactionType === TransactionType.PaymentLoanRepaymentOneTime ? paymentAmount : appliedAmount;
+        case TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME:
+        case TransactionType.LOAN_REPAYMENT_ONE_TIME: {
+            amount = isPending || transactionType === TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME ? paymentAmount : appliedAmount;
             eventBody = bankingBody ?? t('historyEventCard.oneTimePayment');
             break;
         }
 
-        case TransactionType.PaymentSystematicLoanRepayment:
-        case TransactionType.SystematicLoanRepayment: {
+        case TransactionType.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT:
+        case TransactionType.SYSTEMATIC_LOAN_REPAYMENT: {
             amount = appliedAmount || requestedAmount;
             eventBody = bankingBody ?? '';
             break;
         }
 
-        case TransactionType.NewLoan: {
+        case TransactionType.NEW_LOAN: {
             amount = isPending ? (requestedAmount ? -requestedAmount : requestedAmount) : appliedAmount;
             isClickable = true;
             break;
         }
 
-        case TransactionType.Activation:
+        case TransactionType.ACTIVATION:
             break;
 
-        case TransactionType.Anniversary:
+        case TransactionType.ANNIVERSARY:
             break;
 
-        case TransactionType.DeathClaim:
+        case TransactionType.DEATH_CLAIM:
             break;
 
-        case TransactionType.Lapse:
+        case TransactionType.LAPSE:
             isClickable = true;
             break;
 
-        case TransactionType.AddressChange:
-        case TransactionType.EmailChange:
-        case TransactionType.PhoneNumberChange:
-        case TransactionType.BankAccountChange:
+        case TransactionType.ADDRESS_CHANGE:
+        case TransactionType.EMAIL_CHANGE:
+        case TransactionType.PHONE_NUMBER_CHANGE:
+        case TransactionType.BANK_ACCOUNT_CHANGE:
             eventBody = getFullName(getChangedParty(policy, transaction as Transaction) ?? undefined);
 
             isClickable = true;
             break;
-        case TransactionType.FreeLookCancellation: {
+        case TransactionType.FREE_LOOK_CANCELLATION: {
             const bankAccount = getBankAccount({ policy, payorsOrPayees: payeeOrBeneficiaries });
             const eventBankingBody = t('historyEventCard.toBanking', {
                 accountType: mapAccountTypeToTranslation(bankAccount?.accountType, t).toLowerCase(),
@@ -258,7 +251,7 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
             break;
         }
 
-        case TransactionType.Disbursement: {
+        case TransactionType.DISBURSEMENT: {
             // The applied amount for disbursements is tied to each beneficiary, so we have to loop through.
             // this is almost always only 1 (it may always only be 1, but let's be careful).
             const totalAppliedAmount = payeeOrBeneficiaries?.reduce((acc, payeeOrBeneficiary) => {

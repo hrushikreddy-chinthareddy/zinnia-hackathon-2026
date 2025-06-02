@@ -1,3 +1,4 @@
+import { Email, EmailType } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { v4 as uuid4 } from 'uuid';
@@ -8,7 +9,6 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
 import { EmailWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import { SideSheetPeopleHeaderProps } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
-import { Email, EmailType } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 

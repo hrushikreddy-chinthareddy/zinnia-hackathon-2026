@@ -1,3 +1,4 @@
+import { PartyType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
@@ -13,7 +14,6 @@ import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
 import { getStateName } from '@deps/helpers/states.helpers';
 import { convertKebabedDateString, formatSSN, safeString } from '@deps/helpers/string.helpers';
-import { PartyType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 
 export interface IdentificationCardProps {

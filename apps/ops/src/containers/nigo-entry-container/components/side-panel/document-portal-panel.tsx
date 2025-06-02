@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { Loader, TabGroup, TabList, TabTrigger, TabContent, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -8,7 +9,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { PolicyDocument } from '@deps/models/case/document';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 import { useGetPolicyTypeDocs } from '../steps/service-form-review/service-form-review.helpers';
 

@@ -1,24 +1,21 @@
+import { Phone } from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import { useTranslation } from 'next-i18next';
 
 import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import FieldSelect from '@deps/components/fields/field-select/field-select';
-import {
-    countryOptions,
-    frequentCountryOptions,
-} from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
+import { countryOptions, frequentCountryOptions } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
-import { Phone } from '@deps/models/policy/sor-policy';
 
 interface PhoneNumberProps {
     country: keyof typeof countries;
     phone: Phone;
     setCountry: (value: keyof typeof countries) => void;
     setPhone: (value: any) => void;
-    formErrors: any
-};
+    formErrors: any;
+}
 
-const PhoneNumber = ({country, phone, setCountry, setPhone, formErrors}: PhoneNumberProps) => {
+const PhoneNumber = ({ country, phone, setCountry, setPhone, formErrors }: PhoneNumberProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'deathClaims.deathClaimNotification' });
 
     return (
@@ -41,7 +38,7 @@ const PhoneNumber = ({country, phone, setCountry, setPhone, formErrors}: PhoneNu
                 setCountry(value as keyof typeof countries);
                 setPhone((prevState: any) => ({
                     ...prevState,
-                    countryCode: countries[value as keyof typeof countries].phone
+                    countryCode: countries[value as keyof typeof countries].phone,
                 }));
             }}
             options={countryOptions}

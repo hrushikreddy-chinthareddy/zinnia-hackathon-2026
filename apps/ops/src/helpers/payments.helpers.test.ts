@@ -1,4 +1,4 @@
-import { Party, PolicyCoverage, SystematicProgram } from '@deps/models/policy/sor-policy';
+import { FlatExtraType, Party, PolicyCoverage, SystematicProgram } from '@zinnia/api-types/types/sor';
 
 import { getBankDetails, getFlatExtra, getParty } from './payments.helpers';
 
@@ -40,11 +40,11 @@ describe('payments.helper.ts', () => {
             const coverage: PolicyCoverage = {
                 coverageLayers: [
                     {
-                        coverageParticipants: [{ flatExtra: [{ flatExtraType: 'TEMP' }] }],
+                        coverageParticipants: [{ flatExtra: [{ flatExtraType: FlatExtraType.TEMP }] }],
                     },
                 ],
             };
-            expect(getFlatExtra(coverage)).toEqual([{ flatExtraType: 'TEMP' }]);
+            expect(getFlatExtra(coverage)).toEqual([{ flatExtraType: FlatExtraType.TEMP }]);
         });
 
         it('should return an empty array if coverage is undefined', () => {

@@ -1,25 +1,29 @@
+import { Phone, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { createContext } from 'react';
 
-import { ApplyToRolesState, ContractUpdateOptions, SignatureState } from '@deps/containers/address-change-container/types/address-change-types';
+import {
+    ApplyToRolesState,
+    ContractUpdateOptions,
+    SignatureState,
+} from '@deps/containers/address-change-container/types/address-change-types';
 import { Address, FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { Phone, PolicyParties } from '@deps/models/policy/sor-policy';
 
 //TODO: Update all any with the types, we get from api response
 export type AddressChangeFormState = {
     formData: any;
     contractUpdateOption: ContractUpdateOptions;
-    roleIdentifier: PolicyParties;
+    roleIdentifier: PolicyPartyRoles;
     applyToRoles: ApplyToRolesState[];
     signatureData: SignatureState;
     formErrors: FormValidationErrors;
     formWarnings: any;
     phone: Phone;
     address: Address;
-    selectedIds: number[],
+    selectedIds: number[];
     submitSuccess: boolean;
     setFormData: React.Dispatch<React.SetStateAction<any>>;
     setContractUpdateOption: React.Dispatch<React.SetStateAction<ContractUpdateOptions>>;
-    setRoleIdentifier: React.Dispatch<React.SetStateAction<PolicyParties>>;
+    setRoleIdentifier: React.Dispatch<React.SetStateAction<PolicyPartyRoles>>;
     setApplyToRoles: React.Dispatch<React.SetStateAction<ApplyToRolesState[]>>;
     setSignatureData: React.Dispatch<React.SetStateAction<SignatureState>>;
     setFormErrors: React.Dispatch<React.SetStateAction<any>>;
@@ -43,7 +47,7 @@ export const addressChangeDefaultValues = {
     phone: {} as any,
     address: {} as any,
     selectedIds: [] as any,
-    submitSuccess:  false,
+    submitSuccess: false,
     setContractUpdateOption: noop,
     setFormData: noop,
     setRoleIdentifier: noop,

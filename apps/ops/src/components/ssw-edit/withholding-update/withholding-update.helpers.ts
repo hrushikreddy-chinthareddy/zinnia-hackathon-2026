@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
-import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
 import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';

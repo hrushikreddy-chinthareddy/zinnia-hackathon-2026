@@ -1,5 +1,4 @@
-import { DisbursementCriteriaEnum, FundUsageInfo } from '@deps/models/funds/fund-information';
-import { FundAccountType } from '@deps/models/policy/sor-policy';
+import { DisbursementCriteriaEnum, FundAccountTypeEnum, FundUsageInfo } from '@deps/models/funds/fund-information';
 
 export interface CarrierFundsResponse {
     data: string[];
@@ -67,7 +66,7 @@ interface IndexedFund {
 export interface FundInformationByFundId {
     fixedFund?: FixedFund;
     fundAccountName?: string;
-    fundAccountType?: FundAccountType;
+    fundAccountType?: FundAccountTypeEnum;
     // fundId doesnt come back from the request but adding it to avoid needing a map later
     fundId?: string;
     glCode?: string;

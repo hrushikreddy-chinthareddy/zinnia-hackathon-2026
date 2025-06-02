@@ -11,7 +11,9 @@ import { Loader } from '@deps/components/page-loader';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/case/send-document';
-import { Policy } from '@deps/models/policy/sor-policy';
+
+import { Policy } from '@zinnia/api-types/types/sor';
+
 import { searchForms } from '@deps/queries/api/c2web';
 type FormSelectionProps = {
     policy?: Policy;

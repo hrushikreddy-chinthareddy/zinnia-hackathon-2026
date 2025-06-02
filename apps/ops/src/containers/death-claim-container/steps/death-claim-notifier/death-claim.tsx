@@ -1,4 +1,4 @@
-
+import { PartyRole, PhoneType, Policy } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { countries } from 'countries-list';
 import { useTranslation } from 'next-i18next';
@@ -10,10 +10,12 @@ import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_NOTIFIER_PARTY, DEFAULT_PHONE } from '@deps/containers/death-claim-container/death-claim.helpers';
-import { getNotifiersByRoles, validatePhoneNumber } from '@deps/containers/death-claim-container/steps/death-claim-notifier/death-claim-notifier.helpers';
+import {
+    getNotifiersByRoles,
+    validatePhoneNumber,
+} from '@deps/containers/death-claim-container/steps/death-claim-notifier/death-claim-notifier.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { PartyRole, PhoneType, Policy } from '@deps/models/policy/sor-policy';
 
 import { AddBeneficiaryCard } from './add-beneficiary-card';
 import getDeathClaimConfig from './death-claim.config';
@@ -24,13 +26,13 @@ import { ClaimActionTypes, NotifierParty, RoleType } from '../../death-claim.typ
 
 interface DeathClaimProps {
     policy: Policy;
-    notifiers: NotifierParty
+    notifiers: NotifierParty;
     formErrors: FormValidationErrors;
     isNewBene: boolean;
     handleNewBene: (value: boolean) => void;
     updateNotifier: (notifier: NotifierParty) => void;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
-};
+}
 
 export const INITIAL_PHONE = {
     countryCode: '1',
@@ -39,25 +41,32 @@ export const INITIAL_PHONE = {
     areaCode: '',
 };
 
-export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewBene, updateNotifier, setFormErrors} : DeathClaimProps) => {
+export const DeathClaim = ({ policy, formErrors, notifiers, isNewBene, handleNewBene, updateNotifier, setFormErrors }: DeathClaimProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims.deathClaimNotification' });
-    const {  otherRoleFields, newBeneFields } = getDeathClaimConfig(t);
+    const { otherRoleFields, newBeneFields } = getDeathClaimConfig(t);
 
     const primaryBenificaries = useMemo(() => {
-        return getNotifiersByRoles(policy,[ PartyRole.PRIMARYBENEFICIARY ]);
+        return getNotifiersByRoles(policy, [PartyRole.PRIMARYBENEFICIARY]);
     }, [policy]);
 
     const allAgents = useMemo(() => {
-        const agentRoles = [ PartyRole.AGENT, PartyRole.PRIMARYSERVICINGAGENT, PartyRole.PRIMARYWRITINGAGENT, PartyRole.ADDITIONALSERVICINGAGENT, PartyRole.ADDITIONALWRITINGAGENT ];
+        const agentRoles = [
+            PartyRole.AGENT,
+            PartyRole.PRIMARYSERVICINGAGENT,
+            PartyRole.PRIMARYWRITINGAGENT,
+            PartyRole.ADDITIONALSERVICINGAGENT,
+            PartyRole.ADDITIONALWRITINGGAGENT,
+            'ADDITIONALWRITINGAGENT' as PartyRole, // BPB - typo
+        ];
         return getNotifiersByRoles(policy, agentRoles);
     }, [policy]);
 
     const allBeneficiaries = useMemo(() => {
-       return getNotifiersByRoles(policy,[ PartyRole.PRIMARYBENEFICIARY, PartyRole.CONTINGENTBENEFICIARY ]);
+        return getNotifiersByRoles(policy, [PartyRole.PRIMARYBENEFICIARY, PartyRole.CONTINGENTBENEFICIARY]);
     }, [policy]);
 
     const allOwners = useMemo(() => {
-        return getNotifiersByRoles(policy,[ PartyRole.OWNER, PartyRole.JOINTOWNER ]);
+        return getNotifiersByRoles(policy, [PartyRole.OWNER, PartyRole.JOINTOWNER]);
     }, [policy]);
 
     const isSingleOwner = useMemo(() => {
@@ -66,14 +75,14 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
 
     const roleType = useMemo(() => {
         return [
-            { label: t('labels.roleType.agent'), value: RoleType.Agent, disabled: allAgents?.length === 0},
+            { label: t('labels.roleType.agent'), value: RoleType.Agent, disabled: allAgents?.length === 0 },
             { label: t('labels.roleType.beneficiary'), value: RoleType.Beneficiary, disabled: allBeneficiaries?.length === 0 },
             { label: t('labels.roleType.owner'), value: RoleType.Owner, disabled: allOwners?.length === 0 || isSingleOwner },
             { label: t('labels.roleType.other'), value: RoleType.Other },
         ];
     }, [t, allAgents?.length, allBeneficiaries?.length, allOwners?.length, isSingleOwner]);
 
-    const [role, setRole] = useState<RoleType>(notifiers?.notifierRole as RoleType || RoleType.Beneficiary);
+    const [role, setRole] = useState<RoleType>((notifiers?.notifierRole as RoleType) || RoleType.Beneficiary);
     const [phone, setPhone] = useState<any>(notifiers?.party?.phone || INITIAL_PHONE);
     const [country, setCountry] = useState('US' as keyof typeof countries);
     const [selectedParty, setSelectedParty] = useState<NotifierParty>(notifiers || DEFAULT_NOTIFIER_PARTY);
@@ -96,20 +105,19 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
                     //...DEFAULT_PARTY,
                     phone: {
                         //...DEFAULT_PHONE,
-                        ...prevState.party.phone
-                    }
+                        ...prevState.party.phone,
+                    },
                 },
-                notifierRole: role
-            }
+                notifierRole: role,
+            };
         });
-
     }, [role]);
 
     useEffect(() => {
         setSelectedParty(prevState => {
-            return { ...prevState, isPrimaryBeneInfoOnFile: isPrimaryBeneInfoOnFile }
+            return { ...prevState, isPrimaryBeneInfoOnFile: isPrimaryBeneInfoOnFile };
         });
-    },[isPrimaryBeneInfoOnFile]);
+    }, [isPrimaryBeneInfoOnFile]);
 
     useEffect(() => {
         const errors = validatePhoneNumber(phone, t);
@@ -117,7 +125,7 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
         if (Object.keys(errors).length > 0) {
             setFormErrors(prevState => ({
                 ...prevState,
-                ...errors
+                ...errors,
             }));
         } else {
             setFormErrors(prevState => {
@@ -128,9 +136,9 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
 
         setSelectedParty(prevState => {
             const isOther = isNullEmptyOrUndefined(prevState.party.partyId);
-            const { areaCode, dialNumber} = phone || {};
+            const { areaCode, dialNumber } = phone || {};
             const phoneNumber = `${areaCode}${dialNumber}`;
-            const action =  isOther && !isNullEmptyOrUndefined(phoneNumber) ? ClaimActionTypes.ADD : ClaimActionTypes.NONE;
+            const action = isOther && !isNullEmptyOrUndefined(phoneNumber) ? ClaimActionTypes.ADD : ClaimActionTypes.NONE;
             return {
                 ...prevState,
                 party: {
@@ -138,55 +146,54 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
                     phone: {
                         ...DEFAULT_PHONE,
                         ...phone,
-                        action
-                    }
-                }
-            }
+                        action,
+                    },
+                },
+            };
         });
-    }, [phone, t])
+    }, [phone, t]);
 
     useEffect(() => {
         const partyId = selectedParty?.party?.partyId;
-        const { areaCode, dialNumber} =  selectedParty?.party?.phone || {};
+        const { areaCode, dialNumber } = selectedParty?.party?.phone || {};
         const phoneNumber = `${areaCode}${dialNumber}`;
         let existingPhone;
         if (selectedParty.notifierRole === RoleType.Beneficiary) {
             existingPhone = allBeneficiaries?.find(item => item?.party?.partyId === partyId)?.party?.phone;
-        } else  if (selectedParty.notifierRole === RoleType.Owner) {
+        } else if (selectedParty.notifierRole === RoleType.Owner) {
             existingPhone = allOwners?.find(item => item?.party?.partyId === partyId)?.party?.phone;
-        } else  if (selectedParty.notifierRole === RoleType.Agent) {
+        } else if (selectedParty.notifierRole === RoleType.Agent) {
             existingPhone = allAgents?.find(item => item?.party?.partyId === partyId)?.party?.phone;
-
         }
-        const existingPhoneNumber =  existingPhone ? `${existingPhone?.areaCode}${existingPhone?.dialNumber}` : '';
+        const existingPhoneNumber = existingPhone ? `${existingPhone?.areaCode}${existingPhone?.dialNumber}` : '';
         if (!isNullEmptyOrUndefined(phoneNumber) && existingPhoneNumber !== phoneNumber) {
             selectedParty.party.phone.action = ClaimActionTypes.ADD;
         }
 
         updateNotifier(selectedParty);
-    }, [allBeneficiaries, allOwners, allAgents, selectedParty, isNewBene, t])
+    }, [allBeneficiaries, allOwners, allAgents, selectedParty, isNewBene, t]);
 
     const onCardClick = (values: any) => {
-        const { areaCode, dialNumber} =  phone || {};
+        const { areaCode, dialNumber } = phone || {};
         const phoneNumber = `${areaCode}${dialNumber}`;
         const existingPhone = values.party?.phone;
-        const existingPhoneNumber =  existingPhone ? `${existingPhone?.areaCode}${existingPhone?.dialNumber}` : '';
+        const existingPhoneNumber = existingPhone ? `${existingPhone?.areaCode}${existingPhone?.dialNumber}` : '';
 
         if (!isNullEmptyOrUndefined(phoneNumber) && existingPhoneNumber !== phoneNumber) {
             values.party.phone = {
                 ...phone,
-                action: ClaimActionTypes.ADD
-            }
+                action: ClaimActionTypes.ADD,
+            };
         }
         handleNewBene(false);
         setSelectedParty(prevState => {
-                return {
-                    ...prevState,
-                    party: {
-                        ...prevState.party,
-                        ...values.party
-                    },
-                }
+            return {
+                ...prevState,
+                party: {
+                    ...prevState.party,
+                    ...values.party,
+                },
+            };
         });
     };
 
@@ -194,13 +201,13 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
         handleNewBene(value);
     };
 
-   const getPrimaryBeneficiaryCard = () => {
+    const getPrimaryBeneficiaryCard = () => {
         return (
-            <div className='my-4'>
-                <div className='bg-gray-50 p-6 rounded-md mt-5'>
+            <div className="my-4">
+                <div className="bg-gray-50 p-6 rounded-md mt-5">
                     <Typography variant={TypographyVariant.LabelLg}>{t('labels.listedBenificary')}</Typography>
-                    <ol className='my-2'>
-                        {primaryBenificaries?.map(({party}) => (
+                    <ol className="my-2">
+                        {primaryBenificaries?.map(({ party }) => (
                             <li key={`bene-${party.partyId}`}>&ndash; {party.fullName}</li>
                         ))}
                     </ol>
@@ -212,12 +219,7 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
     const getBeneficiariesCard = () => {
         return (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 my-4">
-                <PartyCard
-                    parties={allBeneficiaries}
-                    selectedItem={selectedParty}
-                    onCardClick={onCardClick}
-                    isNewBene={isNewBene}
-                />
+                <PartyCard parties={allBeneficiaries} selectedItem={selectedParty} onCardClick={onCardClick} isNewBene={isNewBene} />
                 <AddBeneficiaryCard onCardClick={onNewBeneCardClick} isNewBene={isNewBene} />
             </div>
         );
@@ -226,11 +228,7 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
     const getAllOwnersCard = () => {
         return (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 my-4">
-                <PartyCard
-                    parties={allOwners}
-                    selectedItem={selectedParty}
-                    onCardClick={onCardClick}
-                />
+                <PartyCard parties={allOwners} selectedItem={selectedParty} onCardClick={onCardClick} />
             </div>
         );
     };
@@ -238,11 +236,7 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
     const getAllAgentsCard = () => {
         return (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 my-4">
-                <PartyCard
-                    parties={allAgents}
-                    selectedItem={selectedParty}
-                    onCardClick={onCardClick}
-                />
+                <PartyCard parties={allAgents} selectedItem={selectedParty} onCardClick={onCardClick} />
             </div>
         );
     };
@@ -252,9 +246,9 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
                 ...prevState,
                 party: {
                     ...prevState.party,
-                    ...values
-                }
-            }
+                    ...values,
+                },
+            };
         });
     };
 
@@ -264,9 +258,9 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
                 ...prevState,
                 party: {
                     ...prevState.party,
-                    ...values
-                }
-            }
+                    ...values,
+                },
+            };
         });
     };
 
@@ -279,19 +273,18 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
             case RoleType.Beneficiary:
                 return getBeneficiariesCard();
             case RoleType.Other:
-                return <OtherNotifier fields={otherRoleFields} onDataChange={onDataChange} formErrors={formErrors}/>;
+                return <OtherNotifier fields={otherRoleFields} onDataChange={onDataChange} formErrors={formErrors} />;
             default:
                 return null;
         }
     }, [role, allOwners, allBeneficiaries, allAgents, isNewBene, formErrors]);
 
-
     return (
         <>
-            <div className='my-2'>
+            <div className="my-2">
                 <Typography variant={TypographyVariant.LabelLg}>{t('labels.notifierDetails')}</Typography>
             </div>
-            <div className='grid md:grid-cols-3 lg:grid-cols-4 gap-1'>
+            <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-1">
                 <SelectSimple
                     className="max-w-[200px]"
                     label={t('labels.role') as string}
@@ -303,25 +296,17 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
                     message={formErrors?.role}
                     variant={formErrors?.role ? FieldVariant.Error : FieldVariant.Default}
                 />
-                <PhoneNumber
-                    country={country}
-                    phone={phone}
-                    setCountry={setCountry}
-                    setPhone={setPhone}
-                    formErrors={formErrors}
-                />
+                <PhoneNumber country={country} phone={phone} setCountry={setCountry} setPhone={setPhone} formErrors={formErrors} />
             </div>
+            <div>{role && displayRoleBasedSections}</div>
             <div>
-                {role && displayRoleBasedSections}
-            </div>
-            <div>
-                {role && [RoleType.Agent, RoleType.Owner, RoleType.Other].includes(role) &&
-                    <div className='my-4'>
-                        <div className='bg-gray-50 p-6 rounded-md mt-5'>
+                {role && [RoleType.Agent, RoleType.Owner, RoleType.Other].includes(role) && (
+                    <div className="my-4">
+                        <div className="bg-gray-50 p-6 rounded-md mt-5">
                             <Typography variant={TypographyVariant.LabelLg}>{t('labels.listedBenificary')}</Typography>
-                            {primaryBenificaries?.length > 0  && (
-                                <ol className='my-2'>
-                                    {primaryBenificaries?.map(({party}) => (
+                            {primaryBenificaries?.length > 0 && (
+                                <ol className="my-2">
+                                    {primaryBenificaries?.map(({ party }) => (
                                         <li key={`bene-${party.partyId}`}>&ndash; {party.fullName}</li>
                                     ))}
                                 </ol>
@@ -335,23 +320,11 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
                             )}
                         </div>
                     </div>
-                }
-            </div>
-            <div>
-                {isNewBene && (
-                    <OtherNotifier
-                        fields={newBeneFields}
-                        onDataChange={onBeneDataChange}
-                        formErrors={formErrors}
-                    />
                 )}
             </div>
+            <div>{isNewBene && <OtherNotifier fields={newBeneFields} onDataChange={onBeneDataChange} formErrors={formErrors} />}</div>
             {formErrors?.beneficiary && (
-                <AssistiveText
-                    text={formErrors?.beneficiary}
-                    variant={AssistiveTextVariant.Error}
-                    className="mt-2"
-                />
+                <AssistiveText text={formErrors?.beneficiary} variant={AssistiveTextVariant.Error} className="mt-2" />
             )}
             <div className="my-4">
                 <CheckboxText
@@ -366,4 +339,3 @@ export const DeathClaim = ({policy, formErrors, notifiers, isNewBene, handleNewB
         </>
     );
 };
-

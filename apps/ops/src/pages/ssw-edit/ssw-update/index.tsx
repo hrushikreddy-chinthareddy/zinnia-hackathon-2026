@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { Policy } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -18,7 +19,6 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { SpecialProgramType } from '@deps/models/case/enums';
 import { ActiveWithdrawalCase, Carrier, RMDProgramType } from '@deps/models/case/withdrawal/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';

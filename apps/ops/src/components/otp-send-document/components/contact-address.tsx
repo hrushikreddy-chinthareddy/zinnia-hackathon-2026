@@ -1,3 +1,4 @@
+import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import React, { useMemo, useState } from 'react';
@@ -9,7 +10,6 @@ import { PartyAddressCard } from '@deps/containers/address-change-container/comp
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PaperMail } from '@deps/models/case/correspondence';
 import { AllowedRoleTypes } from '@deps/models/case/send-document';
-import { PartyRole, PartyType, Policy } from '@deps/models/policy/sor-policy';
 
 import DifferentAddress from './different-address';
 

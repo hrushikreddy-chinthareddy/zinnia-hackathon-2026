@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Transaction } from '@zinnia/api-types/types/sor';
 import { Pagination } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { Fragment, useCallback, useContext, useEffect, useMemo, useState } from 'react';
@@ -10,7 +11,6 @@ import DividerLabel from '@deps/components/tailwind-components/divider-label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { Transaction } from '@deps/models/policy/sor-policy';
 import { getTransactionsQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 
 import EmptyState from './empty-state';

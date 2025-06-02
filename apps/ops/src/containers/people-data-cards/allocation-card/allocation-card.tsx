@@ -1,3 +1,4 @@
+import { PartyType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
@@ -11,7 +12,6 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
 import { safeString } from '@deps/helpers/string.helpers';
-import { PartyType } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 

@@ -1,3 +1,4 @@
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
@@ -13,7 +14,6 @@ import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerC
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useDiaryNotes } from '@deps/hooks/useDiaryNotes';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/icons_outlined/annotation.svg';
 
 type TabGroupContainerProps = {

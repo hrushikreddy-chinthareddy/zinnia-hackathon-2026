@@ -1,11 +1,11 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { AddressType, Country, State, PartyRole, Policy, PartyType } from '@zinnia/api-types/types/sor';
 
 import { useSendDocument } from '@deps/contexts/SendDocumentContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { CommunicationTypes, SendDocumentAction } from '@deps/models/case/send-document';
-import { AddressType, Country, PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 import Correspondence from './correspondence';
 
@@ -31,7 +31,7 @@ describe.skip('Correspondence component', () => {
     const mockPolicy: Policy = {
         parties: [
             {
-                partyType: 'INDIVIDUAL',
+                partyType: PartyType.INDIVIDUAL,
                 partyId: '123',
                 emails: [
                     {
@@ -42,12 +42,12 @@ describe.skip('Correspondence component', () => {
                     {
                         startDate: '1977-01-01',
                         endDate: '2999-12-31',
-                        addressType: 'H' as AddressType,
+                        addressType: AddressType.RESIDENCE,
                         addressLine1: 'ONE SECURITY BENEFIT PLACE',
                         addressLine2: '',
                         addressLine3: '',
                         city: 'TOPEKA',
-                        state: 'KS',
+                        state: State.KS,
                         zipCode: '66636',
                         zipCodeExtension: '',
                         country: 'USA' as Country,
@@ -61,7 +61,7 @@ describe.skip('Correspondence component', () => {
                         addressLine2: 'STE 1',
                         addressLine3: '',
                         city: 'BELLEMEAD',
-                        state: 'NJ',
+                        state: State.NJ,
                         zipCode: '66636',
                         zipCodeExtension: '',
                         country: 'USA' as Country,
@@ -75,7 +75,7 @@ describe.skip('Correspondence component', () => {
                         addressLine2: '',
                         addressLine3: '',
                         city: 'ORLANDO',
-                        state: 'FL',
+                        state: State.FL,
                         zipCode: '66636',
                         zipCodeExtension: '',
                         country: 'USA' as Country,
@@ -86,7 +86,7 @@ describe.skip('Correspondence component', () => {
         ],
         partyRoles: [
             {
-                partyRole: PartyRole.EDELIVERY,
+                partyRole: 'E-DELIVERY' as PartyRole,
                 partyId: '123',
             },
         ],

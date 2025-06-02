@@ -1,7 +1,8 @@
+import { Policy } from '@zinnia/api-types/types/sor';
+
 import { PageHead } from '@deps/components/page-title';
 import WithdrawalContainer from '@deps/containers/financial-transactions/withdrawal/withdrawal-container';
 import { WithdrawalProvider } from '@deps/contexts/transactions/WithdrawalContext';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 

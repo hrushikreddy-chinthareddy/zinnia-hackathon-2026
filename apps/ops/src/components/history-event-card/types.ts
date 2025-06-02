@@ -1,4 +1,6 @@
-import { Policy, Transaction, TransactionPayeeOrBeneficiariesItem, TransactionPayor } from "@deps/models/policy/sor-policy";
+import { Policy, Transaction, Transaction_Payor } from '@zinnia/api-types/types/sor';
+
+import { PayeeOrBeneficiary } from '@deps/models/policy-sor-touchups/Transaction';
 
 export interface EventProps {
     policy: Policy;
@@ -7,7 +9,7 @@ export interface EventProps {
 }
 
 export interface GetBankAccount {
-    payorsOrPayees?: TransactionPayeeOrBeneficiariesItem[] | TransactionPayor[];
+    payorsOrPayees?: PayeeOrBeneficiary[] | Transaction_Payor[];
     policy: Policy;
 }
 

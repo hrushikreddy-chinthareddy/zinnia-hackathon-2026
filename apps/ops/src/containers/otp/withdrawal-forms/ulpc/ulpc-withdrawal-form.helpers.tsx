@@ -37,7 +37,7 @@ import {
     AccountType,
     FormDisbursement,
     ProgramSubType,
-    AddressTypes
+    AddressTypes,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -247,7 +247,7 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
             /*shouldDisplay: ({ parties, partyRoles }: OtpWithdrawalFormState): boolean => {
                 return isLC
                 ? isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[])
-                : isIrrevocableBeneficiaryExists(parties as Party[], partyRoles as PolicyParties[]);
+                : isIrrevocableBeneficiaryExists(parties as Party[], partyRoles as PolicyPartyRoles[]);
             },*/
         },
         {

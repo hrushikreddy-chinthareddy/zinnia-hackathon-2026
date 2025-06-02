@@ -1,3 +1,4 @@
+import { Address } from '@zinnia/api-types/types/sor';
 import { Tag, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { HTMLAttributes } from 'react';
@@ -7,7 +8,6 @@ import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { Statuses } from '@deps/models/case/case';
-import { Address } from '@deps/models/policy/sor-policy';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 
 type PartyDataPoint<T> = {

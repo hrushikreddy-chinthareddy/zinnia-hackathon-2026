@@ -1,3 +1,4 @@
+import { Policy, Transaction } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
@@ -5,7 +6,6 @@ import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-p
 import { getFullName } from '@deps/helpers/party-info-helpers';
 import { orderObjectsByString } from '@deps/helpers/sort.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { Policy, Transaction } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions } from '@deps/queries/api/bpm-non-financial';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 

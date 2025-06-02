@@ -1,4 +1,5 @@
-import { CoverageLayer, CoverageParticipants, FlatExtra, Policy } from '@deps/models/policy/sor-policy';
+import { CoverageLayer, CoverageParticipants, FlatExtra, Policy } from '@zinnia/api-types/types/sor';
+
 import { DataDefinition } from '@deps/types/data';
 
 export interface PolicyCoverageLayerDto {

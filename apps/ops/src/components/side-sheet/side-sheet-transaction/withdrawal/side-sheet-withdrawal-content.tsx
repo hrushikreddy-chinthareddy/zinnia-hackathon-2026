@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 import { TFunction } from 'next-i18next';
@@ -9,7 +10,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import PayeeSummaryCardRow from '@deps/containers/payee-summary-card/payee-summary-card-row/payee-summary-card-row';
 import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
-import { TransactionType } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { WithdrawalSideSheetValues } from './types';
@@ -32,14 +32,14 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
     } = values || {};
     let transactionTypeLabel;
 
-    if (transactionType === TransactionType.FullSurrender) {
+    if (transactionType === TransactionType.FULL_SURRENDER) {
         transactionTypeLabel = t('historyEventCard.surrender');
     } else if (
-        transactionType === TransactionType.PartialWithdrawalOneTime ||
-        transactionType === TransactionType.RequiredMinimumDistributionOneTime
+        transactionType === TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME ||
+        transactionType === TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME
     ) {
         transactionTypeLabel = t('historyEventCard.withdrawal');
-    } else if (transactionType == TransactionType.FreeLookCancellation) {
+    } else if (transactionType == TransactionType.FREE_LOOK_CANCELLATION) {
         transactionTypeLabel = t('historyEventCard.transactionTypes.FreeLookCancellation');
     }
 
@@ -86,7 +86,7 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
                     <hr className="my-6 h-0.5 bg-gray-200" />
                 </>
             )}
-            {transactionType !== TransactionType.FreeLookCancellation && (
+            {transactionType !== TransactionType.FREE_LOOK_CANCELLATION && (
                 <>
                     <section>
                         <div className="mb-4 flex items-center gap-4">

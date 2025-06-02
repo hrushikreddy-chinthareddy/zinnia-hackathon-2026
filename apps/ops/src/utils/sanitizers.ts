@@ -1,3 +1,15 @@
+import {
+    Address,
+    BankAccount,
+    Email,
+    Identification,
+    IdentificationType,
+    Phone,
+    Policy,
+    PolicyCoverage,
+    State,
+    TaxWithholding,
+} from '@zinnia/api-types/types/sor';
 import { ApiError } from 'next/dist/server/api-utils';
 
 import { formatAccountNumber, formatSSN, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
@@ -6,20 +18,7 @@ import { DocumentInstance } from '@deps/models/case/document-instance';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { PartyInstance } from '@deps/models/case/party-instance';
 import { StepInstance } from '@deps/models/case/step-instance';
-import {
-    Address,
-    BankAccount,
-    Email,
-    Identification,
-    IdentificationType,
-    Party,
-    Phone,
-    Policy,
-    PolicyAllOfPartiesItem,
-    PolicyCoverage,
-    State,
-    TaxWithholding,
-} from '@deps/models/policy/sor-policy';
+import { Party } from '@deps/models/policy-sor-touchups/Party';
 import { GetPolicyResponse } from '@deps/queries/api/policies';
 import { AgentAddress, AgentData, AgentDataResponse, AgentEmail, AgentPhone } from '@deps/types/agents';
 import { CaseSearchResponse } from '@deps/types/search';
@@ -241,7 +240,7 @@ const fullyMaskCoverage = (coverage: PolicyCoverage | undefined): PolicyCoverage
     return { ...coverage, coverageLayers: maskedCoverage };
 };
 
-const fullyMaskPolicyParties = (parties: PolicyAllOfPartiesItem[] | undefined): PolicyAllOfPartiesItem[] | undefined => {
+const fullyMaskPolicyParties = (parties: Party[] | undefined): Party[] | undefined => {
     return parties?.map(
         ({
             abbreviatedName,
@@ -285,7 +284,7 @@ const fullyMaskPolicyParties = (parties: PolicyAllOfPartiesItem[] | undefined): 
                 middleName: toMaskedStringOrNull(middleName, 5),
                 phones: fullyMaskPhones(phones),
                 taxWithholdings: fullyMaskTaxWithholdings(taxWithholdings),
-            } as PolicyAllOfPartiesItem;
+            } as Party; // BPB - ToDo: Types are more specific now, so things like Gender are enums and not strings.  May need to revisit this masking strategy
         }
     );
 };
@@ -311,11 +310,11 @@ const fullyMaskSteps = (steps: StepInstance[] | undefined): StepInstance[] | und
             ...rest,
             ...(instanceInfo
                 ? {
-                    instanceInfo: {
-                        ...instanceInfo,
-                        label: toMaskedStringOrNull(instanceInfo?.label) as string,
-                    },
-                }
+                      instanceInfo: {
+                          ...instanceInfo,
+                          label: toMaskedStringOrNull(instanceInfo?.label) as string,
+                      },
+                  }
                 : { instanceInfo: null }),
         } as StepInstance;
     });

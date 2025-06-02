@@ -1,3 +1,4 @@
+import { TransactionStatus } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import {
@@ -10,7 +11,6 @@ import {
 } from '@deps/contexts/HistoryFiltersContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { TransactionStatus } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 export const getYearOptions = (policyIssueDate: string | undefined) => {

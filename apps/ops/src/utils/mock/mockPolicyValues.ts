@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
+import { FlatExtra, FlatExtraType } from '@zinnia/api-types/types/sor';
 
 import { AdditionalCharge } from '@deps/components/card/card-transactions/card-transactions';
-import { FlatExtra, FlatExtraType } from '@deps/models/policy/sor-policy';
 
 export const generatePolicyValue = (costBasis: number) => {
     return {

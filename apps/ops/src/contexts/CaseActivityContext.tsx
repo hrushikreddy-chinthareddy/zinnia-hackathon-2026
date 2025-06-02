@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { Policy } from '@zinnia/api-types/types/sor';
 import { createContext, useContext, useMemo } from 'react';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Case, Processes } from '@deps/models/case/case';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { searchPolicy } from '@deps/queries/api/policies';
 import { getPolicyQuery, getPolicyQueryKey } from '@deps/queries/tanstack/policyQueries/policyQueries';
 

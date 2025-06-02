@@ -1,10 +1,10 @@
+import { Party, PartyType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
 import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
-import { Party, PartyType } from '@deps/models/policy/sor-policy';
 import { sanitizeIdentifications } from '@deps/utils/sanitizers';
 
 export interface PolicyOwnerProps {

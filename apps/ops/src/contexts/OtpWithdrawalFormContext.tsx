@@ -1,3 +1,4 @@
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { createContext } from 'react';
 
 import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
@@ -33,7 +34,6 @@ import {
     FormComment,
     PeriodicPensionFormType,
 } from '@deps/models/case/withdrawal/case';
-import { Party, PolicyParties } from '@deps/models/policy/sor-policy';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 export type WithdrawalTaskStatus = CaseStatus | TaskStatus;
 export interface OtpWithdrawalFormState {
@@ -64,7 +64,7 @@ export interface OtpWithdrawalFormState {
     formSurrenderingCompany: FormSurrenderingCompany | null;
     contractIssueState?: string;
     parties?: LifeCadParty[] | Party[];
-    partyRoles?: PolicyParties[];
+    partyRoles?: PolicyPartyRoles[];
     currentFormState: WithdrawalTaskStatus;
     isFormStateReadOnly: boolean;
     formSpecialInstruction: FormSpecialInstruction;

@@ -1,3 +1,4 @@
+import { Party } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
@@ -11,13 +12,12 @@ import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card'
 import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
-import { PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 
 export interface BankCardProps {
     editable?: boolean;
-    party?: PolicyAllOfPartiesItem;
+    party?: Party;
     planCode?: string;
     policyNumber?: string;
 }

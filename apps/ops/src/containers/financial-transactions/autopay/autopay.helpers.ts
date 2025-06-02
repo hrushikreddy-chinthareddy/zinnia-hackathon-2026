@@ -1,10 +1,9 @@
 import { AmountType } from '@zinnia/api-types/types/bpm';
-import { SystematicProgram } from '@zinnia/api-types/types/sor';
+import { Reason, Status, SystematicProgram as SystematicPrograms, PaymentForm , SystematicProgram } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
 import { ACH, Autopay } from '@deps/contexts/transactions/AutopayContext';
-import { Reason, Status, SystematicProgram as SystematicPrograms, PaymentForm } from '@deps/models/policy/sor-policy';
 import { SystematicProgramUpdateRequestQuery } from '@deps/queries/api/bpm';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 

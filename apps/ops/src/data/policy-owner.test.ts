@@ -1,36 +1,51 @@
-import { Address, PolicyAllOfPartiesItem } from '@deps/models/policy/sor-policy';
+import {
+    Address,
+    PartyType,
+    Suffix,
+    Gender,
+    Country,
+    State,
+    PreferredCommunicationType,
+    AddressType,
+    PhoneType,
+    EmailType,
+    EmploymentStatus,
+    IdentificationType,
+} from '@zinnia/api-types/types/sor';
+
+import { Party } from '@deps/models/policy-sor-touchups/Party';
 
 import { toPolicyOwnerDto } from './policy-owner';
 
-const partyInfo: PolicyAllOfPartiesItem = {
+const partyInfo: Party = {
     partyId: 'Party_PI_1',
     beneficiaryPercentage: 0,
-    partyType: 'INDIVIDUAL',
+    partyType: PartyType.INDIVIDUAL,
     firstName: 'PRASHANT',
     middleName: 'KISHOR',
     lastName: 'SINGH-TC03',
     fullName: '',
-    suffix: 'JR',
-    gender: 'MALE',
+    suffix: Suffix.JR,
+    gender: Gender.MALE,
     dateOfBirth: '2004-10-05',
-    birthCountry: 'US',
-    birthState: 'CA',
-    trustType: '',
-    preferredCommunicationType: 'EMAIL',
+    birthCountry: Country.US,
+    birthState: State.CA,
+    trustType: undefined,
+    preferredCommunicationType: PreferredCommunicationType.EMAIL,
     addresses: [
         {
             addressId: '1',
             startDate: '2023-05-11',
             endDate: '',
-            addressType: 'RESIDENCE',
+            addressType: AddressType.RESIDENCE,
             addressLine1: '675 RHOADS DR',
             addressLine2: '',
             addressLine3: '',
             city: 'Hillsborugh',
-            state: 'PA',
+            state: State.PA,
             zipCode: '08844',
             zipCodeExtension: '',
-            country: 'US',
+            country: Country.US,
         },
     ],
     phones: [
@@ -38,7 +53,7 @@ const partyInfo: PolicyAllOfPartiesItem = {
             phoneId: '1',
             startDate: '2023-05-11',
             endDate: '',
-            phoneType: 'MOBILE',
+            phoneType: PhoneType.MOBILE,
             countryCode: '1',
             areaCode: '318',
             dialNumber: '9873960',
@@ -51,14 +66,14 @@ const partyInfo: PolicyAllOfPartiesItem = {
             emailId: '1',
             startDate: '2023-05-11',
             endDate: '',
-            emailType: 'PERSONAL',
+            emailType: EmailType.PERSONAL,
             emailAddress: 'Prashant.Singh@gmail.com',
         },
     ],
     bankDetails: [],
     insured: {
         employed: true,
-        employmentStatus: 'RETIRED',
+        employmentStatus: EmploymentStatus.RETIRED,
         existingLifeInsurance: false,
         existingLifeInsuranceAmount: 0,
         householdIncome: 0,
@@ -69,7 +84,14 @@ const partyInfo: PolicyAllOfPartiesItem = {
     },
     timestamp: '',
     trustDate: '',
-    identifications: [{ identificationValue: '12345', identificationType: 'SSN', issueState: 'CA', issueCountry: 'NA' }],
+    identifications: [
+        {
+            identificationValue: '12345',
+            identificationType: IdentificationType.SSN,
+            issueState: State.CA,
+            issueCountry: Country.NA,
+        },
+    ],
 };
 
 describe('Policy Owner Data helper', () => {

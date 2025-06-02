@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
-
-import { Address, AddressType, State } from '@deps/models/policy/sor-policy';
+import { Address, AddressType, State, Country } from '@zinnia/api-types/types/sor';
 
 export const generateAddress = (): Address => {
     const addressType = faker.helpers.arrayElement(Object.values(AddressType));
@@ -15,6 +14,6 @@ export const generateAddress = (): Address => {
         state: faker.location.state({ abbreviated: true }) as State,
         zipCode: faker.location.zipCode('#####'),
         zipCodeExtension: faker.number.int({ min: 1000, max: 9999 }).toString(),
-        country: 'US',
+        country: Country.US,
     };
 };

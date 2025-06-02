@@ -1,9 +1,9 @@
+import { BankAccount, Policy, FeatureType, Reason } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { getBankDetails, getParty } from '@deps/helpers/payments.helpers';
 import { convertKebabedDateString, isNullEmptyOrUndefined, translateYearOrYears } from '@deps/helpers/string.helpers';
-import { BankAccount, Policy, PolicyFeatureFeatureType, Reason } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { DataDefinition } from '@deps/types/data';
 
@@ -47,9 +47,7 @@ export const toPolicySummaryColDto = (policy: Policy, t?: TFunction): PolicySumm
     const payorParty = getParty(parties, upcomingPremium);
     const payorBankDetails = getBankDetails(payorParty, upcomingPremium);
 
-    const freeLookFeature = (policyFeatures ?? []).find(feature =>
-        ['FREELOOK', PolicyFeatureFeatureType.freelook].includes(feature.featureType || '')
-    );
+    const freeLookFeature = (policyFeatures ?? []).find(feature => ['freelook', FeatureType.FREELOOK].includes(feature.featureType || ''));
 
     const accountNumber = payorBankDetails?.accountNumber?.substring(payorBankDetails?.accountNumber.length - 4);
     const fixedCostPeriodLeft =
@@ -59,8 +57,9 @@ export const toPolicySummaryColDto = (policy: Policy, t?: TFunction): PolicySumm
 
     const result = {
         freeLookExpirationDate: freeLookFeature?.endDate,
-        upcomingMonthlyPremium: `${upcomingPremium?.amount},${convertKebabedDateString(paymentDate || '')},${accountNumber || 'empty'},${payorBankDetails?.accountType
-            },${policy.policyNumber}`,
+        upcomingMonthlyPremium: `${upcomingPremium?.amount},${convertKebabedDateString(paymentDate || '')},${accountNumber || 'empty'},${
+            payorBankDetails?.accountType
+        },${policy.policyNumber}`,
         maturityDate: policyDates?.maturityDate,
         issueDate: convertKebabedDateString(policyDates?.issueDate),
         baseDeathBenefit: baseDeathBenefit,

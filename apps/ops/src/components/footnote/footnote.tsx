@@ -1,7 +1,7 @@
+import { ProductType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { mapProductTypeToTranslation } from '@deps/helpers/translation.helpers';
-import { ProductType } from '@deps/models/policy/sor-policy';
 
 export type FootnoteProps = {
     productMarketingName?: string;

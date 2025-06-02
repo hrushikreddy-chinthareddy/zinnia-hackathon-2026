@@ -1,11 +1,11 @@
 import { Transition } from '@headlessui/react';
+import { Country, State } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 import IconButton from '@deps/components/icon-button/icon-button';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import { Country, State } from '@deps/models/policy/sor-policy';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 
 interface AdditionalAddressLineProps {

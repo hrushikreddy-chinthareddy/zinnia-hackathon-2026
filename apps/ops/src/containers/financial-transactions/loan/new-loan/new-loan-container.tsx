@@ -13,7 +13,6 @@ import WorkflowContainer from '@deps/containers/workflow-container/workflow-cont
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useNewLoan } from '@deps/contexts/transactions/NewLoanContext';
 import { Processes } from '@deps/models/case/case';
-import { Policy as PolicyOld } from '@deps/models/policy/sor-policy';
 import { validateNewLoan } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -51,7 +50,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
             component: (
                 <StartStep
                     parentPage={ParentPage.Loans}
-                    policy={policy as PolicyOld}
+                    policy={policy}
                     processType={Processes.Loan}
                     setState={setNewLoan as StartStepSetState}
                     state={newLoan}
@@ -120,7 +119,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
         },
     ];
 
-    return <WorkflowContainer policy={policy as PolicyOld} steps={steps} />;
+    return <WorkflowContainer policy={policy} steps={steps} />;
 };
 
 export default NewLoanContainer;

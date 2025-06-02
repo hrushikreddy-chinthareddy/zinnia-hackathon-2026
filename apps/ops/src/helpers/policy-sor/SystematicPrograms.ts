@@ -1,6 +1,6 @@
+import { ArrangementType, Reason, SystematicProgram as SysProg } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
-import { ArrangementType, Reason, SystematicProgram as SysProg } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 //TODO: Remove this eventually because LifeCAD should be sending correct enum values in arrangementTypes
@@ -17,24 +17,25 @@ export class SystematicPrograms {
 
     constructor(programs: SysProg[] = []) {
         this.allPrograms = programs;
-        programs.filter(program => program.status === 'ACTIVE')
-        .forEach(program => {
-            const { arrangementType, arrangementId, reason } = program;
-            if (arrangementType) {
-                if (!this.systematicProgramsByType[arrangementType]) {
-                    this.systematicProgramsByType[arrangementType] = [];
+        programs
+            .filter(program => program.status === 'ACTIVE')
+            .forEach(program => {
+                const { arrangementType, arrangementId, reason } = program;
+                if (arrangementType) {
+                    if (!this.systematicProgramsByType[arrangementType]) {
+                        this.systematicProgramsByType[arrangementType] = [];
+                    }
+                    this.systematicProgramsByType[arrangementType].push(program);
                 }
-                this.systematicProgramsByType[arrangementType].push(program);
-            }
 
-            if (reason) {
-                this.systematicProgramById[reason] = program;
-            }
+                if (reason) {
+                    this.systematicProgramById[reason] = program;
+                }
 
-            if (arrangementId) {
-                this.systematicProgramById[arrangementId] = program;
-            }
-        });
+                if (arrangementId) {
+                    this.systematicProgramById[arrangementId] = program;
+                }
+            });
     }
 
     public getProgramsById(programId: string): SysProg | undefined {

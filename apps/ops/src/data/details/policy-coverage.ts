@@ -1,4 +1,5 @@
-import { Policy, PolicyCoverage } from '@deps/models/policy/sor-policy';
+import { Policy, PolicyCoverage } from '@zinnia/api-types/types/sor';
+
 import { DataDefinition } from '@deps/types/data';
 
 export type PolicyCoverageDto = PolicyCoverage;

@@ -1,3 +1,4 @@
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -8,7 +9,6 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 import { RoleAddressCard } from './components/role-address-cards';
 import { AllowedRoleTypes } from './utils/roles-contract-constants';

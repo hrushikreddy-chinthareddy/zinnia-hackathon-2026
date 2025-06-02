@@ -1,8 +1,8 @@
+import { AllocationOption } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react';
 
 import { AmountType } from '@deps/models/funds/enums';
-import { AllocationOption } from '@deps/models/policy/sor-policy';
 import { TransactionResponse } from '@deps/queries/api/bpm';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 

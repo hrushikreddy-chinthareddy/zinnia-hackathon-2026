@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
@@ -5,7 +6,6 @@ import { useMemo } from 'react';
 import { TranslationFiles } from '@deps/config/translations';
 import TabGroupContainer from '@deps/containers/bene-change/components/tab-group-container';
 import { DocumentData } from '@deps/models/case/document';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 import { useBeneChange } from './bene-change-provider';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -92,7 +92,13 @@ const BeneChangeContainer = ({ policy, document, planCode }: BeneChangeContainer
     return isPeopleView ? (
         <ReRegPeopleView onManageBeneficiaryClick={onManageBeneficiaryClickHandler} policy={policy}></ReRegPeopleView>
     ) : (
-        <TabGroupContainer hideGlobalValueBar={true} steps={filteredSteps} policy={policy} showDiaryNotes={true} showLink={false}></TabGroupContainer>
+        <TabGroupContainer
+            hideGlobalValueBar={true}
+            steps={filteredSteps}
+            policy={policy}
+            showDiaryNotes={true}
+            showLink={false}
+        ></TabGroupContainer>
     );
 };
 

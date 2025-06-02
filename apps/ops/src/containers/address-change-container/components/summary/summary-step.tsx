@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -5,7 +6,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 import { ContactDetailsSummary } from './contact-details-summary';
 import { ApplicableRolesContractSummary } from './roles-contract-summary';

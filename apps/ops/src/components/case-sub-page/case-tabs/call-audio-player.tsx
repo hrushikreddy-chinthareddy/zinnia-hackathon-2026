@@ -1,13 +1,15 @@
-import Content, { ContentVariant } from '@deps/components/content/content';
-import React, { useRef, useState, useEffect } from 'react';
-import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
-import { ReactComponent as VolumeUp } from '@deps/styles/elements/icons/icons_outlined/volume-up.svg';
-import { ReactComponent as VolumeOff } from '@deps/styles/elements/icons/icons_outlined/volume-off.svg';
-import { ReactComponent as CirclePlay } from '@deps/styles/elements/icons/circles/circle-play.svg';
-import { ReactComponent as CirclePause } from '@deps/styles/elements/icons/circles/circle-pause.svg';
 import { useTranslation } from 'next-i18next';
-import { browserLogInfo } from '@deps/utils/browser-logging';
+import React, { useRef, useState, useEffect } from 'react';
+
+import Content, { ContentVariant } from '@deps/components/content/content';
 import { getAudioLink } from '@deps/queries/api/audio';
+import { ReactComponent as CirclePause } from '@deps/styles/elements/icons/circles/circle-pause.svg';
+import { ReactComponent as CirclePlay } from '@deps/styles/elements/icons/circles/circle-play.svg';
+import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
+import { ReactComponent as VolumeOff } from '@deps/styles/elements/icons/icons_outlined/volume-off.svg';
+import { ReactComponent as VolumeUp } from '@deps/styles/elements/icons/icons_outlined/volume-up.svg';
+import { browserLogInfo } from '@deps/utils/browser-logging';
+
 import { FormatTime, PLAY_CALL_LOG_URL } from './call-log-utils';
 
 interface ICallAudioPlayer {

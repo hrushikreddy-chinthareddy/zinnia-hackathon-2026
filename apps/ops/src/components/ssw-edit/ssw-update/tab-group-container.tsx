@@ -1,3 +1,4 @@
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -14,7 +15,6 @@ import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { DocumentData } from '@deps/models/case/document';
 import { FormSignature } from '@deps/models/case/withdrawal/case';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
 

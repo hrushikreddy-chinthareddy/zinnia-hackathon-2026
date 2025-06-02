@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 
 import PayorStep from './payor-step';
 

@@ -1,3 +1,4 @@
+import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
@@ -18,7 +19,6 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { Carrier } from '@deps/models/case/withdrawal/case';
-import { PolicyParties } from '@deps/models/policy/sor-policy';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
@@ -80,7 +80,9 @@ export default function NasuWithdrawalForm() {
     const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
     const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
     const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
-    const shouldShowDOBInOl4573 = isLC ? handleShouldShowDOBInOl4573LC(parties as LifeCadParty[]) : handleShouldShowDOBInOl4573(parties as any[], partyRoles as PolicyParties[]);
+    const shouldShowDOBInOl4573 = isLC
+        ? handleShouldShowDOBInOl4573LC(parties as LifeCadParty[])
+        : handleShouldShowDOBInOl4573(parties as any[], partyRoles as PolicyPartyRoles[]);
     const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>

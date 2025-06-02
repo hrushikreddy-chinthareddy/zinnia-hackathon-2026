@@ -1,4 +1,4 @@
-import { Email, IdentificationType, PartyRole } from '@deps/models/policy/sor-policy';
+import { Email, IdentificationType, PartyRole } from '@zinnia/api-types/types/sor';
 
 import { EnterpriseAddress, getAddresses } from './address-details/address-details.helpers';
 import { getPersonalEmails } from './email-details/email-details.helpers';
@@ -50,7 +50,7 @@ export const getInitialBene = (
         partyRole: {
             partyRole: partyRole,
             partyId: partyId,
-            partyRoleId: partyRoleId
+            partyRoleId: partyRoleId,
         },
         party: {
             partyId: partyId,

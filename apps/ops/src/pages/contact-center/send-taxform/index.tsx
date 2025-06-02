@@ -1,5 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
+import { Policy } from '@zinnia/api-types/types/sor';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -23,7 +24,6 @@ import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { AttachmentType, CorrespondenceFormParts, TransactionSubTypes, TransactionTypes } from '@deps/models/case/correspondence';
 import { CommunicationTypes, SendDocumentFormType } from '@deps/models/case/send-document';
 import { ALLOWED_TAX_YEARS, DisplayName, TaxForm, TaxFormSelectionDetails } from '@deps/models/case/send-tax-forms';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { UserProfile } from '@deps/models/user-profile';
 import { sendCommunication } from '@deps/queries/api/c2web';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';

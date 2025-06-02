@@ -1,6 +1,7 @@
+import { PartyRole, Phone, Policy, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+
 import { DocumentData } from '@deps/models/case/document';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
-import { PartyRole, Phone, Policy, PolicyParties } from '@deps/models/policy/sor-policy';
 
 export type ApplyToRolesState = {
     policyNumber: string;
@@ -20,7 +21,7 @@ export type SignatureState = {
 
 export type AddressChangePayload = {
     applyToRoles: ApplyToRolesState[];
-    roleIdentifier: PolicyParties;
+    roleIdentifier: PolicyPartyRoles;
     signatureData: SignatureState;
     formData: any;
     document: DocumentData;

@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -8,7 +9,6 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { addTransaction } from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';

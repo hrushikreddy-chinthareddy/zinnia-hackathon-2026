@@ -1,8 +1,9 @@
+import { Policy } from '@zinnia/api-types/types/sor';
+
 import { PageHead } from '@deps/components/page-title';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import AutopayContainer from '@deps/containers/financial-transactions/autopay/autopay-container';
 import { AutopayProvider } from '@deps/contexts/transactions/AutopayContext';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 

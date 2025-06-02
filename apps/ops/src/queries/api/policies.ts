@@ -1,10 +1,3 @@
-import { AxiosResponse } from 'axios';
-import dayjs from 'dayjs';
-
-import { PaginationParams } from '@deps/components/pagination/pagination';
-import { LifeCadParty } from '@deps/models/case/lifecad-party';
-import { Carrier, SpecialProgram, TransactionHistory } from '@deps/models/case/withdrawal/case';
-import { VariableQuoteResponse } from '@deps/models/case/withdrawal/rmd';
 import {
     FullSurrenderQuoteResponse,
     PartialWithdrawalOneTimeQuoteResponse,
@@ -12,7 +5,14 @@ import {
     Transaction,
     TransactionStatus,
     TransactionType,
-} from '@deps/models/policy/sor-policy';
+} from '@zinnia/api-types/types/sor';
+import { AxiosResponse } from 'axios';
+import dayjs from 'dayjs';
+
+import { PaginationParams } from '@deps/components/pagination/pagination';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
+import { Carrier, SpecialProgram, TransactionHistory } from '@deps/models/case/withdrawal/case';
+import { VariableQuoteResponse } from '@deps/models/case/withdrawal/rmd';
 import { client } from '@deps/queries/api-utils/client';
 import { isMockPolicyDetailsRequestEnabled, isMockPolicySearchRequestEnabled } from '@deps/services/api-config';
 import { mockPolicy, mockPolicySearchResult } from '@deps/services/mocks/sor-policy';
@@ -627,7 +627,7 @@ export const policyWithdrawalQuote = async (
 
     try {
         const type =
-            transactionType === TransactionType.FullSurrender
+            transactionType === TransactionType.FULL_SURRENDER
                 ? WithdrawalQuoteEndpointType.FullSurrender
                 : WithdrawalQuoteEndpointType.PartialWithdrawalOneTime;
 

@@ -1,9 +1,10 @@
 import { AxiosResponse } from 'axios';
+
 import { TransactionData } from '@deps/models/case/task/doc-matching-payment';
+import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { apiServerBaseUrl } from '@deps/queries/api-config';
 
 export interface SearchTransactionFilters {
     paymentRecordId: string;

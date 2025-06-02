@@ -1,4 +1,4 @@
-import { AccountType, AddressType, EmailType, PhoneType, ProductType } from '@deps/models/policy/sor-policy';
+import { AccountType, AddressType, EmailType, PhoneType, ProductType } from '@zinnia/api-types/types/sor';
 
 import {
     mapAccountTypeToTranslation,

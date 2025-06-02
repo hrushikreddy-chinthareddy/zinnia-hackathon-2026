@@ -1,3 +1,4 @@
+import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
@@ -5,12 +6,11 @@ import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useAddressChange } from '@deps/containers/address-change-container/address-change-provider';
-import { PolicyParties } from '@deps/models/policy/sor-policy';
 
 import { getRolesRadioConfig } from '../utils/roles-contract-helpers';
 
 interface RolesRadioSelectorsProps {
-    extractedPartyRoles: PolicyParties[];
+    extractedPartyRoles: PolicyPartyRoles[];
 }
 
 export const RolesRadioSelectors = ({ extractedPartyRoles }: RolesRadioSelectorsProps) => {
@@ -18,7 +18,7 @@ export const RolesRadioSelectors = ({ extractedPartyRoles }: RolesRadioSelectors
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange' });
 
     const onChangeHandler = React.useCallback(
-        (extractedPartyRoles: PolicyParties[]) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        (extractedPartyRoles: PolicyPartyRoles[]) => (e: React.ChangeEvent<HTMLInputElement>) => {
             const selectedOption = extractedPartyRoles?.find(item => item?.partyRoleId?.toString() === e.target.value);
             if (selectedOption) {
                 setRoleIdentifier({

@@ -1,5 +1,17 @@
 import { Skeleton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
+import {
+    Address,
+    Email,
+    EmailType,
+    LineOfBusiness,
+    Phone,
+    PhoneType,
+    Policy,
+    FeatureType,
+    PolicyStatus,
+    ProductType,
+} from '@zinnia/api-types/types/sor';
 import { Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -39,18 +51,6 @@ import { convertToQueryString } from '@deps/helpers/routing.helpers';
 import { convertKebabedDateString, formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { CardColumnsTest, CardDetailsTest } from '@deps/jest/constants/test-id-constants';
-import {
-    Address,
-    Email,
-    EmailType,
-    LineOfBusiness,
-    Phone,
-    PhoneType,
-    Policy,
-    PolicyFeatureFeatureType,
-    PolicyStatus,
-    ProductType,
-} from '@deps/models/policy/sor-policy';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
 import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
@@ -125,7 +125,7 @@ const QuickViewHeader = ({ policy, loadingPolicyDetails = false }: { loadingPoli
         sideSheet.handleOpen(true);
     };
 
-    const pendingLapse = policy.features.getFirstFeatureByType('LAPSEASSESSMENT' as PolicyFeatureFeatureType);
+    const pendingLapse = policy.features.getFirstFeatureByType(FeatureType.LAPSEASSESSMENT);
     const showPendingLapse = policyStatus === PolicyStatus.PENDINGLAPSE ? true : false;
 
     const getTooltipText = (status: PolicyStatus | undefined): string => {
@@ -263,7 +263,7 @@ export const QuickViewRoot: React.FC<QuickViewProp> = ({ children, title, gridCo
 
 const PendingLapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
-    const pendingLapse = policy.features.getFirstFeatureByType('LAPSEASSESSMENT' as PolicyFeatureFeatureType);
+    const pendingLapse = policy.features.getFirstFeatureByType(FeatureType.LAPSEASSESSMENT);
     const { searchValue } = useContext(DashboardContext);
 
     return (
@@ -305,8 +305,8 @@ const PendingLapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
 const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
 
-    const reinstatement = policy.features.getFirstFeatureByType('REINSTATEMENT' as PolicyFeatureFeatureType);
-    const pendingLapse = policy.features.getFirstFeatureByType('LAPSEASSESSMENT' as PolicyFeatureFeatureType);
+    const reinstatement = policy.features.getFirstFeatureByType(FeatureType.REINSTATEMENT);
+    const pendingLapse = policy.features.getFirstFeatureByType(FeatureType.LAPSEASSESSMENT);
 
     let reinstatementPeriodText;
 
@@ -412,7 +412,7 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
 
     // TODO - BPB: Policy Features Helper Class
     const reinstatementWithApproval = policy.policy.policyFeatures?.find(
-        pf => pf.featureType === ('REINSTATEMENT' as PolicyFeatureFeatureType) && pf.approvalDate
+        pf => pf.featureType === FeatureType.REINSTATEMENT && pf.approvalDate
     );
 
     const [isNewDeathClaim, setIsNewDeathClaim] = useState(null);
@@ -803,7 +803,7 @@ export default function PolicySummaryCard({ policySearchResult }: SummaryCardPro
             policyNumber: policySearchResult.policyNumber,
             carrierId: policySearchResult.carrierId,
             policyStatus: policySearchResult.policyStatus?.toUpperCase() as PolicyStatus,
-            planCode: policySearchResult.planCode,
+            product: { planCode: policySearchResult.planCode },
         };
 
         // Filter out undefined values

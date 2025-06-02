@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import React, { PropsWithChildren, useMemo } from 'react';
 
@@ -9,7 +10,6 @@ import { StaticContentProvider } from '@deps/contexts/LayoutContexts/StaticConte
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 interface PageLayoutProps extends PropsWithChildren {
     policyDetails?: Policy;

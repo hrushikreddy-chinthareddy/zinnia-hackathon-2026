@@ -1,3 +1,4 @@
+import { Email, PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -5,7 +6,6 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { Email, PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as MailIcon } from '@deps/styles/elements/icons/communications/mail.svg';
 import { ReactComponent as ChartPieIcon } from '@deps/styles/elements/icons/icons_outlined/chart-pie.svg';
 import { ReactComponent as ChevronUp } from '@deps/styles/elements/icons/icons_outlined/chevron-up.svg';

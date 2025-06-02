@@ -1,6 +1,7 @@
+import { Party, PartyRole, PartyType, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
-import { Party, PartyRole, PartyType, PolicyParties } from '@deps/models/policy/sor-policy';
 
 import { SignatureState } from '../types/address-change-types';
 
@@ -9,7 +10,7 @@ const CodesForJointOption = ['2', '4'];
 // Commented logic for isRoleWithJointOption as current check is based on PartyRole
 export const getRoleToLabelKeyMap = (partyRole: string) => {
     switch (partyRole) {
-        case PartyRole.JOINTAANUITANT:
+        case PartyRole.JOINTANNUITANT:
             return 'common.partyRole.annuitantWithJoint';
         case PartyRole.JOINTOWNER:
             return 'common.partyRole.ownerWithJoint';
@@ -34,7 +35,7 @@ export const getRoleToLabelKeyMap = (partyRole: string) => {
             return 'common.partyRole.primaryServicingAgent';
         case PartyRole.THIRDPARTYDESIGNEE:
             return 'common.partyRole.thirdPartyDesignee';
-        case PartyRole.EDELIVERY:
+        case 'E-DELIVERY' as PartyRole: // BPB - This was manually added in the SOR spec locally by MG.  Will it be added to the api spec?
             return 'common.partyRole.e-delivery';
         case PartyRole.CONTINGENTBENEFICIARY:
             return 'common.partyRole.contingentBenefeciary';
@@ -49,14 +50,12 @@ const isRoleWithJointOption = (partyRoleId: string) => {
     return CodesForJointOption.includes(roleIdOption);
 };
 
-export const isJointOwnerExist = (partyRoles: PolicyParties[]) => {
-    return !!partyRoles?.find(
-        item => item.partyRole === PartyRole.OWNER && isRoleWithJointOption(item?.partyRoleId?.toString() ?? '')
-    );
+export const isJointOwnerExist = (partyRoles: PolicyPartyRoles[]) => {
+    return !!partyRoles?.find(item => item.partyRole === PartyRole.OWNER && isRoleWithJointOption(item?.partyRoleId?.toString() ?? ''));
 };
 
-export const isJointOwnerPresent = (partyRoles: PolicyParties[]) => {
-    return !!partyRoles?.find(item => item.partyRole === PartyRole.JOINTOWNER)
+export const isJointOwnerPresent = (partyRoles: PolicyPartyRoles[]) => {
+    return !!partyRoles?.find(item => item.partyRole === PartyRole.JOINTOWNER);
 };
 
 export const transformSignatureStateToPayload = (data: SignatureState | null) => {
@@ -84,9 +83,9 @@ export const getChannel = (documentId: string): Channel => {
     } else {
         return Channel.Phone;
     }
-}
+};
 
-export const isAnnuitantSignatureRequired = (partyRoles: PolicyParties[], parties: Party[]) => {
+export const isAnnuitantSignatureRequired = (partyRoles: PolicyPartyRoles[], parties: Party[]) => {
     const partyItem = partyRoles?.find(item => item.partyRole === PartyRole.OWNER);
     if (!partyItem) return false;
 

@@ -1,10 +1,10 @@
 import { cleanup, render } from '@testing-library/react';
+import { PolicyFeature, FeatureType, Rider } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { FeaturesCardsTest } from '@deps/jest/constants/test-id-constants';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
-import { PolicyFeature, PolicyFeatureFeatureType, Rider } from '@deps/models/policy/sor-policy';
 import { mockT } from '@deps/setupTests';
 import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -12,7 +12,7 @@ import PolicyExtrasCards from './policy-extras-cards';
 
 const availableFeature: PolicyFeature = {
     timestamp: '123',
-    featureType: 'LAPSEPROTECTION' as PolicyFeatureFeatureType, // Used in UI Logic
+    featureType: FeatureType.LAPSEPROTECTION, // Used in UI Logic
     startDate: dayjs().subtract(11, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
     endDate: dayjs().add(11, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
     status: true,
@@ -28,7 +28,7 @@ const availableFeature: PolicyFeature = {
 
 const activeFeature: PolicyFeature = {
     timestamp: '456',
-    featureType: 'LAPSEPROTECTION' as PolicyFeatureFeatureType, // Used in UI Logic
+    featureType: FeatureType.LAPSEPROTECTION, // Used in UI Logic
     startDate: dayjs().subtract(1, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
     endDate: dayjs().add(1, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
     status: true,
@@ -44,7 +44,7 @@ const activeFeature: PolicyFeature = {
 
 const terminatedFeature: PolicyFeature = {
     timestamp: '789',
-    featureType: 'LAPSEPROTECTION' as PolicyFeatureFeatureType, // Used in UI Logic
+    featureType: FeatureType.LAPSEPROTECTION, // Used in UI Logic
     startDate: dayjs().subtract(2, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
     endDate: dayjs().subtract(1, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
     status: true,
@@ -60,7 +60,7 @@ const terminatedFeature: PolicyFeature = {
 
 const invalidFeature1: PolicyFeature = {
     timestamp: '1011',
-    featureType: 'LAPSEPROTECTION' as PolicyFeatureFeatureType, // Used in UI Logic
+    featureType: FeatureType.LAPSEPROTECTION, // Used in UI Logic
     endDate: dayjs().add(1, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
     status: true,
     period: 5000, // Used in UI Logic
@@ -75,7 +75,7 @@ const invalidFeature1: PolicyFeature = {
 
 const invalidFeature2: PolicyFeature = {
     timestamp: '1213',
-    featureType: 'LAPSEPROTECTION' as PolicyFeatureFeatureType, // Used in UI Logic
+    featureType: FeatureType.LAPSEPROTECTION, // Used in UI Logic
     startDate: dayjs().subtract(1, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
     status: true,
     period: 900, // Used in UI Logic
@@ -107,7 +107,7 @@ describe('Policy Features Cards', () => {
         mockPolicy.policyFeatures = ogFeatures;
         mockPolicy.riders = ogRiders;
     });
-    
+
     it('should only include features with both a start and end date', () => {
         mockPolicy;
         const { getByTestId } = render(

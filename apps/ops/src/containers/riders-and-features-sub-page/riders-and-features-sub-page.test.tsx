@@ -1,11 +1,11 @@
 import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { PolicyFeature, Rider, Status } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
-import { PolicyFeature, Rider, Status } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import RidersAndFeaturesContainer from './riders-and-features-sub-page';

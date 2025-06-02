@@ -1,4 +1,5 @@
-import { PolicyFeatureFeatureType } from '@deps/models/policy/sor-policy';
+import { FeatureType } from '@zinnia/api-types/types/sor';
+
 import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
 
 import { Features } from './Features';
@@ -11,17 +12,17 @@ describe('Features', () => {
 
     describe('Features Class', () => {
         it('should getFeaturesByType', () => {
-            expect(features.getFeaturesByType('FREELOOK' as PolicyFeatureFeatureType)).toHaveLength(1);
+            expect(features.getFeaturesByType(FeatureType.FREELOOK)).toHaveLength(1);
         });
 
         it('should getFirstFeatureByType', () => {
-            expect(features.getFirstFeatureByType('FREELOOK' as PolicyFeatureFeatureType)).toBeTruthy();
+            expect(features.getFirstFeatureByType(FeatureType.FREELOOK)).toBeTruthy();
         });
 
         it('should not blow up if no features are passed in', () => {
             const noFeatures = new Features(undefined);
-            expect(noFeatures.getFeaturesByType('FREELOOK' as PolicyFeatureFeatureType)).toHaveLength(0);
-            expect(noFeatures.getFirstFeatureByType('FREELOOK' as PolicyFeatureFeatureType)).toBeUndefined();
+            expect(noFeatures.getFeaturesByType(FeatureType.FREELOOK)).toHaveLength(0);
+            expect(noFeatures.getFirstFeatureByType(FeatureType.FREELOOK)).toBeUndefined();
         });
     });
 });

@@ -1,10 +1,10 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import { TFunction } from 'next-i18next';
 
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { DataDefinition } from '@deps/types/data';
 
 export interface SideSheetCoverageColDto {
@@ -35,15 +35,17 @@ export const toSideSheetCoverageDto = (policy: Policy): SideSheetCoverageColDto 
 
     const minCoverageAmount = coverage?.minimumCoverageAmount ?? 0;
 
-    const availableDecrease = coverage?.maximumCoverageDecreaseAmount ?? 0
+    const availableDecrease = coverage?.maximumCoverageDecreaseAmount ?? 0;
 
-    const availableIncrease = coverage?.maximumCoverageIncreaseAmount ?? 0
+    const availableIncrease = coverage?.maximumCoverageIncreaseAmount ?? 0;
 
     const policyAge = policyYear ?? 0 < 1 ? '1 year' : policyYear === 1 ? '1 year' : `${policyYear} years`;
 
     const issueDate = policy.policyDates?.issueDate;
 
-    const eligibleForIncreaseUntil = String(coverage?.maximumAgeNumberCoverageAmountIncrease === 0 ? 'N/A' : coverage?.maximumAgeNumberCoverageAmountIncrease) ?? DEFAULT_ERROR_STRING;
+    const eligibleForIncreaseUntil =
+        String(coverage?.maximumAgeNumberCoverageAmountIncrease === 0 ? 'N/A' : coverage?.maximumAgeNumberCoverageAmountIncrease) ??
+        DEFAULT_ERROR_STRING;
 
     return {
         baseDeathBenefit,

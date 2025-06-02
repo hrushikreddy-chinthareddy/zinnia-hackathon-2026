@@ -1,7 +1,8 @@
+import { Status } from '@zinnia/api-types/types/sor';
+
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import { Status } from '@deps/models/policy/sor-policy';
 
 interface CardBarPolicyHolderProps {
     label: string;

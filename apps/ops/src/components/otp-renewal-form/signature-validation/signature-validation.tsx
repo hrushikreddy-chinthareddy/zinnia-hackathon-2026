@@ -1,14 +1,13 @@
+import { PartyType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { Signature } from '@deps/models/case/task';
-import { PartyType } from '@deps/models/policy/sor-policy';
 
 import { SignatureFields, SingleSignature } from './single-signature';
 import Typography, { TypographyVariant } from '../../typography/typography';
-
 
 export interface SignaturesConfig {
     signatureType: string;
@@ -20,13 +19,12 @@ export interface SignaturesConfig {
 
 interface SignatureValidationsProps {
     configs: SignaturesConfig[];
-    isFormStateReadOnly: boolean,
+    isFormStateReadOnly: boolean;
 }
 
 export default function SignatureValidations({ configs, isFormStateReadOnly }: SignatureValidationsProps) {
     const { setOwnerInformation, ownerInformation, parties, formErrors } = useContext(RenewalFormDataContext);
     const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
-
 
     const shouldShowTitleField = (ownerType: string) => {
         let ownerParty;

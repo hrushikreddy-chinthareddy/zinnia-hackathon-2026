@@ -1,4 +1,4 @@
-import { TransactionType } from '@deps/models/policy/sor-policy';
+import { TransactionType } from '@zinnia/api-types/types/sor';
 
 export interface BaseFinancialTransactionSideSheetModel {
     content?: string;
@@ -7,15 +7,15 @@ export interface BaseFinancialTransactionSideSheetModel {
 }
 
 export const FinancialTransactionTypes: TransactionType[] = [
-    TransactionType.PaymentInitialPremium,
-    TransactionType.InitialPremium,
-    TransactionType.OneTimePremium,
-    TransactionType.PaymentOneTimePremium,
-    TransactionType.SubsequentPayment,
-    TransactionType.SubsequentPremium,
-    TransactionType.FullSurrender,
-    TransactionType.PartialWithdrawalOneTime,
-    TransactionType.FreeLookCancellation,
-    TransactionType.NewLoan,
-    TransactionType.RequiredMinimumDistributionOneTime,
+    TransactionType.PAYMENT_INITIAL_PREMIUM,
+    TransactionType.INITIAL_PREMIUM,
+    TransactionType.ONE_TIME_PREMIUM,
+    TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+    TransactionType.SUBSEQUENT_PAYMENT,
+    TransactionType.SUBSEQUENT_PREMIUM,
+    TransactionType.FULL_SURRENDER,
+    TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
+    TransactionType.FREE_LOOK_CANCELLATION,
+    TransactionType.NEW_LOAN,
+    TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
 ];

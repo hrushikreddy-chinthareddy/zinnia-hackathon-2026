@@ -1,4 +1,4 @@
-import { DisbursementPaymentForm, TransactionType } from '@zinnia/api-types/types/sor';
+import { Address, Policy , DisbursementPaymentForm, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
@@ -12,7 +12,6 @@ import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
-import { Address, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';

@@ -1,7 +1,6 @@
+import { PartyStatus } from '@zinnia/api-types/types/sor';
 import { Tag, type TagProps } from '@zinnia/bloom/components';
 import { useTranslation } from 'react-i18next';
-
-import { PartyStatus } from '@deps/models/policy/sor-policy';
 
 interface PartyTagProps extends TagProps {
     partyStatus?: PartyStatus;

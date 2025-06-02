@@ -1,7 +1,13 @@
+import {
+    AdhocTaxWithholdingInstructions,
+    TaxRateToUse,
+    TaxWithheldAmount,
+    TaxWithholdingType,
+    Transaction,
+} from '@zinnia/api-types/types/sor';
 import { i18n, I18n } from 'next-i18next';
 
 import { WithdrawalQuoteResponse } from '@deps/components/side-sheet/side-sheet-transaction/withdrawal/types';
-import { AdhocTaxWithholdingInstructions, TaxRateToUse, TaxWithheldAmount, TaxWithholdingType, Transaction } from '@deps/models/policy/sor-policy';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { negativeNumberFormatify, numberFormatify, percentFormatify } from './numbers.helpers';
@@ -9,7 +15,7 @@ import { negativeNumberFormatify, numberFormatify, percentFormatify } from './nu
 export const getRequestedWithheldTaxesDisplay = (
     taxWithholdingInstructions: AdhocTaxWithholdingInstructions[] | undefined,
     withholdingType: TaxWithholdingType,
-    emptyFormat: string | number,
+    emptyFormat: string | number
 ): string => {
     const { t } = i18n as I18n;
     const withholding = taxWithholdingInstructions?.find(tw => tw.taxWithholdingType === withholdingType);
@@ -48,10 +54,12 @@ const getReturnedWithheldTaxesDisplay = (
     return negativeNumberFormatify(withheldAmount?.withheldAmount);
 };
 
-export const getTaxWithheldByType = (transaction: Transaction, taxWithholdingType: TaxWithholdingType, quote?: WithdrawalQuoteResponse): string => {
-    const taxWithheldAmounts = quote
-        ? quote.taxWithheldAmounts
-        : transaction.taxWithheldAmounts;
+export const getTaxWithheldByType = (
+    transaction: Transaction,
+    taxWithholdingType: TaxWithholdingType,
+    quote?: WithdrawalQuoteResponse
+): string => {
+    const taxWithheldAmounts = quote ? quote.taxWithheldAmounts : transaction.taxWithheldAmounts;
 
     return getReturnedWithheldTaxesDisplay(taxWithheldAmounts || [], taxWithholdingType, 0);
-}
+};

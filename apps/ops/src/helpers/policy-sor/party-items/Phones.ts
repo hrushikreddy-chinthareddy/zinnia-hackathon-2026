@@ -1,4 +1,4 @@
-import { Phone, PhoneType } from '@deps/models/policy/sor-policy';
+import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 
 import { BasePartyItems } from './BasePartyItems';
 

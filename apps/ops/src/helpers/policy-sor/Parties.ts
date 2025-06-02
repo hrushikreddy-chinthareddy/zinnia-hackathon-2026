@@ -1,6 +1,3 @@
-import { isEndDated } from '@deps/helpers/date.helpers';
-import { getPartyFullName } from '@deps/helpers/party-info-helpers';
-import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import {
     Address,
     BankAccount,
@@ -16,8 +13,12 @@ import {
     PreferredCommunicationType,
     Phone,
     Policy,
-    PolicyParties,
-} from '@deps/models/policy/sor-policy';
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
+
+import { isEndDated } from '@deps/helpers/date.helpers';
+import { getPartyFullName } from '@deps/helpers/party-info-helpers';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 import { calculateAgeNumber } from '../age.helpers';
 import { Addresses } from './party-items/Addresses';
@@ -29,28 +30,29 @@ const orderedRoles = [
     PartyRole.OWNER,
     PartyRole.JOINTOWNER,
     PartyRole.INSURED,
-    'ANNUITANT' as PartyRole,
-    'JOINTANNUITANT' as PartyRole,
+    PartyRole.ANNUITANT,
+    PartyRole.JOINTANNUITANT,
     PartyRole.PAYOR,
     PartyRole.PRIMARYBENEFICIARY,
     PartyRole.CONTINGENTBENEFICIARY,
     PartyRole.AGENT,
     PartyRole.PRIMARYSERVICINGAGENT,
     PartyRole.PRIMARYWRITINGAGENT,
-    'ADDITIONALWRITINGAGENT' as PartyRole,
-    'ADDITIONALSERVICINGAGENT' as PartyRole,
+    'ADDTITIONALWRITINGAGENT' as PartyRole, // BPB - Just in Case the typo is only in the typing
+    PartyRole.ADDITIONALWRITINGGAGENT,
+    PartyRole.ADDITIONALSERVICINGAGENT,
     PartyRole.PAYEE,
     PartyRole.ASSIGNEE,
     'Secondary assignee' as PartyRole,
-    'COVERAGEINSURED' as PartyRole,
+    PartyRole.COVERAGEINSURED,
     'Rider Insured' as PartyRole,
     PartyRole.THIRDPARTYDESIGNEE,
-    'EXCHANGECOMPANY' as PartyRole,
+    PartyRole.EXCHANGECOMPANY,
 ];
 
 export class PolicyParty {
     party: Party;
-    private partyRolesList: PolicyParties[] = [];
+    private partyRolesList: PolicyPartyRoles[] = [];
     public addresses: Addresses;
     public ageInYears: number | undefined;
     public banks: Banks;
@@ -101,7 +103,7 @@ export class PolicyParty {
         this.trustType = this.party.trustType;
     }
 
-    public addPartyRole(role?: PolicyParties) {
+    public addPartyRole(role?: PolicyPartyRoles) {
         if (!role) {
             return;
         }
@@ -130,7 +132,7 @@ export class PolicyParty {
         return this.party.identifications?.find(identification => identification.identificationType === IdentificationType.TIN);
     }
 
-    public get partyRoles(): PolicyParties[] {
+    public get partyRoles(): PolicyPartyRoles[] {
         return this.partyRolesList
             .filter(role => !isEndDated(role.endDate))
             .sort((a, b) => {
@@ -148,7 +150,7 @@ export class PolicyParty {
 
     public get preferredCommunicationType(): PreferredCommunicationType {
         return this.party.preferredCommunicationType ?? PreferredCommunicationType.NOPREFERENCESPECIFIED;
-    };
+    }
 
     public get preferredCommunication(): Address | Email | Phone | undefined {
         switch (this.preferredCommunicationType) {

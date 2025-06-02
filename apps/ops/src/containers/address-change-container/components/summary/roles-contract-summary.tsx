@@ -1,10 +1,10 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
 import Table from '@deps/components/table-v2/table';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 import {
     getColDefinition,

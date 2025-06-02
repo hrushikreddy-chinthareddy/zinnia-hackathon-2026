@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { Policy } from '@zinnia/api-types/types/sor';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -23,7 +24,6 @@ import { AttachmentDetails, CorrespondenceFormParts, TransactionTypes } from '@d
 import { PolicyDocument } from '@deps/models/case/document';
 import { CommunicationTypes, SendDocumentFormType } from '@deps/models/case/send-document';
 import { StatementTypes } from '@deps/models/case/send-statement';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { getApplicableStatementsSSR, sendCommunication } from '@deps/queries/api/c2web';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';

@@ -1,6 +1,7 @@
+import { Policy } from '@zinnia/api-types/types/sor';
+
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
-import { Policy } from '@deps/models/policy/sor-policy';
 
 import { buildTransactionCards, getSalesChannelCardData, mapPolicyTimelineValues } from './policy-details.helpers';
 

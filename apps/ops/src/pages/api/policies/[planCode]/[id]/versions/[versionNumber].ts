@@ -1,7 +1,7 @@
 import { getSession } from '@auth0/nextjs-auth0';
+import { Policy } from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
 
-import { Policy } from '@deps/models/policy/sor-policy';
 import { apiServerBaseUrl, policyApiBaseUrl } from '@deps/queries/api-config';
 import { requestHandler } from '@deps/queries/api-utils/server';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';

@@ -1,11 +1,11 @@
+import { Fund, FundAccountType, FundAllocation, FundSegment, MatchSegment, Product } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { FundUsageInfo } from '@deps/models/funds/fund-information';
-import { Fund, FundAccountType, FundAllocation, FundSegment, MatchSegment, Product } from '@deps/models/policy/sor-policy';
+import { FundAccountTypeEnum, FundUsageInfo } from '@deps/models/funds/fund-information';
 import { getFundInformationByFundId, getFundInformationByPlanCode } from '@deps/queries/api/fund-information';
 import { getCurrentInterestRate } from '@deps/queries/api/product-rate';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
@@ -14,7 +14,10 @@ import { FundInformationByFundId, FundInformationByFundIdResponse, FundInformati
 
 import { FundDetailsViewModel, FundViewModel, MatchViewModel, SegmentViewModel } from './types';
 
-const FundAccountTypesForPolicyDetailsData: FundAccountType[] = [FundAccountType.FIXED, FundAccountType.HOLDING];
+const FundAccountTypesForPolicyDetailsData: (FundAccountType | FundAccountTypeEnum)[] = [
+    FundAccountType.FIXED,
+    FundAccountTypeEnum.HOLDING,
+];
 
 // #region First Glance
 
@@ -80,7 +83,7 @@ const getNotElectedFund = async (
 ): Promise<FundViewModel | undefined> => {
     const fundInfo = fundsInfoMap?.[fundId as string];
 
-    if (fundInfo?.fundAccountType === FundAccountType.HOLDING) {
+    if (fundInfo?.fundAccountType === FundAccountTypeEnum.HOLDING) {
         return undefined;
     }
     const allocationFund = allocationFundsMap?.[fundId as string];
@@ -185,7 +188,7 @@ const getFundInterestRate = async (fundInfo?: FundInformationByFundId, policy?: 
     return percentFormatify(fund.interestRate, { isInteger: true });
 };
 
-const getFundType = (fundType?: FundAccountType): string => {
+const getFundType = (fundType?: FundAccountType | FundAccountTypeEnum): string => {
     if (!fundType) {
         return DEFAULT_ERROR_STRING;
     }
@@ -239,7 +242,7 @@ const getHoldingFundsViewModel = async ({
 
             const fundInfo = fundsInfoMap?.[fundId as string];
 
-            if (fundInfo?.fundAccountType !== (FundAccountType.HOLDING as string)) {
+            if (fundInfo?.fundAccountType !== (FundAccountTypeEnum.HOLDING as string)) {
                 return;
             }
 

@@ -17,7 +17,9 @@ import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/case/send-document';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { Policy } from '@deps/models/policy/sor-policy';
+
+import { Policy } from '@zinnia/api-types/types/sor';
+
 import { updateTask } from '@deps/queries/api/v2/task';
 
 import { getFormSelectionConfig } from './form-selection.helpers';

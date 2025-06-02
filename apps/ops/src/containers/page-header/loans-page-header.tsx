@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Policy } from '@zinnia/api-types/types/sor';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -16,7 +17,6 @@ import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { LoansTest } from '@deps/jest/constants/test-id-constants';
-import { Policy } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { getBorrowingInterestRate, getLoanInterestRate } from '@deps/queries/api/product-rate';
 import { checkNewLoanEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';

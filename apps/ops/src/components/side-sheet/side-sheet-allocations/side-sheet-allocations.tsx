@@ -1,3 +1,4 @@
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -7,7 +8,6 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { PartyRole, Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
