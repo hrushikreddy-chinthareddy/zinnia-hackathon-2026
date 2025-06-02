@@ -30,7 +30,7 @@ export const getPolicyBadgeStatusTooltip = (status: PolicyStatus | undefined) =>
             return 'globalPolicyInfo.tooltip.status.deathClaimPending';
         case PolicyStatus.DEATHCLAIMPAID:
             return 'globalPolicyInfo.tooltip.status.deathClaimPaid';
-        case PolicyStatus.RECISSION:
+        case 'RECISSION' as PolicyStatus: // BPB - This policyStatus isn't in the most recent sor spec.  Update when available.
             return 'globalPolicyInfo.tooltip.status.recission';
         case PolicyStatus.CANCELEDFREELOOK:
             return 'globalPolicyInfo.tooltip.status.canceledFreelook';

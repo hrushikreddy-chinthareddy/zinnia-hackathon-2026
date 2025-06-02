@@ -43,7 +43,7 @@ export const getBadgeStatus = (status: PolicyStatus | undefined) => {
             return 'status.deathClaimPending';
         case PolicyStatus.DEATHCLAIMPAID:
             return 'status.deathClaimPaid';
-        case PolicyStatus.RECISSION:
+        case 'RECISSION' as PolicyStatus: // BPB - This policyStatus isn't in the most recent sor spec.  Update when available.
             return 'status.recission';
         case PolicyStatus.CANCELEDFREELOOK:
             return 'status.canceledFreeLook';
@@ -72,7 +72,7 @@ export const getBadgeStatusVariant = (status: PolicyStatus | undefined): BadgeVa
             return BadgeVariant.Urgent;
         case PolicyStatus.LIVINGCLAIMPENDING:
         case PolicyStatus.DEATHCLAIMPENDING:
-        case PolicyStatus.RECISSION:
+        case 'RECISSION' as PolicyStatus: // BPB - This policyStatus isn't in the most recent sor spec.  Update when available.
         case PolicyStatus.CANCELEDFREELOOK:
             return BadgeVariant.Warning;
         case PolicyStatus.DEATHCLAIMPAID:
