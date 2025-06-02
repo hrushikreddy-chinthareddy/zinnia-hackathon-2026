@@ -15,6 +15,24 @@ export const getPolicyBadgeStatusTooltip = (status: PolicyStatus | undefined) =>
             return 'globalPolicyInfo.tooltip.status.pendingLapse';
         case PolicyStatus.LAPSE:
             return 'globalPolicyInfo.tooltip.status.lapse';
+        case PolicyStatus.TERMINATED:
+            return 'globalPolicyInfo.tooltip.status.terminated';
+        case PolicyStatus.MATURED:
+            return 'globalPolicyInfo.tooltip.status.matured';
+        case PolicyStatus.PAYOUT:
+            return 'globalPolicyInfo.tooltip.status.payout';
+        case PolicyStatus.SURRENDERED:
+            return 'globalPolicyInfo.tooltip.status.surrendered';
+        case PolicyStatus.LIVINGCLAIMPENDING:
+            return 'globalPolicyInfo.tooltip.status.livingClaimPending';
+        case PolicyStatus.DEATHCLAIMPENDING:
+            return 'globalPolicyInfo.tooltip.status.deathClaimPending';
+        case PolicyStatus.DEATHCLAIMPAID:
+            return 'globalPolicyInfo.tooltip.status.deathClaimPaid';
+        case PolicyStatus.RECISSION:
+            return 'globalPolicyInfo.tooltip.status.recission';
+        case PolicyStatus.CANCELEDFREELOOK:
+            return 'globalPolicyInfo.tooltip.status.canceledFreelook';
         default:
             return status;
     }

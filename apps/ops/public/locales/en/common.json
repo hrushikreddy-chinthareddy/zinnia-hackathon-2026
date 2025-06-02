@@ -2696,7 +2696,16 @@
         "reversedOn": "Reversed on {{date}}",
         "pendingReversal": "Pending Reversal",
         "pendingReversalOn": "Pending Reversal on {{date}}",
-        "withdrawn": "Withdrawn"
+        "withdrawn": "Withdrawn",
+        "terminated": "Terminated",
+        "matured": "Matured",
+        "payout": "Payout",
+        "surrendered": "Surrendered",
+        "livingClaimPending": "Pending Living Claim",
+        "deathClaimPaid": "Paid Claim Death",
+        "deathClaimPending": "Pending Death Claim",
+        "recission": "Recission",
+        "canceledFreelook": "Free Look Canceled"
     },
     "placeHolder": {
         "globalSelectSearch": "Start typing to find values..."
@@ -2993,9 +3002,9 @@
         "extras": {
             "features": {
                 "active": "Active",
-                "activeTooltip": "Active riders or features are those that are on the policy and are being used currently. That means the insured has submitted a claim for related benefits.",
+                "activeTooltip": "Active riders or features are those that are being used currently. That means the insured has submitted a claim for related benefits.",
                 "available": "Available",
-                "availableTooltip": "Available riders or features are those that are currently on the policy. The owner is paying for these additional types of coverage and may submit a claim related to it.",
+                "availableTooltip": "Available riders or features are those that are currently elected. The owner may be paying for these additional types of coverage and may submit a claim related to it.",
                 "cost": "Cost",
                 "cumulativePayment": "Cumulative payment",
                 "featureDescription": "Feature Description",
@@ -3008,16 +3017,16 @@
                 "lifetime": "Lifetime",
                 "oneYearProtectionGuarantee": "1 year protection guarantee",
                 "notElected": "Not elected",
-                "notElectedTooltip": "Not elected riders or features are those that the owner has the option to add to this policy. They are not currently paying for these additional types of coverage and may not currently submit claims for related benefits. But they could potentially add these to the policy.",
+                "notElectedTooltip": "Not elected riders or features are those that the owner may have the option to add. They are not currently paying for these additional types of coverage and may not currently submit claims for related benefits.",
                 "nYearsProtectionGuarantee": "{{n}} years protection guarantee",
                 "terminated": "Terminated",
                 "terminatedTooltip": "Terminated riders or features are those that are either expired or cannot be used again."
             },
             "riders": {
                 "active": "Active",
-                "activeTooltip": "Active riders or features are those that are on the policy and are being used currently. That means the insured has submitted a claim for related benefits.",
+                "activeTooltip": "Active riders or features are those that are being used currently. That means the insured has submitted a claim for related benefits.",
                 "available": "Available",
-                "availableTooltip": "Available riders or features are those that are currently on the policy. The owner is paying for these additional types of coverage and may submit a claim related to it.",
+                "availableTooltip": "Available riders or features are those that are currently elected. The owner may be paying for these additional types of coverage and may submit a claim related to it.",
                 "chronicIllnessBenefit": "Up to {{percent}}% of death benefit paid over a maximum of {{period}} payments",
                 "claimProcessed": "Claim processed",
                 "claimProcessedDate": "Claim processed date",
@@ -3030,7 +3039,7 @@
                 "maxClaims": "Max claims allowed",
                 "coverageAmount": "Coverage Amount",
                 "notElected": "Not elected",
-                "notElectedTooltip": "Not elected riders or features are those that the owner has the option to add to this policy. They are not currently paying for these additional types of coverage and may not currently submit claims for related benefits. But they could potentially add these to the policy.",
+                "notElectedTooltip": "Not elected riders or features are those that the owner may have the option to add. They are not currently paying for these additional types of coverage and may not currently submit claims for related benefits.",
                 "terminalIllnessBenefit": "Up to {{percent}}% ({{amount}}).",
                 "terminated": "Terminated",
                 "terminatedTooltip": "Terminated riders or features are those that are either expired or cannot be used again."
@@ -3597,10 +3606,19 @@
         "tooltip": {
             "status": {
                 "notIssued": "This policy failed new business processing\non {{tooltipDate}} and could not\nbe issued.",
-                "active": "This policy was issued on {{tooltipDate}} and is in good order.",
+                "active": "Issued on {{tooltipDate}} and currently in good order.",
                 "pendingIssued": "This policy was issued on {{tooltipDate}} and is in good order.",
-                "pendingLapse": "Pending Lapse means this policy is at risk. If a {{tooltipAmount}} premium payment isn't made by {{tooltipDate}}, the policy will lapse and the owner will lose coverage.",
-                "lapse": "Lapsed means the policy is inactive; the owner lost coverage. This policy lapsed on {{tooltipDate}} due to insufficient funds."
+                "pendingLapse": "Pending Lapse means at risk. If a {{tooltipAmount}} premium payment isn't made by {{tooltipDate}}, the owner will lose coverage.",
+                "lapse": "Lapsed means inactive; the owner lost coverage on {{tooltipDate}} due to insufficient funds. Coverage is no longer in effect, but there may be options to reinstate.",
+                "terminated": "Terminated on {{tooltipDate}} and no longer active.",
+                "matured": "Reached maturity on {{tooltipDate}}.",
+                "payout": "Payout means the annuitant has begun receiving income payments.",
+                "surrendered": "The owner has surrendered their benefits and no coverage remains.",
+                "livingClaimPending": "A living claim request has been made and is currently being reviewed.",
+                "deathClaimPending": "Notification of death was received on {{tooltipDate}} and is currently being reviewed.",
+                "deathClaimPaid": "The death claim was received on {{dateOfDeathReported}} and approved on {{claimApprovalDate}}.",
+                "recission": "The carrier has voided the policy through rescission, meaning all previous coverage and benefits have been revoked as if the policy never existed.",
+                "canceledFreelook": "The owner has cancelled their coverage during the Free Look Period, so no coverage or benefits remain."
             }
         }
     },

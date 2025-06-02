@@ -41,7 +41,9 @@ export class PolicyDetails {
     public distribution: DistributionType | undefined;
     public cumulativeGrossDeathBenefitAmount: number | undefined;
     public currency: string | undefined;
+    public claimApprovalDate: string | undefined;
     public deathBenefitOption: DeathBenefitOptionType | undefined;
+    public dateOfDeathReportedNotification: string | undefined;
     public features: Features;
     public fixedCostPeriod: number | undefined;
     public generalLedgerPlanCode: string | undefined;
@@ -58,6 +60,7 @@ export class PolicyDetails {
     public parties: Parties;
     public planCode: string | undefined;
     public planName: string | undefined;
+    public policyTerminationDate: string | undefined;
     public policyNumber: string | undefined;
     public policyStatus: PolicyStatus | undefined;
     public policyTerm: number | undefined;
@@ -89,7 +92,9 @@ export class PolicyDetails {
         this.costBasis = policy?.costBasis?.costBasis;
         this.cumulativeGrossDeathBenefitAmount = policy?.coverage?.cumulativeGrossDeathBenefitAmount;
         this.currency = policy?.currency;
+        this.claimApprovalDate = policy.policyDates?.claimApprovalDate;
         this.deathBenefitOption = policy?.deathBenefit?.deathBenefitOption;
+        this.dateOfDeathReportedNotification = policy.policyDates?.dateOfDeathReportedNotification;
         this.distribution = policy.product?.distribution;
         this.fixedCostPeriod = policy.fixedCostPeriod;
         this.generalLedgerPlanCode = policy?.product?.generalLedgerPlanCode;
@@ -108,6 +113,7 @@ export class PolicyDetails {
         this.netDeathBenefitAmount = policy?.coverage?.netDeathBenefit;
         this.planCode = policy.product?.planCode;
         this.planName = policy.product?.planName;
+        this.policyTerminationDate = policy.policyDates?.policyTerminationDate;
         this.policyNumber = policy.policyNumber;
         this.policyStatus = policy.policyStatus;
         this.policyTerm = policy.policyTerm;

@@ -127,10 +127,40 @@ const QuickViewHeader = ({ policy, loadingPolicyDetails = false }: { loadingPoli
 
     const pendingLapse = policy.features.getFirstFeatureByType('LAPSEASSESSMENT' as PolicyFeatureFeatureType);
     const showPendingLapse = policyStatus === PolicyStatus.PENDINGLAPSE ? true : false;
-    const tooltipDate =
-        policyStatus === PolicyStatus.LAPSE || policyStatus === PolicyStatus.PENDINGLAPSE
-            ? formatDate(pendingLapse?.endDate)
-            : formatDate(policy?.issueDate);
+
+    const getTooltipText = (status: PolicyStatus | undefined): string => {
+        switch (status) {
+            case PolicyStatus.PENDINGLAPSE:
+            case PolicyStatus.LAPSE:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    tooltipDate: formatDate(pendingLapse?.endDate),
+                    tooltipAmount: showPendingLapse
+                        ? numberFormatify(pendingLapse?.totalMinimumRequiredAmount)
+                        : numberFormatify(totalMinRequiredAmount),
+                });
+            case PolicyStatus.TERMINATED:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    tooltipDate: formatDate(policy?.policyTerminationDate),
+                });
+            case PolicyStatus.MATURED:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    tooltipDate: formatDate(policy?.maturityDate),
+                });
+            case PolicyStatus.DEATHCLAIMPAID:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    dateOfDeathReported: policy?.dateOfDeathReportedNotification,
+                    claimApprovalDate: policy?.claimApprovalDate,
+                });
+            case PolicyStatus.DEATHCLAIMPENDING:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    tooltipDate: policy?.dateOfDeathReportedNotification,
+                });
+            default:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    tooltipDate: formatDate(policy?.issueDate),
+                });
+        }
+    };
 
     return (
         <header data-testid={CardDetailsTest.HEADER}>
@@ -146,14 +176,7 @@ const QuickViewHeader = ({ policy, loadingPolicyDetails = false }: { loadingPoli
                         highlight={searchValue?.policyNumber}
                         status={t(getBadgeStatus(policyStatus))}
                         variant={getBadgeStatusVariant(policyStatus)}
-                        tooltip={
-                            t(getPolicyBadgeStatusTooltip(policyStatus), {
-                                tooltipDate: tooltipDate,
-                                tooltipAmount: showPendingLapse
-                                    ? numberFormatify(pendingLapse?.totalMinimumRequiredAmount)
-                                    : numberFormatify(totalMinRequiredAmount),
-                            }) ?? ''
-                        }
+                        tooltip={getTooltipText(policyStatus) ?? ''}
                         openSideSheet={openDetailsSidesheet}
                     />
                     <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 lg:mt-0">

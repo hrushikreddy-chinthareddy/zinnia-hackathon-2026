@@ -1992,6 +1992,7 @@ export const PolicyStatus = {
     DEATHCLAIMPENDING: 'DEATHCLAIMPENDING',
     DEATHCLAIMPAID: 'DEATHCLAIMPAID',
     PAYOUT: 'PAYOUT',
+    RECISSION: 'RECISSION',
 } as const;
 
 export interface PolicyParties {

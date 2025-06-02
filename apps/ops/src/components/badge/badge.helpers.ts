@@ -29,6 +29,24 @@ export const getBadgeStatus = (status: PolicyStatus | undefined) => {
             return 'status.pendingLapse';
         case PolicyStatus.LAPSE:
             return 'status.lapse';
+        case PolicyStatus.TERMINATED:
+            return 'status.terminated';
+        case PolicyStatus.MATURED:
+            return 'status.matured';
+        case PolicyStatus.PAYOUT:
+            return 'status.payout';
+        case PolicyStatus.SURRENDERED:
+            return 'status.surrendered';
+        case PolicyStatus.LIVINGCLAIMPENDING:
+            return 'status.livingClaimPending';
+        case PolicyStatus.DEATHCLAIMPENDING:
+            return 'status.deathClaimPending';
+        case PolicyStatus.DEATHCLAIMPAID:
+            return 'status.deathClaimPaid';
+        case PolicyStatus.RECISSION:
+            return 'status.recission';
+        case PolicyStatus.CANCELEDFREELOOK:
+            return 'status.canceledFreeLook';
         default:
             return status;
     }
@@ -42,11 +60,23 @@ export const getBadgeStatusVariant = (status: PolicyStatus | undefined): BadgeVa
             return BadgeVariant.Negative;
         case PolicyStatus.ACTIVE:
         case PolicyStatus.PENDINGISSUED:
+        case PolicyStatus.MATURED:
+        case PolicyStatus.PAYOUT:
             return BadgeVariant.Positive;
         case PolicyStatus.PENDINGLAPSE:
             return BadgeVariant.Warning;
         case PolicyStatus.LAPSE:
             return BadgeVariant.Negative;
+        case PolicyStatus.TERMINATED:
+        case PolicyStatus.SURRENDERED:
+            return BadgeVariant.Urgent;
+        case PolicyStatus.LIVINGCLAIMPENDING:
+        case PolicyStatus.DEATHCLAIMPENDING:
+        case PolicyStatus.RECISSION:
+        case PolicyStatus.CANCELEDFREELOOK:
+            return BadgeVariant.Warning;
+        case PolicyStatus.DEATHCLAIMPAID:
+            return BadgeVariant.Neutral;
         default:
             return status as BadgeVariant;
     }
