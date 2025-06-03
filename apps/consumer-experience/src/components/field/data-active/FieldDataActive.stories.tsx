@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Icon, IconType, Label } from '@zinnia/bloom/components';
 
 import { FieldDataActive } from './FieldDataActive';

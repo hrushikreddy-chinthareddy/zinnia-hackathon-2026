@@ -45,6 +45,7 @@ export const SelectAuthenticationMethod = ({
       return {
         phoneNumber: phone?.phone_number,
         authenticationMethods: phone?.authentication_methods.map(method => ({
+          key: method.id,
           label:
             method.type === MfaVerificationType.SMS ? 'Text' : 'Phone call',
           value: method.id,
@@ -115,10 +116,10 @@ export const SelectAuthenticationMethod = ({
           </div>
         )}
       />
-      <p className="typography-nav-links-sm-inline my-xl">
+      <div className="typography-nav-links-sm-inline my-xl">
         If you no longer have access to this number, please give us a call at{' '}
         <CarrierPhoneNumber /> for assistance.
-      </p>
+      </div>
       <div className={styles.buttonContainer}>
         <Button type="submit">Send code</Button>
         <Button

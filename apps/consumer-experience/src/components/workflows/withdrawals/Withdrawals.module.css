@@ -1,0 +1,130 @@
+.actions {
+  display: flex;
+  gap: var(--measure-dimension-gap-lg);
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+
+  li {
+    display: flex;
+    gap: var(--measure-dimension-gap-md);
+  }
+}
+
+.field {
+  max-width: 240px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-3xl);
+}
+
+.radio {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--measure-dimension-gap-md);
+
+  .card {
+    cursor: pointer;
+    padding: var(--measure-dimension-padding-2xl);
+    border-radius: var(--measure-dimension-radius-sm);
+    border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-light);
+    background: var(--base-surface-surface-primary);
+
+    &:has(input[type='radio']:checked) {
+      border-color: var(--color-element-radio-checkbox-default-border-element-selected-border);
+    }
+
+    &:hover {
+      border-color: var(--color-element-radio-checkbox-default-border-element-hover-border);
+    }
+  }
+}
+
+.withholdings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+}
+
+.banks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+}
+
+.linkInline {
+  font: var(--typography-nav-links-sm-inline) !important;
+  display: inline-block;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+  margin: var(--measure-dimension-gap-3xl) 0 var(--measure-dimension-gap-md);
+  align-items: center;
+
+  /* TODO: this is to prevent the double underline that's coming from the link container in bloom and the anchor styles from global here
+  but need to determine which one designers actually want */
+  a {
+    text-decoration: none;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+.banksContainer {
+  display: grid;
+  gap: var(--measure-dimension-gap-lg);
+  grid-template-columns: repeat(2, minmax(80px, 375px));
+}
+
+@media (width < 767px) {
+  .banksContainer {
+    grid-template-columns: 1fr;
+    gap: var(--measure-dimension-gap-md);
+  }
+
+}
+
+.bankContainer {
+  display: flex;
+  flex-direction: column;
+  border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-light);
+  border-radius: var(--measure-dimension-radius-sm);
+  padding: var(--measure-dimension-padding-2xl);
+  max-width: 375px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-states-hover-border-hover-border);
+  }
+
+  &:has(input:checked) {
+    border-color: var(--color-states-selected-border-selected-border);
+
+    &:hover {
+      border-color: var(--color-states-hover-border-hover-border);
+    }
+  }
+
+  &:has(input:focus-visible) {
+    outline: var(--measure-dimension-stroke-sm) solid var(--color-states-focus-focus-border);
+    outline-offset: 2px;
+  }
+}

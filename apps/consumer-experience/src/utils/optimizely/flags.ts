@@ -7,5 +7,6 @@ export enum FEATURE_FLAGS {
   TRANSACTION_LEVEL_CODE_ADD_BANK = 'transaction_level_code_add_bank',
   COMMUNICATION_PREFERENCES = 'communication_preferences',
   TRANSACTION_NOTIFICATIONS = 'transaction_notifications',
-  POLICY_OWNER_PROFILE_PARTIES = 'policy_owner_profile_parties'
+  POLICY_OWNER_PROFILE_PARTIES = 'policy_owner_profile_parties',
+  TRANSACTION_PARTIAL_WITHDRAWAL_ONETIME = 'transaction_partial_withdrawal_onetime'
 }

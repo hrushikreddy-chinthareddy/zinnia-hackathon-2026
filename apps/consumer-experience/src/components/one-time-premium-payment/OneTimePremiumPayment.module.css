@@ -37,11 +37,19 @@
 }
 
 .paymentSummaryDetails {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
   gap: var(--measure-dimension-gap-lg);
   padding-bottom: var(--measure-dimension-padding-3xl);
   border-bottom: 2px solid var(--color-base-border-border-light);
+
+  @media (width < 768px) {
+    grid-template-columns: repeat(2, max-content);
+  }
+
+  @media (width < 500px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .paymentSummaryStepContainer {
