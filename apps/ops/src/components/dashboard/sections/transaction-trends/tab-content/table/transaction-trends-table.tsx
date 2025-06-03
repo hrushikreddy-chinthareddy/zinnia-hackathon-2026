@@ -1,3 +1,4 @@
+import { toSentenceCase } from '@xd/utils/dist';
 import {
     FieldData,
     FieldSize,
@@ -35,8 +36,8 @@ enum SortByOptions {
 }
 
 enum TimeUnit {
-    MONTHLY = 'monthly',
-    DAILY = 'daily',
+    MONTHLY = 'Monthly',
+    DAILY = 'Daily',
 }
 
 export const TransactionTrendsTable = () => {
@@ -108,7 +109,7 @@ export const TransactionTrendsTable = () => {
             <div className={sharedStyles.searchContainer}>
                 <FieldData
                     fieldSize={FieldSize.Small}
-                    placeholder={`Search by ${friendlyGroupByName[groupBy]?.toLocaleLowerCase()} name`}
+                    placeholder={`Search by ${friendlyGroupByName[groupBy]?.toLocaleLowerCase()}`}
                     onChange={e => setSearchText(e.target.value)}
                 />
             </div>
@@ -134,7 +135,7 @@ export const TransactionTrendsTable = () => {
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
-                                        {friendlyGroupByName[groupBy]} Name
+                                        {toSentenceCase(friendlyGroupByName[groupBy])}
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}

@@ -22,15 +22,14 @@
     border-top-right-radius: 0;
 }
 
-.selectDropdowns {
-    max-width: 150px;
-}
-
 .filterContainer {
     display: flex;
     justify-content: space-between;
-    align-items: end;
-    margin-bottom: var(--measure-dimension-gap-lg);
+    margin: var(--measure-dimension-gap-lg) 0;
+}
+
+.multiselectDropdowns {
+    max-width: 150px;
 }
 
 .aiInsightsContainer {

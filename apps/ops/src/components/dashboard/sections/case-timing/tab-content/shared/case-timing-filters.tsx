@@ -5,7 +5,7 @@ import { CaseTypeFilter } from '@deps/components/dashboard/filters/case-type-fil
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { CaseTimingContext } from '@deps/components/dashboard/sections/case-timing/context/case-timing-context';
 import { TimeframeFilterOptions } from '@deps/components/dashboard/utils';
-import { Statuses, Processes } from '@deps/models/case/case';
+import { Processes, Statuses } from '@deps/models/case/case';
 
 export const CaseTimingFilters = () => {
     const { timeframeRadio, timerange, handleTimeframeRadioChange, handleRangeChange, setSelectedProcess, selectedProcess } =

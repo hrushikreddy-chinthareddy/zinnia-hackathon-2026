@@ -1,12 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
+import {
+    CompletedCaseTimeGroupByEnum,
+    CompletedCaseTimeInputFilter,
+    CompletedCaseTimeOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 import { createContext, FC, PropsWithChildren, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeframeFilterOptions, startDates, formatProcessFilter } from '@deps/components/dashboard/utils';
 import { Processes } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
-import { CaseTimingData } from '@deps/queries/api/cases';
-import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getCaseDashboardTimingQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 
@@ -15,10 +17,10 @@ interface CaseTimingContextTypes {
     handleTimeframeRadioChange: (value: TimeframeFilterOptions) => void;
     selectedProcess: Processes | ExtendedProcesses | undefined;
     setSelectedProcess: (value: Processes | ExtendedProcesses) => void;
-    caseTimingData: CaseTimingData[] | undefined;
+    caseTimingData: CompletedCaseTimeOutputLevel1[] | undefined;
     caseTimingDataFetching: boolean;
     caseTimingDataError: Error | null;
-    filter: DashboardSearchFilter;
+    filter: CompletedCaseTimeInputFilter;
     timerange: {
         to: string;
         from: string;
@@ -69,8 +71,8 @@ export const CaseTimingProvider: FC<PropsWithChildren> = ({ children }) => {
         setTimeframeRadio(undefined);
     };
 
-    const filter: DashboardSearchFilter = {
-        createdDateStart: timerange.from,
+    const filter = {
+        updatedDateStart: timerange.from,
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         process: formatProcessFilter(selectedProcess),
@@ -83,8 +85,8 @@ export const CaseTimingProvider: FC<PropsWithChildren> = ({ children }) => {
         error: caseTimingDataError,
     } = useQuery({
         queryKey: ['caseTimingChart', filter],
-        queryFn: () => getCaseDashboardTimingQuery(filter, [GroupByOptions.ProcessSubType]),
-        select: data => data.data?.sort((a, b) => a.secondMedian - b.secondMedian) || data,
+        queryFn: () => getCaseDashboardTimingQuery(filter, [CompletedCaseTimeGroupByEnum.PROCESS_SUB_TYPE]),
+        select: data => data?.sort((a, b) => a.secondMedian - b.secondMedian) || data,
         placeholderData: previousData => previousData,
         enabled: Object.keys(filter).length > 0,
     });

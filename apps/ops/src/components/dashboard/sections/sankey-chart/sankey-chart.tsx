@@ -1,4 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import {
+    CaseCountGroupByEnum,
+    CaseCountInputFilter,
+    CaseCountOutputLevel1,
+    CaseCountOutputLevel2,
+    CaseCountOutputLevel3,
+} from '@zinnia/api-types/types/analytics';
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
@@ -10,9 +17,7 @@ import SelectSimple from '@deps/components/select/select';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat, getLabelSubString } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
-import { DashboardStatsElementResponse } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
-import { DashboardSearchFilter } from '@deps/queries/cases';
 import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
 import { SankeyCellText } from './sankey-cell-text';
@@ -21,7 +26,7 @@ interface Props {
     height?: number;
     width?: number;
     chartOptions?: SankeyChartOptions;
-    baseDashboardQueryFilter?: DashboardSearchFilter;
+    baseDashboardQueryFilter?: CaseCountInputFilter;
 }
 
 interface SankeyChartOptions {
@@ -49,9 +54,9 @@ const defaultChartOptions = {
 };
 
 const DEFAULT_GROUPBY_FILTER_OPTIONS = {
-    L1SelectValue: GroupByOptions.Process,
-    L2SelectValue: GroupByOptions.ProcessSubType,
-    L3SelectValue: GroupByOptions.CaseStatus,
+    L1SelectValue: CaseCountGroupByEnum.PROCESS,
+    L2SelectValue: CaseCountGroupByEnum.PROCESS_SUB_TYPE,
+    L3SelectValue: CaseCountGroupByEnum.CASE_STATUS,
 };
 
 const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOptions, baseDashboardQueryFilter }: Props) => {
@@ -70,9 +75,9 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     } = mergedChartOptions;
     const [totalCases, setTotalCases] = useState<number>(0);
 
-    const [level1ObjectGrouping, setLevel1ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
-    const [level2ObjectGrouping, setLevel2ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
-    const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<DashboardStatsElementResponse[]>([]);
+    const [level1ObjectGrouping, setLevel1ObjectGrouping] = useState<CaseCountOutputLevel1[]>([]);
+    const [level2ObjectGrouping, setLevel2ObjectGrouping] = useState<CaseCountOutputLevel1[]>([]);
+    const [level3ObjectGrouping, setLevel3ObjectGrouping] = useState<CaseCountOutputLevel1[]>([]);
     const [l1SelectedIndex, setL1SelectedIndex] = useState<number>(-100);
 
     const [l1SelectValue, setL1SelectValue] = useState(DEFAULT_GROUPBY_FILTER_OPTIONS.L1SelectValue);
@@ -96,11 +101,11 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         enabled: Object.keys(baseDashboardQueryFilter || {}).length > 0,
     });
 
-    const getGroupingsFromL1 = (l1ObjectGrouping: DashboardStatsElementResponse[]) => {
-        const l2Grouping: DashboardStatsElementResponse[] = [];
-        const l3Grouping: DashboardStatsElementResponse[] = [];
-        const tempL2Grouping: DashboardStatsElementResponse[] = [];
-        const tempL3Grouping: DashboardStatsElementResponse[] = [];
+    const getGroupingsFromL1 = (l1ObjectGrouping: CaseCountOutputLevel1[]) => {
+        const l2Grouping: CaseCountOutputLevel1[] = [];
+        const l3Grouping: CaseCountOutputLevel1[] = [];
+        const tempL2Grouping: CaseCountOutputLevel1[] = [];
+        const tempL3Grouping: CaseCountOutputLevel1[] = [];
 
         const l2CountByKeyMap: { [key: string]: number } = {};
         const l3CountByKeyMap: { [key: string]: number } = {};
@@ -109,7 +114,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         l1ObjectGrouping.forEach(l1Grouping => {
             if (l1Grouping && l1Grouping.values && l1Grouping.values && l1Grouping.values.length > 0) {
                 l1Grouping.values.forEach(l2ChildGrouping => {
-                    const clonedL2ChildGrouping: DashboardStatsElementResponse = JSON.parse(JSON.stringify(l2ChildGrouping));
+                    const clonedL2ChildGrouping: CaseCountOutputLevel1 = JSON.parse(JSON.stringify(l2ChildGrouping));
                     tempL2Grouping.push(clonedL2ChildGrouping);
 
                     clonedL2ChildGrouping?.values?.forEach(l3ChildGrouping => {
@@ -270,11 +275,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         return `M ${xStart},${yStart} C ${xEnd},${yStart} ${xStart},${yEnd} ${xEnd},${yEnd}`;
     };
 
-    const renderL1Path = (
-        l1StatGrouping: DashboardStatsElementResponse,
-        l2StatGrouping: DashboardStatsElementResponse,
-        level1Index: number
-    ) => {
+    const renderL1Path = (l1StatGrouping: CaseCountOutputLevel1, l2StatGrouping: CaseCountOutputLevel2, level1Index: number) => {
         const level2Index = level2ObjectGrouping.findIndex(grouping => grouping.name === l2StatGrouping.name);
         if (level2Index < 0) {
             return null;
@@ -300,8 +301,8 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     };
 
     const renderL2HoverPath = (
-        l2StatGrouping: DashboardStatsElementResponse,
-        l3StatGrouping: DashboardStatsElementResponse,
+        l2StatGrouping: CaseCountOutputLevel2,
+        l3StatGrouping: CaseCountOutputLevel3,
         level2Index: number,
         pathIndex: number
     ) => {
@@ -358,8 +359,8 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     };
 
     const renderL2Path = (
-        l2StatGrouping: DashboardStatsElementResponse,
-        l3StatGrouping: DashboardStatsElementResponse,
+        l2StatGrouping: CaseCountOutputLevel1,
+        l3StatGrouping: CaseCountOutputLevel1,
         level2Index: number,
         pathIndex: number
     ) => {
@@ -395,7 +396,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         );
     };
 
-    const renderL1Group = (l1StatGrouping: DashboardStatsElementResponse | null, index: number, alwaysVisible?: boolean) => {
+    const renderL1Group = (l1StatGrouping: CaseCountOutputLevel1 | null, index: number, alwaysVisible?: boolean) => {
         if (!l1StatGrouping) {
             return null;
         }
@@ -424,7 +425,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
                         fill={isL1Selected() && !isMatchForL1SelectedStatGrouping(index) ? '#ddd' : 'inherit'}
                         count={l1StatGrouping.count}
                         title={
-                            l1SelectValue === GroupByOptions.Carrier
+                            l1SelectValue === CaseCountGroupByEnum.CARRIER
                                 ? getLabelSubString(l1StatGrouping.name)
                                 : dashboardChartTitleFormat(l1StatGrouping.name, false)
                         }
@@ -444,7 +445,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         );
     };
 
-    const renderL2Group = (l2StatGrouping: DashboardStatsElementResponse, index: number, selectedItem: boolean = false) => {
+    const renderL2Group = (l2StatGrouping: CaseCountOutputLevel2, index: number, selectedItem: boolean = false) => {
         const l1MatchedItem = getSelectedL1StatGrouping();
         const l2MatchedItem = l1MatchedItem?.values?.find(l2ChildStatGrouping => l2ChildStatGrouping.name === l2StatGrouping.name);
         let isSelected = false;
@@ -505,7 +506,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         );
     };
 
-    const renderL3Group = (l3StatGrouping: DashboardStatsElementResponse, index: number) => {
+    const renderL3Group = (l3StatGrouping: CaseCountOutputLevel3, index: number) => {
         return (
             <g key={`level-3-${index}`} transform="translate(0.5,0.5)" style={{ visibility: 'visible' }}>
                 <rect
@@ -537,7 +538,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         );
     };
 
-    const getL2ObjectColor = (item: DashboardStatsElementResponse, index: number) => {
+    const getL2ObjectColor = (item: CaseCountOutputLevel2, index: number) => {
         const matchingStatGrouping = getSelectedL1StatGrouping()?.values?.find(statGrouping => statGrouping.name === item.name);
 
         if (!isL1Selected()) {
@@ -549,7 +550,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         }
     };
 
-    const getL2TextColor = (item: DashboardStatsElementResponse) => {
+    const getL2TextColor = (item: CaseCountOutputLevel2) => {
         const matchingStatGrouping = getSelectedL1StatGrouping()?.values?.find(statGrouping => statGrouping.name === item.name);
 
         if (!isL1Selected()) {
@@ -561,7 +562,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         }
     };
 
-    const getL2ObjectCount = (item: DashboardStatsElementResponse) => {
+    const getL2ObjectCount = (item: CaseCountOutputLevel2) => {
         if (!isL1Selected()) {
             return item.count;
         }
@@ -575,7 +576,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
         }
     };
 
-    const getL3ObjectCount = (l3Grouping: DashboardStatsElementResponse) => {
+    const getL3ObjectCount = (l3Grouping: CaseCountOutputLevel3) => {
         if (!isL1Selected()) {
             return l3Grouping.count;
         }
@@ -611,14 +612,14 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
     // };
 
     const handleL1SelectChange = (value: string) => {
-        setL1SelectValue(value as GroupByOptions);
+        setL1SelectValue(value as CaseCountGroupByEnum);
         setL1SelectedIndex(-1); // reset whatever was selected on L1
     };
     const handleL2SelectChange = (value: string) => {
-        setL2SelectValue(value as GroupByOptions);
+        setL2SelectValue(value as CaseCountGroupByEnum);
     };
     const handleL3SelectChange = (value: string) => {
-        setL3SelectValue(value as GroupByOptions);
+        setL3SelectValue(value as CaseCountGroupByEnum);
     };
 
     const isL1Selected = () => l1SelectedIndex > -1;
@@ -662,7 +663,7 @@ const SankeyChart = ({ height = 570, width = 1536, chartOptions = defaultChartOp
             return;
         }
 
-        let l1Grouping: DashboardStatsElementResponse[] = [];
+        let l1Grouping: CaseCountOutputLevel1[] = [];
         // L1: sort the groupings by count
         caseGroupingState?.data.sort((a, b) => b.count - a.count);
         // TODO: should use the container height / blockHeight+blockStroke to determine how many we can show

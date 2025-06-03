@@ -1,0 +1,785 @@
+openapi: 3.1.0
+info:
+  title: Analytics Data API
+  description: Provides analytics data for the Zinnia Life platform
+  contact:
+    name: Data Team
+    email: data-science@se2office365.onmicrosoft.com
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8080
+    description: Local Dev
+  - url: https://qa.api.zinnia.io
+    description: QA Environment
+  - url: https://api.zinnia.io
+    description: Production Environment
+paths:
+  /analytics/v1/dashboard/completed_case_time:
+    post:
+      summary: Completed Case Time
+      description: Get the average time spent on completed cases
+      operationId: completed_case_time_analytics_v1_dashboard_completed_case_time_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompletedCaseTimeInput'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletedCaseTimeOutput'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /analytics/v1/dashboard/case_count:
+    post:
+      summary: Case Count
+      description: Get the quantity of cases matching filters
+      operationId: case_count_analytics_v1_dashboard_case_count_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseCountInput'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseCountOutput'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /analytics/v1/dashboard/exception_count:
+    post:
+      summary: Exception Count
+      description: Get the quantity of exceptions matching filters
+      operationId: exception_count_analytics_v1_dashboard_exception_count_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExceptionCountInput'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionCountOutput'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    CaseCountGroupByEnum:
+      type: string
+      enum:
+        - brokerDealerName
+        - carrier
+        - caseStatus
+        - processSubType
+        - process
+        - productName
+        - applicationType
+        - createdDay
+        - updatedDay
+      title: CaseCountGroupByEnum
+    CaseCountInput:
+      properties:
+        filter:
+          $ref: '#/components/schemas/CaseCountInputFilter'
+        groupBy:
+          items:
+            $ref: '#/components/schemas/CaseCountGroupByEnum'
+          type: array
+          maxItems: 3
+          minItems: 1
+          title: Groupby
+          example:
+            - carrier
+      type: object
+      required:
+        - filter
+        - groupBy
+      title: CaseCountInput
+    CaseCountInputFilter:
+      properties:
+        caseStatus:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Casestatus
+          example:
+            - COMPLETED
+        carrier:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Carrier
+          example:
+            - MASS
+        process:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Process
+          example:
+            - New Business
+        requestSubType:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Requestsubtype
+          example:
+            - Suitability Review
+        productName:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Productname
+          example:
+            - Security Benefit Foundations Annuity 5 Yr product
+        brokerDealerName:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Brokerdealername
+          example:
+            - SANTANDER  SECURITIES LLC
+        createdDateStart:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Createddatestart
+          example: '2025-01-11T01:01:31.316Z'
+        createdDateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Createddateend
+          example: '2025-01-21T23:34:31.316Z'
+        updatedDateStart:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Updateddatestart
+          example: '2025-01-11T01:01:01.316Z'
+        updatedDateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Updateddateend
+          example: '2025-01-21T23:34:31.316Z'
+      type: object
+      title: CaseCountInputFilter
+    CaseCountOutput:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/CaseCountOutputLevel1'
+          type: array
+          title: Data
+        totalElements:
+          type: integer
+          title: Totalelements
+          example: 12345
+      type: object
+      required:
+        - data
+        - totalElements
+      title: CaseCountOutput
+    CaseCountOutputLevel1:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: carrier
+        name:
+          type: string
+          title: Name
+          example: MASS
+        count:
+          type: integer
+          title: Count
+          example: 5832
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/CaseCountOutputLevel2'
+              type: array
+            - type: 'null'
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: CaseCountOutputLevel1
+    CaseCountOutputLevel2:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: processSubType
+        name:
+          type: string
+          title: Name
+          example: Annuity Application
+        count:
+          type: integer
+          title: Count
+          example: 2294
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/CaseCountOutputLevel3'
+              type: array
+            - type: 'null'
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: CaseCountOutputLevel2
+    CaseCountOutputLevel3:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: applicationType
+        name:
+          type: string
+          title: Name
+          example: Digital
+        count:
+          type: integer
+          title: Count
+          example: 28
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: CaseCountOutputLevel3
+    CompletedCaseTimeGroupByEnum:
+      type: string
+      enum:
+        - brokerDealerName
+        - carrier
+        - processSubType
+        - process
+        - productName
+        - applicationType
+      title: CompletedCaseTimeGroupByEnum
+    CompletedCaseTimeInput:
+      properties:
+        filter:
+          $ref: '#/components/schemas/CompletedCaseTimeInputFilter'
+        groupBy:
+          items:
+            $ref: '#/components/schemas/CompletedCaseTimeGroupByEnum'
+          type: array
+          maxItems: 3
+          minItems: 1
+          title: Groupby
+          example:
+            - carrier
+      type: object
+      required:
+        - filter
+        - groupBy
+      title: CompletedCaseTimeInput
+    CompletedCaseTimeInputFilter:
+      properties:
+        carrier:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Carrier
+          example:
+            - MASS
+        process:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Process
+          example:
+            - New Business
+        requestSubType:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Requestsubtype
+          example:
+            - Suitability Review
+        productName:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Productname
+          example:
+            - Security Benefit Foundations Annuity 5 Yr product
+        brokerDealerName:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Brokerdealername
+          example:
+            - SANTANDER  SECURITIES LLC
+        createdDateStart:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Createddatestart
+          example: '2025-01-11T01:01:31.316Z'
+        createdDateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Createddateend
+          example: '2025-01-21T23:34:31.316Z'
+        updatedDateStart:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Updateddatestart
+          example: '2025-01-11T01:01:01.316Z'
+        updatedDateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Updateddateend
+          example: '2025-01-21T23:34:31.316Z'
+      type: object
+      title: CompletedCaseTimeInputFilter
+    CompletedCaseTimeOutput:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/CompletedCaseTimeOutputLevel1'
+          type: array
+          title: Data
+      type: object
+      required:
+        - data
+      title: CompletedCaseTimeOutput
+    CompletedCaseTimeOutputLevel1:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: carrier
+        name:
+          type: string
+          title: Name
+          example: MASS
+        secondLow:
+          type: integer
+          title: Secondlow
+          example: 0
+        secondMedian:
+          type: integer
+          title: Secondmedian
+          example: 10
+        secondMean:
+          type: integer
+          title: Secondmean
+          example: 1331258
+        secondHigh:
+          type: integer
+          title: Secondhigh
+          example: 5259134
+        count:
+          type: integer
+          title: Count
+          example: 5832
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/CompletedCaseTimeOutputLevel2'
+              type: array
+            - type: 'null'
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - secondLow
+        - secondMedian
+        - secondMean
+        - secondHigh
+        - count
+      title: CompletedCaseTimeOutputLevel1
+    CompletedCaseTimeOutputLevel2:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: processSubType
+        name:
+          type: string
+          title: Name
+          example: Annuity Application
+        secondLow:
+          type: integer
+          title: Secondlow
+          example: 24794
+        secondMedian:
+          type: integer
+          title: Secondmedian
+          example: 50709
+        secondMean:
+          type: integer
+          title: Secondmean
+          example: 740047
+        secondHigh:
+          type: integer
+          title: Secondhigh
+          example: 6109775
+        count:
+          type: integer
+          title: Count
+          example: 19
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/CompletedCaseTimeOutputLevel3'
+              type: array
+            - type: 'null'
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - secondLow
+        - secondMedian
+        - secondMean
+        - secondHigh
+        - count
+      title: CompletedCaseTimeOutputLevel2
+    CompletedCaseTimeOutputLevel3:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: applicationType
+        name:
+          type: string
+          title: Name
+          example: Digital
+        secondLow:
+          type: integer
+          title: Secondlow
+          example: 24794
+        secondMedian:
+          type: integer
+          title: Secondmedian
+          example: 50709
+        secondMean:
+          type: integer
+          title: Secondmean
+          example: 740047
+        secondHigh:
+          type: integer
+          title: Secondhigh
+          example: 6109775
+        count:
+          type: integer
+          title: Count
+          example: 19
+      type: object
+      required:
+        - key
+        - name
+        - secondLow
+        - secondMedian
+        - secondMean
+        - secondHigh
+        - count
+      title: CompletedCaseTimeOutputLevel3
+    ExceptionCountGroupByEnum:
+      type: string
+      enum:
+        - applicationType
+        - brokerDealerName
+        - carrier
+        - caseStatus
+        - exceptionCategory
+        - process
+        - processSubType
+        - productName
+        - createdDay
+        - updatedDay
+      title: ExceptionCountGroupByEnum
+    ExceptionCountInput:
+      properties:
+        filter:
+          $ref: '#/components/schemas/ExceptionCountInputFilter'
+        groupBy:
+          items:
+            $ref: '#/components/schemas/ExceptionCountGroupByEnum'
+          type: array
+          maxItems: 3
+          minItems: 1
+          title: Groupby
+          example:
+            - carrier
+      type: object
+      required:
+        - filter
+        - groupBy
+      title: ExceptionCountInput
+    ExceptionCountInputFilter:
+      properties:
+        caseStatus:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Casestatus
+          example:
+            - COMPLETED
+        carrier:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Carrier
+          example:
+            - MASS
+        process:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Process
+          example:
+            - New Business
+        requestSubType:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Requestsubtype
+          example:
+            - Suitability Review
+        productName:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Productname
+          example:
+            - Security Benefit Foundations Annuity 5 Yr product
+        brokerDealerName:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Brokerdealername
+          example:
+            - SANTANDER  SECURITIES LLC
+        createdDateStart:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Createddatestart
+          example: '2025-01-11T01:01:31.316Z'
+        createdDateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Createddateend
+          example: '2025-01-21T23:34:31.316Z'
+        updatedDateStart:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Updateddatestart
+          example: '2025-01-11T01:01:01.316Z'
+        updatedDateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Updateddateend
+          example: '2025-01-21T23:34:31.316Z'
+      type: object
+      title: ExceptionCountInputFilter
+    ExceptionCountOutput:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/ExceptionCountOutputLevel1'
+          type: array
+          title: Data
+        totalElements:
+          type: integer
+          title: Totalelements
+          example: 12345
+      type: object
+      required:
+        - data
+        - totalElements
+      title: ExceptionCountOutput
+    ExceptionCountOutputLevel1:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: carrier
+        name:
+          type: string
+          title: Name
+          example: MASS
+        count:
+          type: integer
+          title: Count
+          example: 5832
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/ExceptionCountOutputLevel2'
+              type: array
+            - type: 'null'
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: ExceptionCountOutputLevel1
+    ExceptionCountOutputLevel2:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: processSubType
+        name:
+          type: string
+          title: Name
+          example: Annuity Application
+        count:
+          type: integer
+          title: Count
+          example: 2294
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/ExceptionCountOutputLevel3'
+              type: array
+            - type: 'null'
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: ExceptionCountOutputLevel2
+    ExceptionCountOutputLevel3:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: exceptionCategory
+        name:
+          type: string
+          title: Name
+          example: Agent
+        count:
+          type: integer
+          title: Count
+          example: 28
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: ExceptionCountOutputLevel3
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError

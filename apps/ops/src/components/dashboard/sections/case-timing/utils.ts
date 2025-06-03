@@ -1,11 +1,10 @@
+import { CompletedCaseTimeOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
-import { CaseTimingData } from '@deps/queries/api/cases';
-
 dayjs.extend(duration);
 
-export const generateSeries = (seriesData: CaseTimingData[]) => {
+export const generateSeries = (seriesData: CompletedCaseTimeOutputLevel1[]) => {
     return [
         {
             data: seriesData.map(item => {

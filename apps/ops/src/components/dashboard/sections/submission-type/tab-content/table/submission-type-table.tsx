@@ -1,3 +1,5 @@
+import { toSentenceCase } from '@xd/utils/dist';
+import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import {
     FieldData,
     FieldSize,
@@ -23,7 +25,7 @@ import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loade
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
-import { DashboardStatsElementResponse, Statuses } from '@deps/models/case/case';
+import { Statuses } from '@deps/models/case/case';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import { SubmissionMethodTooltip } from '../../submission-type';
@@ -39,7 +41,7 @@ interface FlattenedDashboardStatsElement {
 // Since we're returning arrays of carriers with nested data for the submission method,
 // we need to flatten the list of submission methods out and associate them with the carrier
 // Carrier | Method | Count
-const flattenDashboardStats = (data: DashboardStatsElementResponse[], parentName: string): FlattenedDashboardStatsElement[] => {
+const flattenDashboardStats = (data: CaseCountOutputLevel1[], parentName: string): FlattenedDashboardStatsElement[] => {
     return data.flatMap(item => {
         if (item.values && item.values.length > 0) {
             return flattenDashboardStats(item.values, item.name);
@@ -124,7 +126,7 @@ export const SubmissionTypeTable = () => {
             <div className={sharedStyles.searchContainer}>
                 <FieldData
                     fieldSize={FieldSize.Small}
-                    placeholder={`Search by ${friendlyGroupByName[submissionVs]?.toLocaleLowerCase()} name`}
+                    placeholder={`Search by ${friendlyGroupByName[submissionVs]?.toLocaleLowerCase()}`}
                     onChange={e => setSearchText(e.target.value)}
                 />
             </div>
@@ -150,7 +152,7 @@ export const SubmissionTypeTable = () => {
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
-                                        {friendlyGroupByName[submissionVs]} Name
+                                        {toSentenceCase(friendlyGroupByName[submissionVs])}
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -160,7 +162,7 @@ export const SubmissionTypeTable = () => {
                                         />
                                     </TableHeaderCell>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.SUBMISSION_METHOD)} sortable>
-                                        Submission Method
+                                        Submission method
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -170,7 +172,7 @@ export const SubmissionTypeTable = () => {
                                         />
                                     </TableHeaderCell>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.COUNT)} sortable>
-                                        Total Submissions
+                                        Total submissions
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}

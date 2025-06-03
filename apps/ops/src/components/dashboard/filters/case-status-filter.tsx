@@ -6,7 +6,6 @@ import { caseStatusMap } from '@deps/components/dashboard/utils';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { Statuses } from '@deps/models/case/case';
-
 interface CaseStatusOption {
     label: string;
     displayText: string;
@@ -51,11 +50,11 @@ export const CaseStatusFilter: FC<CaseStatusFilterProps> = ({ caseStatus, handle
         <Select
             maxContentWidth
             label="Case status"
-            className={sharedStyles.selectDropdowns}
             options={options}
             value={convertCaseStatusKeysToValuesInObject}
             size={FieldSize.XS}
             isMultiselect
+            className={sharedStyles.multiselectDropdowns}
             onChange={val => handleCaseStatusChange(val as Statuses)}
         />
     );

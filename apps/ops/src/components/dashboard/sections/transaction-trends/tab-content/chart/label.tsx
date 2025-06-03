@@ -28,7 +28,7 @@ export const LabelComponent: React.FC<Props> = ({ labelData, dateStr, total }) =
                 </div>
             ))}
             <div className={clsx('typography-labels-label-sm-alt', styles.date)}>
-                <i>Created date: {dateStr}</i>
+                <i>Closed date: {dateStr}</i>
             </div>
             <div className={styles.total}>
                 Total: <b>{total.toLocaleString()}</b>

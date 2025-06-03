@@ -50,7 +50,7 @@ export const ActiveAgingChart = () => {
     }, [chartSeries]);
 
     return (
-        <div className="flex">
+        <div className="flex flex-wrap">
             <div className={clsx(sharedStyles.chartColumn, 'w-3/4')}>
                 <CardContainer fullWidth={false}>
                     <ActiveAgingHeader />

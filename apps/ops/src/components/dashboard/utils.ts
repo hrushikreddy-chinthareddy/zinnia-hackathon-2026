@@ -1,9 +1,13 @@
+import {
+    CaseCountGroupByEnum,
+    CaseCountInputFilter,
+    CaseCountOutputLevel1,
+    ExceptionCountGroupByEnum,
+} from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
-import { DashboardStatsElementResponse, Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
-import { DashboardSearchFilter } from '@deps/queries/cases';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
 import { SimpleOption } from '../autocomplete/autocomplete.types';
@@ -70,7 +74,7 @@ export const generateCarouselDataLengths = (chunkedResponseLengths: number[]) =>
  *
  * formats select dropdown options for processes.
  */
-export const formatProcessListOptions = (data: DashboardStatsElementResponse[] | undefined) => {
+export const formatProcessListOptions = (data: CaseCountOutputLevel1[] | undefined) => {
     if (!data || !data.length) throw new Error('No data');
     return (
         data
@@ -89,7 +93,7 @@ export const formatProcessListOptions = (data: DashboardStatsElementResponse[] |
  *
  * The main API call for the dashboard we use in tanstack queries
  */
-export const createBaseQuery = async (baseInsightQueryFilter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
+export const createBaseQuery = async (baseInsightQueryFilter: CaseCountInputFilter, groupBy: CaseCountGroupByEnum[]) => {
     const response = await getCaseDashboardStatsQuery(baseInsightQueryFilter, groupBy);
     if (!response?.data) {
         console.error(
@@ -111,22 +115,16 @@ export const formatProcessFilter = (process: Processes | ExtendedProcesses) => {
     return process === ExtendedProcesses.ALL ? [] : [process];
 };
 
-export const groupByUrlMap: Record<GroupByOptions, string> = {
-    [GroupByOptions.Process]: 'process',
-    [GroupByOptions.ProcessSubType]: 'requestSubType',
-    [GroupByOptions.Carrier]: 'carrier',
-    [GroupByOptions.BrokerDealerName]: 'brokerDealerName',
-    [GroupByOptions.Default]: '',
-    [GroupByOptions.ProductName]: 'productName',
-    [GroupByOptions.CreatedAt]: 'createdDate',
-    [GroupByOptions.UpdatedAt]: 'updatedDate',
-    [GroupByOptions.AgingTimeRanges]: 'agingTimeRanges',
-    [GroupByOptions.AgingRange]: 'agingRange',
-    [GroupByOptions.OpenStages]: 'openStages',
-    [GroupByOptions.ExceptionCategory]: 'exceptionCategory',
-    [GroupByOptions.PolicyNumber]: 'policyNumber',
-    [GroupByOptions.ApplicationType]: 'applicationType',
-    [GroupByOptions.CaseStatus]: 'caseStatus',
+export const groupByUrlMap: Record<CaseCountGroupByEnum, string> = {
+    [CaseCountGroupByEnum.PROCESS]: 'process',
+    [CaseCountGroupByEnum.PROCESS_SUB_TYPE]: 'requestSubType',
+    [CaseCountGroupByEnum.CARRIER]: 'carrier',
+    [CaseCountGroupByEnum.BROKER_DEALER_NAME]: 'brokerDealerName',
+    [CaseCountGroupByEnum.PRODUCT_NAME]: 'productName',
+    [CaseCountGroupByEnum.CREATED_DAY]: 'createdDate',
+    [CaseCountGroupByEnum.UPDATED_DAY]: 'updatedDate',
+    [CaseCountGroupByEnum.APPLICATION_TYPE]: 'applicationType',
+    [CaseCountGroupByEnum.CASE_STATUS]: 'caseStatus',
 };
 
 interface generateLinkArgs {
@@ -135,11 +133,11 @@ interface generateLinkArgs {
     submissionMethod?: string;
     startDate?: string;
     endDate?: string;
-    groupBy?: GroupByOptions;
-    carrier?: string[] | string;
+    groupBy?: CaseCountGroupByEnum;
+    carrier?: string[] | string | null;
     product?: string;
-    brokerDealer?: string[];
-    status?: Statuses[];
+    brokerDealer?: string[] | null;
+    status?: string[] | undefined | null;
 }
 
 export const generateCaseLink = ({
@@ -166,7 +164,7 @@ export const generateCaseLink = ({
     }
 
     // Only add this if users aren't grouping by carrier
-    if (carriers && groupBy !== GroupByOptions.Carrier) {
+    if (carriers && groupBy !== CaseCountGroupByEnum.CARRIER) {
         queryParams.push(`carrier=${carriers}`);
     }
     if (product) {
@@ -174,7 +172,7 @@ export const generateCaseLink = ({
     }
 
     // Only add this if users aren't grouping by broker dealer
-    if (brokerDealers && groupBy !== GroupByOptions.BrokerDealerName) {
+    if (brokerDealers && groupBy !== CaseCountGroupByEnum.BROKER_DEALER_NAME) {
         queryParams.push(`brokerDealerName=${brokerDealers}`);
     }
     if (startDate) {
@@ -201,20 +199,15 @@ export const generateCaseLink = ({
     return `/cases?${queryParams.join('&')}`;
 };
 
-export const friendlyGroupByName: Record<GroupByOptions, string> = {
-    [GroupByOptions.ApplicationType]: 'Application type',
-    [GroupByOptions.BrokerDealerName]: 'Distribution partner',
-    [GroupByOptions.ProductName]: 'Product',
-    [GroupByOptions.Carrier]: 'Carrier',
-    [GroupByOptions.ProcessSubType]: 'Case subtype',
-    [GroupByOptions.CaseStatus]: 'Case status',
-    [GroupByOptions.AgingRange]: 'Aging range',
-    [GroupByOptions.OpenStages]: 'Open stages',
-    [GroupByOptions.ExceptionCategory]: 'Exception category',
-    [GroupByOptions.PolicyNumber]: 'Policy number',
-    [GroupByOptions.Process]: 'Process',
-    [GroupByOptions.CreatedAt]: 'Created date',
-    [GroupByOptions.UpdatedAt]: 'Updated date',
-    [GroupByOptions.AgingTimeRanges]: 'Aging time ranges',
-    [GroupByOptions.Default]: 'Default',
+export const friendlyGroupByName: Record<CaseCountGroupByEnum | ExceptionCountGroupByEnum, string> = {
+    [CaseCountGroupByEnum.APPLICATION_TYPE]: 'Application type',
+    [CaseCountGroupByEnum.BROKER_DEALER_NAME]: 'Distribution partner',
+    [CaseCountGroupByEnum.PRODUCT_NAME]: 'Product',
+    [CaseCountGroupByEnum.CARRIER]: 'Carrier',
+    [CaseCountGroupByEnum.PROCESS_SUB_TYPE]: 'Case subtype',
+    [CaseCountGroupByEnum.CASE_STATUS]: 'Case status',
+    [CaseCountGroupByEnum.PROCESS]: 'Process',
+    [CaseCountGroupByEnum.CREATED_DAY]: 'Created date',
+    [CaseCountGroupByEnum.UPDATED_DAY]: 'Updated date',
+    [ExceptionCountGroupByEnum.EXCEPTION_CATEGORY]: 'Exception category',
 };

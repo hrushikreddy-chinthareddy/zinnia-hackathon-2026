@@ -22,7 +22,6 @@ import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { FgaRelation } from '@deps/types/fga';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -94,14 +93,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
             const doesUserHavePagePermission = await checkTuplePage(
                 context,
                 FgaRelation.UiAccess,
                 FgaRoles.CASE_STATS_DASHBOARD_ENTITY,
                 loggingContext
             );
-            if (!doesUserHavePagePermission || !featureFlagDecisions['case-management-case_stats_dashboard']) {
+            if (!doesUserHavePagePermission) {
                 return {
                     redirect: {
                         destination: '/403',

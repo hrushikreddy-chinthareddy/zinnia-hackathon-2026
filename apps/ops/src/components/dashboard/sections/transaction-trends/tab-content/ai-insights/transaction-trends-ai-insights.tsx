@@ -21,9 +21,7 @@ export const TransactionTrendsAIInsights = () => {
         } and ${timerange.to}.`,
         `The data is grouped by ${groupBy}.`,
         `Avoid using phrases such as "the data".`,
-        `Your responses should be insightful and will be displayed on a UI as a summary for a module related to a timeseries chart.`,
         `Use percentages and real data where it makes sense.`,
-        `Keep it concise and to the point`,
         `Format number values to U.S. including commas where appropriate.`,
         `Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
     ].join(' ');

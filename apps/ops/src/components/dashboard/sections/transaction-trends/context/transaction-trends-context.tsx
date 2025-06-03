@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { CaseCountGroupByEnum, CaseCountInputFilter, CaseCountOutput } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import { createContext, FC, PropsWithChildren, useEffect, useState } from 'react';
 
@@ -10,22 +11,20 @@ import {
     startDates,
     TimeframeFilterOptions,
 } from '@deps/components/dashboard/utils';
-import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
-import { DashboardSearchFilter } from '@deps/queries/cases';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
 
 interface TransactionTrendsContextTypes {
     timeframeRadio: TimeframeFilterOptions | undefined;
     handleTimeframeRadioChange: (value: TimeframeFilterOptions) => void;
 
-    setGroupBy: (value: GroupByOptions) => void;
-    groupBy: GroupByOptions;
+    setGroupBy: (value: CaseCountGroupByEnum) => void;
+    groupBy: CaseCountGroupByEnum;
     selectedProcess: Processes | ExtendedProcesses | undefined;
     setSelectedProcess: (value: Processes | ExtendedProcesses) => void;
-    transactionTrendsData: CaseDashboardStatsResponse | undefined;
+    transactionTrendsData: CaseCountOutput | undefined;
     transactionTrendsDataFetching: boolean;
-    filter: DashboardSearchFilter;
+    filter: CaseCountInputFilter;
     transactionTrendsDataError: Error | null;
     timerange: {
         to: string;
@@ -45,7 +44,7 @@ const defaultState = {
     selectedProcess: Processes.NewBusiness,
     setSelectedProcess: () => {},
     setGroupBy: () => {},
-    groupBy: GroupByOptions.ProcessSubType,
+    groupBy: CaseCountGroupByEnum.PROCESS_SUB_TYPE,
     filter: {},
     timerange: {
         to: '',
@@ -60,8 +59,8 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({ children }) =
     const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
 
     const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
-    const [groupBy, setGroupBy] = useState<GroupByOptions>(
-        Object.keys(selectedCarriers).length ? GroupByOptions.ProcessSubType : GroupByOptions.Carrier
+    const [groupBy, setGroupBy] = useState<CaseCountGroupByEnum>(
+        Object.keys(selectedCarriers).length ? CaseCountGroupByEnum.PROCESS_SUB_TYPE : CaseCountGroupByEnum.CARRIER
     );
 
     const [timeframeRadio, setTimeframeRadio] = useState<TimeframeFilterOptions | undefined>(TimeframeFilterOptions.Trailing12Months);
@@ -84,9 +83,8 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({ children }) =
         setTimeframeRadio(undefined);
     };
 
-    const filter: DashboardSearchFilter = {
-        createdDateStart: timerange.from,
-        createdDateEnd: timerange.to || undefined,
+    const filter = {
+        updatedDateStart: timerange.from,
         process: formatProcessFilter(selectedProcess),
         caseStatus: [Statuses.Completed],
         carrier: Object.keys(selectedCarriers),
@@ -100,16 +98,16 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({ children }) =
     } = useQuery({
         queryKey: ['transactionTrends', filter, groupBy],
         placeholderData: previousData => previousData,
-        queryFn: () => createBaseQuery(filter, [groupBy, GroupByOptions.UpdatedAt]),
+        queryFn: () => createBaseQuery(filter, [groupBy, CaseCountGroupByEnum.UPDATED_DAY]),
         enabled: Object.keys(filter).length > 0,
     });
 
     // If there is a selected carrier, default to the product name. Otherwise back to carrier
     useEffect(() => {
         if (selectedCarriers && Object.keys(selectedCarriers).length) {
-            setGroupBy(GroupByOptions.ProcessSubType);
+            setGroupBy(CaseCountGroupByEnum.PROCESS_SUB_TYPE);
         } else {
-            setGroupBy(GroupByOptions.Carrier);
+            setGroupBy(CaseCountGroupByEnum.CARRIER);
         }
     }, [selectedCarriers]);
 

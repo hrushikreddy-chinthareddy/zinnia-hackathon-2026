@@ -1,3 +1,4 @@
+import { CaseCountOutput } from '@zinnia/api-types/types/analytics';
 import { Tooltip } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { ReactNode, useEffect, useState } from 'react';
@@ -10,7 +11,6 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { formatNumberLabel, wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertToQueryString } from '@deps/helpers/routing.helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
-import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { ReactComponent as ChartSquare } from '@deps/styles/elements/icons/icons_outlined/chart-square-bar.svg';
@@ -19,7 +19,7 @@ import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_ou
 import DistributionPieChartSmallAPIBased from '../charts/distribution-charts/distribution-pie-chart-small-api-based';
 
 interface Props {
-    dashboardStatsResponse?: CaseDashboardStatsResponse;
+    dashboardStatsResponse?: CaseCountOutput;
     blockLabel: string;
     timeFrameLabel: string;
     classNames?: string;
@@ -52,13 +52,13 @@ const CaseStatBlock = ({
     const [aiSummary, setAiSummary] = useState<string | null>(null);
     const shouldShowCaseInsights = useCaseInsightsPermission() && showInsights;
 
-    const getOpenAiSummary = async (caseStats: CaseDashboardStatsResponse) => {
+    const getOpenAiSummary = async (caseStats: CaseCountOutput) => {
         try {
             const summary = await getCaseInsights({
                 content: JSON.stringify(caseStats),
                 prompt: `You are an expert in all things case data. Your job is to summarize the data for business and executive users.
-                          They want simple and insightful information about the data provided to you. The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
-                          Your responses should be insightful and will be displayed on a UI as a summary for a module related to a pie chart. Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
+                        The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
+                        Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
             });
             return summary;
         } catch (error) {

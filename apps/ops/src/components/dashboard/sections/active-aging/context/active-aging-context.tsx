@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { CaseCountGroupByEnum, CaseCountInputFilter, CaseCountOutput } from '@zinnia/api-types/types/analytics';
 import { createContext, FC, PropsWithChildren, useMemo, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
@@ -8,11 +9,8 @@ import {
     organizeAndMergeDataByTimeRange,
     TimeRangeData,
 } from '@deps/components/dashboard/sections/active-aging/utils';
-import { formatProcessFilter, createBaseQuery } from '@deps/components/dashboard/utils';
-import { getStartAndEndDates } from '@deps/containers/case-sub-page/case-helpers';
-import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
-import { DashboardSearchFilter } from '@deps/queries/cases';
+import { formatProcessFilter, createBaseQuery, startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
 
 export type CaseStatusType = { [key: string]: string };
@@ -26,12 +24,12 @@ const defaultCaseStatus: CaseStatusType = {
 interface ActiveAgingContextTypes {
     timeframe: ActiveAgingTimeRange;
     setTimeframe: (value: ActiveAgingTimeRange) => void;
-    groupBy: GroupByOptions;
-    setGroupBy: (value: GroupByOptions) => void;
+    groupBy: CaseCountGroupByEnum;
+    setGroupBy: (value: CaseCountGroupByEnum) => void;
     selectedProcess: Processes | ExtendedProcesses | undefined;
     setSelectedProcess: (value: Processes | ExtendedProcesses) => void;
-    filter: DashboardSearchFilter;
-    activeAgingData: CaseDashboardStatsResponse | undefined;
+    filter: CaseCountInputFilter;
+    activeAgingData: CaseCountOutput | undefined;
     activeAgingDataLoading: boolean;
     activeAgingDataError: boolean;
     activeAgingDataFetching: boolean;
@@ -56,7 +54,7 @@ interface ActiveAgingContextTypes {
 const defaultState = {
     timeframe: ActiveAgingTimeRange.ZERO_TO_SIX,
     setTimeframe: () => {},
-    groupBy: GroupByOptions.Carrier,
+    groupBy: CaseCountGroupByEnum.CARRIER,
     setGroupBy: () => {},
     selectedProcess: Processes.NewBusiness,
     setSelectedProcess: () => {},
@@ -73,7 +71,7 @@ const defaultState = {
     setCaseStatus: () => {},
 };
 
-const filterNullData = (response: CaseDashboardStatsResponse) => {
+const filterNullData = (response: CaseCountOutput) => {
     if (response?.data?.length) {
         response.data = response?.data?.filter(item => item.name !== null && item.name !== 'null' && item.name !== '');
     }
@@ -84,14 +82,14 @@ export const ActiveAgingContext = createContext<ActiveAgingContextTypes>(default
 
 export const ActiveAgingProvider: FC<PropsWithChildren> = ({ children }) => {
     const [timeframe, setTimeframe] = useState<ActiveAgingTimeRange>(ActiveAgingTimeRange.ZERO_TO_SIX);
-    const [groupBy, setGroupBy] = useState<GroupByOptions>(GroupByOptions.ProcessSubType);
+    const [groupBy, setGroupBy] = useState<CaseCountGroupByEnum>(CaseCountGroupByEnum.PROCESS_SUB_TYPE);
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
     const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
     const [caseStatus, setCaseStatus] = useState(defaultCaseStatus);
 
-    const { createdDateStart } = getStartAndEndDates('All');
+    const createdDateStart = startDates[TimeframeFilterOptions.Trailing12Months];
 
-    const filter: DashboardSearchFilter = {
+    const filter = {
         caseStatus: Object.keys(caseStatus) as Statuses[],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
@@ -107,7 +105,7 @@ export const ActiveAgingProvider: FC<PropsWithChildren> = ({ children }) => {
     } = useQuery({
         queryKey: ['activeAgingData', filter, groupBy, timeframe],
         placeholderData: previousData => previousData,
-        queryFn: () => createBaseQuery(filter, [groupBy, GroupByOptions.CreatedAt]),
+        queryFn: () => createBaseQuery(filter, [groupBy, CaseCountGroupByEnum.CREATED_DAY]),
         enabled: Object.keys(filter).length > 0,
         select: filterNullData,
     });

@@ -1,3 +1,4 @@
+import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import { useContext } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
@@ -27,7 +28,7 @@ export const SubmissionTypeFilters = () => {
     const submissionVsOptions = [
         { label: 'Carrier', value: GroupByOptions.Carrier, disabled: filter.carrier?.length === 1 },
         { label: 'Product', value: GroupByOptions.ProductName },
-        { label: 'Distribution Partner', value: GroupByOptions.BrokerDealerName },
+        { label: 'Distribution partner', value: GroupByOptions.BrokerDealerName },
     ];
 
     return (
@@ -36,11 +37,10 @@ export const SubmissionTypeFilters = () => {
                 <Select
                     maxContentWidth
                     label="Group by"
-                    className={sharedStyles.selectDropdowns}
                     options={submissionVsOptions}
                     value={submissionVs}
                     size={FieldSize.XS}
-                    onChange={val => setSubmissionVs(val as GroupByOptions)}
+                    onChange={val => setSubmissionVs(val as CaseCountGroupByEnum)}
                 />
 
                 <CaseTypeFilter

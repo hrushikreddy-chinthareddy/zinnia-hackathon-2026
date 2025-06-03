@@ -1,68 +1,80 @@
-import { Statuses, CaseDashboardStatsResponse, DashboardStatsElementResponse } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
+import {
+    CaseCountGroupByEnum,
+    CaseCountInput,
+    CaseCountInputFilter,
+    CompletedCaseTimeGroupByEnum,
+    CompletedCaseTimeInputFilter,
+    ExceptionCountGroupByEnum,
+} from '@zinnia/api-types/types/analytics';
 
-import { CaseTimingData, getCaseDashboardStats, getCaseTimingData } from '../../api/cases';
-import { CaseDashboardStatsQuery, DashboardSearchFilter } from '../../cases';
+import { friendlyGroupByName } from '@deps/components/dashboard/utils';
+import { Statuses } from '@deps/models/case/case';
+import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
 
-/**************************
- * ****General Case Dashboard Stats Query
- * You can use this for lots of the dashboard queries and just pass in filter and groupby
- * *************************
- */
+import { getCaseDashboardStats, getCaseTimingData } from '../../api/cases';
 
-const recursivelyFilter = (
-    items: DashboardStatsElementResponse[],
-    root: DashboardStatsElementResponse | null,
-    filterString: string
-): DashboardStatsElementResponse[] => {
-    return items.filter(item => {
-        if (item.name !== 'NOT_APPLICABLE') {
-            if (item.values) {
-                // Recursively process nested values, directly modifying them
-                item.values = recursivelyFilter(item.values, item, filterString);
-            }
-            return true;
-        } else {
-            if (root) {
-                root.count -= item.count; // Directly modify the root count
-            }
-            return false;
-        }
-    });
-};
-
-export const getCaseDashboardStatsQuery = async (baseFilter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
+export const getCaseDashboardStatsQuery = async (baseFilter: CaseCountInputFilter, groupBy: CaseCountGroupByEnum[]) => {
     const statsResponse = await getCaseDashboardStats({
         filter: baseFilter,
         groupBy,
     });
-    if (!statsResponse || 'status' in statsResponse) {
+    if (!statsResponse || 'detail' in statsResponse || !('data' in statsResponse)) {
         throw statsResponse;
     }
 
-    // Recursively filter out objects with name: "NOT_APPLICABLE"
-
-    const filteredData = recursivelyFilter(statsResponse.data || [], null, 'NOT_APPLICABLE');
-    statsResponse.data = filteredData.sort((a, b) => b.count - a.count);
+    statsResponse.data = statsResponse.data
+        .map(item => {
+            if (item.name === '') {
+                const friendlyName = friendlyGroupByName[groupBy[0]];
+                item.name = `No ${friendlyName.toLowerCase()} name`;
+            }
+            return item;
+        })
+        .sort((a, b) => b.count - a.count);
 
     return statsResponse;
 };
 
-export const getCaseDashboardTimingQuery = async (baseFilter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
+export const getCaseDashboardTimingQuery = async (baseFilter: CompletedCaseTimeInputFilter, groupBy: CompletedCaseTimeGroupByEnum[]) => {
     const statsResponse = await getCaseTimingData({
         filter: baseFilter,
         groupBy,
     });
-    if (!statsResponse || 'status' in statsResponse) {
+    if (!statsResponse || 'detail' in statsResponse || !('data' in statsResponse)) {
         throw statsResponse;
     }
 
-    // Recursively filter out objects with name: "NOT_APPLICABLE"
+    statsResponse.data = statsResponse.data.map(item => {
+        if (item.name === '') {
+            const friendlyName = friendlyGroupByName[groupBy[0]];
+            item.name = `No ${friendlyName.toLowerCase()} name`;
+        }
+        return item;
+    });
 
-    const filteredData = recursivelyFilter(statsResponse.data || [], null, 'NOT_APPLICABLE') as CaseTimingData[];
-    statsResponse.data = filteredData.sort((a, b) => b.count - a.count);
+    return statsResponse.data;
+};
 
-    return statsResponse;
+export const getExceptionCountQuery = async (baseFilter: CaseCountInputFilter, groupBy: ExceptionCountGroupByEnum[]) => {
+    const exceptionResponse = await getDashboardExceptionStats({
+        filter: baseFilter,
+        groupBy,
+    });
+    if (!exceptionResponse || 'detail' in exceptionResponse || !('data' in exceptionResponse)) {
+        throw exceptionResponse;
+    }
+
+    exceptionResponse.data = exceptionResponse.data.map(item => {
+        if (item.name === '') {
+            const friendlyName = friendlyGroupByName[groupBy[0]];
+            item.name = `No ${friendlyName.toLowerCase()} name`;
+        }
+        return item;
+    });
+
+    exceptionResponse.data = [...exceptionResponse.data].sort((a, b) => b.count - a.count);
+
+    return exceptionResponse;
 };
 
 /**************************
@@ -71,63 +83,23 @@ export const getCaseDashboardTimingQuery = async (baseFilter: DashboardSearchFil
  */
 
 export const getStatsFromSelectionQuery = async (
-    baseFilter: DashboardSearchFilter | undefined,
-    l1SelectValue: GroupByOptions,
-    l2SelectValue: GroupByOptions,
-    l3SelectValue: GroupByOptions
+    baseFilter: CaseCountInputFilter | undefined,
+    l1SelectValue: CaseCountGroupByEnum,
+    l2SelectValue: CaseCountGroupByEnum,
+    l3SelectValue: CaseCountGroupByEnum
 ) => {
-    const filter: DashboardSearchFilter = Object.assign({}, baseFilter, {
+    const filter = Object.assign({}, baseFilter, {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
     });
 
-    const query: CaseDashboardStatsQuery = {
+    const query: CaseCountInput = {
         filter,
         groupBy: [l1SelectValue, l2SelectValue, l3SelectValue],
     };
 
     const statsResponse = await getCaseDashboardStats(query);
-    if (!statsResponse || 'status' in statsResponse) {
+    if (!statsResponse || 'detail' in statsResponse || !('data' in statsResponse)) {
         throw statsResponse;
     }
-    return statsResponse as CaseDashboardStatsResponse;
-};
-
-/********************************
- * EXCEPTION SUMMARY QUERIES*****
- * ******************************
- */
-
-export interface StatsDataResponse {
-    data: {
-        statsResponseData?: DashboardStatsElementResponse[];
-        // exceptionData: MappedExceptionData;
-    };
-}
-
-/**
- *
- * Get a bunch of stats response data and add to it. Then return the whole thing.
- */
-export const getStatsData = async (filter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
-    const statsResponse = await getCaseDashboardStats({
-        filter,
-        groupBy,
-    });
-
-    if (!statsResponse || 'status' in statsResponse) {
-        throw statsResponse;
-    }
-
-    const filteredData = recursivelyFilter(statsResponse.data || [], null, 'NOT_APPLICABLE');
-    statsResponse.data = filteredData.sort((a, b) => b.count - a.count);
-
-    const { data: statsData } = { ...statsResponse };
-    // Set up default data
-    const parsedResponse: StatsDataResponse = {
-        data: {
-            statsResponseData: statsData,
-        },
-    };
-
-    return parsedResponse;
+    return statsResponse;
 };

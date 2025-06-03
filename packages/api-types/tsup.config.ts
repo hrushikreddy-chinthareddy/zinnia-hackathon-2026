@@ -12,7 +12,8 @@ export default defineConfig((options: Options) => ({
     'src/generated-types/case',
     'src/generated-types/transaction-store',
     'src/generated-types/preferences',
-    'src/generated-types/partyreference'
+    'src/generated-types/partyreference',
+    'src/generated-types/analytics',
   ],
   clean: true,
   dts: true,

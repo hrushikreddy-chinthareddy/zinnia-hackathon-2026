@@ -15,5 +15,11 @@ export const CaseTimingHeader = () => {
     ) : (
         <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
     );
-    return <ChartHeader title="Median Case Processing Times" subtitle={totalCases} />;
+    return (
+        <ChartHeader
+            title="Median Processing Times"
+            subtitle={totalCases}
+            description="Median processing times for closed cases over a selected time range."
+        />
+    );
 };

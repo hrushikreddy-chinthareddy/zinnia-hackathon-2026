@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
+import { ExceptionCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import { useState } from 'react';
 
 import { TreeMapInsights } from '@deps/components/dashboard/charts/tree-map-insights';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
-import { createBaseQuery, formatProcessFilter, startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
+import { formatProcessFilter, startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
-import { DashboardSearchFilter } from '@deps/queries/cases';
+import { getExceptionCountQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 export const NigoOpenTransactions = () => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
@@ -36,7 +36,7 @@ export const NigoOpenTransactions = () => {
         setTimeframeRadio(undefined);
     };
 
-    const filter: DashboardSearchFilter = {
+    const filter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
@@ -47,7 +47,7 @@ export const NigoOpenTransactions = () => {
     const { data: insightExceptionStats, isFetching: insightExceptionStatsFetching } = useQuery({
         queryKey: ['exceptionStats', filter],
         queryFn: async () => {
-            const response = await createBaseQuery(filter, [GroupByOptions.ExceptionCategory]);
+            const response = await getExceptionCountQuery(filter, [ExceptionCountGroupByEnum.EXCEPTION_CATEGORY]);
             if (response?.data?.length) {
                 response.data = response?.data?.filter(item => item.name !== '');
             }

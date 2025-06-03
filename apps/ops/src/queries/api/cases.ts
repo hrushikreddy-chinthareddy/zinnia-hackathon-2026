@@ -1,21 +1,26 @@
+import {
+    CaseCountInput,
+    CaseCountOutput,
+    CompletedCaseTimeInput,
+    CompletedCaseTimeOutput,
+    CompletedCaseTimeOutputLevel1,
+    HTTPValidationError,
+} from '@zinnia/api-types/types/analytics';
 import { AxiosResponse } from 'axios';
 
 import {
     Case,
-    CaseDashboardStatsErrorResponse,
-    CaseDashboardStatsResponse,
     CaseReferenceResponse,
     CaseStatsErrorResponse,
     CaseStatsResponse,
     CreateCaseBody,
     CreateCaseResponse,
-    DashboardStatsElementResponse,
     Metadata,
     ProcessReferenceData,
 } from '@deps/models/case/case';
 import { CaseDocument } from '@deps/models/case/document';
 import { NoteInstance } from '@deps/models/case/note-instance';
-import { CaseDashboardStatsQuery, CaseStatsQuery } from '@deps/queries/cases';
+import { CaseStatsQuery } from '@deps/queries/cases';
 import { isMockCaseDetailsRequestEnabled } from '@deps/services/api-config';
 import { mockCaseDetails } from '@deps/services/mocks/case-details';
 import { CaseSearchBody, CaseSearchErrorResponse, CaseSearchResponse } from '@deps/types/search';
@@ -40,27 +45,9 @@ export type ReferenceDataQuery = {
     keys?: ('requestSubType' | 'productName' | 'processList')[];
     process?: string[];
 };
+
 export interface CaseTimingResponse {
-    data: CaseTimingData[];
-    totalElements: number;
-}
-
-export interface CaseTimingErrorResponse {
-    data: {
-        err: string;
-    };
-    status: number;
-}
-
-//TODO: Replace this with actual api spec when api publishes
-export interface CaseTimingData {
-    key: string;
-    name: string;
-    secondLow: number;
-    secondMedian: number;
-    secondMean: number;
-    secondHigh: number;
-    count: number;
+    data: CompletedCaseTimeOutputLevel1[];
 }
 
 export const createCase = async (query: CreateCaseBody): Promise<CreateCaseResponse> => {
@@ -133,71 +120,42 @@ export const getCaseStats = async (query: CaseStatsQuery): Promise<CaseStatsResp
     }
 };
 
-const recursivelyFilter = (
-    items: DashboardStatsElementResponse[],
-    root: DashboardStatsElementResponse | null,
-    filterString: string
-): DashboardStatsElementResponse[] => {
-    return items.filter(item => {
-        if (item.name !== filterString) {
-            if (item.values) {
-                // Recursively process nested values, directly modifying them
-                item.values = recursivelyFilter(item.values, item, filterString);
-            }
-            return true;
-        } else {
-            if (root) {
-                root.count -= item.count; // Directly modify the root count
-            }
-            return false;
-        }
-    });
-};
-
-export const getCaseDashboardStats = async (
-    query: CaseDashboardStatsQuery
-): Promise<CaseDashboardStatsResponse | CaseDashboardStatsErrorResponse> => {
+export const getCaseDashboardStats = async (query: CaseCountInput): Promise<CaseCountOutput | HTTPValidationError> => {
     try {
-        const { data } = await client.post<
-            CaseDashboardStatsQuery,
-            AxiosResponse<CaseDashboardStatsResponse | CaseDashboardStatsErrorResponse>
-        >(`${baseAppUrl}/api/case/v1/dashboard/stats`, query);
+        const { data: response } = await client.post<CaseCountInput, AxiosResponse<CaseCountOutput, HTTPValidationError>>(
+            `${baseAppUrl}/api/dashboard/case-count`,
+            query
+        );
 
-        if (Array.isArray(data?.data) && data?.data?.length > 0) {
-            const filteredData = recursivelyFilter(data.data || [], null, 'NOT_APPLICABLE');
-
-            data.data = filteredData;
-            return data;
-        }
-        return { data: [], totalElements: 0 };
+        return {
+            data: response.data,
+            totalElements: response.totalElements,
+        };
     } catch (error: any) {
         console.error('getCaseDashboardStats::An error occurred while getting case dashboard stats results', error);
-        if ('response' in error) {
+        if ('detail' in error) {
             return error.response;
         }
         return error;
     }
 };
 
-export const getCaseTimingData = async (query: CaseDashboardStatsQuery): Promise<CaseTimingResponse | CaseTimingErrorResponse> => {
+export const getCaseTimingData = async (query: CompletedCaseTimeInput): Promise<CaseTimingResponse | HTTPValidationError> => {
     try {
-        const { data } = await client.post<CaseDashboardStatsQuery, AxiosResponse<CaseTimingResponse | CaseTimingErrorResponse>>(
+        const response = await client.post<CompletedCaseTimeInput, AxiosResponse<CompletedCaseTimeOutput, HTTPValidationError>>(
             `${baseAppUrl}/api/dashboard/case-timing`,
             query
         );
 
-        if (Array.isArray(data?.data) && data?.data?.length > 0) {
-            const filteredData = recursivelyFilter(data.data || [], null, 'NOT_APPLICABLE') as CaseTimingData[];
-
-            data.data = filteredData;
-            return data;
-        }
-        return { data: [], totalElements: 0 };
+        return {
+            data: response.data.data,
+        };
     } catch (error: any) {
         console.error('getCaseTimingData::An error occurred while getting case dashboard stats results', error);
-        if ('response' in error) {
-            return error.response;
+        if ('detail' in error) {
+            return error.detail;
         }
+
         return error;
     }
 };

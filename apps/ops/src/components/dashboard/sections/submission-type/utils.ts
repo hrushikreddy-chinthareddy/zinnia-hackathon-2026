@@ -1,26 +1,10 @@
+import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import { SeriesOptionsType } from 'highcharts';
 
 import { DashboardStatsElementResponse } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
-import { DashboardSearchFilter } from '@deps/queries/cases';
-import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
 type TransformedData = {
     [key: string]: { [key: string]: number };
-};
-
-export const submissionTypeQuery = async (baseInsightQueryFilter: DashboardSearchFilter, groupBy: GroupByOptions[]) => {
-    const response = await getCaseDashboardStatsQuery(baseInsightQueryFilter, groupBy);
-    if (!response?.data) {
-        console.error(
-            'createBaseQuery::An error occurred while getting case dashboard stats results',
-            response?.data?.length,
-            JSON.stringify(response)
-        );
-        throw response;
-    } else {
-        return response;
-    }
 };
 
 // Application Type
@@ -68,8 +52,8 @@ export const generateSeries = (transformedData: TransformedData): SeriesOptionsT
 };
 
 // The API returns digital and electronic. We need to combien the data set to make them both just say "Electronic (E-App)"
-export const combineElectronicAndDigital = (data: DashboardStatsElementResponse[]): DashboardStatsElementResponse[] => {
-    const combinedData: Record<string, DashboardStatsElementResponse> = {};
+export const combineElectronicAndDigital = (data: CaseCountOutputLevel1[]): CaseCountOutputLevel1[] => {
+    const combinedData: Record<string, CaseCountOutputLevel1> = {};
 
     data.forEach(item => {
         if (item.name === 'Electronic' || item.name === 'Digital') {

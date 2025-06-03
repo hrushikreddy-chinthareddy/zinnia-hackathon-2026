@@ -1,3 +1,4 @@
+import { CompletedCaseTimeOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import clsx from 'clsx';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -14,7 +15,6 @@ import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loade
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { CaseTimingData } from '@deps/queries/api/cases';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
 
@@ -24,7 +24,7 @@ export const CaseTimingChart: FC = () => {
     const { caseTimingData, caseTimingDataFetching, caseTimingDataError } = useContext(CaseTimingContext);
 
     // get 5 items for each slide
-    const chunkedResponse: CaseTimingData[][] = chunkArray(caseTimingData || [], 5);
+    const chunkedResponse: CompletedCaseTimeOutputLevel1[][] = chunkArray(caseTimingData || [], 5);
 
     // When generating the time axis, we take raw time in seconds, but we convert the seconds to hours or days and display that on the chart.
     const chartConfig = chunkedResponse.map(chunk => {

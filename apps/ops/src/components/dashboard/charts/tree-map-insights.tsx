@@ -1,3 +1,4 @@
+import { ExceptionCountGroupByEnum, ExceptionCountOutput, ExceptionCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import clsx from 'clsx';
 import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
@@ -14,10 +15,7 @@ import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
-import { CaseDashboardStatsResponse } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
-import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
@@ -31,9 +29,9 @@ if (typeof Highcharts === 'object') {
 }
 
 export type TreeMapInsightsProps = {
-    dashboardStatsData?: CaseDashboardStatsResponse;
+    dashboardStatsData?: ExceptionCountOutput;
     heading: string;
-    carrierOrBrokerDealer?: GroupByOptions.Carrier | GroupByOptions.BrokerDealerName;
+    carrierOrBrokerDealer?: ExceptionCountGroupByEnum.CARRIER | ExceptionCountGroupByEnum.BROKER_DEALER_NAME;
     FilterComponents: React.ReactNode;
 };
 
@@ -44,12 +42,12 @@ export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents 
     const [loading, setLoading] = useState(false);
 
     // TODO: add context for secondary and tertiary groupings if applicable
-    const getOpenAiSummary = async (caseStats: DashboardResponseData[]) => {
+    const getOpenAiSummary = async (caseStats: ExceptionCountOutputLevel1[]) => {
         try {
             setLoading(true);
             const summary = await getCaseInsights({
                 content: JSON.stringify(caseStats),
-                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. They want simple and insightful information about the data provided to you. Avoid using phrases such as "the data". In your response, replace "exception" with "NIGO" and "exceptions" to "NIGOs". Your responses should be insightful and will be displayed on a UI as a summary for a module related to a distribution chart. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
+                prompt: `You are an expert in all things new business application data. Your job is to summarize the data for business and executive users. Avoid using phrases such as "the data". In your response, replace "exception" with "NIGO" and "exceptions" to "NIGOs". Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
             });
             setLoading(false);
             return summary;
@@ -64,7 +62,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents 
 
     // this is the same code that is found in exception-insights.tsx
     const chartOptions: Highcharts.Options = useMemo(() => {
-        const chartData: Highcharts.SeriesTreemapOptions['data'] = seriesData?.map((item: DashboardResponseData) => ({
+        const chartData: Highcharts.SeriesTreemapOptions['data'] = seriesData?.map(item => ({
             name: DASHBOARD_REPLACE_LABELS.includes(item.name) ? DASHBOARD_DEFAULT_LABEL : item.name,
             value: item.count,
             colorValue: item.count,

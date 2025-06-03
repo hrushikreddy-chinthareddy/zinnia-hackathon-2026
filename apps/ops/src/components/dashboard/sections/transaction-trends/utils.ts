@@ -6,6 +6,7 @@ export enum TransactionTrendsTimeframe {
     LastMonth = '1M',
 }
 
+import { CaseCountOutputLevel1, CaseCountOutputLevel2 } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 
@@ -20,7 +21,7 @@ dayjs.extend(isoWeek);
  * the data for the series it returns is like [[unixTimestamp, yValue], [unixTimestamp, yValue]] aka: [[x, y], [x, y]]
  *
  */
-export const generateSeries = (transactionTrendsData: DashboardResponseData[] | undefined, timerange: { from: string; to: string }) => {
+export const generateSeries = (transactionTrendsData: CaseCountOutputLevel1[] | undefined, timerange: { from: string; to: string }) => {
     if (!transactionTrendsData || !transactionTrendsData.length) return [];
     const sortedByCount = transactionTrendsData.sort((a, b) => b.count - a.count);
     const top5 = sortedByCount.slice(0, 5);
@@ -62,7 +63,7 @@ export const generateSeries = (transactionTrendsData: DashboardResponseData[] | 
  * //   { key: '3', name: '2023-04-04', count: 15 }
  * // ]
  */
-export const groupDataByWeek = (data: DashboardResponseData[]): DashboardResponseData[] => {
+export const groupDataByWeek = (data: CaseCountOutputLevel1[] | CaseCountOutputLevel2[]): DashboardResponseData[] => {
     const weeklyCounts = new Map<string, { key: string; count: number }>(); // Map to store weekly counts
 
     data.forEach(item => {

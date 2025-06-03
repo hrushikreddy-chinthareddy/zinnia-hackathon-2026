@@ -1,3 +1,4 @@
+import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import {
     FieldData,
     FieldSize,
@@ -25,7 +26,6 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import { SortOrder, useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 enum SortByOptions {
@@ -178,7 +178,7 @@ export const CaseTimingTable = () => {
                                                         carrierOrProductName: item.name,
                                                         startDate: timerange.from,
                                                         endDate: timerange.to,
-                                                        groupBy: GroupByOptions.ProcessSubType,
+                                                        groupBy: CaseCountGroupByEnum.PROCESS_SUB_TYPE,
                                                         status: [Statuses.Completed],
                                                         carrier: filter.carrier,
                                                         brokerDealer: filter.brokerDealerName,

@@ -1,20 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
+import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import { t } from 'i18next';
 import { FC, useState } from 'react';
 
-import styles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
-import { DashboardSearchFilter } from '@deps/queries/cases';
 import { useDashboardStore } from '@deps/store/store';
 
 import { createBaseQuery, formatProcessListOptions } from '../utils';
 
 interface CaseTypeFilterProps {
     onValueChange: (value: Processes | ExtendedProcesses) => void;
-    defaultProcess: Processes;
+    defaultProcess: Processes | ExtendedProcesses;
     caseStatus: Statuses[];
     value?: Processes | ExtendedProcesses;
 }
@@ -27,7 +25,7 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, default
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
     const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(defaultProcess);
 
-    const processFilter: DashboardSearchFilter = {
+    const processFilter = {
         caseStatus,
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
@@ -36,7 +34,7 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, default
     const { data: processListOptions } = useQuery({
         queryKey: ['processListOptions', processFilter],
         placeholderData: previousData => previousData,
-        queryFn: () => createBaseQuery(processFilter, [GroupByOptions.Process]),
+        queryFn: () => createBaseQuery(processFilter, [CaseCountGroupByEnum.PROCESS]),
         select: ({ data }) => {
             const options = formatProcessListOptions(data);
             options.unshift({
@@ -57,7 +55,6 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, default
         <Select
             maxContentWidth
             label="Case type"
-            className={styles.selectDropdowns}
             options={processListOptions || []}
             size={FieldSize.XS}
             name="process-type-dropdown-btn"

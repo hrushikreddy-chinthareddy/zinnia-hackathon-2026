@@ -59,7 +59,7 @@ export const BrokerDealerFilter = ({
             value={selectedBrokerDealers}
             onChange={updateBrokerDealerFilters}
             size={FieldSize.Small}
-            placeholder={t('allAgents') || ''}
+            placeholder={t('allDistributors') || ''}
             disabled={disabled !== undefined ? disabled : brokerDealers.length === 0}
             name="agent-dropdown-btn"
             onOpenChange={handleOnOpenChangeBroker}

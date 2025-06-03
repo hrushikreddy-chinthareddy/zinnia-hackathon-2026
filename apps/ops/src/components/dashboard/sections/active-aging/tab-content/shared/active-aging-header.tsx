@@ -17,9 +17,9 @@ export const ActiveAgingHeader = () => {
 
     return (
         <ChartHeader
-            title="Active Aging"
+            title="Aging Cases"
             subtitle={totalCases}
-            description="The duration of active cases, helping track case age and identify delays in processing."
+            description="Open case duration by carrier, product, or distribution partner."
         />
     );
 };

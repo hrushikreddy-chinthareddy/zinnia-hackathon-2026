@@ -1,19 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
+import { CaseCountGroupByEnum, CaseCountInputFilter, CaseCountOutput } from '@zinnia/api-types/types/analytics';
 import { createContext, FC, PropsWithChildren, useEffect, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
-import { combineElectronicAndDigital, submissionTypeQuery } from '@deps/components/dashboard/sections/submission-type/utils';
-import { TimeframeFilterOptions, startDates, formatProcessFilter } from '@deps/components/dashboard/utils';
-import { CaseDashboardStatsResponse, Processes, Statuses } from '@deps/models/case/case';
-import { GroupByOptions } from '@deps/models/case/enums';
-import { DashboardSearchFilter } from '@deps/queries/cases';
+import { combineElectronicAndDigital } from '@deps/components/dashboard/sections/submission-type/utils';
+import { TimeframeFilterOptions, startDates, formatProcessFilter, createBaseQuery } from '@deps/components/dashboard/utils';
+import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
 
 interface SubmissionTypeContextTypes {
     timeframeRadio: TimeframeFilterOptions | undefined;
     handleTimeframeRadioChange: (value: TimeframeFilterOptions) => void;
-    setSubmissionVs: (value: GroupByOptions) => void;
-    submissionVs: GroupByOptions;
+    setSubmissionVs: (value: CaseCountGroupByEnum) => void;
+    submissionVs: CaseCountGroupByEnum;
     selectedProcess: Processes | ExtendedProcesses | undefined;
     setSelectedProcess: (value: Processes | ExtendedProcesses) => void;
     pieChartStatsLoading: boolean;
@@ -22,9 +21,9 @@ interface SubmissionTypeContextTypes {
     graphStatsFetching: boolean;
     pieChartStatsError: Error | null;
     graphStatsError: Error | null;
-    pieChartStats: CaseDashboardStatsResponse | undefined;
-    filter: DashboardSearchFilter;
-    graphStats: CaseDashboardStatsResponse | undefined;
+    pieChartStats: CaseCountOutput | undefined;
+    filter: CaseCountInputFilter;
+    graphStats: CaseCountOutput | undefined;
     timerange: {
         to: string;
         from: string;
@@ -36,7 +35,7 @@ const defaultState = {
     timeframeRadio: TimeframeFilterOptions.Trailing12Months,
     handleTimeframeRadioChange: () => {},
     setSubmissionVs: () => {},
-    submissionVs: GroupByOptions.Carrier,
+    submissionVs: CaseCountGroupByEnum.CARRIER,
     selectedProcess: Processes.NewBusiness,
     setSelectedProcess: () => {},
     pieChartStatsLoading: false,
@@ -67,10 +66,10 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
     const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
-    const [submissionVs, setSubmissionVs] = useState<GroupByOptions>(GroupByOptions.Carrier);
-    const graphGroupBy = [submissionVs, GroupByOptions.ApplicationType];
+    const [submissionVs, setSubmissionVs] = useState<CaseCountGroupByEnum>(CaseCountGroupByEnum.CARRIER);
+    const graphGroupBy = [submissionVs, CaseCountGroupByEnum.APPLICATION_TYPE];
 
-    const filter: DashboardSearchFilter = {
+    const filter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
@@ -99,7 +98,7 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         error: pieChartStatsError,
     } = useQuery({
         queryKey: ['submissionTypePieChartStats', filter],
-        queryFn: () => submissionTypeQuery(filter, [GroupByOptions.ApplicationType]),
+        queryFn: () => createBaseQuery(filter, [CaseCountGroupByEnum.APPLICATION_TYPE]),
         placeholderData: previousData => previousData,
         enabled: Object.keys(filter).length > 0,
         select: response => {
@@ -119,7 +118,7 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         error: graphStatsError,
     } = useQuery({
         queryKey: ['submissionTypeGraphStats', graphGroupBy, filter],
-        queryFn: () => submissionTypeQuery(filter, graphGroupBy),
+        queryFn: () => createBaseQuery(filter, graphGroupBy),
         placeholderData: previousData => previousData,
         enabled: Object.keys(filter).length > 0,
         select: response => {
@@ -134,9 +133,9 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
 
     useEffect(() => {
         if (Object.keys(selectedCarriers).length === 1) {
-            setSubmissionVs(GroupByOptions.ProductName);
+            setSubmissionVs(CaseCountGroupByEnum.PRODUCT_NAME);
         } else {
-            setSubmissionVs(GroupByOptions.Carrier);
+            setSubmissionVs(CaseCountGroupByEnum.CARRIER);
         }
     }, [selectedCarriers]);
 

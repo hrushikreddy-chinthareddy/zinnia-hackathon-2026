@@ -1,3 +1,4 @@
+import { toSentenceCase } from '@xd/utils/dist';
 import {
     FieldData,
     FieldSize,
@@ -127,7 +128,7 @@ export const ActiveAgingTable = () => {
             <div className={sharedStyles.searchContainer}>
                 <FieldData
                     fieldSize={FieldSize.Small}
-                    placeholder={`Search by ${friendlyGroupByName[groupBy]?.toLocaleLowerCase()} name`}
+                    placeholder={`Search by ${friendlyGroupByName[groupBy]?.toLocaleLowerCase()}`}
                     onChange={e => setSearchText(e.target.value)}
                 />
             </div>
@@ -153,7 +154,7 @@ export const ActiveAgingTable = () => {
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
-                                        {friendlyGroupByName[groupBy]}
+                                        {toSentenceCase(friendlyGroupByName[groupBy])}
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}

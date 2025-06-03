@@ -1,3 +1,10 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* @ts-nocheck */
+
+/**
+ * We ignore errors in this file because its an old archived file and types have changed for our network requests we use. If anyone wants to use this again, check out the other dashboard files and update this to match them
+ */
+
 import { useQuery } from '@tanstack/react-query';
 import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
@@ -7,12 +14,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
-import { createBaseQuery, formatProcessFilter } from '@deps/components/dashboard/utils';
+import { createBaseQuery, formatProcessFilter, startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { getStartAndEndDates } from '@deps/containers/case-sub-page/case-helpers';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
@@ -75,7 +81,7 @@ const ActiveAging = () => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
 
     const shouldShowCaseInsights = useCaseInsightsPermission();
-    const { createdDateStart } = getStartAndEndDates('All');
+    const createdDateStart = startDates[TimeframeFilterOptions.Trailing12Months];
 
     const filter: DashboardSearchFilter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
@@ -92,16 +98,17 @@ const ActiveAging = () => {
     } = useQuery({
         queryKey: ['createdBySubProcessInsights', filter],
         placeholderData: previousData => previousData,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore: Argument of type 'DashboardSearchFilter' is not assignable to parameter of type 'CaseCountInputFilter'
         queryFn: () => createBaseQuery(filter, [GroupByOptions.ProcessSubType, GroupByOptions.CreatedAt]),
         enabled: Object.keys(filter).length > 0,
     });
 
-    const {
-        data: activeAgingPieChartByCreated,
-        isLoading: activeAgingPieChartByCreatedLoading,
-        isError: activeAgingPieChartByCreatedError,
-    } = useQuery({
+    const { data: activeAgingPieChartByCreated, isError: activeAgingPieChartByCreatedError } = useQuery({
         queryKey: ['activeAgingPieChartKeys', filter],
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore: Argument of type 'DashboardSearchFilter' is not assignable to parameter of type 'CaseCountInputFilter'
         queryFn: () => createBaseQuery(filter, [GroupByOptions.CreatedAt, GroupByOptions.ProductName]),
         placeholderData: previousData => previousData,
         enabled: Object.keys(filter).length > 0,
@@ -173,9 +180,9 @@ const ActiveAging = () => {
         queryFn: () =>
             getCaseInsights({
                 content: JSON.stringify(agingGroupingMap[selectedAgingRange]),
-                prompt: `You are an expert in all things case data. Your job is to summarize the data for business and executive users.
-                          They want simple and insightful information about the data provided to you. The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
-                          Your responses should be insightful and will be displayed on a UI as a summary for a module related to a pie chart. Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
+                prompt: `Your job is to summarize the data for business and executive users.
+                          The cases provided to you here are open cases delineated by insurance carrier. Avoid using phrases such as "the data".
+                        Use percentages and real data where it makes sense. Keep it conscise and to the point. Format number values to U.S. Any keys you use make sure they are formatted to title case. For example "ANNUITY APPLICATION" should be formatted to "Annuity Application".`,
             }),
         enabled: shouldShowCaseInsights,
     });
@@ -269,6 +276,8 @@ const ActiveAging = () => {
                 key: GroupByOptions.ProcessSubType,
                 name: subProcess.name,
                 count: subProcess.count,
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore: Argument of type 'DashboardSearchFilter' is not assignable to parameter of type 'CaseCountInputFilter'
                 values: groupIntoAgingRanges(subProcess.values ?? []),
             });
         });
@@ -321,7 +330,10 @@ const ActiveAging = () => {
         // second we need to create a map of all the pie chart data by aging range (this gives us a lot of entries)
         activeAgingPieChartByCreated?.data?.forEach(createdGroupingOfExceptionCategories => {
             const timeRange = getAgingTimeRangeFromDate(new Date(createdGroupingOfExceptionCategories.name));
+
             pieChartCategoryByAgingRangeMap[timeRange] = pieChartCategoryByAgingRangeMap[timeRange].concat(
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore: Argument of type 'DashboardSearchFilter' is not assignable to parameter of type 'CaseCountInputFilter'
                 createdGroupingOfExceptionCategories.values ?? []
             );
         });

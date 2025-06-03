@@ -2,11 +2,9 @@ import { FC, useContext } from 'react';
 
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { TransactionTrendsContext } from '@deps/components/dashboard/sections/transaction-trends/context/transaction-trends-context';
-import { friendlyGroupByName } from '@deps/components/dashboard/utils';
-import { splitAndSentenceCase } from '@deps/helpers/dashboard/dashboard-helpers';
 
 export const TransactionTrendsHeader: FC = () => {
-    const { groupBy, transactionTrendsData, transactionTrendsDataFetching } = useContext(TransactionTrendsContext);
+    const { transactionTrendsData, transactionTrendsDataFetching } = useContext(TransactionTrendsContext);
 
     const totalCaseCount = transactionTrendsData?.data?.map(stat => stat.count).reduce((a, b) => a + b, 0);
 
@@ -20,9 +18,9 @@ export const TransactionTrendsHeader: FC = () => {
 
     return (
         <ChartHeader
-            title="Transaction trends"
+            title="Closed Case Counts"
             subtitle={totalCases}
-            description={`Top ${splitAndSentenceCase(friendlyGroupByName[groupBy])}s`}
+            description={`Volume of closed cases over a selected time range, grouped by the top five case subtypes, carriers, distribution partners, or products.`}
         />
     );
 };

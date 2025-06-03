@@ -38,7 +38,7 @@ export const CustomDateRange: FC<CustomDateRangeProps> = ({ timerange, handleTim
             <ReactPopover.Trigger disabled={!handleTimerangeChange} className={styles.trigger}>
                 {handleTimerangeChange && <Icon className={styles.calendarIcon} width={16} height={16} type={IconType.CALENDAR} />}
 
-                <p className="typography-labels-field-label">{rangeText}</p>
+                <p className="typography-labels-field-label mb-1">{rangeText}</p>
             </ReactPopover.Trigger>
             <ReactPopover.Portal>
                 <ReactPopover.Content align="end" side="bottom" style={{ zIndex: zIndexOrder.DatePickerDialog }}>

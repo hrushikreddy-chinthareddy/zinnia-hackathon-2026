@@ -1,3 +1,4 @@
+import { CaseCountOutput } from '@zinnia/api-types/types/analytics';
 import Highcharts from 'highcharts';
 // import accessibility from 'highcharts/modules/accessibility';
 import more from 'highcharts/highcharts-more';
@@ -5,7 +6,6 @@ import HighchartsReact from 'highcharts-react-official';
 import { useState, useEffect, useCallback } from 'react';
 
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { CaseDashboardStatsResponse } from '@deps/models/case/case';
 
 //https://www.npmjs.com/package/highcharts-react-official#highcharts-with-nextjs
 if (typeof Highcharts === 'object') {
@@ -15,7 +15,7 @@ if (typeof Highcharts === 'object') {
 interface Props {
     className?: string;
     seriesLabel?: string;
-    dashboardStatsResponse?: CaseDashboardStatsResponse;
+    dashboardStatsResponse?: CaseCountOutput;
     showInLegend?: boolean;
     height?: number;
     width?: number;
@@ -24,7 +24,7 @@ interface Props {
     chartConfigOverrides?: Highcharts.Options;
 }
 
-export const getPieChartData = (dashboardStatsResponse?: CaseDashboardStatsResponse) => {
+export const getPieChartData = (dashboardStatsResponse?: CaseCountOutput) => {
     const chartData: { name: string; y: number; totalCount: number }[] = [];
 
     if (!dashboardStatsResponse || !dashboardStatsResponse.data || dashboardStatsResponse.data.length === 0) {

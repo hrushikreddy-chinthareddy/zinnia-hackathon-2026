@@ -71,7 +71,7 @@ export const Breadcrumb = ({ breadcrumbUrl, breadcrumbText, onClick }: PageHeade
 
 const HeaderText = ({ headerText }: Pick<PageHeaderProps, 'headerText'>) => {
     return (
-        <Typography className="flex items-center" variant={TypographyVariant.H1} data-testid="header-text">
+        <Typography className="flex items-center" variant={TypographyVariant.H1} data-testid='header-text'>
             {headerText}
         </Typography>
     );

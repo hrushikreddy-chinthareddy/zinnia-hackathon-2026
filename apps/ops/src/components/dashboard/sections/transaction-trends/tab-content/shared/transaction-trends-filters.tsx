@@ -1,3 +1,4 @@
+import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import { FC, useContext } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
@@ -28,7 +29,7 @@ export const TransactionTrendsFilters: FC = () => {
         { label: 'Case subtype', value: GroupByOptions.ProcessSubType },
         { label: 'Carrier', value: GroupByOptions.Carrier, disabled: filter.carrier?.length === 1 },
         { label: 'Product', value: GroupByOptions.ProductName },
-        { label: 'Distribution Partner', value: GroupByOptions.BrokerDealerName },
+        { label: 'Distribution partner', value: GroupByOptions.BrokerDealerName },
     ];
 
     return (
@@ -37,11 +38,10 @@ export const TransactionTrendsFilters: FC = () => {
                 <Select
                     maxContentWidth
                     label="Group by"
-                    className={sharedStyles.selectDropdowns}
                     options={groupByOptions}
                     value={groupBy}
                     size={FieldSize.XS}
-                    onChange={val => setGroupBy(val as GroupByOptions)}
+                    onChange={val => setGroupBy(val as CaseCountGroupByEnum)}
                 />
                 <CaseTypeFilter
                     onValueChange={setSelectedProcess}

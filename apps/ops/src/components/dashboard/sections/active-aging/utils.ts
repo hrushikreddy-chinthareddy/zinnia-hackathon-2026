@@ -1,8 +1,8 @@
+import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 
 import { friendlyDateFormat } from '@deps/components/dashboard/utils';
-import { DashboardStatsElementResponse } from '@deps/models/case/case';
 
 export enum ActiveAgingTimeRange {
     TWENTY_EIGHT_PLUS = '28+D',
@@ -92,7 +92,7 @@ export const isBetweenTimeRange = (endDate: dayjs.Dayjs, createdDate: string, ti
  * @param data
  * @returns
  */
-export const organizeAndMergeDataByTimeRange = (data: DashboardStatsElementResponse[]): TimeRangeData => {
+export const organizeAndMergeDataByTimeRange = (data: CaseCountOutputLevel1[]): TimeRangeData => {
     const today = dayjs(); // Get the current date
 
     // Initialize the result object with empty arrays for each time range

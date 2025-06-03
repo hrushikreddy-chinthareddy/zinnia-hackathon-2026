@@ -90,22 +90,24 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
 
         const updateCarrierFilters = (value: string, displayText: string) => {
             setPlaceholderSelectedCarriers(prevSelectedCarriers => {
-                if (prevSelectedCarriers[value]) {
-                    delete prevSelectedCarriers[value];
-                    return { ...prevSelectedCarriers };
+                const copy = { ...prevSelectedCarriers };
+                if (copy[value]) {
+                    delete copy[value];
+                    return { ...copy };
                 } else {
-                    return { ...prevSelectedCarriers, [value]: displayText };
+                    return { ...copy, [value]: displayText };
                 }
             });
         };
 
         const updateBrokerDealerFilters = (value: string, displayText: string) => {
             setSelectedBrokerDealers(prevSelectedAgents => {
-                if (prevSelectedAgents[value]) {
-                    delete prevSelectedAgents[value];
-                    return { ...prevSelectedAgents };
+                const copy = { ...prevSelectedAgents };
+                if (copy[value]) {
+                    delete copy[value];
+                    return { ...copy };
                 } else {
-                    return { ...prevSelectedAgents, [value]: displayText };
+                    return { ...copy, [value]: displayText };
                 }
             });
         };

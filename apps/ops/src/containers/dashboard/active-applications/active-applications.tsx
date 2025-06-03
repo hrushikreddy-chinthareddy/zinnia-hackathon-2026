@@ -1,3 +1,4 @@
+import { CaseCountInputFilter } from '@zinnia/api-types/types/analytics';
 import clsx from 'clsx';
 import { FC } from 'react';
 
@@ -9,14 +10,13 @@ import { SubmissionType } from '@deps/components/dashboard/sections/submission-t
 import CardContainer from '@deps/containers/card-container/card-container';
 import { Statuses } from '@deps/models/case/case';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
-import { DashboardSearchFilter } from '@deps/queries/cases';
 import { useDashboardStore } from '@deps/store/store';
 
 export const ActiveApplications: FC = () => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
     const carriers = Object.keys(selectedCarriers);
     const brokers = Object.keys(selectedBrokerDealers);
-    const baseFilter: DashboardSearchFilter = {
+    const baseFilter: CaseCountInputFilter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
     };
     if (selectedCarriers && carriers.length) {
@@ -37,6 +37,7 @@ export const ActiveApplications: FC = () => {
                     <SankeyChart key={JSON.stringify(baseFilter)} baseDashboardQueryFilter={baseFilter} />
                 </CardContainer>
             </div>
+
             <div className={styles.container}>
                 <div className={sharedStyles.dashboardCard}>
                     <ActiveAging />
