@@ -589,7 +589,7 @@
                 "primaryBeneficiary": "Primary beneficiary",
                 "payor": "Payor",
                 "agent": "Agent",
-                "primaryWritingAgent": "Primary writing agent",
+                "primaryWritingAgent": "Agent of Record",
                 "primaryServicingAgent": "Primary servicing agent",
                 "thirdPartyDesignee": "Third party designee",
                 "e-delivery": "E-delivery",
@@ -3688,7 +3688,7 @@
             "jointOwner": "Joint Owner",
             "assignee": "Assignee",
             "riderInsured": "Rider Insured",
-            "primaryWritingAgent": "Primary Writing Agent",
+            "primaryWritingAgent": "Agent of Record",
             "additionalWritingAgent": "Additional Writing Agent",
             "exchangeCompany": "Exchange Company"
         }

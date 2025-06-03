@@ -20,7 +20,7 @@ export interface PartyListProps {
 const partyRoleDisplayText: { [key in PartyRole]?: string } = {
   [PartyRole.CONTINGENTBENEFICIARY]: 'Contingent Beneficiary',
   [PartyRole.PRIMARYBENEFICIARY]: 'Primary Beneficiary',
-  [PartyRole.PRIMARYWRITINGAGENT]: 'Primary Writing agent',
+  [PartyRole.PRIMARYWRITINGAGENT]: 'Agent of Record',
   [PartyRole.PRIMARYSERVICINGAGENT]: 'Primary Servicing agent',
   [PartyRole.ADDITIONALWRITINGGAGENT]: 'Additional Writing agent',
   [PartyRole.ADDITIONALSERVICINGAGENT]: 'Additional Servicing agent',

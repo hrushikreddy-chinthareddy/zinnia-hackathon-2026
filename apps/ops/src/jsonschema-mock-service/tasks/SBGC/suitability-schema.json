@@ -22,7 +22,7 @@
                             "enum": ["PERSON", "ORGANIZATION", "OTHERS"]
                         },
                         "roleTypeEnum": {
-                            "enum": ["OWNER", "JOINT_OWNER", "AGENT", "PRIMARY_WRITING_AGENT", "PRIMARY_SERVICING_AGENT", "BROKER_DEALER"]
+                            "enum": ["OWNER", "JOINT_OWNER", "AGENT", "AGENT_OF_RECORD", "PRIMARY_SERVICING_AGENT", "BROKER_DEALER"]
                         },
                         "countryEnum": {
                             "enum": [
@@ -1462,7 +1462,7 @@
                                             "Owner",
                                             "Joint Owner",
                                             "Agent",
-                                            "Primary Writing Agent",
+                                            "Agent of Record",
                                             "Primary Servicing Agent",
                                             "Broker Dealer"
                                         ]

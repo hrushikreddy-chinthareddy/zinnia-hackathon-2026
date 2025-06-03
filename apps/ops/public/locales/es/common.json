@@ -585,7 +585,7 @@
                 "primaryBeneficiary": "Beneficiario primario",
                 "payor": "Pagador",
                 "agent": "Agente",
-                "primaryWritingAgent": "Agente principal de suscripción",
+                "primaryWritingAgent": "Agente de Registro",
                 "primaryServicingAgent": "Agente principal de servicio",
                 "thirdPartyDesignee": "Designado de tercera parte",
                 "e-delivery": "Entrega electrónica",
@@ -3613,7 +3613,7 @@
             "jointOwner": "Propietario conjunto",
             "assignee": "Cesionario",
             "riderInsured": "Asegurado adicional",
-            "primaryWritingAgent": "Agente redactor principal",
+            "primaryWritingAgent": "Agente de Registro",
             "additionalWritingAgent": "Agente redactor adicional",
             "exchangeCompany": "Empresa de intercambio"
         }

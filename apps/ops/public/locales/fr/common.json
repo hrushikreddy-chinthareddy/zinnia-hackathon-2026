@@ -682,7 +682,7 @@
                 "primaryBeneficiary": "Bénéficiaire principal",
                 "payor": "Payeur",
                 "agent": "Agent",
-                "primaryWritingAgent": "Agent d'écriture principal",
+                "primaryWritingAgent": "Agent désigné",
                 "primaryServicingAgent": "Agent de service principal",
                 "thirdPartyDesignee": "Représentant tiers",
                 "e-delivery": "Livraison électronique",
@@ -3635,7 +3635,7 @@
             "jointOwner": "Copropriétaire",
             "assignee": "Cessionnaire",
             "riderInsured": "Assurée d'un Avenant",
-            "primaryWritingAgent": "Agent principal d'écriture",
+            "primaryWritingAgent": "Agent désigné",
             "additionalWritingAgent": "Agent d'écriture supplémentaire",
             "exchangeCompany": "Société d'échange"
         }
