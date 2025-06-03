@@ -80,7 +80,7 @@
                                             "title": "Caller Name",
                                             "minLength": 1
                                         },
-                                        "callerPhoneNumber": {
+                                        "callerPhone": {
                                             "type": "string",
                                             "title": "Caller Phone #"
                                         }
@@ -474,7 +474,7 @@
                                                         "type": "string",
                                                         "title": "Contract #"
                                                     },
-                                                    "contractOwnerTaxID": {
+                                                    "contractOwnerTaxId": {
                                                         "type": "string",
                                                         "title": "Contract Owner Tax ID"
                                                     }
@@ -563,7 +563,7 @@
                                                         "type": "string",
                                                         "title": "SSN/Tax ID"
                                                     },
-                                                    "additionalContractNumbers": {
+                                                    "additionalContractNumber": {
                                                         "type": "string",
                                                         "title": "Additional Contract Number(s)"
                                                     },
@@ -576,7 +576,7 @@
                                                         "format": "date-time",
                                                         "title": "Call Date and Time"
                                                     },
-                                                    "callersRelationship": {
+                                                    "callerRelationship": {
                                                         "type": "string",
                                                         "title": "Caller's Relationship to Contract"
                                                     }
