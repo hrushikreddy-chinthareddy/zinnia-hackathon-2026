@@ -12,14 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-level }}
     steps:
+      # copy whole repo
       - name: Checkout
         uses: actions/checkout@v4
 
+        # run pnpm
       - name: PNPM setup
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
+        # prune down to just the relevant project
       - name: Prune SSO-MPV
         run: turbo prune sso-mpv --docker
 

@@ -1,4 +1,4 @@
-name: 'Deploy SSO MPV'
+name: 'Build and Deploy SSO MPV'
 
 on:
   workflow_dispatch:
