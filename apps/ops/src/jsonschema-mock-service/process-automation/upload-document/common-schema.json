@@ -6,15 +6,9 @@
     "formSchema": {
         "type": "object",
         "definitions": {
-            "docCategoryEnum": {
-                "enum": []
-            },
-            "documentTypeEnum": {
-                "enum": ["_"]
-            },
-            "formNumberEnum": {
-                "enum": ["_"]
-            }
+            "docCategoryEnum": {},
+            "documentTypeEnum": {},
+            "formNumberEnum": {}
         },
         "properties": {
             "docCategory": {
@@ -22,7 +16,7 @@
                 "title": "Category",
                 "$ref": "#/definitions/docCategoryEnum"
             },
-            "documentTypeSelect": {
+            "documentType": {
                 "type": "string",
                 "title": "Type",
                 "$ref": "#/definitions/documentTypeEnum"
@@ -59,7 +53,7 @@
                 "default": "ZL"
             }
         },
-        "required": ["docCategory", "documentTypeSelect", "docAccessLevel"]
+        "required": ["docCategory", "documentType", "docAccessLevel"]
     },
     "uiSchema": {
         "ui:submitButtonOptions": {
@@ -73,13 +67,17 @@
         "options": {
             "ui:label": false,
             "ui:props": {
-                "apiUrl": "case/v1/refdata/DOCUMENT_CATEGORY",
-                "apiMethod": "get",
+                "apiUrl": "document/v3/documentType/search?limit=100&offset=0",
+                "apiMethod": "post",
+                "apiPayload": {
+                    "parentCarrierCode": "{{carrier}}"
+                },
                 "dataKey": "docCategoryEnum",
                 "responseType": "schema",
+                "responseData": "{{data.documentTypeList}}",
                 "response": {
-                    "enum": "key",
-                    "enumNames": "value"
+                    "enum": "documentCategoryKey",
+                    "enumNames": "documentCategory"
                 }
             }
         },
@@ -98,20 +96,22 @@
         "docCategory": {
             "ui:placeholder": "Select a category",
             "ui:props": {
-                "apiUrl": "case/v1/refdata/DOCUMENT_TYPE?",
-                "apiMethod": "get",
+                "apiUrl": "document/v3/documentType/search?limit=100&offset=0",
+                "apiMethod": "post",
                 "apiPayload": {
-                    "parentKey": "{{value}}"
+                    "parentCarrierCode": "{{customData.carrier}}",
+                    "documentCategory": "{{value}}"
                 },
                 "dataKey": "documentTypeEnum",
                 "responseType": "schema",
+                "responseData": "{{data.documentTypeList}}",
                 "response": {
-                    "enum": "",
-                    "enumNames": "value"
+                    "enum": "documentType"
                 }
             }
         },
-        "documentTypeSelect": {
+        "documentType": {
+            "ui:widget": "select",
             "ui:placeholder": "Select a type",
             "ui:events": [
                 {
@@ -122,41 +122,40 @@
                 }
             ],
             "ui:props": {
-                "apiUrl": "case/v1/refdata/DOCUMENT_NAME?",
-                "apiMethod": "get",
+                "apiUrl": "document/v3/documentType/search?limit=100&offset=0",
+                "apiMethod": "post",
                 "apiPayload": {
-                    "parentKey": "{{value.key}}"
+                    "parentCarrierCode": "{{customData.carrier}}",
+                    "documentType": "{{value}}"
                 },
                 "dataKey": "formNumberEnum",
                 "responseType": "schema",
+                "responseData": "{{data.documentTypeList}}",
                 "response": {
                     "enum": "",
-                    "enumNames": "key"
+                    "enumNames": "formNumber"
                 }
-            },
-            "ui:options": {
-                "omitValue": true
             }
         },
         "formNumberSelect": {
+            "ui:options": {
+                "omitValue": true
+            },
             "ui:placeholder": "Select a form number",
             "ui:events": [
                 {
                     "taskEventType": "onChange",
                     "dataKey": "documentTypeDescription",
                     "responseType": "formData",
-                    "responseData": "value"
+                    "responseData": "documentTypeDescription"
                 },
                 {
                     "taskEventType": "onChange",
                     "dataKey": "formNumber",
                     "responseType": "formData",
-                    "responseData": "key"
+                    "responseData": "formNumber"
                 }
-            ],
-            "ui:options": {
-                "omitValue": true
-            }
+            ]
         },
         "docAccessLevel": {
             "ui:placeholder": "Select"

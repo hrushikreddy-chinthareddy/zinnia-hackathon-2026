@@ -22,6 +22,20 @@ export function isString(v: unknown) {
 
 export const stringifyValue = (v: unknown) => (typeof v === 'string' ? v : JSON.stringify(v));
 
+function deduplicate<T>(items: T[]): T[] {
+    const seen = new Map<string, T>();
+
+    for (const item of items) {
+        const key = typeof item === 'object' && item !== null ? JSON.stringify(item) : String(item);
+
+        if (!seen.has(key)) {
+            seen.set(key, item);
+        }
+    }
+
+    return Array.from(seen.values());
+}
+
 export const csrApiHelper = async (props: ApiProps, formData: any, strigify = false) => {
     const { apiUrl, apiMethod, apiPayload, responseData, response } = props;
 
@@ -45,10 +59,15 @@ export const csrApiHelper = async (props: ApiProps, formData: any, strigify = fa
                 }
 
                 const mapDataToKeys: Record<string, any> = {};
+
                 Object.keys(response).forEach(key => {
-                    mapDataToKeys[key] = filteredResponse?.map((item: any) => {
-                        return item[(response as any)?.[key]] != undefined ? item[(response as any)?.[key]] : item;
-                    });
+                    const values =
+                        filteredResponse?.map((item: any) => {
+                            const filteredItem = item[(response as any)?.[key]];
+                            return filteredItem ? filteredItem : strigify ? stringifyValue(item) : item;
+                        }) || [];
+
+                    mapDataToKeys[key] = deduplicate(values);
                 });
                 return mapDataToKeys;
             }
@@ -72,7 +91,7 @@ export const csrApiHelper = async (props: ApiProps, formData: any, strigify = fa
                 Object.keys(response).forEach(key => {
                     mapDataToKeys[key] = filteredApiData?.map((item: any) => {
                         const filteredItem = item[(response as any)?.[key]];
-                        return filteredItem ? filteredItem : strigify ? JSON.stringify(item) : item;
+                        return filteredItem ? filteredItem : strigify ? stringifyValue(item) : item;
                     });
                 });
                 return mapDataToKeys;

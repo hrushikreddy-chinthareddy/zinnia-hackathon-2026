@@ -27,7 +27,7 @@ import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helpers';
+import { attachFilesToMappedDocuments, cleanForm } from '@deps/utils/tasks/task-payload-helpers';
 
 import FileAttachmentComponent from './file-attachment.component';
 import style from './file-widget.module.css';
@@ -161,9 +161,9 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         const uploadPromises = Object.keys(files).map(async (key: string) => {
             const { blob, name } = dataURItoBlob(files[key]);
             const processedData = replacePlaceholders(data, formContext ?? {});
-
+            const payload = cleanForm(processedData, attachmentSchema || ({} as FormMetadata));
             const metaData = {
-                ...processedData,
+                ...payload,
                 sourceFileName: name,
                 documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                 fileType: getFileSubtype(blob),
@@ -276,6 +276,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                                 formData={{}}
                                 onClose={() => sideSheet.onClose()}
                                 onSubmit={(formData: any) => onSubmit(formData, newValue)}
+                                formContext={formContext?.customData}
                             />
                         )}
                     </div>

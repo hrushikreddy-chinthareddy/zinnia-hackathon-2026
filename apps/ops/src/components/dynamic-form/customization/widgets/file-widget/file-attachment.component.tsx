@@ -1,5 +1,5 @@
 import { IChangeEvent } from '@rjsf/core';
-import { GenericObjectType, RJSFSchema } from '@rjsf/utils';
+import { FormContextType, GenericObjectType, RJSFSchema } from '@rjsf/utils';
 import { useCallback, useState } from 'react';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
@@ -7,13 +7,14 @@ import { FormMetadata } from '@deps/models/case/task';
 import { cleanForm } from '@deps/utils/tasks/task-payload-helpers';
 
 export type FileAttachmentComponentProps = {
+    formContext: FormContextType;
     schema: FormMetadata;
     formData: any;
     onClose: () => void;
     onSubmit: (data: any) => void;
 };
 
-const FileAttachmentComponent = ({ schema, formData, onSubmit, onClose }: FileAttachmentComponentProps) => {
+const FileAttachmentComponent = ({ schema, formData, onSubmit, onClose, formContext }: FileAttachmentComponentProps) => {
     const [currentFormData, setCurrentFormData] = useState(formData);
     const [currentSchema, setCurrentSchema] = useState(schema);
     const uploadChangeHandler = useCallback(
@@ -76,7 +77,7 @@ const FileAttachmentComponent = ({ schema, formData, onSubmit, onClose }: FileAt
             formData={currentFormData}
             onChange={uploadChangeHandler}
             formContext={{
-                customData: { ...formData },
+                customData: { ...formData, customData: { ...formContext } },
                 setCustomData: setCustomDataHandler,
                 onCancel: onClose,
                 updateSchema: updateSchemaHandler,
