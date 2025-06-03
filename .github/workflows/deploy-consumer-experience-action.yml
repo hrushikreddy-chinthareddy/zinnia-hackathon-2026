@@ -33,6 +33,7 @@ jobs:
       - name: Download task definition (east)
         run: |
           aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_NAME_CONSUMER_EXPERIENCE }} --query taskDefinition > east-task-definition.json
+
       - name: Build, tag, and push image to Amazon ECR with action
         id: build_image
         uses: docker/build-push-action@v5

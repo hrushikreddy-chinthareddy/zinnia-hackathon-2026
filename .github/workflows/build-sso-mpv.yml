@@ -1,0 +1,54 @@
+name: 'Build SSO MPV'
+
+on:
+  workflow_call:
+    inputs:
+      environment-level:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-level }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: PNPM setup
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Prune SSO-MPV
+        run: turbo prune sso-mpv --docker
+
+      - name: Build SSO-MPV
+        id: sso_mpv_build
+        uses: docker/build-push-action@v5
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr-east.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        with:
+          context: .
+          file: 'apps/sso-mpv/Dockerfile'
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ vars.ECR_REPOSITORY_SSO_MPV }}
+            ${{ env.ECR_REGISTRY }}/${{ vars.ECR_REPOSITORY_SSO_MPV }}:${{ env.IMAGE_TAG }}
+            ${{ env.ECR_REGISTRY }}/${{ vars.ECR_REPOSITORY_SSO_MPV }}:latest
+
+      - name: Fill in the new image ID in the Amazon ECS task definition (east)
+        id: task-def-east
+        uses: aws-actions/amazon-ecs-render-task-definition@v1.6.1
+        with:
+          task-definition: east-task-definition.json
+          container-name: ${{ vars.CONTAINER_NAME_SSO_MPV }}
+          image: ${{ steps.login-ecr-east.outputs.registry }}/${{ vars.ECR_REPOSITORY_SSO_MPV }}:${{ github.sha }}
+
+      - name: Deploy Amazon ECS Task Definition (east)
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2.2.0
+        with:
+          task-definition: ${{ steps.task-def-east.outputs.task-definition }}
+          service: ${{ secrets.ECS_CLUSTER_SERVICE_SSO_MPV }}
+          cluster: ${{ secrets.ECS_CLUSTER_SSO_MPV }}
+          wait-for-service-stability: true

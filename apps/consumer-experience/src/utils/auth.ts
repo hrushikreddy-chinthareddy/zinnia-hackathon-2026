@@ -75,7 +75,7 @@ const encrypt = async (payload: jose.JWTPayload): Promise<string> => {
  */
 export const decrypt = async (
   jwe: string
-): Promise<jose.JWTDecryptResult<Auth0SessionToken>> => {
+): Promise<jose.JWTDecryptResult<OauthToken>> => {
   let err;
   try {
     const key = await encryption(process.env.JWT_SECRET);
@@ -245,12 +245,9 @@ export const getSession = async (
       const hasSignedTermsAndConditions =
         (await getCookie(AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY)) === 'true';
       const { payload } = await decrypt(existingSessionValue);
-
-      const { oauthToken } = payload;
       // This article is super helpful in terms of understanding the difference between
       // these two tokens: https://auth0.com/blog/id-token-access-token-what-is-the-difference/
-      const { access_token, id_token } = oauthToken;
-
+      const { access_token, id_token } = payload;
       const userClaims = jose.decodeJwt(id_token) as UserClaims;
       const user: User = {
         ...userClaims,
@@ -271,7 +268,7 @@ export const getSession = async (
         accessToken: access_token,
         accessTokenExpiresAt,
         accessTokenScope: sessionValues.scope,
-        refreshToken: oauthToken.refresh_token,
+        refreshToken: payload.refresh_token,
       };
       return session;
     }
@@ -331,9 +328,7 @@ export const setSessionCookie = async (
   // if no token is provided, use the existing session
   // this is used mostly for when you want to update a session: See touchSession
   if (token) {
-    cookieVal = await encrypt({
-      oauthToken: token,
-    });
+    cookieVal = await encrypt({ ...token });
   } else {
     cookieVal = (await getCookie(APP_SESSION_COOKIE_KEY)) || '';
   }

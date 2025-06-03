@@ -1,0 +1,21 @@
+name: 'Deploy SSO MPV'
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment-level:
+        description: 'Select the environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - uat
+          - prod
+
+jobs:
+  deploy-east:
+    uses: ./.github/workflows/build-sso-mpv.yml
+    with:
+      environment-level: ${{ inputs.environment-level }}
+    secrets: inherit

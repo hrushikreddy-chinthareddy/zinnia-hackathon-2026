@@ -104,6 +104,12 @@ export async function middleware(req: NextRequest) {
 
   applyThemeCookies(req, resNext);
 
+  // TODO: need to test this!!! and also probably move it into it's own util file?
+  // const currentSubDomain = getSubdomain(req.headers);
+  // if (!session && currentSubDomain === Subdomains.FARMERS) {
+  //   return NextResponse.redirect(process.env.SSO_FARMERS_REDIRECT);
+  // }
+
   if (session) {
     // since the user has a session we need to check if they signed the terms and conditions
     // we only want to do this once per session. We will store the value on the user object
