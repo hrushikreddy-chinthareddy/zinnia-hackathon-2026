@@ -318,7 +318,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
     const formattedCreated = formatDateTime(task.createdAt);
     const formattedUpdated = formatDateTime(task.updatedAt);
-    const formattedPending = formatDateTime(task.impededTillDate);
+    const formattedPending = formatDateTime(task.scheduledDate);
 
     const userExists =
         user?.email?.toLowerCase() !== '' &&
@@ -328,7 +328,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     const documentsList = transformDocument(task.mappedDocuments || []);
 
     const showStartButton = task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending;
-    const statusReason = task.status === TaskStatus.Pending ? task.impededReason : task.cancellationReason;
+    const statusReason = task.status === TaskStatus.Pending ? task.scheduledReason : task.cancellationReason;
 
     const details = task.taskDetails;
 
@@ -477,7 +477,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     )}
                 </div>
 
-                {((task.status === TaskStatus.Pending && task.impededReason) ||
+                {((task.status === TaskStatus.Pending && task.scheduledReason) ||
                     (task.status === TaskStatus.Canceled && task.cancellationReason)) && (
                     <>
                         <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>

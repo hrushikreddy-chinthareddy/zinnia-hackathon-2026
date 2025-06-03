@@ -88,8 +88,8 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
                 ...taskData,
                 status: TaskStatus.Pending,
                 source: TaskSource.ZinniaTaskManagement,
-                impededReason: pendingReason,
-                impededTillDate: formattedDate,
+                scheduledReason: pendingReason,
+                scheduledDate: formattedDate,
             };
 
             const response = await updateTask(taskData.caseId, taskData.id, body, timer);
