@@ -15,6 +15,12 @@ jest.mock('react-i18next', () => ({
     useTranslation: () => ({ t: () => {} }),
 }));
 
+jest.mock('@deps/pages/create-case', () => ({
+    TabOptions: {
+        myTasks: 'myTasks'
+    },
+}));
+
 const mockPolicy = {
     parties: [
         { partyId: 'Party_PO_Owner_1', firstName: 'John', lastName: 'Doe' },

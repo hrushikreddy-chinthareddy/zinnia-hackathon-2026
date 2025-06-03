@@ -1,12 +1,13 @@
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { TabOptions } from '@deps/pages/create-case';
 import {
     SegmentTrackedEventName,
     TransactionCancelClickedEvent,
@@ -83,7 +84,11 @@ const TransactionNavigationButtons = ({
                 ...trackEventProps,
             });
         }
-        router.push(link);
+
+        router.push({
+            pathname: link,
+            query: { tab: TabOptions.myTasks }
+        });
     }, [trackEventProps, sessionId, partyId, link, router]);
 
     return (

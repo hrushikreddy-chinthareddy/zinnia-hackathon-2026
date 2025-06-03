@@ -1,12 +1,12 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
-import { TabGroup, TabList, TabTrigger, TabContent, Icon, IconType } from '@zinnia/bloom/components';
+import { Icon, IconType, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { getCookie, setCookie } from 'cookies-next';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import router from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import xss from 'xss';
 
@@ -76,7 +76,8 @@ export enum TabOptions {
 const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [showLoader, setShowLoader] = useState(false);
-    const [activeTab, setActiveTab] = useState(TabOptions.search);
+    const { query } = router;
+    const [activeTab, setActiveTab] = useState(() => query.tab === TabOptions.myTasks ? TabOptions.myTasks : TabOptions.search);
 
     useSegmentPageTracker(user, SegmentPageName.CreateCaseLanding);
 
