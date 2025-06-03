@@ -217,18 +217,32 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
         setPolicyNumber(document.contract);
         setDocument(document);
 
-        if (shouldShowNewExperience && document.contract) {
-            browserLogInfo('create-case::Document contract is present', {
-                caseType,
-                docType,
-                clientId,
-                documentNumber,
-                policyNumber: document.contract,
-            });
-            setShowLoader(false);
-            setPolicyNumber(document.contract);
-            setCaseId('');
+        if (shouldShowNewExperience) {
+            if (document.contract) {
+                browserLogInfo('create-case::Document contract is present', {
+                    caseType,
+                    docType,
+                    clientId,
+                    documentNumber,
+                    policyNumber: document.contract,
+                });
+                setShowLoader(false);
+                setPolicyNumber(document.contract);
+                setCaseId('');
+            } else if (!document.contract && caseType === CaseType.Reg60) {
+                browserLogInfo('create-case::Document contract is not preset', {
+                    caseType,
+                    docType,
+                    clientId,
+                    documentNumber,
+                    policyNumber: document.contract,
+                });
+                setShowLoader(false);
+                setPolicyNumber('');
+                setCaseId('');
+            }
         } else {
+            setShowLoader(false);
             return;
         }
     }

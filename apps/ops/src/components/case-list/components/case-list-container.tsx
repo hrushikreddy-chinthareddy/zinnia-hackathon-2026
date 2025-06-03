@@ -69,8 +69,17 @@ export const CaseListContainer = ({
                     process: [CaseTypeToProcessesMap[caseType]],
                 });
             }
+            if (!policyNumber && caseType === CaseType.Reg60 && document?.documentNumber) {
+                const parmas = {
+                    ...initialCaseSearchCriteria,
+                    identifiers: [{'identifier': 'documentNumber' , value: document?.documentNumber }],
+                    carrier: [clientId.toUpperCase()],
+                    process: [CaseTypeToProcessesMap[caseType]],
+                }
+                setFilters(parmas);
+            }
         }
-    }, [policyNumber, clientId, caseType, setFilters, caseId, isInvalid]);
+    }, [policyNumber, clientId, caseType, setFilters, caseId, isInvalid, document?.documentNumber]);
 
     useEffect(() => {
         if (!isEmptyObject(filters)) {
