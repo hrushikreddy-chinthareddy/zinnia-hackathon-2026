@@ -278,12 +278,13 @@ export default function getRslnConfig(t: TFunction) {
         },
 
         { label: t('distributionReason.reasonOptions.disability'), value: RestrictionOption.Disabled },
-        { label: t('distributionReason.reasonOptions.death'), value: RestrictionOption.Death },
         { label: t('distributionReason.reasonOptions.hardship'), value: RestrictionOption.Hardship },
         {
             label: t('distributionReason.reasonOptions.qualifiedReservist'),
             value: RestrictionOption.QualifiedReservist,
         },
+        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
+        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
     ];
 
     const selectOneOptions: SelectOneOption[] = [

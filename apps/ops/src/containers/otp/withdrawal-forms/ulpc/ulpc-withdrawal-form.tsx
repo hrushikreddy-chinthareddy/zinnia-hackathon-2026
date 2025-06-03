@@ -9,6 +9,7 @@ import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disburse
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramFullWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-full-withdrawal';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
+import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import FormType from '@deps/components/otp-withdrawal-form/form-type';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
@@ -41,7 +42,7 @@ export default function UlpcWithdrawalForm() {
         formESignatureData,
         setFormESignatureData,
         formErrors,
-        featureFlagDecisions
+        featureFlagDecisions,
     } = useContext(FormDataContext);
 
     const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
@@ -63,9 +64,8 @@ export default function UlpcWithdrawalForm() {
         validateMaritalStatusAllowances,
         w4pSignaturesConfig,
         eSignatureFieldConfig,
+        reasonOptions,
     } = getUlpcConfig(t, isLC);
-
-
 
     const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
 
@@ -99,6 +99,7 @@ export default function UlpcWithdrawalForm() {
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormType isFormStateReadOnly={isFormStateReadOnly} formSubtypeOptions={formSubtypeOptions} />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <DistributionReason reasonOptions={reasonOptions} isFormStateReadOnly={isFormStateReadOnly} />
 
             {formSubtype === FormSubtype.FullWithdrawal ? (
                 <FormProgramFullWithdrawal

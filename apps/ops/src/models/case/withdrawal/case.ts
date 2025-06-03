@@ -939,6 +939,8 @@ export enum RestrictionOption {
     Empty = '',
     Hardship = 'hardship',
     Others = 'others',
+    DeathInheritedIRA = 'deathinheritedira',
+    DeathDeferredSettlement = 'deathdeferredsettlement',
 }
 
 export enum PayoutOptions {

@@ -38,6 +38,7 @@ import {
     FormDisbursement,
     AddressTypes,
     ProgramSubType,
+    RestrictionOption,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -700,6 +701,11 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
         auditTrial: true,
     };
 
+    const reasonOptions = [
+        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
+        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+    ];
+
     return {
         cslnCheckStates,
         disbursementOptions,
@@ -717,5 +723,6 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
         validateMaritalStatusAllowances,
         meritalStatusAllowanceConfig,
         eSignatureFieldConfig,
+        reasonOptions,
     };
 }

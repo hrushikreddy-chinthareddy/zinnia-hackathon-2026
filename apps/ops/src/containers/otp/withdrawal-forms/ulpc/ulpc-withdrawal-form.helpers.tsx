@@ -38,6 +38,7 @@ import {
     FormDisbursement,
     ProgramSubType,
     AddressTypes,
+    RestrictionOption,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -718,6 +719,11 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
         auditTrial: true,
     };
 
+    const reasonOptions = [
+        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
+        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+    ];
+
     return {
         cslnCheckStates,
         disbursementOptions,
@@ -735,5 +741,6 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
         validateMaritalStatusAllowances,
         w4pSignaturesConfig,
         eSignatureFieldConfig,
+        reasonOptions,
     };
 }

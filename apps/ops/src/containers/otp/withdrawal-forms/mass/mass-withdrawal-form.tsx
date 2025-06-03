@@ -58,7 +58,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         formESignatureData,
         setFormESignatureData,
         formErrors,
-        featureFlagDecisions
+        featureFlagDecisions,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -90,7 +90,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormType isFormStateReadOnly={isFormStateReadOnly} formSubtypeOptions={formSubtypeOptions} />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            {isKeogh && <DistributionReason isFormStateReadOnly={isFormStateReadOnly} reasonOptions={distributionReasonOptions} />}
+            <DistributionReason isFormStateReadOnly={isFormStateReadOnly} reasonOptions={distributionReasonOptions} />
             {formSubtype === FormSubtype.FullWithdrawal ? (
                 <>
                     <FormProgramFullWithdrawal isFormStateReadOnly={isFormStateReadOnly} selectOneOptions={selectOneOptions} />

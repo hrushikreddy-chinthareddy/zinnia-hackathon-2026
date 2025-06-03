@@ -36,6 +36,7 @@ import {
     ProcessRequestType,
     ProgramSubType,
     ProgramType,
+    RestrictionOption,
     TaxWithholdingPlace,
     WithdrawalType,
 } from '@deps/models/case/withdrawal/case';
@@ -710,6 +711,10 @@ export default function useDlicConfig(t: TFunction) {
         date: true,
         auditTrial: true,
     };
+    const reasonOptions = [
+        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
+        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+    ];
 
     const hasPreviousNigoPlanCodes = ['674', '722'];
 
@@ -727,6 +732,7 @@ export default function useDlicConfig(t: TFunction) {
         cslnCheckStates,
         w4pSignaturesConfig,
         eSignatureFieldConfig,
+        reasonOptions,
         hasPreviousNigoPlanCodes,
     };
 }

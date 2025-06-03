@@ -9,6 +9,7 @@ import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disburse
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramFullWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-full-withdrawal';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
+import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import FormType from '@deps/components/otp-withdrawal-form/form-type';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
@@ -22,7 +23,7 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getFlicConfig, { FormSubtype } from './flic-withdrawal-form.helpers';
 
-export default function FlicWithdrawalForm({ qualType, isLC }: { qualType: string, isLC: boolean }) {
+export default function FlicWithdrawalForm({ qualType, isLC }: { qualType: string; isLC: boolean }) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
     const {
         cslnCheckStates,
@@ -39,6 +40,7 @@ export default function FlicWithdrawalForm({ qualType, isLC }: { qualType: strin
         selectOneOptions,
         fullWithdrawalOptions,
         eSignatureFieldConfig,
+        reasonOptions,
     } = getFlicConfig(t, qualType, isLC);
 
     const {
@@ -86,6 +88,8 @@ export default function FlicWithdrawalForm({ qualType, isLC }: { qualType: strin
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormType isFormStateReadOnly={isFormStateReadOnly} formSubtypeOptions={formSubtypeOptions} />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <DistributionReason reasonOptions={reasonOptions} isFormStateReadOnly={isFormStateReadOnly} />
+
             {formSubtype === FormSubtype.FullWithdrawal ? (
                 <FormProgramFullWithdrawal
                     selectOneOptions={selectOneOptions}

@@ -402,6 +402,8 @@ export default function getGdmnConfig(t: TFunction) {
         { label: t('distributionReason.reasonOptions.severance'), value: RestrictionOption.Severance, subElement: <ReasonDate /> },
         { label: t('distributionReason.reasonOptions.disabled'), value: RestrictionOption.Disabled },
         { label: t('distributionReason.reasonOptions.financialHardship'), value: RestrictionOption.Hardship },
+        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
+        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
     ];
 
     const disbursementOptions: PaymentMethodOption[] = [

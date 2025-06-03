@@ -604,6 +604,8 @@ export default function useNasuConfig(t: TFunction) {
         { label: t('distributionReason.reasonOptions.disabled'), value: RestrictionOption.Disabled },
         { label: t('distributionReason.reasonOptions.severance'), value: RestrictionOption.Severance, subElement: <ReasonDate /> },
         { label: t('distributionReason.reasonOptions.hardship'), value: RestrictionOption.Hardship },
+        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
+        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
     ];
 
     const cslnCheckStates = ['CA'];

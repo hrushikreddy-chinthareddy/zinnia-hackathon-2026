@@ -2122,7 +2122,9 @@
                     "qualifiedReservist": "Répartition des réservistes qualifiés",
                     "hardship": "Difficultés financières",
                     "financialHardship": "Difficultés financières",
-                    "other": "Autre"
+                    "other": "Autre",
+                    "deathinheritedira": "DÉCÈS Héritage IRA/NQ Échelonné",
+                    "deathdeferredsettlement": "Règlement différé en cas de décès"
                 },
                 "unforeseeableEmergency": "Urgence imprévisible",
                 "unforeseeableEmergencyOptions": {

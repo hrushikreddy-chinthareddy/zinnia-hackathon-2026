@@ -44,6 +44,7 @@ import {
     AccountCloseReason,
     AccountType,
     FormDisbursement,
+    RestrictionOption,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -79,7 +80,7 @@ export const spousalSignatureStateCodes = [
     statesAndTerritories.WISCONSIN,
 ];
 
-export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:boolean = true) {
+export default function getFlicConfig(t: TFunction, qualType: string = '', isLC: boolean = true) {
     const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
         const programTypeText = formProgram?.programType?.text || '';
         if (programTypeText === ProgramType.TotalFreeAmt) {
@@ -106,7 +107,7 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
         return validQualTypesForSpousalSignatureFAST.includes(qualType);
     }
 
-    const shouldCheckSpouseSignatureOnAnnuitantState = isLC ? isValidQualTypeLC(qualType): isValidQualType(qualType);
+    const shouldCheckSpouseSignatureOnAnnuitantState = isLC ? isValidQualTypeLC(qualType) : isValidQualType(qualType);
 
     const isSpousalSignatureRequired = (ownerState: string | null, annuitantState: string | null): boolean => {
         if (shouldCheckSpouseSignatureOnAnnuitantState) {
@@ -716,6 +717,11 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
         auditTrial: true,
     };
 
+    const reasonOptions = [
+        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
+        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+    ];
+
     return {
         cslnCheckStates,
         disbursementOptions,
@@ -731,5 +737,6 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
         selectOneOptions,
         fullWithdrawalOptions,
         eSignatureFieldConfig,
+        reasonOptions,
     };
 }

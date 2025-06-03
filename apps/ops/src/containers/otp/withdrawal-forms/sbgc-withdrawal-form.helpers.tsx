@@ -673,7 +673,6 @@ export default function getSbgcConfig(t: TFunction) {
         { label: t('distributionReason.reasonOptions.age595'), value: RestrictionOption.Age595 },
         { label: t('distributionReason.reasonOptions.overAge705'), value: RestrictionOption.OverAge705 },
         { label: t('distributionReason.reasonOptions.disabled'), value: RestrictionOption.Disabled },
-        { label: t('distributionReason.reasonOptions.death'), value: RestrictionOption.Death },
         { label: t('distributionReason.reasonOptions.severance'), value: RestrictionOption.Severance, subElement: <ReasonDate /> },
         { label: t('distributionReason.reasonOptions.planTermination'), value: RestrictionOption.PlanTermination },
         {
@@ -684,6 +683,8 @@ export default function getSbgcConfig(t: TFunction) {
             label: t('distributionReason.reasonOptions.adoptionChildBirth'),
             value: RestrictionOption.AdoptionChildBirth,
         },
+        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
+        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
     ];
 
     const w4pSignaturesConfig = [

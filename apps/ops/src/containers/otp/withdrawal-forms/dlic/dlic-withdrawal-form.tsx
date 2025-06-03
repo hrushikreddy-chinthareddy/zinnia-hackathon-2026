@@ -8,6 +8,7 @@ import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signa
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
+import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
@@ -36,6 +37,7 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
         cslnCheckStates,
         w4pSignaturesConfig,
         eSignatureFieldConfig,
+        reasonOptions,
         hasPreviousNigoPlanCodes,
     } = useDlicConfig(t);
     const {
@@ -75,6 +77,8 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <DistributionReason reasonOptions={reasonOptions} isFormStateReadOnly={isFormStateReadOnly} />
+
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={partialWithdrawalOptions}

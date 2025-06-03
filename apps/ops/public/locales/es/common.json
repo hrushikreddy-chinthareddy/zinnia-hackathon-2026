@@ -2110,8 +2110,10 @@
                     "otherEligibleDistributedPermittedPlan": "Otras distribuciones elegibles permitidas por el plan",
                     "qualifiedReservist": "Distribución calificada para reservistas",
                     "hardship": "Dificultad",
-                    "deathdeferredsettlement": "FALLECIMIENTO Liquidación diferida",
-                    "other": "Otro"
+                    "financialHardship": "Dificultad financiera",
+                    "other": "Otro",
+                    "deathinheritedira": "FALLECIMIENTO Herencia IRA/NQ Extendido",
+                    "deathdeferredsettlement": "FALLECIMIENTO Liquidación diferida"
                 },
                 "unforeseeableEmergency": "Emergencia imprevista",
                 "unforeseeableEmergencyOptions": {

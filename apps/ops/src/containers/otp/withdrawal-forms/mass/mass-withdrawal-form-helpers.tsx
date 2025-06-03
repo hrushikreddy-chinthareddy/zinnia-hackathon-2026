@@ -784,6 +784,8 @@ export default function useMassWithdrawalConfig(t: TFunction) {
             label: t('distributionReason.reasonOptions.qualifiedBirthOrAdoption'),
             value: RestrictionOption.AdoptionChildBirth,
         },
+        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
+        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
     ];
     const waiverItemsConfig: WaiverItemConfig[] = [
         {

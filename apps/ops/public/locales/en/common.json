@@ -2144,7 +2144,9 @@
                     "qualifiedReservist": "Qualified reservist distribution",
                     "hardship": "Hardship",
                     "financialHardship": "Financial Hardship",
-                    "other": "Other"
+                    "other": "Other",
+                    "deathinheritedira": "DEATH Inherited IRA/NQ Stretch",
+                    "deathdeferredsettlement": "DEATH Deferred settlement"
                 },
                 "unforeseeableEmergency": "Unforeseeable emergency",
                 "unforeseeableEmergencyOptions": {
