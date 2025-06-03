@@ -564,7 +564,7 @@ export default function getFlicOftConfig(t: TFunction, qualType: string) {
                 if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        payeeName: payee?.name.text ?? '',
+                        payeeName: payee?.name.text?.toUpperCase() ?? '',
                         address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
                         contractNumber: payee?.contractNumber.text ?? '',
                         fboDetails: payee?.fboDetails?.text || '',
@@ -578,7 +578,7 @@ export default function getFlicOftConfig(t: TFunction, qualType: string) {
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
                     payee: {
-                        name: { text: payeeName || null },
+                        name: { text: payeeName?.toUpperCase() || null },
                         addresses: [address || DEFAULT_ADDRESS],
                         contractNumber: { text: contractNumber || null },
                         fboDetails: { text: fboDetails ?? null },

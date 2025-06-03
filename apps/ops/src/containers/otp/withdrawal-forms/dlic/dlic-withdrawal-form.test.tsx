@@ -88,7 +88,7 @@ describe('DLIC Form Specific component', () => {
                         setFormData: setMockData,
                     }}
                 >
-                    <DlicWithdrawalForm />
+                    <DlicWithdrawalForm planCode="" />
                 </FormDataContext.Provider>
             );
 
@@ -189,7 +189,7 @@ describe('DLIC Form Specific component', () => {
                         setFormData: setMockData,
                     }}
                 >
-                    <DlicWithdrawalForm />
+                    <DlicWithdrawalForm planCode="" />
                 </FormDataContext.Provider>
             );
 
