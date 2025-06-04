@@ -47,7 +47,7 @@ export default function AnnuityQuickView({ policy }: BasePolicyComponentArgs) {
         },
         qualificationType: {
             label: t('colDefs:policySummary.qualificationType'),
-            details: t(`dashboard.search.results.policySummaryCard.${policy?.qualificationType}`) ?? '',
+            details: t(`dashboard.search.results.policySummaryCard.${policy?.qualificationType?.toLowerCase()}`) ?? '',
         },
     };
 
