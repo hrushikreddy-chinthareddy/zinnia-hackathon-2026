@@ -31,14 +31,12 @@ import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { caseSanitizer } from '@deps/utils/sanitizers';
 import { logError, LoggingContext, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
 
-import { baseAppUrl, se2ApiServerUrl } from '../api-config';
+import { baseAppUrl, enterpriseSearchApiServerUrl, se2ApiServerUrl } from '../api-config';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const ssrCasesUrl = `${se2ApiServerUrl}/cases`;
-const baseSearchUrl = `${baseAppUrl}/api/enterprise-search/v1/search`;
-const ssrSearchUrl = `${se2ApiServerUrl}/enterprise-search/v1/search`;
 
 export type ReferenceDataQuery = {
     carrier?: string[];
@@ -77,7 +75,9 @@ export const getCases = async (
     featureFlags: FeatureFlags
 ): Promise<CaseSearchResponse | CaseSearchErrorResponse> => {
     try {
-        const searchUrl = featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH] ? baseSearchUrl : `${baseCasesUrl}/search`;
+        const searchUrl = featureFlags?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+            ? `${baseAppUrl}/api/enterprise-search/v1/search`
+            : `${baseCasesUrl}/search`;
         const { data } = await client.post<CaseSearchBody, AxiosResponse>(searchUrl, query);
 
         return data;
@@ -328,7 +328,9 @@ export const searchCasesSSR = async (
     featureFlags: FeatureFlags
 ): Promise<CaseSearchResponse | null> => {
     try {
-        const searchUrl = featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH] ? ssrSearchUrl : `${ssrCasesUrl}/search`;
+        const searchUrl = featureFlags?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+            ? enterpriseSearchApiServerUrl
+            : `${ssrCasesUrl}/search`;
 
         logInfo('searchCasesSSR', { ...loggingContext, file: 'queries/api/cases', function: 'searchCasesSSR', url: searchUrl });
 

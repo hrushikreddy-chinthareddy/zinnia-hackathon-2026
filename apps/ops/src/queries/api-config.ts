@@ -13,3 +13,4 @@ export const calculatorApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/rmd-
 export const se2ApiServerUrlV2 = `${process.env.NEXT_PUBLIC_SE2_BACKEND_URL}/case/v2`;
 export const contactCenterBaseUrlV2 = `${process.env.NEXT_PUBLIC_SE2_BACKEND_URL}/c2web/v2`;
 export const fundsApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/funds/${apiVersion}`;
+export const enterpriseSearchApiServerUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/enterprise-search/v1/search`;

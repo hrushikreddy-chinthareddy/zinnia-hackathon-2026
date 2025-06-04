@@ -22,7 +22,7 @@ export const useContractAccountInfo = (contract: string, clientId: string): Cont
         const getDetails = async () => {
             try {
                 const searchResults = await searchPolicy(
-                    { policyNumber: contract, carrierIds: [clientId.toUpperCase()] },
+                    { policyNumber: contract, carrier: [clientId.toUpperCase()] },
                     { limit: 1, offset: 0 }
                 );
                 const acctInfoResponse = await fetchPolicy(searchResults.results[0].policyNumber, searchResults.results[0].planCode);

@@ -1,8 +1,10 @@
 import { getSession } from '@auth0/nextjs-auth0';
 
-import { policyApiBaseUrl } from '@deps/queries/api-config';
+import { enterpriseSearchApiServerUrl, policyApiBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { PolicyReferenceSearchResponse } from '@deps/types/search';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logTrace, logWarn, withAuthAndLogging, parseErrorInformation, LoggingContext } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -19,7 +21,10 @@ export default withAuthAndLogging(
             const accessToken = session?.accessToken;
 
             const { offset = 0, limit = 5 } = req.query;
-            const searchUrl = `${policyApiBaseUrl}/search?offset=${offset}&limit=${limit}`;
+            const featureFlagDecisions = await optimizelyService.getFeatureFlagDecisions(session?.user?.sub, loggingContext);
+            const searchUrl = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+                ? `${enterpriseSearchApiServerUrl}?searchEntity=policy&offset=${offset}&limit=${limit}`
+                : `${policyApiBaseUrl}/search?offset=${offset}&limit=${limit}`;
             logTrace('policySearch::start', { ...loggingContext, url: searchUrl });
             const { data: searchResponse } = await serverApi.post<PolicyReferenceSearchResponse>(
                 searchUrl,
