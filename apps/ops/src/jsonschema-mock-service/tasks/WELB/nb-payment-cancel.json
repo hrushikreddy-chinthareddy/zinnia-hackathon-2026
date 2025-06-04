@@ -20,7 +20,7 @@
                         "sectionHeader": {
                             "type": "object",
                             "title": "Processing Instructions",
-                            "description": "Review the exchage record information to determine money was received & prorcess a refund for the amount shown."
+                            "description": "Review the exchage record information to determine money was received & process a refund for the amount shown."
                         },
                         "details": {
                             "type": "object",
