@@ -1,4 +1,5 @@
 import { AccordionContent, AccordionHeader, AccordionItem, Accordion as AccordionRoot, AccordionTrigger } from '@radix-ui/react-accordion';
+import { formatTimestamp } from '@xd/utils/src/dates';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ForwardedRef, ReactNode, useMemo, useState } from 'react';
 
@@ -21,8 +22,6 @@ import { CaseStageAccordionClickedEvent, SegmentTrackedEventName } from '@deps/t
 import Exceptions from './exceptions';
 import {
     completionPercentageString,
-    formatTimestampTooltip,
-    formatTimestampWithYearCheck,
     TransformedCase,
     TransformedStage,
     TransformedStep,
@@ -40,16 +39,16 @@ const getStageStatusIconTooltip = (stage: TransformedStage, t: TFunction): React
         case Statuses.Completed:
         case 'RESOLVED' as Statuses:
             icon = <CompletedIcon className="text-semantic-success" width={24} height={24} />;
-            tooltipBody = t('caseOverview.caseStatus.completed.statusTooltipWithDate', { date: formatTimestampTooltip(stage.updatedAt) });
+            tooltipBody = t('caseOverview.caseStatus.completed.statusTooltipWithDate', { date: formatTimestamp(stage.updatedAt, 'tooltip') });
             contentBody = t('caseOverview.caseStatus.completed.statusTooltipWithDate', {
-                date: formatTimestampWithYearCheck(stage.updatedAt),
+                date: formatTimestamp(stage.updatedAt, 'monthDay'),
             });
             break;
         case Statuses.InProgress:
             icon = <InProgressIcon className="text-semantic-info" width={24} height={24} />;
-            tooltipBody = t('caseOverview.caseStatus.inProgress.statusTooltipWithDate', { date: formatTimestampTooltip(stage.updatedAt) });
+            tooltipBody = t('caseOverview.caseStatus.inProgress.statusTooltipWithDate', { date: formatTimestamp(stage.updatedAt, 'tooltip') });
             contentBody = t('caseOverview.caseStatus.inProgress.statusTooltipWithDate', {
-                date: formatTimestampWithYearCheck(stage.updatedAt),
+                date: formatTimestamp(stage.updatedAt, 'monthDay'),
             });
             break;
         case Statuses.NotStarted:
@@ -59,9 +58,9 @@ const getStageStatusIconTooltip = (stage: TransformedStage, t: TFunction): React
             break;
         case Statuses.Exception:
             icon = <ExceptionIcon className="text-semantic-error" width={24} height={24} />;
-            tooltipBody = t('caseOverview.caseStatus.exception.statusTooltipWithDate', { date: formatTimestampTooltip(stage.updatedAt) });
+            tooltipBody = t('caseOverview.caseStatus.exception.statusTooltipWithDate', { date: formatTimestamp(stage.updatedAt, 'tooltip') });
             contentBody = t('caseOverview.caseStatus.exception.statusTooltipWithDate', {
-                date: formatTimestampWithYearCheck(stage.updatedAt),
+                date: formatTimestamp(stage.updatedAt, 'monthDay'),
             });
             break;
         default:

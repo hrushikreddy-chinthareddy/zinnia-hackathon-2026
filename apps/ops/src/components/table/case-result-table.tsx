@@ -13,10 +13,10 @@ import {
 import dayjs from 'dayjs';
 import advanced from 'dayjs/plugin/advancedFormat';
 import timezone from 'dayjs/plugin/timezone';
+import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
 
 import ChipStatus from '@deps/components/chip-status/chip-status';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -34,7 +34,7 @@ import { SearchViewQuery } from '@deps/types/search';
 import { CaseClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
 
-import styles from './case-result-table.module.css';
+import { formatTimestamp } from '../../../../../packages/utils/src/dates';
 import CaseDetailField from '../card/case-search-card/case-detail-field';
 import { CaseStatusTooltip } from '../case-list/components/case-status-tooltip';
 import Highlighter from '../highlighter/highlighter';
@@ -42,6 +42,8 @@ import { PiiProps } from '../pii/pii';
 import { PiiWrapper } from '../pii/PiiWrapper';
 import PlusOthers from '../plus-others/plus-others';
 import PopoverOnTruncate from '../popover-on-truncate/popover-on-truncate';
+import styles from './case-result-table.module.css';
+
 
 dayjs.extend(timezone);
 dayjs.extend(advanced);
@@ -237,7 +239,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                         tooltipClassName="!w-auto"
                         triggerClassName="!z-10"
                     >
-                        {dayjs(singleCase.createdAt).format('M/D/YYYY [at] h:mm a z')}
+                        {formatTimestamp(singleCase.createdAt, 'dateTimeWithTZ')}
                     </Tooltip>
                 </div>
             </TableCell>

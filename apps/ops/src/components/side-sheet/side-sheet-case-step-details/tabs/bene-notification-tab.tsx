@@ -3,7 +3,10 @@ import { Label, Loader } from '@zinnia/bloom/components';
 import { useTranslation, TFunction } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
-import { formatTimestamp, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
+import {TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
+
+import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
+
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';

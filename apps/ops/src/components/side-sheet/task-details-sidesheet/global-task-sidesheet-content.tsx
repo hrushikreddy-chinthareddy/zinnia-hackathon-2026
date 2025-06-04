@@ -11,7 +11,7 @@ import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import CallLogCard from '@deps/components/card/card-call-log/card-call-log';
-import { formatTimestamp } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
+import { formatTimestamp } from '../../../../../../packages/utils/src/dates';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
 import CustomLoader from '@deps/components/loader/customLoader';
@@ -412,12 +412,12 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
         }
 
         let label = '';
-        let timestamp = formattedUpdated ? formatTimestamp(formattedUpdated) : 'N/A';
+        let timestamp = formattedUpdated ? formatTimestamp(formattedUpdated ,'standard') : 'N/A';
 
         switch (status) {
             case TaskStatus.Pending:
                 label = t('sideSheet.task.pendinglabel');
-                timestamp = formattedPending ? formatTimestamp(formattedPending) : 'N/A';
+                timestamp = formattedPending ? formatTimestamp(formattedPending , 'standard') : 'N/A';
                 break;
             case TaskStatus.Canceled:
                 label = t('sideSheet.task.canceledLabel');
@@ -513,7 +513,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
                 <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.newCreatedLabel')} </div>
                 <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                    {formattedCreated ? formatTimestamp(formattedCreated) : 'N/A'}
+                    {formattedCreated ? formatTimestamp(formattedCreated , 'standard') : 'N/A'}
                 </Typography>
 
                 {task.taskName && type == 'case' && (

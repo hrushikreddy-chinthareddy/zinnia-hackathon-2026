@@ -2,7 +2,8 @@ import { Table, TableBody, TableCell, TableRow } from '@zinnia/bloom/components'
 import { TFunction, useTranslation } from 'next-i18next';
 
 import AdditionalStepStatus from '@deps/components/case-overview-box/content/additional-step-status';
-import { formatTimestamp, TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
+import {TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
+import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
 import { CaseAdditionalData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { formatAddressToContainer } from '@deps/containers/small-data-card/address-data/address-data';
@@ -58,7 +59,7 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
         },
         getAdditionalDetails: (additionalData: CaseAdditionalData, filterKeyBy: string) => {
             const date = additionalData[filterKeyBy].value;
-            return formatTimestamp(date);
+            return formatTimestamp(date , 'standard');
         },
     },
     {
@@ -132,7 +133,7 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
     const deliveryMethod = additionalData['deliveryMethod']?.value as CommunicationTypes;
 
     const renderAdditionalData = (id: AdditionalDataStepIds) => {
-        const updatedAt = formatTimestamp(date);
+        const updatedAt = formatTimestamp(date , 'standard');
         switch (id) {
             case AdditionalDataStepIds.correspondenceRequest:
                 return (

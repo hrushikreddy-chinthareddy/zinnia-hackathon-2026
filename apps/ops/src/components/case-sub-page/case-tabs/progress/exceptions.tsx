@@ -3,7 +3,8 @@ import { TFunction, useTranslation } from 'next-i18next';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
 
-import { formatTimestamp } from './progress-tab-helpers';
+import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
+
 import { ExceptionView, GroupedExceptions } from './progress-tab-types';
 import Tasks from './tasks';
 

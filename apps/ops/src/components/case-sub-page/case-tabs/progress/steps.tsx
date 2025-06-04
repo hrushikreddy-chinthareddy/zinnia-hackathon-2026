@@ -17,7 +17,8 @@ import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/ico
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import Exceptions from './exceptions';
-import { formatTimestamp, TransformedStep } from './progress-tab-helpers';
+import {TransformedStep } from './progress-tab-helpers';
+import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
 import Tasks from './tasks';
 
 enum StepResults {

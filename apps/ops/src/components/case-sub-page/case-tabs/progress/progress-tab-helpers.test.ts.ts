@@ -2,7 +2,8 @@ import { TFunction } from 'next-i18next';
 
 import { mockCaseDetails } from '@deps/services/mocks/case-details';
 
-import { TransformedCase, completionPercentageString, formatTimestamp } from './progress-tab-helpers';
+import { TransformedCase, completionPercentageString} from './progress-tab-helpers';
+import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
 const mockT = (key: string, values?: Record<string, string>) => {
     if (values) {
         return `${key} ${Object.values(values).join(', ')}`;
