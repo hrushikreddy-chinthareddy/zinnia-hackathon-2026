@@ -1,6 +1,6 @@
-import { yearsLeft } from '@xd/utils/dist';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType } from '@zinnia/bloom/components';
+import { yearsLeft } from '@zinnia/utils';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
