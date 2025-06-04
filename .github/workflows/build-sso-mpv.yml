@@ -12,31 +12,46 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-level }}
     steps:
-      # copy whole repo
       - name: Checkout
         uses: actions/checkout@v4
 
-        # run pnpm
-      - name: PNPM setup
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Setup PNPM
         uses: pnpm/action-setup@v4
 
-        # prune down to just the relevant project
-      - name: Prune SSO-MPV
-        run: turbo prune sso-mpv --docker
+      - name: Install dependencies
+        run: pnpm install
 
-      - name: Build SSO-MPV
+      - name: Prune SSO-MPV
+        run: npx turbo prune sso-mpv --docker
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR (east)
+        id: login-ecr-east
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push SSO-MPV Docker Image
         id: sso_mpv_build
         uses: docker/build-push-action@v5
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr-east.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
         with:
-          context: .
-          file: 'apps/sso-mpv/Dockerfile'
+          context: ./out
+          file: ./out/apps/sso-mpv/Dockerfile
+          push: true
           tags: |
-            ${{ env.ECR_REGISTRY }}/${{ vars.ECR_REPOSITORY_SSO_MPV }}
-            ${{ env.ECR_REGISTRY }}/${{ vars.ECR_REPOSITORY_SSO_MPV }}:${{ env.IMAGE_TAG }}
-            ${{ env.ECR_REGISTRY }}/${{ vars.ECR_REPOSITORY_SSO_MPV }}:latest
+            ${{ steps.login-ecr-east.outputs.registry }}/${{ vars.ECR_REPOSITORY_SSO_MPV }}
+            ${{ steps.login-ecr-east.outputs.registry }}/${{ vars.ECR_REPOSITORY_SSO_MPV }}:${{ github.sha }}
+            ${{ steps.login-ecr-east.outputs.registry }}/${{ vars.ECR_REPOSITORY_SSO_MPV }}:latest
 
       - name: Fill in the new image ID in the Amazon ECS task definition (east)
         id: task-def-east

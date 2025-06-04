@@ -1,15 +1,21 @@
 FROM node:22-alpine AS base
+WORKDIR /app
 
 FROM base AS builder
-RUN apk update
-WORKDIR /app
-COPY /out /app/out
 
-FROM base AS installer
-WORKDIR /app
-COPY --from=builder /app/out .
+COPY ./out/ ./
+
 RUN npm install -g pnpm
-WORKDIR /app/full/apps/sso-mpv
-RUN pnpm i
+
+RUN pnpm install --frozen-lockfile
+RUN pnpm build
+
+FROM base AS runner
+
+COPY --from=builder /app /app
+
+WORKDIR /app/apps/sso-mpv
+
 EXPOSE 3000
-ENTRYPOINT ["npm", "start"]
+
+CMD ["pnpm", "start"]
