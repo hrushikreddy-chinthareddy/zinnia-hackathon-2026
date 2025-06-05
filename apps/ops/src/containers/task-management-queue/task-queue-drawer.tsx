@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
+import CustomLoader from '@deps/components/loader/customLoader';
 import SelectSimple from '@deps/components/select/select';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
@@ -27,6 +28,7 @@ dayjs.extend(utc);
 function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription, taskName }: TaskQueueDrawerProps) {
     const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
     const [date, setDate] = useState(tomorrow);
+    const [startLoader, setStartLoader] = useState(false);
     const [timer] = useState(performance.now());
     const [pendingReason, setPendingReason] = useState('');
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: '' });
@@ -63,6 +65,10 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
         );
         sideSheet.handleOpen(true);
     };
+
+    const handleClose = () => {
+        router.back();
+    };
     const updateTaskStatus = async () => {
         if (!taskId) {
             browserLogError('task-queue:handleStartTask::Missing taskId', {
@@ -73,17 +79,20 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
         }
 
         const taskData = await getTaskInstance({ taskId });
-        if (!taskData) {
-            browserLogError('task-queue:handleStartTask::Error retrieving task data', {
-                taskId: taskId,
-                taskStatus: taskStatus,
-            });
-            router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
-            return;
-        }
-        const formattedDate = dayjs.utc(date, NUMERIC_DATE_FORMAT).toISOString();
-
         try {
+
+            setStartLoader(true);
+            if (!taskData) {
+                browserLogError('task-queue:handleStartTask::Error retrieving task data', {
+                    taskId: taskId,
+                    taskStatus: taskStatus,
+                });
+                router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
+                return;
+            }
+            const formattedDate = dayjs.utc(date, NUMERIC_DATE_FORMAT).toISOString();
+
+
             const body = {
                 ...taskData,
                 status: TaskStatus.Pending,
@@ -102,7 +111,7 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
                     process: taskData?.process,
                 });
                 removeFromCache('getTaskInstance', { taskId: taskData.id });
-                onClose();
+                handleClose();
                 getTasks && getTasks();
             } else {
                 throw new Error('Failed to update task status.');
@@ -110,7 +119,11 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
         } catch (error) {
             console.log(error);
         }
+        finally {
+            setStartLoader(false);
+        }
     };
+
     function handleIsDateAllowed(date: Dayjs): boolean {
         const currentDate = dayjs();
         if (date.isBefore(currentDate) || date.isSame(currentDate)) return false;
@@ -158,12 +171,13 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
                 <Button
                     className="mr-4"
                     onClick={updateTaskStatus}
-                    size={ButtonSize.Small}
+                    size={startLoader ? ButtonSize.Default : ButtonSize.Small}
                     variant={!pendingReason || !date ? ButtonVariant.Inactive : ButtonVariant.Default}
-                    disabled={!pendingReason || !date}
+                    disabled={!pendingReason || !date || startLoader}
+                    aria-label={t('taskManagementQueue.updateTaskStatusDrawer.updateStatus') as string}
                     type={ButtonType.Primary}
                 >
-                    {t('taskManagementQueue.updateTaskStatusDrawer.updateStatus')}
+                    {!startLoader ? t('taskManagementQueue.updateTaskStatusDrawer.updateStatus') : <CustomLoader />}
                 </Button>
             </div>
         </div>
