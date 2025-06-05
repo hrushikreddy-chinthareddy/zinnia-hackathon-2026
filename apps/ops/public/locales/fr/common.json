@@ -2903,7 +2903,9 @@
             "sentDate": "Date d'envoi",
             "taxDocuments": "Documents fiscaux",
             "taxYear": "Année fiscale",
-            "view": "Voir"
+            "view": "Voir",
+            "xToYOfZ": "Résultats: {{x}}-{{y}} de {{z}}",
+            "pdfError": "Une erreur est survenue lors du chargement du PDF."
         },
         "funds": {
             "matchCard": {

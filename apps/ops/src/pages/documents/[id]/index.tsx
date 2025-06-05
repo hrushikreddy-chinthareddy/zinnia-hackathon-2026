@@ -5,6 +5,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { PageHead } from '@deps/components/page-title';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { TranslationFiles } from '@deps/config/translations';
+import { OptimizelyVariableKey } from '@deps/contexts/OptimizelyContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
@@ -16,8 +17,8 @@ import { DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { b64ToBlob } from '@deps/utils/blob';
 import { TiffConversion } from '@deps/utils/fileviewer/tiffConversion';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { isFeatureFlagVariableActive, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -65,7 +66,6 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const documentType = query.documentType as string;
             const carrierCode = query.carrierCode as string;
-            let finalBuffer: Buffer;
 
             if (!documentType || !carrierCode || !id) {
                 return {
@@ -75,11 +75,17 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             }
+            const featureFlagVariables = await optimizelyService.getAllFeatureFlagVariables(user.sub, loggingContext);
 
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const useV3 = isFeatureFlagVariableActive(
+                featureFlagVariables,
+                FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
+                OptimizelyVariableKey.Clients,
+                carrierCode?.toLocaleLowerCase() || ''
+            );
 
             let docDownload;
-            if (featureFlagDecisions[FEATURE_FLAGS.DOCUMENTS_V3]) {
+            if (useV3) {
                 let docClass;
                 switch (documentType) {
                     case DocumentTypeView.Correspondence:

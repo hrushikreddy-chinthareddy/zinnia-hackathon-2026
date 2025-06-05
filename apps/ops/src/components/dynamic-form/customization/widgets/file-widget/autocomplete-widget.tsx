@@ -1,15 +1,19 @@
 import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { MetadataSearchResponse, SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { IconType, Icon, AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
+import { HttpStatusCode } from 'axios';
 import clsx from 'clsx';
 import { ChangeEvent, useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ClickContainer from '@deps/components/click-container/click-container';
 import inputStyles from '@deps/components/search/search-field-toggle/search-field-toggle.module.css';
+import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
-import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
+import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helpers';
 
@@ -17,18 +21,7 @@ import style from './file-widget.module.css';
 export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     props: WidgetProps<T, S, F>
 ) {
-    const {
-        id,
-        disabled,
-        rawErrors,
-        required,
-        uiSchema,
-        onChange,
-        value,
-        schema: { title },
-        formContext,
-        Placeholder,
-    } = props;
+    const { id, disabled, rawErrors, uiSchema, value, formContext, Placeholder } = props;
     const { icon } = getUiOptions(uiSchema);
 
     const [documents, setDocuments] = useState<MetadataSearchResponse[]>([]);
@@ -38,10 +31,15 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
     const [fetchingDocuments, setFetchingDocuments] = useState<boolean | null>(null);
     const [error, setError] = useState<boolean>(false);
     const { t } = useTranslation(undefined, { keyPrefix: 'taskManagementQueue' });
-
+    const { featureFlagVariables } = useOptimizely();
     const caseKey = uiSchema?.['ui:options']?.['default'];
     const extractedCaseId = caseKey ? replacePlaceholders(caseKey, formContext?.customData) : '';
-
+    const useV3 = isFeatureFlagVariableActive(
+        featureFlagVariables,
+        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
+        OptimizelyVariableKey.Clients,
+        formContext?.customData?.carrier?.toLocaleLowerCase() || ''
+    );
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         const value = event.target.value;
@@ -58,10 +56,10 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
                 parentCarrierCode: formContext?.customData?.carrier,
             };
             try {
-                const { data, error } = await searchDocumentsV3({ limit: 25, offset: 0, searchBody });
-                if (data?.documents) {
-                    setDocuments(data?.documents);
-                } else if (error) {
+                const { data, status } = await getDocumentSearchResultsQuery(searchBody, 25, 0, useV3);
+                if (data) {
+                    setDocuments(data as MetadataSearchResponse[]);
+                } else if (status !== HttpStatusCode.Ok) {
                     browserLogError('fetchLinkedDocuments::Error fetching linked documents', {
                         ...parseErrorInformation(error),
                         caseId: formContext?.customData?.caseId,

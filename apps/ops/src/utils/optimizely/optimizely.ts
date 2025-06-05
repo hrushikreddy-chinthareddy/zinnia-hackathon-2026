@@ -1,14 +1,34 @@
-import { Client, createInstance, OptimizelyDecideOption } from '@optimizely/optimizely-sdk';
+import { Client, createInstance, OptimizelyDecideOption, OptimizelyDecision } from '@optimizely/optimizely-sdk';
 
 import { ENVIRONMENT_NAME, isQA, isUat } from '../environment.helpers';
-import { FEATURE_FLAGS } from './flags';
 import { logError, LoggingContext, parseErrorInformation } from '../server-logging';
+import { FEATURE_FLAGS } from './flags';
 
 export type FeatureFlags = Record<FEATURE_FLAGS, boolean> | Record<string, never>;
+
+export type FeatureFlagVariableType = {
+    [key: string]: OptimizelyDecision & {
+        variables: {
+            [variableKey: string]: {
+                [value: string]: boolean;
+            };
+        };
+    };
+};
 
 const getVeriableByEnviroment = (variableName: string): string => {
     const envSuffix = isQA() ? `-${ENVIRONMENT_NAME.QA}` : isUat() ? `-${ENVIRONMENT_NAME.UAT}` : '';
     return variableName + envSuffix;
+};
+
+export const isFeatureFlagVariableActive = (
+    featureFlagVariables: FeatureFlagVariableType,
+    featureFlag: string,
+    key: string,
+    value: string
+): boolean => {
+    const flagVariableWithEnv = getVeriableByEnviroment(key);
+    return featureFlagVariables?.[featureFlag]?.variables?.[flagVariableWithEnv]?.[value] ?? false;
 };
 
 export const getFeatureFlagByKey = async (
@@ -118,6 +138,46 @@ export class OptimizelyService {
                 ...parseErrorInformation(e),
             });
             return {} as Record<string, unknown>;
+        }
+    }
+
+    public async getAllFeatureFlagVariables(userId: string, loggingContext: LoggingContext): Promise<FeatureFlagVariableType> {
+        try {
+            if (!this.optimizelyClient) {
+                throw new Error('optimizely.ts::getAllFeatureFlagVariables:: instance creation failed');
+            }
+
+            await this.ensureOnReady();
+
+            const attributes = { userId: userId };
+            const user = this.optimizelyClient.createUserContext(userId, attributes);
+
+            if (!user) {
+                throw new Error('failed to create user context');
+            }
+
+            const decisionResults = user.decideAll([
+                OptimizelyDecideOption.ENABLED_FLAGS_ONLY,
+                OptimizelyDecideOption.IGNORE_USER_PROFILE_SERVICE,
+            ]);
+
+            return Object.keys(decisionResults).reduce((acc, curr) => {
+                if (Object.keys(decisionResults[curr].variables).length > 0) {
+                    return {
+                        ...acc,
+                        [curr]: { enabled: decisionResults[curr].enabled, variables: decisionResults[curr].variables },
+                    };
+                }
+                return acc;
+            }, {});
+        } catch (e) {
+            logError('getAllFeatureFlagVariables::Error initializing Optimizely instance', {
+                ...loggingContext,
+                file: 'utils/optimizely/optimizely',
+                function: 'getAllFeatureFlagVariables',
+                ...parseErrorInformation(e),
+            });
+            return {};
         }
     }
 }

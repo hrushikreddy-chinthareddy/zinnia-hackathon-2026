@@ -6,13 +6,14 @@ import { useTranslation } from 'next-i18next';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 
 import Select from '@deps/components/select/select';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaxForm, TaxFormSelectionDetails } from '@deps/models/case/send-tax-forms';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import { MultiselectOption } from '../autocomplete/autocomplete.types';
@@ -40,7 +41,7 @@ const TaxFormsSelection = ({
     const [error, setError] = useState<FormValidationErrors>({});
     const [loader, setLoader] = useState(false);
     const { goToNext } = useWorkflow();
-    const { featureFlags } = useOptimizely();
+    const { featureFlagVariables } = useOptimizely();
     const abortControllerRef = useRef<Map<string, AbortController>>(new Map());
 
     const handleContinue = async () => {
@@ -68,7 +69,13 @@ const TaxFormsSelection = ({
             };
             abortControllerRef.current.set(selected, newAbortController);
 
-            const response = await searchTaxForms(requestData, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3], newAbortController.signal);
+            const useV3 = isFeatureFlagVariableActive(
+                featureFlagVariables,
+                FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
+                OptimizelyVariableKey.Clients,
+                policy?.carrierId?.toLocaleLowerCase() || ''
+            );
+            const response = await searchTaxForms(requestData, useV3, newAbortController.signal);
             if (!response?.data?.items?.length) {
                 setError({ submit: t('sendTaxForms.errors.noTaxForms', { year: selected }) as string });
             }

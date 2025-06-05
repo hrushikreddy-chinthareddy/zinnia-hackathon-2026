@@ -12,11 +12,12 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import CardContainer from '@deps/containers/card-container/card-container';
 import DocumentResultsPagination from '@deps/containers/subpages/documents-sub-page/documents-results-pagination';
 import DocumentsResultsTable from '@deps/containers/subpages/documents-sub-page/documents-results-table';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { Case } from '@deps/models/case/case';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 // try to get any documentIds associated with this case.
 // As we find more ways to associate documents with a case, we can add the ways to retrieve them here.
@@ -38,7 +39,13 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
     const limit = 25;
     const [caseOffset, setCaseOffset] = useState(0);
     const [policyOffset, setPolicyOffset] = useState(0);
-    const { featureFlags } = useOptimizely();
+    const { featureFlagVariables } = useOptimizely();
+    const useV3 = isFeatureFlagVariableActive(
+        featureFlagVariables,
+        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
+        OptimizelyVariableKey.Clients,
+        caseDetails?.carrier?.toLocaleLowerCase() || ''
+    );
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
         if (!caseDetails?.id) {
             return null;
@@ -93,17 +100,16 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
         data: { data: caseDocuments = [], status: caseDocumentsStatusCode, total: totalCaseDocuments = 0 } = {},
         isLoading: loadingCaseDocuments,
     } = useQuery({
-        queryKey: ['documentSearch', caseDocumentSearchBody, limit, caseOffset, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]],
-        queryFn: () => getDocumentSearchResultsQuery(caseDocumentSearchBody, limit, caseOffset, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]),
+        queryKey: ['documentSearch', caseDocumentSearchBody, limit, caseOffset, useV3],
+        queryFn: () => getDocumentSearchResultsQuery(caseDocumentSearchBody, limit, caseOffset, useV3),
     });
 
     const {
         data: { data: policyDocuments = [], status: policyDocumentsStatusCode, total: totalPolicyDocuments = 0 } = {},
         isLoading: loadingPolicyDocuments,
     } = useQuery({
-        queryKey: ['documentSearch', policyDocumentSearchBody, limit, policyOffset, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]],
-        queryFn: () =>
-            getDocumentSearchResultsQuery(policyDocumentSearchBody, limit, policyOffset, featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]),
+        queryKey: ['documentSearch', policyDocumentSearchBody, limit, policyOffset, useV3],
+        queryFn: () => getDocumentSearchResultsQuery(policyDocumentSearchBody, limit, policyOffset, useV3),
         enabled: !!policyDocumentSearchBody?.policyNumber,
     });
 

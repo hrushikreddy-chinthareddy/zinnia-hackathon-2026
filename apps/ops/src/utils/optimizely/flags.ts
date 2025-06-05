@@ -1,4 +1,5 @@
 export type FeatureKeyIdentifier = keyof typeof FEATURE_FLAGS;
+
 export enum FEATURE_FLAGS {
     // XE-3 - Optimizely Spike
     ALTERNATE_SIDE_NAVIGATION = 'policy-management_feature_alternate-side-navigation',

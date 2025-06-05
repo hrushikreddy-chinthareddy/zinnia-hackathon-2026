@@ -46,5 +46,12 @@ pnpm run test-watch
 ```
 
 ### Failing Unit Tests due to Canvas
-- If you cannot run the tests due to an error with `canvas`, run the following `brew` command:
-`brew install pkg-config cairo pango libpng jpeg giflib librsvg`
+
+-   If you cannot run the tests due to an error with `canvas`, run the following `brew` command:
+    `brew install pkg-config cairo pango libpng jpeg giflib librsvg`
+
+### Switching between document v2 to v3
+
+-   To switch document API calls from v2 to v3 format, use the `documents-v3-update-client-wise` flag with supported carriers in the `clients` variable in Optimizely.
+-   Ensure the carrier codes are properly mapped.
+-   Confirm with the EDS team that the v3 API supports the required carrier operations.

@@ -18,7 +18,8 @@
                     "properties": {
                         "sectionHeader": {
                             "type": "object",
-                            "title": "Processing Instructions"
+                            "title": "Processing Instructions",
+                            "description": "Click on the link below to access the submission form. Once the form opens, fill in all the required fields accurately. Review the entered information to ensure everything is correct. Review the entered information to ensure everything is correct. Click Submit to complete the transaction. You will receive a confirmation message upon successful submission"
                         },
                         "process": {
                             "type": "string",
@@ -102,9 +103,6 @@
                         "norender": true
                     },
                     "sectionHeader": {
-                        "props": {
-                            "description": "Click on the link below to access the submission form. Once the form opens, fill in all the required fields accurately. Review the entered information to ensure everything is correct. Review the entered information to ensure everything is correct. Click Submit to complete the transaction. You will receive a confirmation message upon successful submission"
-                        },
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "InstructionsTemplate"

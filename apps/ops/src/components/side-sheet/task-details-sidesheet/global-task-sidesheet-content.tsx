@@ -1,11 +1,12 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { useQuery } from '@tanstack/react-query';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Button, Icon, IconType, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { HttpStatusCode } from 'axios';
 import dayjs from 'dayjs';
 import router from 'next/router';
 import { TFunction, useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
 import Badge from '@deps/components/badge/badge';
@@ -18,9 +19,10 @@ import CustomLoader from '@deps/components/loader/customLoader';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { DocumentsLimit } from '@deps/constants/case';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
+import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime } from '@deps/helpers/string.helpers';
@@ -28,10 +30,11 @@ import { CaseIdentifier } from '@deps/models/case/case';
 import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { EarlyTaskType, TaskSource } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus, TaskLabel, DocumentData, TaskSideSheetProps, TaskComment } from '@deps/models/case/task-instance';
-import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { claimTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
@@ -42,6 +45,8 @@ import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache, writeToCache } from '@deps/utils/cache';
 import { isProd } from '@deps/utils/environment.helpers';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { isAPIErrorInformation, isClaimNextTask, RequestData } from './type-guards';
@@ -97,7 +102,7 @@ const DocumentsListComponent = ({
     t,
     documentsListType,
 }: {
-    documentsList: DocumentData[];
+    documentsList: DocumentWithSource[] | V3DocumentWithSource[];
     task: { carrier: string };
     t: TFunction;
     documentsListType?: string;
@@ -138,19 +143,42 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     const [task, setTask] = useState<ManagementTask | null>(null);
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
     const [claimTaskLoader, setClaimTaskLoader] = useState(false);
-    const [additionalDocuments, setAdditionalDocuments] = useState<DocumentData[]>([]);
     const [showAdditionalDocuments, setShowAdditionalDocuments] = useState(false);
-    const [errorDocuments, setErrorDocuments] = useState(false);
     const [startLoader, setStartLoader] = useState(false);
-    const [additionalLoader, setAdditionalLoader] = useState(false);
     const [errorClaimingTask, setErrorClaimingTask] = useState(false);
     const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] = useState('');
-
+    const { featureFlagVariables } = useOptimizely();
     const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
     const [timer] = useState(performance.now());
+    const limit = 25;
+    const offset = 0;
+
+    const useV3 = isFeatureFlagVariableActive(
+        featureFlagVariables,
+        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
+        OptimizelyVariableKey.Clients,
+        task?.carrier?.toLocaleLowerCase() || ''
+    );
 
     const { user } = useUser();
     const sideSheet = useSideSheetContext();
+
+    const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
+        if (!task?.caseId) {
+            return null;
+        }
+
+        return {
+            parentCarrierCode: task.carrier,
+            documentClassification: SearchRequest.documentClassification.INBOUND,
+            zinniaLiveCaseId: task.caseId,
+        };
+    }, [task]);
+
+    const { data: { data: additionalDocuments = [], status: additionalDocumentsStatusCode } = {}, isLoading: additionalLoader } = useQuery({
+        queryKey: ['documentSideSheetSearch', caseDocumentSearchBody, limit, offset, useV3],
+        queryFn: () => getDocumentSearchResultsQuery(caseDocumentSearchBody, limit, offset, useV3),
+    });
 
     const transformDocument = (documents: DocumentData[]) => {
         const transformedDocuments = documents.map((doc: DocumentData) => ({
@@ -167,40 +195,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             documentSource: DocumentTypeView.Case,
         }));
         return transformedDocuments;
-    };
-
-    const fetchAdditionalDocuments = async ({ carrier, caseId }: { carrier: string; caseId: string }) => {
-        const searchBody: SearchRequest = {
-            documentClassification: SearchRequest.documentClassification.INBOUND,
-            zinniaLiveCaseId: caseId,
-            parentCarrierCode: carrier,
-        };
-        try {
-            setAdditionalLoader(true);
-            const { data, error } = await searchDocumentsV3({ limit: DocumentsLimit, offset: 0, searchBody });
-            if (data?.documents) {
-                const filteredDocuments = transformDocument(data.documents);
-                setAdditionalDocuments(filteredDocuments);
-            } else if (error) {
-                setErrorDocuments(true);
-                browserLogError('fetchAdditionalDocuments::Error fetching additional documents', {
-                    ...parseErrorInformation(error),
-                    carrier,
-                    caseId,
-                    fileName: 'global-task-sidesheet-content',
-                });
-            }
-        } catch (err) {
-            setErrorDocuments(true);
-            browserLogError('fetchAdditionalDocuments::Unexpected error occurred', {
-                ...parseErrorInformation(err),
-                carrier,
-                caseId,
-                fileName: 'global-task-sidesheet-content',
-            });
-        } finally {
-            setAdditionalLoader(false);
-        }
     };
 
     const handleClaimTask = async () => {
@@ -298,9 +292,6 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     useEffect(() => {
         const getTaskData = async () => {
             const data = await getTaskInstance({ taskId });
-            if (data && data.carrier && data.caseId) {
-                fetchAdditionalDocuments({ carrier: data.carrier, caseId: data.caseId });
-            }
             setTask(data);
             setLoading(false);
         };
@@ -554,13 +545,15 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
         </div>
     );
 
+    const additionalCaseDocuments = transformDocument(additionalDocuments || []);
+
     const renderDocuments = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg mt-8">{t('sideSheet.task.tabs.documents')}</label>
             <div className="border-box w-full  mt-2">
                 <DocumentsListComponent
                     additionalLoader={additionalLoader}
-                    errorDocuments={errorDocuments}
+                    errorDocuments={additionalDocumentsStatusCode !== StatusCode.Okay}
                     documentsList={documentsList}
                     task={task}
                     t={t}
@@ -579,8 +572,8 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 {showAdditionalDocuments ? (
                     <DocumentsListComponent
                         additionalLoader={additionalLoader}
-                        errorDocuments={errorDocuments}
-                        documentsList={additionalDocuments}
+                        errorDocuments={additionalDocumentsStatusCode !== StatusCode.Okay}
+                        documentsList={additionalCaseDocuments}
                         task={task}
                         t={t}
                         documentsListType={'additional'}

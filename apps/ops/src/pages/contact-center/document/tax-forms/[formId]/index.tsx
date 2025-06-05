@@ -1,17 +1,19 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { deleteCookie, getCookies } from 'cookies-next';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
 import PageLoader from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { downloadTaxFormById } from '@deps/queries/api/tax-forms';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -25,23 +27,27 @@ interface FormViewerProps extends SegmentTrackedPageProps {
 
 // NOTE!  This FormViewer is now shared between Policy Management and Contact Center.  If substantial changes are made to this page, they should be made to both places
 const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear }: FormViewerProps) => {
+    const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
     const [pdf, setPdf] = useState<string | null>(null);
     const [pdfError, setPdfError] = useState<boolean>(false);
 
     useSegmentPageTracker(user, SegmentPageName.FormViewer, { formId });
-    const { featureFlags } = useOptimizely();
+    const { featureFlagVariables } = useOptimizely();
 
     useEffect(() => {
         const getForms = async () => {
             // short circuit if there are no required params
-            if (![carrierCode, contractNumber, fChar, taxYear, formId, featureFlags].every(Boolean)) return;
+            if (![carrierCode, contractNumber, fChar, taxYear, formId, featureFlagVariables].every(Boolean)) return;
 
             try {
-                const response = await downloadTaxFormById(
-                    formId,
-                    { contractNumber, clientCode: carrierCode, fChar, taxYear },
-                    featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]
+                const useV3 = isFeatureFlagVariableActive(
+                    featureFlagVariables,
+                    FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
+                    OptimizelyVariableKey.Clients,
+                    carrierCode?.toLocaleLowerCase() || ''
                 );
+
+                const response = await downloadTaxFormById(formId, { contractNumber, clientCode: carrierCode, fChar, taxYear }, useV3);
 
                 if (response?.binaryData) {
                     setPdf(response?.binaryData);
@@ -54,10 +60,10 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear 
             }
         };
         getForms();
-    }, [carrierCode, contractNumber, fChar, formId, taxYear, featureFlags]);
+    }, [carrierCode, contractNumber, fChar, formId, taxYear, featureFlagVariables]);
 
     if (!pdf) return <PageLoader />;
-    if (pdfError) return <p>An error occured while loading the PDF.</p>;
+    if (pdfError) return <p>{t('pdfError' as string)}</p>;
 
     return (
         pdf && (

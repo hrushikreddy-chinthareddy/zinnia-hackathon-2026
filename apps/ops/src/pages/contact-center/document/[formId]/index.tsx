@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
@@ -12,12 +13,12 @@ import { downloadFormById } from '@deps/queries/api/c2web';
 import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-
 interface FormViewerProps extends SegmentTrackedPageProps {
     formId: number;
 }
 
 const FormViewer = ({ formId, user }: FormViewerProps) => {
+    const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
     const [pdf, setPdf] = useState<string | null>(null);
     const [pdfError, setPdfError] = useState<boolean>(false);
 
@@ -39,7 +40,7 @@ const FormViewer = ({ formId, user }: FormViewerProps) => {
     }, [formId]);
 
     if (!pdf) return <PageLoader />;
-    if (pdfError) return <p>An error occured while loading the PDF.</p>;
+    if (pdfError) return <p>{t('pdfError' as string)}</p>;
 
     return (
         <iframe

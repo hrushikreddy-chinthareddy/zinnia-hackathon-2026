@@ -2955,7 +2955,8 @@
             "taxDocuments": "Tax documents",
             "taxYear": "Tax year",
             "view": "View",
-            "xToYOfZ": "Results: {{x}}-{{y}} of {{z}}"
+            "xToYOfZ": "Results: {{x}}-{{y}} of {{z}}",
+            "pdfError": "An error occured while loading the PDF."
         },
         "funds": {
             "matchCard": {

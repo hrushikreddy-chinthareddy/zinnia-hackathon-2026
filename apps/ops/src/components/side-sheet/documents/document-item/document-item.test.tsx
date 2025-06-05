@@ -69,6 +69,14 @@ jest.mock('@deps/hooks/useDocumentDownload', () => ({
     isPreviewSupported: jest.requireActual('@deps/hooks/useDocumentDownload').isPreviewSupported,
 }));
 
+jest.mock('@optimizely/optimizely-sdk', () => ({
+    createInstance: jest.fn(),
+    OptimizelyDecideOption: {
+        ENABLED_FLAGS_ONLY: 'ENABLED_FLAGS_ONLY',
+        IGNORE_USER_PROFILE_SERVICE: 'IGNORE_USER_PROFILE_SERVICE',
+    },
+}));
+
 describe('SideSheetDocumentItem', () => {
     it('renders text for unsupported document types', () => {
         const testDate = new Date();

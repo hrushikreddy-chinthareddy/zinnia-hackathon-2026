@@ -11,11 +11,12 @@ import HtmlPreview from '@deps/containers/documents-page/html-preview';
 import ImagePreview from '@deps/containers/documents-page/image-preview';
 import PdfPreview from '@deps/containers/documents-page/pdf-preview';
 import TxtPreview from '@deps/containers/documents-page/txt-preview';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { supportedExtensions, supportedHtmlExtensions, supportedImgExtensions } from '@deps/models/case/document';
 import { getDocumentPreviewV2 } from '@deps/queries/api/client/documents/v2/preview';
 import { getDocumentPreviewV3 } from '@deps/queries/api/client/documents/v3/preview';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
 
@@ -32,13 +33,19 @@ const DocumentViewer = (props: DocumentViewerProps) => {
     const [isLoading, setIsLoading] = useState(true);
     const [fileExtension, setFileExtension] = useState<null | string>(null);
     const [documentBinary, setDocumentBinary] = useState<null | string>(null);
-    const { featureFlags } = useOptimizely();
+    const { featureFlagVariables } = useOptimizely();
     const { id, documentType, carrierCode } = props;
 
     useEffect(() => {
         const getDocument = async () => {
             let download;
-            if (featureFlags[FEATURE_FLAGS.DOCUMENTS_V3]) {
+            const useV3 = isFeatureFlagVariableActive(
+                featureFlagVariables,
+                FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
+                OptimizelyVariableKey.Clients,
+                carrierCode?.toLocaleLowerCase() || ''
+            );
+            if (useV3) {
                 let docClass;
                 switch (documentType) {
                     case DocumentTypeView.Correspondence:
@@ -81,7 +88,7 @@ const DocumentViewer = (props: DocumentViewerProps) => {
         return () => {
             document.removeEventListener('keydown', onKeyDown);
         };
-    }, [carrierCode, documentType, id, featureFlags]);
+    }, [carrierCode, documentType, id, featureFlagVariables]);
 
     if (isLoading) {
         return <PageLoader />;
