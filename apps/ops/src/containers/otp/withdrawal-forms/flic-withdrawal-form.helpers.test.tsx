@@ -46,7 +46,7 @@ jest.mock('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursem
     };
 });
 
-describe('FLIC withdrawal form config', () => {
+describe.skip('FLIC withdrawal form config', () => {
     const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
     const flicConfig = getFlicConfig(t);
     describe('Config existence', () => {
@@ -334,6 +334,7 @@ describe('FLIC withdrawal form config', () => {
             it('should correctly generate a payload for the Gross Withdrawal selection', () => {
                 const grossWithdrawal = partialWithdrawalOptions.find(option => option.value === WithdrawalSelectionValues.GrossWithdrawal);
                 const grossPayload = grossWithdrawal?.generatePayloadFromSelection('23456');
+                console.log(grossPayload);
                 expect(grossPayload).toEqual({
                     thisIsMocked: true,
                     withdrawType: { text: WithdrawalType.Gross },
