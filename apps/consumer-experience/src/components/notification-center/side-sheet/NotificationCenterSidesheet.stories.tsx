@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/react';
 import { Button } from '@zinnia/bloom/components';
 
 import { NotificationCenterSidesheet } from './NotificatonCenterSidesheet';

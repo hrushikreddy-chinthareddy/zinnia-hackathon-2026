@@ -340,21 +340,6 @@ export const isAnnuity = (lineOfBusiness?: LineOfBusiness) => {
   );
 };
 
-/**
- * This fn takes the entire pathname and returns the line of business
- * Get pathname on client by using `usePathname` from 'next/navigation'
- * If you are onthe server you can get pathname from the request object
- * @param pathname - string
- * @returns LineOfBusiness - returns the line of business based on the pathname
- */
-export const lineOfBusinessFromPathname = (pathname: string): LineOfBusiness => {
-  if( pathname.includes(LineOfBusinessPath.ANNUITIES) ) {
-    return LineOfBusiness.ANNUITY;
-  }
-  return LineOfBusiness.LIFE;
-
-}
-
 // TODO: should this default to policies or should we return null if its not one of the two expected?
 export const lineOfBusinessUrlPath = (lineOfBusiness?: LineOfBusiness) => {
   if (!lineOfBusiness) {

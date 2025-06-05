@@ -1,153 +1,58 @@
 'use server';
-import {
-  PartialWithdrawalOneTimeRequest,
-  TransactionFailureResponse,
-  TransactionResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
 import { OneTimePremiumRequest } from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
-import { CLIENT_STATIC_FILES_RUNTIME_REACT_REFRESH } from 'next/dist/shared/lib/constants';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
-import { WithdrawalsState } from '@/components/providers/withdrawals/types';
-import {
-  PolicyRequestInputs,
-} from '@/types/policy';
+import { PolicyRequestInputs } from '@/types/policy';
 import { TransactionEligbility } from '@/types/transactions';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { POLICY_ACKNOWLEDGEMENT_DOC_TYPE } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
-import {
-  CommonLogContext,
-  logError,
-  logTrace,
-  logWarn,
-} from '@/utils/logging/server-logging';
-import { withLogging } from '@/utils/logging/with-logging';
-import { UniformServiceResponse } from '@/utils/serverClientUtils';
+import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
 
 import { ApiResponse } from '..';
-import {
-  transformEligibility,
-  withdrawalStateToPolicyRequestInput,
-} from './transformers';
+import { transformEligibility } from './transformers';
 import { bpmApiBaseUrl, isMockErrorEnabled } from '../api-config';
 import { ServerApi } from '../server-http';
 import { BpmErrorResponse, BpmSuccessResponse } from './types';
 
-const FILE_NAME = 'bpm/index.ts';
+export const getOneTimeWithdrawalEligibility = async (
+  options: PolicyRequestInputs
+) => {
+  const { planCode, policyNumber } = options;
+  const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime/eligibilitycheck`;
+  if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
+    throw new Error('Error fetching withdrawal eligibility.');
+  }
 
-type PWOTWithdrawalBPMSucessResponse = {
-  status: TransactionResponse.status.SUCCESS;
-} & TransactionResponse;
-
-type PWOTWithdrawalBPMErrorResponse = {
-  status: TransactionFailureResponse.status.FAILURE;
-} & TransactionFailureResponse;
-
-type PwotWithdrawalBPMResponse =
-  | PWOTWithdrawalBPMSucessResponse
-  | PWOTWithdrawalBPMErrorResponse;
-
-export const getOneTimeWithdrawalEligibility = withLogging<
-[PolicyRequestInputs], PwotWithdrawalBPMResponse>(
-  async (options: PolicyRequestInputs, loggingCtx: CommonLogContext) => {
-    const { planCode, policyNumber } = options;
-    const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime/eligibilitycheck`;
-    if (isMockErrorEnabled(ApiEndpoints.WITHDRAWAL_ELIGIBILITY)) {
-      throw new Error('Error fetching withdrawal eligibility.');
+  const rawResponse = await ServerApi.post(
+    url,
+    JSON.stringify({ effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT) }),
+    {
+      headers: { 'Content-Type': 'application/json' },
     }
+  );
 
-    const rawResponse = await ServerApi.post(
-      url,
-      JSON.stringify({ effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT) }),
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-      loggingCtx
+  const response = await parseAPIResponse(rawResponse);
+  // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
+  if (rawResponse.status > 400) {
+    logError(
+      'Error fetching withdrawal eligibility',
+      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
     );
 
-    const response: PwotWithdrawalBPMResponse =
-      await parseAPIResponse(rawResponse);
-    // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
-    if (rawResponse.status > 400) {
-      logError(
-        'Error fetching withdrawal eligibility',
-        await logApiNotOkDetails({ rawResponse, parsedResponse: response })
-      );
-
-      throw new Error('Error fetching OneTimeWithdrawalEligibility');
-    }
-
-    if (rawResponse.status === 400 && response.status === 'failure') {
-      logTrace('Withdrawal ineligible reason', {
-        results: response?.validationResult,
-      });
-    }
-
-    return response;
-  },
-  {
-    file: FILE_NAME,
-    functionName: 'getOneTimeWithdrawalEligibility',
+    throw new Error('Error fetching OneTimeWithdrawalEligibility');
   }
-);
 
-export const getOneTimeWithdrawalValidation = withLogging<
-  [PolicyRequestInputs, PartialWithdrawalOneTimeRequest],
-  TransactionResponse
->(
-  async (
-    options: PolicyRequestInputs,
-    pwotRequestDetails: PartialWithdrawalOneTimeRequest,
-    loggingCtx: CommonLogContext
-  ) => {
-    const { planCode, policyNumber } = options;
-    const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime/validation`;
-
-    const rawResponse = await ServerApi.post(
-      url,
-      JSON.stringify(pwotRequestDetails),
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-      loggingCtx
-    );
-
-    const response: PwotWithdrawalBPMResponse =
-      await parseAPIResponse(rawResponse);
-
-    // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
-    if (
-      rawResponse.status > 400 &&
-      response.status === TransactionFailureResponse.status.FAILURE
-    ) {
-      console.error({ rawResponse, response });
-      logError(
-        'Error fetching one time withdrawal validation',
-        await logApiNotOkDetails({ rawResponse, parsedResponse: response })
-      );
-
-      throw new Error('Error fetching PolicyLoanEligibility');
-    }
-
-    if (
-      rawResponse.status === 400 &&
-      response.status === TransactionFailureResponse.status.FAILURE
-    ) {
-      logTrace('one time premium ineligible reason', {
-        results: response?.validationResult,
-      });
-    }
-
-    return response;
-  },
-  {
-    file: CLIENT_STATIC_FILES_RUNTIME_REACT_REFRESH,
-    functionName: 'getOneTimeWithdrawalValidation',
+  if (rawResponse.status === 400) {
+    logTrace('Withdrawal ineligible reason', {
+      results: response?.validationResult,
+    });
   }
-);
+
+  return response;
+};
 
 export const getPolicyLoanEligibility = async (
   options: PolicyRequestInputs
@@ -296,78 +201,22 @@ export const submitOneTimePremiumPayment = async (
   return response;
 };
 
-export const getWithdrawalValidation = withLogging(
-  async (
-    policyInputs: PolicyRequestInputs,
-    pwotRequestDetails: WithdrawalsState,
-    loggingCtx: CommonLogContext
-  ) => {
-    logTrace('getWithdrawalValidation::start', {
-      planCode: policyInputs.planCode,
-      policyNumber: policyInputs.policyNumber,
-    });
-
-    const parsedInput = withdrawalStateToPolicyRequestInput(pwotRequestDetails, loggingCtx.correlationId);
-
-    try {
-      const response = await getOneTimeWithdrawalValidation(
-        policyInputs,
-        parsedInput,
-        loggingCtx
-      );
-      
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response;
-    } catch (error) {
-      logWarn('getWithdrawalValidation::error', { error });
-
-      return {
-        data: null,
-        error: {
-          message: 'Something went wrong',
-          status: 500,
-          name: 'getWithdrawalValidation Error',
-        },
-      };
-    }
-  },
-  {
-    file: FILE_NAME,
-    functionName: 'getWithdrawalValidation',
-  }
-);
-
-type WithdrawalEligibilityResponse = UniformServiceResponse<TransactionEligbility>;
-
-export const getWithdrawalEligibility = withLogging<
-  [PolicyRequestInputs],
-  WithdrawalEligibilityResponse
->(async (
-  policyInputs: PolicyRequestInputs,
-  loggingCtx: CommonLogContext
-) => {
+export const getWithdrawalEligibility = async (
+  policyInputs: PolicyRequestInputs
+): Promise<ApiResponse<TransactionEligbility>> => {
   logTrace('getWithdrawalEligibility::start', {
     planCode: policyInputs.planCode,
     policyNumber: policyInputs.policyNumber,
   });
 
   try {
-    const {data, error} =
-      await getOneTimeWithdrawalEligibility(policyInputs, loggingCtx);
+    const policyWithdrawalEligibility =
+      await getOneTimeWithdrawalEligibility(policyInputs);
 
-      if(!data || data.status !== TransactionFailureResponse.status.SUCCESS) {
-        throw error || new Error('No data returned from BPM');
-      }
-
-      const parsedData = transformEligibility(data)
-
-      return {
-        data: parsedData,
-        error: null,
-      };
+    return {
+      data: transformEligibility(policyWithdrawalEligibility),
+      error: null,
+    };
   } catch (error) {
     logWarn('getWithdrawalEligibility::error', { error });
 
@@ -380,10 +229,7 @@ export const getWithdrawalEligibility = withLogging<
       },
     };
   }
-}, {
-  file: FILE_NAME,
-  functionName: 'getWithdrawalEligibility',
-});
+};
 
 export const getLoanEligibility = async (
   policyInputs: PolicyRequestInputs

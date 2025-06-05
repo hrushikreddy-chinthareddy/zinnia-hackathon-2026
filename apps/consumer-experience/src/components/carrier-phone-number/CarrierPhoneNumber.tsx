@@ -1,6 +1,5 @@
 'use client';
 
-import { useIsClient } from '@xd/hooks/useIsClient';
 import Cookies from 'js-cookie';
 
 import { Link } from '@/components/link/Link';
@@ -25,10 +24,10 @@ const phoneByCarrier = (name?: CompanyName | string) => {
 export const CarrierPhoneNumber = () => {
   const currentTheme = Cookies.get(THEME_COOKIE);
   const phoneNumber = phoneByCarrier(currentTheme);
-  const isClient = useIsClient();
-  if (!isClient || !phoneNumber || phoneNumber.length < 1) {
+  if (!phoneNumber || phoneNumber.length < 1) {
     return (
       <SkeletonLoader
+        className="bg-red-100"
         style={{
           marginBottom: '-4px',
         }}

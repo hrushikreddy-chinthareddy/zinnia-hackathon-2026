@@ -1,5 +1,5 @@
 'use client';
-import { FieldStatus, Label } from '@zinnia/bloom/components';
+import { FieldStatus } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
@@ -215,12 +215,7 @@ export const MfaChallenge = ({
           render={({ field }) => (
             <FieldDataActive
               {...field}
-              id="mfa-code"
-              label={
-                <Label labelFor="mfa-code">
-                  <span className="sr-only">code</span>
-                </Label>
-              }
+              label={<label className="sr-only">Code</label>}
               value={field.value || ''}
               inputMode="numeric"
               fieldStatus={

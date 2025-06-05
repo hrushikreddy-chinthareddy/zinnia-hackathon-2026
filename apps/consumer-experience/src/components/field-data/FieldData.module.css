@@ -1,5 +1,4 @@
 .container {
-  gap: var(--field-container-gap, 0);
   display: flex;
   flex-direction: column;
 }

@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/react';
 import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 
 import { Phones } from '../Phones';

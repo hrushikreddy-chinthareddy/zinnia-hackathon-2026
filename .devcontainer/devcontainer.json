@@ -1,18 +1,18 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-  "name": "Digital-Experience-Monorepo",
-  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  "image": "mcr.microsoft.com/devcontainers/typescript-node",
-  // Features to add to the dev container. More info: https://containers.dev/features.
-  "features": {
-    "ghcr.io/dhoeric/features/act:1": {},
-    "ghcr.io/devcontainers/features/github-cli": {},
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers-extra/features/pnpm:2": {
-      "version": "9.4.0"
-    }
-  },
+	"name": "Digital-Experience-Monorepo",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/dhoeric/features/act:1": {},
+		"ghcr.io/devcontainers/features/github-cli": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/devcontainers-extra/features/pnpm:2": {
+			"version": "9.4.0"
+		}
+	},
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // turned off because it keeps port open even if proj isn't running
@@ -42,8 +42,7 @@
         "maattdd.gitless",
         "vunguyentuan.vscode-postcss",
         "csstools.postcss",
-        "esbenp.prettier-vscode",
-        "wayou.vscode-todo-highlight"
+        "esbenp.prettier-vscode"
       ]
     }
   },
@@ -51,7 +50,7 @@
   "mounts": [
     "source=${localEnv:HOME}/.npmrc,target=/home/node/.npmrc,type=bind,consistency=cached"
   ],
-  "onCreateCommand": "sudo apt update && sudo apt install -y make libtool autoconf automake librsvg2-dev libcairo2-dev libjpeg-dev libjpeg62-turbo-dev libpango1.0-dev libgif-dev build-essential g++",
+  "onCreateCommand": "sudo apt update && sudo apt install -y libcairo2-dev libjpeg62-turbo-dev libpango1.0-dev libgif-dev build-essential g++",
   "postCreateCommand": "bash -i -c 'nvm install && nvm use && npm i -g vercel'",
   "postAttachCommand": "bash -i -c 'nvm use'"
 }

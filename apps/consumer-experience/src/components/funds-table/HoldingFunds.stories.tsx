@@ -1,6 +1,6 @@
 import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { mockIULFundResponse } from '@/services/mocks/funds';
 

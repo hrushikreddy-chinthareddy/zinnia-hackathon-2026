@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/react';
 import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 
 import { NotificationCenter } from './NotificationCenter';

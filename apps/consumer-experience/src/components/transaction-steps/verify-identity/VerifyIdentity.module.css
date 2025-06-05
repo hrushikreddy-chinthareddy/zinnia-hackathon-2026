@@ -7,16 +7,11 @@
     align-self: center;
     width: fit-content;
   }
-
-  /* make this a container query */
-  @media (min-width: 768px) {
-    flex-direction: row;
-  }
 }
 
 /* overriding bloom styles for radio buttons */
 .authenticationOptions {
-  >div {
+  > div {
     flex-direction: row;
     gap: 0;
 

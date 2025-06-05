@@ -1,5 +1,5 @@
 import * as Accordion from '@radix-ui/react-accordion';
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/react';
 import { Button } from '@zinnia/bloom/components';
 
 import AccordionDetails from './AccordionDetails';

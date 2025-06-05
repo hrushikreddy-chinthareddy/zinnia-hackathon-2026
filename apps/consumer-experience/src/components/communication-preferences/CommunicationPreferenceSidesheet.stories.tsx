@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/react';
 import { Country, EmailType, State } from '@zinnia/api-types/types/sor';
 
 import { PolicyProfile } from '@/types/policy';
