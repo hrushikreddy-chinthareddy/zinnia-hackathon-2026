@@ -22,6 +22,8 @@ declare global {
       JWT_SECRET: string;
       AUTH0_CLIENT_ID: string;
       AUTH0_CLIENT_SECRET: string;
+      AUTH0_CLIENT_ID_WELB: string;
+      AUTH0_CLIENT_SECRET_WELB: string;
       NEXT_PUBLIC_AUTH0_BASE_URL: string;
       AUTH0_COOKIE_SECURE: string;
       AUTH0_MANAGEMENT_API_AUDIENCE: string;

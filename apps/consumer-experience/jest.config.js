@@ -18,5 +18,7 @@ module.exports = createJestConfig({
     '^.+\\.(svg)$': '<rootDir>/src/jest/transform/svgTransform.tsx',
     '@zinnia/bloom/internal/components':
       '<rootDir>/node_modules/@zinnia/bloom/src/components',
+    '@panva/hkdf': '<rootDir>/node_modules/@panva/hkdf',
+    'jose': '<rootDir>/node_modules/jose',
   },
 });

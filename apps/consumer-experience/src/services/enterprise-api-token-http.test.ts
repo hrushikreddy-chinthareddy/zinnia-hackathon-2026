@@ -2,9 +2,18 @@ import { EnterpriseTokenApi } from './enterprise-api-token-http';
 import { logApiNotOkDetails } from '../utils/api';
 import { logError } from '../utils/logging/server-logging';
 
+jest.mock('next/headers', () => ({
+  cookies: () => ({
+    get: jest.fn(),
+    has: jest.fn(),
+  }),
+}));
+
 jest.mock('../utils/logging/server-logging', () => ({
   logError: jest.fn(),
   logTrace: jest.fn(),
+  logWarn: jest.fn(),
+  getUserInfoFromSession: jest.fn(),
 }));
 
 jest.mock('../utils/api', () => ({

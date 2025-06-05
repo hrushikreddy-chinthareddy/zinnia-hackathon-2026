@@ -8,7 +8,6 @@ import { NextResponse } from 'next/server';
 import { PartialNextUrl } from '@/types';
 import {
   AccessTokenInfo,
-  Auth0SessionToken,
   CookieConfig,
   GetAccessTokenResult,
   OauthToken,
