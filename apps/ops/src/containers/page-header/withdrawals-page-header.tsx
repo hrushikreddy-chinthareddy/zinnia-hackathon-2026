@@ -54,6 +54,7 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
         amountEligibleForWithdrawal,
         netSurrenderValue,
         maximumWithdrawalAmount,
+        freeWithdrawalAmount,
         annualWithdrawalsRemaining,
         annualWithdrawalsTaken,
         allTimeWithdrawalAmount,
@@ -143,7 +144,7 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
                                         variant={LabelVariant.FieldLabel}
                                     />
                                     <Content
-                                        details={numberFormatify(maximumWithdrawalAmount as number) || DEFAULT_ERROR_STRING}
+                                        details={numberFormatify(freeWithdrawalAmount as number) || DEFAULT_ERROR_STRING}
                                         variant={ContentVariant.Value}
                                     />
                                     <Content
