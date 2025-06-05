@@ -18,11 +18,11 @@ import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 
-import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
 import { Loader } from '../page-loader';
 import { RadioItem } from '../radio/radio';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
+import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 
 const getDefaultCommunicationType = (communicationOptions?: RadioItem[]) => {
     if (!communicationOptions) return '';
@@ -124,7 +124,20 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
         try {
             setLoader(true);
 
-            const response = await submitRequest(state);
+            const normalizedState = {
+                ...state,
+                correspondence: {
+                    ...state.correspondence,
+                    recipients:
+                        state.correspondence?.type === 'Email'
+                            ? state.correspondence?.recipients?.map(email => email?.toLowerCase().trim()) || []
+                            : state.correspondence?.recipients ?? [],
+                },
+            };
+
+
+            const response = await submitRequest(normalizedState);
+
             setLoader(false);
             dispatch({
                 type: CorrespondenceAction.Confirm,
