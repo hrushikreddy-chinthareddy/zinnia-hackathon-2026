@@ -1,10 +1,10 @@
 'use client';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { useParams, usePathname } from 'next/navigation';
 import { useMemo } from 'react';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Layout.module.css';
 import { HeaderPolicyDetails } from '@/components/policy-detail-page-header/header-policy-details/HeaderPolicyDetails';
+import { lineOfBusinessFromPathname } from '@/utils/data';
 
 import { Breadcrumbs } from './Breadcrumbs';
 import {
@@ -46,7 +46,7 @@ export const PolicyDetailPageHeader = () => {
             className={styles.policyDetails}
             planCode={params.planCode}
             policyNumber={params.policyNumber}
-            lineOfBusiness={LineOfBusiness.LIFE}
+            lineOfBusiness={lineOfBusinessFromPathname(pathname)}
           />
         </div>
       </div>

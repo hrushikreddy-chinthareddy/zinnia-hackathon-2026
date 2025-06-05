@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType } from '@zinnia/bloom/components';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 
 import { Link } from '@/components/link/Link';
 import styles from '@/components/nav/Nav.module.css';
@@ -13,6 +13,7 @@ import {
   searchCasesByPolicyNumber,
 } from '@/queries/case-queries';
 import { QueryKeys } from '@/queries/query-keys';
+import { LineOfBusinessPath } from '@/types';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 export const NotificationIcon = () => {
@@ -22,6 +23,11 @@ export const NotificationIcon = () => {
     featureFlags?.[FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS];
 
   const { policyNumber, planCode } = useParams();
+  const lineOfBusinessPath = usePathname().includes(
+    LineOfBusinessPath.ANNUITIES
+  )
+    ? LineOfBusinessPath.ANNUITIES
+    : LineOfBusinessPath.POLICIES;
 
   const { data: casesInException = [], isLoading: _casesInExceptionLoading } =
     useQuery({
@@ -89,7 +95,7 @@ export const NotificationIcon = () => {
   return (
     <Link
       isInternal
-      href={`/coverage/policies/${planCode}/${policyNumber}/notifications`}
+      href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/notifications`}
       className={styles.notification}
     >
       <Icon className={styles.bell} type={IconType.ALERT} />
