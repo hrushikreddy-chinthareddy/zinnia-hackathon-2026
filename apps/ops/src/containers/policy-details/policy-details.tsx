@@ -1,26 +1,54 @@
 import { useContext } from 'react';
 
 import PolicyDetailsHeaderCard from '@deps/containers/page-header/policy-details-header';
-import CoveredPartiesCard from '@deps/containers/shared-cards/covered-parties/covered-parties-card';
+import { AnnuityApplicationDetailsCard } from '@deps/containers/policy-details/cards/application-details/annuity-application-details-card.tsx';
+import { PolicyApplicationDetailsCard } from '@deps/containers/policy-details/cards/application-details/policy-application-details-card';
+import ProductDetailsCard from '@deps/containers/policy-details/cards/product-details-card';
+import { AnnuityTimelineCard, LifeTimelineCard } from '@deps/containers/policy-details/cards/timeline-card';
+import { AnnuitantCard, InsuredCard } from '@deps/containers/shared-cards/covered-parties/covered-parties-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 
-import ProductDetailsCard from './cards/product-details-card';
-import SalesChannelCard from './cards/sales-channel-card';
-import TimelineCard from './cards/timeline-card';
-
-export const PolicyDetailsContainer = () => {
+const AnnuityPolicyDetailsContainer = () => {
     const { policyDetails } = useContext(PolicyData);
 
     return (
         <>
             <PolicyDetailsHeaderCard policy={policyDetails} />
             <hr className="border-t-2 border-gray-200" />
-            <CoveredPartiesCard policy={policyDetails} />
-            <TimelineCard policy={policyDetails} />
-            <SalesChannelCard policy={policyDetails} />
+            <AnnuitantCard policy={policyDetails} />
+            <AnnuityTimelineCard policy={policyDetails} />
+            <AnnuityApplicationDetailsCard policy={policyDetails} />
             <ProductDetailsCard policy={policyDetails} />
         </>
     );
 };
 
-export default PolicyDetailsContainer;
+const LifePolicyDetailsContainer = () => {
+    const { policyDetails } = useContext(PolicyData);
+
+    return (
+        <>
+            <PolicyDetailsHeaderCard policy={policyDetails} />
+            <hr className="border-t-2 border-gray-200" />
+            <InsuredCard policy={policyDetails} />
+            <LifeTimelineCard policy={policyDetails} />
+            <PolicyApplicationDetailsCard policy={policyDetails} />
+            <ProductDetailsCard policy={policyDetails} />
+        </>
+    );
+};
+
+const PolicyDetailsSubPage = () => {
+    const { policyDetails } = useContext(PolicyData);
+    if (policyDetails.isAnnuity) {
+        return <AnnuityPolicyDetailsContainer />;
+    }
+
+    if (policyDetails.isLife) {
+        return <LifePolicyDetailsContainer />;
+    }
+
+    return <LifePolicyDetailsContainer />;
+};
+
+export default PolicyDetailsSubPage;

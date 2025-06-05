@@ -2842,10 +2842,21 @@
                 "ageAtIssue": "Age at issue",
                 "annuitant": "Annuitant",
                 "currentAge": "Current age",
+                "duration": "Duration: {{duration}}",
+                "flatExtraNull": "Flat extra",
+                "flatExtraTooltip": "Flat Extras are either a temporary of permanent addition cost added to  the overall cost of premiums for individuals who may have higher risks because of their health, job, hobbies, or lifestyle.",
+                "flatExtraType": "{{type}} flat extra",
                 "fullName": "Full name",
                 "insured": "Insured",
+                "none": "None",
+                "PERM": "Permanent",
+                "PERMANENT": "Permanent",
                 "riskClassTooltip": "Owners are grouped by how risky they are to insure based on health and lifestyle. Less risky=better risk class=lower premium. And vice versa.",
                 "riskClass": "Risk class",
+                "tableRating": "Table rating",
+                "tableRatingTooltip": "Table ratings increase the overall cost of premiums for individuals who may have higher risks because of their health, job, hobbies, or lifestyle.",
+                "TEMP": "Temporary",
+                "TEMPORARY": "Temporary",
                 "yearsOld_one": "{{count}} year old",
                 "yearsOld_other": "{{count}} years old",
                 "yearsOld_zero": "-- years old"
@@ -2870,12 +2881,18 @@
                 "policyTimeline": "Policy Timeline",
                 "freeLookExpiration": "Free look expiration"
             },
-            "salesChannel": {
-                "salesChannel": "Sales Channel",
-                "issueState": "Issue state",
+            "applicationDetails": {
+                "agentEmailAddress": "Agent email address",
                 "agentName": "Agent name",
                 "agentPhoneNumber": "Agent phone number",
-                "agentEmailAddress": "Agent email address"
+                "applicationDetails": "Application Details",
+                "applicationSource": "Application source",
+                "applicationSourceDetails": "Application source details",
+                "issueState": "Issue state",
+                "originalContractNumber": "Original contract number",
+                "originalPolicyNumber": "Original policy number",
+                "originalPolicyNumberTooltip": "Original Policy Number identifies the original parent linked through conversion, continuation, or replacement.",
+                "salesChannel": "Sales Channel"
             },
             "productDetails": {
                 "carrierName": "Carrier name",

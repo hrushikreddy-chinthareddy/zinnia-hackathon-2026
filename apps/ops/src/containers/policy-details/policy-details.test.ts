@@ -3,7 +3,7 @@ import { Policy } from '@zinnia/api-types/types/sor';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 
-import { buildTransactionCards, getSalesChannelCardData, mapPolicyTimelineValues } from './policy-details.helpers';
+import { buildTransactionCards, getApplicationDetailsData, mapPolicyTimelineValues } from './policy-details.helpers';
 
 const tSpy = jest.fn(str => str);
 
@@ -80,7 +80,7 @@ describe('policy details helpers', () => {
             policyDetails = new PolicyDetails(policy as Policy);
         });
         it('should properly map sales channel', () => {
-            const result = getSalesChannelCardData(policyDetails, tSpy);
+            const result = getApplicationDetailsData(policyDetails, tSpy);
             expect(result).toEqual({
                 issueState: 'New York',
                 salesChannel: 'policy.distributionType.thirdPartyDirectToConsumer',

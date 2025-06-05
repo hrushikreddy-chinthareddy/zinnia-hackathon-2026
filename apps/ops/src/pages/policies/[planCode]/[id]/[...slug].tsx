@@ -17,7 +17,6 @@ import LoansSubPage from '@deps/containers/loans-sub-page/loans-sub-page';
 import PeopleSubPage from '@deps/containers/people-sub-page';
 import PersonSubPage from '@deps/containers/person-sub-page';
 import PolicyDetailsContainer from '@deps/containers/policy-details/policy-details';
-import PolicyDetailsSubPage from '@deps/containers/policy-details-sub-page';
 import PremiumsSubPage from '@deps/containers/premiums-sub-page';
 import RidersAndFeaturesSubPage from '@deps/containers/riders-and-features-sub-page/riders-and-features-sub-page';
 import ActivitySubPage from '@deps/containers/subpages/activity-sub-page/activity-sub-page';
@@ -107,7 +106,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps)
 
     // policies/id/... with no slug
     if (!slug || slug.length === 0) {
-        subPageContent = <PolicyDetailsSubPage />;
+        subPageContent = <PolicyDetailsContainer />;
         subPageTitleKey = 'policyDetails';
     } else if (Array.isArray(slug)) {
         // policies/id/slug

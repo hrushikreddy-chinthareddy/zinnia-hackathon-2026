@@ -1,3 +1,4 @@
+import { FlatExtra, FlatExtraType, SubStandardRating } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -6,16 +7,78 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { getRiskClass } from '@deps/helpers/party-info-helpers';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { getRiskClass, getSubstandardRating } from '@deps/helpers/party-info-helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
+const TableRating = ({ substandardRating }: { substandardRating: SubStandardRating | undefined }) => {
+    const { t } = useTranslation();
+    return (
+        <div>
+            <Label
+                label={t('policy.detailCards.coveredParty.tableRating')}
+                variant={LabelVariant.FieldLabel}
+                tooltipBody={t('policy.detailCards.coveredParty.tableRatingTooltip')}
+                tooltipTitle={t('policy.detailCards.coveredParty.tableRating')}
+            />
+            <Content
+                details={substandardRating ? getSubstandardRating(substandardRating, t) : DEFAULT_ERROR_STRING}
+                variant={ContentVariant.BodySm}
+            />
+        </div>
+    );
+};
+
+const FlatExtras = ({ flatExtras }: { flatExtras?: FlatExtra[] }) => {
+    const { t } = useTranslation(undefined, { keyPrefix: 'policy.detailCards.coveredParty' });
+    if (!flatExtras?.length) {
+        return (
+            <div>
+                <Label
+                    label={t('flatExtraNull')}
+                    variant={LabelVariant.FieldLabel}
+                    tooltipTitle={t('flatExtraNull')}
+                    tooltipBody={t('flatExtraTooltip')}
+                />
+                <Content details={t('none') as string} variant={ContentVariant.BodySm} />
+            </div>
+        );
+    }
+
+    return flatExtras.map((flatExtra, index) => {
+        const { flatExtraType, flatExtraAmount, flatExtraDuration } = flatExtra;
+        const flatExtraTitle = flatExtraType ? t('flatExtraType', { type: t(flatExtraType) }) : t('flatExtraNull');
+        return (
+            <div key={index}>
+                <Label
+                    label={flatExtraTitle}
+                    variant={LabelVariant.FieldLabel}
+                    tooltipTitle={flatExtraTitle}
+                    tooltipBody={t('flatExtraTooltip')}
+                />
+                <Content
+                    details={flatExtraAmount ? numberFormatify(flatExtraAmount) : (t('none') as string)}
+                    variant={ContentVariant.BodySm}
+                />
+                {(flatExtraType === FlatExtraType.TEMP || flatExtraType === ('TEMPORARY' as FlatExtraType)) && (
+                    <Content
+                        className="text-gray-600"
+                        details={t('duration', { duration: flatExtraDuration || DEFAULT_ERROR_STRING }) as string}
+                        variant={ContentVariant.Caption}
+                    />
+                )}
+            </div>
+        );
+    });
+};
+
+export const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.detailCards.coveredParty' });
 
     const { ageInYears, fullName = DEFAULT_ERROR_STRING, partyId } = policy.coveredPeople?.[0] || {};
-    const { issueAge, riskClass } = policy.coverage.getCoverageParticipantByPartyId(partyId) || {};
+    const { issueAge, riskClass, substandardRating, flatExtra } = policy.coverage.getCoverageParticipantByPartyId(partyId) || {};
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-200">
@@ -46,6 +109,10 @@ const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
                     </div>
                 </div>
                 <div className="flex flex-col gap-8 lg:flex-row">
+                    <TableRating substandardRating={substandardRating} />
+                    <FlatExtras flatExtras={flatExtra} />
+                </div>
+                <div className="flex flex-col gap-8 lg:flex-row">
                     <div>
                         <Label label={t('currentAge')} variant={LabelVariant.FieldLabel} />
                         <Content
@@ -72,7 +139,7 @@ const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
     );
 };
 
-const AnnuitantCard = ({ policy }: { policy: PolicyDetails }) => {
+export const AnnuitantCard = ({ policy }: { policy: PolicyDetails }) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.detailCards.coveredParty' });
 
     return (

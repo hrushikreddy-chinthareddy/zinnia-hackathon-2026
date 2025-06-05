@@ -1,7 +1,7 @@
 import { DistributionType, FeatureType } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
-import { SalesChannelCardData } from '@deps/containers/policy-details/cards/sales-channel-card';
+import { ApplicationDetailsCardData } from '@deps/containers/policy-details/cards/application-details/annuity-application-details-card.tsx';
 import { PolicyTimelineCardData } from '@deps/containers/policy-details/cards/timeline-card';
 import { TransactionCardProps } from '@deps/containers/policy-details/cards/transaction-card';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -115,9 +115,12 @@ export const mapPolicyTimelineValues = (policy: PolicyDetails, t: TFunction): Po
     };
 };
 
-export const getSalesChannelCardData = (policy: PolicyDetails, t: TFunction): SalesChannelCardData => {
+export const getApplicationDetailsData = (policy: PolicyDetails, t: TFunction): ApplicationDetailsCardData => {
     return {
-        issueState: getStateName(policy?.issueState) ?? DEFAULT_ERROR_STRING,
+        issueState: getStateName(policy?.issueState),
         salesChannel: mapDistribution(policy.distribution, t),
+        originalPolicyNumber: policy?.policy?.parentPolicyNumber ?? DEFAULT_ERROR_STRING,
+        applicationSource: policy?.policy?.policySource ?? DEFAULT_ERROR_STRING,
+        applicationSourceDetails: policy?.policy?.policySourceDescription ?? DEFAULT_ERROR_STRING,
     };
 };

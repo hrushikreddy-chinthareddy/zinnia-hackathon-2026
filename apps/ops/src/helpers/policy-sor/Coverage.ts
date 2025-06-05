@@ -15,6 +15,7 @@ export class Coverage {
             if (coverageLayer.coverageType) {
                 this.coverageLayerByType[coverageLayer.coverageType] = coverageLayer;
             }
+            // BPB - this assumes that coverageParticipants won't be duplicated across coverageLayers.  Potentially a bad assumption, and may be worth reworking in the future
             if (coverageLayer.coverageParticipants) {
                 coverageLayer.coverageParticipants.forEach(coverageParticipant => {
                     this.allCoverageParticipants.push(coverageParticipant);

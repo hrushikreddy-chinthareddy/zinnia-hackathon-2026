@@ -2787,13 +2787,24 @@
                 "startDate": "Fecha de inicio"
             },
             "coveredParty": {
-                "ageAtIssue": "Edad al emitir",
-                "annuitant": "Anualista",
+                "ageAtIssue": "Edad en la emisión",
+                "annuitant": "Rentista",
                 "currentAge": "Edad actual",
+                "duration": "Duración: {{duration}}",
+                "flatExtraNull": "Cargo adicional",
+                "flatExtraTooltip": "Los cargos adicionales son un costo temporal o permanente agregado al costo total de las primas para individuos que pueden presentar riesgos más altos debido a su salud, trabajo, pasatiempos o estilo de vida.",
+                "flatExtraType": "{{type}} cargo adicional",
                 "fullName": "Nombre completo",
                 "insured": "Asegurado",
-                "riskClassTooltip": "Los propietarios se agrupan según el riesgo que representan para asegurar basado en su salud y estilo de vida. Menos riesgo = mejor clase de riesgo = prima más baja. Y viceversa.",
+                "none": "Ninguno",
+                "PERM": "Permanente",
+                "PERMANENT": "Permanente",
+                "riskClassTooltip": "Los asegurados se agrupan según su riesgo de ser asegurados según su salud y estilo de vida. Menos riesgo = mejor clase de riesgo = prima más baja. Y viceversa.",
                 "riskClass": "Clase de riesgo",
+                "tableRating": "Clasificación de tabla",
+                "tableRatingTooltip": "Las clasificaciones de tabla aumentan el costo total de las primas para individuos que pueden presentar riesgos más altos debido a su salud, trabajo, pasatiempos o estilo de vida.",
+                "TEMP": "Temporal",
+                "TEMPORARY": "Temporal",
                 "yearsOld_one": "{{count}} año",
                 "yearsOld_other": "{{count}} años",
                 "yearsOld_zero": "-- años"
@@ -2817,12 +2828,18 @@
                 "policyLengthTooltip": "La duración de la póliza es exactamente lo que suena: es cuánto tiempo dura la póliza. Algunas pólizas tienen un término fijo (mostrado en número de años) y una fecha de finalización, mientras que otras duran hasta la muerte del asegurado.",
                 "policyTimeline": "Cronología de la póliza"
             },
-            "salesChannel": {
-                "salesChannel": "Canal de ventas",
-                "issueState": "Estado de emisión",
+            "applicationDetails": {
+                "agentEmailAddress": "Correo electrónico del agente",
                 "agentName": "Nombre del agente",
                 "agentPhoneNumber": "Número de teléfono del agente",
-                "agentEmailAddress": "Correo electrónico del agente"
+                "applicationDetails": "Detalles de la solicitud",
+                "applicationSource": "Fuente de la solicitud",
+                "applicationSourceDetails": "Detalles de la fuente de la solicitud",
+                "issueState": "Estado de emisión",
+                "originalContractNumber": "Número de contrato original",
+                "originalPolicyNumber": "Número de póliza original",
+                "originalPolicyNumberTooltip": "El Número de Póliza Original identifica el padre original vinculado a través de conversión, continuación o reemplazo.",
+                "salesChannel": "Canal de ventas"
             },
             "productDetails": {
                 "carrierName": "Nombre de la aseguradora",

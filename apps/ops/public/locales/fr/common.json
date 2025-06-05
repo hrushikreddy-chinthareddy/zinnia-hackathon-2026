@@ -2789,16 +2789,27 @@
                 "startDate": "Date de début"
             },
             "coveredParty": {
-                "ageAtIssue": "Âge à la souscription",
-                "annuitant": "Annuitant",
+                "ageAtIssue": "Âge à l'émission",
+                "annuitant": "Rentier",
                 "currentAge": "Âge actuel",
+                "duration": "Duración: {{duration}}",
+                "flatExtraNull": "Flat extra",
+                "flatExtraTooltip": "Les flat extras sont soit un coût temporaire, soit un coût permanent ajouté au coût total des primes pour les individus qui peuvent présenter des risques plus élevés en raison de leur santé, de leur travail, de leurs loisirs ou de leur mode de vie.",
+                "flatExtraType": "{{type}} flat extra",
                 "fullName": "Nom complet",
                 "insured": "Assuré",
-                "riskClassTooltip": "Les propriétaires sont regroupés en fonction de leur niveau de risque à assurer, basé sur leur santé et leur mode de vie. Moins de risques = meilleure classe de risque = prime plus basse. Et vice versa.",
+                "none": "Aucun",
+                "PERM": "Permanent",
+                "PERMANENT": "Permanent",
+                "riskClassTooltip": "Les assurés sont regroupés en fonction de leur risque d'être assurés en fonction de leur santé et de leur mode de vie. Moins risqué = meilleure classe de risque = prime plus basse. Et vice versa.",
                 "riskClass": "Classe de risque",
-                "yearsOld_one": "{{count}} an",
-                "yearsOld_other": "{{count}} ans",
-                "yearsOld_zero": "-- ans"
+                "tableRating": "Table d'évaluation",
+                "tableRatingTooltip": "Les table d'évaluation augmentent le coût total des primes pour les individus qui peuvent présenter des risques plus élevés en raison de leur santé, de leur travail, de leurs loisirs ou de leur mode de vie.",
+                "TEMP": "Temporaire",
+                "TEMPORARY": "Temporaire",
+                "yearsOld_one": "{{count}} année",
+                "yearsOld_other": "{{count}} années",
+                "yearsOld_zero": "-- années"
             },
             "policyTimeline": {
                 "ageOfContract": "Âge du contrat",
@@ -2819,12 +2830,18 @@
                 "policyLengthTooltip": "La durée de la police correspond à sa durée de validité. Certaines polices ont une durée déterminée (exprimée en nombre d'années) et une date de fin, tandis que d'autres durent jusqu'au décès de l'assuré.",
                 "policyTimeline": "Chronologie de la police"
             },
-            "salesChannel": {
-                "issueState": "État de souscription",
-                "salesChannel": "Canal de vente",
+            "applicationDetails": {
+                "agentEmailAddress": "Adresse e-mail de l'agent",
                 "agentName": "Nom de l'agent",
                 "agentPhoneNumber": "Numéro de téléphone de l'agent",
-                "agentEmailAddress": "Adresse e-mail de l'agent"
+                "applicationDetails": "Détails de la demande",
+                "applicationSource": "Source de l'application",
+                "applicationSourceDetails": "Détails de la source de l'application",
+                "issueState": "État de délivrance",
+                "originalContractNumber": "Numéro de contrat original",
+                "originalPolicyNumber": "Numéro de police d'origine",
+                "originalPolicyNumberTooltip": "Le Numéro de Police d'Origine identifie le parent original lié par conversion, continuation ou remplacement.",
+                "salesChannel": "Canal de vente"
             },
             "productDetails": {
                 "carrierName": "Nom de l'assureur",

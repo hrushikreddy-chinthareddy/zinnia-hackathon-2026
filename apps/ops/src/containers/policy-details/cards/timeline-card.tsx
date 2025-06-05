@@ -6,11 +6,11 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 import { mapPolicyTimelineValues } from '../policy-details.helpers';
 import EverlyIul from './policy-timeline-details/everly-iul';
 import EverlyUl from './policy-timeline-details/everly-ul';
-import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 const BASE_KEY = 'policy.detailCards.policyTimeline.';
 export interface PolicyTimelineCardData {
@@ -24,7 +24,7 @@ export interface PolicyTimelineCardData {
     policyYearsLeft: string | null;
 }
 
-function PolicyTimelineCard({ policy }: BasePolicyComponentArgs) {
+export function LifeTimelineCard({ policy }: BasePolicyComponentArgs) {
     const { t } = useTranslation();
     const policyTimelineCardData = mapPolicyTimelineValues(policy, t);
 
@@ -40,7 +40,7 @@ function PolicyTimelineCard({ policy }: BasePolicyComponentArgs) {
     );
 }
 
-function ContractTimelineCard({ policy }: BasePolicyComponentArgs) {
+export function AnnuityTimelineCard({ policy }: BasePolicyComponentArgs) {
     const { t } = useTranslation();
     const { maturityDate, issueDate, policyAge, freeLookCancelDate } = mapPolicyTimelineValues(policy, t);
 
@@ -73,7 +73,7 @@ function ContractTimelineCard({ policy }: BasePolicyComponentArgs) {
 
 export default function TimelineCard({ policy }: BasePolicyComponentArgs) {
     if (policy.isAnnuity) {
-        return <ContractTimelineCard policy={policy} />;
+        return <AnnuityTimelineCard policy={policy} />;
     }
-    return <PolicyTimelineCard policy={policy} />;
+    return <LifeTimelineCard policy={policy} />;
 }
