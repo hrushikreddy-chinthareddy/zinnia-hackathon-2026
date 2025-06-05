@@ -82,11 +82,10 @@ export const spousalSignatureStateCodes = [
 
 export default function getFlicConfig(t: TFunction, qualType: string = '', isLC: boolean = true) {
     const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
-        const programTypeText = formProgram?.programType?.text || '';
-        if (programTypeText === ProgramType.TotalFreeAmt) {
+        if (formProgram?.programType?.text === ProgramType.TotalFreeAmt) {
             return { selectedOption: WithdrawalSelectionValues.TotalFreeWithdrawal, amount: '' };
         }
-        if (programTypeText === ProgramType.WITHDRAWAL) {
+        if (formProgram?.program?.text === ProgramType.Withdrawal) {
             const amount = formProgram?.partialAmount?.text || '';
             return {
                 selectedOption:
@@ -140,6 +139,7 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                     programType: { text: ProgramType.NetWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
                     partialNetAmount: { text: val, amountType: AmountType.Dollar },
+                    programSubType: { text: ProgramType.NetWithdrawal },
                 };
             },
         },
@@ -154,6 +154,7 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                     programType: { text: ProgramType.GrossWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
                     partialGrossAmount: { text: val, amountType: AmountType.Dollar },
+                    programSubType: { text: ProgramType.GrossWithdrawal },
                 };
             },
         },

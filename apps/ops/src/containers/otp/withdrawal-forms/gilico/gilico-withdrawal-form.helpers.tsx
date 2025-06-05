@@ -76,11 +76,10 @@ export const spousalSignatureStateCodes = [
 
 export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) {
     const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
-        const programTypeText = formProgram?.programType?.text || '';
-        if (programTypeText === ProgramType.TotalFreeAmt) {
+        if (formProgram?.programType?.text === ProgramType.TotalFreeAmt) {
             return { selectedOption: WithdrawalSelectionValues.TotalFreeWithdrawal, amount: '' };
         }
-        if (programTypeText === ProgramType.WITHDRAWAL) {
+        if (formProgram?.program?.text === ProgramType.Withdrawal) {
             const amount = formProgram?.partialAmount?.text || '';
             return {
                 selectedOption:
