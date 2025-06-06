@@ -11,11 +11,10 @@ import { usePathname } from 'next/navigation';
 import { Link } from '@/components/link/Link';
 import { PolicyRequestInputs, PolicyStatusDetail } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import {
-  EVERLY_CONTACT_PHONE_NUMBER,
-  lineOfBusinessUrlPath,
-} from '@/utils/data';
+import { lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+
+import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 
 interface PolicyStatusAlertBannerProps extends PolicyRequestInputs {
   lineOfBusiness?: LineOfBusiness;
@@ -85,14 +84,7 @@ export const PolicyStatusAlertBanner = ({
             <span className="typography-nav-links-sm-inline">
               You’re still in the free look period, a {policyStatusData.period}
               -day window after policy issuance when you can cancel without
-              penalty. If you'd like to cancel, call{' '}
-              <Link
-                isNativeAnchorTag
-                href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}
-              >
-                {EVERLY_CONTACT_PHONE_NUMBER}
-              </Link>
-              .
+              penalty. If you'd like to cancel, call <CarrierPhoneNumber />.
             </span>
           ),
           variant: BannerVariant.Information,
