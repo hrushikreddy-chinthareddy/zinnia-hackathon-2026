@@ -1,3 +1,4 @@
+import { CarrierLogo, CarrierName } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 
@@ -18,23 +19,41 @@ interface Props {
   footer?: ReactNode;
 }
 
-const logo = (company: CompanyName) => {
-  switch (company) {
-    case CompanyName.EVERLY:
-      return <EverlyLogo alt="Everly Logo" />;
-    case CompanyName.WELLABE:
-      return <WellabeLogo alt="Wellabe Logo" color="#ffc107" fill="#ffc107" />;
-    default:
-      return null;
-  }
-};
+interface CarrierConfig {
+  logo: ReactNode;
+  theme?: string;
+  showBranding: boolean;
+}
 
-// If there's a new company AND you have the branding available, add a key/value here
-const themeClasses: Record<CompanyName, string | undefined> = {
-  [CompanyName.EVERLY]: styles.everly,
-  [CompanyName.WELLABE]: styles.wellabe,
-  [CompanyName.FARMERS]: styles.farmers,
-  [CompanyName.ZINNIA]: styles.zinnia,
+const getCarrierConfig = (carrier: CompanyName): CarrierConfig => {
+  switch (carrier) {
+    case CompanyName.EVERLY:
+      return {
+        logo: <EverlyLogo alt="Everly Logo" />,
+        theme: styles.everly,
+        showBranding: true,
+      };
+    case CompanyName.WELLABE:
+      return {
+        logo: <WellabeLogo alt="Wellabe Logo" color="#ffc107" fill="#ffc107" />,
+        theme: styles.wellabe,
+        showBranding: true,
+      };
+    case CompanyName.FARMERS:
+      return {
+        logo: (
+          <CarrierLogo carrier={CarrierName.FARMERS} width={334} height={63} />
+        ),
+        theme: styles.farmers,
+        showBranding: false,
+      };
+    default:
+      return {
+        logo: null,
+        theme: styles.zinnia,
+        showBranding: false,
+      };
+  }
 };
 
 export const GenericInfoPage = async ({
@@ -49,18 +68,25 @@ export const GenericInfoPage = async ({
   if (!featureFlagDecisions[FEATURE_FLAGS.ANNUITY_MODE]) {
     themeCookie = CompanyName.EVERLY;
   }
+
+  const currentCarrierConfig = getCarrierConfig(themeCookie);
+
   // In most cases this won't matter since if the subdomain isn't set up, the whole site won't work
   // but there may be a case where there is a subdomain, but we don't have the branding for it, so only want to add the classes
   // if we have the available branding (in themeClasses above) otherwise show the generic page
   const showBranding =
-    (themeCookie && Object.keys(themeClasses).includes(themeCookie)) ||
+    (themeCookie &&
+      currentCarrierConfig &&
+      currentCarrierConfig.showBranding) ||
     !featureFlagDecisions[FEATURE_FLAGS.ANNUITY_MODE];
 
   const brandingBannerClasses = clsx(
-    showBranding && [styles.banner, themeClasses[themeCookie]],
+    showBranding &&
+      currentCarrierConfig.theme && [styles.banner, currentCarrierConfig.theme],
     {
-      [styles.banner as string]: showBranding,
-      [themeClasses[themeCookie] as string]: showBranding,
+      [styles.banner as string]: showBranding && !!currentCarrierConfig.theme,
+      [currentCarrierConfig.theme as string]:
+        showBranding && !!currentCarrierConfig.theme,
     }
   );
 
@@ -71,12 +97,9 @@ export const GenericInfoPage = async ({
         <div className={styles.content}>
           {showBranding && (
             <div
-              className={clsx(
-                styles.logoContainer,
-                themeClasses[themeCookie as CompanyName]
-              )}
+              className={clsx(styles.logoContainer, currentCarrierConfig.theme)}
             >
-              {logo(themeCookie as CompanyName)}
+              {currentCarrierConfig.logo}
             </div>
           )}
           <div className={styles.details}>
