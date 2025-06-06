@@ -82,7 +82,10 @@ describe('policy details helpers', () => {
         it('should properly map sales channel', () => {
             const result = getApplicationDetailsData(policyDetails, tSpy);
             expect(result).toEqual({
+                applicationSource: '--',
+                applicationSourceDetails: '--',
                 issueState: 'New York',
+                originalPolicyNumber: '--',
                 salesChannel: 'policy.distributionType.thirdPartyDirectToConsumer',
             });
         });
