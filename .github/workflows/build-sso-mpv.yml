@@ -15,23 +15,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Prune SSO-MPV
-        run: npx turbo prune sso-mpv --docker
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -43,12 +26,19 @@ jobs:
         id: login-ecr-east
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Download task definition (east)
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_NAME_SSO_MPV }} --query taskDefinition > east-task-definition.json
+
       - name: Build and Push SSO-MPV Docker Image
         id: sso_mpv_build
         uses: docker/build-push-action@v5
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr-east.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
         with:
-          context: ./out
-          file: ./out/apps/sso-mpv/Dockerfile
+          context: .
+          file: apps/sso-mpv/Dockerfile
           push: true
           tags: |
             ${{ steps.login-ecr-east.outputs.registry }}/${{ vars.ECR_REPOSITORY_SSO_MPV }}
