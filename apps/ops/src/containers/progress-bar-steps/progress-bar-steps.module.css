@@ -7,6 +7,8 @@
 
 .progressBar__steps {
     border-bottom: 2px solid var(--color-base-border-border-subtle);
-    display: grid;
+    display: flex;
+    overflow-x: auto;
+    gap: 1px;
     max-width: 1130px;
 }

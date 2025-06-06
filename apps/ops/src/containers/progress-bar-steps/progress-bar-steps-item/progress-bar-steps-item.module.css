@@ -6,6 +6,7 @@
     justify-content: center;
     height: 56px;
     position: relative;
+    flex: 1 1 0;
 
     &:hover {
         border-color: var(--color-states-hover-border-hover-border);

@@ -44,8 +44,8 @@ const ProgressBarStepsItem = ({
             onClick={onClick}
             className={clsx(styles.stepButton, isActive && styles.active, isDisabled && styles.disabled)}
             disabled={isDisabled}
-            style={{ width: `${stepWidth}px` }}
             data-testid={ProgressBarStepsTest.StepsContainer}
+            style={{ minWidth: `${stepWidth}px` }}
         >
             <div className={clsx(styles.colorBar, isActive && styles.active, isDisabled && styles.disabled)}></div>
 
