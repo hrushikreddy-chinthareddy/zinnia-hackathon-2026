@@ -236,6 +236,21 @@ export const checkEligibilitySystematicProgram = async (
     }
 };
 
+export const checkEligibilityFullSurrender = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<TransactionRequest, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender/eligibilitycheck`
+        );
+        return data;
+    } catch (error: any) {
+        console.error('checkEligibilityFullSurrender::an error occurred during eligibility check', error);
+        return error?.data;
+    }
+};
+
 export const validateFullSurrenderWithdrawal = async (
     planCode: string | undefined,
     policyNumber: string | undefined,

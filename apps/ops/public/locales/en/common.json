@@ -5097,8 +5097,9 @@
             "newPremium": "Start a one-time premium",
             "startAWithdrawal": "Start a withdrawal",
             "cancelPolicy": "Cancel policy",
-            "freeLookCancel": "Free look cancel",
-            "newDeathClaim": "New Death Claim"
+            "newDeathClaim": "New Death Claim",
+            "surrender": "Surrender policy",
+            "freeLookCancel": "Free look cancel"
         }
     },
     "historyEventCard": {

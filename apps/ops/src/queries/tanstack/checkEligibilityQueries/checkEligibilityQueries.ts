@@ -6,6 +6,7 @@ import {
     checkEligibilitySystematicPrograms,
     checkEligibilitySystematicProgram,
     SystematicProgramRequestQuery,
+    checkEligibilityFullSurrender,
 } from '@deps/queries/api/bpm';
 import { initialDeathClaimExists } from '@deps/queries/api/web-non-financial';
 
@@ -31,6 +32,10 @@ export const checkNewLoanEligibilityQuery = async (planCode: string, policyNumbe
 
 export const checkPartialWithdrawalOneTimeEligibilityQuery = async (planCode: string, policyNumber: string) => {
     return await checkEligibilityPartialWithdrawalOneTime(planCode, policyNumber);
+};
+
+export const checkFullSurrenderWithdrawal = async (planCode: string, policyNumber: string) => {
+    return await checkEligibilityFullSurrender(planCode, policyNumber);
 };
 
 export const checkInitialDeathClaimExistsQuery = async (policyNumber: string, clientId: string) => {

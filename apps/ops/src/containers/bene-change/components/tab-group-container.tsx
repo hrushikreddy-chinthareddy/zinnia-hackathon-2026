@@ -68,7 +68,7 @@ const TabGroupContent = ({
                         className="flex items-center"
                         startIcon={<AnnotationIcon width={16} height={16} />}
                         onClick={() => openSideSheet()}
-                        onKeyDown={e => {
+                        onKeyDown={(e: { key: string; preventDefault: () => void }) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                                 e.preventDefault();
                                 openSideSheet();

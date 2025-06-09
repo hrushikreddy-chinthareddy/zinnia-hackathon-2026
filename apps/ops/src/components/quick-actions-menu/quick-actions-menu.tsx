@@ -1,6 +1,7 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery } from '@tanstack/react-query';
 import { Reason } from '@zinnia/api-types/types/sor';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
 import React from 'react';
@@ -17,6 +18,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
+    checkFullSurrenderWithdrawal,
     checkInitialDeathClaimExistsQuery,
     checkLoanRepaymentOneTimeEligibilityQuery,
     checkNewLoanEligibilityQuery,
@@ -136,6 +138,18 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
         },
     });
 
+    const { data: surrenderEligibility } = useQuery({
+        queryKey: ['checkFullSurrenderWithdrawal', policy.planCode, policy.policyNumber],
+        queryFn: () => checkFullSurrenderWithdrawal(policy.planCode as string, policy.policyNumber as string),
+        placeholderData: previousData => previousData,
+        select: data => {
+            return {
+                ...data,
+                isEligibleSurrender: data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
+
     const { data: newLoanEligibility } = useQuery({
         queryKey: ['checkNewLoanEligibility', policy.planCode, policy.policyNumber, policy.loanValues?.maximumLoanAmount],
         queryFn: () =>
@@ -243,6 +257,12 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                                 `/policies/${policy.planCode}/${policy.policyNumber}/policy/withdrawals/new-withdrawal/`
                             );
                         }}
+                    />
+                    <MenuContextualItem
+                        disabled={!surrenderEligibility?.isEligibleSurrender}
+                        content={t('transactions.surrender')}
+                        href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/withdrawals/new-withdrawal/`}
+                        icon={<Icon type={IconType.CHECK} height={20} width={20} />}
                     />
                     <MenuContextualItem
                         disabled={!newLoanEligibility?.isEligibleNewLoan}

@@ -4911,7 +4911,9 @@
             "newLoan": "Iniciar un préstamo",
             "newPremium": "Iniciar una prima única",
             "startAWithdrawal": "Iniciar un retiro",
-            "cancelPolicy": "Cancelar póliza"
+            "cancelPolicy": "Cancelar póliza",
+            "newDeathClaim": "Nueva reclamación por muerte",
+            "surrender": "Política de rendición"
         }
     },
     "historyEventCard": {

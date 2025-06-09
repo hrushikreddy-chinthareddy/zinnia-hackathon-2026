@@ -5017,7 +5017,8 @@
             "newPremium": "Démarrez un abonnement premium unique",
             "startAWithdrawal": "Démarrer un retrait",
             "cancelPolicy": "Annuler la police",
-            "newDeathClaim": "New Death Claim"
+            "newDeathClaim": "Nouvelle réclamation pour décès",
+            "surrender": "Politique de reddition"
         }
     },
     "historyEventCard": {

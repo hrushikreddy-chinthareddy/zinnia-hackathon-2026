@@ -191,7 +191,7 @@ const TabGroupContent = ({
                     className="flex items-center"
                     startIcon={<AnnotationIcon width={16} height={16} />}
                     onClick={() => opeDiaryNotes()}
-                    onKeyDown={e => {
+                    onKeyDown={(e: { key: string; preventDefault: () => void }) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
                             openSideSheet();
@@ -207,7 +207,7 @@ const TabGroupContent = ({
                     className="flex items-center"
                     startIcon={<DocumentIcon height={16} width={16} />}
                     onClick={showDocumentPanel}
-                    onKeyDown={e => {
+                    onKeyDown={(e: { key: string; preventDefault: () => void }) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
                             openSideSheet();
@@ -222,7 +222,7 @@ const TabGroupContent = ({
                     className="flex items-center capitalize"
                     startIcon={<MenuIcon height={10} width={10} className="text-secondary" />}
                     onClick={() => openCaseDetails()}
-                    onKeyDown={e => {
+                    onKeyDown={(e: { key: string; preventDefault: () => void }) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
                             openSideSheet();
