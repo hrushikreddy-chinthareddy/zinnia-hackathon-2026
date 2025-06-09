@@ -45,7 +45,7 @@ const getCarrierConfig = (carrier: CompanyName): CarrierConfig => {
           <CarrierLogo carrier={CarrierName.FARMERS} width={334} height={63} />
         ),
         theme: styles.farmers,
-        showBranding: false,
+        showBranding: true,
       };
     default:
       return {
