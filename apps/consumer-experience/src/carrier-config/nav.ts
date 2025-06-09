@@ -55,7 +55,7 @@ export const navCarrierConfig: Record<CompanyName, NavCarrierConfig> = {
     },
   },
   [CarrierName.FARMERS]: {
-    homePageHref: `${process.env.SSO_FARMERS_REDIRECT_BASE_URL}/policysummary`,
+    homePageHref: `${process.env.NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL}/policysummary`,
     hrefAriaLabel: 'Return to all Farmers policies',
     image: CarrierLogos[CarrierName.FARMERS],
     logoProps: {
