@@ -159,7 +159,7 @@ describe('formValidation', () => {
                     setFormData: setMockData,
                 }}
             >
-                <OftDlicForm qualType={QualTypes.IRARegular} />
+                <OftDlicForm qualType={QualTypes.IRARegular} planCode="" />
             </FormDataContext.Provider>
         );
     });
@@ -204,7 +204,7 @@ describe('formValidation', () => {
                     setFormData: setMockData,
                 }}
             >
-                <OftDlicForm qualType={QualTypes.IRARegular} />
+                <OftDlicForm qualType={QualTypes.IRARegular} planCode="" />
             </FormDataContext.Provider>
         );
 
