@@ -2,7 +2,6 @@ import '@deps/styles/styles.css';
 import { Meta } from '@storybook/react';
 
 import NavLink, { NavLinkProps } from './nav-link';
-import { NavElementVariant, NavElementSize } from '../nav-element';
 
 const meta: Meta<typeof NavLink> = {
     title: 'Components/NavLink',
@@ -12,12 +11,6 @@ const meta: Meta<typeof NavLink> = {
         type: 'link',
     },
     argTypes: {
-        variant: {
-            options: [NavElementVariant.Default, NavElementVariant.Primary, NavElementVariant.Text],
-        },
-        size: {
-            options: [NavElementSize.Default, NavElementSize.ExtraSmall, NavElementSize.Small],
-        },
         startIcon: {
             table: {
                 disable: true,

@@ -1,7 +1,10 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
-import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
+
+import styles from './menu-contextual-item.module.css';
 
 export interface MenuContextualItemProps {
     content: string;
@@ -24,20 +27,15 @@ const MenuContextualItem = ({ content, icon, href, onClick, disabled, openInNewT
     return (
         <DropdownMenu.Item onSelect={handleSelect} disabled={disabled}>
             <NavElement
-                className={
-                    !disabled
-                        ? 'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-0 text-white hover:bg-gray-800 active:bg-white active:text-gray-900'
-                        : 'disabled flex cursor-not-allowed items-center gap-2 self-stretch rounded-sm px-4 py-0 text-gray-300 '
-                }
-                variant={disabled ? undefined : NavElementVariant.Text}
+                className={clsx(styles.menuContextualItem, disabled && styles.disabled)}
                 type={NavElementType.Link}
                 disabled={disabled}
                 href={href}
                 rel={openInNewTab ? 'noopener noreferrer' : undefined}
                 target={openInNewTab ? '_blank' : undefined}
             >
-                {icon}
-                <p className="whitespace-nowrap font-primary text-md font-light leading-6">{content}</p>
+                <span className={styles.icon}>{icon}</span>
+                <p>{content}</p>
             </NavElement>
         </DropdownMenu.Item>
     );

@@ -109,7 +109,6 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                         type={NavElementType.Link}
                         className="flex items-center my-4 no-underline relative "
                         size={NavElementSize.Small}
-                        variant={NavElementVariant.Secondary}
                         startIcon={<ChevronLeftIcon width={16} height={16} />}
                         onClick={handleBackRoute}
                     >

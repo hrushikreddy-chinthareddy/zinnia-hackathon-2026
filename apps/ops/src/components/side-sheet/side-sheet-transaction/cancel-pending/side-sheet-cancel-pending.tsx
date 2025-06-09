@@ -58,12 +58,7 @@ export default function SidesheetCancelPending({
                     subtitle={
                         <>
                             {t('policy.history.cancelSidesheet.apiError.subtitle')}
-                            <NavElement
-                                href={HELP_DESK_LINK}
-                                target="_blank"
-                                type={NavElementType.Link}
-                                variant={NavElementVariant.Secondary}
-                            >
+                            <NavElement href={HELP_DESK_LINK} target="_blank" type={NavElementType.Link}>
                                 {t('policy.history.cancelSidesheet.apiError.submitHelpDeskTicket')}
                             </NavElement>
                         </>

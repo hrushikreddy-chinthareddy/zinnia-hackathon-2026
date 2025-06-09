@@ -1,0 +1,33 @@
+.menuContextualItem {
+    align-items: center;
+    border-radius: 2px;
+    color: var(--color-base-text-text-light);
+    display: flex;
+    font: var(--typography-nav-nav-drawer);
+    gap: var(--measure-dimension-z-space-2);
+    padding-inline: var(--measure-dimension-z-space-4);
+    white-space: nowrap;
+
+    &:hover,
+    &:active {
+        background-color: var(--color-nav-menu-surface-menu-link-hover-fill);
+        color: var(--color-base-text-text-light);
+        &:after {
+            content: unset;
+        }
+    }
+
+    &:active {
+        & .icon {
+            background-color: var(--color-nav-menu-surface-menu-link-selected-fill);
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+            color: var(--color-nav-menu-icon-menu-icon-selected-fill);
+        }
+    }
+
+    &.disabled {
+        cursor: not-allowed;
+        color: var(--color-states-inactive-text-inactive-text);
+    }
+}

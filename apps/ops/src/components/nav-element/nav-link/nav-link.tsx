@@ -1,15 +1,11 @@
 import NextLink from 'next/link';
 import { AnchorHTMLAttributes } from 'react';
 
-import { NavElementSize, NavElementVariant } from '@deps/components/nav-element/nav-element';
-
 export type NavLinkProps = {
     isNewPage?: boolean;
     children?: React.ReactNode;
     startIcon?: React.ReactNode;
     disabled?: boolean;
-    size?: NavElementSize;
-    variant?: NavElementVariant;
     pathname?: string;
     replace?: boolean;
 } & AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -37,7 +33,7 @@ export default function NavLink({
     if (isNewPage) {
         return (
             <a
-                href={!disabled ? href : '#'}
+                href={!disabled ? href : undefined}
                 target={target}
                 referrerPolicy={referrerPolicy}
                 rel={rel}
@@ -55,7 +51,7 @@ export default function NavLink({
     if (pathname === '/re-reg') {
         return (
             <a
-                href={!disabled ? href : '#'}
+                href={!disabled ? href : undefined}
                 target={target}
                 referrerPolicy={referrerPolicy}
                 rel={rel}
@@ -80,6 +76,7 @@ export default function NavLink({
             onFocus={focusEvent}
             onBlur={blurEvent}
             replace={replace}
+            aria-disabled={disabled}
             {...rest}
         >
             {startIcon}

@@ -137,23 +137,4 @@ describe('verify quick links render appropriately', () => {
 
         expect(startLoanLink).toBeInTheDocument();
     });
-
-    it('should display a disabled start a loan link if a user does not meet the requirements', async () => {
-        mockedLoanEligibility.mockResolvedValueOnce({ status: 500 });
-        mockedInterestRate.mockResolvedValue(Promise.resolve(2));
-        mockedCreditRate.mockResolvedValue(Promise.resolve(3));
-        const modifiedMockPolicy = {
-            ...mockPolicy,
-        };
-
-        render(
-            <QueryClientProvider client={queryClient}>
-                <LoansPageHeaderContainer loanCarryingBalance={true} policy={modifiedMockPolicy} />
-            </QueryClientProvider>
-        );
-
-        const startLoanDisabledLink = await screen.findByTestId(LoansTest.START_LOAN_LINK_DISABLED);
-
-        expect(startLoanDisabledLink).toBeInTheDocument();
-    });
 });

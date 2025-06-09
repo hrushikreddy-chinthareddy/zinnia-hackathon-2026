@@ -3,7 +3,7 @@ import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -75,7 +75,6 @@ const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier, process, applicati
                             target="_blank"
                             type={NavElementType.Link}
                             onClick={setCookies}
-                            variant={NavElementVariant.Secondary}
                         >
                             {CaseAdditionalDetails[CaseAdditionalDataKeys.formName] || CaseAdditionalDetails[CaseAdditionalDataKeys.formId]}
                         </NavElement>
@@ -105,7 +104,6 @@ const CaseDetailsSideNav = ({ CaseAdditionalDetails, carrier, process, applicati
                             title={CaseAdditionalDetails[CaseAdditionalDataKeys?.documentName] ?? ''}
                             type={NavElementType.Link}
                             onClick={setCookies}
-                            variant={NavElementVariant.Secondary}
                         >
                             {CaseAdditionalDetails[CaseAdditionalDataKeys?.documentName] ?? ''}
                         </NavElement>

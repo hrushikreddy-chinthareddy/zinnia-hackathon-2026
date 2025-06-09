@@ -15,7 +15,7 @@ import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Popover from '@deps/components/popover/popover';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
@@ -71,7 +71,6 @@ const DownloadItem = ({ doc, carrierCode }: { doc: DocumentWithSource | Metadata
             size={NavElementSize.Small}
             title={`${t('general.download')} ${doc.displayName}`}
             type={NavElementType.Button}
-            variant={NavElementVariant.Secondary}
         >
             {loading ? (
                 // to do - add optional alt text?
@@ -92,7 +91,6 @@ export const createAction = (doc: DocumentWithSource | V3DocumentWithSource, car
             displayName={(doc.displayName || doc.documentId) ?? ((doc as DocumentWithSource).documentID as string)}
             documentId={doc.documentId ?? ((doc as DocumentWithSource).documentID as string)}
             activeDocType={doc.documentSource}
-            variant={NavElementVariant.Secondary}
         >
             {label ? t(label) : t('view')}
         </DocumentPreviewer>

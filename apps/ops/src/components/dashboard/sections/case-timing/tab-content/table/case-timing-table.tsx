@@ -20,7 +20,7 @@ import { CaseTimingFilters } from '@deps/components/dashboard/sections/case-timi
 import { CaseTimingHeader } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-header';
 import { generateTableTimeRange } from '@deps/components/dashboard/sections/case-timing/utils';
 import { generateCaseLink } from '@deps/components/dashboard/utils';
-import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
@@ -171,7 +171,6 @@ export const CaseTimingTable = () => {
                                                 <NavElement
                                                     type={NavElementType.Link}
                                                     target="_blank"
-                                                    variant={NavElementVariant.Secondary}
                                                     className="underline"
                                                     href={generateCaseLink({
                                                         process: selectedProcess,

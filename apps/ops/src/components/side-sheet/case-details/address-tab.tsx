@@ -1,7 +1,7 @@
 import { IconType, Icon, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
 import { AddressTypeAndAddress } from '@deps/containers/small-data-card/address-data/address-data';
@@ -36,23 +36,23 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
                     </div>
                 );
             })}
-            {(!addresses || addresses?.length === 0) &&  ( <EmptyCard text={t('noAddressesAvailable')} />)}
-            { url && <div className="text-[--color-base-text-text-link] font-semibold text-md p-4">
-                <NavElement
-                    className={'whitespace-normal break-words'}
-                    href={url}
-                    isNewPage={true}
-                    size={NavElementSize.Small}
-                    target="_blank"
-                    title={t('viewFullDeatils') as string}
-                    type={NavElementType.Link}
-                    startIcon={<Icon type={IconType.EXTERNAL_LINK} width={20} height={20} />}
-                    variant={NavElementVariant.Secondary}
-                >
-                    {t('viewFullDeatils')}
-                </NavElement>
-            </div>
-            }
+            {(!addresses || addresses?.length === 0) && <EmptyCard text={t('noAddressesAvailable')} />}
+            {url && (
+                <div className="text-[--color-base-text-text-link] font-semibold text-md p-4">
+                    <NavElement
+                        className={'whitespace-normal break-words'}
+                        href={url}
+                        isNewPage={true}
+                        size={NavElementSize.Small}
+                        target="_blank"
+                        title={t('viewFullDeatils') as string}
+                        type={NavElementType.Link}
+                        startIcon={<Icon type={IconType.EXTERNAL_LINK} width={20} height={20} />}
+                    >
+                        {t('viewFullDeatils')}
+                    </NavElement>
+                </div>
+            )}
         </div>
     );
 }

@@ -4621,7 +4621,8 @@
             "maxAnnualPast": "{{maxDuring}} per year",
             "maxAnnualTooltip": "This is how many times an owner can make a withdrawal (of any eligible amount) within a policy year.",
             "coverageLimit": "Coverage preservation limit",
-            "coverageLimitTooltip": "Owners can withdraw this amount without impacting their coverage. In other words, they can withdraw this amount and still keep their death benefit intact."
+            "coverageLimitTooltip": "Owners can withdraw this amount without impacting their coverage. In other words, they can withdraw this amount and still keep their death benefit intact.",
+            "statusTooltip": "This policy's status {{status}} doesn't allow this transaction type."
         },
         "upcoming": {
             "manageAutopay": "$t(premium.upcoming.manageAutopay)",

@@ -60,7 +60,10 @@ const ProgressBarSteps = ({ steps, currentStepIndex, onClick, classNames, stepWi
 
     return (
         <div className={clsx(isScrollable && styles.progressBar__scrollable)} ref={containerRef}>
-            <div className={clsx(styles.progressBar__steps, classNames)}>
+            <div
+                className={clsx(styles.progressBar__steps, classNames)}
+                style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(${stepWidth}px, max-content))` }}
+            >
                 {steps.map((step, index) => {
                     const isActive = step.index === currentStepIndex;
                     const isDisabled = step.isDisabled || step.index > currentStepIndex;

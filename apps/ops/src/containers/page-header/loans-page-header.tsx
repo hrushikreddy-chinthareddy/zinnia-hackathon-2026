@@ -158,18 +158,24 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
                         data-testid={LoansTest.START_LOAN_LINK}
                         onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans/new-loan`)}
                         size={NavElementSize.Small}
-                        type={NavElementType.Button}
+                        type={NavElementType.Link}
                     >
                         {t('transactions.loans.header.startLoan')}
                     </NavElement>
                 ) : (
                     <Tooltip placement={PopoverPlacement.TopRight} body={formatValidationResult(newLoanEligibility?.validationResult)}>
-                        <span
-                            className="mr-8 cursor-not-allowed font-primary text-links-sm font-semibold text-gray-300"
-                            data-testid={LoansTest.START_LOAN_LINK_DISABLED}
+                        <NavElement
+                            className="mr-5"
+                            data-testid={LoansTest.START_LOAN_LINK}
+                            onClick={() =>
+                                router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans/new-loan`)
+                            }
+                            size={NavElementSize.Small}
+                            type={NavElementType.Link}
+                            disabled={true}
                         >
                             {t('transactions.loans.header.startLoan')}
-                        </span>
+                        </NavElement>
                     </Tooltip>
                 )}
             </div>

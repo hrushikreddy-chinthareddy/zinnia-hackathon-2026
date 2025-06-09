@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useRef } from 'react';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { useSendDocument } from '@deps/contexts/SendDocumentContext';
 import { FormDetails, SendDocumentAction } from '@deps/models/case/send-document';
 
@@ -59,7 +59,6 @@ const DocumentDetail = ({ document, isSelected }: DocumentDetailsProps) => {
                 target="_blank"
                 title={`${t('sendDocument.formSelection.view')} `}
                 type={NavElementType.Link}
-                variant={NavElementVariant.Secondary}
             >
                 {t('sendDocument.formSelection.view')}
             </NavElement>

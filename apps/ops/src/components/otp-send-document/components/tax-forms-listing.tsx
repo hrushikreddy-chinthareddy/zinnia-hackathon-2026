@@ -15,7 +15,7 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TaxForm } from '@deps/models/case/send-tax-forms';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
@@ -143,7 +143,6 @@ const TaxFormsListing = ({ taxForms, carrierCode, selectedTaxForms, setSelectedT
                                             target="_blank"
                                             title={`${t('sendDocument.formSelection.view')} `}
                                             type={NavElementType.Link}
-                                            variant={NavElementVariant.Secondary}
                                             onClick={() => setCookies(form)}
                                         >
                                             {t('sendDocument.formSelection.view')}

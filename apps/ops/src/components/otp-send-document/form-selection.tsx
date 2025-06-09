@@ -15,7 +15,7 @@ import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType } from '../nav-element/nav-element';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
 
 const mapIdToFormDetails = (value: SendDocumentFormParts[]): SendDocumentFormPartsAdditionData[] => {
@@ -122,7 +122,6 @@ function FormSelection({
                                 type={NavElementType.Button}
                                 startIcon={<TrashDocumentIcon width={20} height={20} />}
                                 onClick={() => removeFilter(form.id)}
-                                variant={NavElementVariant.Secondary}
                             ></NavElement>
                         </div>
                     )}
@@ -136,7 +135,6 @@ function FormSelection({
                     type={NavElementType.Button}
                     startIcon={<AddDocumentIcon width={20} height={20} />}
                     onClick={addNewFilter}
-                    variant={NavElementVariant.Secondary}
                 >
                     {t(`formSelection.addNewDocument`) as string}
                 </NavElement>

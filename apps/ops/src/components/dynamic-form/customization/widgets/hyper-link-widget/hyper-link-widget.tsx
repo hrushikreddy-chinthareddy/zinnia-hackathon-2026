@@ -1,7 +1,7 @@
 import { getUiOptions, UiSchema, WidgetProps } from '@rjsf/utils';
 import router from 'next/router';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/actions/external-link.svg';
 
@@ -42,7 +42,6 @@ export const HyperLink = ({ title, label, value, type, disabled, className }: Hy
                     size={NavElementSize.Small}
                     title={label}
                     type={NavElementType.Link}
-                    variant={NavElementVariant.Secondary}
                     href={value}
                     isNewPage={true}
                     target="_blank"
@@ -58,7 +57,6 @@ export const HyperLink = ({ title, label, value, type, disabled, className }: Hy
                         size={NavElementSize.Small}
                         title={label}
                         type={NavElementType.Link}
-                        variant={NavElementVariant.Secondary}
                         onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => handleClick(e, value)}
                         disabled={disabled}
                     >

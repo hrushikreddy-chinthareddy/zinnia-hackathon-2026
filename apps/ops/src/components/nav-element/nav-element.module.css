@@ -1,0 +1,12 @@
+.navLink {
+    &.text {
+        color: var(--color-base-text-text-primary);
+    }
+    &.disabled {
+        color: var(--color-states-inactive-text-inactive-text-link);
+        cursor: not-allowed;
+        &:hover:after {
+            content: unset;
+        }
+    }
+}

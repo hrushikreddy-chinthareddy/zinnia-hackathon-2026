@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 import { MetadataSearchResponse } from 'node_modules/@zinnia/api-types/dist/generated-types/documents-v3/models/MetadataSearchResponse';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
@@ -290,7 +290,6 @@ const DocumentActions = ({ document, t }: any) => {
                     size={NavElementSize.Small}
                     title={`${t('general.download')} ${document?.displayName}`}
                     type={NavElementType.Button}
-                    variant={NavElementVariant.Secondary}
                 >
                     {loading ? (
                         // to do - add optional alt text?

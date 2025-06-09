@@ -97,12 +97,7 @@ export default function SidesheetReverseRecreate({
                     subtitle={
                         <>
                             {t('policy.history.reverseRecreateSidesheet.apiError.subtitle')}
-                            <NavElement
-                                href={HELP_DESK_LINK}
-                                target="_blank"
-                                type={NavElementType.Link}
-                                variant={NavElementVariant.Secondary}
-                            >
+                            <NavElement href={HELP_DESK_LINK} target="_blank" type={NavElementType.Link}>
                                 {t('policy.history.reverseRecreateSidesheet.apiError.submitHelpDeskTicket')}
                             </NavElement>
                         </>

@@ -21,7 +21,7 @@ import { TransactionTrendsFilters } from '@deps/components/dashboard/sections/tr
 import { TransactionTrendsHeader } from '@deps/components/dashboard/sections/transaction-trends/tab-content/shared/transaction-trends-header';
 import { calculateAverage } from '@deps/components/dashboard/sections/transaction-trends/utils';
 import { friendlyGroupByName, generateCaseLink } from '@deps/components/dashboard/utils';
-import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
@@ -187,7 +187,6 @@ export const TransactionTrendsTable = () => {
                                             <TableCell>
                                                 <NavElement
                                                     type={NavElementType.Link}
-                                                    variant={NavElementVariant.Secondary}
                                                     className="underline"
                                                     target="_blank"
                                                     href={link}

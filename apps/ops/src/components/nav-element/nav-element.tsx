@@ -1,18 +1,18 @@
+import clsx from 'clsx';
 import { cloneElement } from 'react';
 
 import NavButton, { NavButtonProps } from './nav-button/nav-button';
+import styles from './nav-element.module.css';
 import NavLink, { NavLinkProps } from './nav-link/nav-link';
 
 export enum NavElementSize {
     Default = 'default',
-    ExtraSmall = 'extra-small',
     Small = 'small',
 }
 
 export enum NavElementVariant {
     Default = 'default',
     Primary = 'primary',
-    Secondary = 'secondary',
     Text = 'text',
 }
 
@@ -23,61 +23,23 @@ export enum NavElementType {
 
 export type NavElementProps = {
     type: NavElementType;
+    variant?: NavElementVariant;
+    size?: NavElementSize;
 } & (NavLinkProps | NavButtonProps);
 
 export default function NavElement({ type, ...rest }: NavElementProps) {
-    const { className, startIcon, ...newRest } = rest;
+    const { className, startIcon, variant, size, ...newRest } = rest;
 
-    const focusVisibleClass = 'default-focus focus-visible:rounded';
-    const stateClass = `${focusVisibleClass}`;
-
-    const extraSmallSizeClass = 'text-sm leading-4.5';
-    const smallSizeClass = 'text-links-sm';
-    const defaultSizeClass = 'text-base';
-    const defaultIconMargin = 'mr-2';
-
-    let sizeClass = defaultSizeClass;
-    let iconMargin = defaultIconMargin;
-    switch (newRest.size) {
-        case NavElementSize.ExtraSmall:
-            sizeClass = extraSmallSizeClass;
-            iconMargin = 'mr-1';
-            break;
-        case NavElementSize.Small:
-            sizeClass = smallSizeClass;
-            iconMargin = 'mr-1';
-            break;
-        case NavElementSize.Default:
-        default:
-            break;
-    }
-
-    const defaultVariantClass = 'text-links';
-    const inactiveVariantClass = 'text-gray-300 cursor-not-allowed';
-    const primaryVariantClass = 'rounded-none';
-    const secondaryVariantClass = 'font-secondary text-link font-normal';
-    const textVariantClass = 'font-primary text-gray-900';
-
-    let variantClass;
-    switch (newRest.variant) {
-        case NavElementVariant.Primary:
-            variantClass = primaryVariantClass;
-            break;
-        case NavElementVariant.Secondary:
-            variantClass = `${focusVisibleClass} ${secondaryVariantClass} hover:text-secondary-dark`;
-            break;
-        case NavElementVariant.Text:
-            variantClass = textVariantClass;
-            break;
-        case NavElementVariant.Default:
-        default:
-            variantClass = newRest.disabled ? inactiveVariantClass : `${stateClass} ${defaultVariantClass}`;
-            break;
-    }
-
-    const classes = `${sizeClass} ${variantClass} ${className}`;
+    const classes = clsx(
+        `${styles.navLink} text-links default-focus focus-visible:rounded ${className}`,
+        newRest.disabled && styles.disabled,
+        variant === NavElementVariant.Text && styles.text,
+        size === NavElementSize.Small && 'text-links-sm'
+    );
     const iconClone = startIcon
-        ? cloneElement(startIcon as React.ReactElement<any>, { className: `inline-flex align-top ${iconMargin}` })
+        ? cloneElement(startIcon as React.ReactElement<any>, {
+              className: clsx(`inline-flex align-top`, size === NavElementSize.Small ? 'mr-1' : 'mr-2'),
+          })
         : null;
 
     return type === NavElementType.Button ? (

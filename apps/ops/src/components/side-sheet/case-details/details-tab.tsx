@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
 import { PolicyCarrierLogo } from '@deps/components/global-values/policy-info/policy-info';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
 import { DocumentData } from '@deps/models/case/document';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
@@ -65,7 +65,6 @@ function DetailsTab({ carrierName, policy, documentData, policyNumber, clientCod
                         title={t('viewFullDeatils') as string}
                         type={NavElementType.Link}
                         startIcon={<Icon type={IconType.EXTERNAL_LINK} width={20} height={20} />}
-                        variant={NavElementVariant.Secondary}
                     >
                         {t('viewFullDeatils')}
                     </NavElement>

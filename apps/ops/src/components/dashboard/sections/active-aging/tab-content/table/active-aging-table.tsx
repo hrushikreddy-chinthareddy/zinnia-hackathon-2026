@@ -17,7 +17,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { friendlyGroupByName, generateCaseLink } from '@deps/components/dashboard/utils';
-import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
@@ -98,7 +98,6 @@ export const ActiveAgingTable = () => {
                                 <NavElement
                                     type={NavElementType.Link}
                                     target="_blank"
-                                    variant={NavElementVariant.Secondary}
                                     className="underline"
                                     href={generateCaseLink({
                                         process: selectedProcess,
@@ -204,7 +203,6 @@ export const ActiveAgingTable = () => {
                                             <TableCell>
                                                 <NavElement
                                                     type={NavElementType.Link}
-                                                    variant={NavElementVariant.Secondary}
                                                     target="_blank"
                                                     className="underline"
                                                     href={link}

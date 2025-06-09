@@ -4559,7 +4559,8 @@
             "maxAnnualPast": "{{maxDuring}} par an",
             "maxAnnualTooltip": "C'est le nombre de fois qu'un propriétaire peut effectuer un retrait (de tout montant éligible) au cours d'une année de police.",
             "coverageLimit": "Limite de préservation de couverture",
-            "coverageLimitTooltip": "Les propriétaires peuvent retirer ce montant sans affecter leur couverture. En d'autres termes, ils peuvent retirer ce montant et conserver intact leur capital-décès."
+            "coverageLimitTooltip": "Les propriétaires peuvent retirer ce montant sans affecter leur couverture. En d'autres termes, ils peuvent retirer ce montant et conserver intact leur capital-décès.",
+            "statusTooltip": "Le statut de cette politique {{status}} n'autorise pas ce type de transaction."
         },
         "upcoming": {
             "manageAutopay": "$t(premium.upcoming.manageAutopay)",

@@ -2,7 +2,7 @@ import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { BadgeVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import { StatusBadge } from '@deps/components/status-badge/status-badge';
 import Tooltip from '@deps/components/tooltip/tooltip';
@@ -36,7 +36,6 @@ const CasePageHeader = ({ caseId, title, tag, status, statusTooltip, statusVaria
                         size={NavElementSize.Default}
                         startIcon={<LeftArrow height={24} width={24} />}
                         type={NavElementType.Link}
-                        variant={NavElementVariant.Secondary}
                     />
                 </Tooltip>
             )}

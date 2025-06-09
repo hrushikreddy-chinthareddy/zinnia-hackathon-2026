@@ -4536,7 +4536,8 @@
             "maxAnnualPast": "{{maxDuring}} por año",
             "maxAnnualTooltip": "Esta es la cantidad de veces que un propietario puede hacer un retiro (de cualquier cantidad elegible) dentro de un año de póliza.",
             "coverageLimit": "Límite de preservación de cobertura",
-            "coverageLimitTooltip": "Los propietarios pueden retirar esta cantidad sin afectar su cobertura. En otras palabras, pueden retirar esta cantidad y mantener intacto su beneficio por fallecimiento."
+            "coverageLimitTooltip": "Los propietarios pueden retirar esta cantidad sin afectar su cobertura. En otras palabras, pueden retirar esta cantidad y mantener intacto su beneficio por fallecimiento.",
+            "statusTooltip": "El estado de esta política {{status}} no permite este tipo de transacción."
         },
         "upcoming": {
             "manageAutopay": "$t(premium.upcoming.manageAutopay)",

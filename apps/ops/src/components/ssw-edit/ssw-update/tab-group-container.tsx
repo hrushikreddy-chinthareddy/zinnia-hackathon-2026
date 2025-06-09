@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
 import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
@@ -85,7 +85,6 @@ const TabGroupContent = ({
                                 type={NavElementType.Link}
                                 className="flex items-center my-4 mx-2 relative"
                                 size={NavElementSize.Small}
-                                variant={NavElementVariant.Secondary}
                                 startIcon={<ChevronLeftIcon width={16} height={16} />}
                                 onClick={() => {
                                     setIsLoading(true);

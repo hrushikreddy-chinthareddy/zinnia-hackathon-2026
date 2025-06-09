@@ -40,17 +40,20 @@
         }
     }
 
-    .default-focus {
-        @apply focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[6px] focus-visible:outline-semantic-focus;
-    }
-    .default-focus-icons {
-        @apply focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-semantic-focus;
-    }
+    .default-focus,
+    .default-focus-icons,
     .default-focus-within {
-        @apply focus-within:outline-none focus-within:outline focus-within:outline-2 focus-within:outline-offset-[6px] focus-within:outline-semantic-focus;
+        &:focus {
+            outline: none;
+        }
+        &:focus-visible {
+            outline: 2px solid var(--color-semantics-color-semantic-focus);
+            outline-offset: 6px;
+        }
     }
-    .default-hover {
-        @apply hover:border-accent1;
+
+    .default-hover:hover {
+        border-color: var(--color-states-hover-border-hover-border);
     }
 }
 
@@ -204,7 +207,6 @@ body {
     .subtitle-alt {
         font: var(--typography-titles-subtitle-alt);
     }
-
     .nav-links,
     .nav-links-sm,
     .text-links,
@@ -216,7 +218,7 @@ body {
         &:hover {
             color: var(--color-states-hover-text-hover-text-link);
         }
-        &:hover&::after {
+        &:hover::after {
             content: '';
             background-color: var(--color-states-hover-text-hover-text-link);
             height: 2px;
@@ -227,7 +229,6 @@ body {
     }
     .nav-links,
     .text-links {
-        font: var(--typography-nav-links);
         &:hover::after {
             text-underline-offset: 5px;
             bottom: -2px;

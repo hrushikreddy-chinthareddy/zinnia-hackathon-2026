@@ -20,7 +20,7 @@ import { ChartHeader } from '@deps/components/dashboard/header-components/chart-
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
 import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
 import { friendlyGroupByName, generateCaseLink } from '@deps/components/dashboard/utils';
-import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
@@ -205,7 +205,6 @@ export const SubmissionTypeTable = () => {
                                             <TableCell>
                                                 <NavElement
                                                     type={NavElementType.Link}
-                                                    variant={NavElementVariant.Secondary}
                                                     className="underline"
                                                     target="_blank"
                                                     href={link}

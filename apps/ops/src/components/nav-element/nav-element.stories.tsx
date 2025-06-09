@@ -15,7 +15,7 @@ const meta: Meta<typeof NavElement> = {
             control: 'select',
         },
         size: {
-            options: [NavElementSize.Default, NavElementSize.ExtraSmall, NavElementSize.Small],
+            options: [NavElementSize.Default, NavElementSize.Small],
             control: 'select',
         },
         startIcon: {

@@ -14,7 +14,6 @@ import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 
 import TaxFormPreviewer from '@deps/components/document-viewer/tax-form-previewer';
-import { NavElementVariant } from '@deps/components/nav-element/nav-element';
 import Popover from '@deps/components/popover/popover';
 import { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
@@ -68,7 +67,6 @@ export default function TaxDocumentsTable({ carrierCode, policyNumber, results }
                                     carrier={carrierCode}
                                     policyNumber={policyNumber}
                                     taxForm={document}
-                                    variant={NavElementVariant.Secondary}
                                 >
                                     {t('view')}
                                 </TaxFormPreviewer>

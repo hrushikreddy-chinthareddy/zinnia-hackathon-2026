@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Policy as SorPolicy } from '@zinnia/api-types/types/sor';
+import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
@@ -49,6 +50,8 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
         isEligible: partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime || false,
         policy: policyDetails.policy as SorPolicy,
     });
+
+    const status = policyDetails?.policyStatus?.toLocaleLowerCase();
 
     const {
         amountEligibleForWithdrawal,
@@ -224,17 +227,37 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
                 </div>
             </div>
             <div className="mt-4 flex w-full flex-row items-center gap-8 bg-gray-50 px-8 py-4 align-middle">
-                <NavElement
-                    disabled={!partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime}
-                    href={t('site.navLinks.transactions.withdrawalStart.href', { id: policyNumber, planCode }) || ''}
-                    size={NavElementSize.Small}
-                    type={NavElementType.Link}
-                    data-testid="withdrawal-start-link"
-                >
-                    {policyDetails.isAnnuity
-                        ? t('site.navLinks.transactions.withdrawalOneTime.text')
-                        : t('site.navLinks.transactions.withdrawalStart.text')}
-                </NavElement>
+                {partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime ? (
+                    <NavElement
+                        href={t('site.navLinks.transactions.withdrawalStart.href', { id: policyNumber, planCode }) || ''}
+                        size={NavElementSize.Small}
+                        type={NavElementType.Link}
+                        data-testid="withdrawal-start-link"
+                    >
+                        {policyDetails.isAnnuity
+                            ? t('site.navLinks.transactions.withdrawalOneTime.text')
+                            : t('site.navLinks.transactions.withdrawalStart.text')}
+                    </NavElement>
+                ) : (
+                    <Tooltip
+                        placement={TooltipPlacement.TopLeft}
+                        trigger={
+                            <NavElement
+                                disabled={!partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime}
+                                href={t('site.navLinks.transactions.withdrawalStart.href', { id: policyNumber, planCode }) || ''}
+                                size={NavElementSize.Small}
+                                type={NavElementType.Link}
+                                data-testid="withdrawal-start-link"
+                            >
+                                {policyDetails.isAnnuity
+                                    ? t('site.navLinks.transactions.withdrawalOneTime.text')
+                                    : t('site.navLinks.transactions.withdrawalStart.text')}
+                            </NavElement>
+                        }
+                    >
+                        {t('withdrawals.rules.statusTooltip', { status: status })}
+                    </Tooltip>
+                )}
                 <NavElement
                     href={t('site.navLinks.transactions.withdrawalStart.href', { id: policyNumber, planCode }) || ''}
                     size={NavElementSize.Small}
