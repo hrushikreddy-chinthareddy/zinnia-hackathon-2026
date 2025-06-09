@@ -9,6 +9,7 @@ export interface TaxFormPreviewer {
     taxForm: TaxformResponse;
     className?: string;
     policyNumber: string;
+    planCode?: string;
     variant?: NavElementVariant;
 }
 
@@ -16,6 +17,7 @@ export default function TaxFormPreviewer({
     carrier,
     taxForm,
     policyNumber,
+    planCode,
     children,
     className = '',
     variant,
@@ -28,7 +30,9 @@ export default function TaxFormPreviewer({
             href={
                 `/documents/tax-forms/${taxForm?.formId}?contractNumber=${policyNumber}&clientCode=${carrier}&fChar=${
                     (taxForm as TaxForm)?.fChar ?? taxForm?.fchar
-                }` + (taxForm?.taxYear ? `&taxYear=${taxForm?.taxYear}` : '')
+                }` +
+                (taxForm?.taxYear ? `&taxYear=${taxForm?.taxYear}` : '') +
+                (planCode ? `&planCode=${planCode}` : '')
             }
             isNewPage={false}
             size={NavElementSize.Small}

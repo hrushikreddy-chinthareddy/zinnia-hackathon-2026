@@ -6,6 +6,7 @@ import { RouteKey, getPageTitle } from '@/route-map';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { DocumentCategory } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
+import { retrieveDocumentsFromV2 } from '@/utils/documents';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { createQueryString } from '@/utils/strings';
 
@@ -33,11 +34,21 @@ export default async function DocumentPreview({
   };
 }) {
   const flags = await getFeatureFlags();
-  const shouldUseV3 = flags?.[FEATURE_FLAGS.DOCUMENTS_V3];
+  const shouldUseV2 =
+    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || retrieveDocumentsFromV2();
   const { lineOfBusiness, documentId, ...otherParams } = params;
   const { fileName, ...otherSearchParams } = searchParams;
   let docDownloadUrl;
-  if (shouldUseV3) {
+  if (shouldUseV2) {
+    const queryParamString = createQueryString({
+      ...otherParams,
+      ...otherSearchParams,
+    });
+    docDownloadUrl =
+      searchParams.docCategory === DocumentCategory.TAX
+        ? `/api/documents/tax-docs/${documentId}/download/${fileName}.pdf?${queryParamString}`
+        : `/api/documents/${documentId}/download/${fileName}.pdf?${queryParamString}`;
+  } else {
     const queryParamString = createQueryString({
       ...otherParams,
       ...otherSearchParams,
@@ -48,15 +59,6 @@ export default async function DocumentPreview({
       searchParams.docCategory === DocumentCategory.TAX
         ? `/api/documents/v3/tax-docs/${documentId}/download/${fileName}.pdf?${queryParamString}`
         : `/api/documents/v3/${documentId}/download/${fileName}.pdf?${queryParamString}`;
-  } else {
-    const queryParamString = createQueryString({
-      ...otherParams,
-      ...otherSearchParams,
-    });
-    docDownloadUrl =
-      searchParams.docCategory === DocumentCategory.TAX
-        ? `/api/documents/tax-docs/${documentId}/download/${fileName}.pdf?${queryParamString}`
-        : `/api/documents/${documentId}/download/${fileName}.pdf?${queryParamString}`;
   }
 
   return (

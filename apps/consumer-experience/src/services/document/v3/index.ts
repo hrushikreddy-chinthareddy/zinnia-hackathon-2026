@@ -134,6 +134,7 @@ export const searchDocumentsV3 = async (
     if (isMockErrorEnabled(ApiEndpoints.DOCUMENTS)) {
       throw new Error('Error fetching documents.');
     }
+
     const rawResponse = await ServerApi.post(
       documentUrl,
       JSON.stringify(searchBody),
@@ -202,7 +203,6 @@ export const getTaxDocumentsV3 = async (
   const { clientCode } = queryParams;
   const documentQueryParams = buildDocumentQueryParamsV3(queryParams);
   const documentUrl = `${documentV3ApiBaseUrl}/tax-forms?${documentQueryParams.toString()}`;
-
   if (isMockDocumentsRequestEnabled()) {
     return {
       data: mockTaxDocumentsResponse,

@@ -87,6 +87,7 @@ const NormalDocs = ({
                     ? SearchRequest.documentClassification.INBOUND
                     : SearchRequest.documentClassification.OUTBOUND,
             policyNumber: policy.policyNumber,
+            planCode: policy?.product?.planCode,
             parentCarrierCode: policy?.carrierId,
             orderBy: 'documentDate',
             orderByDirection: SearchRequest.orderByDirection.DESC,
@@ -173,6 +174,7 @@ const TaxDocs = ({
             const taxQueryParams: SearchTaxFormRequestBody = {
                 clientCode: policy.carrierId ?? '',
                 contractNumber: policy.policyNumber ?? '',
+                planCode: policy?.product?.planCode,
             };
             if (yearSelection === 'all' || isFirstYearSelected) {
                 taxQueryParams.numYears = maxTaxYears;
@@ -218,6 +220,7 @@ const TaxDocs = ({
                     {!loading && (
                         <TaxDocumentsTable
                             carrierCode={policy.carrierId ?? ''}
+                            planCode={policy?.product?.planCode}
                             policyNumber={policy.policyNumber ?? ''}
                             results={paginatedDocs}
                         />

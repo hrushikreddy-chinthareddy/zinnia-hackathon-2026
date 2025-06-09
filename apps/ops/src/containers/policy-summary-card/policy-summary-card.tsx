@@ -216,7 +216,7 @@ function KeyValuesBar({ policy, loadingPolicyDetails = false }: KeyValuesBarProp
                     <Skeleton loading={loadingPolicyDetails} width="300px" height="38px" />
                 ) : (
                     <SelectSearch
-                        classNames="flex flex-col gap-1 max-w-[328px] w-full"
+                        classNames="flex flex-col gap-1 max-w-[328px] w-full relative"
                         labelClassNames="mr-4 hidden md:block"
                         size={FieldSize.Small}
                         label={t('dashboard.quickSearch.label') || ''}

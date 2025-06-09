@@ -13,10 +13,10 @@ const baseUrl = `${apiServerBaseUrl}/document/v3`;
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<TaxformDownloadResponse | null>, loggingContext) => {
         const now = performance.now();
-        const { formId, clientCode, contractNumber, fChar, taxYear } = req.query;
+        const { formId, clientCode, contractNumber, fChar, taxYear, planCode } = req.query;
         const accessToken = (await getAccessToken(req, res)).accessToken;
 
-        const url = `${baseUrl}/tax-forms/${formId}/download?clientCode=${clientCode}&contractNumber=${contractNumber}&fChar=${fChar}&taxYear=${taxYear}`;
+        const url = `${baseUrl}/tax-forms/${formId}/download?clientCode=${clientCode}&contractNumber=${contractNumber}&fChar=${fChar}&taxYear=${taxYear}&planCode=${planCode}`;
 
         logTrace('taxFormDownload::start', loggingContext);
         logCompliance('Tax Form Download Attempt', loggingContext);

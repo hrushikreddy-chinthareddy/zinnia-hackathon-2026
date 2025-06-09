@@ -21,7 +21,7 @@ export const FindKeyValueSearch = ({ keyValues, planCode, policyNumber }: FindKe
     return (
         <div className={searchClasses}>
             <SelectSearch
-                classNames="flex flex-col gap-1 max-w-[328px] w-full"
+                classNames="flex flex-col gap-1 max-w-[328px] w-full relative"
                 labelClassNames="mr-4"
                 size={FieldSize.Small}
                 label={t('label.findKeyValues') ?? ''}

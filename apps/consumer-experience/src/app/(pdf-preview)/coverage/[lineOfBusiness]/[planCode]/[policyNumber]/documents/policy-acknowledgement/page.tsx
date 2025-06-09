@@ -1,3 +1,4 @@
+import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
@@ -8,6 +9,7 @@ import { searchDocumentsV3 } from '@/services/document/v3';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { DocumentV3SearchItem, ExtendedDocumentMeta } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
+import { retrieveDocumentsFromV2 } from '@/utils/documents';
 import { logInfo } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
@@ -35,15 +37,13 @@ export default async function PolicyAcknowledgementDocumentPreview({
   };
 }) {
   const flags = await getFeatureFlags();
-  const shouldUseV3 = flags?.[FEATURE_FLAGS.DOCUMENTS_V3];
-  const policyDocuments = shouldUseV3
-    ? await searchDocumentsV3({
-        documentType: 'POLPG',
-        recipient: 'CLIENT',
-        parentCarrierCode: searchParams.clientCode,
-        policyNumber: params.policyNumber,
-      })
-    : await getDocumentsV2({
+  const { lineOfBusiness, policyNumber, planCode } = params;
+  const { clientCode } = searchParams;
+  const shouldUseV2 =
+    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || retrieveDocumentsFromV2();
+
+  const policyDocuments = shouldUseV2
+    ? await getDocumentsV2({
         clientCode: searchParams.clientCode,
         contractNumber: params.policyNumber,
         recipient: 'Client',
@@ -51,9 +51,15 @@ export default async function PolicyAcknowledgementDocumentPreview({
         // check delivery date. This code is specifically for viewing the policy
         // acknowledgement document
         documentType: 'POLPG',
+      })
+    : await searchDocumentsV3({
+        documentType: 'POLPG',
+        recipient: 'CLIENT',
+        parentCarrierCode: searchParams.clientCode,
+        policyNumber: params.policyNumber,
+        planCode,
+        documentClassification: SearchRequest.documentClassification.OUTBOUND,
       });
-  const { lineOfBusiness, policyNumber, planCode } = params;
-  const { clientCode } = searchParams;
   const document = policyDocuments?.data?.documents?.[0];
 
   logInfo(
@@ -72,9 +78,9 @@ export default async function PolicyAcknowledgementDocumentPreview({
     (document as DocumentV3SearchItem)?.sourceFileName ||
     '';
 
-  const docDownloadUrl = shouldUseV3
-    ? `/api/documents/v3/${document?.documentId}/download?parentCarrierCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`
-    : `/api/documents/${document?.documentId}/download/${fileName}.pdf?clientCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`;
+  const docDownloadUrl = shouldUseV2
+    ? `/api/documents/${document?.documentId}/download/${fileName}.pdf?clientCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`
+    : `/api/documents/v3/${document?.documentId}/download/${fileName}?parentCarrierCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`;
 
   return (
     <div style={{ height: '100svh' }}>

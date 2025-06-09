@@ -65,6 +65,7 @@ const TaxFormsSelection = ({
             const requestData = {
                 contractNumber: policy?.policyNumber || '',
                 clientCode: policy?.carrierId || '',
+                planCode: policy?.product?.planCode,
                 taxYear: Number(selected),
             };
             abortControllerRef.current.set(selected, newAbortController);
@@ -174,6 +175,8 @@ const TaxFormsSelection = ({
                                 carrierCode={policy?.carrierId || ''}
                                 selectedTaxForms={taxFormSelectionDetails.selectedTaxForms}
                                 setSelectedTaxForms={setSelectedTaxForms}
+                                planCode={policy?.product?.planCode}
+                                policyNumber={policy?.policyNumber || ''}
                             />
                         )}
                     </>

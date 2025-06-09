@@ -18,6 +18,7 @@ export type SearchTaxFormRequestBody = {
     numYears?: number;
     clientCode: string;
     taxYear?: number;
+    planCode?: string; // BPB - only supported on V3
 };
 
 export type SearchTaxFormResponseBody = {

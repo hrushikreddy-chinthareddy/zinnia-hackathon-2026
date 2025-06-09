@@ -11,7 +11,7 @@ import DocumentsWithPagination from '@/components/documents-list/DocumentsWithPa
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getDocumentsV2, getTaxDocumentsV2 } from '@/services/document/v2';
-import { searchDocumentsV3, getTaxDocumentsV3 } from '@/services/document/v3';
+import { getTaxDocumentsV3, searchDocumentsV3 } from '@/services/document/v3';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getPolicyDetails } from '@/services/policy';
 import {
@@ -19,6 +19,7 @@ import {
   DocumentV3SearchItem,
   ExtendedDocumentMeta,
 } from '@/types/document';
+import { retrieveDocumentsFromV2 } from '@/utils/documents';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
@@ -59,31 +60,36 @@ export const DocumentsView = async ({
     loggingContext
   );
   const showTaxDocuments = flags?.[FEATURE_FLAGS.VIEW_TAX_DOCUMENTS];
-  const shouldUseV3 = flags?.[FEATURE_FLAGS.DOCUMENTS_V3];
+  const shouldUseV2 =
+    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || retrieveDocumentsFromV2();
   const [correspondenceDocsRes, taxDocsRes] = await Promise.allSettled([
-    shouldUseV3
-      ? searchDocumentsV3({
-          documentClassification: SearchRequest.documentClassification.OUTBOUND,
-          parentCarrierCode: policyData?.carrierId,
-          policyNumber: policyNumber,
-          recipient: 'CLIENT',
-        })
-      : getDocumentsV2({
+    shouldUseV2
+      ? getDocumentsV2({
           clientCode: policyData?.carrierId,
           contractNumber: policyNumber,
           recipient: 'Client',
           source: 'Correspondence',
-        }),
-    shouldUseV3
-      ? getTaxDocumentsV3({
-          clientCode: policyData?.carrierId,
-          contractNumber: policyNumber,
-          numYears: maxTaxYears,
         })
-      : getTaxDocumentsV2({
+      : searchDocumentsV3({
+          documentClassification: SearchRequest.documentClassification.OUTBOUND,
+          parentCarrierCode: policyData?.carrierId,
+          planCode,
+          policyNumber,
+          recipient: 'CLIENT',
+        }),
+
+    shouldUseV2
+      ? getTaxDocumentsV2({
           clientCode: policyData?.carrierId,
           contractNumber: policyNumber,
           numYears: maxTaxYears,
+          planCode,
+        })
+      : getTaxDocumentsV3({
+          clientCode: policyData?.carrierId,
+          contractNumber: policyNumber,
+          numYears: maxTaxYears,
+          planCode,
         }),
   ]);
 

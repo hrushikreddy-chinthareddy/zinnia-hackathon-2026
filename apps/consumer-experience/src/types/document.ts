@@ -41,6 +41,7 @@ export interface TaxDocumentApiRequestInputs {
   taxYear: string;
   numYears: number;
   clientCode: string;
+  planCode?: string; // BPB - only supported on V3
 }
 
 export interface TaxDocument {

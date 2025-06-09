@@ -44,6 +44,8 @@ export default function DocumentsListTax({
           fChar: (d as TaxDocument)?.fChar || (d as TaxformResponse)?.fchar,
           taxYear: d.taxYear,
           docCategory: DocumentCategory.TAX,
+          planCode,
+          contractNumber: policyNumber,
         };
         const queryString = createQueryString(queryParams);
 

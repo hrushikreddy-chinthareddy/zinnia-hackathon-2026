@@ -14,6 +14,7 @@ import DocumentsTab from './case-tabs/documents-tab';
 import NotesTab from './case-tabs/notes-tab';
 import Typography, { TypographyVariant } from '../typography/typography';
 import ProgressTab from './case-tabs/progress/progress-tab';
+import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 
 export default function CaseSubPage({
     caseDetails,
@@ -26,6 +27,7 @@ export default function CaseSubPage({
 }) {
     const { t } = useTranslation();
     const { sessionId, partyId } = usePermissionsContext();
+    const { policy } = useCaseActivityContext();
 
     const trackTabClick = (tab: string) => () => {
         segmentAnalyticsTrackEvent<CaseTabClickedEvent>(SegmentTrackedEventName.CaseDetailsTabClicked, {
@@ -69,7 +71,7 @@ export default function CaseSubPage({
                     <ProgressTab caseDetails={caseDetails} />
                 </TabContent>
                 <TabContent className="w-full" value={CaseDetailsTabValues.documents}>
-                    <DocumentsTab caseDetails={caseDetails} />
+                    <DocumentsTab caseDetails={caseDetails} policy={policy} />
                 </TabContent>
                 <TabContent className="w-full" value={CaseDetailsTabValues.notes}>
                     <NotesTab caseDetails={caseDetails} />

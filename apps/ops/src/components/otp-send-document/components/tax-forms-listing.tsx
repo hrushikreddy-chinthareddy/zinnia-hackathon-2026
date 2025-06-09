@@ -43,16 +43,26 @@ type TaxFormsListingProps = {
     carrierCode: string;
     selectedTaxForms: TaxForm[] | TaxformResponse[];
     setSelectedTaxForms: (selectedTaxForms: TaxForm[] | TaxformResponse[]) => void;
+    planCode?: string;
+    policyNumber?: string;
 };
 
-const TaxFormsListing = ({ taxForms, carrierCode, selectedTaxForms, setSelectedTaxForms }: TaxFormsListingProps) => {
+const TaxFormsListing = ({
+    taxForms,
+    carrierCode,
+    selectedTaxForms,
+    setSelectedTaxForms,
+    planCode,
+    policyNumber,
+}: TaxFormsListingProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: '' });
     const [selected, setSelected] = useState(selectedTaxForms || []);
     const setCookies = (form: TaxForm | TaxformResponse) => {
         setCookie('carrierCode', carrierCode);
-        setCookie('contractNumber', form?.contractNumber);
+        setCookie('contractNumber', form?.contractNumber ?? policyNumber ?? '');
         setCookie('fChar', (form as TaxForm)?.fChar || (form as TaxformResponse)?.fchar);
         setCookie('taxYear', form?.taxYear);
+        setCookie('planCode', planCode || '');
     };
 
     useEffect(() => {

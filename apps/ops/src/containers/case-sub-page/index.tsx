@@ -17,12 +17,12 @@ import CasePageHeader from './CasePageHeader';
 import CaseSideNav from './CaseSideNav';
 import styles from './styles.module.css';
 
-interface CaseRedesignProps {
+interface CaseOverviewProps {
     caseDetails: Case;
     tab?: string; // The subpath (if any)
 }
 
-const CaseRedesign = ({ caseDetails, tab }: CaseRedesignProps) => {
+const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [tabVal, setTabVal] = useState(tab);
     const { featureFlags } = useOptimizely();
@@ -60,4 +60,4 @@ const CaseRedesign = ({ caseDetails, tab }: CaseRedesignProps) => {
     );
 };
 
-export default CaseRedesign;
+export default CaseOverview;

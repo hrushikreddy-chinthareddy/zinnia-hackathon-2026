@@ -34,7 +34,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
 
             try {
-                const { contractNumber, clientCode, fChar, taxYear } = query;
+                const { contractNumber, clientCode, fChar, taxYear, planCode } = query;
 
                 const translations = await serverSideTranslations(
                     locale,
@@ -52,6 +52,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         carrierCode: clientCode,
                         fChar,
                         taxYear,
+                        planCode,
                     },
                 };
             } catch (e) {

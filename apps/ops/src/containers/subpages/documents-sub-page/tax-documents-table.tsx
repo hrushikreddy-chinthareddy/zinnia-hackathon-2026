@@ -22,11 +22,12 @@ import styles from './documents-results-table.module.css';
 
 type TaxDocumentsTableProps = {
     carrierCode: string;
+    planCode?: string;
     policyNumber: string;
     results: TaxformResponse[];
 };
 
-export default function TaxDocumentsTable({ carrierCode, policyNumber, results }: TaxDocumentsTableProps) {
+export default function TaxDocumentsTable({ carrierCode, planCode, policyNumber, results }: TaxDocumentsTableProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
 
     return (
@@ -65,6 +66,7 @@ export default function TaxDocumentsTable({ carrierCode, policyNumber, results }
                                 <TaxFormPreviewer
                                     className="!underline-offset-2"
                                     carrier={carrierCode}
+                                    planCode={planCode}
                                     policyNumber={policyNumber}
                                     taxForm={document}
                                 >

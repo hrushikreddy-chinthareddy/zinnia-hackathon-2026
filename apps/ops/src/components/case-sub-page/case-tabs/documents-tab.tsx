@@ -13,6 +13,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import DocumentResultsPagination from '@deps/containers/subpages/documents-sub-page/documents-results-pagination';
 import DocumentsResultsTable from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Case } from '@deps/models/case/case';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
@@ -32,7 +33,7 @@ const getKnownCaseDocIds = (caseDetails: Case): string[] => {
     return Array.from(knownDocIds);
 };
 
-export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
+export default function DocumentsTab({ caseDetails, policy }: { caseDetails: Case; policy: PolicyDetails | null }) {
     const { t } = useTranslation();
     const knownCaseDocIds = getKnownCaseDocIds(caseDetails);
     const [docSource, setDocSource] = useState(DocumentTypeView.Policy as string);
@@ -73,8 +74,9 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
                     ? SearchRequest.documentClassification.INBOUND
                     : SearchRequest.documentClassification.OUTBOUND,
             policyNumber: caseDetails.policyNumber,
+            planCode: caseDetails?.planCode || caseDetails?.additionalData?.planCode || policy?.planCode,
         };
-    }, [caseDetails, docSource]);
+    }, [caseDetails, policy, docSource]);
 
     const handleDocSourceChange = (value: string) => {
         setCaseOffset(0);
@@ -110,7 +112,7 @@ export default function DocumentsTab({ caseDetails }: { caseDetails: Case }) {
     } = useQuery({
         queryKey: ['documentSearch', policyDocumentSearchBody, limit, policyOffset, useV3],
         queryFn: () => getDocumentSearchResultsQuery(policyDocumentSearchBody, limit, policyOffset, useV3),
-        enabled: !!policyDocumentSearchBody?.policyNumber,
+        enabled: !!policyDocumentSearchBody?.policyNumber && !!policyDocumentSearchBody?.planCode,
     });
 
     return (

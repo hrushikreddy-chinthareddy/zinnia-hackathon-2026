@@ -28,6 +28,10 @@ export const searchTaxForms = async (
         if (requestBody?.taxYear) {
             url += `&taxYear=${requestBody.taxYear}`;
         }
+        // BPB - planCode is only supported on V3
+        if (useV3 && requestBody?.planCode) {
+            url += `&planCode=${requestBody.planCode}`;
+        }
 
         const options: AxiosRequestConfig = {
             signal,
@@ -76,9 +80,13 @@ export const downloadTaxFormById = async (
 
         const queryParams = `?clientCode=${optionalParams?.clientCode}&contractNumber=${optionalParams?.contractNumber}&fChar=${optionalParams?.fChar}&taxYear=${optionalParams?.taxYear}`;
 
-        const url = useV3
+        let url = useV3
             ? `${baseUrlV3}/tax-forms/${formId}/download${queryParams}`
             : `${baseAppUrl}/api/documents/tax-form/${formId}/preview${queryParams}`;
+
+        if (useV3 && optionalParams?.planCode) {
+            url += `&planCode=${optionalParams?.planCode}`;
+        }
 
         datadogLogs.logger.info('contactCenterDownloadTaxFormById', {
             payload: { formId, ...optionalParams },

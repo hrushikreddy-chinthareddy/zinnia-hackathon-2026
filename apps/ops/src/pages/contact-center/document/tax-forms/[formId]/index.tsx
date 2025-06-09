@@ -23,10 +23,11 @@ interface FormViewerProps extends SegmentTrackedPageProps {
     carrierCode: string;
     fChar: string;
     taxYear: string;
+    planCode: string;
 }
 
 // NOTE!  This FormViewer is now shared between Policy Management and Contact Center.  If substantial changes are made to this page, they should be made to both places
-const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear }: FormViewerProps) => {
+const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear, planCode }: FormViewerProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
     const [pdf, setPdf] = useState<string | null>(null);
     const [pdfError, setPdfError] = useState<boolean>(false);
@@ -47,7 +48,11 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear 
                     carrierCode?.toLocaleLowerCase() || ''
                 );
 
-                const response = await downloadTaxFormById(formId, { contractNumber, clientCode: carrierCode, fChar, taxYear }, useV3);
+                const response = await downloadTaxFormById(
+                    formId,
+                    { contractNumber, clientCode: carrierCode, fChar, taxYear, planCode },
+                    useV3
+                );
 
                 if (response?.binaryData) {
                     setPdf(response?.binaryData);
@@ -60,7 +65,7 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear 
             }
         };
         getForms();
-    }, [carrierCode, contractNumber, fChar, formId, taxYear, featureFlagVariables]);
+    }, [carrierCode, contractNumber, fChar, formId, taxYear, featureFlagVariables, planCode]);
 
     if (!pdf) return <PageLoader />;
     if (pdfError) return <p>{t('pdfError' as string)}</p>;
@@ -110,12 +115,13 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
 
             try {
-                const { contractNumber, carrierCode, fChar, taxYear } = getCookies({ req, res });
+                const { contractNumber, carrierCode, fChar, taxYear, planCode } = getCookies({ req, res });
 
                 deleteCookie('contractNumber');
                 deleteCookie('carrierCode');
                 deleteCookie('fChar');
                 deleteCookie('taxYear');
+                deleteCookie('planCode');
 
                 const translations = await serverSideTranslations(
                     locale,
@@ -133,6 +139,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         carrierCode,
                         fChar,
                         taxYear,
+                        planCode,
                     },
                 };
             } catch (e) {
