@@ -9,4 +9,5 @@ export enum FEATURE_FLAGS {
   TRANSACTION_NOTIFICATIONS = 'transaction_notifications',
   POLICY_OWNER_PROFILE_PARTIES = 'policy_owner_profile_parties',
   WELLABE_AUTH_TOKENS = 'wellabe_auth_tokens',
+  ENTERPRISE_POLICY_SEARCH = 'enterprise_policy_search',
 }

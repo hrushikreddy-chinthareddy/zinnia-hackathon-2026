@@ -15,6 +15,7 @@ import { BankDetail } from '@/components/person-data/types';
 import {
   ApiResponse,
   ServerApi,
+  enterprisePolicySearchBaseUrl,
   isMockErrorEnabled,
   isMockPaymentHistoryRequestEnabled,
   isMockPolicyMetricsRequestEnabled,
@@ -79,7 +80,9 @@ import { RidersAndBenefits } from '@/types/riders';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { CommonLogContext, logError } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
+import { getFeatureFlags } from '../feature-flags';
 import { mockAnnuityResponse } from '../mocks/annuity';
 import { MockMetricsResponse } from '../mocks/metrics';
 import {
@@ -88,6 +91,45 @@ import {
 } from '../mocks/transactions';
 
 const FILE_NAME = '/src/services/policy/index.ts';
+
+const getPolicyReferencesByCarrierEnterprise = withLogging(
+  async (loggingCtx?: CommonLogContext) => {
+    const searchUrl = `${enterprisePolicySearchBaseUrl}/search?searchEntity=policy&offset=0&limit=100`;
+    const searchFilter: PolicySearchRequest = {};
+
+    if (isTestPoliciesEnabled()) {
+      // @ts-expect-error specs aren't updated in developer portal yet
+      searchFilter['carrier'] = CarrierId.SBUL;
+    }
+
+    if (isMockErrorEnabled(ApiEndpoints.POLICY_BY_CARRIERS)) {
+      throw new Error('Error fetching policies by carrier.');
+    }
+
+    const rawResponse = await ServerApi.post(
+      searchUrl,
+      JSON.stringify(searchFilter),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      },
+      loggingCtx
+    );
+
+    const response = await parseAPIResponse(rawResponse);
+
+    if (!rawResponse?.ok) {
+      logError(
+        'Error fetching policy search results',
+        await logApiNotOkDetails({ rawResponse, parsedResponse: response })
+      );
+
+      throw new Error('Error fetching policy references');
+    }
+
+    return response;
+  },
+  { file: FILE_NAME, functionName: 'getPolicyReferencesByCarrierEnterprise' }
+);
 
 /**
  * Returns error object that occur while fetching policy data from an API.
@@ -98,7 +140,10 @@ const FILE_NAME = '/src/services/policy/index.ts';
  */
 const getPolicyReferencesByCarrier = withLogging(
   async (loggingCtx?: CommonLogContext) => {
-    const searchUrl = `${policyApiBaseUrl}/search?offset=0&limit=100`;
+    const featureFlags = await getFeatureFlags();
+    const searchUrl = featureFlags[FEATURE_FLAGS.ENTERPRISE_POLICY_SEARCH]
+      ? `${policyApiBaseUrl}/search?searchEntity=policy&offset=0&limit=100`
+      : `${policyApiBaseUrl}/search?offset=0&limit=100`;
     const searchFilter: PolicySearchRequest = {};
 
     if (isTestPoliciesEnabled()) {
@@ -299,9 +344,12 @@ const getPolicyMetrics = withLogging(
 
 export const getMyPoliciesByCarrier = withLogging(
   async (
+    // TODO: how could this be a string?
     carrierId: string[] | string,
     loggingCtx: CommonLogContext
   ): Promise<CarrierPolicyDetails[]> => {
+    const featureFlags = await getFeatureFlags();
+
     if (isMockSearchRequestEnabled()) {
       const product = isTestAnnuitiesEnabled()
         ? mockAnnuityResponse
@@ -309,14 +357,19 @@ export const getMyPoliciesByCarrier = withLogging(
       return transformPolicyReferenceData([product]);
     }
 
-    const { data: response, error } =
-      await getPolicyReferencesByCarrier(loggingCtx);
+    const { data: response, error } = featureFlags[
+      FEATURE_FLAGS.ENTERPRISE_POLICY_SEARCH
+    ]
+      ? await getPolicyReferencesByCarrierEnterprise(loggingCtx)
+      : await getPolicyReferencesByCarrier(loggingCtx);
+
     if (!response || !response.results || !!error) {
       throw new Error('Failed to fetch policy references by carrier.', {
         cause: { error },
       });
     }
 
+    // TODO: why did we do it this way rather than passing carrierId array to the search?
     const filteredPolicies: Promise<ApiResponse<Policy>>[] = response.results
       .filter((p: Policy) => carrierId.includes(p.carrierId || ''))
       .map(
