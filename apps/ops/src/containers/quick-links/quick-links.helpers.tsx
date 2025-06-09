@@ -17,10 +17,14 @@ export const getPolicyQuickLinks = (t: TFunction, policy: PolicyDetails): QuickL
                     name: t(`site.navLinks.${isAnnuity ? 'contractDetails' : 'policyDetails'}.text`),
                     href: t(`site.navLinks.${isAnnuity ? 'contractDetails' : 'policyDetails'}.link`, { id: policyNumber, planCode }) || '',
                 },
-                {
-                    name: t('site.navLinks.coverage.text'),
-                    href: t('site.navLinks.coverage.link', { id: policyNumber, planCode }) || '',
-                },
+                ...(!isAnnuity
+                    ? [
+                          {
+                              name: t('site.navLinks.coverage.text'),
+                              href: t('site.navLinks.coverage.link', { id: policyNumber, planCode }) || '',
+                          },
+                      ]
+                    : []),
                 {
                     name: t(`site.navLinks.ridersAndFeatures.text`),
                     href: t(`site.navLinks.ridersAndFeatures.link`, { id: policyNumber, planCode }) || '',
@@ -33,10 +37,15 @@ export const getPolicyQuickLinks = (t: TFunction, policy: PolicyDetails): QuickL
                     name: t('site.navLinks.transactions.premiums.text'),
                     href: t('site.navLinks.transactions.premiums.href', { id: policyNumber, planCode }) || '',
                 },
-                {
-                    name: t('site.navLinks.transactions.loans.text'),
-                    href: t('site.navLinks.transactions.loans.href', { id: policyNumber, planCode }) || '',
-                },
+
+                ...(!isAnnuity
+                    ? [
+                          {
+                              name: t('site.navLinks.transactions.loans.text'),
+                              href: t('site.navLinks.transactions.loans.href', { id: policyNumber, planCode }) || '',
+                          },
+                      ]
+                    : []),
                 {
                     name: t('site.navLinks.transactions.withdrawals.text'),
                     href: t('site.navLinks.transactions.withdrawals.href', { id: policyNumber, planCode }) || '',

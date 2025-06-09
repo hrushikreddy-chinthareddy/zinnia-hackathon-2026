@@ -42,6 +42,8 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
 import { logError, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+import { useMemo } from 'react';
+import Custom404Page from '@deps/pages/404s';
 
 interface PolicyPageProps extends SegmentTrackedPageProps {
     policy: Policy;
@@ -82,6 +84,8 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps)
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
+    const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
+
     if (loading) {
         return (
             <PolicyLayout loading={true}>
@@ -92,17 +96,17 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps)
         );
     }
 
+    const isAnnuityForbiddenPage = policyDetails.isAnnuity && slug?.[0] === 'policy' && ['coverage', 'loans'].includes(slug?.[1]);
+
     // If there is no policy or an error occurs, route to the 404 page.
-    // trigger a router reload also, because we need the 404 to load from the server to get the translations
-    if (error || !policy) {
-        router.push('/404');
-        router.reload();
-        return;
+    // Do not redirect to /404, as it no longer exists as a standalone page.
+    // Translations are now handled via getServerSideProps in pages/[...lng].tsx.
+    if (error || !policy || isAnnuityForbiddenPage) {
+        return <Custom404Page />;
     }
 
     let subPageContent = null;
     let subPageTitleKey = '';
-    const policyDetails = new PolicyDetails(policy);
 
     // policies/id/... with no slug
     if (!slug || slug.length === 0) {

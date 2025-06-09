@@ -9,11 +9,12 @@ import { UserPermission } from '@deps/models/user-profile';
 import Error from '@deps/pages/404s';
 import { logWarn, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+import { AppProps } from 'next/app';
 
 // THIS IS THE 404 page. This allows us to include translations and server-side funtionality
 // to a page that is usually statically generated.
-const CatchAllPage = () => {
-    return <Error />;
+const CatchAllPage = (pageProps: AppProps['pageProps']) => {
+    return <Error {...pageProps} />;
 };
 
 export const getServerSideProps = withPageAuthAndLogging(
@@ -57,7 +58,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 nextI18nextConfig,
                 ALL_LOCALES
             );
-
             return { props: { locale, ...translations, permissions } };
         },
     },
