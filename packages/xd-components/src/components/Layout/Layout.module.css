@@ -37,9 +37,28 @@
   content: none;
 }
 
+.sidesheetContent,
+.sidesheetOverlay,
+.layoutHeader {
+  display: auto;
+}
+.sidebarNav {
+  display: none;
+}
+
 @media (min-width: 1024px) {
   .container {
     display: flex;
     background-color: var(--color-base-surface-surface-carrier);
+  }
+
+  .sidesheetContent,
+  .sidesheetOverlay,
+  .layoutHeader {
+    display: none;
+  }
+
+  .sidebarNav {
+    display: block;
   }
 }

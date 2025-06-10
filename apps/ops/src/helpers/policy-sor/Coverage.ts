@@ -6,6 +6,7 @@ export class Coverage {
     private coverageLayerByType: Record<string, CoverageLayer> = {};
     public allCoverageParticipants: CoverageParticipants[] = [];
     private coverageParticipantByPartyId: Record<string, CoverageParticipants> = {};
+
     constructor({ coverage = {} }: Policy = {}) {
         this.coverage = coverage;
         coverage?.coverageLayers?.forEach(coverageLayer => {

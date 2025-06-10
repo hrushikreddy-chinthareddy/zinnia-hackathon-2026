@@ -18,3 +18,38 @@
     flex-direction: column;
     gap: var(--measure-dimension-gap-lg);
 }
+
+.quickViewRoot {
+    flex: 1;
+
+    &:first-child {
+        border-right: 2px solid var(--color-base-border-border-light);
+        padding-right: 32px;
+    }
+    &:last-child {
+        padding-left: 32px;
+    }
+}
+
+.quickViewSection {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    column-gap: 32px;
+    row-gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .policyQuickColumns {
+        flex-direction: column;
+        gap: 32px;
+    }
+    .quickViewRoot {
+        &:first-child {
+            border-right: none;
+            padding-right: 0;
+        }
+        &:last-child {
+            padding-left: 0;
+        }
+    }
+}

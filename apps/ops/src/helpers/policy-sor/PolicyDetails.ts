@@ -49,6 +49,7 @@ export class PolicyDetails {
     public grossDeathBenefitAmount: number | undefined;
     public isAnnuity: boolean;
     public isLife: boolean;
+    public isTerm: boolean;
     public issueDate: string | undefined;
     public issueState: string | undefined;
     public loanValues: LoanValues | undefined;
@@ -103,6 +104,7 @@ export class PolicyDetails {
             policy?.product?.lineOfBusiness === LineOfBusiness.ANNUITY ||
             policy?.product?.lineOfBusiness === ('Annuity Product' as LineOfBusiness);
         this.isLife = policy?.product?.lineOfBusiness === LineOfBusiness.LIFE;
+        this.isTerm = policy.product?.productType === ProductType.TERM;
         this.issueDate = policy.policyDates?.issueDate;
         this.issueState = policy.issueState;
         this.loanValues = policy?.loanValues;

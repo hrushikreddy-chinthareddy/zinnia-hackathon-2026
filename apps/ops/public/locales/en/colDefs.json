@@ -40,7 +40,8 @@
         "reinstatementPaymentPeriodTooltip": "These dates tell you how long the owner has to make the required reinstatement payment once approved via underwriting. The first date is when the owner was approved for reinstatement, and the second is the deadline to make the required reinstatement payment.",
         "reinstatementMinPayment": "Reinstatement min payment",
         "reinstatementMinPaymentTooltip": "This is the minimum amount the owner must pay in premium within the reinstatement approval period to get their policy back to active.",
-        "qualificationType": "Qualification type"
+        "qualificationType": "Qualification type",
+        "policyTerm": "Policy Term"
     },
     "policyDetails": {
         "issueDate": "Issue date",

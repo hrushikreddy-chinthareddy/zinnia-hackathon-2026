@@ -10,10 +10,8 @@ import {
     Policy,
     FeatureType,
     PolicyStatus,
-    ProductType,
 } from '@zinnia/api-types/types/sor';
 import { Icon, IconType, BannerAlert, BannerVariant } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
@@ -59,15 +57,11 @@ import { getCasesQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { getPolicyQuery, getPolicyQueryKey } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { ReactComponent as CogIcon } from '@deps/styles/elements/icons/icons_outlined/cog.svg';
-import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT, FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING, FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { CaseSearchErrorResponse, CaseSearchResponse, PolicySearchResult, SearchViewQuery } from '@deps/types/search';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import AnnuityQuickView from './active-quick-view/annuity';
-import EverlyIul from './active-quick-view/everly-iul';
-import EverlyUl from './active-quick-view/everly-ul';
-import BaseDeathBenefit from './display-fields/base-death-benefit';
-import UpcomingPremiumDisplayField from './display-fields/upcoming-premium';
 import { default as styles } from './policy-summary-card.module.css';
 import SideSheetAddress from '../people-data-cards/address-card/side-sheet/side-sheet-address';
 import { sortEmailsByType } from '../people-data-cards/email-card/email-card.helpers';
@@ -76,6 +70,11 @@ import { sortPhonesByType } from '../people-data-cards/phone-card/phone-card.hel
 import { SideSheetPhone } from '../people-data-cards/phone-card/side-sheet/side-sheet-phone';
 import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { getPolicyQuickLinks } from '../quick-links/quick-links.helpers';
+import { ActiveQuickView } from './active-quick-view/active-quick-view';
+import { LapseQuickView } from './lapse-quick-view';
+import { PendingLapseQuickView } from './pending-lapse-quick-view';
+import { OwnerInfoSkeleton, QuickViewSkeleton } from './skeletons';
+import { TermQuickView } from './term-quick-view';
 
 interface SummaryCardProps extends PropsWithChildren {
     policySearchResult: PolicySearchResult;
@@ -86,7 +85,13 @@ interface KeyValuesBarProps {
     loadingPolicyDetails?: boolean;
 }
 
-const getPolicyHighlighter = ({ firstName, lastName, policyNumber, ssn }: SearchViewQuery) => {
+enum SideSheetViews {
+    PHONE = 'PHONE',
+    EMAIL = 'EMAIL',
+    ADDRESS = 'ADDRESS',
+}
+
+export const getPolicyHighlighter = ({ firstName, lastName, policyNumber, ssn }: SearchViewQuery) => {
     if (!firstName && !lastName && !policyNumber && !ssn) return [];
 
     const descriptionListHighlighter = [];
@@ -236,169 +241,15 @@ function KeyValuesBar({ policy, loadingPolicyDetails = false }: KeyValuesBarProp
 
 interface QuickViewProp extends PropsWithChildren {
     children: ReactNode;
-    gridColumns?: number;
     title: string;
 }
 
-const columnNumberAtLarge: Record<number, string> = {
-    1: 'lg:grid-cols-1',
-    2: 'lg:grid-cols-2',
-};
-
-export const QuickViewRoot: React.FC<QuickViewProp> = ({ children, title, gridColumns = 2 }) => {
+export const QuickViewRoot = ({ children, title }: QuickViewProp) => {
     return (
-        <div
-            data-testid={`${CardColumnsTest.ITEMS}-${title}`}
-            className={`mt-8 grow first:mt-0 first:md:mt-0 lg:mt-0 lg:border-r-2 lg:border-r-gray-100 lg:px-8 lg:first:pl-0 lg:last:border-none lg:last:pr-0`}
-        >
+        <div data-testid={`${CardColumnsTest.ITEMS}-${title}`} className={styles.quickViewRoot}>
             <h3 className="pb-4">{title}</h3>
-            <div
-                className={`grid w-fit grid-cols-${gridColumns} items-start gap-x-8 gap-y-6 md:grid-cols-3 md:gap-y-6 ${columnNumberAtLarge[gridColumns]} lg:gap-y-8`}
-            >
-                {children}
-            </div>
+            <div className={styles.quickViewSection}>{children}</div>
         </div>
-    );
-};
-
-const PendingLapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
-    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
-    const pendingLapse = policy.features.getFirstFeatureByType(FeatureType.LAPSEASSESSMENT);
-    const { searchValue } = useContext(DashboardContext);
-
-    return (
-        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2')}>
-            <div>
-                <Label
-                    variant={LabelVariant.FieldLabel}
-                    label={t('colDefs:policySummary.gracePeriod')}
-                    tooltipTitle={t('colDefs:policySummary.gracePeriod')}
-                    tooltipBody={t('colDefs:policySummary.gracePeriodTooltip')}
-                />
-                <Content
-                    details={`${dayjs(pendingLapse?.startDate).format(DEFAULT_EXTENDED_DATE_FORMAT)} - ${dayjs(
-                        pendingLapse?.endDate
-                    ).format(DEFAULT_EXTENDED_DATE_FORMAT)}`}
-                    variant={ContentVariant.BodySm}
-                />
-            </div>
-            <div>
-                <Label
-                    variant={LabelVariant.FieldLabel}
-                    label={t('colDefs:policySummary.gracePeriodMinPayment')}
-                    tooltipTitle={t('colDefs:policySummary.gracePeriodMinPayment')}
-                    tooltipBody={t('colDefs:policySummary.gracePeriodMinPaymentTooltip')}
-                />
-                <Content
-                    details={numberFormatify(pendingLapse?.totalMinimumRequiredAmount || DEFAULT_ERROR_STRING)}
-                    variant={ContentVariant.BodySm}
-                    highlights={getPolicyHighlighter(searchValue)}
-                />
-            </div>
-            <UpcomingPremiumDisplayField policy={policy} />
-            <BaseDeathBenefit baseDeathBenefit={policy.baseDeathBenefit} />
-        </QuickViewRoot>
-    );
-};
-
-// TODO MG: move these components to their own file
-const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
-    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
-
-    const reinstatement = policy.features.getFirstFeatureByType(FeatureType.REINSTATEMENT);
-    const pendingLapse = policy.features.getFirstFeatureByType(FeatureType.LAPSEASSESSMENT);
-
-    let reinstatementPeriodText;
-
-    switch (Number(reinstatement?.period)) {
-        case 0:
-            reinstatementPeriodText = 'None';
-            break;
-        case 1:
-            reinstatementPeriodText = t('common:temporal.oneYear');
-            break;
-        default:
-            reinstatementPeriodText = t('common:temporal.nYears', { n: reinstatement?.period });
-            break;
-    }
-
-    return (
-        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2')}>
-            <div>
-                <Label
-                    variant={LabelVariant.FieldLabel}
-                    label={t('colDefs:policySummary.lapseEffectiveDate')}
-                    tooltipTitle={t('colDefs:policySummary.lapseEffectiveDate')}
-                    tooltipBody={t('colDefs:policySummary.lapseEffectiveDateTooltip')}
-                />
-                <Content
-                    details={pendingLapse?.effectiveDate ? dayjs(pendingLapse?.effectiveDate).format(DEFAULT_EXTENDED_DATE_FORMAT) : '--'}
-                    variant={ContentVariant.BodySm}
-                />
-            </div>
-            <div>
-                <Label
-                    variant={LabelVariant.FieldLabel}
-                    label={t('colDefs:policySummary.reinstatementPeriod')}
-                    tooltipTitle={t('colDefs:policySummary.reinstatementPeriod')}
-                    tooltipBody={t('colDefs:policySummary.reinstatementPeriodTooltip')}
-                />
-                <Content details={reinstatementPeriodText} variant={ContentVariant.BodySm} />
-            </div>
-            {reinstatement && (
-                <>
-                    {!!reinstatement.approvalDate && (
-                        <div>
-                            <Label
-                                variant={LabelVariant.FieldLabel}
-                                label={t('colDefs:policySummary.underwritingDecision')}
-                                tooltipTitle={t('colDefs:policySummary.underwritingDecision')}
-                                tooltipBody={t('colDefs:policySummary.underwritingDecisionTooltip')}
-                            />
-                            <Content
-                                details={
-                                    reinstatement?.approvalDate
-                                        ? String(t('common:general.approved'))
-                                        : String(t('common:general.unapproved'))
-                                }
-                                variant={ContentVariant.BodySm}
-                            />
-                        </div>
-                    )}
-
-                    {reinstatement.approvalDate && reinstatement.endDate && (
-                        <div>
-                            <Label
-                                variant={LabelVariant.FieldLabel}
-                                label={t('colDefs:policySummary.reinstatementPaymentPeriod')}
-                                tooltipTitle={t('colDefs:policySummary.reinstatementPaymentPeriod')}
-                                tooltipBody={t('colDefs:policySummary.reinstatementPaymentPeriodTooltip')}
-                            />
-                            <Content
-                                details={`${dayjs(reinstatement?.approvalDate).format(DEFAULT_EXTENDED_DATE_FORMAT)} - ${dayjs(
-                                    reinstatement?.endDate
-                                ).format(DEFAULT_EXTENDED_DATE_FORMAT)}`}
-                                variant={ContentVariant.BodySm}
-                            />
-                        </div>
-                    )}
-
-                    {!!reinstatement.paymentAmount && (
-                        <div>
-                            <Label
-                                variant={LabelVariant.FieldLabel}
-                                label={t('colDefs:policySummary.reinstatementMinPayment')}
-                                tooltipTitle={t('colDefs:policySummary.reinstatementMinPayment')}
-                                tooltipBody={t('colDefs:policySummary.reinstatementMinPaymentTooltip')}
-                            />
-                            <Content details={numberFormatify(reinstatement?.paymentAmount)} variant={ContentVariant.BodySm} />
-                        </div>
-                    )}
-                </>
-            )}
-
-            <BaseDeathBenefit baseDeathBenefit={policy.baseDeathBenefit} />
-        </QuickViewRoot>
     );
 };
 
@@ -494,29 +345,10 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
     );
 };
 
-const LabelContentSkeleton = ({ contentLines = 1 }: { contentLines?: number }) => (
-    <div className="flex flex-col gap-1">
-        <Skeleton width="80px" height="16px" />
-        {Array.from({ length: contentLines }).map((_, index) => (
-            <Skeleton key={index} width="130px" height="16px" />
-        ))}
-    </div>
-);
-
-const QuickViewSkeleton = () => {
-    return (
-        <QuickViewRoot title={''}>
-            <LabelContentSkeleton />
-            <LabelContentSkeleton />
-            <LabelContentSkeleton />
-            <LabelContentSkeleton />
-            <LabelContentSkeleton />
-            <LabelContentSkeleton />
-        </QuickViewRoot>
-    );
-};
 const QuickViewModule = ({ policy }: BasePolicyComponentArgs) => {
-    if (policy.isLife) {
+    if (policy.isTerm) {
+        return <TermQuickView policy={policy} />;
+    } else if (policy.isLife) {
         switch (policy.policyStatus) {
             case PolicyStatus.PENDINGLAPSE:
                 return <PendingLapseQuickView policy={policy} />;
@@ -525,33 +357,9 @@ const QuickViewModule = ({ policy }: BasePolicyComponentArgs) => {
             default:
                 return <ActiveQuickView policy={policy} />;
         }
+    } else if (policy.isAnnuity) {
+        return <AnnuityQuickView policy={policy} />;
     }
-    return <AnnuityQuickView policy={policy} />;
-};
-
-enum SideSheetViews {
-    PHONE = 'PHONE',
-    EMAIL = 'EMAIL',
-    ADDRESS = 'ADDRESS',
-}
-
-const OwnerInfoSkeleton = () => {
-    return (
-        <QuickViewRoot title={' '} gridColumns={1}>
-            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
-                <LabelContentSkeleton />
-                <LabelContentSkeleton />
-            </div>
-            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
-                <LabelContentSkeleton />
-                <LabelContentSkeleton />
-            </div>
-            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
-                <LabelContentSkeleton />
-                <LabelContentSkeleton contentLines={3} />
-            </div>
-        </QuickViewRoot>
-    );
 };
 
 const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
@@ -663,90 +471,69 @@ const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
     };
 
     return (
-        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header1')} gridColumns={1}>
-            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
-                <div>
-                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.fullName')} />
-                    <Content
-                        details={toTitleCase(owner?.fullName) || DEFAULT_ERROR_STRING}
-                        variant={ContentVariant.BodySm}
-                        highlights={getPolicyHighlighter(searchValue)}
-                        pii={true}
-                    />
-                </div>
-                <div>
-                    <div className="flex gap-1">
-                        <Label id="policy-owner-email" variant={LabelVariant.FieldLabel} label={t('colDefs:owner.email')} />
-                        {bestAvailEmail?.isPending && <PendingTag />}
-                        {canEditPolicy && bestAvailEmail && (
-                            <IconButton aria-describedby="policy-owner-email" onClick={() => openSideSheet(SideSheetViews.EMAIL)}>
-                                <Icon type={IconType.EDIT_ALT} height={16} width={16} />
-                            </IconButton>
-                        )}
-                    </div>
-                    <Content details={bestAvailEmail?.emailAddress || DEFAULT_ERROR_STRING} variant={ContentVariant.BodySm} pii={true} />
-                </div>
+        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header1')}>
+            <div>
+                <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.fullName')} />
+                <Content
+                    details={toTitleCase(owner?.fullName) || DEFAULT_ERROR_STRING}
+                    variant={ContentVariant.BodySm}
+                    highlights={getPolicyHighlighter(searchValue)}
+                    pii={true}
+                />
             </div>
-            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
-                <div>
-                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.birthDate')} />
-                    <Content details={owner?.formattedBirthDate} variant={ContentVariant.BodySm} pii={true} />
+            <div>
+                <div className="flex gap-1">
+                    <Label id="policy-owner-email" variant={LabelVariant.FieldLabel} label={t('colDefs:owner.email')} />
+                    {bestAvailEmail?.isPending && <PendingTag />}
+                    {canEditPolicy && bestAvailEmail && (
+                        <IconButton aria-describedby="policy-owner-email" onClick={() => openSideSheet(SideSheetViews.EMAIL)}>
+                            <Icon type={IconType.EDIT_ALT} height={16} width={16} />
+                        </IconButton>
+                    )}
                 </div>
-                <div>
-                    {' '}
-                    <div className="flex gap-1">
-                        <Label id="policy-owner-phone" variant={LabelVariant.FieldLabel} label={contactNumberLabel} />
-                        {bestAvailPhone?.isPending && <PendingTag />}
-                        {canEditPolicy && bestAvailPhone && (
-                            <IconButton aria-describedby="policy-owner-phone" onClick={() => openSideSheet(SideSheetViews.PHONE)}>
-                                <Icon type={IconType.EDIT_ALT} height={16} width={16} />
-                            </IconButton>
-                        )}
-                    </div>
-                    <Content
-                        details={(bestAvailPhone && formatPhone(bestAvailPhone)) || DEFAULT_ERROR_STRING}
-                        variant={ContentVariant.BodySm}
-                        pii={true}
-                    />
-                </div>
+                <Content details={bestAvailEmail?.emailAddress || DEFAULT_ERROR_STRING} variant={ContentVariant.BodySm} pii={true} />
             </div>
-            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
-                <div>
-                    <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.ssn')} />
-                    <Content
-                        details={formatSSN(owner?.ssn)}
-                        variant={ContentVariant.BodySm}
-                        highlights={getPolicyHighlighter(searchValue)}
-                        pii={true}
-                    />
-                </div>
-                <div>
-                    <div className="flex gap-1">
-                        <Label id="policy-owner-address" variant={LabelVariant.FieldLabel} label={t('colDefs:owner.mailingAddress')} />
-                        {bestAvailAddress?.isPending && <PendingTag />}
-                        {canEditPolicy && bestAvailAddress && (
-                            <IconButton aria-describedby="policy-owner-address" onClick={() => openSideSheet(SideSheetViews.ADDRESS)}>
-                                <Icon type={IconType.EDIT_ALT} height={16} width={16} />
-                            </IconButton>
-                        )}
-                    </div>
-                    {(bestAvailAddress && <FormattedAddress address={bestAvailAddress} />) || DEFAULT_ERROR_STRING}
-                </div>
+            <div>
+                <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.birthDate')} />
+                <Content details={owner?.formattedBirthDate} variant={ContentVariant.BodySm} pii={true} />
             </div>
-        </QuickViewRoot>
-    );
-};
-
-const ActiveQuickView = ({ policy }: BasePolicyComponentArgs) => {
-    const { t } = useTranslation();
-
-    return (
-        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2')}>
-            {policy?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE ? (
-                <EverlyIul policy={policy} />
-            ) : (
-                <EverlyUl policy={policy} />
-            )}
+            <div>
+                <div className="flex gap-1">
+                    <Label id="policy-owner-phone" variant={LabelVariant.FieldLabel} label={contactNumberLabel} />
+                    {bestAvailPhone?.isPending && <PendingTag />}
+                    {canEditPolicy && bestAvailPhone && (
+                        <IconButton aria-describedby="policy-owner-phone" onClick={() => openSideSheet(SideSheetViews.PHONE)}>
+                            <Icon type={IconType.EDIT_ALT} height={16} width={16} />
+                        </IconButton>
+                    )}
+                </div>
+                <Content
+                    details={(bestAvailPhone && formatPhone(bestAvailPhone)) || DEFAULT_ERROR_STRING}
+                    variant={ContentVariant.BodySm}
+                    pii={true}
+                />
+            </div>
+            <div>
+                <Label variant={LabelVariant.FieldLabel} label={t('colDefs:owner.ssn')} />
+                <Content
+                    details={formatSSN(owner?.ssn)}
+                    variant={ContentVariant.BodySm}
+                    highlights={getPolicyHighlighter(searchValue)}
+                    pii={true}
+                />
+            </div>
+            <div>
+                <div className="flex gap-1">
+                    <Label id="policy-owner-address" variant={LabelVariant.FieldLabel} label={t('colDefs:owner.mailingAddress')} />
+                    {bestAvailAddress?.isPending && <PendingTag />}
+                    {canEditPolicy && bestAvailAddress && (
+                        <IconButton aria-describedby="policy-owner-address" onClick={() => openSideSheet(SideSheetViews.ADDRESS)}>
+                            <Icon type={IconType.EDIT_ALT} height={16} width={16} />
+                        </IconButton>
+                    )}
+                </div>
+                {(bestAvailAddress && <FormattedAddress address={bestAvailAddress} />) || DEFAULT_ERROR_STRING}
+            </div>
         </QuickViewRoot>
     );
 };
@@ -827,5 +614,6 @@ export default function PolicySummaryCard({ policySearchResult }: SummaryCardPro
         );
     }
     const currentPolicyDetails = isLoadingPolicyDetails ? partialPolicyDetails : policyDetails;
+
     return <PolicyQuickView policyDetails={currentPolicyDetails} caseData={caseData} isLoading={isLoadingPolicyDetails} />;
 }

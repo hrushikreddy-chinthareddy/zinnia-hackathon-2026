@@ -54,7 +54,7 @@ export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({ policy }: B
         );
     } else {
         transactionLink = (
-            <NavElement onClick={openBankingSidesheet} size={NavElementSize.Small} type={NavElementType.Button}>
+            <NavElement onClick={openBankingSidesheet} size={NavElementSize.Small} type={NavElementType.Button} className="text-left">
                 <PiiWrapper>
                     {t('colDefs:policySummary.endingIn', {
                         accountType: toTitleCase(bankDetails.accountType),
