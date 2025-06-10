@@ -78,6 +78,7 @@ import {
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
+import { getSession } from '@/utils/auth';
 import { CommonLogContext, logError } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
@@ -96,6 +97,8 @@ const getPolicyReferencesByCarrierEnterprise = withLogging(
   async (loggingCtx?: CommonLogContext) => {
     const searchUrl = `${enterprisePolicySearchBaseUrl}/search?searchEntity=policy&offset=0&limit=100`;
     const searchFilter: PolicySearchRequest = {};
+    const session = await getSession();
+    const partyId = session?.user?.partyId;
 
     if (isTestPoliciesEnabled()) {
       // @ts-expect-error specs aren't updated in developer portal yet
@@ -108,7 +111,9 @@ const getPolicyReferencesByCarrierEnterprise = withLogging(
 
     const rawResponse = await ServerApi.post(
       searchUrl,
-      JSON.stringify(searchFilter),
+      // TODO: we shouldn't have to pass partyIds here, but people were seeing the wrong
+      // policies before adding this.
+      JSON.stringify({ ...searchFilter, partyIds: [partyId] }),
       {
         headers: { 'Content-Type': 'application/json' },
       },
