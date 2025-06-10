@@ -37,6 +37,7 @@
     "@zinnia/api-types": "workspace:*",
     "@zinnia/bloom": "5.15.0",
     "@zinnia/utils": "workspace:*",
+    "@zinnia/xd-components": "workspace:*",
     "clsx": "^2.1.0",
     "cookie": "^0.6.0",
     "dayjs": "^1.11.10",

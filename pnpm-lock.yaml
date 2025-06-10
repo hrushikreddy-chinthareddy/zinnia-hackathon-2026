@@ -77,6 +77,9 @@ importers:
       '@zinnia/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@zinnia/xd-components':
+        specifier: workspace:*
+        version: link:../../packages/xd-components
       clsx:
         specifier: ^2.1.0
         version: 2.1.1
