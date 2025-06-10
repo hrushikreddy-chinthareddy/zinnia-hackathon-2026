@@ -5,8 +5,8 @@ import {
   PaymentForm,
 } from '@xd/api-types/dist/generated-types/bpm';
 import { Address as AddressType } from '@xd/api-types/dist/generated-types/sor';
-import { toSentenceCase } from '@xd/utils/dist';
-import { countryCodeToName } from '@xd/xd-components/src/utils/Adresses';
+import { toSentenceCase } from '@xd/utils';
+import { countryCodeToName } from '@xd-components/utils/Adresses';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,

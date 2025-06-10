@@ -1,6 +1,6 @@
 'use client';
 
-import { useIsClient } from '@xd-components/hooks/useIsClient';
+import { useIsClient } from '@xd/hooks/useIsClient';
 import Cookies from 'js-cookie';
 
 import { Link } from '@/components/link/Link';
