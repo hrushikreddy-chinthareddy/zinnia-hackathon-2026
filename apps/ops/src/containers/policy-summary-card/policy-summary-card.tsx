@@ -69,6 +69,7 @@ import SideSheetEmail from '../people-data-cards/email-card/side-sheet/side-shee
 import { sortPhonesByType } from '../people-data-cards/phone-card/phone-card.helpers';
 import { SideSheetPhone } from '../people-data-cards/phone-card/side-sheet/side-sheet-phone';
 import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header/side-sheet-people-header';
+import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 import { getPolicyQuickLinks } from '../quick-links/quick-links.helpers';
 import { ActiveQuickView } from './active-quick-view/active-quick-view';
 import { LapseQuickView } from './lapse-quick-view';
@@ -167,6 +168,8 @@ const QuickViewHeader = ({ policy, loadingPolicyDetails = false }: { loadingPoli
         }
     };
 
+    const { data: quickLinks, isLoading: loadingQuickLinks } = usePolicyQuickLinks(t, policy);
+
     return (
         <header data-testid={CardDetailsTest.HEADER}>
             <div className="flex w-full items-end justify-between">
@@ -185,11 +188,11 @@ const QuickViewHeader = ({ policy, loadingPolicyDetails = false }: { loadingPoli
                         openSideSheet={openDetailsSidesheet}
                     />
                     <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 lg:mt-0">
-                        <Skeleton loading={loadingPolicyDetails} maxWidth="550px" height="24px">
+                        <Skeleton loading={loadingPolicyDetails || loadingQuickLinks} maxWidth="550px" height="24px">
                             <QuickLinks
                                 userPartyId={userPartyId}
                                 policy={policy}
-                                links={getPolicyQuickLinks(t, policy)}
+                                links={quickLinks || []}
                                 sessionId={sessionId}
                             />
                         </Skeleton>

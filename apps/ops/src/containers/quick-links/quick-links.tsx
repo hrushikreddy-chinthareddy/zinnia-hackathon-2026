@@ -49,10 +49,10 @@ const trackClick = (
 const QuickLinks = ({ links, policy, sessionId, userPartyId, className }: QuickLinksProps) => {
     const [isLife] = useState(policy.isLife);
     const [isAnnuity] = useState(policy.isAnnuity);
-
+    const safeLinks = Array.isArray(links) ? links : [];
     return (
         <div className={clsx('flex flex-wrap gap-x-8 gap-y-4', className)} data-testid="quick-links">
-            {links.map(({ name, href, subLinks, hideLabel }) => {
+            {safeLinks.map(({ name, href, subLinks, hideLabel }) => {
                 if (subLinks) {
                     return (
                         <MenuContextual

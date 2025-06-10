@@ -15,8 +15,9 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 
 import styles from './content-container.module.css';
 import QuickLinks from '../quick-links/quick-links';
-import { getPolicyQuickLinks } from '../quick-links/quick-links.helpers';
+import { Skeleton } from '@radix-ui/themes';
 
+import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 interface ContentContainerProps extends PropsWithChildren {
     policy: Policy;
     openSideSheet: () => void;
@@ -50,6 +51,8 @@ const ContentContainer = ({ children, policy, openSideSheet, hideSearch, showJoi
     const policyDetails = new PolicyDetails(policy);
     const { partyId: userPartyId, sessionId } = usePermissionsContext();
 
+    const { data: quickLinks, isLoading: loadingQuickLinks } = usePolicyQuickLinks(t, policyDetails);
+
     return (
         <>
             {loading ? (
@@ -79,13 +82,15 @@ const ContentContainer = ({ children, policy, openSideSheet, hideSearch, showJoi
                         )}
                     </GlobalValuesBar>
                     <div className={styles.contentCard}>
-                        <QuickLinks
-                            userPartyId={userPartyId}
-                            policy={policyDetails}
-                            links={getPolicyQuickLinks(t, policyDetails)}
-                            sessionId={sessionId}
-                            className={styles.quickLinks}
-                        />
+                        <Skeleton loading={loadingQuickLinks} maxWidth="550px" height="24px">
+                            <QuickLinks
+                                userPartyId={userPartyId}
+                                policy={policyDetails}
+                                links={quickLinks || []}
+                                sessionId={sessionId}
+                                className={styles.quickLinks}
+                            />
+                        </Skeleton>
                         {children}
                     </div>
                 </>
