@@ -38,3 +38,23 @@ export interface GetSessionResponse {
 export interface PostSessionResponse {
   success: boolean;
 }
+
+
+interface UniformServiceSuccessResponse<T> {
+  data: T;
+  error: null;
+}
+
+interface UniformServiceErrorResponse {
+  data: null;
+  error: {
+    message: string;
+    status: number;
+    name: string;
+  };
+}
+
+export type UniformServiceResponse<T> =
+  | UniformServiceSuccessResponse<T>
+  | UniformServiceErrorResponse;
+

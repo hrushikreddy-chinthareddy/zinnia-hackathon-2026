@@ -68,9 +68,9 @@ export const isEndDatedAndEndDateUpcoming = (
 
 export type ItemsWithEndDate = Address | Email | Phone | BankDetail;
 
-export const filterItemsWithPastEndDate = (
-  items?: ItemsWithEndDate[]
-): ItemsWithEndDate[] => {
+export const filterItemsWithPastEndDate = <T extends ItemsWithEndDate>(
+  items?: T[]
+): T[] => {
   if (!items) {
     return [];
   }

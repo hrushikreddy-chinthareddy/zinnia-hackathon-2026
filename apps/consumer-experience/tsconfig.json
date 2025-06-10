@@ -5,8 +5,8 @@
       "@/*": ["./src/*"],
       "@xd/*": ["../../packages/*"],
       "@xd-components/*": ["../../packages/xd-components/src/*"],
-      "@xd/components/*": ["../../packages/xd-components/components/*"],
-      "@xd/hooks/*": ["../../packages/xd-components/hooks/*"]
+      "@xd/components/*": ["../../packages/xd-components/src/components/*"],
+      "@xd/hooks/*": ["../../packages/xd-components/hooks/src/hooks/*"]
     },
     "plugins": [
       {

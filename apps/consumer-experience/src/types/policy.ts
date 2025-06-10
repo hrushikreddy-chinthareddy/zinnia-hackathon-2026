@@ -151,6 +151,10 @@ export interface PolicyRequestInputs {
   policyNumber: string;
 }
 
+export interface PolicyRequestInputsParams {
+  params: PolicyRequestInputs;
+}
+
 export interface PolicyMetricsRequestInputs {
   startDate: string;
   endDate: string;

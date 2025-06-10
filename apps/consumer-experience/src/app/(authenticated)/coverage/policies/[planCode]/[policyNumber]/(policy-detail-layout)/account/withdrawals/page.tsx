@@ -1,10 +1,11 @@
 import { FeatureType } from '@zinnia/api-types/types/sor';
-import { Label } from '@zinnia/bloom/components';
+import { Button, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
+import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { StatusIconText } from '@/components/status-icon-text/StatusIconText';
 import { RouteKey, getPageTitle } from '@/route-map';
@@ -13,12 +14,14 @@ import {
   getPolicyStatusDetails,
   getPolicyWithdrawalDetails,
 } from '@/services';
-import { getWithdrawalEligibility } from '@/services/bpm';
+import { getWithdrawalEligibility } from '@/services/bpm/partial-withdrawal';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs, PolicyWithdrawals } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import {
   DEFAULT_ERROR_STRING,
   DEFAULT_UNAVAILABLE_STRING,
@@ -48,7 +51,13 @@ export default async function Withdrawals({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
+
   const loggingContext = await buildCommonLogContext();
+  const flags = await getFeatureFlags();
+
+  const showPartialWithdrawalOneTime =
+    flags?.[FEATURE_FLAGS.TRANSACTION_PARTIAL_WITHDRAWAL_ONETIME];
+
   const [withdrawalDetails, withdrawalEligibility, policyStatus] =
     await Promise.allSettled([
       getPolicyWithdrawalDetails(
@@ -58,10 +67,13 @@ export default async function Withdrawals({
         },
         loggingContext
       ),
-      getWithdrawalEligibility({
-        planCode,
-        policyNumber,
-      }),
+      getWithdrawalEligibility(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingContext
+      ),
       getPolicyStatusDetails(
         {
           planCode,
@@ -78,7 +90,7 @@ export default async function Withdrawals({
 
   const withdrawalEligibilityData =
     withdrawalEligibility?.status === 'fulfilled'
-      ? withdrawalEligibility.value?.data?.isEligible
+      ? withdrawalEligibility.value?.data?.data?.isEligible
       : null;
 
   const policyStatusData =
@@ -86,7 +98,7 @@ export default async function Withdrawals({
   const isFreelook = policyStatusData?.policyStatus === FeatureType.FREELOOK;
 
   const { data, error } = summaryData;
-  const withdrawalsData = () => {
+  const withdrawalsData = async () => {
     if (error || !data) {
       return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
     }
@@ -113,7 +125,7 @@ export default async function Withdrawals({
             showIcon
             className="typography-content-body-bold mb-lg"
           />
-          <div className="column-card">
+          <div className="column-card mb-lg">
             {/* AVAILABLE TO WITHDRAW */}
             {withdrawalEligibilityData && (
               <FieldData
@@ -251,6 +263,30 @@ export default async function Withdrawals({
               </>
             )}
           </div>
+          {showPartialWithdrawalOneTime && (
+            <div
+              className="column-card p-2xl"
+              style={{
+                backgroundColor: 'var(--color-base-surface-surface-secondary)',
+                display: 'grid',
+              }}
+            >
+              <div>
+                {withdrawalEligibilityData &&
+                !isFreelook &&
+                showPartialWithdrawalOneTime ? (
+                  <Link
+                    text="Make a withdrawal"
+                    href={`/coverage/policies/${planCode}/${policyNumber}/withdrawal/information`}
+                  />
+                ) : (
+                  <Button size="small" mode="link" disabled>
+                    Make a withdrawal
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </>
     );

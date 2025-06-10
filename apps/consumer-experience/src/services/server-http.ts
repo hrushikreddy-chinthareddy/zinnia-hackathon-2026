@@ -1,13 +1,11 @@
 import { headers } from 'next/headers';
 import { v4 as uuid4 } from 'uuid';
 
-import { getFeatureFlags } from '@/services/feature-flags';
 import {
   MfaChallengeInputs,
   MfaAssociateInputs,
   MfaSendChallengeInputs,
 } from '@/types/auth';
-import { Subdomains } from '@/types/carriers';
 import { getAccessToken, getSession } from '@/utils/auth';
 import {
   CommonLogContext,
@@ -16,9 +14,7 @@ import {
   LoggingStage,
   logTrace,
 } from '@/utils/logging/server-logging';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { AUTH0_SCOPE } from '@/utils/serverClientUtils';
-import { getSubdomain } from '@/utils/url';
 
 import { HttpRequest } from './http';
 
@@ -80,25 +76,6 @@ class ServerHttpRequest extends HttpRequest {
   };
 
   sendVerificationCode = async (email: string) => {
-    let clientId = process.env.AUTH0_CLIENT_ID;
-    let clientSecret = process.env.AUTH0_CLIENT_SECRET;
-
-    const featureFlagDecisions = await getFeatureFlags();
-
-    // client_id and client_secret here are using wellabe specific variables so that the email with the code
-    // has the correct wellabe logo. This is a TEMPORARY change because it's the only way for us to know what
-    // subdomain the user is on before sending the email since we do not have access to organizations through
-    // this custom auth0 flow. These variables are defined on a separate auth0 application that is a duplicate of
-    // the mypolicyview application
-    if (featureFlagDecisions?.[FEATURE_FLAGS.WELLABE_AUTH_TOKENS]) {
-      const subDomain = getSubdomain(headers());
-
-      if (subDomain === Subdomains.WELLABE) {
-        clientId = process.env.AUTH0_CLIENT_ID_WELB;
-        clientSecret = process.env.AUTH0_CLIENT_SECRET_WELB
-      }
-    }
-
     return fetch(`${process.env.AUTH0_ISSUER_BASE_URL}/passwordless/start`, {
       method: 'POST',
       headers: {
@@ -106,11 +83,11 @@ class ServerHttpRequest extends HttpRequest {
       },
       cache: 'no-store',
       body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
+        client_id: process.env.AUTH0_CLIENT_ID,
+        client_secret: process.env.AUTH0_CLIENT_SECRET,
         connection: 'email',
         email,
-        send: 'code'
+        send: 'code',
       }),
     });
   };

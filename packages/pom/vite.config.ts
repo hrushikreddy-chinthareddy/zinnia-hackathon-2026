@@ -6,7 +6,9 @@ import { libInjectCss } from 'vite-plugin-lib-inject-css';
 // https://vite.dev/config/
 export default defineConfig({
   define: {
-    'process.env': process.env
+    'process.env': {
+      'NEXT_PUBLIC_BASE_URL': process.env.NEXT_PUBLIC_BASE_URL,
+    },
   },
   plugins: [
     react(),

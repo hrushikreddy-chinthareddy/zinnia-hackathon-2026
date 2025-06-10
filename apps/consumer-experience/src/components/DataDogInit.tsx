@@ -7,7 +7,10 @@ import { datadogRum } from '@datadog/browser-rum';
 
 import { logDataDog } from '@/utils';
 
-if (logDataDog()) {
+// only initialize once
+let isInitialized = false;
+
+if (logDataDog() && !isInitialized) {
   datadogRum.init({
     applicationId: process.env.NEXT_PUBLIC_DATADOG_APPLICATION_ID || '',
     clientToken: process.env.NEXT_PUBLIC_DATADOG_CLIENT_TOKEN || '',
@@ -22,6 +25,8 @@ if (logDataDog()) {
     trackLongTasks: true,
     defaultPrivacyLevel: 'mask',
   });
+
+  isInitialized = true;
 }
 
 export const DataDogInit = () => null;

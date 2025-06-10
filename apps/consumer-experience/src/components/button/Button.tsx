@@ -6,13 +6,14 @@ import {
   Loader,
   LoaderVariant,
 } from '@zinnia/bloom/components';
-import { useRef } from 'react';
+import { forwardRef, useRef } from 'react';
 
 import { useUser } from '@/hooks/use-user';
 import { analytics } from '@/utils/segment';
 
 interface AdditionalProps {
   correlationId?: string;
+  'data-testid'?: string;
   /**
    * Button to provide additional segment context about where the action
    * took place
@@ -30,40 +31,55 @@ type Props = ButtonProps & AdditionalProps;
  * AND does not include aria-label e.g. a cancel button on a transaction
  * include additional context via the additionalContext prop
  */
-export const Button = ({
-  additionalContext,
-  children,
-  correlationId,
-  loading,
-  ...props
-}: Props) => {
-  const { user } = useUser();
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const trackAndClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    analytics.track('button_clicked', {
+export const Button = forwardRef<HTMLButtonElement, Props>(
+  (
+    {
       additionalContext,
-      buttonText:
-        buttonRef.current?.innerText ||
-        props['aria-label'] ||
-        'unknown button text',
-      userId: user?.partyId,
-      ...(correlationId && { correlationId }),
-    });
+      children,
+      correlationId,
+      loading,
+      'data-testid': testId,
+      ...props
+    },
+    forwardRef
+  ) => {
+    const { user } = useUser();
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-    props.onClick?.(event);
-  };
+    const trackAndClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      analytics.track('button_clicked', {
+        additionalContext,
+        buttonText:
+          buttonRef.current?.innerText ||
+          props['aria-label'] ||
+          'unknown button text',
+        userId: user?.partyId,
+        ...(correlationId && { correlationId }),
+      });
 
-  return (
-    <BloomButton {...props} onClick={trackAndClick} ref={buttonRef}>
-      <>
-        {children}
-        {loading && (
-          <span className="ml-sm">
-            <Loader variant={LoaderVariant.CTA} />
-          </span>
-        )}
-      </>
-    </BloomButton>
-  );
-};
+      props.onClick?.(event);
+    };
+
+    return (
+      <BloomButton
+        {...props}
+        data-testid={testId || 'bloom-button'}
+        disabled={loading}
+        className="flex items-center"
+        onClick={trackAndClick}
+        ref={forwardRef || buttonRef}
+      >
+        <>
+          {children}
+          {loading && (
+            <span className="ml-sm">
+              <Loader variant={LoaderVariant.CTA} />
+            </span>
+          )}
+        </>
+      </BloomButton>
+    );
+  }
+);
+
+Button.displayName = 'Button';

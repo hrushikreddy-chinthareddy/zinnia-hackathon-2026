@@ -13,7 +13,7 @@ export const SkeletonLoader = ({
   className,
 }: SkeletonLoaderProps) => {
   return (
-    <div
+    <span
       style={{ width, height }}
       className={clsx(styles.skeletonBox, className)}
     />

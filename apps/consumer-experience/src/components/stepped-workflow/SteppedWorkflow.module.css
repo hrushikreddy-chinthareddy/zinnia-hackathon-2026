@@ -1,0 +1,20 @@
+.container {
+  background-color: var(--color-base-surface-surface-primary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+  justify-content: space-between;
+  padding-bottom: var(--measure-dimension-padding-4xl);
+}
+
+.actions {
+  display: flex;
+  gap: var(--measure-dimension-gap-2xl);
+  margin-top: var(--measure-dimension-margin-xs);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-3xl);
+}
