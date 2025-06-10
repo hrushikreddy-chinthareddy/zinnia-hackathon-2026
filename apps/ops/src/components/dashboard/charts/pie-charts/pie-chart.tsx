@@ -6,23 +6,29 @@ import { renderToStaticMarkup } from 'react-dom/server';
 interface LegendItemProps {
     name: string;
     count: number;
+    showPercentage?: boolean;
 }
 
 export interface PieChartProps {
     colors: string[];
     series: Highcharts.SeriesOptions[];
+    showPercentage?: boolean;
+    pieWidth?: number;
 }
 
-const LegendItem: FC<LegendItemProps> = ({ name, count }) => {
+const LegendItem: FC<LegendItemProps> = ({ name, count, showPercentage }) => {
     return (
         <div className="flex justify-between w-[150px]">
             <div>{name}</div>
-            <div>{count.toLocaleString()}</div>
+            <div>
+                {count.toLocaleString()}
+                {showPercentage && '%'}
+            </div>
         </div>
     );
 };
 
-export const PieChart: FC<PieChartProps> = ({ colors, series }) => {
+export const PieChart: FC<PieChartProps> = ({ colors, series, showPercentage, pieWidth }) => {
     const options = {
         navigation: { buttonOptions: { enabled: false } },
 
@@ -30,6 +36,7 @@ export const PieChart: FC<PieChartProps> = ({ colors, series }) => {
             type: 'pie',
             spacing: [10, 10, -10, 10],
             height: 280,
+            width: pieWidth,
             marginBottom: 80,
             backgroundColor: 'transparent',
         },
@@ -63,7 +70,7 @@ export const PieChart: FC<PieChartProps> = ({ colors, series }) => {
             },
             useHTML: true,
             labelFormatter: function (this: Highcharts.Point) {
-                return renderToStaticMarkup(<LegendItem name={this.name} count={this.y || 0} />);
+                return renderToStaticMarkup(<LegendItem name={this.name} count={this.y || 0} showPercentage={showPercentage} />);
             },
             symbolRadius: 3,
             symbolHeight: 12,

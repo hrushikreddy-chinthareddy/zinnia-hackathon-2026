@@ -1,8 +1,9 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { TabContent } from '@zinnia/bloom/components';
 import { FgaRoles } from '@zinnia/utils';
+import Highcharts from 'highcharts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { DashboardTabNav, DashboardTabs } from '@deps/components/dashboard/dashboard-nav-links';
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
@@ -11,6 +12,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { ActiveApplications } from '@deps/containers/dashboard/active-applications/active-applications';
 import { ClosedTransactions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
+import { NIGOAnalysis } from '@deps/containers/dashboard/nigo-analysis/nigo-analysis';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
@@ -48,6 +50,14 @@ const DashboardPage = ({ authorizedCarriers, brokerDealersSSR, user }: Dashboard
         rootMargin: `${0}px 0px -100% 0px`,
     });
 
+    useEffect(() => {
+        Highcharts.setOptions({
+            lang: {
+                thousandsSep: ',',
+            },
+        });
+    }, []);
+
     return (
         <>
             <PageHead titleKey="dashboard" />
@@ -66,6 +76,9 @@ const DashboardPage = ({ authorizedCarriers, brokerDealersSSR, user }: Dashboard
                         </TabContent>
                         <TabContent value={DashboardTabs.CLOSED_TRANSACTIONS}>
                             <ClosedTransactions />
+                        </TabContent>
+                        <TabContent value={DashboardTabs.NIGO_ANALYSIS}>
+                            <NIGOAnalysis />
                         </TabContent>
                     </div>
                 </DashboardTabNav>

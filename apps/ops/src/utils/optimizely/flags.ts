@@ -135,4 +135,5 @@ export enum FEATURE_FLAGS {
     FAST_WITHDRAWAL = 'fast-withdrawal',
     CALL_AUDIO_FEATURE = 'call-audio-feature',
     NEW_DEATH_CLAIM = 'new_death_claim',
+    DASHBOARD_NIGO_TAB = 'dashboard_nigo_tab',
 }

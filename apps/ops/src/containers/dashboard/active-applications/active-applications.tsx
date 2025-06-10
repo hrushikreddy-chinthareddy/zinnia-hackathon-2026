@@ -8,6 +8,7 @@ import { NigoOpenTransactions } from '@deps/components/dashboard/sections/nigo-o
 import SankeyChart from '@deps/components/dashboard/sections/sankey-chart/sankey-chart';
 import { SubmissionType } from '@deps/components/dashboard/sections/submission-type/submission-type';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { oneYearAgoISO } from '@deps/helpers/dashboard/dashboard-helpers';
 import { Statuses } from '@deps/models/case/case';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { useDashboardStore } from '@deps/store/store';
@@ -18,6 +19,7 @@ export const ActiveApplications: FC = () => {
     const brokers = Object.keys(selectedBrokerDealers);
     const baseFilter: CaseCountInputFilter = {
         caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+        createdDateStart: oneYearAgoISO,
     };
     if (selectedCarriers && carriers.length) {
         baseFilter.carrier = carriers;

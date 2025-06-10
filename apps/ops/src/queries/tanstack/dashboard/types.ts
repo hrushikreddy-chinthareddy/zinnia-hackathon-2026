@@ -16,3 +16,12 @@ export type MappedExceptionData = {
     exceptionCategories: ExceptionCategory[]; // List of exception categories that came back
     totalMonths: number; // Number of months to be included in the chart
 };
+
+export enum ExceptionStatus {
+    UNRESOLVED = 'Unresolved',
+    NEW = 'New',
+    IN_PROGRESS = 'In_Progress',
+    INPROGRESS = 'Inprogress',
+    RESOLVED = 'Resolved',
+    OVERRRIDDEN = 'Overridden',
+}
