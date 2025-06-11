@@ -89,7 +89,6 @@ export const yearsLeft = (
 const getUserLocale = (): string => {
   const formatter = new Intl.DateTimeFormat();
   const resolvedOptions = formatter.resolvedOptions();
-  console.log('Resolved options:', resolvedOptions);
   if (resolvedOptions.timeZone === ASIA_IN_TZ) {
     return ASIA_IN_LOCAL;
   }
