@@ -1,7 +1,7 @@
 'use-client';
 import { PartyRole, PartyType } from '@zinnia/api-types/types/sor';
 import { Button, Icon, IconType, SideSheet } from '@zinnia/bloom/components';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 import { PolicyParty } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
@@ -150,7 +150,9 @@ export const Party = ({
           </div>
         }
       >
-        <div className={styles.personDetails}>
+        <div style={{
+          '--cols': 1,
+        } as CSSProperties} className={styles.personDetails}>
           <div className={styles.name}>
             <h2 className="mb-lg">Name</h2>
             <div>

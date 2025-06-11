@@ -10,6 +10,7 @@ import {
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Party } from '@/components/party-list/PartyList';
 import { Beneficiary, PolicyParty } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
@@ -44,9 +45,9 @@ const BeneficiaryListItem = ({
 
   return (
     <div className={styles.allocationItem}>
-      <p className="typography-labels-label-sm">
+      <div className="typography-labels-label-sm">
         <Party key={beneficiary.partyId} party={beneficiaryParty} />
-      </p>
+      </div>
       <div className={styles.allocationDetails}>
         <span
           aria-hidden
@@ -56,6 +57,49 @@ const BeneficiaryListItem = ({
         <p className="typography-content-value">{`${beneficiary?.beneficiaryPercentage}%`}</p>
       </div>
     </div>
+  );
+};
+
+type BeneficiaryType = 'Primary' | 'Contingent';
+const Header = ({
+  children,
+  type,
+}: {
+  children?: React.ReactNode;
+  type: 'Primary' | 'Contingent';
+}) => {
+  if (!type) {
+    return <NoDataAvailable />;
+  }
+  const TooltipCopy: Record<
+    BeneficiaryType,
+    { title: string; description: string }
+  > = {
+    Primary: {
+      title: 'Primary Allocation',
+      description:
+        'Your primary allocation tells us how to split up the money between primary beneficiaries, who will receive payment according to your contract terms, should you die.',
+    },
+    Contingent: {
+      title: 'Contingent Allocation',
+      description:
+        'Your contingent allocation tells us how to split up the money between contingent beneficiaries, who will receive payment according to your contract terms, should you die and your primary beneficiaries have died.',
+    },
+  };
+
+  const { title, description } = TooltipCopy[type];
+
+  return (
+    <figure className={styles.allocationHeader}>
+      <div className={styles.allocationHeaderText}>
+        <Icon type={IconType.USER_GROUP} />
+        <figcaption className="typography-labels-label-md">{title}</figcaption>
+        <LabelPopover title="Primary allocation">
+          <p>{description}</p>
+        </LabelPopover>
+      </div>
+      {children}
+    </figure>
   );
 };
 
@@ -100,25 +144,14 @@ export async function BeneficiariesView({
 
       {groupedBenes && groupedBenes.primary.length > 0 && (
         <div className={styles.allocationContainer}>
-          <div className={styles.allocationHeader}>
-            <div className={styles.allocationHeaderText}>
-              <Icon type={IconType.USER_GROUP} />
-              <h2 className="typography-labels-label-md">Primary allocation</h2>
-              <LabelPopover title="Primary allocation">
-                <p>
-                  Your primary allocation tells us how to split up the money
-                  between primary beneficiaries, who will receive payment
-                  according to your contract terms, should you die.
-                </p>
-              </LabelPopover>
-            </div>
+          <Header type="Primary">
             <AllocationColorBar
               type="primary"
               allocations={groupedBenes?.primary?.map(
                 primary => primary.beneficiaryPercentage
               )}
             />
-          </div>
+          </Header>
           <ul>
             {groupedBenes.primary.map((bene, index) => (
               <li key={index}>
@@ -135,28 +168,15 @@ export async function BeneficiariesView({
 
       {groupedBenes && groupedBenes.contingent.length > 0 && (
         <div className={styles.allocationContainer}>
-          <div className={styles.allocationHeader}>
-            <div className={styles.allocationHeaderText}>
-              <Icon type={IconType.USER_GROUP} />
-              <h2 className="typography-labels-label-md">
-                Contingent allocation
-              </h2>
-              <LabelPopover title="Contingent allocation">
-                <p>
-                  Your contingent allocation tells us how to split up the money
-                  between contingent beneficiaries, if needed. Contingent
-                  beneficiaries will receive payment from your death benefit
-                  only if your primary beneficiaries have died.
-                </p>
-              </LabelPopover>
-            </div>
+          <Header type="Contingent">
             <AllocationColorBar
               type="contingent"
               allocations={groupedBenes.contingent.map(
                 contingents => contingents.beneficiaryPercentage
               )}
             />
-          </div>
+          </Header>
+
           <ul>
             {groupedBenes.contingent.map((bene, index) => (
               <li key={index}>
@@ -178,3 +198,5 @@ export async function BeneficiariesView({
     </div>
   );
 }
+
+BeneficiariesView.Header = Header;

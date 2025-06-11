@@ -3,11 +3,18 @@
   position: relative;
   width: 100%;
   border: var(--border-style);
-  border-bottom: none;
+   li {
+    padding: var(--measure-dimension-padding-2xl, 1rem);
+    &:not(:last-child) {
+      border-bottom:var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-light);
+    }
+  }
+  .allocationHeader {
+     padding: var(--measure-dimension-padding-2xl, 1rem);
+   }
 }
 
 .allocationHeader {
-  padding: var(--measure-dimension-padding-2xl, 1rem);
   border-bottom: 2px solid var(--color-base-border-border-light);
 }
 
@@ -26,8 +33,6 @@
   justify-content: space-between;
   width: 100%;
   align-items: center;
-  padding: var(--measure-dimension-padding-2xl, 2rem);
-  border-bottom: 2px solid var(--color-base-border-border-light);
 }
 
 .allocationDetails {

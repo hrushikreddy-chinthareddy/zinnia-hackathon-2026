@@ -1,7 +1,6 @@
 import { LineOfBusiness, PartyRole } from '@zinnia/api-types/types/sor';
 import {
   AllocationColorBar,
-  Icon,
   IconType,
   contingentColorOrder,
   primaryColorOrder,
@@ -12,7 +11,6 @@ import styles from '@/app/(authenticated)/coverage/shared-styles/Beneficiaries.m
 import { BeneficiariesView } from '@/app/(authenticated)/coverage/shared-views/beneficiaries-view/BeneficiariesView';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { FullName } from '@/components/pii/FullName';
@@ -176,25 +174,14 @@ export default async function Beneficiaries({
         <ClickableCardContainer
           listItems={[...beneListItems(groupedBenes.primary)]}
         >
-          <div className={styles.allocationContainer}>
-            <div className={styles.allocationHeader}>
-              <Icon type={IconType.USER_GROUP} />
-              <h2 className="typography-labels-label-md">Primary allocation</h2>
-              <LabelPopover title="Primary allocation">
-                <p>
-                  Your primary allocation tells us how to split up the money
-                  between primary beneficiaries, who will receive payment
-                  according to your contract terms, should you die.
-                </p>
-              </LabelPopover>
-            </div>
+            <BeneficiariesView.Header type="Primary" >
             <AllocationColorBar
               type="primary"
               allocations={groupedBenes?.primary?.map(
                 primary => primary.beneficiaryPercentage
               )}
             />
-          </div>
+            </BeneficiariesView.Header>
         </ClickableCardContainer>
       )}
 
@@ -202,28 +189,14 @@ export default async function Beneficiaries({
         <ClickableCardContainer
           listItems={[...beneListItems(groupedBenes.contingent)]}
         >
-          <div className={styles.allocationContainer}>
-            <div className={styles.allocationHeader}>
-              <Icon type={IconType.USER_GROUP} />
-              <h2 className="typography-labels-label-md">
-                Contingent allocation
-              </h2>
-              <LabelPopover title="Contingent allocation">
-                <p>
-                  Your contingent allocation tells us how to split up the money
-                  between contingent beneficiaries, if needed. Contingent
-                  beneficiaries will receive payment from your death benefit
-                  only if your primary beneficiaries have died.
-                </p>
-              </LabelPopover>
-            </div>
+            <BeneficiariesView.Header type="Contingent" >
             <AllocationColorBar
               type="contingent"
               allocations={groupedBenes.contingent.map(
                 contingents => contingents.beneficiaryPercentage
               )}
             />
-          </div>
+            </BeneficiariesView.Header>
         </ClickableCardContainer>
       )}
       <CallForAssistance

@@ -4,16 +4,6 @@
     var(--measure-dimension-padding-none, 0);
 }
 
-.allocationHeader {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--measure-dimension-gap-lg, 1rem);
-
-  > * {
-    margin-right: var(--measure-dimension-gap-md, 0.5rem);
-  }
-}
-
 .allocationItem {
   display: flex;
   justify-content: space-between;

@@ -32,8 +32,7 @@ body {
 
 body,
 main {
-  --border-style: var(--measure-dimension-stroke-sm, 2px) solid
-    var(--color-base-border-border-light, #ededed);
+  --border-style: var(--measure-dimension-stroke-sm, 2px) solid var(--color-base-border-border-light, #ededed);
 }
 
 main {
@@ -83,13 +82,13 @@ p:has(a) {
   }
 }
 
-@media (width >= 500px) {
+@media (width >=500px) {
   .layout-wrapper {
     margin: 0 var(--measure-dimension-margin-sm);
   }
 }
 
-@media (width >= 768px) {
+@media (width >=768px) {
   .layout-wrapper {
     margin: 0 var(--measure-dimension-margin-md);
 
@@ -110,6 +109,13 @@ h4,
 h5,
 h6 {
   font-size: unset;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-base-text-text-carrier);
 }
 
 h1 {
@@ -187,17 +193,17 @@ a:focus-visible {
 }
 
 .card-container {
-  > *:not(:last-child) {
+  >*:not(:last-child) {
     margin-bottom: 8px;
   }
 }
 
 .info-card-container {
-  > * {
+  >* {
     padding: var(--measure-dimension-padding-2xl) 0;
   }
 
-  > *:not(:last-of-type) {
+  >*:not(:last-of-type) {
     border-bottom: var(--border-style);
   }
 }
@@ -283,8 +289,7 @@ input[type='radio'] {
 .input-with-interaction {
   width: 100%;
   background-color: white;
-  border: var(--measure-dimension-stroke-sm) solid
-    var(--color-base-border-border-light);
+  border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-light);
   border-radius: var(--measure-dimension-radius-sm);
   padding: var(--measure-dimension-padding-lg);
   display: flex;

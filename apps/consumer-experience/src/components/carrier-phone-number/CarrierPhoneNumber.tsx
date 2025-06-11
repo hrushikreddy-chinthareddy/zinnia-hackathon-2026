@@ -6,8 +6,8 @@ import Cookies from 'js-cookie';
 import { Link } from '@/components/link/Link';
 import { CompanyName } from '@/types/carriers';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
+import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
-import { SkeletonLoader } from '../skeleton-loader/SkeletonLoader';
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
 export const WELLABE_CONTACT_PHONE_NUMBER = '1-888-222-3003';
 
@@ -23,23 +23,24 @@ const phoneByCarrier = (name?: CompanyName | string) => {
 };
 
 export const CarrierPhoneNumber = () => {
-  const currentTheme = Cookies.get(THEME_COOKIE);
-  const phoneNumber = phoneByCarrier(currentTheme);
+  // TODO: switch this to `@xd/hooks/useIsCLient` after the merge of the stepped workflow branch
   const isClient = useIsClient();
+
+  const currentTheme = Cookies.get(THEME_COOKIE);
+
+  let phoneNumber = phoneByCarrier(currentTheme);
+  let href: string | undefined = `tel:${phoneNumber}`;
+
   if (!isClient || !phoneNumber || phoneNumber.length < 1) {
-    return (
-      <SkeletonLoader
-        style={{
-          marginBottom: '-4px',
-        }}
-        width="12ch"
-        height="14px"
-      />
-    );
+    phoneNumber = DEFAULT_ERROR_STRING;
+    href = undefined;
   }
 
   return (
-    <Link isNativeAnchorTag href={`tel:+${phoneNumber}`}>
+    <Link
+      isNativeAnchorTag
+      href={href}
+    >
       {phoneNumber}
     </Link>
   );

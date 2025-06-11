@@ -3,20 +3,30 @@
 }
 
 .itemsRow {
+  /* If you need to override the amt of columns
+     in a specific instance of this component
+     pass --cols as a style prop and it will
+     respect it
+     eg:
+      <div style={{--cols: 2} as CSSProperties} >
+        <PersonData />
+      </div>
+  */
+  --_cols: var(--cols, 1);
   display: grid;
-  grid-template-columns: repeat(minmax(0, 1fr));
-  column-gap: var(--measureDimensionGap2xl, 2rem);
-  row-gap: var(--measureDimensionGapLg, 1rem);
+  grid-template-columns: repeat(var(--_cols), 1fr);
+  column-gap: var(--measure-dimension-gap-2xl, 2rem);
+  row-gap: var(--measure-dimension-gap-lg, 1rem);
 }
 
 @media (min-width: 768px) {
   .itemsRow {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    --_cols: var(--cols, 2);
   }
 }
 
 @media (min-width: 1024px) {
   .itemsRow {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    --_cols: var(--cols, 3);
   }
 }
