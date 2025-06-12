@@ -20,6 +20,8 @@ import { mapWithdrawalsSubPage } from '@deps/helpers/withdrawals.helpers';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkPartialWithdrawalOneTimeEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface WithdrawalsPageHeaderContainerProps {
     breadcrumbText?: string;
@@ -32,6 +34,9 @@ interface WithdrawalsPageHeaderContainerProps {
 const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCode, policyNumber }: WithdrawalsPageHeaderContainerProps) => {
     const { t } = useTranslation();
     const { policyDetails } = useContext(PolicyData);
+    const { featureFlags } = useOptimizely();
+
+    const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
 
     const { data: partialWithdrawalOneTimeEligibility, isLoading: isLoadingPartialWithdrawalOneTimeEligibility } = useQuery({
         queryKey: ['checkPartialWithdrawalOneTimeEligibility', policyDetails.planCode, policyDetails.policyNumber],
@@ -266,14 +271,16 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
                 >
                     {t('withdrawals.surrenderPolicy')}
                 </NavElement>
-                <NavElement
-                    href={t('site.navLinks.cancelFreeLook.href', { id: policyNumber, planCode }) || ''}
-                    size={NavElementSize.Small}
-                    type={NavElementType.Link}
-                    data-testid="cancel-free-look-link"
-                >
-                    {t('withdrawals.freeLookCancel')}
-                </NavElement>
+                {freeLookEnabled && policyDetails.freeLookPeriodDetails.isInFreeLookPeriod && (
+                    <NavElement
+                        href={t('site.navLinks.cancelFreeLook.href', { id: policyNumber, planCode }) || ''}
+                        size={NavElementSize.Small}
+                        type={NavElementType.Link}
+                        data-testid="cancel-free-look-link"
+                    >
+                        {t('withdrawals.freeLookCancel')}
+                    </NavElement>
+                )}
                 {isStillInactive.withdrawalPageexchange1035.length ? (
                     <TempNavInactive tooltipBody={isStillInactive.withdrawalPageexchange1035}>
                         {t('withdrawals.exchange1035')}
