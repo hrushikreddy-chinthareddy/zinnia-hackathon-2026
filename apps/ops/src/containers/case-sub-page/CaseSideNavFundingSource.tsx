@@ -15,8 +15,9 @@ import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-
 import { FormattedAddress } from '../people-data-cards/address-card/address-card.helpers';
+import dayjs from 'dayjs';
+import { DEFAULT_DATE_FORMAT } from '@xd/utils/src/dates';
 
 type FundingSource = CaseAdditionalData;
 
@@ -28,15 +29,20 @@ type TransactionEntitySideSheetValues = {
     trackingNumber: string;
     fundingCompany: string;
     fundingContract: string;
-    contractDetails: {
+    paymentMethod: string;
+    grossAmount: string;
+    netAmount: string;
+    rateLockEndDate: string;
+    premiumStatus: string;
+    contactDetails: {
         mailingAddress: Address;
         phoneNumber: string;
         faxNumber: string;
     } | null;
 };
 
-const formatAddress = (address: { addressLines: string[]; city: string; state: string; zip: string; country: string }): Address => {
-    const { addressLines, country, state, zip, ...rest } = address;
+const formatAddress = (address: { addressLines: string[]; city: string; state: string; zip: string; zipSuffix?: string; country: string }): Address => {
+    const { addressLines, country, state, zip, zipSuffix, ...rest } = address;
     return {
         ...rest,
         addressLine1: addressLines[0],
@@ -45,6 +51,7 @@ const formatAddress = (address: { addressLines: string[]; city: string; state: s
         country: country as Country,
         state: state as State,
         zipCode: zip,
+        zipCodeExtension: zipSuffix
     };
 };
 
@@ -57,22 +64,29 @@ const SourceTypeTag = ({ sourceType }: { sourceType: string | undefined }) => {
 
 const getSideSheetValues = (transactionEntity: TransactionModelResponse, t: TFunction): TransactionEntitySideSheetValues => {
     const { entity } = transactionEntity;
-    const { exchangeReplace, institutionName, moneySource } = entity?.payment || {};
+    const { exchangeReplace, institutionName, moneySource, receivedAmount } = entity?.payment || {};
+    const rateLockEndDate = exchangeReplace?.rateLockEndDate;
     const values: TransactionEntitySideSheetValues = {
-        companyName: exchangeReplace?.companyName || t('caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingSources'),
+        companyName: exchangeReplace?.companyName || t('caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingSource'),
         sourceType: moneySource,
         expectedAmount: numberFormatify(exchangeReplace?.amountRequested),
-        receivedAmount: numberFormatify(entity?.payment?.receivedAmount),
+        premiumStatus: receivedAmount === null || receivedAmount === undefined ? t('caseOverview.sidenav.tabs.fundingSourceSideSheet.awaitingFunds') : t('caseOverview.sidenav.tabs.fundingSourceSideSheet.received'),
+        receivedAmount: numberFormatify(receivedAmount),
         trackingNumber: exchangeReplace?.trackingNumber ?? DEFAULT_ERROR_STRING,
-        fundingCompany: institutionName ?? DEFAULT_ERROR_STRING,
-        fundingContract: exchangeReplace?.sourcePolicyNumber ?? DEFAULT_ERROR_STRING,
-        contractDetails: null,
+        fundingCompany: institutionName ?? null,
+        fundingContract: exchangeReplace?.sourcePolicyNumber ?? null,
+        contactDetails: null,
+        paymentMethod: entity?.payment?.paymentMethod ?? null,
+        grossAmount: numberFormatify(entity?.payment?.grossAmount) ?? null,
+        netAmount: numberFormatify(entity?.payment?.netAmount) ?? null,
+        rateLockEndDate: rateLockEndDate ? dayjs(exchangeReplace?.rateLockEndDate).format(DEFAULT_DATE_FORMAT) : DEFAULT_ERROR_STRING,
+
     };
     if (exchangeReplace?.address || exchangeReplace?.phone || exchangeReplace?.faxId) {
-        values.contractDetails = {
-            mailingAddress: formatAddress(exchangeReplace?.address || {}),
-            phoneNumber: exchangeReplace?.phone ?? DEFAULT_ERROR_STRING,
-            faxNumber: exchangeReplace?.faxId ?? DEFAULT_ERROR_STRING,
+        values.contactDetails = {
+            mailingAddress: formatAddress(exchangeReplace?.address || {}) ?? null,
+            phoneNumber: exchangeReplace?.phone ?? null,
+            faxNumber: exchangeReplace?.faxId ?? null,
         };
     }
     return values;
@@ -113,47 +127,74 @@ const FundingSourceSideSheetContent = ({ transactionEntity }: { transactionEntit
                     </Typography>
                     <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.trackingNumber}</Typography>
                 </div>
-                <div className="flex flex-row w-full gap-8">
+                {sideSheetValues.fundingCompany !== null && <div className="flex flex-row w-full gap-8">
                     <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
                         {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingCompany')}
                     </Typography>
                     <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.fundingCompany}</Typography>
-                </div>
-                <div className="flex flex-row w-full gap-8">
+                </div>}
+                {sideSheetValues.fundingContract !== null && <div className="flex flex-row w-full gap-8">
                     <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
                         {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingContract')}
                     </Typography>
                     <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.fundingContract}</Typography>
+                </div>}
+                <div className="flex flex-row w-full gap-8">
+                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
+                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.premiumStatus')}
+                    </Typography>
+                    <Typography variant={TypographyVariant.BodySm}> {sideSheetValues.premiumStatus}</Typography>
                 </div>
+                {sideSheetValues.paymentMethod !== null && <div className="flex flex-row w-full gap-8">
+                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
+                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.paymentMethod')}
+                    </Typography>
+                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.paymentMethod}</Typography>
+                </div>}
+                {sideSheetValues.grossAmount !== null && <div className="flex flex-row w-full gap-8">
+                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
+                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.grossAmount')}
+                    </Typography>
+                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.grossAmount}</Typography>
+                </div>}
+                {sideSheetValues.netAmount !== null && <div className="flex flex-row w-full gap-8">
+                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
+                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.netAmount')}
+                    </Typography>
+                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.netAmount}</Typography>
+                </div>}
+                <div className="flex flex-row w-full gap-8">
+                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
+                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.rateLockEndDate')}
+                    </Typography>
+                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.rateLockEndDate}</Typography>
+                </div>
+
             </div>
-            {sideSheetValues.contractDetails && (
+            {sideSheetValues.contactDetails && (sideSheetValues.contactDetails?.mailingAddress || sideSheetValues.contactDetails?.phoneNumber || sideSheetValues.contactDetails?.faxNumber) && (
                 <>
                     <Typography variant={TypographyVariant.H3}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.contractDetails')}
+                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.contactDetails')}
                     </Typography>
                     <div className="flex flex-col w-full gap-2 my-4">
-                        <div className="flex flex-row w-full gap-8">
+                        {sideSheetValues.contactDetails?.mailingAddress !== null && (<div className="flex flex-row w-full gap-8">
                             <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
                                 {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.mailingAddress')}
                             </Typography>
-                            {sideSheetValues.contractDetails?.mailingAddress ? (
-                                <FormattedAddress address={sideSheetValues.contractDetails?.mailingAddress as Address} />
-                            ) : (
-                                DEFAULT_ERROR_STRING
-                            )}
-                        </div>
-                        <div className="flex flex-row w-full gap-8">
+                            <FormattedAddress address={sideSheetValues.contactDetails?.mailingAddress as Address} />
+                        </div>)}
+                        {sideSheetValues.contactDetails?.phoneNumber !== null && (<div className="flex flex-row w-full gap-8">
                             <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
                                 {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.phoneNumber')}
                             </Typography>
-                            <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.contractDetails?.phoneNumber}</Typography>
-                        </div>
-                        <div className="flex flex-row w-full gap-8">
+                            <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.contactDetails?.phoneNumber}</Typography>
+                        </div>)}
+                        {sideSheetValues.contactDetails?.faxNumber !== null && (<div className="flex flex-row w-full gap-8">
                             <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
                                 {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.faxNumber')}
                             </Typography>
-                            <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.contractDetails?.faxNumber}</Typography>
-                        </div>
+                            <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.contactDetails?.faxNumber}</Typography>
+                        </div>)}
                     </div>
                 </>
             )}

@@ -16,6 +16,8 @@ export enum TypographyVariant {
     H2acc = 'h2acc',
     H3 = 'h3',
     H4 = 'h4',
+    H5 = 'h5',
+    H6 = 'h6',
     Caption = 'caption',
     Body = 'body',
     BodySm = 'body-sm',
@@ -59,6 +61,14 @@ const typographyMapping: Record<TypographyVariant, TypographyData> = {
     [TypographyVariant.H4]: {
         styles: 'headline-4',
         tag: 'h4',
+    },
+    [TypographyVariant.H5]: {
+        styles: 'headline-5',
+        tag: 'h5',
+    },
+    [TypographyVariant.H6]: {
+        styles: 'headline-6',
+        tag: 'h6',
     },
     [TypographyVariant.Caption]: {
         styles: 'typography-content-caption',
