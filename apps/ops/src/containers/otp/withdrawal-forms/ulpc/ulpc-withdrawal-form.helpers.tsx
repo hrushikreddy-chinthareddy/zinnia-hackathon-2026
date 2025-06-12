@@ -78,23 +78,21 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
     const identifySelectedFormProgramOption = (
         formProgram: FormProgram
     ): { selectedOption: string | null; amount: string | null; maturityGuaranteePeriod?: string | null } => {
+        const program = formProgram?.program?.text;
+        const withdrawType = formProgram?.withdrawType?.text;
         const programTypeText = formProgram?.programType?.text || '';
-        const amount = formProgram?.partialAmount?.text || '';
         const programSubType = formProgram?.programSubType?.text || '';
 
-        if (programTypeText === ProgramType.NetWithdrawal) {
-            return { selectedOption: ProgramType.NetWithdrawal, amount };
-        }
-        if (programTypeText === ProgramType.GrossWithdrawal) {
-            return { selectedOption: ProgramType.GrossWithdrawal, amount };
+        if (withdrawType == WithdrawalType.Net && program == ProgramType.Withdrawal) {
+            return { selectedOption: ProgramType.NetWithdrawal, amount: formProgram?.partialNetAmount?.text || '' };
         }
 
-        if (programSubType === ProgramSubType.PercentageofAV) {
-            return { selectedOption: ProgramType.PartialPercent, amount: formProgram?.partialPercent?.text || '' };
+        if (withdrawType == WithdrawalType.Gross && programTypeText === ProgramType.GrossWithdrawal) {
+            return { selectedOption: ProgramType.GrossWithdrawal, amount: formProgram?.partialGrossAmount?.text || '' };
         }
 
-        if (programSubType === ProgramSubType.TotalFreeWithdrawal) {
-            return { selectedOption: ProgramType.PenaltyFreeAmount, amount: '' };
+        if (withdrawType == WithdrawalType.Gross && programSubType === ProgramSubType.TotalFreeWithdrawal) {
+            return { selectedOption: ProgramType.TotalFreeAmt, amount: '' };
         }
         return { selectedOption: null, amount: '' };
     };
@@ -130,7 +128,7 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
         },
         {
             label: t('amountDetails.programTypes.penaltyFreeAmount'),
-            value: ProgramType.PenaltyFreeAmount,
+            value: ProgramType.TotalFreeAmt,
             generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormProgramValues(),
