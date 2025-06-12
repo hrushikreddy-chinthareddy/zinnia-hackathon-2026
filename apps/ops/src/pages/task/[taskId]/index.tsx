@@ -124,15 +124,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
                 if (!(!isProd() && (taskUserOverride || taskTypeOverride || taskSchemaOverride))) {
-                    if (
-                        !(
-                            user.email &&
-                            ((task.assignee && task.assignee.toLowerCase() == user.email.toLowerCase()) ||
-                                (!task.assignee &&
-                                    task.prefferedAssignee &&
-                                    task.prefferedAssignee.toLowerCase() == user.email.toLowerCase()))
-                        )
-                    ) {
+                    if (!(user.partyId && task.assigneePartyId && task.assigneePartyId === user.partyId)) {
                         logWarn('task/:id::task is not assigned to user', { ...loggingContext, assignee: task.assignee });
                         return {
                             redirect: {

@@ -210,6 +210,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     setTask({
                         ...task,
                         assignee: user.email,
+                        assigneePartyId: (user.partyId as string) ?? '',
                     });
                     if (onTaskClaimSuccess) {
                         onTaskClaimSuccess();
@@ -220,6 +221,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                         {
                             ...task,
                             assignee: user.email,
+                            assigneePartyId: (user.partyId as string) ?? '',
                         }
                     );
                     setErrorClaimingTask(false);
@@ -311,10 +313,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     const formattedUpdated = formatDateTime(task.updatedAt);
     const formattedPending = formatDateTime(task.scheduledDate);
 
-    const userExists =
-        user?.email?.toLowerCase() !== '' &&
-        (user?.email?.toLowerCase() === task.assignee?.toLowerCase() ||
-            task.prefferedAssignee?.toLowerCase() === user?.email?.toLowerCase());
+    const isUserAssociatedWithTask = user?.partyId !== '' && user?.partyId === task?.assigneePartyId;
 
     const documentsList = transformDocument(task.mappedDocuments || []);
 
@@ -444,7 +443,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 <div className="col-span-2 mt-2 align-self">
                     {task?.status === TaskStatus.InProgress &&
                     task?.queue &&
-                    task.assignee?.toLowerCase() === user?.email?.toLowerCase() &&
+                    task?.assigneePartyId === user?.partyId &&
                     !Object.values(EarlyTaskType).includes(task?.taskType as EarlyTaskType) ? (
                         <Dropdown
                             triggerIcon={
@@ -521,17 +520,21 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 )}
             </div>
 
-            {type == 'case' && !userExists && showStartButton && (
+            {type == 'case' && !isUserAssociatedWithTask && showStartButton && (
                 <div className="bg-black text-white text-sm font-normal rounded-lg shadow p-2  whitespace-nowrap z-10  mt-8 max-w-[240px]">
                     {t('sideSheet.task.noAssignee')}
                 </div>
             )}
 
             {type == 'case' && showStartButton && (
-                <div className={!userExists ? 'flex flex-row items-center gap-1 pt-2' : 'flex flex-row items-center gap-1 pt-8'}>
+                <div
+                    className={
+                        !isUserAssociatedWithTask ? 'flex flex-row items-center gap-1 pt-2' : 'flex flex-row items-center gap-1 pt-8'
+                    }
+                >
                     <Button
                         mode="primary"
-                        disabled={!userExists || startLoader}
+                        disabled={!isUserAssociatedWithTask || startLoader}
                         onClick={() => handleStart(task.id, task.status)}
                         data-testid="start-task-btm"
                         aria-label={t('ariaLabel.startTask') as string}

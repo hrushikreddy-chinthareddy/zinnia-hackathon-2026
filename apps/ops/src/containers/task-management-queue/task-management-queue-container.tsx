@@ -68,6 +68,7 @@ const TaskManagementQueue = ({ featureFlagDecisions, showClaimTask, additionalDa
 
     const getTasks = async (handleLoader: boolean) => {
         const assignee: string = additionalData?.user?.name || '';
+        const assigneePartyId: string = additionalData?.user?.partyId || '';
 
         setErrorMessage('');
 
@@ -80,7 +81,11 @@ const TaskManagementQueue = ({ featureFlagDecisions, showClaimTask, additionalDa
                 if (assignedTaskData.length > 0) {
                     setTaskDetails(
                         assignedTaskData.map(taskData => {
-                            return { ...taskData, assignee };
+                            return {
+                                ...taskData,
+                                assignee,
+                                assigneePartyId,
+                            };
                         })
                     );
                 } else {
@@ -90,7 +95,13 @@ const TaskManagementQueue = ({ featureFlagDecisions, showClaimTask, additionalDa
                     }
                 }
             } else {
-                setTaskDetails(assignedTaskData.map(task => ({ ...task, assignee: assignee || '' })));
+                setTaskDetails(
+                    assignedTaskData.map(task => ({
+                        ...task,
+                        assignee: assignee,
+                        assigneePartyId,
+                    }))
+                );
             }
         } catch (error) {
             setErrorMessage(t('fetchTaskError') || '');

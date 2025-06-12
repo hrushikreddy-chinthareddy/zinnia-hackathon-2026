@@ -47,6 +47,7 @@ export type ManagementTask<T = TaskStatus> = {
     assignedTo?: any;
     assigneeFirstName?: string;
     assigneeLastName?: string;
+    assigneePartyId?: string;
     carrier: string;
     caseId: string;
     createdAt: string;
