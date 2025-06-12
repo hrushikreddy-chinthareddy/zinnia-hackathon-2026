@@ -68,7 +68,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                                 </Label>
                             </div>
                         )}
-                        {readonly && typeof formData === 'string' && !schema.enum ? formData : children}
+                        {readonly && typeof formData === 'string' && !(schema.enum || uiOptions.format === 'numeric') ? formData : children}
                         {!hideError && errors}
                     </div>
                 </div>

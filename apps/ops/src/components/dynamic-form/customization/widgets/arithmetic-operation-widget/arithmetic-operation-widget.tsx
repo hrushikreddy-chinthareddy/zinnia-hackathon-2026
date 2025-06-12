@@ -1,8 +1,8 @@
 import { getUiOptions, WidgetProps } from '@rjsf/utils';
 import { Label } from '@zinnia/bloom/components';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
+import Field, { FieldFormat, FieldSize, FieldType } from '@deps/components/fields/field';
 
 
 
@@ -48,10 +48,17 @@ const ArithmeticOperationWidget = function (props: WidgetProps) {
   };
 
   const value = applyArithmeticOperations(formContextOptions);
+  const numberFormat = { type: 'number' as FieldFormat, decimalPlaces: 2, format: 'en-US' };
+  const formatNumber = (num: any) => {
+    return parseFloat(num).toLocaleString('en-US', {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2
+    })
+  };
 
   useEffect(() => {
     if (value !== null || value !== undefined) {
-      onChange(value?.toString());
+      onChange(value?.toFixed(2));
     }
   }, [value]);
 
@@ -60,7 +67,7 @@ const ArithmeticOperationWidget = function (props: WidgetProps) {
     return (disabled as boolean) ? (
       <div>{value}</div>
     ) : (
-      readonly ? <>{value}</> :
+      readonly ? <>{formatNumber(value)}</> :
         <div className="">
           {title && (
             <div className="mb-2">
@@ -71,17 +78,17 @@ const ArithmeticOperationWidget = function (props: WidgetProps) {
           )}
           {description}
           <div className="max-w-sm flex w-full flex-col">
-            <TextField
-              placeholder={placeholder}
+            <Field name={id}
+              value={value.toString()}
+              formatOptions={numberFormat}
               id={id}
-              className={"text-right"}
-              value={value || ''}
+              disabled={disabled}
               required={required}
-              disabled={true}
-              onChange={() => onChange(value.toString())}
-              hideError={hideError}
-              status={rawErrors && rawErrors?.length > 0 ? 'error' : undefined}
-            />
+              readOnly={readonly}
+              placeholder={placeholder}
+              onChange={e => onChange(e.target.value)}
+              size={FieldSize.Small}
+              type={FieldType.BaseActive} />
           </div>
           {!hideError && errors}
         </div>
