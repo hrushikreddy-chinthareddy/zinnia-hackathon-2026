@@ -845,6 +845,16 @@
         "unapproved": "Désapprouvé",
         "submit": "Soumettre",
         "uploadDocument": "Uploader un document",
+        "fileUpload": {
+            "documentCategory": "Catégorie de document",
+            "documentType": "Type de document",
+            "formNumber": "Numéro du formulaire",
+            "restricted": "Restreint",
+            "upload": "Téléverser",
+            "cancel": "Annuler",
+            "select": "Sélectionner",
+            "erreur": "Une erreur est survenue lors de la récupération des filtres. Veuillez réessayer."
+        },
         "fileUploadToastMessages": {
             "fileUploadError": "Échec du téléchargement des fichiers suivants ({{failedUploads}})",
             "fileUploadSuccess": "Fichier téléchargé avec succès"

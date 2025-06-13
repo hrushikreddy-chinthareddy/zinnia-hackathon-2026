@@ -271,10 +271,6 @@
                             "label": false,
                             "showFiles": false,
                             "omitValue": true
-                        },
-                        "ui:props": {
-                            "apiUrl": "case/v1/form/metadata?process=Suitability&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
-                            "apiMethod": "get"
                         }
                     },
                     "attachments": {

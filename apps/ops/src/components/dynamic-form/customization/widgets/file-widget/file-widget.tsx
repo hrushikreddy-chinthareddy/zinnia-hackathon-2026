@@ -9,30 +9,26 @@ import {
     UIOptionsType,
     WidgetProps,
 } from '@rjsf/utils';
-import { Loader, Toast, ToastVariant } from '@zinnia/bloom/components';
-import { AxiosResponse } from 'axios';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { Toast, ToastVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { csrApiHelper } from '@deps/helpers/csr-api-helpers';
-import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
-import { ApiProps, FormMetadata } from '@deps/models/case/task';
+import { EDSDocumentRequestBody } from '@deps/models/case/document';
 import { uploadDocumentV2 } from '@deps/queries/api/documents';
-import { baseAppUrl } from '@deps/queries/api-config';
-import { client } from '@deps/queries/api-utils/client';
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
+import { SourceSystem } from '@deps/types/documents-v3';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { attachFilesToMappedDocuments, cleanForm } from '@deps/utils/tasks/task-payload-helpers';
+import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helpers';
 
 import FileAttachmentComponent from './file-attachment.component';
 import style from './file-widget.module.css';
 
-const baseUrl = baseAppUrl + '/api/';
 const INTERVAL = 3000;
 
 function addNameToDataURL(dataURL: string, name: string) {
@@ -146,30 +142,30 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
     const sideSheet = useSideSheetContext();
 
-    const [attachmentSchema, setAttachmentSchema] = useState<FormMetadata | null>(null);
-    const [loader, setLoader] = useState(false);
-    const { props, showFiles } = getUiOptions<T, S, F>(uiSchema);
+    const { showFiles } = getUiOptions<T, S, F>(uiSchema);
 
-    const { apiUrl, apiMethod } = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
     const [toastMessage, setToastMessage] = useState<any>(undefined);
     const [toastVariant, setToastVariant] = useState<any>(undefined);
 
-    const onSubmit = (data: any, files: any) => {
+    const onSubmit = (data: EDSDocumentRequestBody, files: any) => {
         const attachments = [...(formContext?.customData?.attachments || [])];
         const failedUploads: string[] = []; // Track failed uploads
 
         const uploadPromises = Object.keys(files).map(async (key: string) => {
             const { blob, name } = dataURItoBlob(files[key]);
-            const processedData = replacePlaceholders(data, formContext ?? {});
-            const payload = cleanForm(processedData, attachmentSchema || ({} as FormMetadata));
             const metaData = {
-                ...payload,
+                ...data,
                 sourceFileName: name,
                 documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                 fileType: getFileSubtype(blob),
+                docClassification: SearchRequest.documentClassification.INBOUND,
+                sourceSystem: SourceSystem.ZL,
+                zinniaLiveCaseId: formContext?.customData?.caseId,
+                parentCarrierCode: formContext?.customData?.carrier ?? '',
+                correlationId: formContext?.correlationId || '',
             };
             try {
-                const response = await uploadDocumentV2(metaData, files[key], formContext?.correlationId || '');
+                const response = await uploadDocumentV2(metaData, files[key]);
 
                 if (response?.documentId) {
                     const attachment = {
@@ -213,32 +209,6 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         });
     };
 
-    useEffect(() => {
-        const getAttachmentSchema = async () => {
-            try {
-                setLoader(true);
-                const url = `${baseUrl}${apiUrl}`;
-
-                const { data } = await client[apiMethod ?? 'get']<FormMetadata, AxiosResponse>(url);
-                if (!data) return;
-
-                const apiProps = typeof props === 'object' ? (data?.uiSchema?.options?.['ui:props'] as ApiProps) : ({} as ApiProps);
-                if (apiProps?.apiUrl) {
-                    await csrApiHelper(apiProps, { ...formContext?.customData }).then(response => {
-                        data.formSchema.definitions[apiProps?.dataKey] = response;
-                    });
-                }
-
-                setAttachmentSchema(data);
-            } catch (err) {
-                browserLogError('🚀 ~ getAttachmentSchema ~ err:', { err });
-            } finally {
-                setLoader(false);
-            }
-        };
-        getAttachmentSchema();
-    }, [apiMethod, apiUrl]);
-
     const handleChange = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
             if (!event.target.files) {
@@ -253,10 +223,8 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                 let values = '';
                 if (multiple) {
                     values = value?.concat(newValue);
-                    onChange(value?.concat(newValue));
                 } else {
                     values = newValue[0] || '';
-                    onChange(newValue[0]);
                     // For single file upload, just take the first element if newValue is an array
                 }
 
@@ -270,23 +238,20 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                             options={values as any}
                         />
 
-                        {attachmentSchema && (
-                            <FileAttachmentComponent
-                                schema={attachmentSchema}
-                                formData={{}}
-                                onClose={() => sideSheet.onClose()}
-                                onSubmit={(formData: any) => onSubmit(formData, newValue)}
-                                formContext={formContext?.customData}
-                            />
-                        )}
+                        <FileAttachmentComponent
+                            carrier={formContext?.customData?.carrier || ''}
+                            onClose={() => sideSheet.onClose()}
+                            onSubmit={(formData: EDSDocumentRequestBody) => onSubmit(formData, newValue)}
+                        />
                     </div>
                 );
+                ``;
 
                 sideSheet.changeSideSheetContent(t('uploadDocument'), content);
                 sideSheet.handleOpen(true);
             });
         },
-        [attachmentSchema, multiple, onChange, value, onSubmit, options.filePreview]
+        [multiple, onChange, value, onSubmit, options.filePreview]
     );
 
     useEffect(() => {
@@ -313,25 +278,22 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
     return (
         <>
-            {loader ? (
-                <Loader />
-            ) : (
-                <div className="mt-1">
-                    <label htmlFor={widgetProps.id} className={style.customFileUpload}>
-                        {schema?.title ?? t('upload')}
-                    </label>
-                    <BaseInputTemplate
-                        {...widgetProps}
-                        disabled={disabled || readonly}
-                        type="file"
-                        required={value ? false : required}
-                        onChangeOverride={handleChange}
-                        value=""
-                        accept={options.accept ? String(options.accept) : undefined}
-                        className={style.input}
-                    />
-                </div>
-            )}
+            <div className="mt-1">
+                <label htmlFor={widgetProps.id} className={style.customFileUpload}>
+                    {schema?.title ?? t('upload')}
+                </label>
+                <BaseInputTemplate
+                    {...widgetProps}
+                    disabled={disabled || readonly}
+                    type="file"
+                    required={value ? false : required}
+                    onChangeOverride={handleChange}
+                    value=""
+                    accept={options.accept ? String(options.accept) : undefined}
+                    className={style.input}
+                />
+            </div>
+
             {showFiles && (
                 <FilesInfo<T, S, F>
                     filesInfo={filesInfo}

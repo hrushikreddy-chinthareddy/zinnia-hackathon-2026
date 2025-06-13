@@ -33,11 +33,7 @@ export const getDocumentV2 = async (documentNumber: string, docType: string, cli
     }
 };
 
-export const uploadDocumentV2 = async (
-    metadata: EDSDocumentRequestBody,
-    document: any,
-    correlationId: string
-): Promise<EDSDocumentResponse | null> => {
+export const uploadDocumentV2 = async (metadata: EDSDocumentRequestBody, document: any): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/upload`;
 

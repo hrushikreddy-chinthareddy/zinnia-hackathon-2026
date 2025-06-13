@@ -752,6 +752,16 @@
         "unapproved": "Unapproved",
         "submit": "Submit",
         "uploadDocument": "Upload Document",
+        "fileUpload": {
+            "documentCategory": "Category",
+            "documentType": "Type",
+            "formNumber": "Form number",
+            "restricted": "Restricted",
+            "upload": "Upload",
+            "cancel": "Cancel",
+            "select": "Select",
+            "error": "Error occurred while fecthing filters. Please try again"
+        },
         "fileUploadToastMessages": {
             "fileUploadError": "Failed to upload following files ({{failedUploads}})",
             "fileUploadSuccess": "File uploaded successfully"

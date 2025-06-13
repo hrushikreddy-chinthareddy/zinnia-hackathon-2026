@@ -167,6 +167,8 @@ export type EDSDocumentRequestBody = {
     docClassification: string;
     zinniaLiveCaseId: string;
     correlationId: string;
+    documentTypeDescription?: string;
+    formNumber?: string;
 };
 
 export type EDSDocumentResponse = {

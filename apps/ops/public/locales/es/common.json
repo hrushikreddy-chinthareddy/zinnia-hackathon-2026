@@ -748,6 +748,16 @@
         "unapproved": "No aprobado",
         "submit": "Enviar",
         "uploadDocument": "Subir Documento",
+        "fileUpload": {
+            "documentCategory": "Categoría",
+            "documentType": "Tipo",
+            "formNumber": "Número de Formulario",
+            "restricted": "Restringido",
+            "upload": "Subir",
+            "cancel": "Cancelar",
+            "select": "Seleccionar",
+            "error": "Ocurrió un error al obtener los filtros. Por favor, inténtalo de nuevo."
+        },
         "fileUploadToastMessages": {
             "fileUploadError": "Error al subir los siguientes archivos ({{failedUploads}})",
             "fileUploadSuccess": "Archivo subido exitosamente"

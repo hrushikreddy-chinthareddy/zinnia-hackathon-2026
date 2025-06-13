@@ -33,3 +33,30 @@ export interface TaxDocumentApiRequestInputs {
     numYears: number;
     clientCode: string;
 }
+export const SourceSystem = { ZL: 'ZL' };
+
+export type DocumentMetadata = {
+    documentInfoId: string;
+    parentCarrierCode: string;
+    documentCategory: string;
+    documentType: string;
+    formNumber: string;
+    documentTypeDescription: string;
+    companyName: string;
+    documentClassification: DocumentClassification;
+    applicableState: string;
+    createDate: string;
+    documentCategoryKey: string;
+};
+
+export type DocumentMetaDataRequest = {
+    parentCarrierCode: string;
+    documentType?: string;
+    documentCategory?: string;
+};
+
+export enum DocumentAccessLevel {
+    CLIENT_COPY = 'CLIENT_COPY',
+    AGENT_COPY = 'AGENT_COPY',
+    CARRIER_ONLY = 'CARRIER_ONLY',
+}

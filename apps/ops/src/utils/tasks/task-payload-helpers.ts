@@ -139,10 +139,15 @@ export const cleanForm = (formData: any, taskMetadata: FormMetadata) => {
 
 export const attachFilesToMappedDocuments = async (attachment: any, task: ManagementTask, correlationId: string): Promise<boolean> => {
     try {
+        const attachments = [...(task.data?.attachments || []), attachment];
         await updateTask(
             {
                 ...task,
-                mappedDocuments: [...(task.mappedDocuments || []), attachment],
+                data: {
+                    ...task.data,
+                    attachments,
+                },
+                mappedDocuments: attachments,
             },
             correlationId,
             TaskStatus.InProgress
