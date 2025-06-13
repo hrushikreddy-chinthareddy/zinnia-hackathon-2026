@@ -90,7 +90,7 @@ export const NotificationIcon = () => {
     enabled: !!fetchNotificationsFlag,
   });
 
-  if (!policyNumber || !planCode) return null;
+  if (!policyNumber || !planCode || !fetchNotificationsFlag) return null;
 
   return (
     <Link

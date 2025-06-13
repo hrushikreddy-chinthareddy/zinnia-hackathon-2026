@@ -1,50 +1,44 @@
 'use client';
 
-import { AccountStatus } from '@zinnia/api-types/types/sor';
 import { SideSheet, Icon, IconType } from '@zinnia/bloom/components';
-import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
-import { putEndDateBankAccount } from '@/actions/bpm/bank-actions';
 import { Button } from '@/components/button/Button';
 import { useNeedsVerificationCode } from '@/hooks/use-needs-verification-code';
-import { useUser } from '@/hooks/use-user';
-import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
+import { ApiResponseError } from '@/services';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
-import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 
-import { Link } from '../link/Link';
 import { Error } from './form-steps/error/Error';
 import { Loading } from './form-steps/loading/Loading';
 import { RemoveBankConfirm } from './form-steps/remove-bank-confirm/RemoveBankConfirm';
 import { Success } from './form-steps/success/Success';
 import { VerifyIdentity } from '../transaction-steps/verify-identity/VerifyIdentity';
+import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 
 export interface RemoveBankProps {
-  partyId: string;
-  bankId?: string;
-  values?: BankFormFields;
+  values?: Omit<BankFormFields, 'accountType'> & {
+    accountType?: string;
+  };
   autopayEnabled?: boolean;
   numberOfAccounts?: number;
+  onRemoveBank: () => Promise<{
+    data: { title: string; message: string };
+    error: ApiResponseError | null;
+  }>;
+  checkVerification?: boolean;
 }
 
 export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   values,
-  partyId,
-  bankId,
   autopayEnabled,
   numberOfAccounts,
+  onRemoveBank,
+  checkVerification = true,
 }) => {
   const requiresIdentityCode = useNeedsVerificationCode();
 
-  const updateBpmAction = useBpmStore(state => state.updateBpmAction);
-  const params = useParams<{
-    planCode: string;
-    policyNumber: string;
-  }>();
   const [open, setOpen] = useState(false);
-  const { user } = useUser();
   const [step, setStep] = useState<FormSteps>();
   const [errorTitle, setErrorTitle] = useState('An error occurred');
   const [errorMessage, setErrorMessage] = useState<ReactNode>(
@@ -57,7 +51,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
   );
 
   const checkVerificationAndRemove = async () => {
-    if (requiresIdentityCode) {
+    if (requiresIdentityCode && checkVerification) {
       setStep(FormSteps.VERIFY_IDENTITY);
       return;
     }
@@ -67,19 +61,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
 
   const handleRemove = async () => {
     setStep(FormSteps.LOADING);
-    const { data, error } = await putEndDateBankAccount({
-      planCode: params.planCode,
-      policyNumber: params.policyNumber,
-      partyId,
-      bankId,
-      bankAccountChangeRequest: {
-        bankAccount: {
-          ...values,
-          accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
-          nameOnAccount: user?.name,
-        },
-      },
-    });
+    const { data, error } = await onRemoveBank();
 
     if (error) {
       setIsServerError(error.status >= 500);
@@ -89,15 +71,9 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
       return;
     }
     if (data) {
-      setSuccessTitle(data.messages.title);
-      setSuccessMessage(data.messages.message);
+      setSuccessTitle(data.title);
+      setSuccessMessage(data.message);
       setStep(FormSteps.SUCCESS);
-      updateBpmAction({
-        actionType: ActionTypes.REMOVE,
-        propertyKey: PropertyKeys.BANK_DETAILS,
-        itemKey: 'routingNumber',
-        itemValue: values?.routingNumber,
-      });
       return;
     }
   };
@@ -126,13 +102,7 @@ export const RemoveBankSidesheet: FC<RemoveBankProps> = ({
           isServerError={isServerError}
           errorMessage={
             <span>
-              To manage your autopay details, call us at{' '}
-              <Link
-                isNativeAnchorTag
-                href={`tel:${EVERLY_CONTACT_PHONE_NUMBER}`}
-              >
-                {EVERLY_CONTACT_PHONE_NUMBER}
-              </Link>
+              To manage your autopay details, call us at <CarrierPhoneNumber />
             </span>
           }
           closeCallback={onClose}

@@ -7,3 +7,8 @@
 .bankName {
   margin-bottom: var(--measure-dimension-gap-lg, 1rem);
 }
+
+.bankActions {
+  display: flex;
+  gap: var(--measure-dimension-gap-sm);
+}

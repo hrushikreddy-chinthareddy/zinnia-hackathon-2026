@@ -7,6 +7,7 @@ import { AddressList } from '@/components/address-list/AddressList';
 import { BankList } from '@/components/bank-list/BankList';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { CommunicationPreferences } from '@/components/communication-preferences/CommunicationPreferences';
+import { PaymentDetails } from '@/components/farmers/payment-details/PaymentDetails';
 import { FieldData } from '@/components/field-data/FieldData';
 import { PartyList } from '@/components/party-list/PartyList';
 import { Emails } from '@/components/person-data/Emails';
@@ -14,10 +15,12 @@ import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getPreferencesByPlanCode } from '@/services/preferences/v1/[partyId]/e-delivery/[planCode]/[policyNumber]';
+import { Subdomains } from '@/types/carriers';
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { getThemeCookies } from '@/utils/theme';
 
 export const ProfileView = async ({
   lineOfBusiness,
@@ -36,8 +39,11 @@ export const ProfileView = async ({
     flags?.[FEATURE_FLAGS.COMMUNICATION_PREFERENCES];
   const allowBankingChanges =
     flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT] || false;
+  const showFarmersPaymentus =
+    flags?.[FEATURE_FLAGS.FARMERS_PAYMENTUS] || false;
   const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
   const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
+  const currentCarrier = await getThemeCookies();
 
   let preferencesData = [] as EDeliveryPreferenceModel[];
   const loggingContext = await buildCommonLogContext();
@@ -105,14 +111,20 @@ export const ProfileView = async ({
   };
 
   const bank = () => {
+    if (currentCarrier === Subdomains.FARMERS && showFarmersPaymentus) {
+      return <PaymentDetails />;
+    }
+
     return (
-      <BankList
-        planCode={planCode}
-        policyNumber={policyNumber}
-        allowBankingChanges={allowBankingChanges}
-        initialProfileData={profileData}
-        lineOfBusiness={lineOfBusiness}
-      />
+      <>
+        <BankList
+          planCode={planCode}
+          policyNumber={policyNumber}
+          allowBankingChanges={allowBankingChanges}
+          initialProfileData={profileData}
+          lineOfBusiness={lineOfBusiness}
+        />
+      </>
     );
   };
 

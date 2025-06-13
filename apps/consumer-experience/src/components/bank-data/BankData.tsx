@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Label,
   AssistiveText,
@@ -5,53 +7,77 @@ import {
 } from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
-import { BankDetail } from '@/components/person-data/types';
 import { AccountNumber } from '@/components/pii/AccountNumber';
 import { AccountType } from '@/components/pii/AccountType';
 import { BankName } from '@/components/pii/BankName';
 import { Name } from '@/components/pii/Name';
 import { RoutingNumber } from '@/components/pii/RoutingNumber';
+import { ApiResponseError } from '@/services';
 
 import styles from './BankData.module.css';
+import { EditBankSidesheet } from '../edit-bank/EditBankSidesheet';
 import { RemoveBankSidesheet } from '../remove-bank/RemoveBankSidesheet';
 
-interface BankDetailProps extends BankDetail {
-  removeBankEnabled?: boolean;
+interface BaseBankDetailProps {
+  accountNumber?: string;
+  branchName?: string;
+  nameOnAccount?: string;
+  routingNumber?: string;
   numberOfAccounts: number;
-  partyId: string;
+  accountType?: string;
+  autopayEnabled?: boolean;
+  editBankEnabled?: boolean;
 }
+
+interface BankDetailWithRemoveBank extends BaseBankDetailProps {
+  removeBankEnabled: boolean;
+  onRemoveBank: () => Promise<{
+    data: { title: string; message: string };
+    error: ApiResponseError | null;
+  }>;
+}
+
+interface BankDetailWithoutRemoveBank extends BaseBankDetailProps {
+  removeBankEnabled?: boolean;
+  onRemoveBank?: never;
+}
+
+type BankDetailProps = BankDetailWithRemoveBank | BankDetailWithoutRemoveBank;
 
 export const BankData = ({
   accountNumber,
   accountType,
   autopayEnabled,
   branchName,
-  partyId,
   nameOnAccount,
   routingNumber,
   removeBankEnabled,
   numberOfAccounts,
-  bankId,
+  onRemoveBank,
+  editBankEnabled,
 }: BankDetailProps) => {
   return (
     <div>
       <div className={styles.bankName}>
         <div className="typography-labels-label-lg justify-between">
           <BankName bankName={branchName} />
-          {removeBankEnabled && (
-            <RemoveBankSidesheet
-              partyId={partyId}
-              autopayEnabled={autopayEnabled}
-              numberOfAccounts={numberOfAccounts}
-              bankId={bankId}
-              values={{
-                accountNumber,
-                accountType,
-                routingNumber,
-                branchName,
-              }}
-            />
-          )}
+          <div className={styles.bankActions}>
+            {editBankEnabled && <EditBankSidesheet />}
+            {removeBankEnabled && onRemoveBank && (
+              <RemoveBankSidesheet
+                autopayEnabled={autopayEnabled}
+                numberOfAccounts={numberOfAccounts}
+                onRemoveBank={onRemoveBank}
+                checkVerification={false}
+                values={{
+                  accountNumber,
+                  accountType,
+                  routingNumber,
+                  branchName,
+                }}
+              />
+            )}
+          </div>
         </div>
         {autopayEnabled && (
           <AssistiveText
@@ -67,11 +93,14 @@ export const BankData = ({
             <AccountNumber accountNumber={accountNumber} />
           </p>
         </FieldData>
-        <FieldData Label={<Label>Routing number</Label>}>
-          <p className="typography-content-body-sm">
-            <RoutingNumber routingNumber={routingNumber} />
-          </p>
-        </FieldData>
+        {routingNumber && (
+          <FieldData Label={<Label>Routing number</Label>}>
+            <p className="typography-content-body-sm">
+              <RoutingNumber routingNumber={routingNumber} />
+            </p>
+          </FieldData>
+        )}
+
         <FieldData Label={<Label>Account type</Label>}>
           <p className="typography-content-body-sm">
             <AccountType accountType={accountType} />

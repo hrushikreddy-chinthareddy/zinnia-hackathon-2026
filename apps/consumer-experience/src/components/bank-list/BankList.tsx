@@ -1,13 +1,16 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+import { AccountStatus, LineOfBusiness } from '@zinnia/api-types/types/sor';
+import { useParams } from 'next/navigation';
 import { FC, useMemo, useRef } from 'react';
 
+import { putEndDateBankAccount } from '@/actions/bpm/bank-actions';
 import { actionLogInfo } from '@/actions/log-actions';
+import { useUser } from '@/hooks/use-user';
 import { getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
-import { PropertyKeys, useBpmStore } from '@/store/store';
+import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { CaseSummary, CaseTypes } from '@/types/case';
 import { PolicyProfile } from '@/types/policy';
 import { refetchHandler } from '@/utils/transactions';
@@ -17,6 +20,7 @@ import { AddBankSidesheet } from '../add-bank/AddBankSidesheet';
 import { BankData } from '../bank-data/BankData';
 import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 import { OpenTransactionCaseDetails } from '../open-transaction-case-details/OpenTransactionCaseDetails';
+import { BankDetail } from '../person-data/types';
 
 const POLL_INTERVAL = 1000;
 const POLL_LIMIT = 5;
@@ -38,10 +42,17 @@ export const BankList: FC<BankListProps> = ({
   initialCaseData,
   lineOfBusiness,
 }) => {
+  const params = useParams<{
+    planCode: string;
+    policyNumber: string;
+  }>();
   const bpmAction = useBpmStore(state => state.bpmAction);
+  const updateBpmAction = useBpmStore(state => state.updateBpmAction);
+
   const pollCount = useRef(0);
   const removeBpmAction = useBpmStore(state => state.removeBpmAction);
   const queryClient = useQueryClient();
+  const { user } = useUser();
 
   const logHandler = () => {
     actionLogInfo('BankList poll limit reached', {
@@ -75,19 +86,58 @@ export const BankList: FC<BankListProps> = ({
     },
   });
 
+  const handleRemoveBank = useMemo(
+    () => async (bankDetail: BankDetail) => {
+      const { data, error } = await putEndDateBankAccount({
+        planCode: params.planCode,
+        policyNumber: params.policyNumber,
+        partyId: bankDetail.appliesToPartyId || '',
+        bankId: bankDetail.accountNumber,
+        bankAccountChangeRequest: {
+          bankAccount: {
+            accountNumber: bankDetail.accountNumber,
+            accountType: bankDetail.accountType,
+            routingNumber: bankDetail.routingNumber,
+            branchName: bankDetail.branchName,
+            accountStatus: AccountStatus.ACTIVEBANKACCOUNT,
+            nameOnAccount: user?.name,
+          },
+        },
+      });
+
+      updateBpmAction({
+        actionType: ActionTypes.REMOVE,
+        propertyKey: PropertyKeys.BANK_DETAILS,
+        itemKey: 'routingNumber',
+        itemValue: bankDetail.routingNumber,
+      });
+
+      return {
+        data: {
+          title: data?.messages?.title || 'Success',
+          message: data?.messages?.message || 'Bank removed',
+        },
+        error: error || null,
+      };
+    },
+    [params.planCode, params.policyNumber, updateBpmAction, user?.name]
+  );
+
   const allBankData = useMemo(() => {
     return data?.map(bankDetail => {
       return (
         <BankData
           key={bankDetail.accountNumber}
-          partyId={bankDetail.appliesToPartyId || ''}
           removeBankEnabled={allowBankingChanges}
           numberOfAccounts={data.length}
+          onRemoveBank={
+            allowBankingChanges ? () => handleRemoveBank(bankDetail) : undefined
+          }
           {...bankDetail}
         />
       );
     });
-  }, [allowBankingChanges, data]);
+  }, [allowBankingChanges, data, handleRemoveBank]);
 
   return (
     <div>
