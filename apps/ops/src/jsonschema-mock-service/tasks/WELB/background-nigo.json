@@ -23,9 +23,17 @@
                                 "type": "object",
                                 "title": "",
                                 "properties": {
-                                    "processingInstruction": {
+                                    "detailedReason": {
                                         "type": "string",
                                         "title": "Issues"
+                                    },
+                                    "processingInstruction": {
+                                        "type": "string",
+                                        "title": "Processing Instructions"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
                                     }
                                 }
                             }
@@ -192,11 +200,23 @@
                                 "templateType": "table",
                                 "ObjectFieldTemplate": "ObjectRowFieldTemplate"
                             },
+                            "detailedReason": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
                             "processingInstruction": {
                                 "ui-widget": "ValueWidget",
                                 "ui:options": {
                                     "label": false,
                                     "inline": true
+                                }
+                            },
+                            "resolved": {
+                                "ui:options": {
+                                    "label": false
                                 }
                             }
                         }
