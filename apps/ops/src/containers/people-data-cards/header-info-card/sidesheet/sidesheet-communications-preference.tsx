@@ -40,6 +40,8 @@ import {
     updateEDeliveryPreferenceByPlanCode,
 } from '@deps/queries/api/bpm-non-financial';
 
+import { sortEmailsByType } from '../../email-card/email-card.helpers';
+
 interface CommunicationPreferenceOption {
     contactType?: PreferredCommunicationType;
     contactInfo?: Email | Address;
@@ -202,7 +204,9 @@ export const SidesheetCommunicationsPreference = ({
         });
     };
 
-    const emailRadioOptions = emails.map(role => ({
+    const sortedEmails = sortEmailsByType({ emails: emails });
+
+    const emailRadioOptions = sortedEmails.map(role => ({
         label: role.emailAddress,
         value: role.emailId,
         type: NonFinancialTransactionIdKeys.Email,
