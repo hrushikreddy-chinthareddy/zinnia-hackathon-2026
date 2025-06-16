@@ -25,7 +25,7 @@ const FileAttachmentComponent = ({ carrier, onSubmit, onClose }: FileAttachmentC
     const [currentFormData, setCurrentFormData] = useState<EDSDocumentRequestBody>({} as EDSDocumentRequestBody);
     const [restricted, setRestricted] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const limit = 10;
+    const limit = 100;
     const offset = 0;
 
     useEffect(() => {
