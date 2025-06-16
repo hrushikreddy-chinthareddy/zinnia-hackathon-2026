@@ -18,4 +18,8 @@ export const FinancialTransactionTypes: TransactionType[] = [
     TransactionType.FREE_LOOK_CANCELLATION,
     TransactionType.NEW_LOAN,
     TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
+    TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
+    TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
+    TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
 ];

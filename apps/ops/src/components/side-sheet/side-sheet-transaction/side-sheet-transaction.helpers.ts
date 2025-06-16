@@ -51,6 +51,10 @@ export const getFinancialTransactionSideSheetValues = (
         case TransactionType.FULL_SURRENDER:
         case TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME:
         case TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
+        case TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL:
+        case TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP:
+        case TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION:
+        case TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP:
             return getWithdrawalSideSheetValues(policy, transaction, t);
         case TransactionType.FREE_LOOK_CANCELLATION:
             return getFreeLookCancellationSideSheetValues(policy, transaction, t);

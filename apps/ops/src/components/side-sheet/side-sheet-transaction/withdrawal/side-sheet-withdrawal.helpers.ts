@@ -16,6 +16,7 @@ import { TFunction } from 'next-i18next';
 import { forcePositiveNumber, numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString, toSentenceCase } from '@deps/helpers/string.helpers';
 import { getRequestedWithheldTaxesDisplay, getTaxWithheldByType } from '@deps/helpers/tax-withholdings.helpers';
+import { withdrawalDetailsTransactions } from '@deps/helpers/transaction-types.helpers';
 import { getOwnersTaxJurisdictionState } from '@deps/helpers/transactions/taxes.helpers';
 import { Charge, PayeeOrBeneficiary } from '@deps/models/policy-sor-touchups/Transaction';
 import { policyWithdrawalQuote } from '@deps/queries/api/policies';
@@ -140,8 +141,8 @@ const getWithdrawalDetails = (values: WithdrawalDetailsValues, t: TFunction): Wi
             },
         ];
     } else if (
-        transactionType === TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME ||
-        transactionType === TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME
+        withdrawalDetailsTransactions.includes(transactionType as TransactionType) &&
+        (disbursementType === DisbursementType.GROSS || disbursementType === DisbursementType.NET)
     ) {
         return [
             {
@@ -223,10 +224,7 @@ const getActualWithdrawalAmount = (
         } else {
             withdrawalAmount = amount || 0;
         }
-    } else if (
-        transaction.transactionType === TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME ||
-        transaction.transactionType === TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME
-    ) {
+    } else if (withdrawalDetailsTransactions.includes(transaction.transactionType as TransactionType)) {
         if (quote?.transactionAmounts?.appliedAmount) {
             withdrawalAmount = quote?.transactionAmounts?.appliedAmount;
         } else {

@@ -185,7 +185,11 @@ export const getHistoryEventCardValues = (policy: Policy, transaction: Transacti
         }
 
         case TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME:
-        case TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME: {
+        case TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
+        case TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL:
+        case TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP:
+        case TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION:
+        case TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP: {
             const bankAccount = getBankAccount({ policy, payorsOrPayees: payeeOrBeneficiaries });
             const eventBankingBody = t('historyEventCard.toBanking', {
                 accountType: mapAccountTypeToTranslation(bankAccount?.accountType, t).toLowerCase(),

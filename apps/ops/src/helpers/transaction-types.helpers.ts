@@ -92,6 +92,22 @@ export const policyTransactions = {
     [PolicyFilters.KeyDates]: keyDateTransaction,
     all: [...anniversaryTransactions, ...coverageTransactions, ...feesTransactions, ...keyDateTransaction],
 };
+
+export const withdrawalDetailsTransactions = [
+    TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
+    TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
+    TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
+    TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
+    TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
+];
+
+export const withdrawalFinancialTransactions = [
+    ...withdrawalDetailsTransactions,
+    TransactionType.FULL_SURRENDER,
+    TransactionType.FREE_LOOK_CANCELLATION,
+];
+
 const loanTransactions = [
     TransactionType.LOAN_REPAYMENT_ONE_TIME,
     TransactionType.NEW_LOAN,
@@ -112,7 +128,11 @@ const systematicProgramTransactions = [
     TransactionType.SYSTEMATIC_PROGRAM_UPDATE,
     TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP,
     TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
+    TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
+    TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
 ];
+
 const withdrawalTransactions = [
     TransactionType.CLAIM_PAYOUT,
     TransactionType.DISBURSEMENT,
@@ -120,7 +140,10 @@ const withdrawalTransactions = [
     TransactionType.FULL_SURRENDER,
     TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
     TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
     TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
+    TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
+    TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
 ];
 
 export const financialTransactions = {

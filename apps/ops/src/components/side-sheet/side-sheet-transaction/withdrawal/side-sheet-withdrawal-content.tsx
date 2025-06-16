@@ -10,6 +10,7 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import PayeeSummaryCardRow from '@deps/containers/payee-summary-card/payee-summary-card-row/payee-summary-card-row';
 import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
+import { withdrawalDetailsTransactions } from '@deps/helpers/transaction-types.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { WithdrawalSideSheetValues } from './types';
@@ -34,10 +35,7 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
 
     if (transactionType === TransactionType.FULL_SURRENDER) {
         transactionTypeLabel = t('historyEventCard.surrender');
-    } else if (
-        transactionType === TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME ||
-        transactionType === TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME
-    ) {
+    } else if (withdrawalDetailsTransactions.includes(transactionType as TransactionType)) {
         transactionTypeLabel = t('historyEventCard.withdrawal');
     } else if (transactionType == TransactionType.FREE_LOOK_CANCELLATION) {
         transactionTypeLabel = t('historyEventCard.transactionTypes.FreeLookCancellation');

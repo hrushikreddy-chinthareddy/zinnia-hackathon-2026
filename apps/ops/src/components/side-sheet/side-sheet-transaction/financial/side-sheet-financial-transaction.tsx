@@ -10,6 +10,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+import { withdrawalFinancialTransactions } from '@deps/helpers/transaction-types.helpers';
 import { Statuses } from '@deps/models/case/case';
 import { getPolicyTransactions } from '@deps/queries/api/policies';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -127,18 +128,16 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
 
     let SidesheetContent;
 
-    switch (transactionType) {
-        case TransactionType.NEW_LOAN:
+    switch (true) {
+        case transactionType === TransactionType.NEW_LOAN:
             SidesheetContent = (
                 <SideSheetNewLoanTransactionContent t={t} values={sideSheetValues as NewLoanTransactionSideSheetValues} loading={loading} />
             );
             break;
-        case TransactionType.FULL_SURRENDER:
-        case TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME:
-        case TransactionType.FREE_LOOK_CANCELLATION:
-        case TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
+        case withdrawalFinancialTransactions.includes(transactionType as TransactionType):
             SidesheetContent = <SideSheetWithdrawalContent t={t} values={sideSheetValues as WithdrawalSideSheetValues} loading={loading} />;
             break;
+
         default:
             SidesheetContent = (
                 <SideSheetFinancialTransactionContent t={t} values={sideSheetValues as TransactionSideSheetValues} loading={loading} />
@@ -192,13 +191,9 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                 <div className="p-8">
                     <div className={`flex flex-col gap-4`}>
                         <div className="flex flex-col">
-                            {![
-                                TransactionType.FULL_SURRENDER,
-                                TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
-                                TransactionType.FREE_LOOK_CANCELLATION,
-                                TransactionType.NEW_LOAN,
-                                TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
-                            ].includes(transactionType as TransactionType) && (
+                            {![...withdrawalFinancialTransactions, TransactionType.NEW_LOAN].includes(
+                                transactionType as TransactionType
+                            ) && (
                                 <div className={cancelCta ? 'mb-4' : ''}>
                                     <Content details={numberFormatify(transactionValue)} variant={ContentVariant.Value} />
                                     <Content
