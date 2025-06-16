@@ -1,0 +1,16 @@
+.close {
+  margin-top: var(--measure-dimension-gap-3xl);
+  width: 100%;
+}
+
+.wrapper {
+  gap: var(--measure-dimension-gap-3xl);
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font: var(--typography-content-body);
+}
+
+.successIcon {
+  color: var(--color-status-icon-status-success-icon);
+}

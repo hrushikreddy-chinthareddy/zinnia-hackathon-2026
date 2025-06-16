@@ -4,7 +4,7 @@
 
 ## Testing locally
 
-Update /etc/hosts file with `sso.mypolicyview.local`
+Update /etc/hosts file with `http://sso.mypolicyview.local:{port}`
 
 Add this `DEBUG=express-openid-connect:* node index.js` to include debug logs in local server
 

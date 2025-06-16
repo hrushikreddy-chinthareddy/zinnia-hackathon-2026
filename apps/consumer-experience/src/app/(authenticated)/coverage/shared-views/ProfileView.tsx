@@ -15,7 +15,7 @@ import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getPreferencesByPlanCode } from '@/services/preferences/v1/[partyId]/e-delivery/[planCode]/[policyNumber]';
-import { Subdomains } from '@/types/carriers';
+import { CompanyName } from '@/types/carriers';
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
@@ -43,7 +43,7 @@ export const ProfileView = async ({
     flags?.[FEATURE_FLAGS.FARMERS_PAYMENTUS] || false;
   const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
   const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
-  const currentCarrier = await getThemeCookies();
+  const isFarmers = (await getThemeCookies()) === CompanyName.FARMERS;
 
   let preferencesData = [] as EDeliveryPreferenceModel[];
   const loggingContext = await buildCommonLogContext();
@@ -111,8 +111,8 @@ export const ProfileView = async ({
   };
 
   const bank = () => {
-    if (currentCarrier === Subdomains.FARMERS && showFarmersPaymentus) {
-      return <PaymentDetails />;
+    if (isFarmers && showFarmersPaymentus) {
+      return <PaymentDetails policyNumber={policyNumber} />;
     }
 
     return (

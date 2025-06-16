@@ -30,7 +30,7 @@ const encryptJWT = async () => {
 };
 
 export const getPaymentusApiToken = async (): Promise<string> => {
-  const url = `${process.env.FARMERS_API_BASE_URL}/api/token/frms`;
+  const url = `${process.env.NEXT_PUBLIC_FARMERS_API_BASE_URL}/api/token/frms`;
   const jwtToken = await encryptJWT();
 
   const requestBody = new URLSearchParams({ jwt: jwtToken });
@@ -67,7 +67,7 @@ export const getPaymentusUserPaymentsList = withLogging(
 
     const authToken = await getPaymentusApiToken();
 
-    const url = `${process.env.FARMERS_API_BASE_URL}/api/v2/listProfiles/frms/${userId}`;
+    const url = `${process.env.NEXT_PUBLIC_FARMERS_API_BASE_URL}/api/v2/listProfiles/frms/${userId}`;
 
     const response = await fetch(url, {
       headers: {

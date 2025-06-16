@@ -1,14 +1,15 @@
-.nav {
+.unthemedTabsWrapper {
   display: flex;
   gap: var(--measure-dimension-gap-xl);
   padding-left: var(--measure-dimension-padding-2xl);
 
+  button,
   a {
     color: var(--color-base-text-text-primary);
     font-weight: 600;
     padding: var(--measure-dimension-padding-sm) 0;
 
-    &.active {
+    &.selected {
       border-bottom: var(--measure-dimension-stroke-md) solid
         var(--color-base-border-border-darker);
     }

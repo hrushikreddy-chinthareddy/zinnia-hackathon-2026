@@ -3,7 +3,7 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import useWindowSize from 'react-use/lib/useWindowSize';
 
-import documentStyles from '@/app/(authenticated)/coverage/shared-styles/Documents.module.css';
+import documentStyles from '@/app/styles/unthemedTabsWrapper.module.css';
 import { ClientOnly } from '@/components/client-only/ClientOnly';
 import { Link } from '@/components/link/Link';
 import { DocumentCategory } from '@/types/document';
@@ -27,12 +27,12 @@ export const DocumentsTabs = ({
 
   return (
     <ClientOnly>
-      <ul className={documentStyles.nav}>
+      <ul className={documentStyles.unthemedTabsWrapper}>
         <li>
           <Link
             isInternal
             href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents`}
-            className={`${activeTab === DocumentCategory.DOCUMENTS ? documentStyles.active : ''}`}
+            className={`${activeTab === DocumentCategory.DOCUMENTS ? documentStyles.selected : ''}`}
           >
             Correspondence
           </Link>
@@ -41,7 +41,7 @@ export const DocumentsTabs = ({
           <Link
             isInternal
             href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents?type=${DocumentCategory.STATEMENTS}`}
-            className={`${activeTab === DocumentCategory.STATEMENTS ? documentStyles.active : ''}`}
+            className={`${activeTab === DocumentCategory.STATEMENTS ? documentStyles.selected : ''}`}
           >
             Statements
           </Link>
@@ -51,7 +51,7 @@ export const DocumentsTabs = ({
             <Link
               isInternal
               href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents?type=${DocumentCategory.TAX}`}
-              className={`${activeTab === DocumentCategory.TAX ? documentStyles.active : ''}`}
+              className={`${activeTab === DocumentCategory.TAX ? documentStyles.selected : ''}`}
             >
               {width < 501 ? 'Tax' : 'Tax Documents'}
             </Link>
