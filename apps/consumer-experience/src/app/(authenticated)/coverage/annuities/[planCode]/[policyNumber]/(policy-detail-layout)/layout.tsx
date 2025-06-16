@@ -13,7 +13,7 @@ import { buildCommonLogContext } from '@/utils/logging/server-logging';
 export const metadata: Metadata = {
   title: {
     template: '%s | MyPolicyView',
-    default: 'Policy',
+    default: 'Contract',
   },
 };
 

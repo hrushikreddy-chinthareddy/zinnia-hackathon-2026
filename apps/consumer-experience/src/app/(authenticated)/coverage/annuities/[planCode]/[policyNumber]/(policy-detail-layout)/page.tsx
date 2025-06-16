@@ -47,7 +47,7 @@ export default async function Page({
           <MockMessage />
           <NoDataAvailable
             iconType={IconType.SHIELD_EXCLAMATION}
-            message="There is currently no policy data available."
+            message="There is currently no contract data available."
           />
         </div>
       </>

@@ -40,7 +40,7 @@ export default async function SelectAmountPage({
     );
 
     if (!policyDetails) {
-      throw new Error('Failed to fetch policy details');
+      throw new Error('Failed to fetch contract details');
     }
 
     const [policyStatusRes, ottpFeeRes] = await Promise.allSettled([

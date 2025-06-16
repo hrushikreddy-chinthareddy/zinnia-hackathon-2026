@@ -61,7 +61,7 @@ export default async function Riders({
             <div>
               <h2 className="pb-2xl border-b mt-lg">Additional Riders</h2>
               <p>
-                Looks like there are additional riders for your policy, but
+                Looks like there are additional riders for your contract, but
                 they're not covering you yet.
               </p>
             </div>
