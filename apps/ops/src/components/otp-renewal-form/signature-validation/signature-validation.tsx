@@ -69,7 +69,7 @@ export default function SignatureValidations({ configs, isFormStateReadOnly }: S
                         <div key={index} className="mb-4">
                             <SingleSignature
                                 fields={config.fields}
-                                signature={{ ...owner.signature, name: ownerName || '', type: owner?.type || '' }}
+                                signature={{ ...owner.signature, name: (ownerName || '').trim(), type: owner?.type || '' }}
                                 showTitle={shouldShowTitleField(owner.type)}
                                 errors={{
                                     [SignatureFields.SignaturePresent]: formErrors[`${owner?.type}-${SignatureFields.SignaturePresent}`],
