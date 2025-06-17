@@ -52,7 +52,7 @@
                                         },
                                         "agentNPN": {
                                             "type": "string",
-                                            "title": "NPN:",
+                                            "title": "NPN",
                                             "ui:field": "subTitle"
                                         },
                                         "lastName": {

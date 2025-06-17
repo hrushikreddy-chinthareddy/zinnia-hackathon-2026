@@ -65,9 +65,8 @@
                                         },
                                         "agentNPN": {
                                             "type": "string",
-                                            "title": "SSN",
-                                            "ui:field": "subTitle",
-                                            "dataType": "ssn"
+                                            "title": "NPN",
+                                            "ui:field": "subTitle"
                                         },
                                         "lastName": {
                                             "type": "string",
