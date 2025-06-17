@@ -9,8 +9,10 @@ import {
 import { PaymentProfilesList } from './PaymentProfilesList';
 
 export const PaymentDetails = async ({
+  verifyIdentityRequired,
   policyNumber,
 }: {
+  verifyIdentityRequired?: boolean;
   policyNumber: string;
 }) => {
   const loggingContext: CommonLogContext = await buildCommonLogContext();
@@ -26,7 +28,12 @@ export const PaymentDetails = async ({
         Need help updating banking details? Give us a call at&nbsp;
         <CarrierPhoneNumber />.
       </p>
-      {data && data.length > 0 && <PaymentProfilesList profiles={data} />}
+      {data && data.length > 0 && (
+        <PaymentProfilesList
+          profiles={data}
+          verifyIdentityRequired={verifyIdentityRequired}
+        />
+      )}
       <PaymentusAddPaymentMethod policyNumber={policyNumber} />
     </div>
   );

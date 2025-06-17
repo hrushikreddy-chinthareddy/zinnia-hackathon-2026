@@ -27,6 +27,7 @@ interface BaseBankDetailProps {
   accountType?: string;
   autopayEnabled?: boolean;
   editBankEnabled?: boolean;
+  checkVerification?: boolean;
 }
 
 interface BankDetailWithRemoveBank extends BaseBankDetailProps {
@@ -55,6 +56,7 @@ export const BankData = ({
   numberOfAccounts,
   onRemoveBank,
   editBankEnabled,
+  checkVerification,
 }: BankDetailProps) => {
   return (
     <div>
@@ -68,7 +70,7 @@ export const BankData = ({
                 autopayEnabled={autopayEnabled}
                 numberOfAccounts={numberOfAccounts}
                 onRemoveBank={onRemoveBank}
-                checkVerification={false}
+                checkVerification={checkVerification}
                 values={{
                   accountNumber,
                   accountType,

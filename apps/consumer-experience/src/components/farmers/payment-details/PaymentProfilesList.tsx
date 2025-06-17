@@ -10,10 +10,12 @@ import { accountType, creditCardAccountTypes } from './utils';
 
 interface PaymentProfilesListProps {
   profiles: PaymentusProfile[];
+  verifyIdentityRequired?: boolean;
 }
 
 export const PaymentProfilesList: FC<PaymentProfilesListProps> = ({
   profiles,
+  verifyIdentityRequired = false,
 }) => {
   /**
    * Get the branch name based on the paymentItem type.
@@ -61,6 +63,7 @@ export const PaymentProfilesList: FC<PaymentProfilesListProps> = ({
           accountNumber={paymentItem['account-number']}
           accountType={getAccountTypeDisplay(paymentItem.type)}
           editBankEnabled={true}
+          checkVerification={verifyIdentityRequired}
           branchName={branchName}
           nameOnAccount={paymentItem['card-holder-name']}
         />

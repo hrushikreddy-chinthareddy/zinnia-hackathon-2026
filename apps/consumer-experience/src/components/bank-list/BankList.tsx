@@ -32,6 +32,7 @@ interface BankListProps {
   initialProfileData?: PolicyProfile | null;
   initialCaseData?: CaseSummary[];
   lineOfBusiness?: LineOfBusiness;
+  verifyIdentityRequired?: boolean;
 }
 
 export const BankList: FC<BankListProps> = ({
@@ -41,6 +42,7 @@ export const BankList: FC<BankListProps> = ({
   initialProfileData,
   initialCaseData,
   lineOfBusiness,
+  verifyIdentityRequired,
 }) => {
   const params = useParams<{
     planCode: string;
@@ -130,6 +132,7 @@ export const BankList: FC<BankListProps> = ({
           key={bankDetail.accountNumber}
           removeBankEnabled={allowBankingChanges}
           numberOfAccounts={data.length}
+          checkVerification={verifyIdentityRequired}
           onRemoveBank={
             allowBankingChanges ? () => handleRemoveBank(bankDetail) : undefined
           }
@@ -137,7 +140,7 @@ export const BankList: FC<BankListProps> = ({
         />
       );
     });
-  }, [allowBankingChanges, data, handleRemoveBank]);
+  }, [allowBankingChanges, data, handleRemoveBank, verifyIdentityRequired]);
 
   return (
     <div>
