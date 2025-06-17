@@ -91,7 +91,7 @@ export const ActiveAgingTable = () => {
                     const daysActive = dayjs().diff(startDate, 'day');
                     return (
                         <TableRow key={key}>
-                            <TableCell>{name}</TableCell>
+                            <TableCell aria-label={name}></TableCell>
                             <TableCell>{countByDay[key]}</TableCell>
                             <TableCell>{daysActive} Days</TableCell>
                             <TableCell>
