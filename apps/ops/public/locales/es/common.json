@@ -1185,7 +1185,8 @@
             "verifyFunds.stopUncashedTransactions": "Detener cheque sin cobrar",
             "verifyFunds.stopSystematicPrograms": "Detener el programa sistemático",
             "verifyFunds.stopRMD": "Detener los RMD",
-            "verifyFunds.stopSpecialPrograms": "Detener programas especiales"
+            "verifyFunds.stopSpecialPrograms": "Detener programas especiales",
+            "requestAck.receiveClaimRequest": "Detalles de la notificación de defunción"
         },
         "stepDescriptions": {
             "requestAck.nbRequestReceived": "Cuando se recibe un documento de {{subType}}, se indexa y se ingiere en el sistema.",

@@ -11,7 +11,7 @@ import { DeliveryMethods } from '@deps/components/side-sheet/side-sheet-case-ste
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { Address } from '@zinnia/api-types/types/sor';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { formatPhone, toTitleCase, formatFaxNumber } from '@deps/helpers/string.helpers';
+import { formatPhoneWithAreacode, toTitleCase, formatFaxNumber } from '@deps/helpers/string.helpers';
 
 const DeathNotificationSidesheet = ({ stepAdditionalData }: DeathNotificationSidesheetProps) => {
   const { t } = useTranslation();
@@ -137,7 +137,7 @@ const DeathNotificationSidesheet = ({ stepAdditionalData }: DeathNotificationSid
           </Typography>
           <div className="col-span-2 text-[--color-base-text-text-secondary]">{t('deathNotification.notifierDetails.notifierPhoneNumber')}</div>
           <Typography variant={TypographyVariant.BodySm} className="col-span-3">
-            {data.notifiers.party?.phone?.dialNumber ? formatPhone(data.notifiers.party?.phone): DEFAULT_ERROR_STRING}
+            {data.notifiers.party?.phone?.dialNumber ? formatPhoneWithAreacode(data.notifiers.party?.phone): DEFAULT_ERROR_STRING}
           </Typography>
           <div className="col-span-2 text-[--color-base-text-text-secondary]">{t('deathNotification.notifierDetails.beneOnFileFlag')}</div>
           <Typography variant={TypographyVariant.BodySm} className="col-span-3">

@@ -1191,7 +1191,8 @@
             "verifyFunds.stopUncashedTransactions": "Arrêter un chèque non encaissé",
             "verifyFunds.stopSystematicPrograms": "Arrêter le programme systématique",
             "verifyFunds.stopRMD": "Arrêtez les RMD",
-            "verifyFunds.stopSpecialPrograms": "Arrêter les programmes spéciaux"
+            "verifyFunds.stopSpecialPrograms": "Arrêter les programmes spéciaux",
+            "requestAck.receiveClaimRequest": "Détails de la notification de décès"
         },
         "stepDescriptions": {
             "requestAck.nbRequestReceived": "Lorsqu'un document {{subType}} est reçu, il est indexé et intégré dans le système.",

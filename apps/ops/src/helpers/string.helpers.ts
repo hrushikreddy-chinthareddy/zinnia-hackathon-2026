@@ -107,6 +107,22 @@ export const formatPhone = (phone: Phone) => {
     return phoneNumber;
 };
 
+export const formatPhoneWithAreacode = (phone: Phone) => {
+    if (!phone) return '';
+
+    let phoneNumber = '';
+
+    if (!isNullEmptyOrUndefined(phone.areaCode)) {
+        phoneNumber += `(${phone.areaCode}) `;
+    }
+
+    if (!isNullEmptyOrUndefined(phone.dialNumber)) {
+        phoneNumber += `${formatFaxNumber(phone?.dialNumber?.toString())}`;
+    }
+
+    return phoneNumber;
+};
+
 export const formatFaxNumber = (faxNumber: string | undefined) => {
     if (!faxNumber || typeof faxNumber !== 'string') {
       return DEFAULT_ERROR_STRING;

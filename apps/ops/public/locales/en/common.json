@@ -1216,7 +1216,8 @@
             "verifyFunds.stopUncashedTransactions": "Stop Uncashed Check",
             "verifyFunds.stopSystematicPrograms": "Stop Systematic Program",
             "verifyFunds.stopRMD": "Stop RMDs",
-            "verifyFunds.stopSpecialPrograms": "Stop Special Programs"
+            "verifyFunds.stopSpecialPrograms": "Stop Special Programs",
+            "requestAck.receiveClaimRequest": "Death Notification Details"
         },
         "stepDescriptions": {
             "requestAck.nbRequestReceived": "When a {{subType}} document is received, it is indexed and ingested into the system.",
