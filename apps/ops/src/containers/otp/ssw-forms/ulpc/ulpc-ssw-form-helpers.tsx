@@ -33,7 +33,7 @@ import {
     PaymentMailType,
     PaymentMethod,
     PhoneTypes,
-    SSWType
+    SSWType,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -78,17 +78,6 @@ export default function getUlpcConfig(t: TFunction) {
                     fieldName: BankingFields.Bank,
                     fieldLabel: t('distributionMethod.chooseTheBank'),
                     component: DisbursementFields.SelectBank,
-                },
-                {
-                    fieldName: BankingFields.IsVoidCheckAttached,
-                    fieldLabel: t('distributionMethod.isVoidCheckAttached'),
-                    component: DisbursementFields.BankBooleanButtonGroup,
-                    classNames: 'col-start-1',
-                },
-                {
-                    fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
-                    component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
                     fieldName: BankingFields.AccountType,
@@ -302,42 +291,6 @@ export default function getUlpcConfig(t: TFunction) {
                 {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
-                },
-            ],
-        },
-    ];
-
-    const coveredPartyConfigs: PartyConfig[] = [
-        {
-            partyRoleType: PartyRoles.JOINTCOVEREDPERSON,
-            title: t('personalDetails.title'),
-            fields: [
-                {
-                    fieldName: PartyFields.FirstName,
-                    fieldLabel: t('personalDetails.firstName'),
-                },
-                {
-                    fieldName: PartyFields.MiddleName,
-                    fieldLabel: t('personalDetails.middleName'),
-                },
-                {
-                    fieldName: PartyFields.LastName,
-                    fieldLabel: t('personalDetails.lastName'),
-                },
-                {
-                    fieldName: PartyFields.TaxId,
-                    fieldLabel: t('personalDetails.ssn'),
-                },
-                {
-                    fieldName: PartyFields.Dob,
-                    fieldLabel: t('personalDetails.dob'),
-                },
-            ],
-
-            addressFields: [
-                {
-                    addressType: AddressTypes.DEFAULT,
-                    title: t('addressDetails.title'),
                 },
             ],
         },

@@ -49,17 +49,6 @@ export default function getGlcoRmdConfig(t: TFunction) {
                     component: DisbursementFields.SelectBank,
                 },
                 {
-                    fieldName: BankingFields.IsVoidCheckAttached,
-                    fieldLabel: t('distributionMethod.isVoidCheckAttached'),
-                    component: DisbursementFields.BankBooleanButtonGroup,
-                    classNames: 'col-start-1',
-                },
-                {
-                    fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
-                    component: DisbursementFields.BankBooleanButtonGroup,
-                },
-                {
                     fieldName: BankingFields.AccountType,
                     fieldLabel: t('distributionMethod.accountType'),
                     component: DisbursementFields.AccountTypes,
