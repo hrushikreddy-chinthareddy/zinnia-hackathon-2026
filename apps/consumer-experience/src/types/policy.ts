@@ -52,7 +52,9 @@ export interface PolicyDetails {
 }
 
 export interface UpcomingPremium {
+  arrangementId: string;
   amount: number;
+  frequency: Frequency;
   nextActivityDate: string;
   nextActivityStatus?: Status;
   planName: string;

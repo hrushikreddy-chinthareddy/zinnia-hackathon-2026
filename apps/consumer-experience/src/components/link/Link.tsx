@@ -4,10 +4,13 @@ import {
   Link as BloomLink,
   LinkProps as BloomLinkProps,
 } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import NextLink from 'next/link';
 import { AnchorHTMLAttributes } from 'react';
 
 import { analytics } from '@/utils/segment';
+
+import { default as styles } from './Link.module.css';
 
 // @TODO anssam: pass additionalContext prop
 interface CommonProps {
@@ -86,6 +89,12 @@ export const Link = (props: Props): React.ReactElement => {
     );
   }
 
-  const { isInternal: _, isNativeAnchorTag: __, ...rest } = props;
-  return <BloomLink {...rest} onClick={trackAndClick} />;
+  const { isInternal: _, isNativeAnchorTag: __, className, ...rest } = props;
+  return (
+    <BloomLink
+      className={clsx(styles.link, className)}
+      {...rest}
+      onClick={trackAndClick}
+    />
+  );
 };

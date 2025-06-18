@@ -12,64 +12,24 @@ import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
 import dayjs from 'dayjs';
 import { PropsWithChildren, useReducer } from 'react';
 
-import { WithdrawalSteps } from '@/components/workflows/withdrawals/steps';
 
 import {
   Action,
   taxWithholdingAmountTypeEnum,
-  WithdrawalsAction,
   WithdrawalsState,
+  WithdrawalSteps,
 } from './types';
 import { WithdrawalsContext } from './useWithdrawals';
 
-interface WithdrawalsProviderProps extends PropsWithChildren {}
+interface WithdrawalsProviderProps extends PropsWithChildren { }
 
 function WithdrawalsReducer(
   state: WithdrawalsState,
   action: Action
 ): WithdrawalsState {
-  switch (action.type) {
-    case WithdrawalsAction.SET_WITHDRAWAL_AMOUNT_STEP:
-      return {
-        ...state,
-        withdrawalAmountStep: {
-          ...action.payload,
-        },
-      };
-    case WithdrawalsAction.SET_WITHDRAWAL_METHOD_STEP: {
-      return {
-        ...state,
-        withdrawalMethodStep: {
-          ...action.payload,
-        },
-      };
-    }
-    case WithdrawalsAction.SET_WITHDRAWAL_TAX_WITHHOLDING_STEP: {
-      return {
-        ...state,
-        taxWithholdingsStep: {
-          ...action.payload,
-        },
-      };
-    }
-    case WithdrawalsAction.SET_WITHDRAWAL_PAYEE_STEP: {
-      return {
-        ...state,
-        payeeStep: {
-          ...action.payload,
-        },
-      };
-    }
-    case WithdrawalsAction.SET_WITHDRAWAL_DISTRIBUTION_METHOD_STEP: {
-      return {
-        ...state,
-        distributionMethodStep: {
-          ...action.payload,
-        },
-      };
-    }
-    default:
-      return state;
+  return {
+    ...state,
+    ...action.payload
   }
 }
 

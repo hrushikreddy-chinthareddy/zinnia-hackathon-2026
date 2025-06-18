@@ -1,6 +1,9 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AmountType, DisbursementType } from '@xd/api-types/dist/generated-types/bpm';
+import {
+  AmountType,
+  DisbursementType,
+} from '@xd/api-types/dist/generated-types/bpm';
 import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
 import {
   AssistiveText,
@@ -13,7 +16,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -25,19 +28,13 @@ import {
   WithdrawalsAction,
 } from '@/components/providers/withdrawals/types';
 import { useWithdrawals } from '@/components/providers/withdrawals/useWithdrawals';
-// import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 
-import { WithdrawalSteps } from '../steps';
-import { getNextUrl } from '../utils';
 import { default as styles } from '../Withdrawals.module.css';
 
 export const WithdrawalAmountForm = () => {
   const { state, dispatch } = useWithdrawals();
-  // const { setPrimaryButtonDisabled } = useSteppedWorkflowContext();
-  const { planCode, policyNumber } = useParams<{
-    planCode: string;
-    policyNumber: string;
-  }>();
+  const { stepInfo } = useSteppedWorkflowContext();
   const router = useRouter();
   const maxAmount = 12500;
   const minAmount = 7200;
@@ -56,11 +53,6 @@ export const WithdrawalAmountForm = () => {
 
   const amountType = form.watch('amountType');
 
-  const nextStepInfo = getNextUrl({
-    step: WithdrawalSteps.AMOUNT,
-    planCode,
-    policyNumber,
-  });
   const onSubmit: SubmitHandler<
     z.infer<typeof withdrawalAmountStepSchema>
   > = data => {
@@ -73,10 +65,12 @@ export const WithdrawalAmountForm = () => {
     }
     dispatch({
       type: WithdrawalsAction.SET_WITHDRAWAL_AMOUNT_STEP,
-      payload: data,
+      payload: {
+        withdrawalAmountStep: data
+      }
     });
 
-    router.push(nextStepInfo);
+    router.push(stepInfo.nextStepUrl);
   };
   // setPrimaryButtonDisabled(
   //   !form.formState.isValid || form.formState.isSubmitting
@@ -100,9 +94,7 @@ export const WithdrawalAmountForm = () => {
         <p className="typography-labels-field-label">
           How much do you want to withdraw?
         </p>
-        <LabelPopover title='ieiejeij'>
-          stuff
-        </LabelPopover>
+        <LabelPopover title="ieiejeij">stuff</LabelPopover>
       </div>
 
       <Controller
@@ -161,7 +153,7 @@ export const WithdrawalAmountForm = () => {
       />
       <div>
         <FieldData
-        // TODO: XG: fix readonly display in bloooom
+          // TODO: XG: fix readonly display in bloooom
           id="payment-amt"
           {...form.register('paymentAmount')}
           readOnly={amountType !== AmountType.AMOUNT}
@@ -169,10 +161,7 @@ export const WithdrawalAmountForm = () => {
             <Label
               labelFor="payment-amt"
               interactiveElements={[
-                <LabelPopover
-                  key="req-amt"
-                  title='requested-amount'
-                >
+                <LabelPopover key="req-amt" title="requested-amount">
                   stuff
                 </LabelPopover>,
               ]}

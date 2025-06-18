@@ -1,7 +1,7 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label, Radio } from '@zinnia/bloom/components';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -12,10 +12,9 @@ import {
   WithdrawalsAction,
 } from '@/components/providers/withdrawals/types';
 import { useWithdrawals } from '@/components/providers/withdrawals/useWithdrawals';
+import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { PolicyParty } from '@/types/policy';
 
-import { WithdrawalSteps } from '../steps';
-import { getNextUrl } from '../utils';
 import { default as styles } from '../Withdrawals.module.css';
 
 type PayeeStepProps = {
@@ -36,19 +35,10 @@ const createRadioOption = (party: PolicyParty) => {
 };
 
 export const PayeeStep = ({ payees = [] }: PayeeStepProps) => {
+  const { stepInfo } = useSteppedWorkflowContext();
   const { dispatch } = useWithdrawals();
   const radioOptions = payees.map(createRadioOption);
   const router = useRouter();
-  const { planCode, policyNumber } = useParams<{
-    planCode: string;
-    policyNumber: string;
-  }>();
-
-  const nextUrl = getNextUrl({
-    step: WithdrawalSteps.PAYEE,
-    planCode,
-    policyNumber,
-  });
 
   const defaultParty = payees?.[0];
   const defaultPayeePartyId = `${defaultParty?.partyId}`;
@@ -69,15 +59,17 @@ export const PayeeStep = ({ payees = [] }: PayeeStepProps) => {
     );
     const payeeName =
       `${selectedParty?.firstName} ${selectedParty?.lastName}`.trim();
-      if(!selectedParty) return
+    if (!selectedParty) return;
     dispatch({
       type: WithdrawalsAction.SET_WITHDRAWAL_PAYEE_STEP,
       payload: {
-        payeePartyId: selectedParty.partyId,
-        payeeName: payeeName,
+        payeeStep: {
+          payeePartyId: selectedParty.partyId ?? '',
+          payeeName: payeeName,
+        },
       },
     });
-    router.push(nextUrl);
+    router.push(stepInfo.nextStepUrl);
   };
 
   return (

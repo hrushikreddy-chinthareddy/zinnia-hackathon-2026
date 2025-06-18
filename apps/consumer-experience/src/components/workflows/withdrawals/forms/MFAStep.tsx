@@ -4,28 +4,19 @@ import { useRouter } from 'next/navigation';
 
 import { useWithdrawals } from '@/components/providers/withdrawals/useWithdrawals';
 import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';
+import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { VerifyIdentity } from '@/components/transaction-steps/verify-identity/VerifyIdentity';
 import { useNeedsVerificationCode } from '@/hooks/use-needs-verification-code';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { submitPartialWithdrawalOneTime } from '@/queries/transaction-queries';
 
-import { WithdrawalSteps } from '../steps';
-import { getNextUrl } from '../utils';
-
 // TODO: XG - How can we move this compopnent to the stepped-workflow
 export const MFAStep = () => {
   const router = useRouter();
   const needsVerification = useNeedsVerificationCode();
+  const { stepInfo, cancelUrl } = useSteppedWorkflowContext();
   const { state } = useWithdrawals();
-  const { policyNumber, planCode, lineOfBusinessUrl } = usePolicyUrlInputs();
-
-  const cancelUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/`;
-
-  const nextUrl = getNextUrl({
-    step: WithdrawalSteps.MFA,
-    planCode,
-    policyNumber,
-  });
+  const { policyNumber, planCode } = usePolicyUrlInputs();
 
   const mutation = useMutation({
     mutationFn: () => {
@@ -37,7 +28,7 @@ export const MFAStep = () => {
     },
     onSuccess: ({ data }) => {
       if (data?.caseId?.length) {
-        router.push(nextUrl);
+        router.push(stepInfo.nextStepUrl);
       } else {
         router.push('error');
       }

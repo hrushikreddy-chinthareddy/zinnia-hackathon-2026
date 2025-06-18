@@ -36,11 +36,10 @@ import {
   WithdrawalsAction,
 } from '@/components/providers/withdrawals/types';
 import { useWithdrawals } from '@/components/providers/withdrawals/useWithdrawals';
+import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { PolicyParty } from '@/types/policy';
 
-import { WithdrawalSteps } from '../steps';
-import { getNextUrl } from '../utils';
 import { default as styles } from '../Withdrawals.module.css';
 
 export const SelectBank = ({
@@ -54,8 +53,9 @@ export const SelectBank = ({
   lineOfBusiness: LineOfBusiness;
 }) => {
   const { state, dispatch } = useWithdrawals();
+  const { stepInfo } = useSteppedWorkflowContext();
   const router = useRouter();
-  const { planCode, policyNumber,lineOfBusinessUrl } = usePolicyUrlInputs();
+  const { planCode, policyNumber, lineOfBusinessUrl } = usePolicyUrlInputs();
 
   const defaultBank = activeBanks[0];
   const form = useForm<z.infer<typeof distributionMethodStepSchema>>({
@@ -68,12 +68,6 @@ export const SelectBank = ({
   const addBankUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/profile#addBankSection`;
   const ownerProfileUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/profile`;
 
-  const nextUrl = getNextUrl({
-    step: WithdrawalSteps.DISTRIBUTION,
-    planCode,
-    policyNumber,
-  })
-
   const selectedPartyId = state.payeeStep?.payeePartyId;
   const selectedParty = parties.find(
     party => party.partyId === selectedPartyId
@@ -83,6 +77,7 @@ export const SelectBank = ({
   useEffect(() => {
     if (!selectedParty) return;
     const payload = {
+      distributionType: state.distributionMethodStep.distributionType,
       address: state.distributionMethodStep.address,
       bank: state.distributionMethodStep.bank,
     };
@@ -90,7 +85,7 @@ export const SelectBank = ({
     const selectedAddress = payload.address?.addressId;
     const selectedBank = payload.bank?.accountNumber;
 
-    if(selectedBank && selectedAddress) {
+    if (selectedBank && selectedAddress) {
       return;
     }
 
@@ -123,9 +118,10 @@ export const SelectBank = ({
 
     dispatch({
       type: WithdrawalsAction.SET_WITHDRAWAL_DISTRIBUTION_METHOD_STEP,
-      payload,
+      payload: {
+        distributionMethodStep: payload,
+      },
     });
-
   }, [
     activeAddresses,
     activeBanks,
@@ -134,6 +130,7 @@ export const SelectBank = ({
     state.distributionMethodStep.address,
     state.distributionMethodStep.bank,
     state.distributionMethodStep.bank?.accountNumber,
+    state.distributionMethodStep.distributionType,
   ]);
 
   const distributionMethod = form.watch('distributionType');
@@ -141,42 +138,44 @@ export const SelectBank = ({
   const onSubmit: SubmitHandler<
     z.infer<typeof distributionMethodStepSchema>
   > = data => {
-
     const selectedBank =
       activeBanks.find(
         bank => bank.accountNumber === data.bank?.accountNumber
       ) || defaultBank;
 
-      const selectedAddress = activeAddresses.find(
+    const selectedAddress =
+      activeAddresses.find(
         address => address.addressId === data.address?.addressId
       ) || defaultAddress;
 
     dispatch({
       type: WithdrawalsAction.SET_WITHDRAWAL_DISTRIBUTION_METHOD_STEP,
       payload: {
-        distributionType: data.distributionType,
-        bank: {
-          accountNumber: selectedBank?.accountNumber,
-          bankId: selectedBank?.bankId,
-          branchName: selectedBank?.branchName,
-          accountType: selectedBank?.accountType,
-          autopayEnabled: selectedBank?.autopayEnabled,
-        },
-        address: {
-          addressId: selectedAddress?.addressId,
-          addrCountry: selectedAddress?.country,
-          city: selectedAddress?.city,
-          state: selectedAddress?.state,
-          zipCode: selectedAddress?.zipCode,
-          addrLine1: selectedAddress?.addressLine1,
-          addrLine2: selectedAddress?.addressLine2,
-          addrLine3: selectedAddress?.addressLine3,
-          zipExt: selectedAddress?.zipCodeExtension,
+        distributionMethodStep: {
+          distributionType: data.distributionType,
+          bank: {
+            accountNumber: selectedBank?.accountNumber,
+            bankId: selectedBank?.bankId,
+            branchName: selectedBank?.branchName,
+            accountType: selectedBank?.accountType,
+            autopayEnabled: selectedBank?.autopayEnabled,
+          },
+          address: {
+            addressId: selectedAddress?.addressId,
+            addrCountry: selectedAddress?.country,
+            city: selectedAddress?.city,
+            state: selectedAddress?.state,
+            zipCode: selectedAddress?.zipCode,
+            addrLine1: selectedAddress?.addressLine1,
+            addrLine2: selectedAddress?.addressLine2,
+            addrLine3: selectedAddress?.addressLine3,
+            zipExt: selectedAddress?.zipCodeExtension,
+          },
         },
       },
     });
 
-    router.push(nextUrl);
+    router.push(stepInfo.nextStepUrl);
   };
 
   return (

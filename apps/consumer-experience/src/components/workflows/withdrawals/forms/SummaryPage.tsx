@@ -16,7 +16,6 @@ import {
 import { toSentenceCase } from '@zinnia/utils';
 import { useParams, useRouter } from 'next/navigation';
 import { CSSProperties, useMemo } from 'react';
-import { useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -28,13 +27,13 @@ import { AccountNumber } from '@/components/pii/AccountNumber';
 import { Address } from '@/components/pii/Address';
 import { BankName } from '@/components/pii/BankName';
 import { Payee } from '@/components/pii/Payee';
-import { taxWithholdingSchema } from '@/components/providers/withdrawals/types';
+import { taxWithholdingSchema, WithdrawalSteps } from '@/components/providers/withdrawals/types';
 import { useWithdrawals } from '@/components/providers/withdrawals/useWithdrawals';
 import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';
+import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { stepsInfo } from '@/components/workflows/withdrawals/steps';
 import { getPartialWithdrawalOneTimeValidation } from '@/queries/transaction-queries';
 
-import { stepsInfo, WithdrawalSteps } from '../steps';
-import { getNextUrl } from '../utils';
 
 const fundWithdrawalMethodCopyMap = {
   [AllocationOption.PRORATA]: 'Even distribution (prorata)',
@@ -67,10 +66,10 @@ const getTotalTaxAmount = ({
 };
 
 export const SummaryPage = () => {
-  const { pending } = useFormStatus();
   const router = useRouter();
   const { state } = useWithdrawals();
   const form = useForm();
+  const { stepInfo } = useSteppedWorkflowContext();
 
   const totalFederalAmount = useMemo(
     () =>
@@ -102,14 +101,8 @@ export const SummaryPage = () => {
     policyNumber: string;
   }>();
 
-  const nextUrl = getNextUrl({
-    step: WithdrawalSteps.SUMMARY,
-    planCode,
-    policyNumber,
-  });
-
   const onSubmit = () => {
-    router.push(nextUrl);
+    router.push(stepInfo.nextStepUrl);
   };
 
   const calculateFeeAmount = 10;
@@ -228,7 +221,7 @@ export const SummaryPage = () => {
 
   const distributionMethod = state.distributionMethodStep.distributionType;
 
-  if (pending || !validationResponse || validationLoading) {
+  if (!validationResponse || validationLoading) {
     return <PaymentLoading />;
   }
 

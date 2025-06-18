@@ -2,10 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 
+import { WithdrawalSteps } from '@/components/providers/withdrawals/types';
 import { SteppedWorkflow } from '@/components/stepped-workflow/SteppedWorkflow';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 
-import { stepsInfo, WithdrawalSteps } from './steps';
+import { stepsInfo } from './steps';
 
 interface WithdrawalsProps {
   currentStepOverride: number;
@@ -33,16 +34,17 @@ export const Withdrawals = ({
     secondary: null,
   };
 
-
-  const cancelUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/withdrawal`;
+  const cancelUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}`;
+  const baseUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/withdrawal`;
+  const returnUrl = cancelUrl;
 
   return (
     <SteppedWorkflow
+      returnUrl={returnUrl}
+      baseUrl={baseUrl}
       cancelTitleText="Leave this withdrawal?"
       cancelBodyText="Are you sure you want to cancel this withdrawal?"
       cancelUrl={cancelUrl}
-      planCode={planCode}
-      policyNumber={policyNumber}
       currentStepOverride={currentStepOverride}
       workflowSteps={Object.values(WithdrawalStages)}
     >

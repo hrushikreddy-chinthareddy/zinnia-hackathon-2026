@@ -72,8 +72,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api-types
       '@zinnia/bloom':
-        specifier: 5.15.0
-        version: 5.15.0(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.42.0)(typescript@5.8.3)(vite@6.3.5(@types/node@20.19.0)(jiti@1.21.7)(less@4.3.0)(terser@5.41.0)(yaml@2.8.0))
+        specifier: 5.16.0
+        version: 5.16.0(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.42.0)(typescript@5.8.3)(vite@6.3.5(@types/node@20.19.0)(jiti@1.21.7)(less@4.3.0)(terser@5.41.0)(yaml@2.8.0))
       '@zinnia/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -6808,8 +6808,8 @@ packages:
   '@zinnia/bloom@5.13.0':
     resolution: {integrity: sha512-KcT83Nv5LWnocp0AfS0khYR1gkfgprIf+VHZE1hejGuo2LpSDVWiJ+FIfZESmLR7HbCyyZc/GUauM7hFywgdZg==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.13.0/cbce864f1e4d17f00a7d5bb5165395c242c300c6}
 
-  '@zinnia/bloom@5.15.0':
-    resolution: {integrity: sha512-auBqMqqvo6KNJbo5nB5bpDQnKTc8e6Fn6OqnEzIxdU9RnGi8bAFyrBGLsfQiatglvcs7Oh+Uu3v3De8bt3nP+w==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.15.0/04914443adcd6035270b08e8738192875a78a72e}
+  '@zinnia/bloom@5.16.0':
+    resolution: {integrity: sha512-XqBgBSw9PI833LHJ6T5hfTSrqcBgrJ2dSNqxWAUgkWgxzTYlIRUyj39884S3ElW+vxAYJAHlEwsgOewj2wxBFA==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.16.0/21bd04ca0833423c97ec8d524e8ae7322b264ded}
 
   '@zinnia/prettier-config@0.0.1':
     resolution: {integrity: sha512-H/90EcMEPKpyeXV5MQJQMqcSaKfvNKqi9Os90sBqp6dEkSaB8vdnTMKdJ6BJUSAr6jwvu/aSXkNintZFYuwQng==, tarball: https://npm.pkg.github.com/download/@zinnia/prettier-config/0.0.1/ab3051a974dc3c08ce02fb490d620bbd5fc2e1a0}
@@ -22465,7 +22465,7 @@ snapshots:
       - typescript
       - vite
 
-  '@zinnia/bloom@5.15.0(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.42.0)(typescript@5.8.3)(vite@6.3.5(@types/node@20.19.0)(jiti@1.21.7)(less@4.3.0)(terser@5.41.0)(yaml@2.8.0))':
+  '@zinnia/bloom@5.16.0(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.42.0)(typescript@5.8.3)(vite@6.3.5(@types/node@20.19.0)(jiti@1.21.7)(less@4.3.0)(terser@5.41.0)(yaml@2.8.0))':
     dependencies:
       '@ariakit/react': 0.4.17(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-checkbox': 1.3.2(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

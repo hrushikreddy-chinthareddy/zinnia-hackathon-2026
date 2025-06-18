@@ -1,6 +1,6 @@
-import { toSentenceCase } from "@xd/utils/dist";
-import { Loader } from "@zinnia/bloom/components";
-import { useEffect, useState } from "react";
+import { toSentenceCase } from '@xd/utils/dist';
+import { Loader } from '@zinnia/bloom/components';
+import { useEffect, useState } from 'react';
 
 // TODO: UPDATE COPY!!!!
 const loadingStrings = [
@@ -8,7 +8,6 @@ const loadingStrings = [
   'We’re working on it...',
   'data is updating',
 ];
-
 
 export const LoadingText = () => {
   const [loadingText, setLoadingText] = useState(loadingStrings[0]);
@@ -51,4 +50,4 @@ export const PaymentLoading = () => {
       <LoadingText />
     </div>
   );
-}
+};

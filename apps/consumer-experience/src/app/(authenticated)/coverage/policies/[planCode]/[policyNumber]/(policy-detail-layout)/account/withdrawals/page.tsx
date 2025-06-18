@@ -3,6 +3,7 @@ import { Button, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
+import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { Link } from '@/components/link/Link';
@@ -119,175 +120,177 @@ export default async function Withdrawals({
           tax professional before withdrawing.) Also note that withdrawing from
           the account value may reduce your death benefit.
         </p>
-        <div className="card">
-          <StatusIconText
-            isEligible={withdrawalEligibilityData && !isFreelook}
-            showIcon
-            className="typography-content-body-bold mb-lg"
-          />
-          <div className="column-card mb-lg">
-            {/* AVAILABLE TO WITHDRAW */}
-            {withdrawalEligibilityData && (
-              <FieldData
-                caption={
-                  <span>{`As of ${standardDateMonthDayYear(data.effectiveDate)}`}</span>
-                }
-                Label={
-                  <Label
-                    interactiveElements={[
-                      <LabelPopover
-                        key={AVAILBLE_TO_WITHDRAW}
-                        title={AVAILBLE_TO_WITHDRAW}
-                      >
-                        <div>
-                          <p>
-                            If eligible, this is the maximum amount available
-                            for withdrawal.
-                          </p>
-                        </div>
-                      </LabelPopover>,
-                    ]}
-                  >
-                    {AVAILBLE_TO_WITHDRAW}
-                  </Label>
-                }
-              >
-                <p className="typography-content-value">
-                  {formatUSDollars(data.maximumWithdrawalAmount)}
-                </p>
-              </FieldData>
-            )}
-
-            {/* ALL TIME WITHDRAWALS */}
-            <FieldData
-              caption={
-                !isNullEmptyOrUndefined(data.numberOfWithdrawal) ? (
-                  <span>
-                    {pluralize(data.numberOfWithdrawal, 'withdrawal')}
-                  </span>
-                ) : (
-                  ''
-                )
-              }
-              Label={
-                <Label
-                  interactiveElements={[
-                    <LabelPopover
-                      key={ALL_TIME_WITHDRAWALS}
-                      title={ALL_TIME_WITHDRAWALS}
-                    >
-                      <p>
-                        This is the total amount you’ve withdrawn over the life
-                        of your policy.
-                      </p>
-                    </LabelPopover>,
-                  ]}
-                >
-                  {ALL_TIME_WITHDRAWALS}
-                </Label>
-              }
-            >
-              <p className="typography-content-value">
-                {formatUSDollars(data.totalWithdrawalAmount)}
-              </p>
-            </FieldData>
-
-            {withdrawalEligibilityData && (
-              <>
-                {/* COVERAGE PRESERAVTION LIMIT */}
-                <FieldData
-                  Label={
-                    <Label
-                      interactiveElements={[
-                        <LabelPopover
-                          key={COVERAGE_PRESERVATION_LIMIT}
-                          title={COVERAGE_PRESERVATION_LIMIT}
-                        >
-                          <p>
-                            You can withdraw this amount without reducing your
-                            coverage amount.
-                          </p>
-                        </LabelPopover>,
-                      ]}
-                    >
-                      {COVERAGE_PRESERVATION_LIMIT}
-                    </Label>
-                  }
-                >
-                  <p className="typography-content-value">
-                    {formatUSDollars(
-                      data.annualWithdrawalLimitNoCoverageDecrease
-                    )}
-                  </p>
-                </FieldData>
-                {/* ANNUAL WITHDRAWALS REMAINING */}
+        <ClickableCardContainer>
+          <ClickableCardContainer.LinkContent>
+            <StatusIconText
+              isEligible={withdrawalEligibilityData && !isFreelook}
+              showIcon
+              className="typography-content-body-bold mb-lg"
+            />
+          </ClickableCardContainer.LinkContent>
+          <ClickableCardContainer.LinkContent>
+            <div className="column-card mb-lg">
+              {/* AVAILABLE TO WITHDRAW */}
+              {withdrawalEligibilityData && (
                 <FieldData
                   caption={
-                    !isNullEmptyOrUndefined(data.annualWithdrawalsTaken) ? (
-                      <span>{`${data.annualWithdrawalsTaken} taken`}</span>
-                    ) : (
-                      ''
-                    )
+                    <span>{`As of ${standardDateMonthDayYear(data.effectiveDate)}`}</span>
                   }
                   Label={
                     <Label
                       interactiveElements={[
                         <LabelPopover
-                          key={ANNUAL_WITHDRAWALS_REMAINING}
-                          title={ANNUAL_WITHDRAWALS_REMAINING}
+                          key={AVAILBLE_TO_WITHDRAW}
+                          title={AVAILBLE_TO_WITHDRAW}
                         >
                           <div>
-                            <p className="mb-lg">
-                              {`At this time, you could withdraw ${isNullEmptyOrUndefined(data.annualWithdrawalsRemaining) ? DEFAULT_ERROR_STRING : data.annualWithdrawalsRemaining} more time(s) during the policy year. Your policy year ends on ${standardDateMonthDayYear(data.nextAnniversaryDate)}.`}
-                            </p>
                             <p>
-                              {`During the vesting period (the first ${data.vestingDetails.vestingPeriod} years of your
-                          policy which end${data.vestingDetails.policyHasVested ? 'ed' : 's'} on ${standardDateMonthDayYear(data.vestingDetails.matchVestingDate)}), you can only withdraw ${data.vestingDetails.maximumWithdrawalRequestDuringVestingPeriod} time during each
-                          policy year. After that, you may withdraw up to ${data.vestingDetails.maximumWithdrawalRequestAfterVestingPeriod}
-                          times in a policy year.`}
+                              If eligible, this is the maximum amount available
+                              for withdrawal.
                             </p>
                           </div>
                         </LabelPopover>,
                       ]}
                     >
-                      {ANNUAL_WITHDRAWALS_REMAINING}
+                      {AVAILBLE_TO_WITHDRAW}
                     </Label>
                   }
                 >
                   <p className="typography-content-value">
-                    {!isNullEmptyOrUndefined(data.annualWithdrawalsRemaining)
-                      ? `${data.annualWithdrawalsRemaining} left`
-                      : DEFAULT_ERROR_STRING}
+                    {formatUSDollars(data.maximumWithdrawalAmount)}
                   </p>
                 </FieldData>
-              </>
-            )}
-          </div>
-          {showPartialWithdrawalOneTime && (
-            <div
-              className="column-card p-2xl"
-              style={{
-                backgroundColor: 'var(--color-base-surface-surface-secondary)',
-                display: 'grid',
-              }}
-            >
-              <div>
-                {withdrawalEligibilityData &&
-                !isFreelook &&
-                showPartialWithdrawalOneTime ? (
-                  <Link
-                    text="Make a withdrawal"
-                    href={`/coverage/policies/${planCode}/${policyNumber}/withdrawal/information`}
-                  />
-                ) : (
-                  <Button size="small" mode="link" disabled>
-                    Make a withdrawal
-                  </Button>
-                )}
-              </div>
+              )}
+
+              {/* ALL TIME WITHDRAWALS */}
+              <FieldData
+                caption={
+                  !isNullEmptyOrUndefined(data.numberOfWithdrawal) ? (
+                    <span>
+                      {pluralize(data.numberOfWithdrawal, 'withdrawal')}
+                    </span>
+                  ) : (
+                    ''
+                  )
+                }
+                Label={
+                  <Label
+                    interactiveElements={[
+                      <LabelPopover
+                        key={ALL_TIME_WITHDRAWALS}
+                        title={ALL_TIME_WITHDRAWALS}
+                      >
+                        <p>
+                          This is the total amount you’ve withdrawn over the
+                          life of your policy.
+                        </p>
+                      </LabelPopover>,
+                    ]}
+                  >
+                    {ALL_TIME_WITHDRAWALS}
+                  </Label>
+                }
+              >
+                <p className="typography-content-value">
+                  {formatUSDollars(data.totalWithdrawalAmount)}
+                </p>
+              </FieldData>
+
+              {withdrawalEligibilityData && (
+                <>
+                  {/* COVERAGE PRESERAVTION LIMIT */}
+                  <FieldData
+                    Label={
+                      <Label
+                        interactiveElements={[
+                          <LabelPopover
+                            key={COVERAGE_PRESERVATION_LIMIT}
+                            title={COVERAGE_PRESERVATION_LIMIT}
+                          >
+                            <p>
+                              You can withdraw this amount without reducing your
+                              coverage amount.
+                            </p>
+                          </LabelPopover>,
+                        ]}
+                      >
+                        {COVERAGE_PRESERVATION_LIMIT}
+                      </Label>
+                    }
+                  >
+                    <p className="typography-content-value">
+                      {formatUSDollars(
+                        data.annualWithdrawalLimitNoCoverageDecrease
+                      )}
+                    </p>
+                  </FieldData>
+                  {/* ANNUAL WITHDRAWALS REMAINING */}
+                  <FieldData
+                    caption={`${!isNullEmptyOrUndefined(data.annualWithdrawalsTaken) && <span>{data.annualWithdrawalsTaken} taken</span>}`}
+                    Label={
+                      <Label
+                        interactiveElements={[
+                          <LabelPopover
+                            key={ANNUAL_WITHDRAWALS_REMAINING}
+                            title={ANNUAL_WITHDRAWALS_REMAINING}
+                          >
+                            <div>
+                              <p className="mb-lg">
+                                {`At this time, you could withdraw ${isNullEmptyOrUndefined(data.annualWithdrawalsRemaining) ? DEFAULT_ERROR_STRING : data.annualWithdrawalsRemaining} more time(s) during the policy year. Your policy year ends on ${standardDateMonthDayYear(data.nextAnniversaryDate)}.`}
+                              </p>
+                              <p>
+                                {`During the vesting period (the first ${data.vestingDetails.vestingPeriod} years of your
+                          policy which end${data.vestingDetails.policyHasVested ? 'ed' : 's'} on ${standardDateMonthDayYear(data.vestingDetails.matchVestingDate)}), you can only withdraw ${data.vestingDetails.maximumWithdrawalRequestDuringVestingPeriod} time during each
+                          policy year. After that, you may withdraw up to ${data.vestingDetails.maximumWithdrawalRequestAfterVestingPeriod}
+                          times in a policy year.`}
+                              </p>
+                            </div>
+                          </LabelPopover>,
+                        ]}
+                      >
+                        {ANNUAL_WITHDRAWALS_REMAINING}
+                      </Label>
+                    }
+                  >
+                    <p className="typography-content-value">
+                      {!isNullEmptyOrUndefined(data.annualWithdrawalsRemaining)
+                        ? `${data.annualWithdrawalsRemaining} left`
+                        : DEFAULT_ERROR_STRING}
+                    </p>
+                  </FieldData>
+                </>
+              )}
             </div>
+          </ClickableCardContainer.LinkContent>
+          {showPartialWithdrawalOneTime && (
+            <ClickableCardContainer.AdditionalContent>
+              <div
+                className="column-card p-2xl"
+                style={{
+                  backgroundColor:
+                    'var(--color-base-surface-surface-secondary)',
+                  display: 'grid',
+                }}
+              >
+                <div>
+                  {withdrawalEligibilityData &&
+                  !isFreelook &&
+                  showPartialWithdrawalOneTime ? (
+                    <Link
+                      size="small"
+                      text="Make a withdrawal"
+                      href={`/coverage/policies/${planCode}/${policyNumber}/withdrawal/information`}
+                    />
+                  ) : (
+                    <Button size="small" mode="link" disabled>
+                      Make a withdrawal
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </ClickableCardContainer.AdditionalContent>
           )}
-        </div>
+        </ClickableCardContainer>
       </>
     );
   };

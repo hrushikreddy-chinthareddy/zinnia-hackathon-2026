@@ -1,5 +1,6 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useIsClient } from '@xd/hooks/useIsClient';
 import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 import {
   AssistiveTextVariant,
@@ -8,7 +9,6 @@ import {
   Loader,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
 
 import { NotificationCenterSection } from '@/components/notification-center/section/NotificationCenterSection';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
@@ -50,14 +50,10 @@ export const NotificationCenter = ({
   planCode,
 }: NotificationCenterProps) => {
   const queryClient = useQueryClient();
-  const [isClient, setIsClient] = useState(false);
+  const isClient = useIsClient()
   const { data: featureFlags } = useFeatureFlags();
   const fetchNotificationsFlag =
     featureFlags?.[FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS];
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const shouldFetchClientSideNotifications =
     !!fetchNotificationsFlag && isClient;

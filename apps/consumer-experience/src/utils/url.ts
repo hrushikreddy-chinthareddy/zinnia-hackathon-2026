@@ -1,3 +1,7 @@
+import { LineOfBusiness } from "@xd/api-types/dist/generated-types/sor";
+
+import { lineOfBusinessUrlPath } from "./data";
+
 export const prependSubdomain = (subdomain: string): string => {
   let protocol = 'https';
   let domain =
@@ -25,9 +29,11 @@ export const getPolicyDataFromPath = (pathname: string) => {
   const lineOfBusiness = urlParts[2] ?? '';
   const planCode = urlParts[3] ?? '';
   const policyNumber = urlParts[4] ?? '';
+  const lineOfBusinessUrl = lineOfBusinessUrlPath(lineOfBusiness as LineOfBusiness)
 
   return {
     lineOfBusiness,
+    lineOfBusinessUrl,
     planCode,
     policyNumber,
   };

@@ -1,3 +1,4 @@
+import { SystematicProgramSetupRequest } from '@xd/api-types/dist/generated-types/sor';
 import {
   DisbursementPaymentForm,
   FilingStatus,
@@ -9,9 +10,11 @@ import {
 } from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 
+import { SystematicPremiumsState } from '@/components/providers/systematic-premiums/types';
 import { WithdrawalsState } from '@/components/providers/withdrawals/types';
 import { TransactionEligbility } from '@/types/transactions';
 import { eligibilityStatus } from '@/utils/data';
+import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 export const transformEligibility = (
   eligibility: TransactionResponse
@@ -100,3 +103,14 @@ export const withdrawalStateToPolicyRequestInput = (
   };
 };
 
+export const systematicPremiumsStateToPolicyRequestInput = (
+  state: SystematicPremiumsState,
+  correlationId: string
+): SystematicProgramSetupRequest => {
+  const effectiveDate = dayjs(state.systematicPremiumAmountStep.effectiveDate).format(ZAHARA_DATE_FORMAT);
+  return {
+    correlationId,
+    effectiveDate,
+    reverseInitiator: false
+  }
+}

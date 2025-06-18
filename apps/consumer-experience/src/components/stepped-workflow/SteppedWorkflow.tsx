@@ -1,8 +1,5 @@
 import { Button, ButtonProps } from '@zinnia/bloom/components';
-import { useParams } from 'next/navigation';
 import { RefAttributes } from 'react';
-
-import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 
 import { CancelDialogLink } from './common/CancelDialogLink';
 import { FormHeader } from './common/FormHeader';
@@ -10,8 +7,6 @@ import styles from './SteppedWorkflow.module.css';
 import { useSteppedWorkflowContext } from './SteppedWorkflowContext';
 import { SteppedWorkflowProvider } from './SteppedWorkflowProvider';
 import { StepInfo } from './types';
-import { stepsInfo, WithdrawalSteps } from '../workflows/withdrawals/steps';
-import { getPrevUrl } from '../workflows/withdrawals/utils';
 
 export type SteppedWorkflowStep = {
   pageTitle: string;
@@ -28,10 +23,10 @@ export type SteppedWorkflowProps = {
   cancelTitleText: string;
   cancelBodyText: string;
   workflowSteps: StepInfo[];
-  planCode: string;
-  policyNumber: string;
   currentStepOverride?: number;
   children?: React.ReactNode;
+  baseUrl: string;
+  returnUrl: string;
 };
 
 export const SteppedWorkflow = ({
@@ -41,19 +36,26 @@ export const SteppedWorkflow = ({
   workflowSteps,
   children,
   cancelUrl = '#',
+  baseUrl,
+  returnUrl,
 }: SteppedWorkflowProps) => {
-  const { policyNumber, planCode } = usePolicyUrlInputs();
   return (
     <SteppedWorkflowProvider
+      cancelUrl={cancelUrl}
+      baseUrl={baseUrl}
+      returnUrl={returnUrl}
+      workflowSteps={workflowSteps}
+      cancelBodyText={cancelBodyText}
+      cancelTitleText={cancelTitleText}
       steps={workflowSteps}
       initialStepIndex={currentStepOverride}
     >
       <WorkflowContainer
+        baseUrl={baseUrl}
+        returnUrl={returnUrl}
         cancelTitleText={cancelTitleText}
         cancelBodyText={cancelBodyText}
         cancelUrl={cancelUrl}
-        planCode={planCode}
-        policyNumber={policyNumber}
         workflowSteps={workflowSteps}
       >
         {children}
@@ -69,66 +71,55 @@ const WorkflowContainer = ({
   workflowSteps,
   children,
 }: SteppedWorkflowProps) => {
-  const params = useParams<{
-    planCode: string;
-    policyNumber: string;
-  }>();
-  const { currentStepIndex } = useSteppedWorkflowContext();
+  const { stepInfo, currentStep } = useSteppedWorkflowContext();
 
   const totalSteps = workflowSteps.filter(({ order }) => order !== null).length;
 
-  const activeStep = workflowSteps[currentStepIndex];
-
   let nextButtonProps: ButtonProps & RefAttributes<HTMLButtonElement> = {
-    children: activeStep?.actions?.primary?.text ?? 'Continue',
+    children: currentStep?.actions?.primary?.text ?? 'Continue',
   };
 
-  let prevUrl;
-  if (currentStepIndex > 0 && !!workflowSteps[currentStepIndex]) {
-    const currentStep = Object.keys(stepsInfo)[
-      currentStepIndex
-    ] as WithdrawalSteps;
-
-    prevUrl = getPrevUrl({
-      step: currentStep,
-      planCode: params.planCode,
-      policyNumber: params.policyNumber,
-    });
+  if (currentStep) {
+    if (currentStep?.actions?.primary?.onClick) {
+      nextButtonProps = {
+        ...nextButtonProps,
+        onClick: currentStep.actions.primary.onClick,
+      };
+    } else {
+      nextButtonProps = {
+        ...nextButtonProps,
+        type: 'submit',
+        form: 'submit-form',
+        className: styles.submit,
+      };
+    }
   }
 
-  if (activeStep?.actions?.primary?.onClick) {
-    nextButtonProps = {
-      ...nextButtonProps,
-      onClick: activeStep.actions.primary.onClick,
-    };
-  } else {
-    nextButtonProps = {
-      ...nextButtonProps,
-      type: 'submit',
-      form: 'submit-form',
-      className: styles.submit,
-    };
-  }
   return (
     <div className={styles.container}>
       <FormHeader
-        currentStep={activeStep?.order ?? undefined}
+        currentStep={currentStep?.order ?? undefined}
         totalSteps={totalSteps}
-        title={activeStep?.title}
-        link={prevUrl ? { url: prevUrl, label: 'Back' } : undefined}
+        title={currentStep?.title}
+        link={
+          stepInfo.prevStepUrl
+            ? { url: stepInfo.prevStepUrl, label: 'Back' }
+            : undefined
+        }
       />
       <div className={styles.form}>{children}</div>
       <div className={styles.actions}>
-        {activeStep?.actions?.primary !== null && (
+        {currentStep && currentStep?.actions?.primary !== null && (
           <Button {...nextButtonProps} />
         )}
-        {activeStep?.actions?.secondary && (
-          <Button onClick={activeStep.actions.secondary?.onClick}>
-            {activeStep.actions.secondary?.text}
+        {currentStep && currentStep?.actions?.secondary && (
+          <Button onClick={currentStep.actions.secondary?.onClick}>
+            {currentStep.actions.secondary?.text}
           </Button>
         )}
-        {!activeStep?.actions?.secondary &&
-          activeStep?.actions?.secondary !== null && (
+        {currentStep &&
+          !currentStep?.actions?.secondary &&
+          currentStep?.actions?.secondary !== null && (
             <CancelDialogLink
               cancelUrl={cancelUrl}
               titleText={cancelTitleText}

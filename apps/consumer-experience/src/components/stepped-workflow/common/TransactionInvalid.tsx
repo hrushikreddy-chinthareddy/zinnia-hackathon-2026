@@ -4,7 +4,6 @@ import { Link } from '@/components/link/Link';
 import styles from '@/components/one-time-premium-payment/OneTimePremiumPayment.module.css';
 import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
 
-
 export const PaymentInvalid = ({ goToUrl }: { goToUrl: string }) => {
   return (
     <div style={{ maxWidth: '500px', margin: '0 auto' }}>

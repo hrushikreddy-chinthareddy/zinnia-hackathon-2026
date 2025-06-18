@@ -2,9 +2,12 @@ export interface ApiResponseError extends Error {
   status: number;
 }
 
-export interface ApiResponse<T> {
-  data: T | null;
-  error: ApiResponseError | null;
+export type ApiResponse<T> = {
+  data: T;
+  error: null;
+} | {
+  data: null;
+  error: ApiResponseError;
 }
 
 export * from './server-http';

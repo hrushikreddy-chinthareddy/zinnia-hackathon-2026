@@ -7,7 +7,7 @@ import {
   Label,
   Radio,
 } from '@zinnia/bloom/components';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -18,32 +18,19 @@ import {
   WithdrawalsAction,
 } from '@/components/providers/withdrawals/types';
 import { useWithdrawals } from '@/components/providers/withdrawals/useWithdrawals';
-// import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 
-import { WithdrawalSteps } from '../steps';
-import { getNextUrl } from '../utils';
 import { default as styles } from '../Withdrawals.module.css';
 
 export const WithdrawalMethod = () => {
   const { state, dispatch } = useWithdrawals();
-  // const { setPrimaryButtonDisabled } = useSteppedWorkflowContext();
+  const { stepInfo } = useSteppedWorkflowContext();
   const router = useRouter();
-  const { planCode, policyNumber } = useParams<{
-    planCode: string;
-    policyNumber: string;
-  }>();
-
-  const nextUrl = getNextUrl({
-    step: WithdrawalSteps.METHOD,
-    planCode,
-    policyNumber,
-  });
 
   const form = useForm<z.infer<typeof withdrawalMethodStepSchema>>({
     resolver: zodResolver(withdrawalMethodStepSchema),
     defaultValues: {
-      withdrawalMethod:
-        state.withdrawalMethodStep.withdrawalMethod,
+      withdrawalMethod: state.withdrawalMethodStep.withdrawalMethod,
     },
   });
 
@@ -52,9 +39,11 @@ export const WithdrawalMethod = () => {
   > = data => {
     dispatch({
       type: WithdrawalsAction.SET_WITHDRAWAL_METHOD_STEP,
-      payload: data,
+      payload: {
+        withdrawalMethodStep: data
+      },
     });
-    router.push(nextUrl);
+    router.push(stepInfo.nextStepUrl);
   };
 
   // setPrimaryButtonDisabled(
@@ -86,7 +75,6 @@ export const WithdrawalMethod = () => {
               id="withdrawal-method"
               onValueChange={field.onChange}
               defaultValue={field.value}
-  
               options={[
                 {
                   key: AllocationOption.PRORATA,

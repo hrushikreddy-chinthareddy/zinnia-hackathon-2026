@@ -1,8 +1,12 @@
+import { SystematicProgram } from '@xd/api-types/dist/generated-types/sor';
+
 import { ApiResponse } from '@/services';
+import { TransactionEligbilityResponse } from '@/services/bpm/systematic-programs';
 import { ClientApi } from '@/services/client-http';
 import { Fund } from '@/services/funds';
 import {
   PolicyProfile,
+  PolicyRequestInputs,
   PolicyStatusDetail,
   PolicyWithAgent,
 } from '@/types/policy';
@@ -84,5 +88,37 @@ export const checkIfPolicyRequiresAcknowledgement = async (
   if (response.error || !response) {
     throw response.error;
   }
+  return response.data;
+};
+
+export const getAllSystematicPrograms = async ({
+  planCode,
+  policyNumber,
+}: PolicyRequestInputs) => {
+  const response: ApiResponse<SystematicProgram[]> = await (
+    await ClientApi.get(
+      `/api/policies/${planCode}/${policyNumber}/systematic-programs`
+    )
+  ).json();
+  if (response.error || !response) {
+    throw response.error;
+  }
+  return response.data;
+};
+
+export const getSystematicProgramsEligibility = async ({
+  planCode,
+  policyNumber,
+}: PolicyRequestInputs) => {
+  const response: ApiResponse<TransactionEligbilityResponse> = await (
+    await ClientApi.get(
+      `/api/policies/${planCode}/${policyNumber}/systematic-programs/eligibility`
+    )
+  ).json();
+
+  if (response.error || !response) {
+    throw response.error;
+  }
+
   return response.data;
 };

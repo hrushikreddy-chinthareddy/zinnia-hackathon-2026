@@ -4,20 +4,9 @@ import {
   taxWithholdingStepSchema,
   withdrawalAmountStepSchema,
   withdrawalMethodStepSchema,
+  WithdrawalSteps,
 } from '@/components/providers/withdrawals/types';
 import { StepInfo } from '@/components/stepped-workflow/types';
-
-export enum WithdrawalSteps {
-  INTRO = 'introduction',
-  AMOUNT = 'amount',
-  METHOD = 'method',
-  WITHHOLDINGS = 'withholdings',
-  PAYEE = 'payee',
-  DISTRIBUTION = 'distribution',
-  SUMMARY = 'summary',
-  SUBMITTED = 'submitted',
-  MFA = 'multi-factor-auth',
-}
 
 export const withdrawalUrls: Record<WithdrawalSteps, string> = {
   [WithdrawalSteps.INTRO]: 'information',
@@ -29,7 +18,7 @@ export const withdrawalUrls: Record<WithdrawalSteps, string> = {
   [WithdrawalSteps.SUMMARY]: 'summary',
   [WithdrawalSteps.MFA]: 'verify-identity',
   [WithdrawalSteps.SUBMITTED]: 'submitted',
-}
+};
 
 export const stepsInfo: Record<WithdrawalSteps, StepInfo> = {
   [WithdrawalSteps.INTRO]: {

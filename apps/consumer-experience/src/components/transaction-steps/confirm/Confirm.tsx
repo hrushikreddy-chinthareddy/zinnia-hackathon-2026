@@ -6,13 +6,15 @@ import { Button } from '@/components/button/Button';
 import styles from './Confirm.module.css';
 interface ConfirmProps {
   confirmTitle: string;
-  confirmMessage?: string;
+  confirmExpand?: boolean;
+  confirmMessage?: string | React.ReactNode;
   confirmButtonText: string;
   confirmCallback: () => void;
   correlationId?: string;
   denyCallback: () => void;
 }
 export const Confirm: FC<ConfirmProps> = ({
+  confirmExpand = false,
   confirmTitle,
   confirmMessage,
   confirmButtonText,
@@ -33,6 +35,7 @@ export const Confirm: FC<ConfirmProps> = ({
         <p className="typography-content-body">{confirmMessage}</p>
       )}
       <Button
+        expand={confirmExpand}
         onClick={confirmCallback}
         className={styles.confirmButton}
         mode="error"

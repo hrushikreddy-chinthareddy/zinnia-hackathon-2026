@@ -2,8 +2,15 @@
 import { ZodObject, ZodRawShape } from 'zod';
 
 export interface StepProps<T> {
+  // base url
+  baseUrl: string;
+  // url for when user clicks cancel
+  cancelUrl: string;
+  // url for when user reaches end of flow
+  returnUrl: string;
   planCode: string;
   policyNumber: string;
+  stepsInfo: StepInfo[];
   step: T;
 }
 
@@ -14,11 +21,11 @@ export interface StepInfo {
   actions?: {
     primary?: {
       text: string;
-      onClick: () => void;
+      onClick?: () => void;
     } | null;
     secondary?: {
       text: string;
-      onClick: () => void;
+      onClick?: () => void;
     } | null;
   };
   requiredData?: ZodObject<ZodRawShape>;

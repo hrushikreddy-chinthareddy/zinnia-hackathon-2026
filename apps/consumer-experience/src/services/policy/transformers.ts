@@ -12,6 +12,7 @@ import {
   Transaction_Payor,
   FeatureType,
   LineOfBusiness,
+  Frequency,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
@@ -229,7 +230,9 @@ export const transformPolicyForUpcomingPremium = (
   );
 
   return {
+    arrangementId: upcomingPremium?.arrangementId || '',
     amount: upcomingPremium?.amount || 0,
+    frequency: upcomingPremium?.frequency as Frequency,
     nextActivityDate: upcomingPremium?.nextProgramDate || '',
     nextActivityStatus: upcomingPremium?.status,
     planName: policy.product?.planName || '',

@@ -43,7 +43,8 @@
         "vunguyentuan.vscode-postcss",
         "csstools.postcss",
         "esbenp.prettier-vscode",
-        "wayou.vscode-todo-highlight"
+        "wayou.vscode-todo-highlight",
+        "unifiedjs.vscode-mdx"
       ]
     }
   },

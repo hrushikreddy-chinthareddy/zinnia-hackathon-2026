@@ -1,5 +1,6 @@
+import { TransactionResponse } from '@xd/api-types/dist/generated-types/bpm';
 import { PolicyStatus, Status } from '@zinnia/api-types/types/sor';
-import { Label, Icon, IconType } from '@zinnia/bloom/components';
+import { Label, Icon, IconType, Button } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
@@ -14,6 +15,8 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { getUpcomingPremium } from '@/services';
 import { getPremiumEligibility } from '@/services/bpm';
+import { getSystematicProgramsEligibility } from '@/services/bpm/systematic-programs';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
@@ -21,8 +24,10 @@ import {
   buildCommonLogContext,
   logError,
 } from '@/utils/logging/server-logging';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
+import { CancelAutopaySidesheet } from './CancelAutopaySidesheet';
 import styles from './PolicyOverview.module.css';
 import { defaultStep, getStepInfo } from '../one-time-premium-payment/steps';
 
@@ -40,19 +45,31 @@ export const UpcomingPremium = async ({
   title?: string;
 }) => {
   const loggingContext = await buildCommonLogContext();
-  const [upcomingResult, ottpResult] = await Promise.allSettled([
-    getUpcomingPremium(
-      {
+  const featureFlags = await getFeatureFlags();
+  const systematicPremiumFeatureFlag =
+    featureFlags?.[FEATURE_FLAGS.TRANSACTION_SYSTEMATIC_PREMIUM];
+
+  const [upcomingResult, ottpResult, systematicProgramsEligibilityResult] =
+    await Promise.allSettled([
+      getUpcomingPremium(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingContext
+      ),
+      getPremiumEligibility({
         planCode,
         policyNumber,
-      },
-      loggingContext
-    ),
-    getPremiumEligibility({
-      planCode,
-      policyNumber,
-    }),
-  ]);
+      }),
+      getSystematicProgramsEligibility(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingContext
+      ),
+    ]);
 
   if (upcomingResult?.status === 'rejected') {
     logError('Error fetching upcoming premium', upcomingResult.reason);
@@ -61,7 +78,13 @@ export const UpcomingPremium = async ({
   const { data, error } =
     upcomingResult?.status === 'fulfilled'
       ? upcomingResult.value
-      : { data: null, error: null };
+      : {
+        data: null,
+        error: {
+          message: 'Error fetching upcoming premium',
+          ...loggingContext,
+        },
+      };
 
   if (ottpResult?.status === 'rejected') {
     logError('Error fetching upcoming premium', ottpResult.reason);
@@ -71,6 +94,14 @@ export const UpcomingPremium = async ({
     ottpResult?.status !== 'fulfilled' ||
     !!ottpResult?.value?.data?.reason ||
     !!ottpResult?.value?.error;
+
+  const systematicPremiumEligible =
+    systematicProgramsEligibilityResult.status === 'fulfilled' &&
+    systematicProgramsEligibilityResult.value.data?.status ===
+    TransactionResponse.status.SUCCESS;
+
+  const showSetUpAutopay =
+    systematicPremiumFeatureFlag && systematicPremiumEligible;
 
   if (error) {
     return (
@@ -86,11 +117,14 @@ export const UpcomingPremium = async ({
 
   const {
     amount,
+    arrangementId,
     nextActivityDate,
     nextActivityStatus,
     policyStatus,
     lineOfBusiness,
-  } = data!;
+    frequency,
+  } = data;
+
   let currentAmount = amount;
 
   if (policyStatus === PolicyStatus.LAPSE) {
@@ -157,21 +191,56 @@ export const UpcomingPremium = async ({
       {extended && (
         <ClickableCardContainer.AdditionalContent>
           <div className={styles.additionalContent}>
-            {/* TODO: once bloom link updates released, update this to use the new state prop rather than setting styles here*/}
             <Link
-              size="small"
+              passHref={true}
+              isInternal
               href={
-                ottpPaymentDisabled
-                  ? ''
-                  : `${getStepInfo({ step: defaultStep, policyNumber, planCode }).stepUrl}`
+                getStepInfo({ step: defaultStep, policyNumber, planCode })
+                  .stepUrl
               }
-              text="Make a one-time payment"
               className={clsx(
                 ottpPaymentDisabled && styles.disabledTransaction
               )}
               role={ottpPaymentDisabled ? 'link' : ''}
               aria-disabled={ottpPaymentDisabled}
-            />
+            >
+              <Button mode="link" size="small" disabled={ottpPaymentDisabled}>
+                Make a one-time payment
+              </Button>
+            </Link>
+            {showSetUpAutopay && (
+              <>
+                <Link
+                  passHref={true}
+                  isInternal
+                  href={{
+                    pathname: `/coverage/policies/${planCode}/${policyNumber}/systematic-premium/amount`,
+                    query: {
+                      arrangementId,
+                    },
+                  }}
+                  role={ottpPaymentDisabled ? 'link' : ''}
+                  aria-disabled={ottpPaymentDisabled}
+                >
+                  <Button
+                    mode="link"
+                    size="small"
+                    disabled={!systematicPremiumEligible}
+                  >
+                    {arrangementId?.length ? 'Manage' : 'Set-up'} autopay
+                  </Button>
+                </Link>
+                <CancelAutopaySidesheet
+                  arrangementId={arrangementId}
+                  disabled={!arrangementId.length}
+                  frequency={frequency}
+                  paymentAmount={amount}
+                  planCode={planCode}
+                  policyNumber={policyNumber}
+                  nextActivityDate={nextActivityDate}
+                />
+              </>
+            )}
           </div>
         </ClickableCardContainer.AdditionalContent>
       )}

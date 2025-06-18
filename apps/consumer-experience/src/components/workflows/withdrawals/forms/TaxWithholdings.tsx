@@ -10,7 +10,7 @@ import {
   Label,
   Radio,
 } from '@zinnia/bloom/components';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -18,13 +18,11 @@ import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import {
   taxWithholdingStepSchema,
   WithdrawalsAction,
-  taxWithholdingAmountTypeEnum
+  taxWithholdingAmountTypeEnum,
 } from '@/components/providers/withdrawals/types';
 import { useWithdrawals } from '@/components/providers/withdrawals/useWithdrawals';
-// import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 
-import { WithdrawalSteps } from '../steps';
-import { getNextUrl } from '../utils';
 import { default as styles } from '../Withdrawals.module.css';
 
 const options = [
@@ -63,25 +61,15 @@ export const TaxWithholdings = ({
   taxWithholdingState,
 }: TaxWithholdingsProps) => {
   const { state, dispatch } = useWithdrawals();
-  // const { setPrimaryButtonDisabled } = useSteppedWorkflowContext();
+  const { stepInfo } = useSteppedWorkflowContext();
   const router = useRouter();
-  const { planCode, policyNumber } = useParams<{
-    planCode: string;
-    policyNumber: string;
-  }>();
-
-  const nextUrl = getNextUrl({
-    step: WithdrawalSteps.WITHHOLDINGS,
-    planCode,
-    policyNumber,
-  });
 
   const form = useForm({
     resolver: zodResolver(taxWithholdingStepSchema),
     defaultValues: {
       federal: {
         taxRateToUse: state.taxWithholdingsStep?.federal?.taxRateToUse,
-        amountType: state.taxWithholdingsStep?.federal?.amountType ,
+        amountType: state.taxWithholdingsStep?.federal?.amountType,
         dollar: state.taxWithholdingsStep?.federal?.dollar,
         percentage: state.taxWithholdingsStep?.federal?.percentage,
         exemptions: state.taxWithholdingsStep?.federal?.exemptions,
@@ -90,7 +78,7 @@ export const TaxWithholdings = ({
         taxRateToUse: state.taxWithholdingsStep?.state?.taxRateToUse,
         amountType: state.taxWithholdingsStep?.state?.amountType,
         dollar: state.taxWithholdingsStep?.state?.dollar,
-        percentage: state.taxWithholdingsStep?.state?.percentage ,
+        percentage: state.taxWithholdingsStep?.state?.percentage,
         exemptions: state.taxWithholdingsStep?.state?.exemptions,
       },
     },
@@ -115,13 +103,14 @@ export const TaxWithholdings = ({
   const onSubmit: SubmitHandler<
     z.infer<typeof taxWithholdingStepSchema>
   > = data => {
-
     dispatch({
       type: WithdrawalsAction.SET_WITHDRAWAL_TAX_WITHHOLDING_STEP,
-      payload: data,
+      payload: {
+        taxWithholdingsStep: data
+      },
     });
 
-    router.push(nextUrl);
+    router.push(stepInfo.nextStepUrl);
   };
 
   // setPrimaryButtonDisabled(
@@ -154,19 +143,31 @@ export const TaxWithholdings = ({
                     case taxWithholdingAmountTypeEnum.Enum.minimum:
                       form.setValue('federal.dollar', '0');
                       form.setValue('federal.percentage', '0');
-                      form.setValue('federal.taxRateToUse', TaxRateToUse.USEDEFAULTTABLE);
+                      form.setValue(
+                        'federal.taxRateToUse',
+                        TaxRateToUse.USEDEFAULTTABLE
+                      );
                       break;
                     case taxWithholdingAmountTypeEnum.Enum.none:
                       form.setValue('federal.dollar', '0');
                       form.setValue('federal.percentage', '0');
-                      form.setValue('federal.taxRateToUse', TaxRateToUse.NOWITHHOLDINGELECTED);
+                      form.setValue(
+                        'federal.taxRateToUse',
+                        TaxRateToUse.NOWITHHOLDINGELECTED
+                      );
                       break;
                     case taxWithholdingAmountTypeEnum.Enum.dollar:
-                      form.setValue('federal.taxRateToUse', TaxRateToUse.USEVALUESENTERED);
+                      form.setValue(
+                        'federal.taxRateToUse',
+                        TaxRateToUse.USEVALUESENTERED
+                      );
                       form.setValue('federal.percentage', '0');
                       break;
                     case taxWithholdingAmountTypeEnum.Enum.percentage:
-                      form.setValue('federal.taxRateToUse', TaxRateToUse.USEVALUESENTERED);
+                      form.setValue(
+                        'federal.taxRateToUse',
+                        TaxRateToUse.USEVALUESENTERED
+                      );
                       form.setValue('federal.dollar', '0');
                       break;
                     default:
@@ -181,12 +182,11 @@ export const TaxWithholdings = ({
           {!!fieldTypes.federal && (
             <div className={styles.field}>
               {federalWithholdingType === 'dollar' && (
-
-              <FieldData
-                {...form.register('federal.dollar')}
-                fieldSize={FieldSize.Small}
-                fieldType={FieldTypes.Value}
-              />
+                <FieldData
+                  {...form.register('federal.dollar')}
+                  fieldSize={FieldSize.Small}
+                  fieldType={FieldTypes.Value}
+                />
               )}
               {federalWithholdingType === 'percentage' && (
                 <FieldData
@@ -213,10 +213,7 @@ export const TaxWithholdings = ({
         <div className={styles.radioGroup} radioGroup="tax-withholdings-state">
           <Label
             interactiveElements={[
-              <LabelPopover
-                key="info"
-                title='state-tax-withholding'
-              >
+              <LabelPopover key="info" title="state-tax-withholding">
                 this is some very important info
               </LabelPopover>,
             ]}
@@ -238,19 +235,31 @@ export const TaxWithholdings = ({
                     case taxWithholdingAmountTypeEnum.Enum.minimum:
                       form.setValue('state.dollar', '0');
                       form.setValue('state.percentage', '0');
-                      form.setValue('state.taxRateToUse', TaxRateToUse.USEDEFAULTTABLE);
+                      form.setValue(
+                        'state.taxRateToUse',
+                        TaxRateToUse.USEDEFAULTTABLE
+                      );
                       break;
                     case taxWithholdingAmountTypeEnum.Enum.none:
                       form.setValue('state.dollar', '0');
                       form.setValue('state.percentage', '0');
-                      form.setValue('state.taxRateToUse', TaxRateToUse.NOWITHHOLDINGELECTED);
+                      form.setValue(
+                        'state.taxRateToUse',
+                        TaxRateToUse.NOWITHHOLDINGELECTED
+                      );
                       break;
                     case taxWithholdingAmountTypeEnum.Enum.dollar:
-                      form.setValue('state.taxRateToUse', TaxRateToUse.USEVALUESENTERED);
+                      form.setValue(
+                        'state.taxRateToUse',
+                        TaxRateToUse.USEVALUESENTERED
+                      );
                       form.setValue('state.percentage', '0');
                       break;
                     case taxWithholdingAmountTypeEnum.Enum.percentage:
-                      form.setValue('state.taxRateToUse', TaxRateToUse.USEVALUESENTERED);
+                      form.setValue(
+                        'state.taxRateToUse',
+                        TaxRateToUse.USEVALUESENTERED
+                      );
                       form.setValue('state.dollar', '0');
                       break;
                     default:

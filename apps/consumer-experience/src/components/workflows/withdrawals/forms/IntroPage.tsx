@@ -5,26 +5,21 @@ import { ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Link } from '@/components/link/Link';
+import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 
-import { WithdrawalSteps } from '../steps';
-import { getNextUrl } from '../utils';
 import { default as styles } from '../Withdrawals.module.css';
 export const IntroPage = () => {
+  const { stepInfo } = useSteppedWorkflowContext();
   const { lineOfBusinessUrl, planCode, policyNumber } = usePolicyUrlInputs();
   const router = useRouter();
 
-  const nextUrl = getNextUrl({
-    step: WithdrawalSteps.INTRO,
-    planCode,
-    policyNumber,
-  });
   const form = useForm();
 
   const addBankUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/profile#addBankSection`;
 
   const onSubmit = () => {
-    router.push(nextUrl);
+    router.push(stepInfo.nextStepUrl);
   };
   return (
     <form

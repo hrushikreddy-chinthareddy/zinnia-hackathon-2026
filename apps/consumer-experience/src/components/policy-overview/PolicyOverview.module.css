@@ -40,6 +40,7 @@
   background-color: var(--color-base-surface-surface-secondary);
   padding: var(--measure-dimension-padding-2xl, 1rem);
   display: flex;
+  align-items: start;
   flex-direction: column;
   gap: var(--measure-dimension-gap-lg);
   margin-top: var(--measure-dimension-gap-lg);

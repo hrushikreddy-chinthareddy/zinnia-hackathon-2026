@@ -9,7 +9,17 @@ import {
 import { FilingStatus } from '@xd/api-types/dist/generated-types/sor';
 import { z } from 'zod';
 
-import { WithdrawalSteps } from '@/components/workflows/withdrawals/steps';
+export enum WithdrawalSteps {
+  INTRO = 'introduction',
+  AMOUNT = 'amount',
+  METHOD = 'method',
+  WITHHOLDINGS = 'withholdings',
+  PAYEE = 'payee',
+  DISTRIBUTION = 'distribution',
+  SUMMARY = 'summary',
+  SUBMITTED = 'submitted',
+  MFA = 'multi-factor-auth',
+}
 
 export enum WithdrawalsAction {
   SET_CURRENT_PAGE = 'setCurrentPage',
@@ -100,12 +110,16 @@ export const payeeStepSchema = z.object({
       PartyRole.CONTINGENTBENEFICIARY,
       PartyRole.OWNER,
       PartyRole.PAYEE,
-      PartyRole.PAYOR
-    ]).optional()
+      PartyRole.PAYOR,
+    ])
+    .optional(),
 });
 
 export const distributionMethodStepSchema = z.object({
-  distributionType: z.enum([DisbursementPaymentForm.CHECK, DisbursementPaymentForm.ACH]),
+  distributionType: z.enum([
+    DisbursementPaymentForm.CHECK,
+    DisbursementPaymentForm.ACH,
+  ]),
   bank: bankAccountSchema.optional(),
   address: addressSchema.optional(),
 });
@@ -126,10 +140,8 @@ export type WithdrawalsState = z.infer<typeof WithdrawalsStateSchema>;
 export const payloadSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal(WithdrawalsAction.SET_CURRENT_PAGE),
-    payload: z.object({
-      currentPage: WithdrawalsStateSchema.pick({
-        currentPage: true,
-      }),
+    payload: WithdrawalsStateSchema.pick({
+      currentPage: true,
     }),
   }),
   z.object({
@@ -164,9 +176,5 @@ export const payloadSchema = z.discriminatedUnion('type', [
   }),
 ]);
 
-export type Action = {
-  type: WithdrawalsAction;
-  // payload: z.infer<typeof payloadSchema>;
-  payload: any;
-};
+export type Action = z.infer<typeof payloadSchema>;
 export type Dispatch = (action: Action) => void;

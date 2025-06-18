@@ -10,6 +10,7 @@ import { CLIENT_STATIC_FILES_RUNTIME_REACT_REFRESH } from 'next/dist/shared/lib/
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import { WithdrawalsState } from '@/components/providers/withdrawals/types';
+import { ApiResponse } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { TransactionEligbility } from '@/types/transactions';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
@@ -21,7 +22,6 @@ import {
   logWarn,
 } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
-import { UniformServiceResponse } from '@/utils/serverClientUtils';
 
 import { bpmApiBaseUrl, isMockErrorEnabled } from '../../api-config';
 import { ServerApi } from '../../server-http';
@@ -45,13 +45,13 @@ type PwotWithdrawalBPMResponse =
   | PWOTWithdrawalBPMErrorResponse;
 
 type WithdrawalEligibilityResponse =
-  UniformServiceResponse<TransactionEligbility>;
+  ApiResponse<TransactionEligbility>;
 
 export type WithdrawalValidationResposne =
-  UniformServiceResponse<PwotWithdrawalBPMResponse>;
+  ApiResponse<PwotWithdrawalBPMResponse>;
 
 export type WithdrawalSubmissionResponse =
-  UniformServiceResponse<TransactionAcceptedResponse>;
+  ApiResponse<TransactionAcceptedResponse>;
 
 export const submitOneTimeWithdrawal = withLogging<
   [PolicyRequestInputs, WithdrawalsState],

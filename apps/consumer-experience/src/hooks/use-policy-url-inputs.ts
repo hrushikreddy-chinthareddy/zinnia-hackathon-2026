@@ -7,6 +7,9 @@ import {
   lineOfBusinessUrlPath,
 } from '@/utils/data';
 
+/**
+ * For getting planCode, policyNumber, lineOfBusiness on client
+ */
 export const usePolicyUrlInputs = () => {
   const pathname = usePathname();
   const params = useParams<{
@@ -20,6 +23,7 @@ export const usePolicyUrlInputs = () => {
   return {
     policyNumber: params.policyNumber,
     planCode: params.planCode,
+    lineOfBusiness,
     lineOfBusinessUrl,
   };
 };
