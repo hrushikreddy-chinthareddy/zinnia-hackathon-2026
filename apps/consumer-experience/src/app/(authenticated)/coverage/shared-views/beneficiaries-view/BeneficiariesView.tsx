@@ -122,7 +122,7 @@ export async function BeneficiariesView({
 
   return (
     <div className="container">
-      {lineOfBusiness === LineOfBusiness.ANNUITY && (
+      {lineOfBusiness === LineOfBusiness.LIFE && (
         <p className="typography-content-body-sm">
           You’re covered for{' '}
           <span style={{ fontWeight: 600 }}>
