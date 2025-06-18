@@ -40,7 +40,7 @@ export const loginVerificationSuccessUrl = async () => {
   // There is a const for this elsewhere in the project
   //, but the file that it is defined in, has not loaded
   // when this code is evaluated so it returns an empty string
-  const rootPath = '/coverage';
+  const rootPath = 'coverage';
 
   if (returnUrl) {
     // pathname with params intact
