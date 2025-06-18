@@ -199,7 +199,7 @@
                                             }
                                         },
                                         "deliveryFaxNumber": {
-                                            "type": "string",
+                                            "type": ["string", "null"],
                                             "title": "Fax number"
                                         }
                                     },

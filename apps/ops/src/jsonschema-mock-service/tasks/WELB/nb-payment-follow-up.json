@@ -121,7 +121,8 @@
                         },
                         "rejectApplication": {
                             "type": "boolean",
-                            "title": "Reject Application"
+                            "title": "Reject Application",
+                            "default": false
                         },
                         "uploadRequired": {
                             "type": "boolean",

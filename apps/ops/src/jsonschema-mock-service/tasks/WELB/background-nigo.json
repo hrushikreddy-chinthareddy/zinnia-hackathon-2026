@@ -126,6 +126,7 @@
                             }
                         }
                     },
+                    "required": ["issuesResolved"],
                     "dependencies": {
                         "issuesResolved": {
                             "oneOf": [
@@ -251,6 +252,7 @@
                         }
                     },
                     "issuesResolved": {
+                        "ui:hideError": true,
                         "ui:widget": "radio",
                         "ui:options": {
                             "label": "true",

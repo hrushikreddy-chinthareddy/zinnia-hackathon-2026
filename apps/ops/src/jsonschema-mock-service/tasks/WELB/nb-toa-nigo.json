@@ -199,7 +199,7 @@
                                             }
                                         },
                                         "deliveryFaxNumber": {
-                                            "type": "string",
+                                            "type": ["string", "null"],
                                             "title": "Fax number"
                                         }
                                     },
@@ -277,7 +277,8 @@
                                         },
                                         "statusReason": {
                                             "type": "object",
-                                            "title": "The status reason for the task will be set to:"
+                                            "title": "The status reason for the task will be set to:",
+                                            "description": "NIGOs unable to be resolved"
                                         },
                                         "communicationSent": {
                                             "type": "boolean",
@@ -593,9 +594,6 @@
                         }
                     },
                     "statusReason": {
-                        "props": {
-                            "description": "NIGOs unable to be resolved"
-                        },
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "InstructionsTemplate"

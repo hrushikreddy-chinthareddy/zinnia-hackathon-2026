@@ -118,6 +118,7 @@
                             }
                         }
                     },
+                    "required": ["issuesResolved"],
                     "dependencies": {
                         "issuesResolved": {
                             "oneOf": [
@@ -127,7 +128,7 @@
                                             "enum": ["NO"]
                                         },
                                         "declineReason": {
-                                            "title": "",
+                                            "title": "Reason for decline",
                                             "type": "array",
                                             "items": {
                                                 "type": "string",
@@ -141,7 +142,8 @@
                                                 "type": "string"
                                             }
                                         }
-                                    }
+                                    },
+                                    "required": ["declineReason"]
                                 }
                             ]
                         }
@@ -229,6 +231,7 @@
                         }
                     },
                     "issuesResolved": {
+                        "ui:hideError": true,
                         "ui:widget": "radio",
                         "ui:options": {
                             "label": true,
@@ -238,7 +241,7 @@
                     "declineReason": {
                         "ui:widget": "select",
                         "ui:options": {
-                            "label": false,
+                            "label": true,
                             "enumOptions": [
                                 {
                                     "label": "Default",
