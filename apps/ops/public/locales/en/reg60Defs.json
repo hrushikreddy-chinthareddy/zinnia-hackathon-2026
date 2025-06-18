@@ -170,7 +170,8 @@
                 "products": {
                     "stableVoyage": "Stable Voyage",
                     "retireEase": "Retire Ease",
-                    "retireEaseChoice": "RetireEase Choice"
+                    "retireEaseChoice": "RetireEase Choice",
+                    "stableVoyagePlus": "Stable Voyage Plus"
                 },
                 "cdscPeriods": {
                     "na": "N/A",

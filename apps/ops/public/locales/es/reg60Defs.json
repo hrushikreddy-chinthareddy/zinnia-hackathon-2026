@@ -170,7 +170,8 @@
                 "products": {
                     "stableVoyage": "Viaje Estable",
                     "retireEase": "Retiro Fácil",
-                    "retireEaseChoice": "Elección de Retiro Fácil"
+                    "retireEaseChoice": "Elección de Retiro Fácil",
+                    "stableVoyagePlus": "Viaje Estable Plus"
                 },
                 "cdscPeriods": {
                     "na": "N/A",

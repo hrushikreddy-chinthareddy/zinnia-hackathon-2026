@@ -112,8 +112,12 @@ export function FormControls({ isLoading, setIsLoading, setTaskApiError, documen
 
     const handleContinue = (event: FormEvent) => {
         event.preventDefault();
-        if (validateForm()) {
-            if (userOnInfoPage) setCurrentPage(CurrentPage.COMPARISON);
+        if (isFormStateReadOnly && userOnInfoPage) {
+            setCurrentPage(CurrentPage.COMPARISON);
+            return;
+        }
+        if (!isFormStateReadOnly && validateForm() && userOnInfoPage) {
+            setCurrentPage(CurrentPage.COMPARISON);
         }
     };
 

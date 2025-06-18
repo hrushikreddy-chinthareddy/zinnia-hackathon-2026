@@ -13,7 +13,7 @@ import UserInformation from '../components/user-information/user-information';
 import { CurrentPage, PartyRoles } from '../reg60.types';
 import { getErrorObjectByRole } from '../utils/reg60-form-helpers';
 
-export default function MassMutualReg60Form({ document }: { document: DocumentData }) {
+export default function MassMutualReg60Form({ document, planCode }: { document: DocumentData; planCode: string }) {
     const {
         isFormStateReadOnly,
         formErrors,
@@ -82,6 +82,7 @@ export default function MassMutualReg60Form({ document }: { document: DocumentDa
                         formDisclosureAuthorization={disclosureAuthorization}
                         setFormDisclosureAuthorization={setDisclosureAuthorization}
                         formErrors={formErrors}
+                        planCode={planCode}
                     />
                 </div>
             ) : (

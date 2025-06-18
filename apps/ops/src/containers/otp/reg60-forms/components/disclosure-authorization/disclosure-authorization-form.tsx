@@ -22,6 +22,7 @@ export default function DisclosureAuthorizationForm({
     formErrors,
     formDisclosureAuthorization,
     setFormDisclosureAuthorization,
+    planCode,
 }: DisclosureAuthorizationFormProps) {
     const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request.disclosureAuthorization' });
 
@@ -42,6 +43,7 @@ export default function DisclosureAuthorizationForm({
                     disclosureAuthorizationInfo={disclosureAuthorizationInfo}
                     formErrors={formErrors}
                     onDataChange={val => handleSetDisclosureAuthorizationInfo(val)}
+                    planCode={planCode}
                 />
             </div>
         </div>

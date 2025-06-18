@@ -23,6 +23,7 @@ export enum Products {
     'stableVoyage' = 'STABLE_VOYAGE',
     'retireEase' = 'RETIRE_EASE',
     'retireEaseChoice' = 'RETIRE_EASE_CHOICE',
+    'stableVoyagePlus' = 'STABLE_VOYAGE_PLUS',
 }
 
 export enum CDSCPeriods {
@@ -53,6 +54,7 @@ export interface DisclosureAuthorizationFormProps {
     setFormDisclosureAuthorization: React.Dispatch<React.SetStateAction<DisclosureAuthorizationInformation>>;
     formErrors: FormValidationErrors;
     isFormStateReadOnly?: boolean;
+    planCode: string;
 }
 
 export interface DisclosureAuthorizationProps {
@@ -61,4 +63,5 @@ export interface DisclosureAuthorizationProps {
     formErrors: FormValidationErrors;
     onDataChange: (value: DisclosureAuthorizationInformation) => void;
     isFormStateReadOnly?: boolean;
+    planCode: string;
 }

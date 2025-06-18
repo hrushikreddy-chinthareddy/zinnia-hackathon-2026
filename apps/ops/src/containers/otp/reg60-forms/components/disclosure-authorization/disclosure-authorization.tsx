@@ -6,10 +6,12 @@ import Field, { FieldFormat, FieldSize, FieldType, FieldVariant } from '@deps/co
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import SelectSimple from '@deps/components/select/select';
+import { SimpleOption } from '@deps/components/select/select.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
+import { cdscPeriodOptions, productOptions } from './disclosure-authorization.helpers';
 import {
     DisclosureAuthorizationFields,
     DisclosureAuthorizationFieldConfig,
@@ -21,6 +23,7 @@ import {
 
 export function useDisclosureAuthorizationFields(
     disclosureAuthorization: DisclosureAuthorizationInformation,
+    planCode: string,
     formErrors?: FormValidationErrors,
     isFormStateReadOnly?: boolean
 ) {
@@ -33,19 +36,6 @@ export function useDisclosureAuthorizationFields(
     const [isCdscPeriodDisabled, setIsCdscPeriodDisabled] = useState(disclosureAuthorization?.cdscPeriod === CDSCPeriods.NA ? true : false);
     const [currentDisclosureAuthorization, setCurrentDisclosureAuthorization] = useState(disclosureAuthorization);
 
-    const productOptions = [
-        { label: t('products.stableVoyage'), value: Products.stableVoyage },
-        { label: t('products.retireEase'), value: Products.retireEase },
-        { label: t('products.retireEaseChoice'), value: Products.retireEaseChoice },
-    ];
-    const cdscPeriodOptions = [
-        { label: t('cdscPeriods.oneYearGuarantee'), value: CDSCPeriods['1YearGuarantee'] },
-        { label: t('cdscPeriods.threeYearGuarantee'), value: CDSCPeriods['3YearGuarantee'] },
-        { label: t('cdscPeriods.fourYearGuarantee'), value: CDSCPeriods['4YearGuarantee'] },
-        { label: t('cdscPeriods.fiveYearGuarantee'), value: CDSCPeriods['5YearGuarantee'] },
-        { label: t('cdscPeriods.sevenYearGuarantee'), value: CDSCPeriods['7YearGuarantee'] },
-        { label: t('cdscPeriods.nineYearGuarantee'), value: CDSCPeriods['9YearGuarantee'] },
-    ];
     const numberFormat = { type: 'number' as FieldFormat, decimalPlaces: 2, format: '' };
 
     const handleSetSignatureDateChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +64,7 @@ export function useDisclosureAuthorizationFields(
         <SelectSimple
             label={label || (t(`cdscPeriod`) as string)}
             onChange={(val: string) => setCdscPeriod(val as CDSCPeriods)}
-            options={cdscPeriodOptions}
+            options={cdscPeriodOptions(t, planCode) as SimpleOption[]}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={cdscPeriod}
@@ -111,7 +101,7 @@ export function useDisclosureAuthorizationFields(
         <SelectSimple
             label={label || (t(`product`) as string)}
             onChange={(val: string) => setProduct(val as Products)}
-            options={productOptions}
+            options={productOptions(t, planCode) as SimpleOption[]}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={product}
@@ -179,9 +169,11 @@ export function DisclosureAuthorization({
     formErrors,
     onDataChange,
     isFormStateReadOnly,
+    planCode,
 }: DisclosureAuthorizationProps) {
     const { renderField, currentDisclosureAuthorization } = useDisclosureAuthorizationFields(
         disclosureAuthorizationInfo,
+        planCode,
         formErrors,
         isFormStateReadOnly
     );

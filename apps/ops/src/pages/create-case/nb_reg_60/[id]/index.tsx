@@ -36,10 +36,10 @@ import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLoggi
 
 import { ERROR_CODES } from '../../error';
 
-const determineFormToRender = (clientId: string, document: DocumentData): React.ReactNode => {
+const determineFormToRender = (clientId: string, document: DocumentData, planCode: string): React.ReactNode => {
     switch (clientId.toUpperCase()) {
         case Carrier.MASS:
-            return <MassMutualReg60Form document={document} />;
+            return <MassMutualReg60Form document={document} planCode={planCode} />;
         default:
             console.error('determineFormToRender::unsupported clientId', clientId);
             return null;
@@ -62,7 +62,9 @@ export default function Reg60({ document, form, transactionsHistory, user }: Cre
     const [isLoading, setIsLoading] = useState(false);
     const [taskApiError, setTaskApiError] = useState('');
 
-    const formParts = determineFormToRender(clientForFormDetermination as string, document);
+    const accInfo = useAccountInfo(document.contract, clientId as string);
+
+    const formParts = determineFormToRender(clientForFormDetermination as string, document, accInfo.planCode || '');
     if (!formParts) {
         browserLogError('NBReg60Case::No form parts', {
             documentNumber: document?.documentNumber,
