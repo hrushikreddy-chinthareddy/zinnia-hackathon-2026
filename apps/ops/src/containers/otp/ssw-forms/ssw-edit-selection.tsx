@@ -7,35 +7,37 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SswUpdateOption } from '@deps/models/case/enums';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 
-export const sswUpdateOptions = (t: TFunction) => [
-    {
-        label: t('sswUpdateOptions.new'),
-        value: SswUpdateOption.NEW,
-    },
-    {
-        label: t('sswUpdateOptions.rmdUpdate'),
-        value: SswUpdateOption.RMD_UPDATE,
-    },
-    {
-        label: t('sswUpdateOptions.sswUpdate'),
-        value: SswUpdateOption.SSW_UPDATE,
-    },
-    {
-        label: t('sswUpdateOptions.bankUpdate'),
-        value: SswUpdateOption.BANK_UPDATE,
-    },
-    {
-        label: t('sswUpdateOptions.eftDrawUpdate'),
-        value: SswUpdateOption.EFT_DRAW_UPDATE,
-    },
-    {
-        label: t('sswUpdateOptions.withholdingUpdate'),
-        value: SswUpdateOption.WITHHOLDING_UPDATE,
-    },
-];
+export const sswUpdateOptions = (t: TFunction, carrier = '') =>
+    [
+        {
+            label: t('sswUpdateOptions.new'),
+            value: SswUpdateOption.NEW,
+        },
+        {
+            label: t('sswUpdateOptions.rmdUpdate'),
+            value: SswUpdateOption.RMD_UPDATE,
+        },
+        carrier !== Carrier.MASS && {
+            label: t('sswUpdateOptions.sswUpdate'),
+            value: SswUpdateOption.SSW_UPDATE,
+        },
+        {
+            label: t('sswUpdateOptions.bankUpdate'),
+            value: SswUpdateOption.BANK_UPDATE,
+        },
+        {
+            label: t('sswUpdateOptions.eftDrawUpdate'),
+            value: SswUpdateOption.EFT_DRAW_UPDATE,
+        },
+        {
+            label: t('sswUpdateOptions.withholdingUpdate'),
+            value: SswUpdateOption.WITHHOLDING_UPDATE,
+        },
+    ].filter(Boolean);
 
-const SswEditSelection = () => {
+const SswEditSelection = ({ carrier }: { carrier?: string }) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
     const router = useRouter();
     const { initialForm, isFormStateReadOnly } = useContext(FormDataContext);
@@ -84,7 +86,7 @@ const SswEditSelection = () => {
             <SelectSimple
                 className="max-w-lg my-3"
                 label={t('sswRequest') as string}
-                options={sswUpdateOptions(t)}
+                options={sswUpdateOptions(t, carrier) as { label: string; value: SswUpdateOption }[]}
                 onChange={(val: string) => {
                     setSswRequest(val as SswUpdateOption);
                     setLoading(true);

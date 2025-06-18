@@ -76,7 +76,7 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <SswEditSelection />
+            <SswEditSelection carrier={Carrier.MASS} />
             <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
             <DistributionReason isFormStateReadOnly={isFormStateReadOnly} reasonOptions={reasonOptions} />
             <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
