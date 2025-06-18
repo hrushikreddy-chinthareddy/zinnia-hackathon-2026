@@ -107,6 +107,17 @@ export const formatPhone = (phone: Phone) => {
     return phoneNumber;
 };
 
+export const formatFaxNumber = (faxNumber: string | undefined) => {
+    if (!faxNumber || typeof faxNumber !== 'string') {
+      return DEFAULT_ERROR_STRING;
+    }
+    const digits = faxNumber.replace(/\D/g, '');
+    if (digits.length !== 10) {
+      return DEFAULT_ERROR_STRING;
+    }
+    return `(${digits.substring(0, 3)}) ${digits.substring(3, 6)}-${digits.substring(6, 10)}`;
+  };
+
 export const formatDate = (date: string | undefined) => {
     if (date === '' || date == null) return DEFAULT_ERROR_STRING;
 
@@ -326,4 +337,40 @@ export const getSlug = (val: string): string => {
 
 export const reverseNameOrder = (name: string) => {
     return name.split(', ').reverse().join(' ');
+};
+
+export const formatRelationshipEnum = (value: string): string => {
+    if (!value) return '';
+
+    const relationshipMap: Record<string, string> = {
+        TRUSTEE: 'Trustee',
+        TRUSTEEOFMINOR: 'Trustee of Minor',
+        TRUSTEEOFINCOMPETENT: 'Trustee of Incompetent Person',
+        POWEROFATTORNEY: 'Power of Attorney',
+        CONTROLLINGPERSONOFENTITY: 'Controlling Person of Entity',
+        BROTHER: 'Brother',
+        CHILD: 'Child',
+        DAUGHTER: 'Daughter',
+        DOMESTICPARTNER: 'Domestic Partner',
+        EXECUTORS: 'Executor(s)',
+        FATHER: 'Father',
+        FIANCE: 'Fiancé/Fiancée',
+        GRANDCHILD: 'Grandchild',
+        LIFEPARTNER: 'Life Partner',
+        MOTHER: 'Mother',
+        SISTER: 'Sister',
+        SON: 'Son',
+        SPOUSE: 'Spouse',
+        STEPFATHER: 'Stepfather',
+        STEPMOTHER: 'Stepmother',
+        SELF: 'Self',
+        OTHER: 'Other',
+    };
+
+    return relationshipMap[value] || toTitleCase(value.replace(/_/g, ' '));
+};
+
+export const formatPercentage = (value: number | undefined) => {
+    if (!value) return '';
+    return `${value}%`;
 };

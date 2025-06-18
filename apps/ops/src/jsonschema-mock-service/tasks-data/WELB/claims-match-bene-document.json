@@ -1,0 +1,38 @@
+{
+    "id": "TA000000020060",
+    "caseId": "CA0000395559",
+    "source": "BPM.ClaimProcessing",
+    "process": "Claims",
+    "carrier": "FLIC",
+    "taskType": "CLAIMS_MATCH_BENE_DOCUMENT",
+    "taskName": "Match Death Document to Beneficiary",
+    "status": "NEW",
+    "data": {
+        "details": {
+            "documentEntityMatch": {
+                "documents": [
+                    {
+                        "documentId": "24367624",
+                        "documentType": "Death",
+                        "metadata": {
+                            "displayName": "Death for FLIC PITERSON PATRICK - 6/17/2025",
+                            "documentSource": "MANUAL",
+                            "documentNumber": "20250617-MAN-367624"
+                        }
+                    }
+                ],
+                "potentialMatchCriteria": {
+                    "identifiers": [
+                        {
+                            "identifier": "zlCaseId",
+                            "value": "CA0000429686"
+                        }
+                    ],
+                    "entityType": [
+                        "IDN_CLAIM_BENE_RECORD"
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -102,7 +102,7 @@ export const NotificationIcon = () => {
       {showNotificationAlert && (
         <Icon
           className={styles.exclamation}
-          type={IconType.CIRCLE_EXCLAMATION}
+          type={IconType.ALERT_EXCLAMATION}
         />
       )}
     </Link>

@@ -11,6 +11,7 @@ import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 
 import { RoleType } from './death-claim.types';
+import DocumentSelectionModal from './document-selection/document-selection-modal';
 import ConfirmStep from './steps/confirm/confirm-step';
 import { DeathClaimNotificationStep } from './steps/death-claim-notifier/death-claim-notifier-step';
 import NotificationMethodStep from './steps/notification-method/notification-method.step';
@@ -21,7 +22,7 @@ interface DeathClaimContainerProps {
 
 const DeathClaimContainer = ({ policy }: DeathClaimContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims' });
-    const { notifiers } = useDeathClaim();
+    const { notifiers, isDocumentSelected } = useDeathClaim();
 
     const communicationTypes = useMemo(() => getCommunicationTypes(t), [t]);
     const [communicationOptions] = useState<RadioItem[]>(communicationTypes);
@@ -78,7 +79,11 @@ const DeathClaimContainer = ({ policy }: DeathClaimContainerProps) => {
         [steps]
     );
 
-    return <TabGroupContainer steps={filteredSteps} policy={new PolicyDetails(policy)}></TabGroupContainer>;
+    if (!isDocumentSelected) {
+        return <DocumentSelectionModal policyNumber={policy.policyNumber as string} lob={policy.carrierId as string} />
+    } else {
+        return <TabGroupContainer steps={filteredSteps} policy={new PolicyDetails(policy)}></TabGroupContainer>
+    }
 };
 
 export default DeathClaimContainer;

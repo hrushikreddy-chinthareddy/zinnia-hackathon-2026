@@ -58,17 +58,21 @@ export const formatAddressLines = (addressLines?: any[]): Record<string, string>
     return formattedAddressLines;
 };
 
-export const formatDirtyAddress = (dirtyFields: AddressFormFields): string => {
-    const order = ['addressLines', 'country', 'state', 'city', 'zip'];
-    return order
-        .map((field: string) => {
-            if (field === 'addressLines' && Array.isArray(dirtyFields.addresses)) {
-                const formattedAddressLines = formatAddressLines(dirtyFields.addresses);
-                return Object.values(formattedAddressLines).join(', ');
-            } else {
-                return dirtyFields[field as keyof AddressFormFields]?.toString() || '';
+export const formatDirtyAddress = (dirtyFields: AddressFormFields): Record<string, string> => {
+    const addressParts: Record<string, string> = {};
+    if (dirtyFields) {
+
+        if (Object.hasOwn(dirtyFields, 'addressLines') && Array.isArray(dirtyFields.addressLines)) {
+            dirtyFields.addressLines.forEach((addr, index) => {
+                addressParts[`addressLine${index+1}`] = addr;
+            });
+        }
+
+        for (const [key, value] of Object.entries(dirtyFields || {})) {
+            if (value !== undefined && value !== null && value !== '') {
+                addressParts[key] = value as string;
             }
-        })
-        .filter(Boolean)
-        .join(', ');
+        }
+    }
+    return addressParts;
 };

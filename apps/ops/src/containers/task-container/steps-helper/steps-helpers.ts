@@ -3,7 +3,11 @@ import { TaskType } from '@deps/models/case/task';
 
 import { getAgentNigoSteps } from './agent-nigo';
 import { getAgentReviewSteps } from './agent-review';
+import { getBeneAddressVerificationSteps } from './bene-address-verification';
+import { getBeneCallSteps } from './bene-call-steps';
+import { getClaimBeneReviewSteps } from './claim-bene-review-steps';
 import { getClaimUncashTxnIdentifySteps } from './claim-uncash-txn-identify';
+import { getDay150ReviewSteps } from './claims-day-150-review';
 import { getClaimReverseUncashTxnSteps } from './claims-reverse-uncashed-transactions';
 import { getClaimStopUncashTxnSteps } from './claims-stop-uncashed-transactions';
 import getDefaultTaskSteps from './default-task-steps';
@@ -43,6 +47,8 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
         case TaskType.Payment_Follow_Up:
         case TaskType.Background_Nigo:
         case TaskType.Background_Review:
+        case TaskType.Claims_Match_Bene_Document:
+        case TaskType.Claims_Fi_Escheatment_Task:
             steps = getAgentNigoSteps(props);
             break;
 
@@ -66,6 +72,18 @@ export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] =
             break;
         case TaskType.Claims_Reverse_Uncashed_Transactions:
             steps = getClaimReverseUncashTxnSteps(props);
+            break;
+        case TaskType.Bene_Address_Verification:
+            steps = getBeneAddressVerificationSteps(props);
+            break;
+        case TaskType.Claims_Bene_Review:
+            steps = getClaimBeneReviewSteps(props);
+            break;
+        case TaskType.Bene_Call:
+            steps = getBeneCallSteps(props);
+            break;
+        case TaskType.Day_150_Review:
+            steps = getDay150ReviewSteps(props);
             break;
         default:
             steps = getDefaultTaskSteps(props);

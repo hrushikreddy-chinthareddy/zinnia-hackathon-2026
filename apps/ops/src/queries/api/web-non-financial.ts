@@ -96,6 +96,40 @@ export const submitDeathClaim = async (body: any): Promise<any> => {
     }
 };
 
+export const updateNotificationMethod = async (body: any): Promise<any> => {
+    const url = `${claimUrl}/initialdeathclaim/updatenotificationmethod`;
+    try {
+        browserLogInfo('webnonfinancial::Update notification method of beneficiaries', {
+            url: url,
+            function: 'webnonfinancial.updateNotificationMethod',
+            policyNumber: body?.policyNumber,
+            zlcaseId: body?.zlCaseId
+        });
+        const { data } = await client.put<any, AxiosResponse>(
+            url,
+            body
+        );
+        browserLogInfo('webNonFinancial::Successfully updated notification method', {
+            correlationid: body?.correlationid,
+            url: url,
+            function: 'webnonfinancial.updateNotificationMethod',
+            policyNumber: body?.policyNumber,
+            zlcaseId: data?.zlCaseId
+        });
+        return data;
+    } catch (error) {
+        browserLogError('webNonFinancial::Failed to update notification method', {
+            ...parseErrorInformation(error),
+            correlationid: body?.correlationid,
+            url: url,
+            function: 'webnonfinancial.updateNotificationMethod',
+            policyNumber: body?.policyNumber,
+            zlcaseId: body?.zlCaseId
+        });
+        return error;
+    }
+};
+
 export const initialDeathClaimExistsSsr = async (
     contractNumber: string | undefined,
     clientId: string | undefined,

@@ -1,0 +1,191 @@
+{
+    "process": "Claims",
+    "taskType": "BENE_ADDRESS_VERIFICATION",
+    "formId": "e408fdaa-d193-4f20-b663-408ce9708a15",
+    "carrier": "FLIC",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Confirm Mailing Address",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "",
+                            "description": "Confirm beneficiary's address and update it, if necessary"
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "",
+                            "properties": {
+                                "beneAddress": {
+                                    "type": "object",
+                                    "title": "",
+                                    "properties": {
+                                        "beneficiary": {
+                                            "title": "",
+                                            "type": "object",
+                                            "properties": {
+                                                "party": {
+                                                    "title": "",
+                                                    "type": "object",
+                                                    "ui:field": "title",
+                                                    "properties": {
+                                                        "fullName": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "notificationPreferences": {
+                                                    "type": "object",
+                                                    "title": "",
+                                                    "properties": {
+                                                        "notificationMethod": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "action": {
+                                                                    "type": "string"
+                                                                },
+                                                                "method": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        },
+                                                        "address": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "action": {
+                                                                    "type": "string"
+                                                                },
+                                                                "addressLine1": {
+                                                                    "title": "Address",
+                                                                    "type": "string"
+                                                                },
+                                                                "addressLine2": {
+                                                                    "type": "string",
+                                                                    "title": "Address Line 2"
+                                                                },
+                                                                "city": {
+                                                                    "type": "string",
+                                                                    "title": "City"
+                                                                },
+                                                                "country": {
+                                                                    "type": "string",
+                                                                    "title": "Country"
+                                                                },
+                                                                "state": {
+                                                                    "type": "string",
+                                                                    "title": "State"
+                                                                },
+                                                                "zipCode": {
+                                                                    "type": "string",
+                                                                    "title": "Zip Code"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:order": ["sectionHeader", "details"],
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "beneAddress": {
+                            "beneficiary": {
+                                "party": {
+                                    "fullName": {
+                                        "ui:options": {
+                                            "title": "",
+                                            "label": false,
+                                            "disabled": true,
+                                            "readonly": true,
+                                            "classNames": "font-bold"
+                                        }
+                                    }
+                                },
+                                "notificationPreferences": {
+                                    "notificationMethod": {
+                                        "type": "object",
+                                        "ui:widget": "hidden",
+                                        "properties": {
+                                            "action": {
+                                                "ui:hideError": true,
+                                                "ui:widget": "hidden"
+                                            },
+                                            "method": {
+                                                "ui:hideError": true,
+                                                "ui:widget": "hidden"
+                                            }
+                                        }
+                                    },
+                                    "address": {
+                                        "type": "object",
+                                        "ui:options": {
+                                            "cardType": "changeAddress",
+                                            "title": "Address",
+                                            "label": true,
+                                            "ObjectFieldTemplate": "ChangeAddressTemplate"
+                                        },
+                                        "properties": {
+                                            "action": {
+                                                "ui:hideError": true,
+                                                "ui:widget": "hidden"
+                                            },
+                                            "addressLine1": {
+                                                "ui:hideError": true
+                                            },
+                                            "addressLine2": {
+                                                "ui:hideError": true
+                                            },
+                                            "addressType": {
+                                                "ui:hideError": true
+                                            },
+                                            "city": {
+                                                "ui:hideError": true
+                                            },
+                                            "state": {
+                                                "ui:hideError": true
+                                            },
+                                            "zipCode": {
+                                                "ui:hideError": true
+                                            }
+                                        },
+                                        "ui:hideError": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

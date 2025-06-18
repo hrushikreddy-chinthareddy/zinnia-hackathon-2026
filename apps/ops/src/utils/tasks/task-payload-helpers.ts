@@ -128,12 +128,26 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
 
 export const cleanForm = (formData: any, taskMetadata: FormMetadata) => {
     const finalFormData = normalizeFormData(formData);
-    const iterableProperties = Object.keys(taskMetadata.uiSchema).filter((metadata: string) => !metadata.includes('ui'));
-    iterableProperties.forEach(property => {
-        if ((taskMetadata.uiSchema?.[property]?.['ui:options'] || {})?.omitValue) {
-            finalFormData.data ? delete finalFormData.data[property] : delete finalFormData[property];
-        }
-    });
+
+    const removeOmittedProperties = (schema: any, data: any, parentPath: string[] = []) => {
+        Object.keys(schema).forEach(key => {
+            if (key.includes('ui')) return;
+            const currentPath = [...parentPath, key];
+            const options = schema[key]?.['ui:options'];
+            if (options?.omitValue) {
+                let target = data;
+                for (let i = 0; i < parentPath.length; i++) {
+                    target = target?.[parentPath[i]];
+                    if (!target) return;
+                }
+                if (target) delete target[key];
+            } else if (typeof schema[key] === 'object' && schema[key] !== null) {
+                removeOmittedProperties(schema[key], data, currentPath);
+            }
+        });
+    };
+
+    removeOmittedProperties(taskMetadata.uiSchema, finalFormData.data || finalFormData);
     return finalFormData;
 };
 

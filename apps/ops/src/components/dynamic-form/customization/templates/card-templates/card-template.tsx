@@ -1,8 +1,10 @@
 import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
+import { toTitleCase } from '@xd/utils/dist';
 import { Icon, IconType, Loader } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { MetadataSearchResponse } from 'node_modules/@zinnia/api-types/dist/generated-types/documents-v3/models/MetadataSearchResponse';
+import React from 'react';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
@@ -10,10 +12,11 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { formatSSN } from '@deps/helpers/string.helpers';
+import { formatSSN, formatDate, formatRelationshipEnum, formatPercentage, formatPhone, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { formatDirtyAddress, replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
 import { CardTypes, DataFormattingTypes, TaskFieldTypes } from '@deps/models/case/task';
@@ -36,7 +39,6 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
     const formFields = schemaProperties ? getUiOptionsByField(schemaProperties, TaskFieldTypes.Form) : [];
 
     const additionalInfoFields = schemaProperties ? getUiOptionsByField(schemaProperties, TaskFieldTypes.AdditionalInfo) : [];
-
     return (
         <>
             {schema.title && (
@@ -123,11 +125,11 @@ const extractField = (
     fieldName: string
 ): { field: Record<string, any>[]; keys: string[]; value: string } => {
     const field = Object.entries(properties)
-        .filter(([_, value]) => (value as any)['ui:field'] === fieldName)
-        .map(([_, value]) => value as Record<string, any>); // Explicitly type field as an array of objects
+        .filter(([, value]) => (value as any)['ui:field'] === fieldName)
+        .map(([, value]) => value as Record<string, any>);
 
     const keys = Object.entries(properties)
-        .filter(([_, value]) => (value as any)['ui:field'] === fieldName)
+        .filter(([, value]) => (value as any)['ui:field'] === fieldName)
         .map(([key]) => key);
 
     // Extract separator & placeholder once
@@ -146,6 +148,10 @@ const extractField = (
         }, '')
         ?.trim();
 
+    if (value === '') {
+        return { field, keys, value: properties.title || properties.subTitle || '' };
+    }
+
     return { field, keys, value: value ? placeholder + value : '' };
 };
 
@@ -158,12 +164,29 @@ export const formatValueByDataType = (dataType: string, value: any) => {
         case DataFormattingTypes.DirtyAddress: {
             if (!value) return null;
             try {
-                return formatDirtyAddress(JSON.parse(value));
-            } catch (err) {
-                console.error('Invalid JSON:', value, err);
+                const addressValue = typeof value === 'string' && value.startsWith('{') ? JSON.parse(value) : value;
+                const addr = formatDirtyAddress(addressValue);
+                const className = Object.hasOwn(addressValue, 'addressLines') ? 'pl-1 inline-grid' : ''
+                return <FormattedAddress address={addr} className={className}/>
+            } catch (error) {
+                console.error('Error parsing address value:', error);
                 return null;
             }
         }
+        case DataFormattingTypes.Date:
+            return formatDate(value);
+        case DataFormattingTypes.Phone: {
+            const phoneValue = typeof value === 'string' && value.startsWith('{') ? JSON.parse(value) : value;
+            const phone = formatPhone(phoneValue);
+            return !isNullEmptyOrUndefined(phone) ? phone : '-';
+        }
+        case DataFormattingTypes.RelationshipToInsured:
+            return formatRelationshipEnum(value);
+        case DataFormattingTypes.TitleCase:
+            return toTitleCase(value);
+
+        case DataFormattingTypes.Percentage:
+            return formatPercentage(value);
         default:
             return value;
     }
@@ -171,9 +194,7 @@ export const formatValueByDataType = (dataType: string, value: any) => {
 
 export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, className, formData }: SingleCardProps) => {
     const { t } = useTranslation();
-
     const sideSheet = useSideSheetContext();
-
     const title = extractField(properties, data, 'title');
     const subtitle = extractField(properties, data, 'subTitle');
 
@@ -193,7 +214,6 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
               )
               .map(([key, prop]: [string, any]) => ({ key, ...prop }))
         : [];
-
     const handleCardClick = () => {
         const content = <DetailsCard details={data} sectionTitle={sectionTitle} properties={displayProperties} />;
         sideSheet.changeSideSheetContent(title.value || '', content);
@@ -288,7 +308,7 @@ const DocumentActions = ({ document, t }: any) => {
                 <NavElement
                     onClick={handleClick}
                     size={NavElementSize.Small}
-                    title={`${t('general.download')} ${document?.displayName}`}
+                    title={`${t('general.download')} ${document?.displayName || ''}`}
                     type={NavElementType.Button}
                 >
                     {loading ? (

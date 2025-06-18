@@ -16,9 +16,12 @@ type DifferentAddressProps = {
     carrierId: string;
     handleClose: (selectedAddress: any) => void;
     showName?: boolean;
+    isContainerClass?: boolean;
+    isSideSheet?: boolean;
+    isCancel?: boolean;
 };
 
-const DifferentAddress = ({ carrierId, handleClose, showName = true }: DifferentAddressProps) => {
+const DifferentAddress = ({ carrierId, handleClose, showName = true, isContainerClass = true, isSideSheet = false, isCancel = true }: DifferentAddressProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
     const [firstName, setFirstName] = useState('');
@@ -70,7 +73,7 @@ const DifferentAddress = ({ carrierId, handleClose, showName = true }: Different
     }
 
     return (
-        <CardContainer classNames={'w-full'} containerClassNames="w-full content-divider">
+        <CardContainer classNames={'w-full'} containerClassNames={isContainerClass ? 'w-full content-divider' : 'w-full'}>
             {showName && <div className="grid w-full grid-cols-2 gap-4">
                 <Field
                     label={t(`correspondence.mailDetails.firstName`) as string}
@@ -112,6 +115,7 @@ const DifferentAddress = ({ carrierId, handleClose, showName = true }: Different
                     setSelectedId={setSelectedId}
                     setAddressValidator={setAddressValidator}
                     isAddressValidationRequired={true}
+                    isSideSheet={isSideSheet}
                 />
             </div>
             {formErrors?.address && <AssistiveText text={formErrors?.address} variant={AssistiveTextVariant.Error} className="my-4" />}
@@ -120,7 +124,7 @@ const DifferentAddress = ({ carrierId, handleClose, showName = true }: Different
                 <Button className="mr-4" onClick={handleContinue} size={ButtonSize.Small} type={ButtonType.Primary}>
                     {t('formActions.continue')}
                 </Button>
-                <NavElement
+                {isCancel && <NavElement
                     aria-label={t('cancel') as string}
                     onClick={handleCancelClick}
                     size={NavElementSize.Small}
@@ -128,7 +132,7 @@ const DifferentAddress = ({ carrierId, handleClose, showName = true }: Different
                     variant={NavElementVariant.Default}
                 >
                     {t('formActions.cancel')}
-                </NavElement>
+                </NavElement>}
             </div>
         </CardContainer>
     );

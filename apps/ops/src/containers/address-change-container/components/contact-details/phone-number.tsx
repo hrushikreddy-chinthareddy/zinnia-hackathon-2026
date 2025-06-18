@@ -16,18 +16,19 @@ interface PhoneNumberProps {
     phone: Phone;
     setCountry: (value: keyof typeof countries) => void;
     setPhone: (value: any) => void;
+    title?: boolean;
 }
 
-const PhoneNumber = ({ country, phone, setCountry, setPhone }: PhoneNumberProps) => {
+const PhoneNumber = ({ country, phone, setCountry, setPhone, title = true }: PhoneNumberProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'addressChange.contactDetails.phoneNumber' });
     const { formErrors } = useAddressChange();
 
     return (
         <>
-            <div className="flex flex-col">
+            {title && <div className="flex flex-col">
                 <Typography variant={TypographyVariant.LabelLg}>{t('title')}</Typography>
             </div>
-
+            }
             <FieldSelect
                 aria-label={t('fieldLabels.number') as string}
                 className="w-[300px]"

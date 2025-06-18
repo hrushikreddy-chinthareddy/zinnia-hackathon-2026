@@ -88,14 +88,25 @@ export const normalizeFormData = (formData: any) => {
             for (let i = 0; i < formData.length; i++) {
                 if (typeof formData[i] === 'object' && formData[i] !== null) {
                     traverse(formData[i]);
+                } else if (isStringifiedObject(formData[i])) {
+                    formData[i] = JSON.parse(formData[i]);
+                    traverse(formData[i]);
                 }
             }
         } else if (typeof formData === 'object' && formData !== null) {
             for (const key in formData) {
                 if (!Object.prototype.hasOwnProperty.call(formData, key)) continue;
                 const value = formData[key];
+
                 if (isArrayOfStringifiedObjects(value)) {
-                    formData[key] = value.map((item: any) => JSON.parse(item));
+                    formData[key] = value.map((item: any) => {
+                        const parsed = JSON.parse(item);
+                        traverse(parsed);
+                        return parsed;
+                    });
+                } else if (isStringifiedObject(value)) {
+                    formData[key] = JSON.parse(value);
+                    traverse(formData[key]);
                 } else {
                     traverse(value);
                 }

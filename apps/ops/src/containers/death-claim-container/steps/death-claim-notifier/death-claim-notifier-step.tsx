@@ -12,6 +12,7 @@ import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { PartyType } from '@deps/models/policy/sor-policy';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 
@@ -37,7 +38,7 @@ export const checkNewPhone = (notifierPhone: any, party: any) => {
 export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathClaimNotificationStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims.deathClaimNotification' });
     const { goToNext } = useWorkflow();
-    const { formErrors, setNotifiers, owners, setOwners, notifiers, beneficiaries, setFormErrors, setSubmitFailed, setCaseId } =
+    const { formErrors, setNotifiers, owners, setOwners, notifiers, beneficiaries, setFormErrors, setSubmitFailed, setCaseId, onbaseCaseId, onbaseDocumentNumber } =
         useDeathClaim();
     const [isNewBene, setIsNewBene] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -46,11 +47,36 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
         return getPolicyOwnersByRole(policy, [PartyRole.OWNER, PartyRole.JOINTOWNER]);
     }, [policy]);
 
+    const policyAnnuitants = useMemo(() => {
+        return getPolicyOwnersByRole(policy,[ PartyRole.ANNUITANT ]);
+    }, [policy]);
+
+    const ownerPartyType = useMemo(() => {
+        return  getPolicyOwnersByRole(policy,[PartyRole.OWNER])?.[0]?.party.partyType;
+    }, [policy]);
+
+    const isIndividual = ownerPartyType === PartyType.INDIVIDUAL;
+    const isNonIndividual = ownerPartyType !== PartyType.INDIVIDUAL;
+
     useEffect(() => {
-        if (policyOwners && policyOwners?.length > 0) {
+        if (isIndividual && policyOwners && policyOwners?.length > 0) {
+            browserLogInfo('DeathClaimNotifierStep::Setting owner under deceased list', {
+                isIndividual: isIndividual,
+                policyOwners: policyOwners
+            });
             setOwners(policyOwners);
         }
-    }, [policyOwners, setOwners]);
+    }, [policyOwners, setOwners, isIndividual]);
+
+    useEffect(() => {
+        if (isNonIndividual && policyAnnuitants && policyAnnuitants?.length > 0) {
+            browserLogInfo('DeathClaimNotifierStep::setting annuitants under deceased list', {
+                isNonIndividual: isNonIndividual,
+                policyAnnuitants: policyAnnuitants
+            });
+            setOwners(policyAnnuitants);
+        }
+    }, [policyAnnuitants, setOwners, isNonIndividual]);
 
     useEffect(() => {
         if (isNullEmptyOrUndefined(notifiers?.notifierRole)) {
@@ -64,9 +90,7 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
             errors = validateOtherNotifier(notifiers?.party, RoleType.Other, t);
         } else {
             errors['firstName'] = '';
-            errors['middleName'] = '';
             errors['lastName'] = '';
-            errors['suffix'] = '';
             errors['relationship'] = '';
         }
 
@@ -78,13 +102,13 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
 
     const submit = useCallback(async () => {
         setIsLoading(true);
-        const payload = buildClaimPaylod(policy, null, notifiers, owners, beneficiaries);
-        browserLogInfo('DeathClaomNotifierStep::Submit claim payload', {
+        const payload = buildClaimPaylod(policy, null, notifiers, owners, beneficiaries, onbaseCaseId, onbaseDocumentNumber);
+        browserLogInfo('DeathClaimNotifierStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,
         });
         const successfulSubmit = await submitDeathClaim(payload);
-        browserLogInfo('DeathClaomNotifierStep::submitDeathClaim', {
+        browserLogInfo('DeathClaimNotifierStep::submitDeathClaim', {
             response: successfulSubmit,
             policy: policy?.policyNumber,
         });
@@ -211,12 +235,14 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
                     isNewBene={isNewBene}
                     handleNewBene={handleNewBene}
                     setFormErrors={setFormErrors}
+                    isIndividual={isIndividual}
+                    isNonIndividual={isNonIndividual}
                 />
                 {notifiers.notifierRole && owners.length > 0 && (
                     <DeceasedDetails
                         deceasedData={owners}
                         handleDeceased={handleOwners}
-                        selectedNotifierPartyRole={notifiers?.party?.partyRole}
+                        selectedNotifierPartyId={notifiers?.party?.partyId}
                     />
                 )}
                 {formErrors['deceased'] && (

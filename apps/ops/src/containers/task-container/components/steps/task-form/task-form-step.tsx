@@ -26,6 +26,7 @@ type TaskFormStepProps = {
     taskMetadata: FormMetadata;
     isSaveAsDraftEnabled?: boolean;
     isContinueButtonEnabled?: boolean;
+    stepIndex?: number;
 };
 
 const TaskFormStep = ({
@@ -35,6 +36,7 @@ const TaskFormStep = ({
     taskMetadata,
     isSaveAsDraftEnabled = false,
     isContinueButtonEnabled,
+    stepIndex
 }: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `taskManagement.taskForm` });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
@@ -67,10 +69,10 @@ const TaskFormStep = ({
                 setError(error);
                 setCurrentStepIndex(currentStepIndex - 1);
             } else {
-                goToNext();
+                stepIndex ? setCurrentStepIndex(stepIndex) : goToNext();
             }
         },
-        [currentStepIndex, goToNext, setCurrentStepIndex]
+        [currentStepIndex, goToNext, setCurrentStepIndex, stepIndex]
     );
 
     const handleSaveAsDraft = async () => {

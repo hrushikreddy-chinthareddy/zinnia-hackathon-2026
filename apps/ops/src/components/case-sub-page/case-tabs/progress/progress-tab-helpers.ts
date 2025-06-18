@@ -17,7 +17,7 @@ import { MultiStepInstance, SingleStepInstance, StepInstance } from '@deps/model
 import { TaskInstance, TaskStatus } from '@deps/models/case/task-instance';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-import { GroupedExceptions, CaseAdditionalData, ExceptionView, TaskView } from './progress-tab-types';
+import { GroupedExceptions, CaseAdditionalData, ExceptionView, TaskView, CaseAdditionalStepData } from './progress-tab-types';
 
 export interface DocumentView extends DocumentInstance {
     previewDocProps: DocumentPreviewerProps;
@@ -119,6 +119,7 @@ const groupExceptionsByTask = (exceptions: ExceptionView[]): GroupedExceptions =
 
 export class TransformedStep {
     additionalData: CaseAdditionalData = {};
+    stepAdditionalData: CaseAdditionalStepData[] = [];
     description?: string;
     documents: DocumentView[];
     exceptions: ExceptionView[] = [];
@@ -136,6 +137,7 @@ export class TransformedStep {
 
     constructor(step: ConvertedStepInstance | MultiStepInstance, parentStage: TransformedStage) {
         this.additionalData = step.additionalData ?? ({} as CaseAdditionalData);
+        this.stepAdditionalData = step?.stepAdditionalData ?? [];
         this.parentStage = parentStage;
         this.stepRaw = step;
         this.id = step.id;

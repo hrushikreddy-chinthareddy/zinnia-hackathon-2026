@@ -1,0 +1,308 @@
+{
+    "formId": "c620918f-2067-47b2-957f-8fc6f6e78c16",
+    "process": "Claims",
+    "taskType": "CLAIMS_BENE_REVIEW",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Verify beneficiaries",
+                "formSchema": {
+                    "type": "object",
+                    "definitions": {
+                        "inaccuracyReasons": {
+                            "enum": [
+                                "RELATIONSHIP",
+                                "BENEFICIARY_TYPE",
+                                "DATE_OF_BIRTH",
+                                "PERCENTAGE",
+                                "SSN",
+                                "ADDRESS",
+                                "PHONE",
+                                "EMAIL"
+                            ]
+                        }
+                    },
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Confirm beneficiary details match the system of record."
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "",
+                            "properties": {
+                                "beneReview": {
+                                    "type": "object",
+                                    "title": "",
+                                    "properties": {
+                                        "beneficiaries": {
+                                            "title": "",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "party": {
+                                                        "title": "",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "relationshipToInsured": {
+                                                                "type": "string"
+                                                            },
+                                                            "partyType": {
+                                                                "type": "string"
+                                                            },
+                                                            "dateOfBirth": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "beneficiaryPercentage": {
+                                                                "type": "number"
+                                                            },
+                                                            "ssn": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    },
+                                                    "notificationPreferences": {
+                                                        "title": "",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "address": {
+                                                                "type": ["string", "object"],
+                                                                "title": "Address",
+                                                                "dataType": "dirtyAddress"
+                                                            },
+                                                            "phone": {
+                                                                "type": ["string", "object"],
+                                                                "title": "",
+                                                                "dataType": "phone"
+                                                            },
+                                                            "email": {
+                                                                "title": "",
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "emailAddress": {
+                                                                        "type": "string"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    "isAccurate": {
+                                                        "type": "boolean"
+                                                    }
+                                                },
+                                                "dependencies": {
+                                                    "isAccurate": {
+                                                        "required": ["isAccurate"],
+                                                        "if": {
+                                                            "properties": {
+                                                                "isAccurate": {
+                                                                    "const": false
+                                                                }
+                                                            }
+                                                        },
+                                                        "then": {
+                                                            "properties": {
+                                                                "inaccuracyReasons": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "type": "string",
+                                                                        "$ref": "#/definitions/inaccuracyReasons"
+                                                                    },
+                                                                    "minItems": 1,
+                                                                    "uniqueItems": true
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "carrierApprovalTitle": {
+                                            "type": "object",
+                                            "title": "Carrier Approval/Restricted Beneficiary"
+                                        },
+                                        "carrierApprovalRequired": {
+                                            "type": "boolean",
+                                            "default": false,
+                                            "enum": [true, false]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:order": ["sectionHeader", "details"],
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "beneReview": {
+                            "beneficiaries": {
+                                "ui:options": {
+                                    "label": false,
+                                    "addable": false,
+                                    "removable": false
+                                },
+                                "items": {
+                                    "ui:options": {
+                                        "nobackground": true,
+                                        "title": "{{party.fullName}}",
+                                        "defaultItemLabel": "New Beneficiary",
+                                        "minItems": 1,
+                                        "label": true,
+                                        "expandable": true
+                                    },
+                                    "party": {
+                                        "relationshipToInsured": {
+                                            "ui:inline": true,
+                                            "ui:options": {
+                                                "title": "Relationship",
+                                                "label": false,
+                                                "disabled": true,
+                                                "dataType": "relationshipToInsured",
+                                                "inline": true
+                                            }
+                                        },
+                                        "partyType": {
+                                            "ui:inline": true,
+                                            "ui:options": {
+                                                "title": "Beneficiary Type",
+                                                "label": false,
+                                                "disabled": true,
+                                                "dataType": "titleCase",
+                                                "inline": true
+                                            }
+                                        },
+                                        "dateOfBirth": {
+                                            "ui:inline": true,
+                                            "ui:options": {
+                                                "title": "Date of Birth",
+                                                "label": false,
+                                                "disabled": true,
+                                                "dataType": "date",
+                                                "inline": true
+                                            }
+                                        },
+                                        "beneficiaryPercentage": {
+                                            "ui:inline": true,
+                                            "ui:options": {
+                                                "title": "Percentage",
+                                                "label": false,
+                                                "disabled": true,
+                                                "dataType": "percentage"
+                                            }
+                                        },
+                                        "ssn": {
+                                            "ui:inline": true,
+                                            "ui:options": {
+                                                "title": "SSN",
+                                                "label": false,
+                                                "disabled": true,
+                                                "dataType": "ssn",
+                                                "inline": true
+                                            }
+                                        }
+                                    },
+                                    "notificationPreferences": {
+                                        "address": {
+                                            "ui:inline": true,
+                                            "ui:options": {
+                                                "label": false,
+                                                "disabled": true,
+                                                "dataType": "dirtyAddress",
+                                                "inline": true
+                                            },
+                                            "ui:hideError": true
+                                        },
+
+                                        "phone": {
+                                            "ui:inline": true,
+                                            "ui:options": {
+                                                "title": "Phone",
+                                                "label": false,
+                                                "disabled": true,
+                                                "dataType": "phone",
+                                                "inline": true
+                                            },
+                                            "ui:hideError": true
+                                        },
+                                        "email": {
+                                            "emailAddress": {
+                                                "ui:inline": true,
+                                                "ui:options": {
+                                                    "title": "Email",
+                                                    "label": false,
+                                                    "disabled": true
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "isAccurate": {
+                                        "ui:widget": "radio",
+                                        "ui:options": {
+                                            "title": "Are the details above reflected accurately in the submitted paper form?"
+                                        }
+                                    },
+                                    "inaccuracyReasons": {
+                                        "ui:options": {
+                                            "label": true,
+                                            "title": "What data was updated in the system of records? (Select at least one)",
+                                            "help": "Update the system of record to match the data above",
+                                            "enumNames": [
+                                                "Relationship",
+                                                "Beneficiary Type",
+                                                "Date of Birth",
+                                                "Percentage",
+                                                "SSN",
+                                                "Address",
+                                                "Phone",
+                                                "Email"
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "carrierApprovalTitle": {
+                                "ui:options": {
+                                    "label": true,
+                                    "omitValue": true
+                                }
+                            },
+                            "carrierApprovalRequired": {
+                                "ui:options": {
+                                    "widget": "CheckboxWidget",
+                                    "label": true,
+                                    "title": "At least one beneficiary has either been updated within the last 6 months, is missing from the paper form, or is designated as a restricted beneficiary.",
+                                    "help": "Required when all beneficiaries have been updated within 6 months or are missing from the form."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

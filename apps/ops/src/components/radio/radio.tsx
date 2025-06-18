@@ -29,6 +29,7 @@ export type RadioProps = {
     items: RadioItem[];
     variant?: RadioVariant;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    alignItems?: string;
 } & Omit<RadioGroupProps, 'onChange'>;
 
 export default function Radio({
@@ -43,13 +44,14 @@ export default function Radio({
     'data-testid': dataTestId,
     name,
     className,
+    alignItems='items-start'
 }: RadioProps) {
     const classes = radioClasses(variant);
 
     const flexDirection = orientation === RadioOrientation.Vertical ? 'flex-col' : 'flex-row';
 
     return (
-        <div className={`flex ${flexDirection} items-start gap-4`} data-testid={RadioTest.Radio}>
+        <div className={`flex ${flexDirection} ${alignItems} gap-4`} data-testid={RadioTest.Radio}>
             <FieldLabel label={label} required={required} classNames="!mb-0" />
             {items.map((item, index) => {
                 const containerClasses = clsx('flex flex-row gap-3', {

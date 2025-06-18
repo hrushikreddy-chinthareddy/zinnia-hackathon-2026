@@ -22,6 +22,7 @@ interface VerifyAddressProps {
     setAddresses: (key: string, data: any) => void;
     setAddressValidator?: (value: FormValidationErrors) => void;
     isAddressValidationRequired?: boolean;
+    isSideSheet?: boolean;
 }
 
 export default function VerifyAddress({
@@ -32,6 +33,7 @@ export default function VerifyAddress({
     addresses,
     setAddresses,
     selectedId,
+    isSideSheet = false,
     setSelectedId,
     isAddressValidationRequired,
     setAddressValidator,
@@ -109,6 +111,7 @@ export default function VerifyAddress({
                                 onCardClick={handleCardClick}
                                 addressStatus={t('addressList.status.verifiedAddress')}
                                 isAddressChange={true}
+                                isSideSheet={isSideSheet}
                             />
                         ) : (
                             <AddressError />
@@ -123,6 +126,7 @@ export default function VerifyAddress({
                             onCardClick={handleCardClick}
                             addressStatus={t('addressList.status.enteredAddress')}
                             isAddressChange={true}
+                            isSideSheet={isSideSheet}
                         />
                     </div>
                 </div>

@@ -1,0 +1,216 @@
+{
+    "process": "Claims",
+    "taskType": "BENE_CALL",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "definitions": {
+            "contactRoleTypeEnum": {
+                "enum": ["Beneficiary", "Agent", "Advisor", "Employer", "Family Member", "Funeral Home", "Trustee", "Other"]
+            }
+        },
+        "tabSchemas": [
+            {
+                "title": "Call for information",
+
+                "formSchema": {
+                    "type": "object",
+
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "",
+                            "description": "Call necessary people to verify critical information about this death claim."
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "",
+
+                            "properties": {
+                                "beneCall": {
+                                    "type": "object",
+                                    "title": "",
+                                    "properties": {
+                                        "callLogs": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "contactRole": {
+                                                        "type": "string",
+                                                        "title": "Contact role",
+                                                        "$ref": "#/definitions/contactRoleTypeEnum"
+                                                    },
+                                                    "fullName": {
+                                                        "type": "string",
+                                                        "title": "Name"
+                                                    },
+                                                    "customName": {
+                                                        "type": "string",
+                                                        "title": "Name"
+                                                    },
+                                                    "relationToDeceased": {
+                                                        "type": "string",
+                                                        "title": "Relation to deceased"
+                                                    },
+                                                    "phone": {
+                                                        "type": "object",
+                                                        "title": "Phone number",
+                                                        "properties": {
+                                                            "phoneType": {
+                                                                "type": "string",
+                                                                "title": "Type",
+                                                                "enum": ["Home", "Work", "Mobile", "Other"]
+                                                            },
+                                                            "countryCode": {
+                                                                "type": "string",
+                                                                "title": "Country code",
+                                                                "default": "+1"
+                                                            },
+                                                            "areaCode": {
+                                                                "type": "string",
+                                                                "title": "Area code"
+                                                            },
+                                                            "dialNumber": {
+                                                                "type": "string",
+                                                                "title": "Phone number"
+                                                            },
+                                                            "bestTime": {
+                                                                "type": "string",
+                                                                "title": "Best time to call",
+                                                                "enum": ["Morning", "Afternoon", "Evening", "Anytime"]
+                                                            }
+                                                        }
+                                                    },
+                                                    "customPhone": {
+                                                        "type": "object",
+                                                        "title": "Phone number",
+                                                        "properties": {
+                                                            "phoneType": {
+                                                                "type": "string",
+                                                                "title": "Type",
+                                                                "enum": ["Home", "Work", "Mobile", "Other"]
+                                                            },
+                                                            "countryCode": {
+                                                                "type": "string",
+                                                                "title": "Country code",
+                                                                "default": "+1"
+                                                            },
+                                                            "areaCode": {
+                                                                "type": "string",
+                                                                "title": "Area code"
+                                                            },
+                                                            "dialNumber": {
+                                                                "type": "string",
+                                                                "title": "Phone number"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:order": ["sectionHeader", "details"],
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "beneCall": {
+                            "callLogs": {
+                                "items": {
+                                    "ui:order": ["contactRole", "fullName", "customName", "relationToDeceased", "phone", "customPhone"],
+                                    "contactRole": {
+                                        "ui:widget": "select",
+                                        "ui:options": {
+                                            "label": true
+                                        }
+                                    },
+                                    "fullName": {
+                                        "ui:widget": "select",
+                                        "ui:options": {
+                                            "label": true,
+                                            "conditional": {
+                                                "field": "contactRole",
+                                                "notvalue": "Other"
+                                            }
+                                        }
+                                    },
+                                    "customName": {
+                                        "ui:options": {
+                                            "label": true,
+                                            "conditional": {
+                                                "field": "contactRole",
+                                                "value": "Other"
+                                            }
+                                        }
+                                    },
+                                    "relationToDeceased": {
+                                        "ui:options": {
+                                            "label": true,
+                                            "conditional": {
+                                                "field": "contactRole",
+                                                "value": "Other"
+                                            }
+                                        }
+                                    },
+                                    "phone": {
+                                        "ui:options": {
+                                            "label": true,
+                                            "conditional": {
+                                                "field": "contactRole",
+                                                "notvalue": "Other"
+                                            }
+                                        },
+                                        "phoneType": {
+                                            "ui:widget": "select"
+                                        },
+                                        "bestTime": {
+                                            "ui:widget": "select"
+                                        }
+                                    },
+                                    "customPhone": {
+                                        "ui:options": {
+                                            "label": true,
+                                            "conditional": {
+                                                "field": "contactRole",
+                                                "value": "Other"
+                                            }
+                                        },
+                                        "phoneType": {
+                                            "ui:widget": "select"
+                                        },
+                                        "bestTime": {
+                                            "ui:widget": "select"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

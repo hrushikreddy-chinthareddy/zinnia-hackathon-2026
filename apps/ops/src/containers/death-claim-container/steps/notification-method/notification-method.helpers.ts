@@ -83,7 +83,7 @@ export const isEqualObjects = (obj1: any, obj2: any) => {
 };
 
 //export const domainValidation = /^[a-zA-Z0-9](\.?[a-zA-Z0-9]){3,}@zinnia\.com$/;
-export const domainValidation = /^[A-Za-z0-9._%+-]+@zinnia\.com$/;
+export const domainValidation = /^[A-Za-z0-9._%+-]+@zinnia\.com$/i;
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const faxRegex = /^\d{10}$/;
 

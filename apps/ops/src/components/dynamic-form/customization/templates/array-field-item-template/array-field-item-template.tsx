@@ -1,4 +1,5 @@
 import { ArrayFieldTemplateItemType, FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import clsx from 'clsx';
 import { CSSProperties } from 'react';
 
 export const containerClasses = 'flex rounded border-2 border-dashed border-gray-100 bg-gray-50 mb-2 pt-2 px-3';
@@ -31,6 +32,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
     };
 
     const nobackground = uiSchema?.['ui:options']?.nobackground ?? false;
+    const centralizedToolbar = uiSchema?.['ui:options']?.centralizedToolbar ?? false;
 
     return (
         <>
@@ -43,7 +45,7 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                             {children}
                         </div>
                     </div>
-                    <div className="ml-auto my-3">
+                    <div className={clsx('ml-auto my-3', centralizedToolbar && 'flex flex-col justify-center')}>
                         {hasToolbar && (
                             <div className="d-flex flex-row items-center">
                                 {(hasMoveUp || hasMoveDown) && (

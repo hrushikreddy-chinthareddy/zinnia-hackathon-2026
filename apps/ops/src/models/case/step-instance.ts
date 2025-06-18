@@ -1,4 +1,4 @@
-import { CaseAdditionalData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
+import { CaseAdditionalData, CaseAdditionalStepData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 import { Statuses } from '@deps/models/case/case';
 export type InstanceInfo = {
     entityType?: string;
@@ -7,6 +7,7 @@ export type InstanceInfo = {
 };
 type BaseStepInstance = {
     additionalData?: CaseAdditionalData;
+    stepAdditionalData?: CaseAdditionalStepData[];
     createdAt: string;
     eventRef: string[];
     id: string;

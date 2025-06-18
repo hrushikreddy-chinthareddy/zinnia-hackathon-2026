@@ -286,6 +286,15 @@
             "link": "/api/auth/logout"
         }
     },
+    "formValidations": {
+        "required": "This field is required.",
+        "patternDigit": "Only digits are allowed.",
+        "patternNumer": "Only digits are allowed. Must start with 82000.",
+        "patternNoSpecial": "Only contain letters and numbers (no special characters).",
+        "maxLength": "Field cannot be longer than {{limit}} characters.",
+        "minLength": "Field must not have fewer than {{limit}} characters.",
+        "minItems": "Please select atleast {{limit}} item(s)."
+    },
     "beneChange": {
         "tabs": {
             "start": "Start",
@@ -793,6 +802,28 @@
                     "errorSubtitle": "Data for policy {{policyNumber}} couldn't be retrieved.  Try refreshing your browser.",
                     "initialDeathNotification": "Initial Death Notification",
                     "initialDeathNotificationLink": "View death claim progress",
+                    "deathClaimExists": "Death claim case already exists in OnBase. Please refer to the OnBase record.",
+                    "unableToProceedWithDeathClaimPolicyCancelled": "Unable to proceed with the death claim as the policy is cancelled.",
+                    "unableToProceedWithDeathClaimPolicyCommuted": "Unable to proceed with the death claim as the policy is commuted.",
+                    "unableToProceedWithDeathClaimPolicyAppEntry": "Unable to proceed with the death claim as the policy is app entry.",
+                    "unableToProceedWithDeathClaimPolicyTerminated": "Unable to proceed with the death claim as the policy is terminated.",
+                    "unableToProceedWithDeathClaimPolicyDeathClaimPaid": "Unable to proceed with the death claim as death claim paid.",
+                    "unableToProceedWithDeathClaimPolicyPendingOverIssue": "Unable to proceed with the death claim as the policy is pending over issue.",
+                    "unableToProceedWithDeathClaimPolicyFreeLookPeriod": "Unable to proceed with the death claim as the policy is free look period.",
+                    "unableToProceedWithDeathClaimPolicySurrender": "Unable to proceed with the death claim as the policy is surrender.",
+                    "unableToProceedWithDeathClaimPolicyPendingRequirement": "Unable to proceed with the death claim as the policy is pending outstanding requirement.",
+                    "unableToProceedWithDeathClaimPolicyPendingFunds": "Unable to proceed with the death claim as the policy is pending over funds.",
+                    "unableToProceedWithDeathClaimPolicyRejected": "Unable to proceed with the death claim as the policy is rejected.",
+                    "unableToProceedWithDeathClaimPolicyWithdrawn": "Unable to proceed with the death claim as the policy is withdrawn.",
+                    "NONQUALIFIED": "Non-Qualified Investment Account",
+                    "INDIVIDUALRETIREMENTACCOUNTREGULAR": "Traditional IRA",
+                    "INDIVIDUALRETIREMENTACCOUNTSPOUSAL": "Spousal IRA",
+                    "INDIVIDUALRETIREMENTACCOUNTROLLOVER": "Rollover IRA",
+                    "ROTHINDIVIDUALRETIREMENTACCOUNT": "Roth IRA",
+                    "CUSTODIALINDIVIDUALRETIREMENTACCOUNT": "Custodial Traditional IRA",
+                    "CUSTODIALROTHINDIVIDUALRETIREMENTACCOUNT": "Custodial Roth IRA",
+                    "CUSTODIALROLLOVERINDIVIDUALRETIREMENTACCOUNT": "Custodial Rollover IRA",
+                    "IRA-SEP": "SEP IRA",
                     "nonqualified": "Non-Qualified Investment Account",
                     "individualretirementaccountregular": "Traditional IRA",
                     "individualretirementaccountspousal": "Spousal IRA",
@@ -1610,12 +1641,18 @@
         "notifications": {
             "types": {
                 "email": "Email",
-                "fax": "Fax",
+                "faxnumber": "Fax",
                 "mail": "Mail"
             },
-            "sendNotification": "Send notification",
+            "startNotification": "Notification flow initiated.",
+            "sendNotification": "Sent notification via {{method}} ({{followup}} of 4)",
+            "scheduledNotification": "Send notification via {{method}} ({{followup}} of 4)",
+            "resetNotification": "Notification method updated. Attempts {{action}}.",
+            "resendNotification": "Attempts {{action}}.",
             "receiveBeneficiaryConfirmation": "Receive beneficiary confirmation",
             "completedStatusTooltipWithDate": "Completed on {{date}}",
+            "updatedStatusTooltipWithDate": "Updated on {{date}}",
+            "scheduledStatusTooltipWithDate": "Scheduled for {{date}}",
             "notStarted": "Not started"
         }
     },
@@ -3659,7 +3696,7 @@
             "status": {
                 "notIssued": "This policy failed new business processing\non {{tooltipDate}} and could not\nbe issued.",
                 "active": "Issued on {{tooltipDate}} and currently in good order.",
-                "pendingIssued": "This policy was issued on {{tooltipDate}} and is in good order.",
+                "pendingIssued": "Currently awaiting issuance. It will become active once the initial premium is paid and all delivery requirements are completed.",
                 "pendingLapse": "Pending Lapse means at risk. If a {{tooltipAmount}} premium payment isn't made by {{tooltipDate}}, the owner will lose coverage.",
                 "lapse": "Lapsed means inactive; the owner lost coverage on {{tooltipDate}} due to insufficient funds. Coverage is no longer in effect, but there may be options to reinstate.",
                 "terminated": "Terminated on {{tooltipDate}} and no longer active.",
@@ -5413,6 +5450,58 @@
             "completed": "Completed"
         }
     },
+    "transactionListing": {
+        "loadingTransactions": "Retrieving stopped transactions...",
+        "errorGettingTransactions": "Stopped transactions data couldn't be retrieved.",
+        "stoppedTransactions": "Stopped Transactions",
+        "noTransactionsFoundTitle": "No transactions were found",
+        "noTransactionsMessage": "There are no transactions related with this event.",
+        "labels": {
+            "deleted": "Deleted",
+            "terminated": "Terminated",
+            "deleteFailed": "Delete Failed",
+            "terminateFailed": "Terminate Failed",
+            "on": "On"
+        },
+        "tableColumns": {
+            "transaction": "Transaction",
+            "status": "Status",
+            "amount": "Amount"
+        }
+    },
+    "deathNotification": {
+        "title": "IDN Request",
+        "noData": "No death notification details available.",
+        "loadingTransactions": "Retrieving Death Form Details...",
+        "errorGettingTransactions": "Death Form data couldn't be retrieved.",
+        "labels": {
+            "yes": "Yes",
+            "no": "No"
+        },
+        "notifierDetails": {
+          "title": "Notifier Details",
+          "dateOfNotification": "Date of Notification:",
+          "notifierRole": "Notifier Role:",
+          "notifierName": "Notifier Name:",
+          "notifierPhoneNumber": "Notifier Phone Number:",
+          "beneOnFileFlag": "Beneficiary details are on File:"
+        },
+        "ownerDetails": {
+          "title": "Deceased Details",
+          "dateOfDeath": "Date of Death:",
+          "foreignDeathFlag": "Foreign Death:",
+          "noData": "No owner details available."
+        },
+        "beneficiaryDetails": {
+          "title": "Beneficiary Notification Details",
+          "notificationMethod": "Notification Method:",
+          "contactDetails": "Contact Details",
+          "email": "Email:",
+          "mail": "Mailing Address:",
+          "faxnumber": "Fax:",
+          "noData": "No beneficiary details available."
+        }
+      },
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Service Form Review",
@@ -5662,6 +5751,7 @@
         "taskForm": {
             "title": "Task Management",
             "submit": "Submit",
+            "callforInformation": "Call for Information",
             "cancel": "Cancel",
             "confirm": "Confirm",
             "continue": "Continue",
@@ -5671,7 +5761,10 @@
                 "nigoDetails": "Missing Information",
                 "suitabilityForm": "Suitability form",
                 "summary": "Summary",
-                "matchDocument": "Match Document"
+                "matchDocument": "Match Document",
+                "beneficiaryStatus": "Beneficiary Status",
+                "addressChange": "Address Change",
+                "call": "Call"
             },
             "nextTask": "Continue to Next Task"
         },
@@ -5871,7 +5964,7 @@
                 "notifierDetails": "Notifier Details",
                 "role": "Role",
                 "phoneNumber": "Phone Number",
-                "beneInfoOnFile": "Check this box if the beneficiary list above is incorrect or incomplete, and details should be added to the SOR based on the attached document.",
+                "beneInfoOnFile": "Check this box if the beneficiary listed above is incorrect or incomplete, and details should be added to the system of record based on the supporting documents.",
                 "selectARole": "Select a role...",
                 "listedBenificary": "Listed Beneficiaries",
                 "noBeneficiaries": "Primary beneficiaries not present",
@@ -5881,7 +5974,8 @@
                     "family": "Family",
                     "owner": "Owner",
                     "other": "Other",
-                    "jointOwner": "Joint Owner"
+                    "jointOwner": "Joint Owner",
+                    "annuitant": "Annuitant"
                 },
                 "otherNotifier": {
                     "firstName": "First Name",
@@ -5914,7 +6008,7 @@
             "labels": {
                 "deceased": "Deceased",
                 "dateOfDeath": "Date of Death",
-                "insuredDiedInForeignCountry": "Did the insured died in foreign country?",
+                "insuredDiedInForeignCountry": "Did the insured die in foreign country?",
                 "selectionOptions": {
                     "yes": "Yes",
                     "no": "No"
@@ -5961,6 +6055,61 @@
             "submitClaim": "Submit Claim",
             "subTitle": "Death claim notification was submitted successfully for {{caseId}}.",
             "cta": "Go to Death Claim Case",
+            "secondaryCta": "Close"
+        },
+        "documentSelection": {
+            "title": "Select Supporting Document",
+            "subtitle": "We found one or more documents related to this contract in OnBase. Please select a document ID or proceed without selecting a document.",
+            "proceedWithoutDocument": "Proceed without document",
+            "continue": "Continue",
+            "cancel": "Cancel",
+            "missingSelection": "Select a document (or proceed without) to continue."
+        }
+    },
+    "updateNotificationMethodForBeneficiary": {
+        "tabs": {
+            "updateNotificationMethod": "Update Notification Method",
+            "confirm": "Confirm"
+        },
+        "updateNotificationMethodStep": {
+            "title": "Update Notification Method",
+            "subtitle": "Select a preferred notification method for communications related to this claim",
+            "notificationMethods": {
+                "email": "Email",
+                "fax": "Fax",
+                "address": "Mailing Address",
+                "change": "change",
+                "updateEmail": "Update Email Address",
+                "updateFax": "Update Fax Number",
+                "formActions": {
+                    "continue": "Continue",
+                    "cancel": "Cancel"
+                },
+                "formErrors": {
+                    "formValidation": {
+                        "zipIsRequired": "Zip is required.",
+                        "addressLine1IsRequired": "Address line 1 is required.",
+                        "cityIsRequired": "City is required.",
+                        "stateIsRequired": "State is required."
+                    }
+                },
+                "errors": {
+                    "emailIsRequired": "Email is required",
+                    "inValidDomain": "Only Zinnia emails are allowed",
+                    "inValidEmail": "Please enter valid email address",
+                    "faxIsRequired": "Fax number is required",
+                    "inValidFax": "Please enter valid fax number",
+                    "addressIsRequired": "Address is required."
+                }
+            }
+        },
+        "confirmStep": {
+            "header": "Confirm",
+            "close": "Close",
+            "title": "Done!",
+            "updateNotificationMethod": "Update Notification Method",
+            "subTitle": "Notification method for beneficiary was updated successfully for {{caseId}}.",
+            "cta": "Go to case",
             "secondaryCta": "Close"
         }
     },
@@ -6095,6 +6244,76 @@
             "submitTask": "Submit"
         }
     },
+    "claimsFiEscheatmentTask": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Claims FI Escheatment was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "claimsBeneReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Claims Beneficiary Review was submitted.",
+            "cta": "Go to Claim Case ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "beneCall": {
+        "callForInformation": {
+            "title": "Call for Information",
+            "subTitle": "Call necessary people to verify critical information about this death claim.",
+            "submit": "Submit",
+            "cancel": "Cancel",
+            "noChangesRequired": "No changes were required",
+            "yes": "Yes",
+            "name": "Name",
+            "phone": "Phone",
+            "contactRoleLabel": "Contact Roles",
+            "paperMail": "Paper Mail",
+            "email": "Email",
+            "fax": "Fax",
+            "notificationMethod": "Notification Method",
+            "dateOfDeath": "Date of Death",
+            "sourceOfInfo": "Source of Information",
+            "newInformation": "New Information",
+            "relationshipToDeceased": "Relationship to Deceased",
+            "didYouMakeAnyChanges": "Did you make any changes to the system of record?",
+            "addAnotherCall": "Add Another Call",
+            "contactRoles": {
+                "agent": "Agent",
+                "beneficiary": "Beneficiary",
+                "other": "Other"
+            },
+            "changeTypes": {
+                "beneficiaryNotificationChange": "Beneficiary Notification Change",
+                "beneficiaryDeceased": "Beneficiary Deceased"
+            }
+        },
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Service Request Form was submitted.",
+            "cta": "Go to case ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "beneAddressVerification": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Beneficiary Address Verification was submitted.",
+            "cta": "Go to Claim Case ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "claimsAddressChange": {
+        "change": "change",
+        "updateAddress": "Update {{type}} address"
+    },
     "defaultCaseDataEntry": {
         "confirmStep": {
             "title": "Got It!",
@@ -6118,6 +6337,67 @@
             "title": "Got It!",
             "subTitle": "Task: Operation Review was submitted.",
             "cta": "Go to Case ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "day150Review": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Operation Review was submitted.",
+            "cta": "Go to Case ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        },
+        "callForInformation": {
+            "title": "Call for Information",
+            "subTitle": "Call necessary people to verify critical information about this death claim.",
+            "submit": "Submit",
+            "cancel": "Cancel",
+            "noChangesRequired": "No changes were required",
+            "yes": "Yes",
+            "name": "Name",
+            "phone": "Phone",
+            "contactRoleLabel": "Contact Roles",
+            "paperMail": "Paper Mail",
+            "email": "Email",
+            "fax": "Fax",
+            "notificationMethod": "Notification Method",
+            "dateOfDeath": "Date of Death",
+            "sourceOfInfo": "Source of Information",
+            "newInformation": "New Information",
+            "relationshipToDeceased": "Relationship to Deceased",
+            "didYouMakeAnyChanges": "Did you make any changes to the system of record?",
+            "addAnotherCall": "Add Another Call",
+            "contactRoles": {
+                "agent": "Agent",
+                "beneficiary": "Beneficiary",
+                "other": "Other"
+            },
+            "changeTypes": {
+                "beneficiaryNotificationChange": "Beneficiary Notification Change",
+                "beneficiaryDeceased": "Beneficiary Deceased"
+            }
+        }
+    },
+    "claimsDay150": {
+        "beneStatus": {
+            "title": "Beneficiary Status",
+            "subTitle": "Call necessary people to verify critical information about this death claim.",
+            "isDeceased": "Is the beneficiary deceased?",
+            "dateOfDeath": "Date of Death",
+            "sourceOfInfo": "Source of Information",
+            "submit": "Submit",
+            "cancel": "Cancel",
+            "no": "No",
+            "yes": "Yes"
+        }
+    },
+    "claimsMatchBeneDocument": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Claim Match Bene Document was submitted.",
+            "cta": "Go to death claim",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }

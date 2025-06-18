@@ -1,0 +1,83 @@
+{
+    "id": "TA000000018676",
+    "caseId": "CA0000392914",
+    "source": "BPM.ClaimProcessing",
+    "templateId": "006b92ec-a0ef-49d0-94ac-47c0456b79fb",
+    "process": "Claims",
+    "carrier": "FLIC",
+    "taskType": "CLAIMS_FI_ESCHEATMENT_TASK",
+    "taskName": "FI Escheatment",
+    "status": "New",
+    "data": {
+        "details": {
+            "beneEscheatment": {
+                "beneficiary": {
+                    "recordId": "38513e0e-e8a4-4090-ad05-d1574471e7a7",
+                    "recordType": "IDN_CLAIM_BENE_RECORD",
+                    "party": {
+                        "partyId": "1810637943",
+                        "partyRoleId": "-2|0|4",
+                        "partyRole": "PRIMARYBENEFICIARY",
+                        "partyType": "INDIVIDUAL",
+                        "prefix": "Mr.",
+                        "firstName": "SAGAR",
+                        "lastName": "Bene",
+                        "fullName": "SAGAR Bene",
+                        "gender": "MALE",
+                        "dateOfBirth": "1976-01-02",
+                        "relationshipToInsured": "BROTHER",
+                        "beneficiaryPercentage": 50,
+                        "ssn": "211221029"
+                    },
+                    "notificationPreferences": {
+                        "notificationMethod": {
+                            "method": "FAXNUMBER"
+                        },
+                        "fax": {
+                            "faxNumber": "7853681743"
+                        },
+                        "address": {
+                            "addressId": "743660755",
+                            "addressType": "DEFAULT",
+                            "addressLine1": "437 N HIGHLAND AVE",
+                            "city": "LOS ANGELES",
+                            "state": "CA",
+                            "zipCode": "90036",
+                            "country": "USA"
+                        }
+                    }
+                }
+            }
+        },
+        "uploadRequired": false
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "initial_death_notification_ops",
+    "priority": "",
+    "escalated": false,
+    "assignee": "Soniya.Agrawal@zinnia.com",
+    "assigneePartyId": "03c6e78745c84aa892e4dbd85d45c1b9",
+    "assignedAt": "2025-06-10T10:09:12Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-06-10T07:41:16Z",
+    "updatedBy": "Soniya.Agrawal@zinnia.com",
+    "updatedByPartyId": "03c6e78745c84aa892e4dbd85d45c1b9",
+    "updatedAt": "2025-02-21T13:29:17Z",
+    "identifiers": [
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000426234"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "680081501"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "680081501"
+        }
+    ],
+    "externalId": "b024b6ab-96df-4fc7-8f1d-09b86c4f5480"
+}

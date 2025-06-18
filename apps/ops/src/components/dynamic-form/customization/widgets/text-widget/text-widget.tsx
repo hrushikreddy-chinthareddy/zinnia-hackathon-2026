@@ -22,7 +22,7 @@ export const TextWidget = function (props: WidgetProps) {
                 <div className="text-500">{label}</div>
                 <div>
                     {prefix ? prefix : ''}
-                    {value}
+                    {formatValueByDataType((dataType as string) || 'text', value)}
                 </div>
             </div>
         );

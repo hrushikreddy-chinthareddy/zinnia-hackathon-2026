@@ -24,7 +24,7 @@ type NotificationMethodStepProps = {
 
 const NotificationMethodStep = ({ policy, communicationOptions }: NotificationMethodStepProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'deathClaims.notificationMethod' });
-    const { beneficiaries, setBeneficiaries, notifiers, owners, setSubmitFailed, setCaseId, formErrors } = useDeathClaim();
+    const { beneficiaries, setBeneficiaries, notifiers, owners, setSubmitFailed, setCaseId, formErrors, onbaseCaseId, onbaseDocumentNumber } = useDeathClaim();
     const { goToNext } = useWorkflow();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -70,7 +70,7 @@ const NotificationMethodStep = ({ policy, communicationOptions }: NotificationMe
 
     const submit = useCallback(async () => {
         setIsLoading(true);
-        const payload = buildClaimPaylod(policy, null, notifiers, owners, beneficiaries);
+        const payload = buildClaimPaylod(policy, null, notifiers, owners, beneficiaries, onbaseCaseId, onbaseDocumentNumber);
         browserLogInfo('NotificationMethodStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,

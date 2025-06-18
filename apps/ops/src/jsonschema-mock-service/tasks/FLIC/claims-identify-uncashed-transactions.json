@@ -1,12 +1,11 @@
 {
     "formId": "95201e9f-8e7a-459c-8b34-e6ebfb8f1390",
     "process": "Claims",
+    "carrier": "FLIC",
     "taskType": "CLAIMS_IDENTIFY_UNCASHED_TRANSACTIONS",
     "formSchema": {
         "type": "object"
     },
-    "liveValidate": false,
-    "noValidate": true,
     "uiSchema": {
         "type": "object"
     },
@@ -18,7 +17,6 @@
                     "type": "object",
                     "liveValidate": false,
                     "noValidate": true,
-
                     "properties": {
                         "sectionHeader": {
                             "type": "object",
@@ -28,7 +26,6 @@
                         "details": {
                             "type": "object",
                             "title": "",
-
                             "properties": {
                                 "uncashTransaction": {
                                     "type": "object",
@@ -42,7 +39,9 @@
                                     "allOf": [
                                         {
                                             "if": {
-                                                "required": ["uncashTransactionExists"],
+                                                "required": [
+                                                    "uncashTransactionExists"
+                                                ],
                                                 "properties": {
                                                     "uncashTransactionExists": {
                                                         "const": true
@@ -60,29 +59,37 @@
                                                             "properties": {
                                                                 "policyNumber": {
                                                                     "type": "string",
-                                                                    "title": "Contract ID"
+                                                                    "title": "Contract Number",
+                                                                    "pattern": "^[0-9]+$",
+                                                                    "maxLength": 22
                                                                 },
                                                                 "transactionNumber": {
                                                                     "type": "string",
-                                                                    "title": "LifeCAD ID"
+                                                                    "title": "Lifecad Transaction ID",
+                                                                    "pattern": "^[a-zA-Z0-9]*$",
+                                                                    "maxLength": 15
                                                                 },
                                                                 "transactionDate": {
                                                                     "type": "string",
                                                                     "format": "date",
-                                                                    "title": "Transaction Date"
+                                                                    "title": "Check Transaction Date"
                                                                 },
                                                                 "checkNumber": {
                                                                     "type": "string",
-                                                                    "title": "Check #"
+                                                                    "title": "Check Number",
+                                                                    "pattern": "^82000[0-9]*$",
+                                                                    "maxLength": 20,
+                                                                    "dataType": "number"
                                                                 },
                                                                 "transactionAmount": {
                                                                     "type": "string",
-                                                                    "title": "Amount"
+                                                                    "title": "Check Amount",
+                                                                    "maxLength": 23,
+                                                                    "dataType": "amount"
                                                                 }
                                                             },
                                                             "required": [
                                                                 "policyNumber",
-                                                                "transactionNumber",
                                                                 "transactionDate",
                                                                 "checkNumber",
                                                                 "transactionAmount"
@@ -97,15 +104,22 @@
                                             }
                                         }
                                     ],
-                                    "required": ["uncashTransactionExists"]
+                                    "required": [
+                                        "uncashTransactionExists"
+                                    ]
                                 },
-                                "required": ["uncashTransaction"]
+                                "required": [
+                                    "uncashTransaction"
+                                ]
                             }
                         }
                     }
                 },
                 "uiSchema": {
-                    "ui:order": ["sectionHeader", "details"],
+                    "ui:order": [
+                        "sectionHeader",
+                        "details"
+                    ],
                     "ui:submitButtonOptions": {
                         "norender": true,
                         "props": {
@@ -117,7 +131,7 @@
                         "showErrors": false,
                         "liveValidate": false
                     },
-                    "ui:hideError": true,
+                    "ui:hideError": false,
                     "sectionHeader": {
                         "ui:options": {
                             "label": true,
@@ -126,62 +140,60 @@
                     },
                     "details": {
                         "uncashTransaction": {
-                            "ui:hideError": true,
                             "ui:options": {
                                 "label": true
                             },
-
                             "uncashTransactionExists": {
+                                "ui:hideError": true,
                                 "ui:widget": "radio",
                                 "ui:options": {
-                                    "enumNames": ["Yes", "No"]
+                                    "enumNames": [
+                                        "Yes",
+                                        "No"
+                                    ]
                                 }
                             },
                             "transactions": {
-                                "ui:hideError": true,
-
                                 "ui:options": {
                                     "label": false,
-                                    "inline": true
+                                    "inline": true,
+                                    "orderable": false
                                 },
                                 "items": {
                                     "inline": true,
                                     "ui:options": {
                                         "label": false,
                                         "title": "transactions",
-                                        "minItems": 1
+                                        "minItems": 1,
+                                        "centralizedToolbar": true
                                     },
                                     "policyNumber": {
-                                        "ui:hideError": true,
-
                                         "ui:options": {
                                             "label": true
                                         }
                                     },
                                     "transactionNumber": {
-                                        "ui:hideError": true,
                                         "ui:options": {
                                             "label": true
                                         }
                                     },
                                     "transactionDate": {
-                                        "ui:hideError": true,
                                         "ui:options": {
-                                            "label": true
+                                            "label": true,
+                                            "format": "MM-DD-YYYY",
+                                            "outputFormat": "MM-DD-YYYY"
                                         }
                                     },
                                     "checkNumber": {
-                                        "ui:hideError": true,
                                         "ui:options": {
                                             "label": true
                                         }
                                     },
                                     "transactionAmount": {
-                                        "ui:hideError": true,
                                         "ui:options": {
                                             "label": true,
-
-                                            "widget": "ValueWidget"
+                                            "widget": "ValueWidget",
+                                            "format": "numeric"
                                         }
                                     }
                                 }

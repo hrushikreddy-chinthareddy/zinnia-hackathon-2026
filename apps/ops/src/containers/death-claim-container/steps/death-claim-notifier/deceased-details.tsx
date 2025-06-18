@@ -1,4 +1,3 @@
-import { PartyRole } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -11,10 +10,10 @@ import { DeceasedParty } from '../../death-claim.types';
 interface DeceasedDetailsProps {
     deceasedData: DeceasedParty[];
     handleDeceased: (owner: DeceasedParty, index: number) => void;
-    selectedNotifierPartyRole?: PartyRole;
-}
+    selectedNotifierPartyId?: string;
+};
 
-export const DeceasedDetails = ({ deceasedData, handleDeceased, selectedNotifierPartyRole = undefined }: DeceasedDetailsProps) => {
+export const DeceasedDetails = ({deceasedData, handleDeceased, selectedNotifierPartyId = undefined}: DeceasedDetailsProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims.deceasedDetails' });
 
     return (
@@ -22,22 +21,22 @@ export const DeceasedDetails = ({ deceasedData, handleDeceased, selectedNotifier
             <Typography variant={TypographyVariant.LabelLg}>{t('title')}</Typography>
             <div className="grid auto-rows-fr grid-cols-1 gap-2 lg:grid-cols-3">
                 <div className="flex-1">
-                    <Label label={t('labels.deceased') as string} variant={LabelVariant.LabelSm} />
-                    {deceasedData?.map((owner, index) => {
-                        let isDisabled = false;
-                        if (selectedNotifierPartyRole && owner.party.partyRole === selectedNotifierPartyRole) {
-                            isDisabled = true;
-                        }
-                        return (
-                            <DeceasedRecord
-                                index={index}
-                                key={owner.party.partyId}
-                                owner={owner}
-                                handleDeceased={handleDeceased}
-                                isDisabled={isDisabled}
-                            />
-                        );
-                    })}
+                <Label label={t('labels.deceased') as string} variant={LabelVariant.LabelSm} />
+                {deceasedData?.map((owner, index) => {
+                    let isDisabled = false;
+                    if ( selectedNotifierPartyId && owner.party.partyId === selectedNotifierPartyId) {
+                        isDisabled = true;
+                    }
+                    return (
+                        <DeceasedRecord
+                            index={index}
+                            key={owner.party.partyId}
+                            owner={owner}
+                            handleDeceased={handleDeceased}
+                            isDisabled={isDisabled}
+                        />
+                    )
+                })}
                 </div>
             </div>
         </div>

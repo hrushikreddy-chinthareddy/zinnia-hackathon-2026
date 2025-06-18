@@ -27,14 +27,11 @@ export const PolicyBadgeStatus = ({
     tooltip,
     tooltipPlacements = PopoverPlacement.TopRight,
 }: Partial<GlobalValues>) => {
-    // This might get expanded at some point to only show Active or NotIssued
-    const Status = status === PolicyStatus.PENDINGISSUED ? PolicyStatus.ACTIVE : status;
-
     return (
         <div className="mt-[-3px]">
             {!!status && !!tooltip && (
                 <Tooltip placement={tooltipPlacements} body={tooltip}>
-                    <Badge rounded={true} label={Status} variant={variant as BadgeVariant} className="w-max" />
+                    <Badge rounded={true} label={status} variant={variant as BadgeVariant} className="w-max" />
                 </Tooltip>
             )}
         </div>

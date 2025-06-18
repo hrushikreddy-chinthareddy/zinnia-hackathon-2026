@@ -4,6 +4,7 @@ import { Nigo, OnbaseCase } from '@deps/models/case/case';
 import { DigitalFormWithdrawal } from '@deps/models/case/withdrawal/case';
 import { CalculateRmdBody, CalculateRmdResponse } from '@deps/models/case/withdrawal/rmd';
 import { ProductFund, ProductFundsRequestBody } from '@deps/models/integration/product-funds';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 import { logError, LoggingContext, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
@@ -144,5 +145,47 @@ export const checkNigoExistsSSR = async (
             ...loggingContext,
         });
         return false;
+    }
+};
+
+export const getDocuments = async (
+    lob: string,
+    docType: string,
+    contractNumber: string
+): Promise<any> => {
+    if (!lob) {
+        throw new Error('No lob provided');
+    }
+    if (!docType) {
+        throw new Error('No doc type provided');
+    }
+    if (!contractNumber) {
+        throw new Error('No contract number provided');
+    }
+    const body = {
+        lob,
+        docType,
+        contractNumber
+    };
+
+    try {
+        const {data} = await client.post<any, AxiosResponse>(
+                `${baseUrl}/onbase/getdocuments`,
+                body
+            );
+
+        browserLogInfo('getDocuments::success', {
+            payload: body,
+            function: 'integration.getDocuments',
+        });
+        return data.data || [];
+    } catch (error) {
+         browserLogInfo('getDocuments::error', {
+            ...parseErrorInformation(error),
+            payload: body,
+            function: 'integration.getDocuments',
+        });
+
+        return [];
     }
 };

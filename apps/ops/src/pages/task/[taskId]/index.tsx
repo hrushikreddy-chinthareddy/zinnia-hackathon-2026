@@ -211,7 +211,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return {
                     props: {
                         ...translations,
-                        taskMetadata: TaskMetadataHelper(task, currentTaskMetadata),
+                        taskMetadata: await TaskMetadataHelper(task, currentTaskMetadata),
                         task,
                         correlationId,
                         taskInfoLink,

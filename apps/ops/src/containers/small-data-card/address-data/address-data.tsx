@@ -17,6 +17,7 @@ export interface AddressDataCardProps {
     selectedId?: string;
     addressStatus?: string | null;
     isAddressChange?: boolean;
+    isSideSheet?: boolean;
 }
 let fullAddress: string | JSX.Element;
 export const formatAddressToContainer = (address: Address, skipCountryCode: boolean) => {
@@ -42,18 +43,19 @@ interface AddressTypeAndAddressProps {
     address: Address;
     addressType: string;
     isAddressChange?: boolean;
+    isSideSheet?: boolean;
 }
 
-export const AddressTypeAndAddress = ({ address, addressType, isAddressChange = false }: AddressTypeAndAddressProps) => {
+export const AddressTypeAndAddress = ({ address, addressType, isAddressChange = false, isSideSheet = false }: AddressTypeAndAddressProps) => {
     const formattedAddress = formatAddressToContainer(address, isAddressChange);
 
     return (
-        <div className="flex flex-col items-start text-gray-900">
+
+        <div className={`flex flex-col items-start text-gray-900 w-[200px] + ${isSideSheet && "w-[200px]"}`}>
             {!isAddressChange && addressType && (
                 <Label className="h-6 leading-4.5" label={toTitleCase(addressType)} variant={LabelVariant.FieldLabel} />
             )}
             {isAddressChange && addressType && <Tag text={toTitleCase(addressType)} className="my-1" />}
-
             <div className={`leading-[18px] ${!addressType && 'pt-2'} text-bold`}>
                 {formattedAddress.map((line, index) => (
                     <Content
@@ -78,6 +80,7 @@ const AddressDataCard = ({
     selectedId,
     addressStatus = null,
     isAddressChange = false,
+    isSideSheet = false,
 }: AddressDataCardProps) => {
     const { t } = useTranslation();
     const addressType = addressStatus || getAddressType(address?.addressType, t);
@@ -94,7 +97,8 @@ const AddressDataCard = ({
         {
             'border-primary hover:border-primary ': isSelected,
         },
-        isAddressChange ? 'min-w-[425px]' : 'min-w-[300px]'
+
+        isAddressChange ? (isSideSheet ? 'min-w-[200px]' : 'min-w-[425px]') : 'min-w-[300px]'
     );
 
     return (
@@ -103,7 +107,7 @@ const AddressDataCard = ({
             onClick={handleClick}
             ariaLabel={`${accessibilityClickText} ${addressType} ${addressString}`}
         >
-            <AddressTypeAndAddress address={address} addressType={addressType || ''} isAddressChange={isAddressChange} />
+            <AddressTypeAndAddress address={address} addressType={addressType || ''} isAddressChange={isAddressChange} isSideSheet={isSideSheet} />
         </ClickContainer>
     );
 };

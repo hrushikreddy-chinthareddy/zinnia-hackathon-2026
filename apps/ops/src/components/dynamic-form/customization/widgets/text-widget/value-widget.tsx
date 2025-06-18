@@ -1,9 +1,9 @@
 import { WidgetProps } from '@rjsf/utils';
 
-import Field, { FieldFormat, FieldSize, FieldType } from '@deps/components/fields/field';
+import Field, { FieldFormat, FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
 
 export const ValueWidget = function (props: WidgetProps) {
-    const { id, value, disabled, readonly, required, onChange, placeholder, schema } = props;
+    const { id, value, disabled, readonly, required, onChange, placeholder, schema, rawErrors } = props;
     const numberFormat = { type: 'number' as FieldFormat, decimalPlaces: 2, format: 'en-US' };
 
     const formatNumber = (num: any) => {
@@ -30,7 +30,9 @@ export const ValueWidget = function (props: WidgetProps) {
                     placeholder={placeholder}
                     onChange={e => onChange(e.target.value.toString())}
                     size={FieldSize.Small}
-                    type={FieldType.BaseActive} />
+                    type={FieldType.BaseActive}
+                    variant={rawErrors && rawErrors?.length > 0 ? FieldVariant.Error : FieldVariant.Default}
+                />
             </div>
     );
 };

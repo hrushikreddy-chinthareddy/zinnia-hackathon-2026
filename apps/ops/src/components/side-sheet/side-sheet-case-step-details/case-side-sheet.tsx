@@ -5,17 +5,21 @@ import { useState } from 'react';
 import { TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import StepAdditionalData, {
     hasAdditionalDataSideSheet,
+    hasTransactionalAdditionalDataSideSheet,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/step-additional-data';
 import { AdditionalDataStepIds } from '@deps/models/case/additional-data-instance';
 
 import DocumentsTab from './tabs/documents-tab';
 import MultiInstanceTab from './tabs/multi-instance-tab';
+import { TransactionsStepAdditionalData } from './tabs/transactions-step-additional-data';
+import { TransactionsAdditionalDataStepIds } from './tabs/transactions-step-additional-data.types';
 
 const StepSideSheetViews = {
     AdditionalData: 'additionalData',
     Documents: 'documents',
     MultiInstance: 'multiInstance',
     Overview: 'overview',
+    StepAdditionalData: 'stepAdditionalData',
 };
 
 const getStepSidesheetViews = (step: TransformedStep): string[] => {
@@ -30,6 +34,10 @@ const getStepSidesheetViews = (step: TransformedStep): string[] => {
 
     if (hasAdditionalDataSideSheet(step)) {
         sideSheetViews.push(StepSideSheetViews.AdditionalData);
+    }
+
+    if (hasTransactionalAdditionalDataSideSheet(step)) {
+        sideSheetViews.push(StepSideSheetViews.StepAdditionalData);
     }
 
     return sideSheetViews;
@@ -66,6 +74,12 @@ export default function StepSideSheetContent({ step }: { step: TransformedStep }
                         stepKey={step.id as AdditionalDataStepIds}
                         status={step.status}
                         date={step.updatedAt}
+                    />
+                </TabContent>
+                <TabContent className="w-full p-8" value={StepSideSheetViews.StepAdditionalData}>
+                    <TransactionsStepAdditionalData
+                        stepAdditionalData={step.stepAdditionalData?.[0]}
+                        stepKey={step.id as TransactionsAdditionalDataStepIds}
                     />
                 </TabContent>
             </TabGroup>

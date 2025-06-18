@@ -285,6 +285,15 @@
             "link": "/api/auth/logout"
         }
     },
+    "formValidations": {
+        "required": "Ce champ est obligatoire.",
+        "patternDigit": "Seuls les chiffres sont autorisés.",
+        "patternNumer": "Seuls les chiffres sont autorisés. Doit commencer par 82000.",
+        "patternNoSpecial": "Ne contient que des lettres et des chiffres (pas de caractères spéciaux).",
+        "maxLength": "Le champ ne peut pas dépasser {{limit}} caractères.",
+        "minLength": "Le champ ne doit pas contenir moins de {{limit}} caractères.",
+        "minItems": "Veuillez sélectionner au moins {{limit}} élément(s)."
+    },
     "taskManagementQueue": {
         "homeTitle": "Accueil",
         "claimTask": "Revendiquer une tâche",
@@ -882,6 +891,21 @@
                     "caseBannerLink": "Voir les cas",
                     "caseBannerText_one": "Cette politique a {{count}} cas ouvert",
                     "caseBannerText_other": "Cette politique a {{count}} cas ouverts",
+                    "initialDeathNotification": "Notification initiale de décès",
+                    "initialDeathNotificationLink": "Afficher la progression d'une demande de règlement en cas de décès",
+                    "deathClaimExists": "Un dossier de demande d'indemnisation pour décès existe déjà dans OnBase. Veuillez consulter le dossier OnBase.",
+                    "unableToProceedWithDeathClaimPolicyCancelled": "Impossible de procéder à la réclamation en cas de décès car la police est annulée.",
+                    "unableToProceedWithDeathClaimPolicyCommuted": "Impossible de procéder à la réclamation en cas de décès car la police est commuée.",
+                    "unableToProceedWithDeathClaimPolicyAppEntry": "Impossible de procéder à la réclamation en cas de décès car la police est une entrée d'application.",
+                    "unableToProceedWithDeathClaimPolicyTerminated": "Impossible de procéder à la réclamation en cas de décès car la police est résiliée.",
+                    "unableToProceedWithDeathClaimPolicyDeathClaimPaid": "Impossible de procéder à la réclamation en cas de décès car la réclamation en cas de décès a été payée.",
+                    "unableToProceedWithDeathClaimPolicyPendingOverIssue": "Impossible de procéder à la réclamation en cas de décès car la police est en attente d'émission.",
+                    "unableToProceedWithDeathClaimPolicyFreeLookPeriod": "Impossible de procéder à la réclamation en cas de décès car la politique est une période d'essai gratuite.",
+                    "unableToProceedWithDeathClaimPolicySurrender": "Impossible de procéder à la réclamation en cas de décès car la police est en cours de rachat.",
+                    "unableToProceedWithDeathClaimPolicyPendingRequirement": "Impossible de procéder à la réclamation en cas de décès car la police est en attente d'une exigence en suspens.",
+                    "unableToProceedWithDeathClaimPolicyPendingFunds": "Impossible de procéder à la réclamation en cas de décès car la police est en attente de fonds.",
+                    "unableToProceedWithDeathClaimPolicyRejected": "Impossible de procéder à la réclamation en cas de décès car la police est rejetée.",
+                    "unableToProceedWithDeathClaimPolicyWithdrawn": "Impossible de procéder à la réclamation en cas de décès car la police est retirée.",
                     "errorTitle": "Oh non ! Nous avons rencontré un problème technique...",
                     "errorSubtitle": "Nous n'avons pas pu récupérer les données pour la police {{policyNumber}}. Essayez de rafraîchir votre navigateur."
                 }
@@ -1163,7 +1187,11 @@
             "userDecision.acceptedOffer": "Recevoir la décision d'offre",
             "userDecision.rejectedOffer": "Recevoir la décision d'offre",
             "userDecision.expireOffer": "Recevoir offre expiration avis",
-            "userDecision.requestedOfferAmendment": "Recevoir la décision d'offre"
+            "userDecision.requestedOfferAmendment": "Recevoir la décision d'offre",
+            "verifyFunds.stopUncashedTransactions": "Arrêter un chèque non encaissé",
+            "verifyFunds.stopSystematicPrograms": "Arrêter le programme systématique",
+            "verifyFunds.stopRMD": "Arrêtez les RMD",
+            "verifyFunds.stopSpecialPrograms": "Arrêter les programmes spéciaux"
         },
         "stepDescriptions": {
             "requestAck.nbRequestReceived": "Lorsqu'un document {{subType}} est reçu, il est indexé et intégré dans le système.",
@@ -1596,6 +1624,23 @@
             "address": "Adresse résidentielle",
             "requestedRecipients": "Destinataires demandés",
             "recipients": "Destinataires"
+        },
+        "notifications": {
+            "types": {
+                "email": "Courriel",
+                "faxnumber": "Fax",
+                "mail": "Courrier"
+            },
+            "startNotification": "Flux de notification initié.",
+            "sendNotification": "Notification envoyée via {{method}} ({{followup}} sur 4)",
+            "scheduledNotification": "Envoi de notification prévu via {{method}} ({{followup}} sur 4)",
+            "resetNotification": "Méthode de notification mise à jour. Tentatives {{action}}.",
+            "resendNotification": "Tentatives {{action}}.",
+            "receiveBeneficiaryConfirmation": "Recevoir la confirmation du bénéficiaire",
+            "completedStatusTooltipWithDate": "Terminé le {{date}}",
+            "updatedStatusTooltipWithDate": "Mis à jour le {{date}}",
+            "scheduledStatusTooltipWithDate": "Prévu pour le {{date}}",
+            "notStarted": "Non commencé"
         }
     },
     "caseRenewal": {
@@ -3607,7 +3652,7 @@
             "status": {
                 "notIssued": "Cette règle n'a pas pu être traitée on par le {{tooltip date}} et n'a pas pu\nêtre émise.",
                 "active": "Cette police a été émise {{tooltipDate}} et est en bon état.",
-                "pendingIssued": "Cette politique a été émise le {{tooltipDate}} et est en bon état.",
+                "pendingIssued": "Actualmente en espera de emisión. Se activará una vez pagada la prima inicial y completados todos los requisitos de entrega.",
                 "pendingLapse": "En attente de déchéance signifie que cette police est en danger. Si un paiement de prime de {{tooltipAmount}} n'est pas effectué avant le {{tooltipDate}}, la police deviendra caduque et le propriétaire perdra sa couverture.",
                 "lapse": "Excédé signifie que la politique est inactive ; le propriétaire a perdu la couverture. Cette politique est devenue caduque le {{tooltipDate}} en raison de fonds insuffisants."
             }
@@ -5332,6 +5377,58 @@
             "completed": "Complété"
         }
     },
+    "transactionListing": {
+        "loadingTransactions": "Récupération des transactions arrêtées...",
+        "errorGettingTransactions": "Les données des transactions arrêtées n'ont pas pu être récupérées.",
+        "stoppedTransactions": "Transactions arrêtées",
+        "noTransactionsFoundTitle": "Aucune transaction n'a été trouvée",
+        "noTransactionsMessage": "Aucune transaction n'est liée à cet événement.",
+        "labels": {
+            "deleted": "Supprimé",
+            "terminated": "Terminé",
+            "deleteFailed": "Échec de la suppression",
+            "terminateFailed": "Échec de la terminaison",
+            "on": "Sur"
+        },
+        "tableColumns": {
+            "transaction": "Transaction",
+            "status": "Statut",
+            "amount": "Montant"
+        }
+    },
+    "deathNotification": {
+        "title": "Requête IDN",
+        "noData": "Aucun détail de notification de décès disponible.",
+        "loadingTransactions": "Récupération des détails du formulaire de décès...",
+        "errorGettingTransactions": "Les données du formulaire de décès n'ont pas pu être récupérées.",
+        "labels": {
+            "yes": "Oui",
+            "no": "Non"
+        },
+        "notifierDetails": {
+            "title": "Détails du Notifiant",
+            "dateOfNotification": "Date de Notification :",
+            "notifierRole": "Rôle du Notifiant :",
+            "notifierName": "Nom du Notifiant :",
+            "notifierPhoneNumber": "Numéro de Téléphone du Notifiant :",
+            "beneOnFileFlag": "Les détails du bénéficiaire sont enregistrés :"
+        },
+        "ownerDetails": {
+            "title": "Détails du défunt",
+            "dateOfDeath": "Date de Décès :",
+            "foreignDeathFlag": "Décès à l'Étranger :",
+            "noData": "Aucun détail du propriétaire disponible."
+        },
+        "beneficiaryDetails": {
+            "title": "Détails de Notification du Bénéficiaire",
+            "notificationMethod": "Méthode de Notification :",
+            "contactDetails": "Détails de Contact",
+            "email": "Email :",
+            "mail": "Adresse Postale :",
+            "faxnumber": "Fax :",
+            "noData": "Aucun détail du bénéficiaire disponible."
+        }
+    },
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Révision du formulaire de service",
@@ -5580,14 +5677,20 @@
             "submit": "Soumettre",
             "cancel": "Annuler",
             "confirm": "Confirmer",
+            "callforInformation": "Llamar por información",
             "continue": "Continuer",
             "cases": "Aller aux cas",
             "nextTask": "Continuer au prochain processus",
+            "dateOfDeath": "Date du décès",
+            "sourceOfInfo": "Source d'information",
             "tabs": {
                 "start": "Démarrer",
                 "nigoDetails": "Informations manquantes",
                 "suitabilityForm": "Formulaire d'adéquation",
-                "summary": "Résumé"
+                "summary": "Résumé",
+                "beneficiaryStatus": "Statut du bénéficiaire",
+                "addressChange": "Changement d'adresse",
+                "call": "Appel"
             }
         }
     },
@@ -5731,6 +5834,203 @@
             "secondaryCta": "Retour à l'accueil"
         }
     },
+    "deathClaims": {
+        "tabs": {
+            "deathClaimNotification": "Notification de réclamation de décès",
+            "notificationMethod": "Méthode de notification",
+            "confirm": "Confirmer"
+        },
+        "deathClaimNotification": {
+            "title": "Avis de réclamation en cas de décès",
+            "subTitle": "Fournissez les détails requis sur le déclarant, la personne décédée et la méthode de notification préférée",
+            "relationshipToInsured": {
+                "associate": "Associé",
+                "aunt": "Tante",
+                "brother": "Frère",
+                "daughter": "Fille",
+                "father": "Père",
+                "fiance": "Fiancé",
+                "grandfather": "Grand-père",
+                "grandmother": "Grand-mère",
+                "grandchild": "Petit enfant",
+                "husband": "Mari",
+                "mother": "Mère",
+                "partner": "Partenaire",
+                "sister": "Sœur",
+                "son": "Fils",
+                "trustee": "Curateur",
+                "wife": "Épouse",
+                "uncle": "Oncle",
+                "niece": "Nièce",
+                "nephew": "Neveu",
+                "self": "Soi",
+                "estate": "Domaine",
+                "trust": "Confiance",
+                "spouse": "Conjointe",
+                "grandson": "Grandson",
+                "granddaughter": "Granddaughter",
+                "parent": "Parent",
+                "child": "Enfant",
+                "nonSpouse": "Non Spouse",
+                "childrenEqually": "Les enfants également",
+                "childrenPerStirpes": "Enfants par Stirpes",
+                "perStirpes": "Par Stirpes",
+                "survivingSpouse": "Conjoint survivant",
+                "other": "Autre"
+            },
+            "labels": {
+                "notifierDetails": "Détails du notificateur",
+                "role": "Rôle",
+                "phoneNumber": "Numéro de téléphone",
+                "beneInfoOnFile": "Cochez cette case si le bénéficiaire indiqué ci-dessus est incorrect ou incomplet, et les détails doivent être ajoutés au système d'enregistrement en fonction des pièces justificatives.",
+                "selectARole": "Sélectionnez un rôle...",
+                "listedBenificary": "Bénéficiaires répertoriés",
+                "noBeneficiaries": "Bénéficiaires principaux absents",
+                "roleType": {
+                    "agent": "Agent",
+                    "beneficiary": "Bénéficiaire",
+                    "family": "Famille",
+                    "owner": "Propriétaire",
+                    "other": "Autre",
+                    "jointOwner": "Copropriétaire",
+                    "annuitant": "Rentier"
+                },
+                "otherNotifier": {
+                    "firstName": "Prénom",
+                    "lastName": "Nom de famille",
+                    "middleName": "Deuxième prénom",
+                    "suffix": "Suffixe",
+                    "phoneNumber": "Numéro de téléphone",
+                    "ssn": "Numéro de sécurité sociale",
+                    "relationshipToDeceased": "Lien de parenté avec le défunt",
+                    "select": "Sélectionner"
+                },
+                "other": "Autre"
+            },
+            "formErrors": {
+                "formValidation": {
+                    "roleIsRequired": "Le rôle est requis.",
+                    "phoneIsInvalid": "Le numéro de téléphone doit comporter 10 chiffres.",
+                    "firstNameIsRequired": "Le prénom est obligatoire",
+                    "middleNameIsRequired": "Le deuxième prénom est obligatoire",
+                    "lastNameIsRequired": "Le nom de famille est obligatoire",
+                    "suffixIsRequired": "Le suffixe est obligatoire",
+                    "relationshipToInsuredIsRequired": "Sélectionnez le lien avec l'assuré",
+                    "notifierIsRequired": "Sélectionnez le notificateur",
+                    "deceasedSelectionIsRequired": "Sélectionner une personne décédée"
+                }
+            }
+        },
+        "deceasedDetails": {
+            "title": "Détails du défunt",
+            "labels": {
+                "deceased": "Décédé",
+                "dateOfDeath": "Date de décès",
+                "insuredDiedInForeignCountry": "L'assuré est-il décédé à l'étranger ?",
+                "selectionOptions": {
+                    "yes": "Oui",
+                    "no": "Non"
+                }
+            }
+        },
+        "notificationMethod": {
+            "title": "Avis de réclamation en cas de décès",
+            "subTitle": "Fournissez les détails requis sur le déclarant, la personne décédée et la méthode de notification préférée",
+            "notificationMethod": "Méthode de notification",
+            "noBeneficiaries": "Bénéficiaires principaux absents",
+            "email": "E-mail",
+            "fax": "Fax",
+            "paperMail": "courrier papier",
+            "label": "Où le(s) document(s) doivent-ils être envoyés",
+            "emailAddress": "Adresse email",
+            "faxNumber": "Numéro de fax",
+            "edit": "Modifier",
+            "mailDetails": {
+                "sendToDifferentAddress": "Envoyer à une adresse différente",
+                "updateAddress": "Mettre à jour l'adresse",
+                "addressType": "Type d'adresse"
+            },
+            "formActions": {
+                "continue": "Continuer",
+                "cancel": "Annuler"
+            },
+            "errors": {
+                "addressIsRequired": "Sélectionnez une adresse pour continuer.",
+                "emailIsRequired": "L'e-mail est obligatoire",
+                "inValidDomain": "Seuls les e-mails Zinnia sont autorisés",
+                "inValidEmail": "Veuillez saisir une adresse e-mail valide",
+                "faxIsRequired": "Le numéro de fax est requis",
+                "inValidFax": "Veuillez saisir un numéro de fax valide",
+                "firstName": "Le prénom est obligatoire",
+                "lastName": "Le nom de famille est obligatoire",
+                "address": "Vérifiez et sélectionnez l'adresse pour continuer."
+            }
+        },
+        "confirmStep": {
+            "header": "Confirmer",
+            "close": "Fermer",
+            "title": "Fait!",
+            "submitClaim": "Soumettre une réclamation",
+            "subTitle": "La notification de réclamation de décès a été soumise avec succès pour {{caseId}}.",
+            "cta": "Accéder au dossier de réclamation pour décès",
+            "secondaryCta": "Fermer"
+        },
+        "documentSelection": {
+            "title": "Sélectionnez le document justificatif",
+            "subtitle": "Nous avons trouvé un ou plusieurs documents liés à ce contrat dans OnBase. Veuillez sélectionner un identifiant de document ou poursuivre sans sélectionner de document.",
+            "proceedWithoutDocument": "Procéder sans document",
+            "continue": "Continuer",
+            "cancel": "Annuler",
+            "missingSelection": "Sélectionnez un document (ou continuez sans) pour continuer."
+        }
+    },
+    "updateNotificationMethodForBeneficiary": {
+        "tabs": {
+            "updateNotificationMethod": "Mettre à jour la méthode de notification",
+            "confirm": "Confirmer"
+        },
+        "updateNotificationMethodStep": {
+            "title": "Mettre à jour la méthode de notification",
+            "subtitle": "Sélectionnez une méthode de notification préférée pour les communications liées à cette réclamation",
+            "notificationMethods": {
+                "email": "Email",
+                "fax": "Fax",
+                "address": "Adresse postale",
+                "change": "Modifier",
+                "updateEmail": "Mettre à jour l'adresse e-mail",
+                "updateFax": "Mettre à jour le numéro de fax",
+                "formActions": {
+                    "continue": "Continuer",
+                    "cancel": "Annuler"
+                },
+                "formErrors": {
+                    "formValidation": {
+                        "zipIsRequired": "Le code postal est obligatoire.",
+                        "addressLine1IsRequired": "La ligne d'adresse 1 est obligatoire.",
+                        "cityIsRequired": "La ville est obligatoire.",
+                        "stateIsRequired": "L'état est obligatoire."
+                    }
+                },
+                "errors": {
+                    "emailIsRequired": "L'e-mail est obligatoire",
+                    "inValidDomain": "Seuls les e-mails Zinnia sont autorisés",
+                    "inValidEmail": "Veuillez saisir une adresse e-mail valide",
+                    "faxIsRequired": "Le numéro de fax est requis",
+                    "inValidFax": "Veuillez saisir un numéro de fax valide",
+                    "addressIsRequired": "Sélectionnez une adresse pour continuer."
+                }
+            }
+        },
+        "confirmStep": {
+            "header": "Confirmer",
+            "close": "Fermer",
+            "title": "Fait!",
+            "updateNotificationMethod": "Mettre à jour la méthode de notification",
+            "subTitle": "La méthode de notification pour le bénéficiaire a été mise à jour avec succès pour {{caseId}}.",
+            "cta": "Aller au dossier",
+            "secondaryCta": "Fermer"
+        }
+    },
     "nbPaymentFollowUp": {
         "confirmStep": {
             "title": "Compris!",
@@ -5773,28 +6073,28 @@
     },
     "claimsIdentifyUncashedTransactions": {
         "confirmStep": {
-            "title": "Got It!",
-            "subTitle": "Task: Identify Uncashed Transaction was submitted.",
-            "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
+            "title": "J'ai compris!",
+            "subTitle": "Tâche : identifier la transaction non encaissée soumise.",
+            "cta": "Aller à la demande de décès",
+            "secondaryCta": "Retour à la maison",
             "submitTask": "Soumettre"
         }
     },
     "claimsStopUncashedTransactions": {
         "confirmStep": {
-            "title": "Got It!",
-            "subTitle": "Task: Stop Uncashed Transaction was submitted.",
-            "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
+            "title": "J'ai compris!",
+            "subTitle": "Tâche : Arrêter la transaction non encaissée a été soumis.",
+            "cta": "Aller à la demande de décès",
+            "secondaryCta": "Retour à la maison",
             "submitTask": "Soumettre"
         }
     },
     "claimsReverseUncashedTransactions": {
         "confirmStep": {
-            "title": "Got It!",
-            "subTitle": "Task: Reverse Uncashed Transaction was submitted.",
-            "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
+            "title": "J'ai compris!",
+            "subTitle": "Tâche : La transaction non encaissée inversée a été soumise.",
+            "cta": "Aller à la demande de décès",
+            "secondaryCta": "Retour à la maison",
             "submitTask": "Soumettre"
         }
     },
@@ -5866,6 +6166,37 @@
             "submitTask": "Soumettre"
         }
     },
+    "claimsFiEscheatmentTask": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Les réclamations FI en déshérence ont été soumises.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "claimsBeneReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Vérification des bénéficiaires de réclamations a été soumise.",
+            "cta": "Aller au dossier de réclamation",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "beneAddressVerification": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Vérification de la vérification des antécédents a été soumise.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "claimsAddressChange": {
+        "change": "modifier",
+        "updateAddress": "Mettre à jour l'adresse {{type}}"
+    },
     "defaultCaseDataEntry": {
         "confirmStep": {
             "title": "C'est fait !",
@@ -5873,6 +6204,45 @@
             "cta": "Aller au cas",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
+        }
+    },
+    "beneCall": {
+        "callForInformation": {
+            "title": "Appel pour information",
+            "subTitle": "Appelez les personnes nécessaires pour vérifier les informations critiques concernant cette demande de décès.",
+            "submit": "Soumettre",
+            "cancel": "Annuler",
+            "noChangesRequired": "Aucun changement requis",
+            "yes": "Oui",
+            "name": "Nom",
+            "phone": "Téléphone",
+            "newInformation": "Nouvelle information",
+            "contactRoleLabel": "Rôle de contact",
+            "paperMail": "Paper Mail",
+            "email": "Email",
+            "fax": "Fax",
+            "notificationMethod": "Notification Method",
+            "dateOfDeath": "Date of Death",
+            "sourceOfInfo": "Source of Information",
+            "relationshipToDeceased": "Relation avec le défunt",
+            "didYouMakeAnyChanges": "Avez-vous effectué des changements dans le système d’enregistrement ?",
+            "addAnotherCall": "Ajouter un autre appel",
+            "contactRoles": {
+                "agent": "Agent",
+                "beneficiary": "Beneficiary",
+                "other": "Other"
+            },
+            "changeTypes": {
+                "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
+                "beneficiaryDeceased": "Beneficiario fallecido"
+            }
+        },
+        "confirmStep": {
+            "title": "C'est fait !",
+            "subTitle": "Tâche : Vérification de beneficiarios de reclamación de muerte fue enviada.",
+            "cta": "Ir al expediente de reclamación",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
         }
     },
     "opsReview": {
@@ -5889,6 +6259,67 @@
             "title": "Compris!",
             "subTitle": "Tâche : Opération Review a été soumise.",
             "cta": "Aller au cas",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "day150Review": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Opération Review a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        },
+        "callForInformation": {
+            "title": "Llamar por información",
+            "subTitle": "Llama a las personas pertinentes para verificar la información crítica sobre esta reclamación por fallecimiento.",
+            "submit": "Enviar",
+            "cancel": "Cancelar",
+            "noChangesRequired": "No se requirieron cambios",
+            "yes": "Sí",
+            "name": "Nombre",
+            "phone": "Télefono",
+            "contactRoleLabel": "Roles de contacto",
+            "paperMail": "Paper Mail",
+            "email": "Email",
+            "fax": "Fax",
+            "notificationMethod": "Notification Method",
+            "dateOfDeath": "Fecha de Defunción",
+            "sourceOfInfo": "Fuente de Información",
+            "newInformation": "Nueva información",
+            "relationshipToDeceased": "Relación con el fallecido",
+            "didYouMakeAnyChanges": "¿Hizo algún cambio en el sistema de registro?",
+            "addAnotherCall": "Agregar otra llamada",
+            "contactRoles": {
+                "agent": "Agente",
+                "beneficiary": "Beneficiary",
+                "other": "Other"
+            },
+            "changeTypes": {
+                "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
+                "beneficiaryDeceased": "Beneficiario fallecido"
+            }
+        }
+    },
+    "claimsDay150": {
+        "beneStatus": {
+            "title": "Statut du Bénéficiaire",
+            "subTitle": "Appelez les personnes nécessaires pour vérifier les informations critiques concernant cette demande de règlement de décès.",
+            "isDeceased": "Le bénéficiaire est-il décédé ?",
+            "dateOfDeath": "Date du Décès",
+            "sourceOfInfo": "Source d'Information",
+            "submit": "Soumettre",
+            "cancel": "Annuler",
+            "no": "Non",
+            "yes": "Oui"
+        }
+    },
+    "claimsMatchBeneDocument": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Le document Claim Match Bene a été soumis.",
+            "cta": "Aller à la demande de décès",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }

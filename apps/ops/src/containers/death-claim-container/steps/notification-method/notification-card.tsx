@@ -135,11 +135,7 @@ const NotificationCard = ({
                 action = ClaimActionTypes.ADD;
             } else if (address?.addressId === policyBeneficiaries[index]['address']?.addressId) {
                 const isEqual = isEqualObjects(address, policyBeneficiaries[index]['address']);
-                //console.log("??isEqualObjects", isEqual);
-                //console.log("??address", address);
-                //console.log("??prevAddress", policyBeneficiaries[index]['address']);
-                action = isEqual ? ClaimActionTypes.NONE : ClaimActionTypes.UPDATE;
-                //console.log("??action", action);
+                action = isEqual ? ClaimActionTypes.NONE :  ClaimActionTypes.UPDATE;
             }
             address.action = action;
             updatedNotification = {

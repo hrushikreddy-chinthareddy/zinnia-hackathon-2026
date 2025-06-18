@@ -23,6 +23,7 @@ export const getBadgeStatus = (status: PolicyStatus | undefined) => {
         case PolicyStatus.NOTISSUED:
             return 'status.notIssued';
         case PolicyStatus.PENDINGISSUED:
+            return 'status.pendingIssued';
         case PolicyStatus.ACTIVE:
             return 'status.active';
         case PolicyStatus.PENDINGLAPSE:
@@ -43,10 +44,10 @@ export const getBadgeStatus = (status: PolicyStatus | undefined) => {
             return 'status.deathClaimPending';
         case PolicyStatus.DEATHCLAIMPAID:
             return 'status.deathClaimPaid';
+        case PolicyStatus.CANCELEDFREELOOK:
+            return 'status.canceledFreelook';
         case 'RECISSION' as PolicyStatus: // BPB - This policyStatus isn't in the most recent sor spec.  Update when available.
             return 'status.recission';
-        case PolicyStatus.CANCELEDFREELOOK:
-            return 'status.canceledFreeLook';
         default:
             return status;
     }

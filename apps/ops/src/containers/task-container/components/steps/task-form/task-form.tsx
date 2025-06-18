@@ -17,6 +17,8 @@ import { browserLogWarn } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
 import { buildTaskPayload, cleanForm } from '@deps/utils/tasks/task-payload-helpers';
 
+import { applyHiddenFieldPopulation } from './task-form-hidden-field.utils';
+
 type TaskFormProps = {
     readonly: boolean;
     onSubmit: (error: string) => void;
@@ -143,25 +145,26 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
             const { formData } = event;
             const { uiSchema } = formSchema;
+
+            const updatedFormData = applyHiddenFieldPopulation(formData, uiSchema);
             const hasDataPathFields = Object.keys(uiSchema).some(field => uiSchema[field]?.['ui:dataPath']);
 
             if (!hasDataPathFields) {
                 setTask(ogTask => ({
                     ...ogTask,
-                    data: event.formData,
+                    data: updatedFormData,
                 }));
                 return;
             }
 
             // Otherwise, apply the dataPath mapping logic
             setTask(prevTask => {
-                const updatedTask = getUpdatedTaskFromFormData(prevTask, formData, uiSchema);
+                const updatedTask = getUpdatedTaskFromFormData(prevTask, updatedFormData, uiSchema);
                 return updatedTask;
             });
         },
-        [setTask, task]
+        [setTask, task, formSchema]
     );
-
     const setFormContext = (dynamicData: any) => {
         setTask((ogTask: any) => ({
             ...ogTask,

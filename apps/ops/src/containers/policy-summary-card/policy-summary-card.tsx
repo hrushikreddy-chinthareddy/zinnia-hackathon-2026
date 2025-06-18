@@ -46,8 +46,9 @@ import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpe
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs, PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertToQueryString } from '@deps/helpers/routing.helpers';
-import { convertKebabedDateString, formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helpers';
+import { convertKebabedDateString, formatDate, formatPhone, formatSSN, isNullEmptyOrUndefined, toTitleCase } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
+import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 import { CardColumnsTest, CardDetailsTest } from '@deps/jest/constants/test-id-constants';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
@@ -61,21 +62,20 @@ import { DEFAULT_ERROR_STRING, FIFTEEN_MINUTES_IN_MS } from '@deps/types/constan
 import { CaseSearchErrorResponse, CaseSearchResponse, PolicySearchResult, SearchViewQuery } from '@deps/types/search';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import { ActiveQuickView } from './active-quick-view/active-quick-view';
 import AnnuityQuickView from './active-quick-view/annuity';
+import { LapseQuickView } from './lapse-quick-view';
+import { PendingLapseQuickView } from './pending-lapse-quick-view';
+import { deathClaimNotApplicableStatuses, existingDeathClaimStatuses, getCancelledPolicyStatuses } from './policy-summary-card.helpers';
 import { default as styles } from './policy-summary-card.module.css';
+import { OwnerInfoSkeleton, QuickViewSkeleton } from './skeletons';
+import { TermQuickView } from './term-quick-view';
 import SideSheetAddress from '../people-data-cards/address-card/side-sheet/side-sheet-address';
 import { sortEmailsByType } from '../people-data-cards/email-card/email-card.helpers';
 import SideSheetEmail from '../people-data-cards/email-card/side-sheet/side-sheet-email';
 import { sortPhonesByType } from '../people-data-cards/phone-card/phone-card.helpers';
 import { SideSheetPhone } from '../people-data-cards/phone-card/side-sheet/side-sheet-phone';
 import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header/side-sheet-people-header';
-import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
-import { getPolicyQuickLinks } from '../quick-links/quick-links.helpers';
-import { ActiveQuickView } from './active-quick-view/active-quick-view';
-import { LapseQuickView } from './lapse-quick-view';
-import { PendingLapseQuickView } from './pending-lapse-quick-view';
-import { OwnerInfoSkeleton, QuickViewSkeleton } from './skeletons';
-import { TermQuickView } from './term-quick-view';
 
 interface SummaryCardProps extends PropsWithChildren {
     policySearchResult: PolicySearchResult;
@@ -261,7 +261,7 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
     const policyStatus = policy.policyStatus;
     const { featureFlags } = useOptimizely();
     const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
-
+    const isNewDeathClaimEnabled = featureFlags[FEATURE_FLAGS.NEW_DEATH_CLAIM];
     const showCaseBanner = !!casesTotal && casesTotal > 0;
 
     // TODO - BPB: Policy Features Helper Class
@@ -271,9 +271,13 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
 
     const [isNewDeathClaim, setIsNewDeathClaim] = useState(null);
     const [zlCaseId, setZlCaseId] = useState(null);
+    const [isCheckingdeathClaim, setIsCheckingdeathClaim] = useState(false);
+    const cancelledPolicyStatus = getCancelledPolicyStatuses(policyStatus as string, t);
+    const isDeathClaimNotApplicable =  deathClaimNotApplicableStatuses.includes(policyStatus);
 
     useEffect(() => {
         const checkIsNewDeathClaim = async () => {
+            setIsCheckingdeathClaim(true);
             const response = await initialDeathClaimExists(policy.policyNumber, policy?.carrierId);
             if (response?.isNewRequest) {
                 setIsNewDeathClaim(response.isNewRequest);
@@ -281,9 +285,12 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
                 setIsNewDeathClaim(response?.isNewRequest || null);
                 setZlCaseId(response?.zlCaseId || null);
             }
+            setIsCheckingdeathClaim(false);
         };
-        checkIsNewDeathClaim();
-    }, [policy.policyNumber, policy?.carrierId]);
+        if (policyStatus && !isDeathClaimNotApplicable) {
+            checkIsNewDeathClaim();
+        }
+    }, [policy.policyNumber, policy?.carrierId, policyStatus, isDeathClaimNotApplicable]);
 
     return (
         <div className={styles.bannerContainer}>
@@ -334,7 +341,7 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
                 />
             )}
 
-            {!isNewDeathClaim && zlCaseId && (
+            {isNewDeathClaimEnabled && !isNewDeathClaim && zlCaseId && isNullEmptyOrUndefined(cancelledPolicyStatus) && (
                 <BannerAlert
                     variant={BannerVariant.Warning}
                     cta={{
@@ -342,6 +349,18 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
                         text: t('dashboard.search.results.policySummaryCard.initialDeathNotificationLink'),
                     }}
                     bodyText={t('dashboard.search.results.policySummaryCard.initialDeathNotification')}
+                />
+            )}
+            {isNewDeathClaimEnabled && !isCheckingdeathClaim && !isNewDeathClaim && !zlCaseId && policyStatus && existingDeathClaimStatuses.includes(policyStatus) && (
+                <BannerAlert
+                    variant={BannerVariant.Warning}
+                    bodyText={t('dashboard.search.results.policySummaryCard.deathClaimExists')}
+                />
+            )}
+            {isNewDeathClaimEnabled && policyStatus && isDeathClaimNotApplicable && !isNullEmptyOrUndefined(cancelledPolicyStatus) && (
+                <BannerAlert
+                    variant={BannerVariant.Warning}
+                    bodyText={cancelledPolicyStatus}
                 />
             )}
         </div>

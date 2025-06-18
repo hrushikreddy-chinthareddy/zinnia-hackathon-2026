@@ -127,8 +127,12 @@
   border-radius: var(--measure-dimension-radius-sm);
 }
 
-@media (width > 390px) {
+/* Styles for disabled (greyed-out) days */
+.disabledDays {
+  opacity: 0.3;
+}
 
+@media (width > 390px) {
   /* I know this is vile, but the width is calculated based on the input size on mobile otherwise its just content
   i think this is the more efficient way of doing this rather than triggering a full rerender
   by using a window dimensions hook  */

@@ -131,6 +131,9 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
                                             after: disableAfterDate,
                                         } as DateInterval
                                     }
+                                    modifiersClassNames={{
+                                        disabled: fieldStyles.disabledDays,
+                                    }}
                                 />
                             </div>
                         </ReactPopover.Content>

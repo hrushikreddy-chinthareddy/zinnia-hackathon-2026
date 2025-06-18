@@ -4,6 +4,7 @@ import AddressFieldTemplate from '../customization/templates/address-field-templ
 import ArrayFieldTableTemplate from '../customization/templates/array-field-template/array-field-table-template';
 import ArrayFieldTemplate from '../customization/templates/array-field-template/array-field-template';
 import { CardTemplate } from '../customization/templates/card-templates/card-template';
+import { ChangeAddressTemplate } from '../customization/templates/change-address-templete/change-address-template';
 import DifferenceTemplate from '../customization/templates/difference-template/difference-template';
 import InstructionsTemplate from '../customization/templates/instructions-template/instructions-template';
 import FileInfoTemplate from '../customization/templates/object-field-template/file-info-template';
@@ -23,6 +24,7 @@ export const UIObjectTemplateMap: Record<string, (props: any) => React.JSX.Eleme
     ['AddressFieldTemplate']: AddressFieldTemplate,
     ['ObjectRowFieldTemplate']: ObjectRowFieldTemplate,
     ['DifferenceTemplate']: DifferenceTemplate,
+    ['ChangeAddressTemplate']: ChangeAddressTemplate,
 };
 
 export const ApplyUITemplates = (uiSchema: UiSchema) => {

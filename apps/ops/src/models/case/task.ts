@@ -40,8 +40,14 @@ export enum TaskType {
     Claims_Stop_Uncashed_Transactions = 'CLAIMS_STOP_UNCASHED_TRANSACTIONS',
     Claims_Identify_Uncashed_Transactions = 'CLAIMS_IDENTIFY_UNCASHED_TRANSACTIONS',
     Claims_Reverse_Uncashed_Transactions = 'CLAIMS_REVERSE_UNCASHED_TRANSACTIONS',
+    Claims_Match_Bene_Document = 'CLAIMS_MATCH_BENE_DOCUMENT',
     Background_Nigo = 'BACKGROUND_NIGO',
     Background_Review = 'BACKGROUND_REVIEW',
+    Claims_Fi_Escheatment_Task = 'CLAIMS_FI_ESCHEATMENT_TASK',
+    Bene_Address_Verification = 'BENE_ADDRESS_VERIFICATION',
+    Claims_Bene_Review = 'CLAIMS_BENE_REVIEW',
+    Day_150_Review = 'DAY_150_REVIEW',
+    Bene_Call = 'BENE_CALL',
     Ops_Nigo = 'OPS_NIGO',
     Ops_Review = 'OPS_REVIEW',
     Default_Case_DataEntry = 'DEFAULT_CASE_DATA_ENTRY',
@@ -217,6 +223,10 @@ export enum DataFormattingTypes {
     Date = 'date',
     Amount = 'amount',
     DirtyAddress = 'dirtyAddress',
+    RelationshipToInsured = 'relationshipToInsured',
+    TitleCase = 'titleCase',
+    Percentage = 'percentage',
+    Phone = 'phone',
 }
 
 export interface AddressFormFields {
@@ -224,8 +234,11 @@ export interface AddressFormFields {
     addresses?: any[];
     city?: string;
     state?: string;
+    zip?: string;
     zipCode?: string;
+    country?: string;
     defaultAddress?: boolean;
+    addressLines?: any[]
 }
 export interface ExceptionRef {
     carrier: string;

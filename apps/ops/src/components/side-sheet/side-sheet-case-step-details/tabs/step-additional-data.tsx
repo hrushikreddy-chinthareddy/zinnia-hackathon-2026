@@ -11,6 +11,8 @@ import { toTitleCase } from '@deps/helpers/string.helpers';
 import { AdditionalDataStepIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
 import { Statuses } from '@deps/models/case/case';
 
+import { TransactionsAdditionalDataStepIds } from './transactions-step-additional-data.types';
+
 type DeliveryCardProps = {
     additionalData: CaseAdditionalData;
     deliveryMethod: CommunicationTypes;
@@ -28,6 +30,12 @@ export const hasAdditionalDataSideSheet = (step: TransformedStep): boolean => {
     if (!Object.keys(step.additionalData).length) return false;
     return Object.values(AdditionalDataStepIds).includes(step.id as AdditionalDataStepIds);
 };
+
+export const hasTransactionalAdditionalDataSideSheet = (step: TransformedStep): boolean => {
+    if (!Object.keys(step.stepAdditionalData).length) return false;
+    return Object.values(TransactionsAdditionalDataStepIds).includes(step.id as TransactionsAdditionalDataStepIds);
+};
+
 const getDataByDeliveryMethod = (data: CaseAdditionalData, deliveryMethod: CommunicationTypes, t: TFunction) => {
     switch (deliveryMethod) {
         case CommunicationTypes.Fax:

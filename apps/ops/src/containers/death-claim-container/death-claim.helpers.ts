@@ -25,86 +25,6 @@ export const DEFAULT_ADDRESS = {
     addressId: null,
 };
 
-/*const getTransformAddress = (address: any) => {
-    return {
-        action: ClaimActionTypes.NONE,
-        addressType: address?.addressType || AddressType.RESIDENCE,
-        addressLine1: address?.addressLine1 || null,
-        addressLine2: address?.addressLine2 || null,
-        addressLine3: address?.addressLine3 || null,
-        city: address?.city || null,
-        state: address?.state || null,
-        zipCode: address?.zipCode || null,
-        zipCodeExtension: address?.zipCodeExtension || null,
-        country: address?.country || 'USA',
-        addressId: address?.addressId || null,
-    };
-};
-
-
-const getTransformEmail = (email: any) => {
-    return {
-        action: ClaimActionTypes.NONE,
-        emailType: email?.emailType || EmailType.PERSONAL,
-        emailAddress: email?.emailAddress || null,
-        emailId: email?.emailId || null
-    }
-}*/
-
-/*const getBeneficiaryByRole = (policy: Policy, role: PartyRole): NotificationMethod | undefined => {
-    const correspondingRole = policy?.partyRoles?.find(pr => pr.partyRole === role);
-    const party = policy?.parties?.find(party => party.partyId === correspondingRole?.partyId);
-
-    if (party && correspondingRole) {
-        const { addresses, emails } = party;
-        const personalEmail = emails?.filter(
-            email => email.emailType === EmailType.PERSONAL
-        )?.[0] || {};
-        const residentialAddresse = addresses?.filter(
-            address => address.addressType === AddressType.RESIDENCE
-        )?.[0] || {};
-
-        return {
-                party: {
-                    partyId: party?.partyId || '',
-                    partyRoleId: correspondingRole.partyRoleId,
-                    partyRole: correspondingRole.partyRole,
-                    partyType: party.partyType,
-                    prefix: party?.prefix || '',
-                    suffix: party.suffix || '',
-                    firstName: party?.firstName || '',
-                    middleName: party?.middleName || '',
-                    lastName: party?.lastName || '',
-                    fullName: party?.fullName || '',
-                    gender: party?.gender || '',
-                    dateOfBirth: party?.dateOfBirth || '',
-                    relationshipToInsured: correspondingRole?.relationshipToInsured || ''
-                },
-                email: {
-                    ...getTransformEmail(personalEmail)
-                },
-                faxNumber : null,
-                address: {
-                    ...getTransformAddress(residentialAddresse)
-                },
-                notificationMethod: null
-        };
-    }
-};*/
-
-/*export const getBeneficiariesByRole = (policy: Policy, roles: PartyRole[])  => {
-    const parties: any = [];
-    roles && roles?.forEach(role => {
-        if (role)  {
-          const party = getBeneficiaryByRole(policy, role);
-          if (party) {
-              parties.push(party);
-          }
-        }
-    });
-    return parties;
-};*/
-
 export const getCommunicationTypes = (t: TFunction) => {
     return [
         {
@@ -124,27 +44,18 @@ export const getCommunicationTypes = (t: TFunction) => {
 
 export const validateOtherNotifier = (notifier: any, roleType: RoleType, t: TFunction) => {
     const errors: FormValidationErrors = {};
-    const { firstName, middleName, lastName, suffix, relationshipToInsured } = notifier;
+    const { firstName, lastName, relationshipToInsured } = notifier;
 
     if (!firstName) {
         errors['firstName'] = t('formErrors.formValidation.firstNameIsRequired');
     } else {
         errors['firstName'] = '';
     }
-    if (!middleName) {
-        errors['middleName'] = t('formErrors.formValidation.middleNameIsRequired');
-    } else {
-        errors['middleName'] = '';
-    }
+
     if (!lastName) {
         errors['lastName'] = t('formErrors.formValidation.lastNameIsRequired');
     } else {
         errors['lastName'] = '';
-    }
-    if (!suffix) {
-        errors['suffix'] = t('formErrors.formValidation.suffixIsRequired');
-    } else {
-        errors['suffix'] = '';
     }
 
     if (roleType === RoleType.Other && !relationshipToInsured) {
@@ -152,7 +63,6 @@ export const validateOtherNotifier = (notifier: any, roleType: RoleType, t: TFun
     } else {
         errors['relationship'] = '';
     }
-
     return errors;
 };
 
@@ -189,7 +99,9 @@ export const buildClaimPaylod = (
     document: any = {},
     selNotifiers: NotifierParty,
     selOwners: DeceasedParty[],
-    selBeneficiaries: NotificationMethod[]
+    selBeneficiaries: NotificationMethod[],
+    onbaseCaseId: string,
+    onbaseDocumentNumber: string,
 ) => {
     const { policyNumber, policyStatus, product, carrierId } = policy;
     const ownersRec = selOwners.map((item: any) => formatBene(item));
@@ -197,7 +109,8 @@ export const buildClaimPaylod = (
         ...DEFAULT_PAYLOAD,
         businessKey: document?.documentNumber,
         correlationid: uuid4(),
-        onbaseCaseId: document?.caseId,
+        onbaseCaseId: onbaseCaseId,
+        onbaseDocumentNumber: onbaseDocumentNumber,
         caseId: null,
         documentDate: document ? dayjs(document?.documentDate).format(ZAHARA_API_DATE_FORMAT) : null,
         carrierId: carrierId,

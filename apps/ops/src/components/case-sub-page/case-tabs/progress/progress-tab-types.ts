@@ -24,6 +24,16 @@ export type CaseAdditionalData = {
     [key: string]: { label: string; value: string; type: string };
 };
 
+export type CaseAdditionalStepData = {
+    id: string,
+    label: string;
+    value: string;
+    type: string;
+    dataType: string;
+    entityType: string;
+    source: string;
+};
+
 export interface GroupedExceptions {
     [taskId: string]: { tasks: TaskView[]; exceptions: ExceptionView[] };
 }

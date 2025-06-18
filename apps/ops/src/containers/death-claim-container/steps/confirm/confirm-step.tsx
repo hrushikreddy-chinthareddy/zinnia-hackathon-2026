@@ -21,12 +21,12 @@ interface ConfirmStepProps {
 const ConfirmStep = ({ policy }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims.confirmStep' });
     const router = useRouter();
-    const { submitFailed, setSubmitFailed, notifiers, owners, beneficiaries, setCaseId, caseId } = useDeathClaim();
+    const { submitFailed, setSubmitFailed, notifiers, owners, beneficiaries, setCaseId, caseId, onbaseCaseId, onbaseDocumentNumber } = useDeathClaim();
     const [isLoading, setIsLoading] = useState(false);
 
     const submit = useCallback(async () => {
         setIsLoading(true);
-        const payload = buildClaimPaylod(policy, null, notifiers, owners, beneficiaries);
+        const payload = buildClaimPaylod(policy, null, notifiers, owners, beneficiaries, onbaseCaseId, onbaseDocumentNumber);
         browserLogInfo('ConfirmStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,

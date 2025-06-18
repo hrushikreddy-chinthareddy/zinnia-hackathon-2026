@@ -1,0 +1,120 @@
+{
+    "formId": "f44caa75-6068-43e3-b2ce-c513ca2ef437",
+    "process": "Claims",
+    "carrier": "FLIC",
+    "taskType": "CLAIMS_FI_ESCHEATMENT_TASK",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "FI Escheatment",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Mark the funds as “Abandoned Property” in the appropriate state portal or system and create an “Ops Escheatment” task in OnBase."
+                        },
+                        "details": {
+                            "type": "object",
+                            "properties": {
+                                "beneEscheatment": {
+                                    "type": "object",
+                                    "properties": {
+                                        "escheatmentPortalUpdateConfirmed": {
+                                            "type": "boolean",
+                                            "title": "I have marked the unclaimed funds as “Abandoned Property” in the applicable state escheatment portal or financial system."
+                                        },
+                                        "escheatmentOnBase": {
+                                            "type": "boolean",
+                                            "title": "I have manually created an Ops Escheatment case in OnBase to document the escheatment activity and entered the OnBase Case ID below:"
+                                        },
+                                        "escheatmentExternalCaseId": {
+                                            "type": "string",
+                                            "title": "OnBase Case ID:",
+                                            "minLength": 12
+                                        },
+                                        "escheatmentSorUpdateConfirmed": {
+                                            "type": "boolean",
+                                            "title": "I have confirmed that the System of Record (SOR) has been updated to reflect the escheatment status."
+                                        }
+                                    },
+                                    "required": [
+                                        "escheatmentPortalUpdateConfirmed",
+                                        "escheatmentOnBase",
+                                        "escheatmentExternalCaseId",
+                                        "escheatmentSorUpdateConfirmed"
+                                    ]
+                                }
+                            },
+                            "required": ["beneEscheatment"]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:order": [
+                        "sectionHeader",
+                        "details"
+                    ],
+                    "ui:submitButtonOptions": {
+                        "norender": true,
+                        "props": {
+                            "noValidate": true
+                        }
+                    },
+                    "ui:hideError": true,
+                    "sectionHeader": {
+                        "ui:title": "",
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:title": "",
+                        "beneEscheatment": {
+                            "ui:title": "",
+                            "ui:hideError": true,
+                            "ui:options": {
+                                "label": true
+                            },
+                            "escheatmentPortalUpdateConfirmed": {
+                                "ui:options": {
+                                    "label": true
+                                },
+                                "ui:hideError": true
+                            },
+                            "escheatmentOnBase": {
+                                "ui:options": {
+                                    "label": true,
+                                    "omitValue": true
+                                },
+                                "ui:hideError": true
+                            },
+                            "escheatmentExternalCaseId": {
+                                "inline": true,
+                                "ui:placeholder": "eg: CA1234567890",
+                                "ui:options": {
+                                    "label": true
+                                },
+                                "ui:hideError": true
+                            },
+                            "escheatmentSorUpdateConfirmed": {
+                                "ui:options": {
+                                    "label": true
+                                },
+                                "ui:hideError": true
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

@@ -12,10 +12,12 @@ import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual
 import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
 import { commonPopoverClasses, commonTriggerClasses } from '@deps/components/popover/popover.helpers';
 import { TranslationFiles } from '@deps/config/translations';
+import { deathClaimNotApplicableStatuses, existingDeathClaimStatuses } from '@deps/containers/policy-summary-card/policy-summary-card.helpers';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { PolicyStatus } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkFullSurrenderWithdrawal,
@@ -75,6 +77,7 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
     const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
     const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
     const isNewDeathClaim = featureFlags[FEATURE_FLAGS.NEW_DEATH_CLAIM];
+    const isDeathClaimNotApplicable =  deathClaimNotApplicableStatuses.includes(policy.policyStatus as PolicyStatus);
 
     const trackClick = (linkName: string, linkUrl: string) => {
         // TODO MG: do we always want to call both of these?
@@ -188,6 +191,7 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
             return {
                 ...data,
                 isEligibleNewDeathClaim: data?.isNewRequest,
+                zlCaseId: data?.zlCaseId || null,
             };
         },
     });
@@ -234,7 +238,9 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                     />
                     {isNewDeathClaim && (
                         <MenuContextualItem
-                            disabled={!initialDeathClaimEligibility?.isEligibleNewDeathClaim}
+                            disabled={!initialDeathClaimEligibility?.isEligibleNewDeathClaim
+                                    || isDeathClaimNotApplicable
+                                    || (!initialDeathClaimEligibility?.isEligibleNewDeathClaim && !initialDeathClaimEligibility.zlCaseId  && existingDeathClaimStatuses.includes(policy.policyStatus))}
                             content={t('transactions.newDeathClaim')}
                             href={`/claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`}
                             icon={<BriefcaseIcon height={20} width={20} />}

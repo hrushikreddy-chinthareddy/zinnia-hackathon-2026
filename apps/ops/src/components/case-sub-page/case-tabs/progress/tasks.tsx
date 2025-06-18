@@ -40,6 +40,10 @@ export const SupportedTaskMap = [
     TaskType.Claims_Stop_Uncashed_Transactions,
     TaskType.Background_Nigo,
     TaskType.Background_Review,
+    TaskType.Claims_Fi_Escheatment_Task,
+    TaskType.Bene_Address_Verification,
+    TaskType.Claims_Bene_Review,
+    TaskType.Bene_Call,
 ];
 
 export function Task({ task }: { task: TaskView }) {

@@ -38,23 +38,23 @@
                                                 "properties": {
                                                     "policyNumber": {
                                                         "type": "string",
-                                                        "title": "Contract Id"
+                                                        "title": "Contract Number"
                                                     },
                                                     "transactionNumber": {
                                                         "type": "string",
-                                                        "title": "LifeCad Id"
+                                                        "title": "Lifecad Transaction ID"
                                                     },
                                                     "transactionDate": {
                                                         "type": "string",
-                                                        "title": "Transaction Date"
+                                                        "title": "Check Transaction Date"
                                                     },
                                                     "checkNumber": {
                                                         "type": "string",
-                                                        "title": "Check #"
+                                                        "title": "Check Number"
                                                     },
                                                     "transactionAmount": {
                                                         "type": "string",
-                                                        "title": " Amount"
+                                                        "title": "Check Amount"
                                                     }
                                                 }
                                             }
@@ -66,7 +66,9 @@
                                         },
                                         "stopSorTransaction": {
                                             "type": "boolean",
-                                            "title": "I have reserved these transaction in LifeCAD"
+                                            "title": "I have reversed these transaction in LifeCAD",
+                                            "default": null,
+                                            "enum": [null, true]
                                         }
                                     },
                                     "required": ["stopSorTransaction"]

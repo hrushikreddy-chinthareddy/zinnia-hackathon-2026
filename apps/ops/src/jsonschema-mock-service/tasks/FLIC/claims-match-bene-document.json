@@ -1,0 +1,165 @@
+{
+    "formId": "67fba220-53f0-4834-ae04-872e80ef6cc4",
+    "process": "Claims",
+    "carrier": "FLIC",
+    "taskType": "CLAIMS_MATCH_BENE_DOCUMENT",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Match Beneficiary",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Match the received document to the associated beneficiary"
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Details",
+                            "properties": {
+                                "documentEntityMatch": {
+                                    "type": "object",
+                                    "title": "Supporting Information",
+                                    "properties": {
+                                        "documents": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "documentType": {
+                                                        "type": "string",
+                                                        "ui:field": "title",
+                                                        "ui:separator": " - "
+                                                    },
+                                                    "documentId": {
+                                                        "type": "string",
+                                                        "ui:field": "subTitle",
+                                                        "ui:placeholder": "Documemt ID: "
+                                                    },
+                                                    "displayName": {
+                                                        "type": "string",
+                                                        "default": "{{metadata.displayName}}",
+                                                        "ui:field": "title"
+                                                    },
+                                                    "documentSource": {
+                                                        "type": "string",
+                                                        "default": "{{metadata.documentSource}}"
+                                                    },
+                                                    "carrier": {
+                                                        "type": "string",
+                                                        "default": "{{carrier}}"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "matchRecord": {
+                                            "type": "string",
+                                            "title": "Select associated beneficiary"
+                                        }
+                                    },
+                                    "required": ["matchRecord"]
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:order": ["sectionHeader", "details"],
+                    "ui:submitButtonOptions": {
+                        "norender": true,
+                        "props": {
+                            "noValidate": true
+                        }
+                    },
+                    "ui:options": {
+                        "noValidate": true,
+                        "showErrors": false,
+                        "liveValidate": false
+                    },
+                    "ui:hideError": true,
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "documentEntityMatch": {
+                            "documents": {
+                                "ui:options": {
+                                    "canAdd": false,
+                                    "label": false,
+                                    "addable": false
+                                },
+                                "items": {
+                                    "ui:options": {
+                                        "cardType": "Document",
+                                        "icon": "DOCUMENT_TEXT",
+                                        "ObjectFieldTemplate": "CardTemplate",
+                                        "nobackground": true
+                                    },
+                                    "documentName": {
+                                        "ui:options": {
+                                            "omitValue": true
+                                        }
+                                    },
+                                    "documentSource": {
+                                        "ui:options": {
+                                            "omitValue": true
+                                        }
+                                    }
+                                }
+                            },
+                            "matchRecord": {
+                                "ui:widget": "radio",
+                                "ui:options": {
+                                    "cardType": "Detailed",
+                                    "icon": "CIRCLE_USER",
+                                    "label": true,
+                                    "properties": {
+                                        "beneficiaryName": {
+                                            "type": "string",
+                                            "title": "Beneficiary Name",
+                                            "default": "{{entity.party.fullName}}",
+                                            "dataType": "string",
+                                            "ui:field": "title"
+                                        },
+                                        "entityType": {
+                                            "type": "string",
+                                            "title": "Entity Type",
+                                            "default": "{{entityType}}",
+                                            "dataType": "string"
+                                        },
+                                        "recordId": {
+                                            "type": "string",
+                                            "title": "RecordId",
+                                            "default": "{{recordId}}",
+                                            "dataType": "string"
+                                        },
+                                        "ssn": {
+                                            "type": "string",
+                                            "title": "SSN",
+                                            "default": "{{entity.party.ssn}}",
+                                            "ui:field": "subTitle",
+                                            "dataType": "ssn"
+                                        }
+                                    },
+                                    "customOptions": []
+                                },
+                                "ui:hideError": true
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
