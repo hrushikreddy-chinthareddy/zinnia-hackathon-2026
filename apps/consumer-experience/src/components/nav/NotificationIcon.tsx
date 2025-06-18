@@ -16,6 +16,8 @@ import { QueryKeys } from '@/queries/query-keys';
 import { LineOfBusinessPath } from '@/types';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
+import { SkeletonLoader } from '../skeleton-loader/SkeletonLoader';
+
 export const NotificationIcon = () => {
   const { data: featureFlags } = useFeatureFlags();
 
@@ -47,7 +49,7 @@ export const NotificationIcon = () => {
 
   const {
     data: showNotificationAlert = false,
-    isLoading: _acknowledgedNotificationsLoading,
+    isLoading: acknowledgedNotificationsLoading,
   } = useQuery({
     queryKey: [QueryKeys.NOTIFICATIONS, casesInException],
     queryFn: () => {
@@ -98,12 +100,18 @@ export const NotificationIcon = () => {
       href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/notifications`}
       className={styles.notification}
     >
-      <Icon className={styles.bell} type={IconType.ALERT} />
-      {showNotificationAlert && (
-        <Icon
-          className={styles.exclamation}
-          type={IconType.ALERT_EXCLAMATION}
-        />
+      {acknowledgedNotificationsLoading ? (
+        <SkeletonLoader width="36px" height="24px" />
+      ) : (
+        <>
+          <Icon className={styles.bell} type={IconType.ALERT} />
+          {showNotificationAlert && (
+            <Icon
+              className={styles.exclamation}
+              type={IconType.CIRCLE_EXCLAMATION}
+            />
+          )}
+        </>
       )}
     </Link>
   );
