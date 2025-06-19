@@ -8,12 +8,9 @@ import { useTranslation } from 'react-i18next';
 
 import ClickContainer from '@deps/components/click-container/click-container';
 import inputStyles from '@deps/components/search/search-field-toggle/search-field-toggle.module.css';
-import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { browserLogError } from '@deps/utils/browser-logging';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helpers';
 
@@ -33,15 +30,8 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
     const [fetchingDocuments, setFetchingDocuments] = useState<boolean | null>(null);
     const [error, setError] = useState<boolean>(false);
     const { t } = useTranslation(undefined, { keyPrefix: 'taskManagementQueue' });
-    const { featureFlagVariables } = useOptimizely();
     const caseKey = uiSchema?.['ui:options']?.['default'];
     const extractedCaseId = caseKey ? replacePlaceholders(caseKey, formContext?.customData) : '';
-    const useV3 = isFeatureFlagVariableActive(
-        featureFlagVariables,
-        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-        OptimizelyVariableKey.Clients,
-        formContext?.customData?.carrier?.toLocaleLowerCase() || ''
-    );
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         const value = event.target.value;
@@ -58,7 +48,7 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
                 parentCarrierCode: formContext?.customData?.carrier,
             };
             try {
-                const { data, status } = await getDocumentSearchResultsQuery(searchBody, 25, 0, useV3);
+                const { data, status } = await getDocumentSearchResultsQuery(searchBody, 25, 0, true);
                 if (data) {
                     setDocuments(data as MetadataSearchResponse[]);
                 } else if (status !== HttpStatusCode.Ok) {

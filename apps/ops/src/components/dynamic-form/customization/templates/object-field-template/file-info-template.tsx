@@ -1,11 +1,23 @@
 import { ArrayFieldTemplateProps, UiSchema } from '@rjsf/utils';
+import { Icon, IconType, ToastVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-
+import { Toast } from '@zinnia/bloom/components';
+import { useTranslation } from 'react-i18next';
+import { updateTask } from '@deps/containers/task-container/task.helpers';
+import { ActionTypes, INTERVAL } from '@deps/models/case/task';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
+import { browserLogError } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
+import { useEffect, useState } from 'react';
+import { TranslationFiles } from '@deps/config/translations';
+import { MetadataSearchResponse } from '@xd/api-types/dist/generated-types/documents-v3';
 function FileInfoTemplate(props: ArrayFieldTemplateProps) {
     const { items: _items, uiSchema } = props;
-    let { formData } = props;
-
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'general' });
+    let { formData, formContext } = props;
+    const [toastMessage, setToastMessage] = useState<string | undefined>(undefined);
+    const [toastVariant, setToastVariant] = useState<ToastVariant | undefined>(undefined);
     if (formData.length === 0) {
         const formContextOptions: any = (uiSchema as UiSchema)?.['ui:options']?.formContext ?? {};
         if (formContextOptions && props.formContext[formContextOptions?.keyName]?.[formContextOptions?.listName]) {
@@ -14,6 +26,56 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
         }
     }
 
+    const removeAttachment = async (fileInfo: MetadataSearchResponse) => {
+        let attachments = [...(formContext?.customData?.attachments || [])];
+        try {
+            const updatedMappedDocuments =
+                attachments.map((item: any) => {
+                    return { ...item, operationType: item.documentId === fileInfo.documentId ? ActionTypes.Remove : null };
+                }) || [];
+            attachments = attachments.filter(item => item.documentId !== fileInfo.documentId);
+
+            if (formContext?.setCustomData) {
+                formContext.setCustomData({ attachments });
+            }
+
+            const updatedTask = {
+                ...formContext?.customData?.task,
+                data: {
+                    ...formContext?.customData?.task?.data,
+                    attachments,
+                },
+                mappedDocuments: [...(formContext?.customData?.task?.mappedDocuments || []), ...updatedMappedDocuments],
+            };
+            const success = await updateTask(updatedTask, formContext?.customData?.correlationId, TaskStatus.InProgress);
+
+            if (success) {
+                setToastVariant(ToastVariant.Success);
+                setToastMessage(t(`fileUploadToastMessages.fileDeletedSuccess`) as string);
+            } else {
+                setToastVariant(ToastVariant.Error);
+                setToastMessage(t(`fileUploadToastMessages.fileDeletedError`) as string);
+            }
+        } catch (error) {
+            if (formContext?.setCustomData) {
+                formContext.setCustomData({ attachments });
+            }
+            browserLogError('Error while removing the document', {
+                ...parseErrorInformation(error),
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (toastMessage && toastVariant) {
+            const timer = setTimeout(() => {
+                setToastMessage(undefined);
+                setToastVariant(undefined);
+            }, INTERVAL);
+            return () => clearTimeout(timer);
+        }
+    }, [toastMessage, toastVariant]);
+
     return (
         <div className={clsx('flex ')}>
             <ul className="file-info">
@@ -21,14 +83,24 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
                     const { documentId, documentName } = fileInfo;
                     return (
                         <li key={index} className="p-2 border-1 border-gray-100 my-4 max-w-sm">
-                            <div className="typography-content-body-sm-bold flex gap-2">
-                                <UploadIcon height={25} width={25} />
-                                <div>{documentName || documentId || ''}</div>
+                            <div className="flex justify-between">
+                                <div className="typography-content-body-sm-bold flex gap-2">
+                                    <UploadIcon height={25} width={25} />
+                                    <div>{documentName || documentId || ''}</div>
+                                </div>
+                                <span onClick={() => removeAttachment(fileInfo)} className="cursor-pointer ml-4">
+                                    <Icon type={IconType.CLOSE} height={25} width={25} />
+                                </span>
                             </div>
                         </li>
                     );
                 })}
             </ul>
+            {toastMessage && toastVariant && (
+                <div className="fixed bottom-4 right-10 z-50">
+                    <Toast variant={toastVariant}>{toastMessage}</Toast>
+                </div>
+            )}
         </div>
     );
 }

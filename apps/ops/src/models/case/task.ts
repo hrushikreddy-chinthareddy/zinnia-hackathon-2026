@@ -4,6 +4,7 @@ import { Reg60FormData } from '@deps/containers/otp/reg60-forms/reg60.types';
 
 import { Channel } from './renewal/case-renewal';
 import { ActiveWithdrawalCase, ActiveWithdrawalCaseData } from './withdrawal/case';
+export const INTERVAL = 3000;
 
 export enum TaskType {
     Withdrawal = 'WithdrawalFormInputTask',
@@ -238,7 +239,7 @@ export interface AddressFormFields {
     zipCode?: string;
     country?: string;
     defaultAddress?: boolean;
-    addressLines?: any[]
+    addressLines?: any[];
 }
 export interface ExceptionRef {
     carrier: string;
@@ -256,4 +257,9 @@ export enum TaskFieldTypes {
     Title = 'title',
     Subtitle = 'subTitle',
     hidden = 'hidden',
+}
+
+export enum ActionTypes {
+    Add = 'ADD',
+    Remove = 'REMOVE',
 }

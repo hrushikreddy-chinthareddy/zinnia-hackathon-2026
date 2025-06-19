@@ -774,7 +774,9 @@
         },
         "fileUploadToastMessages": {
             "fileUploadError": "Failed to upload following files ({{failedUploads}})",
-            "fileUploadSuccess": "File uploaded successfully"
+            "fileUploadSuccess": "File uploaded successfully",
+            "fileDeletedSuccess": "File deleted successfully",
+            "fileDeletedError": "Failed to delete file {{fileName}}"
         }
     },
     "dashboard": {
@@ -5482,29 +5484,29 @@
             "no": "No"
         },
         "notifierDetails": {
-          "title": "Notifier Details",
-          "dateOfNotification": "Date of Notification:",
-          "notifierRole": "Notifier Role:",
-          "notifierName": "Notifier Name:",
-          "notifierPhoneNumber": "Notifier Phone Number:",
-          "beneOnFileFlag": "Beneficiary details are on File:"
+            "title": "Notifier Details",
+            "dateOfNotification": "Date of Notification:",
+            "notifierRole": "Notifier Role:",
+            "notifierName": "Notifier Name:",
+            "notifierPhoneNumber": "Notifier Phone Number:",
+            "beneOnFileFlag": "Beneficiary details are on File:"
         },
         "ownerDetails": {
-          "title": "Deceased Details",
-          "dateOfDeath": "Date of Death:",
-          "foreignDeathFlag": "Foreign Death:",
-          "noData": "No owner details available."
+            "title": "Deceased Details",
+            "dateOfDeath": "Date of Death:",
+            "foreignDeathFlag": "Foreign Death:",
+            "noData": "No owner details available."
         },
         "beneficiaryDetails": {
-          "title": "Beneficiary Notification Details",
-          "notificationMethod": "Notification Method:",
-          "contactDetails": "Contact Details",
-          "email": "Email:",
-          "mail": "Mailing Address:",
-          "faxnumber": "Fax:",
-          "noData": "No beneficiary details available."
+            "title": "Beneficiary Notification Details",
+            "notificationMethod": "Notification Method:",
+            "contactDetails": "Contact Details",
+            "email": "Email:",
+            "mail": "Mailing Address:",
+            "faxnumber": "Fax:",
+            "noData": "No beneficiary details available."
         }
-      },
+    },
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Service Form Review",

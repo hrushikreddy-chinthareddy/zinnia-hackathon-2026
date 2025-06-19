@@ -867,7 +867,9 @@
         },
         "fileUploadToastMessages": {
             "fileUploadError": "Échec du téléchargement des fichiers suivants ({{failedUploads}})",
-            "fileUploadSuccess": "Fichier téléchargé avec succès"
+            "fileUploadSuccess": "Fichier téléchargé avec succès",
+            "fileDeletedSuccess": "Fichier supprimé avec succès",
+            "fileDeletedError": "Échec de la suppression du fichier {{fileName}}"
         }
     },
     "dashboard": {

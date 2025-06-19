@@ -769,7 +769,9 @@
         },
         "fileUploadToastMessages": {
             "fileUploadError": "Error al subir los siguientes archivos ({{failedUploads}})",
-            "fileUploadSuccess": "Archivo subido exitosamente"
+            "fileUploadSuccess": "Archivo subido exitosamente",
+            "fileDeletedSuccess": "Archivo eliminado con éxito",
+            "fileDeletedError": "No se pudo eliminar el archivo {{fileName}}"
         }
     },
     "dashboard": {
