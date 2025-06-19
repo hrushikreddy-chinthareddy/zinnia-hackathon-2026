@@ -36,7 +36,7 @@ const TaskFormStep = ({
     taskMetadata,
     isSaveAsDraftEnabled = false,
     isContinueButtonEnabled,
-    stepIndex
+    stepIndex,
 }: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `taskManagement.taskForm` });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
@@ -52,6 +52,9 @@ const TaskFormStep = ({
             if (isValidForm) {
                 formRef.current.submit();
             }
+        }
+        if (readonly) {
+            goToNext();
         }
     }, [formRef]);
 
@@ -96,15 +99,16 @@ const TaskFormStep = ({
             subtitle={taskMetadata?.description as string}
             footerContent={
                 <TransactionNavigationButtons
+                    readonly={readonly}
                     submitLabel={isSubmit ? (t('submit') as string) : (t('continue') as string)}
                     cancelLabel={t('cancel') as string}
-                    isSubmit={true}
+                    isSubmit={readonly ? false : true}
                     handleContinue={handleStepContinue}
                     handleSaveAsDraft={handleSaveAsDraft}
                     isDraft={isSaveAsDraftEnabled}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
-                    disableContinue={isContinueButtonEnabled ? !isContinueButtonEnabled : !isValidForm}
+                    disableContinue={!(isContinueButtonEnabled || task?.status === TaskStatus.Completed) && !isValidForm}
                 />
             }
         >

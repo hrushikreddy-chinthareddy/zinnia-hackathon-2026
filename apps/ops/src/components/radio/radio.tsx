@@ -28,6 +28,7 @@ export type RadioProps = {
     'data-testid'?: string;
     items: RadioItem[];
     variant?: RadioVariant;
+    readonly?: boolean;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     alignItems?: string;
 } & Omit<RadioGroupProps, 'onChange'>;
@@ -43,6 +44,7 @@ export default function Radio({
     disabled = false,
     'data-testid': dataTestId,
     name,
+    readonly,
     className,
     alignItems='items-start'
 }: RadioProps) {
@@ -61,6 +63,8 @@ export default function Radio({
 
                 const disabledClass = item?.disabled ?? disabled ? 'cursor-not-allowed !border-gray-300 !bg-gray-100' : 'cursor-pointer';
 
+                const readonlyClass = readonly ? '!cursor-not-allowed opacity-50' : '';
+
                 const labelClasses = clsx('body-sm', {
                     hidden: !!item.subElement,
                     'pointer-events-none': disabled || variant === RadioVariant.Inactive,
@@ -71,7 +75,7 @@ export default function Radio({
                         <input
                             type="radio"
                             value={item.value}
-                            className={`${classes} ${disabledClass}`}
+                            className={`${classes} ${disabledClass} ${readonlyClass}`}
                             tabIndex={0}
                             checked={value === item.value}
                             data-testid={dataTestId}
@@ -80,6 +84,7 @@ export default function Radio({
                             onChange={() => undefined}
                             disabled={item?.disabled ?? disabled}
                             onClick={() => {
+                                if (readonly) return;
                                 const event = {
                                     target: {
                                         value: item.value,

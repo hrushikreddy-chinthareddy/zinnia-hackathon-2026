@@ -3,11 +3,13 @@ import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 import { TaskReviewStep } from '../components/steps/task-review/task-review-step';
+import { TaskStatus } from '@deps/models/case/task-instance';
 
 export const getSuitabilitySteps = ({
     carrierId,
     caseId,
     taskInfoLink,
+    task,
     taskType,
     isReadyForDataEntry,
     t,
@@ -15,6 +17,7 @@ export const getSuitabilitySteps = ({
     isSaveAsDraftEnabled,
     isContinueButtonEnabled,
 }: GetStepsProps) => {
+    const readOnly = task.status === TaskStatus.Completed;
     const steps: Step[] = [
         {
             isVisible: () => true,
@@ -28,10 +31,11 @@ export const getSuitabilitySteps = ({
             isVisible: () => isReadyForDataEntry,
             component: (
                 <TaskFormStep
+                    readonly={task.status === TaskStatus.Completed}
                     taskInfoLink={taskInfoLink}
                     isSubmit={false}
                     taskMetadata={taskMetadata[0]}
-                    isSaveAsDraftEnabled={isSaveAsDraftEnabled}
+                    isSaveAsDraftEnabled={readOnly ? false : isSaveAsDraftEnabled}
                     isContinueButtonEnabled={isContinueButtonEnabled}
                 ></TaskFormStep>
             ),
@@ -42,7 +46,13 @@ export const getSuitabilitySteps = ({
         {
             isVisible: () => isReadyForDataEntry,
             component: (
-                <TaskFormStep taskInfoLink={taskInfoLink} readonly={true} isSubmit={true} taskMetadata={taskMetadata[0]}></TaskFormStep>
+                <TaskFormStep
+                    isContinueButtonEnabled={isContinueButtonEnabled}
+                    taskInfoLink={taskInfoLink}
+                    readonly={readOnly || true}
+                    isSubmit={!readOnly ? true : false}
+                    taskMetadata={taskMetadata[0]}
+                ></TaskFormStep>
             ),
             text: t('tabs.summary'),
             index: 2,

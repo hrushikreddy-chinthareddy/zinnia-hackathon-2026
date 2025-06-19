@@ -744,6 +744,7 @@
         "cancelGoBack": "Cancel and go back",
         "close": "Close",
         "continue": "Continue",
+        "next": "Next",
         "download": "Download",
         "downloading": "Downloading",
         "error": "Error",
@@ -3636,6 +3637,7 @@
             "additionalDocuments": "Additional Documents",
             "noAssignee": "Only the assignee can start this task",
             "startTask": "Start task",
+            "viewTask": "View task",
             "claimTask": "Claim task",
             "claimTaskError": "You don't have the necessary permissions to access this feature. Please reach out to the administrator for assistance.",
             "taskHeading": "Task"

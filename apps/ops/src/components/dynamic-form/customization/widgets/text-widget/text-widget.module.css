@@ -6,3 +6,8 @@
     border-radius: var(--measure-border-radius-radius-md);
     border-left-width: var(--measure-border-width-stroke-sm);
 }
+
+.readOnly {
+    cursor: not-allowed !important;
+    opacity: 0.5;
+}

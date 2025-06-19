@@ -255,8 +255,10 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
         const url = openNigoEntry ? `/nigo-entry?taskId=${taskId}` : `/task/${taskId}`;
 
         try {
-            setStartLoader(true);
             if (taskStatus === TaskStatus.InProgress) {
+            }
+            setStartLoader(true);
+            if (taskStatus === TaskStatus.InProgress || taskStatus === TaskStatus.Completed) {
                 await router.push(url);
             } else {
                 // Fetch the task instance
@@ -317,7 +319,11 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
     const documentsList = transformDocument(task.mappedDocuments || []);
 
-    const showStartButton = task.status === TaskStatus.New || task.status === TaskStatus.InProgress || task.status === TaskStatus.Pending;
+    const readOnly = task.status === TaskStatus.Completed;
+
+    const allowedTaskStatusForStartBtnDisplay = [TaskStatus.New, TaskStatus.InProgress, TaskStatus.Pending];
+
+    const showStartButton = allowedTaskStatusForStartBtnDisplay.includes(task.status) || readOnly;
     const statusReason = task.status === TaskStatus.Pending ? task.scheduledReason : task.cancellationReason;
 
     const details = task.taskDetails;
@@ -402,12 +408,12 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
         }
 
         let label = '';
-        let timestamp = formattedUpdated ? formatTimestamp(formattedUpdated ,'standard') : 'N/A';
+        let timestamp = formattedUpdated ? formatTimestamp(formattedUpdated, 'standard') : 'N/A';
 
         switch (status) {
             case TaskStatus.Pending:
                 label = t('sideSheet.task.pendinglabel');
-                timestamp = formattedPending ? formatTimestamp(formattedPending , 'standard') : 'N/A';
+                timestamp = formattedPending ? formatTimestamp(formattedPending, 'standard') : 'N/A';
                 break;
             case TaskStatus.Canceled:
                 label = t('sideSheet.task.canceledLabel');
@@ -503,7 +509,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
                 <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.newCreatedLabel')} </div>
                 <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                    {formattedCreated ? formatTimestamp(formattedCreated , 'standard') : 'N/A'}
+                    {formattedCreated ? formatTimestamp(formattedCreated, 'standard') : 'N/A'}
                 </Typography>
 
                 {task.taskName && type == 'case' && (
@@ -520,7 +526,7 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 )}
             </div>
 
-            {type == 'case' && !isUserAssociatedWithTask && showStartButton && (
+            {type == 'case' && !isUserAssociatedWithTask && showStartButton && !readOnly && (
                 <div className="bg-black text-white text-sm font-normal rounded-lg shadow p-2  whitespace-nowrap z-10  mt-8 max-w-[240px]">
                     {t('sideSheet.task.noAssignee')}
                 </div>
@@ -534,14 +540,14 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 >
                     <Button
                         mode="primary"
-                        disabled={!isUserAssociatedWithTask || startLoader}
+                        disabled={task.status === TaskStatus.Completed ? false : !isUserAssociatedWithTask || startLoader}
                         onClick={() => handleStart(task.id, task.status)}
                         data-testid="start-task-btm"
                         aria-label={t('ariaLabel.startTask') as string}
                         type="submit"
                         size={startLoader ? 'large' : 'small'}
                     >
-                        {!startLoader ? t('sideSheet.task.startTask') : <CustomLoader />}
+                        {!startLoader ? readOnly ? t('sideSheet.task.viewTask') : t('sideSheet.task.startTask') : <CustomLoader />}
                     </Button>
                 </div>
             )}

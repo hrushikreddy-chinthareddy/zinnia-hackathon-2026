@@ -3,7 +3,14 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from '
 
 import { CheckboxTextProps } from './checkbox-text/checkbox-text';
 
-const Checkbox = ({ onChange, isDisabled, isIndeterminate = false, checked = false, ...rest }: Omit<CheckboxTextProps, 'label'>) => {
+const Checkbox = ({
+    onChange,
+    isDisabled,
+    readonly,
+    isIndeterminate = false,
+    checked = false,
+    ...rest
+}: Omit<CheckboxTextProps, 'label'>) => {
     const [isChecked, setIsChecked] = useState<boolean>(checked);
     const [indeterminate, setIndeterminate] = useState(isIndeterminate);
 
@@ -20,8 +27,10 @@ const Checkbox = ({ onChange, isDisabled, isIndeterminate = false, checked = fal
         [isChecked]
     );
 
+    const noAction = isDisabled || readonly;
+
     const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (!isDisabled) {
+        if (!noAction) {
             handleCheck(e.target.checked);
         }
     };
@@ -39,18 +48,18 @@ const Checkbox = ({ onChange, isDisabled, isIndeterminate = false, checked = fal
     const checkboxClasses = clsx(
         'h-6 w-6 rounded border-2 text-white',
         {
-            '!border-gray-200 !bg-white': !isDisabled,
-            '!border-primary': isSelectedState && !isDisabled,
-            '!border-primary-lightest': isSelectedState && isDisabled,
-            '!border-gray-300 !bg-gray-100': !isSelectedState && isDisabled,
-            'hover:!border-yellow-400 active:!border-yellow-400': !isDisabled,
+            '!border-gray-200 !bg-white': !noAction,
+            '!border-primary': isSelectedState && !noAction,
+            '!border-primary-lightest': isSelectedState && noAction,
+            '!border-gray-300 !bg-gray-100': !isSelectedState && noAction,
+            'hover:!border-yellow-400 active:!border-yellow-400': !noAction,
         },
         focusCheckboxClasses
     );
 
     const fillClasses = clsx('center absolute w-3.5 rounded-sm', {
-        'bg-primary': isSelectedState && !isDisabled,
-        'bg-primary-lightest': isSelectedState && isDisabled,
+        'bg-primary': isSelectedState && !noAction,
+        'bg-primary-lightest': isSelectedState && noAction,
         block: isSelectedState,
         hidden: !isSelectedState,
         'h-0.5': indeterminate,
@@ -65,7 +74,7 @@ const Checkbox = ({ onChange, isDisabled, isIndeterminate = false, checked = fal
                     className={checkboxClasses}
                     onChange={handleCheckboxChange}
                     checked={isChecked === true}
-                    disabled={isDisabled}
+                    disabled={isDisabled || readonly}
                     ref={checkboxRef}
                     data-testid="checkbox"
                     {...rest}

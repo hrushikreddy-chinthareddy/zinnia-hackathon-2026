@@ -13,6 +13,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
     const helpText = uiOptions.help;
 
     const style = uiOptions?.style ?? '';
+    const isLink = uiOptions?.type === 'link';
     let { displayLabel } = props;
 
     if (uiOptions.label === false) {
@@ -68,7 +69,8 @@ export function FieldTemplate(props: FieldTemplateProps) {
                                 </Label>
                             </div>
                         )}
-                        {readonly && typeof formData === 'string' && !(schema.enum || uiOptions.format === 'numeric') ? formData : children}
+
+                        {readonly && typeof formData === 'string' && !(schema.enum || uiOptions.format === 'numeric')  && !isLink ? formData : children}
                         {!hideError && errors}
                     </div>
                 </div>

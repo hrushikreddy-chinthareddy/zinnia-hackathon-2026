@@ -14,6 +14,7 @@ export type CheckboxTextProps = {
     checked?: boolean;
     className?: string;
     isDisabled?: boolean;
+    readonly?: boolean;
     isIndeterminate?: boolean;
     label: string;
     onChange?: (checked: boolean) => void;
@@ -21,12 +22,12 @@ export type CheckboxTextProps = {
 } & Omit<HTMLAttributes<HTMLInputElement>, 'onChange'>;
 
 const CheckboxText = (props: CheckboxTextProps) => {
-    const { assistiveText, isDisabled, label, className, ...restProps } = props;
+    const { assistiveText, isDisabled, readonly, label, className, ...restProps } = props;
 
     const labelClasses = clsx(
         'flex items-center space-x-2',
         {
-            'cursor-not-allowed text-gray-900': isDisabled,
+            'cursor-not-allowed text-gray-900': isDisabled || readonly,
             'cursor-pointer': !isDisabled,
         },
         className
@@ -35,7 +36,7 @@ const CheckboxText = (props: CheckboxTextProps) => {
     return (
         <div className="flex flex-col gap-6">
             <label className={labelClasses}>
-                <Checkbox isDisabled={isDisabled} {...restProps} />
+                <Checkbox isDisabled={isDisabled} readonly={readonly} {...restProps} />
                 <Content details={label} variant={ContentVariant.BodySm} contentClassName="items-center flex" />
             </label>
             {!!assistiveText?.text && <AssistiveText text={assistiveText.text} variant={assistiveText.variant} />}

@@ -38,10 +38,12 @@ interface TransactionNavigationButtonsProps extends TransactionClickProps {
     leaveTransactionLink?: string;
     isDraft?: boolean;
     draftLabel?: string;
+    readonly?: boolean;
 }
 
 const TransactionNavigationButtons = ({
     className,
+    readonly,
     handleContinue,
     handleSaveAsDraft,
     isSubmit,
@@ -60,7 +62,13 @@ const TransactionNavigationButtons = ({
     const { sessionId, partyId } = usePermissionsContext();
     const router = useRouter();
 
-    const submitLbl = isSubmit ? (submitLabel?.length ? submitLabel : t('general.submitPayment')) : t('general.continue');
+    const submitLbl = readonly
+        ? t('general.next')
+        : isSubmit
+        ? submitLabel?.length
+            ? submitLabel
+            : t('general.submitPayment')
+        : t('general.continue');
     const cancelLbl = cancelLabel?.length ? cancelLabel : t('general.leaveTransaction');
     const draftLbl = draftLabel?.length ? draftLabel : t('general.draft');
     const link = leaveTransactionLink ? leaveTransactionLink : `/policies/${planCode}/${policyNumber}/policy/${parentPage}`;

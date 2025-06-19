@@ -12,6 +12,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
 
 import { TaskReview } from './task-review';
+import { TaskStatus } from '@deps/models/case/task-instance';
 
 type TaskReviewStepProps = {
     caseId: string;
@@ -30,25 +31,26 @@ export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepP
     const { goToNext } = useWorkflow();
 
     const handleStepContinue = useCallback(async () => {
-        const updatedTask = {
-            ...task,
-            data: {
-                details: task.data?.details || {},
-                nigoList: selectedExceptionDetails.map(detail => ({
-                    issue: nmDetails?.nmDetails,
-                    applicationValue: detail,
-                    nmid: nmDetails?.nmId,
-                })),
-                missingInformation: !isReadyForDataEntry,
-            },
-        };
+        if (task.data?.status !== TaskStatus.Completed) {
+            const updatedTask = {
+                ...task,
+                data: {
+                    details: task.data?.details || {},
+                    nigoList: selectedExceptionDetails.map(detail => ({
+                        issue: nmDetails?.nmDetails,
+                        applicationValue: detail,
+                        nmid: nmDetails?.nmId,
+                    })),
+                    missingInformation: !isReadyForDataEntry,
+                },
+            };
 
-        setTask(updatedTask);
-        if (isReadyForDataEntry === false) {
-            const success = await updateTask(updatedTask, correlationId);
-            setSubmitFailed(!success);
+            setTask(updatedTask);
+            if (isReadyForDataEntry === false) {
+                const success = await updateTask(updatedTask, correlationId);
+                setSubmitFailed(!success);
+            }
         }
-
         goToNext();
     }, [goToNext, isReadyForDataEntry, nmDetails, selectedExceptionDetails, setTask, task, correlationId]);
 
@@ -58,6 +60,7 @@ export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepP
             subtitle={t('subTitle') as string}
             footerContent={
                 <TransactionNavigationButtons
+                    readonly={task?.status === TaskStatus.Completed}
                     className="mt-4"
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}

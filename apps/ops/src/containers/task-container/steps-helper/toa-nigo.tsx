@@ -2,12 +2,22 @@ import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
+import { TaskStatus } from '@deps/models/case/task-instance';
 
-export const getTOANigoSteps = ({ taskType, taskInfoLink, t, taskMetadata = [] }: GetStepsProps) => {
+export const getTOANigoSteps = ({ taskType, task, taskInfoLink, t, taskMetadata = [], isContinueButtonEnabled }: GetStepsProps) => {
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
         isVisible: () => true,
-        component: <TaskFormStep taskInfoLink={taskInfoLink} isSubmit={true} taskMetadata={metadata} key={`step_${index}`}></TaskFormStep>,
+        component: (
+            <TaskFormStep
+                readonly={task.status === TaskStatus.Completed}
+                isContinueButtonEnabled={isContinueButtonEnabled}
+                taskInfoLink={taskInfoLink}
+                isSubmit={task.status === TaskStatus.Completed ? false : true}
+                taskMetadata={metadata}
+                key={`step_${index}`}
+            ></TaskFormStep>
+        ),
         text: metadata?.title || '',
         isSubmit: true,
         index: index,

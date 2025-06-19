@@ -276,10 +276,12 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         [multiple, value, onChange]
     );
     const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
+
+    const readonlyClass = readonly ? '!cursor-not-allowed opacity-50' : '';
     return (
         <>
-            <div className="mt-1">
-                <label htmlFor={widgetProps.id} className={style.customFileUpload}>
+            <div className={`mt-1 ${readonlyClass}`}>
+                <label htmlFor={widgetProps.id} className={`${style.customFileUpload} ${readonlyClass}`}>
                     {schema?.title ?? t('upload')}
                 </label>
                 <BaseInputTemplate
@@ -290,10 +292,9 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                     onChangeOverride={handleChange}
                     value=""
                     accept={options.accept ? String(options.accept) : undefined}
-                    className={style.input}
+                    className={`${style.input} ${readonlyClass}`}
                 />
             </div>
-
             {showFiles && (
                 <FilesInfo<T, S, F>
                     filesInfo={filesInfo}

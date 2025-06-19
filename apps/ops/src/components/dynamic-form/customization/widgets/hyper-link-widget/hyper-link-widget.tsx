@@ -6,14 +6,14 @@ import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/actions/external-link.svg';
 
 const HyperLinkWidget = (props: WidgetProps) => {
-    const { value, disabled, label, uiSchema, formContext } = props;
+    const { value, disabled, label, uiSchema, formContext, readonly } = props;
 
     const defaultValue = replacePlaceholders(value, { ...formContext }) || value;
     const defaultLabel = replacePlaceholders(label, { ...formContext }) || label;
 
     const uiOptions = getUiOptions(uiSchema as UiSchema);
 
-    return <HyperLink type={uiOptions.type} label={defaultLabel} value={defaultValue} disabled={disabled} />;
+    return <HyperLink type={uiOptions.type} label={defaultLabel} value={defaultValue} disabled={disabled} readonly={readonly} />;
 };
 
 export default HyperLinkWidget;
@@ -25,8 +25,9 @@ type HyperLinkProps = {
     value: string;
     disabled?: boolean;
     className?: string;
+    readonly?: boolean;
 };
-export const HyperLink = ({ title, label, value, type, disabled, className }: HyperLinkProps) => {
+export const HyperLink = ({ title, label, value, type, disabled, readonly, className }: HyperLinkProps) => {
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, value: string) => {
         e.preventDefault();
         router.push(value);
@@ -45,7 +46,7 @@ export const HyperLink = ({ title, label, value, type, disabled, className }: Hy
                     href={value}
                     isNewPage={true}
                     target="_blank"
-                    disabled={disabled}
+                    disabled={disabled || readonly}
                     startIcon={<TrashDocumentIcon width={20} height={20} />}
                 >
                     {label}
@@ -58,7 +59,7 @@ export const HyperLink = ({ title, label, value, type, disabled, className }: Hy
                         title={label}
                         type={NavElementType.Link}
                         onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => handleClick(e, value)}
-                        disabled={disabled}
+                        disabled={disabled || readonly}
                     >
                         {label}
                     </NavElement>

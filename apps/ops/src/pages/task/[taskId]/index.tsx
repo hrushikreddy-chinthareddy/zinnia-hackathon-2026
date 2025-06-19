@@ -12,7 +12,7 @@ import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-da
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
-import { ManagementTask } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
@@ -152,7 +152,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     }
                 }
 
-                const [isSaveAsDraftEnabled, isContinueButtonEnabled] = await Promise.all([
+                let [isSaveAsDraftEnabled, isContinueButtonEnabled] = await Promise.all([
                     getFeatureFlagByKey(FEATURE_FLAG_VARIABLES.TASK_SAVE_AS_DRAFT, carrier?.toLowerCase(), flag, user.sub, loggingContext),
                     getFeatureFlagByKey(
                         FEATURE_FLAG_VARIABLES.TASK_CONTINUE_BUTTON_ENABLE,
@@ -163,11 +163,15 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ),
                 ]);
 
+                isSaveAsDraftEnabled = task?.status !== TaskStatus.Completed && isSaveAsDraftEnabled;
+                isContinueButtonEnabled = task?.status === TaskStatus.Completed || isContinueButtonEnabled;
+
                 const nigoFilters = {
                     categoryIds: ['Form', 'Signature', 'Account Information'],
                     carrier: carrier?.toUpperCase(),
                     process: taskType,
                 };
+
                 const mockedSchema = taskSchemaOverride === 'true' && !isProd();
                 const [translations, caseDetails, nigoExceptionResponse, taskMetadata] = await Promise.all([
                     await serverSideTranslations(

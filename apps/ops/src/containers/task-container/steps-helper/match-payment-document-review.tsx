@@ -4,8 +4,16 @@ import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
+import { TaskStatus } from '@deps/models/case/task-instance';
 
-export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, taskMetadata, task }: GetStepsProps) => {
+export const getMatchDocumentPaymentReviewSteps = ({
+    taskType,
+    taskInfoLink,
+    t,
+    isContinueButtonEnabled,
+    taskMetadata,
+    task,
+}: GetStepsProps) => {
     let isSubmit = task.data.matchingResult === MatchingCase.REINDEX;
 
     if (task.data.matchingResult === 'NO_MATCH' && task.taskType === 'STANDARD_DOCUMENT_MATCHING') {
@@ -17,10 +25,12 @@ export const getMatchDocumentPaymentReviewSteps = ({ taskType, taskInfoLink, t, 
         isVisible: () => index === 0 || !isSubmit,
         component: (
             <TaskFormStep
+                readonly={task.status === TaskStatus.Completed}
                 taskInfoLink={taskInfoLink}
-                isSubmit={index === 1 ? true : isSubmit}
+                isSubmit={task.status === TaskStatus.Completed ? false : index === 1 ? true : isSubmit}
                 taskMetadata={metadata}
                 key={`step_${index}`}
+                isContinueButtonEnabled={isContinueButtonEnabled}
             ></TaskFormStep>
         ),
         text: metadata?.title || '',

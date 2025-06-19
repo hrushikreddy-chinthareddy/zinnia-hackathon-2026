@@ -173,8 +173,8 @@ const TaskQueueTableRow = ({ task, getTasks, setErrorMessage }: TaskQueueTableRo
     };
 
     const getTimeText = () => {
-        let text = '';
-        const { unit, count } = getTimeAgoUnitValue(createdAt) || {};
+        let text;
+        const { unit, count } = getTimeAgoUnitValue(createdAt as string) || {};
         const timeText = t('temporal.timeago', { formattedDate: '', count: count, unit: unit }).trim();
         text = timeText;
         return text;

@@ -44,6 +44,7 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
                 updateTask = {
                     ...task,
                     data: {
+                        ...task.data,
                         details: { ...task.data.details },
                         matchingResult,
                         matchedData: {

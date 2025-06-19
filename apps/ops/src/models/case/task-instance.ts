@@ -164,7 +164,8 @@ export type UnassignedTask<T = TaskStatus> = {
     taskName: string;
     status: T;
     assignee?: string;
-    createdAt: string;
     identifiers: IdentifierInstance[];
     taskDetails?: string;
+    createdAt?: string;
+    updatedAt?: string;
 };

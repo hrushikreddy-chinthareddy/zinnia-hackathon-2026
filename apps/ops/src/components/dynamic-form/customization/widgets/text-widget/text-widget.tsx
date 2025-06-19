@@ -4,6 +4,8 @@ import TextField from '@deps/components/dynamic-form/components/text-field/text-
 
 import { formatValueByDataType } from '../../templates/card-templates/card-template';
 
+import style from './text-widget.module.css';
+
 export const TextWidget = function (props: WidgetProps) {
     const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder, readonly } = props;
     const { inline, prefix, inlinetext, dataType, hideError } = getUiOptions(uiSchema);
@@ -30,20 +32,22 @@ export const TextWidget = function (props: WidgetProps) {
 
     return (disabled as boolean) ? (
         <div>{value}</div>
+    ) : readonly ? (
+        <>{value}</>
     ) : (
-        readonly ? <>{value}</> :
-            <div className="max-w-sm flex w-full flex-col">
-                <TextField
-                    placeholder={placeholder}
-                    id={id}
-                    value={value || ''}
-                    required={required}
-                    disabled={disabled}
-                    onChange={onChange}
-                    hideError={hideError}
-                    status={rawErrors && rawErrors?.length > 0 ? 'error' : undefined}
-                />
-            </div>
+        <div className="max-w-sm flex w-full flex-col">
+            <TextField
+                className={readonly ? style.readOnly : ''}
+                placeholder={placeholder}
+                id={id}
+                value={value || ''}
+                required={required}
+                disabled={disabled}
+                onChange={onChange}
+                hideError={hideError}
+                status={rawErrors && rawErrors?.length > 0 ? 'error' : undefined}
+            />
+        </div>
     );
 };
 

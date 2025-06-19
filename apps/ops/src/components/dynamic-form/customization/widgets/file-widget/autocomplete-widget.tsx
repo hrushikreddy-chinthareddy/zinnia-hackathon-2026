@@ -21,7 +21,9 @@ import style from './file-widget.module.css';
 export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     props: WidgetProps<T, S, F>
 ) {
-    const { id, disabled, rawErrors, uiSchema, value, formContext, Placeholder } = props;
+
+    const { id, disabled, readonly, rawErrors, uiSchema, value, formContext, Placeholder } = props;
+
     const { icon } = getUiOptions(uiSchema);
 
     const [documents, setDocuments] = useState<MetadataSearchResponse[]>([]);
@@ -82,6 +84,9 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
     }, []);
 
     const onFocusHandler = () => {
+        if (readonly) {
+            return;
+        }
         filterDocuments(inputValue ?? '');
     };
 
@@ -142,6 +147,8 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
         setFilteredDocuments([]);
     };
 
+    const readonlyClass = readonly ? '!cursor-not-allowed opacity-50' : '';
+
     return (
         <>
             <div ref={inputRef} className={`${clsx(inputStyles.inputContainer, style.autoCompleteContainer)} `}>
@@ -149,12 +156,12 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
                 <input
                     aria-labelledby="case-search-label"
                     placeholder={Placeholder || 'Find existing documents...'}
-                    className={clsx(inputStyles.input, style.iconInput, style.linkDocumentInput)}
+                    className={`${clsx(inputStyles.input, style.iconInput, style.linkDocumentInput)} ${readonlyClass}`}
                     onChange={onChangeHandler}
                     key={id}
                     onFocus={onFocusHandler}
                     value={inputValue}
-                    disabled={disabled}
+                    disabled={disabled || readonly}
                     onKeyDown={e => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();

@@ -1,11 +1,9 @@
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
-import CompleteCard from '@deps/components/workflows/complete-card/complete-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
-import { TaskStatus } from '@deps/models/case/task-instance';
 
 import { stepsProvider } from './steps-helper/steps-provider';
 import { TaskDataContext } from './task-context';
@@ -30,10 +28,6 @@ const TaskContainer = ({
     const { task, isReadyForDataEntry } = useContext(TaskDataContext);
     const { carrier, caseId, id, taskType } = task;
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagement.taskForm' });
-
-    if (task.status === TaskStatus.Completed) {
-        return <CompleteCard leaveRoute={taskInfoLink} />;
-    }
 
     const steps = stepsProvider.getSteps(taskType as TaskType, {
         carrierId: carrier,

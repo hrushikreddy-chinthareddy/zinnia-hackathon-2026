@@ -90,6 +90,7 @@ const SelectComponent = ({
     value,
     onOpenChange,
     maxContentWidth,
+    readOnly,
 }: SelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const MainComponent = isMultiselect ? DropdownMenu : Select;
@@ -158,25 +159,25 @@ const SelectComponent = ({
                 label={label}
                 labelTooltipBody={labelTooltipBody}
                 labelTooltip={labelTooltip}
-                variant={disabled ? FieldVariant.Inactive : FieldVariant.Default}
+                variant={readOnly ? FieldVariant.Inactive : disabled ? FieldVariant.Inactive : FieldVariant.Default}
             />
             <MainComponent.Root {...rootProps}>
                 <MainComponent.Trigger
                     aria-label={label}
                     className={`${variantClass} ${getTriggerClasses(isOpen)}`}
                     data-testid={name}
-                    disabled={disabled}
+                    disabled={readOnly || disabled}
                 >
-                    <Typography variant={TypographyVariant.BodySm} className={getSelectedValueClasses(disabled, size)}>
+                    <Typography variant={TypographyVariant.BodySm} className={getSelectedValueClasses(readOnly || disabled, size)}>
                         {selectedLabel}
                     </Typography>
                     <div aria-hidden="true">
                         <FieldIcon
                             icon={endIcon}
-                            variant={disabled ? FieldVariant.Inactive : FieldVariant.Default}
+                            variant={readOnly || disabled ? FieldVariant.Inactive : FieldVariant.Default}
                             className={clsx('simple-transition', {
                                 flip180: isOpen,
-                                'text-link': disabled,
+                                'text-link': readOnly || disabled,
                                 'mr-4': size !== FieldSize.XS,
                                 'mr-2': size === FieldSize.XS,
                             })}

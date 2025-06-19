@@ -125,21 +125,18 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     };
 
     const handleSubmit = useCallback(async () => {
-        if (!isSubmit) {
-            await fetchData();
-            onSubmit('');
-            return;
+        if (!readonly) {
+            if (!isSubmit) {
+                await fetchData();
+            } else {
+                const taskPayload = buildTaskPayload(cleanForm(task, taskMetadata), initialTask);
+                const success = await updateTask(taskPayload, correlationId);
+                removeFromCache('getTaskInstance', { taskId: task.id });
+                setSubmitFailed(!success);
+            }
         }
-
-        const taskPayload = buildTaskPayload(cleanForm(task, taskMetadata), initialTask);
-
-        const success = await updateTask(taskPayload, correlationId);
-
-        removeFromCache('getTaskInstance', { taskId: task.id });
-        setSubmitFailed(!success);
-
         onSubmit('');
-    }, [correlationId, isSubmit, onSubmit, setSubmitFailed, task]);
+    }, [readonly, isSubmit, correlationId, onSubmit, setSubmitFailed, task]);
 
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {

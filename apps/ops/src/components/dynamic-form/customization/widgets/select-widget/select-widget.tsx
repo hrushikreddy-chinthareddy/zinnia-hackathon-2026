@@ -57,7 +57,10 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 }: WidgetProps<T, S, F>) {
     const formData = formContext;
 
-    const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+    const { enumDisabled, emptyValue: optEmptyVal } = options;
+    let enumOptions: EnumOptionsType<S>[] | undefined = Array.isArray(uiSchema?.['ui:options']?.enumOptions)
+        ? uiSchema['ui:options'].enumOptions
+        : options.enumOptions;
 
     const { props, events } = getUiOptions<T, S, F>(uiSchema);
     const apiProps = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);

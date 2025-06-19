@@ -16,6 +16,7 @@ import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { useGetCaseDocs } from './task-review.helpers';
+import { TaskStatus } from '@deps/models/case/task-instance';
 
 interface TaskReviewProps {
     caseId: string;
@@ -36,7 +37,7 @@ export const TaskReview = ({
     setSelectedExceptionDetails,
 }: TaskReviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
-    const { setIsReadyForDataEntry, isReadyForDataEntry } = useContext(TaskDataContext);
+    const { setIsReadyForDataEntry, isReadyForDataEntry, task } = useContext(TaskDataContext);
 
     const [sectionOption, setSectionOption] = useState(isReadyForDataEntry === true ? 'true' : '');
 
@@ -115,6 +116,24 @@ export const TaskReview = ({
     };
 
     const { documentName, documentId } = workingDocument?.[0] || {};
+    const readyOnly = task.status === TaskStatus.Completed;
+
+    useEffect(() => {
+        if (readyOnly) {
+            const missingInformationValue = !task.data?.missingInformation;
+            const sectionOption = String(missingInformationValue);
+            setSectionOption(sectionOption);
+
+            if (task.data?.nigoList?.length > 0) {
+                setSelectedOption(task.data.nigoList.map((item: any) => item.applicationValue || ''));
+                setSelectedExceptionDetails(task.data.nigoList.map((item: any) => item?.applicationValue || ''));
+            }
+            if (sectionOption === 'true') {
+                setIsReadyForDataEntry(true);
+            }
+        }
+    }, []);
+
     return (
         <>
             <div className="flex flex-col">
@@ -139,12 +158,19 @@ export const TaskReview = ({
                         </div>
                     </div>
                 )}
-                <Radio items={sectionOptions} label={''} onChange={event => onOptionSelection(event.target.value)} value={sectionOption} />
+                <Radio
+                    readonly={readyOnly}
+                    items={sectionOptions}
+                    label={''}
+                    onChange={event => onOptionSelection(event.target.value)}
+                    value={sectionOption}
+                />
                 {sectionOption === 'false' && (
                     <div className="ml-6">
                         <div className="mb-4 mt-12 w-[436px]">
                             <Select
                                 isMultiselect
+                                readOnly={readyOnly}
                                 options={exceptionOptions.reduce(
                                     (unique, item, index) => {
                                         const existingItem = unique.find(u => u.value === item.subNmIdDetail);
