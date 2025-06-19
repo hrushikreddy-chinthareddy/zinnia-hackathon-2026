@@ -18,7 +18,7 @@ export enum NotificationStatus {
     Resend = 'RESEND',
     Generating = 'GENERATING',
     NIGO = 'NIGO',
-    Exception = 'EXCEPTION',
+    Exception = 'TERMINATE',
 }
 
 export interface INotification {
