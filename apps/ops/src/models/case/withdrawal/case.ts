@@ -803,8 +803,8 @@ export enum PolicyWaiver {
 }
 
 export enum AccountType {
-    Checking = 'Checking',
-    Savings = 'Savings',
+    Checking = 'CHECKING',
+    Savings = 'SAVINGS',
 }
 
 // Status of the form.  Used to differentiate between submit, cancel, and save as draft
