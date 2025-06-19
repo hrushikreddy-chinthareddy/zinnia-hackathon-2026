@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { BankDetail } from '@/components/person-data/types';
+import { PaymentMethod } from '@/types/payment';
 
 export enum OttpAction {
   SET_EFFECTIVE_DATE = 'setEffectiveDate',
@@ -13,7 +13,7 @@ export enum OttpAction {
 const payorBankSchema = z.object({
   bankId: z.string(),
   appliesToPartyId: z.string(),
-}) satisfies z.ZodType<Partial<BankDetail>>;
+}) satisfies z.ZodType<Partial<PaymentMethod>>;
 
 const paymentAmountSchema = z.object({
   plain: z
@@ -45,6 +45,6 @@ export type Dispatch = (action: Action) => void;
 export interface OttpState {
   effectiveDate: string;
   paymentAmount: z.infer<typeof paymentAmountSchema>;
-  payorBank: BankDetail;
+  payorBank: PaymentMethod;
   paymentFee?: number;
 }

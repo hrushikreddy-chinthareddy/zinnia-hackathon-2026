@@ -52,10 +52,10 @@ export const BankData = ({
   branchName,
   nameOnAccount,
   routingNumber,
-  removeBankEnabled,
+  removeBankEnabled = false,
   numberOfAccounts,
   onRemoveBank,
-  editBankEnabled,
+  editBankEnabled = false,
   checkVerification,
 }: BankDetailProps) => {
   return (

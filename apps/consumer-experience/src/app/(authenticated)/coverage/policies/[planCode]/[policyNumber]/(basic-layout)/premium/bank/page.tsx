@@ -1,7 +1,8 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
-import { SelectBank } from '@/components/one-time-premium-payment/select-bank/SelectBank';
-import { getPaymentDetails } from '@/services/policy';
+import { getCarrierConfig } from '@/carrier-config/config';
+import { SelectBankWrapper } from '@/components/one-time-premium-payment/select-bank/SelectBankWrapper';
+import { getPaymentMethods } from '@/services/payment-methods';
 import { PolicyRequestInputs } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
@@ -12,22 +13,24 @@ export default async function SelectBankPage({
 }) {
   const { planCode, policyNumber } = params;
   const loggingContext = await buildCommonLogContext();
-  const { data } = await getPaymentDetails(
+  const { payment } = await getCarrierConfig();
+
+  const { data: initialPaymentMethods } = await getPaymentMethods(
     {
-      planCode: params.planCode,
-      policyNumber: params.policyNumber,
+      policyNumber,
+      planCode,
+      paymentProvider: payment.provider,
     },
     loggingContext
   );
 
   return (
-    <>
-      <SelectBank
-        policyNumber={policyNumber}
-        planCode={planCode}
-        activeBanks={data || []}
-        lineOfBusiness={LineOfBusiness.LIFE}
-      />
-    </>
+    <SelectBankWrapper
+      policyNumber={policyNumber}
+      planCode={planCode}
+      initialPaymentMethods={initialPaymentMethods || []}
+      lineOfBusiness={LineOfBusiness.LIFE}
+      paymentProvider={payment.provider}
+    />
   );
 }

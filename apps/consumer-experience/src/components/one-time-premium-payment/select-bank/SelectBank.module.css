@@ -1,6 +1,7 @@
 .bankContainer {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: baseline;
   border: var(--measure-dimension-stroke-sm) solid
     var(--color-base-border-border-light);
   border-radius: var(--measure-dimension-radius-sm);
@@ -68,4 +69,8 @@ button.linkClassname {
       margin-bottom: 0;
     }
   }
+}
+
+.addBank {
+  margin-top: var(--measure-dimension-margin-xs);
 }

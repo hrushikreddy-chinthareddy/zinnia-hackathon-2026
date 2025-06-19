@@ -1,15 +1,6 @@
-import { getThemeCookies } from '@/utils/theme';
-
 import { CompanyName } from '@/types/carriers';
-
-export enum PaymentProvider {
-  ZINNIA = 'ZINNIA',
-  PAYMENTUS = 'PAYMENTUS',
-}
-export interface PaymentConfig {
-  provider: PaymentProvider;
-  verifyIdentityRequired: boolean;
-}
+import { PaymentConfig, PaymentProvider } from '@/types/payment';
+import { getThemeCookies } from '@/utils/theme';
 
 export const getCarrierConfig = async (): Promise<{
   payment: PaymentConfig;
@@ -34,3 +25,4 @@ export const getCarrierConfig = async (): Promise<{
       };
   }
 };
+export { PaymentProvider };

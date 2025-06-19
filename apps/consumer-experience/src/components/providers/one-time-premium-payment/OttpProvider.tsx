@@ -1,7 +1,7 @@
 'use client';
 import React, { PropsWithChildren, useReducer } from 'react';
 
-import { BankDetail } from '@/components/person-data/types';
+import { PaymentMethod } from '@/types/payment';
 
 import { OttpContext } from './OttpContext';
 import { Action, OttpAction, OttpState } from './types';
@@ -43,7 +43,7 @@ const OttpProvider: React.FC<OttpProviderProps> = ({ children }) => {
       plain: 0,
       withFees: 0,
     },
-    payorBank: {} as BankDetail,
+    payorBank: {} as PaymentMethod,
     paymentFee: 0,
   });
 

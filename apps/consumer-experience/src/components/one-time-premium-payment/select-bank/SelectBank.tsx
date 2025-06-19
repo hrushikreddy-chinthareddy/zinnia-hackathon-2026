@@ -10,40 +10,47 @@ import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Button } from '@/components/button/Button';
+import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
 import { ConfirmDialog } from '@/components/confirm-dialog/ConfirmDialog';
+import { EditBankSidesheet } from '@/components/edit-bank/EditBankSidesheet';
 import { FeatureFlagComponent } from '@/components/FeatureFlagComponent';
-import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.css';
-import { BankDetail } from '@/components/person-data/types';
+import { PaymentusAddPaymentMethod } from '@/components/paymentus/PaymentusAddPaymentMethod';
 import { AccountNumber } from '@/components/pii/AccountNumber';
 import { AccountType } from '@/components/pii/AccountType';
 import { BankName } from '@/components/pii/BankName';
-import {
-  EVERLY_CONTACT_PHONE_NUMBER,
-  lineOfBusinessUrlPath,
-} from '@/utils/data';
+import { OttpAction } from '@/components/providers/one-time-premium-payment/types';
+import { PaymentMethod } from '@/types/payment';
+import { lineOfBusinessUrlPath } from '@/utils/data';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './SelectBank.module.css';
 import { useOttp } from '../../providers/one-time-premium-payment/OttpContext';
-import { OttpAction } from '../../providers/one-time-premium-payment/types';
 import { CancelDialogLink } from '../CancelDialogLink';
 import { FormStepWrapper } from '../FormStepWrapper';
 import premiumStyles from '../OneTimePremiumPayment.module.css';
 import { getStepInfo, Steps } from '../steps';
+
+interface SelectBankProps {
+  planCode: string;
+  policyNumber: string;
+  activeBanks: PaymentMethod[];
+  lineOfBusiness: LineOfBusiness;
+  editBankEnabled?: boolean;
+  addBankEnabled?: boolean;
+  onAddPaymentMethod?: () => void;
+}
 
 export const SelectBank = ({
   planCode,
   policyNumber,
   activeBanks,
   lineOfBusiness,
-}: {
-  planCode: string;
-  policyNumber: string;
-  activeBanks: BankDetail[];
-  lineOfBusiness: LineOfBusiness;
-}) => {
+  editBankEnabled = false,
+  addBankEnabled = false,
+  onAddPaymentMethod,
+}: SelectBankProps) => {
   const router = useRouter();
   const { state, dispatch } = useOttp();
   const { payorBank: statePayorBank } = state;
@@ -98,6 +105,7 @@ export const SelectBank = ({
               </NoDataAvailable>
             </div>
           ))}
+
         {activeBanks?.length > 0 && (
           <div
             role="radiogroup"
@@ -106,88 +114,97 @@ export const SelectBank = ({
           >
             {activeBanks?.map((bankDetail, index) => {
               return (
-                <Controller
+                <div
                   key={`${index}-${bankDetail.branchName}`}
-                  name="payorBank"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <label
-                      key={`${index}-${bankDetail.branchName}`}
-                      className={styles.bankContainer}
-                    >
-                      <BankName
-                        bankName={bankDetail.branchName}
-                        className="typography-labels-label-lg"
-                      />
-                      <div
-                        className={`${styles.bankDetail} typography-content-caption`}
-                      >
-                        <AccountType accountType={bankDetail.accountType} />{' '}
-                        <span>account ending in</span>{' '}
-                        <AccountNumber
-                          accountNumber={bankDetail.accountNumber}
+                  className={styles.bankContainer}
+                >
+                  <Controller
+                    name="payorBank"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <label key={`${index}-${bankDetail.branchName}`}>
+                        <BankName
+                          bankName={bankDetail.branchName}
+                          className="typography-labels-label-lg"
                         />
-                      </div>
+                        <div
+                          className={`${styles.bankDetail} typography-content-caption`}
+                        >
+                          <AccountType accountType={bankDetail.accountType} />{' '}
+                          <span>
+                            {bankDetail.accountType?.includes('Checking') ||
+                            bankDetail.accountType?.includes('Savings')
+                              ? 'account ending in'
+                              : 'ending in'}
+                          </span>{' '}
+                          <AccountNumber
+                            accountNumber={bankDetail.accountNumber}
+                          />
+                        </div>
 
-                      {bankDetail.autopayEnabled && (
-                        <AssistiveText
-                          variant={AssistiveTextVariant.Success}
-                          text="Premium autopay"
+                        {bankDetail.autopayEnabled && (
+                          <AssistiveText
+                            variant={AssistiveTextVariant.Success}
+                            text="Premium autopay"
+                          />
+                        )}
+                        <input
+                          {...field}
+                          style={{ position: 'absolute', opacity: 0 }}
+                          type="radio"
+                          role="radio"
+                          name="bank"
+                          id={`${index}-${bankDetail.branchName}`}
+                          value={bankDetail.bankId}
+                          defaultChecked={
+                            bankDetail?.bankId === defaultSelectedBankId
+                          }
                         />
-                      )}
-                      <input
-                        {...field}
-                        style={{ position: 'absolute', opacity: 0 }}
-                        type="radio"
-                        role="radio"
-                        name="bank"
-                        id={`${index}-${bankDetail.branchName}`}
-                        value={bankDetail.bankId}
-                        defaultChecked={
-                          bankDetail?.bankId === defaultSelectedBankId
-                        }
-                      />
-                    </label>
-                  )}
-                />
+                      </label>
+                    )}
+                  />
+                  {editBankEnabled && <EditBankSidesheet />}
+                </div>
               );
             })}
           </div>
         )}
-        <FeatureFlagComponent
-          flagKey={FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT}
-          enabledComponent={
-            <div className={`my-lg mb-none ${styles.disclaimer}`}>
-              <p className="typography-content-body-sm">
-                Want to pay with another bank account? Go to{' '}
-                <ConfirmDialog
-                  confirmCallback={() =>
-                    router.push(
-                      `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/profile?addBank=true#addBankSection`
-                    )
-                  }
-                  linkText="banking details"
-                  linkClassName={styles.linkClassname}
-                  confirmDescription="Navigate to the profile page and open the add bank sidesheet"
-                  message="If you leave now, your payment won't be submitted and you will have to start over."
-                  cancelDescription="Stay on the premium payment page"
-                  title="Leave payment?"
-                />{' '}
-                to add. If you're not seeing the account you want to pay with,
-                give us a call at{' '}
-                <Link
-                  isNativeAnchorTag
-                  className="typography-nav-links-sm-inline"
-                  href={`tel:+${EVERLY_CONTACT_PHONE_NUMBER}`}
-                >
-                  {EVERLY_CONTACT_PHONE_NUMBER}
-                </Link>
-                .
-              </p>
-            </div>
-          }
-        />
+
+        {addBankEnabled ? (
+          <div className={styles.addBank}>
+            <PaymentusAddPaymentMethod
+              policyNumber={policyNumber}
+              onAddPaymentMethod={onAddPaymentMethod}
+            />
+          </div>
+        ) : (
+          <FeatureFlagComponent
+            flagKey={FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT}
+            enabledComponent={
+              <div className={`my-lg mb-none ${styles.disclaimer}`}>
+                <p className="typography-content-body-sm">
+                  Want to pay with another bank account? Go to{' '}
+                  <ConfirmDialog
+                    confirmCallback={() =>
+                      router.push(
+                        `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/profile?addBank=true#addBankSection`
+                      )
+                    }
+                    linkText="banking details"
+                    linkClassName={styles.linkClassname}
+                    confirmDescription="Navigate to the profile page and open the add bank sidesheet"
+                    message="If you leave now, your payment won't be submitted and you will have to start over."
+                    cancelDescription="Stay on the premium payment page"
+                    title="Leave payment?"
+                  />{' '}
+                  to add. If you're not seeing the account you want to pay with,
+                  give us a call at <CarrierPhoneNumber />.
+                </p>
+              </div>
+            }
+          />
+        )}
 
         <div className={premiumStyles.buttonGroup}>
           {/* TODO: disabled if nothing selected */}

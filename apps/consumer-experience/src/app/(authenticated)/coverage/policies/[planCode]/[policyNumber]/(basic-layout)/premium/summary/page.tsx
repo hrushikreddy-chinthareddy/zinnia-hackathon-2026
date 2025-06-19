@@ -1,4 +1,4 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 
 import { PaymentSummary } from '@/components/one-time-premium-payment/payment-summary/PaymentSummary';
 import { getPolicyAccountValue } from '@/services';

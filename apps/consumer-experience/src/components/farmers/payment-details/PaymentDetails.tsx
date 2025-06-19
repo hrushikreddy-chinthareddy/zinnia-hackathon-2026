@@ -1,6 +1,6 @@
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
 import { PaymentusAddPaymentMethod } from '@/components/paymentus/PaymentusAddPaymentMethod';
-import { getPaymentusUserPaymentsList } from '@/services/paymentus';
+import { getPaymentusUserPaymentsList } from '@/services/payment-methods/paymentus';
 import {
   buildCommonLogContext,
   CommonLogContext,
@@ -17,6 +17,7 @@ export const PaymentDetails = async ({
 }) => {
   const loggingContext: CommonLogContext = await buildCommonLogContext();
   const { data } = await getPaymentusUserPaymentsList(
+    // @TODO: CUI-874: get userId from access token ecn
     { userId: '7657659', isMock: false },
     loggingContext
   );

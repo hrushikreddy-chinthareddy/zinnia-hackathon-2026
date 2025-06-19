@@ -15,8 +15,10 @@ const removeStars = (str: string) => str.replace(/\*/g, '');
 // Test Credit Cards: https://www.paypalobjects.com/en_GB/vhelp/paypalmanager_help/credit_card_numbers.htm
 export const PaymentusAddPaymentMethod = ({
   policyNumber,
+  onAddPaymentMethod,
 }: {
   policyNumber: string;
+  onAddPaymentMethod?: () => void;
 }) => {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -61,6 +63,8 @@ export const PaymentusAddPaymentMethod = ({
     queryClient.invalidateQueries({
       queryKey: ['paymentusAddCCToken'],
     });
+    // call success add bank callback when closing the sidesheet
+    step === FormSteps.SUCCESS && onAddPaymentMethod?.();
   };
 
   return (
