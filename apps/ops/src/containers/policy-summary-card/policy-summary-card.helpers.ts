@@ -16,6 +16,7 @@ export const deathClaimNotApplicableStatuses: any[] = [
     PolicyStatus.DEATHCLAIMPAID,
     PolicyStatus.PENDINGISSUED,
     PolicyStatus.FREELOOKPER,
+    PolicyStatus.CANCELEDFREELOOK,
     PolicyStatus.PNDOUTSTNDREQ,
     PolicyStatus.PNDAWAITFUNDS,
     PolicyStatus.REJECTED,
