@@ -29,20 +29,25 @@
                                     "properties": {
                                         "escheatmentPortalUpdateConfirmed": {
                                             "type": "boolean",
-                                            "title": "I have marked the unclaimed funds as “Abandoned Property” in the applicable state escheatment portal or financial system."
+                                            "title": "I have marked the unclaimed funds as “Abandoned Property” in the applicable state escheatment portal or financial system.",
+                                            "enum": [true]
                                         },
                                         "escheatmentOnBase": {
                                             "type": "boolean",
-                                            "title": "I have manually created an Ops Escheatment case in OnBase to document the escheatment activity and entered the OnBase Case ID below:"
+                                            "title": "I have manually created an Ops Escheatment case in OnBase to document the escheatment activity and entered the OnBase Case ID below:",
+                                            "enum": [true]
                                         },
                                         "escheatmentExternalCaseId": {
                                             "type": "string",
                                             "title": "OnBase Case ID:",
-                                            "minLength": 12
+                                            "minLength": 12,
+                                            "pattern": "^[A-Za-z0-9]+$",
+                                            "trim": true
                                         },
                                         "escheatmentSorUpdateConfirmed": {
                                             "type": "boolean",
-                                            "title": "I have confirmed that the System of Record (SOR) has been updated to reflect the escheatment status."
+                                            "title": "I have confirmed that the System of Record (SOR) has been updated to reflect the escheatment status.",
+                                            "enum": [true]
                                         }
                                     },
                                     "required": [
@@ -65,7 +70,7 @@
                     "ui:submitButtonOptions": {
                         "norender": true,
                         "props": {
-                            "noValidate": true
+                            "noValidate": false
                         }
                     },
                     "ui:hideError": true,
