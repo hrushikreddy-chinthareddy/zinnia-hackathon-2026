@@ -1,5 +1,4 @@
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import { FieldSize, FieldVariant } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
@@ -43,7 +42,7 @@ const AccountTypes = ({
             options={accountTypeOptions}
             onChange={(val: string) => setDataChange(val as AccountType)}
             size={FieldSize.Small}
-            value={accountType}
+            value={accountType.toUpperCase()}
             data-testid="accountType"
             key={fieldName}
             message={error}
