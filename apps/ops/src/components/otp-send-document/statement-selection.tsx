@@ -24,10 +24,11 @@ import { DatePickerTypes, getQuarter, Quarter, quarters } from '../date-picker/d
 import { FieldSize, FieldType } from '../fields/field';
 import FieldDateSelect from '../fields/field-date-select/field-date-select';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
-import { MetadataSearchResponse, SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 const toggleStatement = (val: StatementTypes, SetSelectedStatements: React.Dispatch<React.SetStateAction<StatementTypes[]>>) => {
     return (shouldHaveStatement: boolean) => {
@@ -132,8 +133,14 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
     const [error, setError] = useState<FormValidationErrors>({});
     const [loader, setLoader] = useState(false);
     const [datePickerType, setdatePickerType] = useState(getDatePickerType(selectedStatementType));
-    const { featureFlags } = useOptimizely();
-    const shouldUseV3 = featureFlags?.[FEATURE_FLAGS.DOCUMENTS_V3];
+    const { featureFlagVariables } = useOptimizely();
+
+    const useV3 = isFeatureFlagVariableActive(
+        featureFlagVariables,
+        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
+        OptimizelyVariableKey.Clients,
+        policy?.carrierId?.toLocaleLowerCase() || ''
+    );
 
     useEffect(() => {
         setdatePickerType(getDatePickerType(selectedStatementType));
@@ -192,7 +199,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
 
                         const optionalParams = {
                             documentType: documentTypes.join(','),
-                            periods: encodeURIComponent(JSON.stringify(selectedYearQuarters))
+                            periods: encodeURIComponent(JSON.stringify(selectedYearQuarters)),
                         };
 
                         browserLogInfo('contactCenterGetStatements', {
@@ -207,46 +214,49 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                             function: 'documents.getCorrespondenceDocs',
                         });
 
-                        if(shouldUseV3){
+                        if (useV3) {
                             const searchBody = {
-                                "parentCarrierCode": policy?.carrierId || '',
-                                "documentClassification": SearchRequest.documentClassification.OUTBOUND,
-                                "policyNumber": policy?.policyNumber || '',
-                                "documentType": optionalParams.documentType,
-                                "periods": selectedYearQuarters,
+                                parentCarrierCode: policy?.carrierId || '',
+                                documentClassification: SearchRequest.documentClassification.OUTBOUND,
+                                policyNumber: policy?.policyNumber || '',
+                                documentType: optionalParams.documentType,
+                                periods: selectedYearQuarters,
                             };
 
                             const { data, error } = await searchDocumentsV3({
-                                searchBody
-                             })
+                                searchBody,
+                            });
 
-                            if(error){
+                            if (error) {
                                 setError({ submit: error.message });
                                 return;
                             }
 
-                        const statements: PolicyDocument[] = data?.documents?.map(document => ({
-                                ...document,
-                                caseId: '',
-                                contractNumber: policy?.policyNumber || '',
-                                docStatus: '',
-                                documentNumber: document?.documentId || '',
-                                documentDate: document.createDate || '',
-                                importDate: document.createDate || '',
-                                displayCode: DocumentDisplayCode.Owner,
-                                displayName: document.displayName || '',
-                                documentType: document.documentType || '',
-                                source: document.source || '',
-                                fileType: document.fileType || '',
-                                periodYear: document.periodYear?.toString() || '',
-                                periodQuarter: document.periodQuarter,
-                                documentID: document.documentId
-
-                            })) || [];
-                        setStatements(ownerCopyStatements(statements));
-
-                        }else{
-                            const response =  await getCorrespondenceDocsV2(policy?.policyNumber || '', policy?.carrierId || '', optionalParams);
+                            const statements: PolicyDocument[] =
+                                data?.documents?.map(document => ({
+                                    ...document,
+                                    caseId: '',
+                                    contractNumber: policy?.policyNumber || '',
+                                    docStatus: '',
+                                    documentNumber: document?.documentId || '',
+                                    documentDate: document.createDate || '',
+                                    importDate: document.createDate || '',
+                                    displayCode: DocumentDisplayCode.Owner,
+                                    displayName: document.displayName || '',
+                                    documentType: document.documentType || '',
+                                    source: document.source || '',
+                                    fileType: document.fileType || '',
+                                    periodYear: document.periodYear?.toString() || '',
+                                    periodQuarter: document.periodQuarter,
+                                    documentID: document.documentId,
+                                })) || [];
+                            setStatements(ownerCopyStatements(statements));
+                        } else {
+                            const response = await getCorrespondenceDocsV2(
+                                policy?.policyNumber || '',
+                                policy?.carrierId || '',
+                                optionalParams
+                            );
 
                             if ('err' in response.data) {
                                 setError({ submit: response.data.err });
@@ -254,8 +264,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                             }
                             const statements: PolicyDocuments = response.data;
                             setStatements(ownerCopyStatements(statements.items));
-                        }         
-
+                        }
                     }
                 } catch (error) {
                     browserLogError('contactCenterGetStatements', {
@@ -348,7 +357,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                 endDate &&
                 !Object.keys(error).length && <StatementListing statements={statements} carrierId={policy?.carrierId || ''} />
             )}
-            {error && ( 
+            {error && (
                 <div className="flex flex-col mt-2">
                     {error.statementType && <AssistiveText text={error.statementType} variant={AssistiveTextVariant.Error} />}
 
