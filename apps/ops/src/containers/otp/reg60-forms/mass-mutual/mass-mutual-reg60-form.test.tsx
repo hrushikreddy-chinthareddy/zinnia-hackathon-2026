@@ -232,7 +232,7 @@ describe('MassMutualReg60Form', () => {
     it('renders without crashing', () => {
         render(
             <Reg60FormContext.Provider value={mockContext as any}>
-                <MassMutualReg60Form document={doc as any} />
+                <MassMutualReg60Form document={doc as any} planCode="" />
             </Reg60FormContext.Provider>
         );
 
@@ -243,7 +243,7 @@ describe('MassMutualReg60Form', () => {
         mockContext.currentPage = 'comparison';
         render(
             <Reg60FormContext.Provider value={mockContext as any}>
-                <MassMutualReg60Form document={doc as any} />
+                <MassMutualReg60Form document={doc as any} planCode="" />
             </Reg60FormContext.Provider>
         );
 

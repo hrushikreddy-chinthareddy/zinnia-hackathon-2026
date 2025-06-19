@@ -34,6 +34,7 @@ describe('#DisclosureAuthorization', () => {
                 disclosureAuthorizationInfo={disclosureAuthorizationInfo}
                 formErrors={{}}
                 onDataChange={onDataChange}
+                planCode=""
             />
         );
 
@@ -64,6 +65,7 @@ describe('#DisclosureAuthorization', () => {
                 disclosureAuthorizationInfo={disclosureAuthorizationInfo}
                 formErrors={{}}
                 onDataChange={onDataChange}
+                planCode=""
             />
         );
 
