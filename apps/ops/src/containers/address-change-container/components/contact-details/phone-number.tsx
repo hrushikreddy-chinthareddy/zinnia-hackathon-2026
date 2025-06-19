@@ -17,9 +17,10 @@ interface PhoneNumberProps {
     setCountry: (value: keyof typeof countries) => void;
     setPhone: (value: any) => void;
     title?: boolean;
+    label?: string;
 }
 
-const PhoneNumber = ({ country, phone, setCountry, setPhone, title = true }: PhoneNumberProps) => {
+const PhoneNumber = ({ country, phone, setCountry, setPhone, title = true, label }: PhoneNumberProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'addressChange.contactDetails.phoneNumber' });
     const { formErrors } = useAddressChange();
 
@@ -35,7 +36,7 @@ const PhoneNumber = ({ country, phone, setCountry, setPhone, title = true }: Pho
                 dropdownValue={countries[country].phone}
                 formatOptions={{ format: '(###) ###-####' }}
                 frequentOptions={frequentCountryOptions}
-                label={t('fieldLabels.number') as string}
+                label={label ?? t('fieldLabels.number') as string}
                 leading={countries[country].emoji}
                 onChange={event => {
                     setPhone((prevState: any) => ({

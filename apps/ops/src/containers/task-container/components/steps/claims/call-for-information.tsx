@@ -50,7 +50,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
   const [name, setName] = useState('');
   const [phone, setPhone] = useState<Phone>({} as Phone);
   const [country, setCountry] = useState<keyof typeof countries>('US');
-  const [relationshipToDeceased, setRelationshipToDeceased] = useState('');
+  const [relationshipToOwner, setRelationshipToOwner] = useState('');
   const [addressSelected, setAddressSelected] = useState(false);
 
   const { goToNext } = useWorkflow();
@@ -123,7 +123,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
             callSequence: maxCallSequence + 1,
             phone: { ...phone, countryCode: countries[country].phone },
             partyRoleCategory: contactRole,
-            relationshipToInsured: relationshipToDeceased,
+            relationshipToInsured: relationshipToOwner,
             callDone: true,
           });
         }
@@ -136,7 +136,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
           callSequence: callEntries.length,
           phone: { ...phone, countryCode: countries[country].phone },
           partyRoleCategory: contactRole,
-          relationshipToInsured: relationshipToDeceased,
+          relationshipToInsured: relationshipToOwner,
           callDone: true,
         });
         setTask(updatedTask);
@@ -152,7 +152,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
 
     };
     onContinueReady && onContinueReady(() => handleContinue);
-  }, [onContinueReady, task, beneficiary, callEntries, contactRole, name, setTask, phone, relationshipToDeceased, correlationId, setSubmitFailed, goToNext, country, dynamicKey]);
+  }, [onContinueReady, task, beneficiary, callEntries, contactRole, name, setTask, phone, relationshipToOwner, correlationId, setSubmitFailed, goToNext, country, dynamicKey]);
 
   const addNewCallEntry = () => {
     if (task?.data?.details?.[dynamicKey]?.callLogs && task.data.details[dynamicKey].callLogs.length > 0) {
@@ -179,7 +179,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
           callSequence: callEntries.length,
           phone: { ...phone, countryCode: countries[country].phone },
           partyRoleCategory: contactRole,
-          relationshipToInsured: relationshipToDeceased,
+          relationshipToInsured: relationshipToOwner,
           callDone: true,
         });
 
@@ -194,7 +194,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
         callSequence: callEntries.length,
         phone: { ...phone, countryCode: countries[country].phone },
         partyRoleCategory: contactRole,
-        relationshipToInsured: relationshipToDeceased,
+        relationshipToInsured: relationshipToOwner,
         callDone: true,
       });
       setTask(updatedTask);
@@ -210,7 +210,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
         phone: {} as Phone,
       },
     ]);
-
+    setBeneficiary((prev: UpdatedBeneficiaryRecord) => ({ ...prev, changeRequire: null }))
     setContactRole('');
     setName('');
     setPhone({} as Phone);
@@ -280,17 +280,14 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
 
 
     }
-    if (contactRole === ContactRole.OTHER && !relationshipToDeceased) {
-      errors['mandatoryField'] = "Missing relationshipToDeceased";
+    if (contactRole === ContactRole.OTHER && !relationshipToOwner) {
+
+      errors['mandatoryField'] = "Missing relationshipToOwner";
     }
     if (beneficiary.changeRequire && !beneficiary.changeType) {
       errors['mandatoryField'] = "Missing changeType";
     }
-    if (beneficiary.changeType === ChangeTypeEnum.BENEFICIARY_DECEASED) {
-      if (!beneficiary.beneDeathDate || !beneficiary.beneDeathSourceOfInfo) {
-        errors['mandatoryField'] = "Missing beneDeathDate or beneDeathSourceOfInfo";
-      }
-    }
+
     if (beneficiary.changeType === ChangeTypeEnum.BENEFICIARY_NOTIFICATION_CHANGE) {
       if (beneficiary.notificationPreferences.notificationMethod.method === ClaimCommunicationTypes.Email && !beneficiary.notificationPreferences.email?.emailAddress) {
         errors['mandatoryField'] = "Missing emailAddress";
@@ -306,15 +303,31 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
+  useEffect(() => {
+    if (filteredCallLogs.length === 1) {
+      setName(filteredCallLogs[0].fullName)
+    }
+  }, [filteredCallLogs])
 
   useEffect(() => {
     validateAddress();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contactRole, phone, name, beneficiary, addressSelected]);
+
+  const shouldRenderChangeRequire = () => {
+    switch (contactRole === ContactRole.OTHER) {
+      case true: {
+        return name && phone.dialNumber && relationshipToOwner && contactRole
+      }
+      case false: {
+        return name && phone.dialNumber && contactRole
+      }
+    }
+
+  }
   return (
     <div>
-      <DisplayCompletedCalls task={task} />
+      <DisplayCompletedCalls task={task} t={t} />
 
       {/* Current call entry form */}
       <div className="grid grid-cols-4 gap-4">
@@ -327,6 +340,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
               setName('');
               setPhone({} as Phone);
               setContactRole(newValue);
+              setRelationshipToOwner('')
             }
           }}
         />
@@ -336,6 +350,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
         <div className="grid grid-cols-4 gap-4 mt-5">
           {contactRole !== ContactRole.OTHER && filteredCallLogs.length > 0 && (
             <>
+
               <SelectComponent
                 label={t('name') ?? 'Name'}
                 className="my-1"
@@ -377,24 +392,24 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
                 />
               </div>
               <div className="mt-1">
-                <PhoneNumber title={false} country={country} phone={phone} setCountry={setCountry} setPhone={setPhone} />
+                <PhoneNumber title={false} label={t('phone') ?? 'Phone'} country={country} phone={phone} setCountry={setCountry} setPhone={setPhone} />
               </div>
 
               <div className="col-span-1 ml-10">
-                <Label labelFor="relationshipToDeceased">{t('relationshipToDeceased')}</Label>
+                <Label labelFor="relationshipToOwner">{t('relationshipToOwner')}</Label>
                 <input
                   type="text"
-                  id="relationshipToDeceased"
-                  placeholder={t('relationshipToDeceased') ?? 'Relationship to Deceased'}
+                  id="relationshipToOwner"
+                  placeholder={t('relationshipToOwner') ?? 'Relationship to Owner'}
                   className={`${styles.textField} w-full`}
-                  value={relationshipToDeceased}
-                  onChange={e => setRelationshipToDeceased(e.target.value)}
+                  value={relationshipToOwner}
+                  onChange={e => setRelationshipToOwner(e.target.value)}
                 />
               </div>
             </>
           )}
 
-          {contactRole && name && phone.dialNumber && (
+          {shouldRenderChangeRequire() && (
             <div className="col-span-4 mt-4">
               <Radio
                 label={t('didYouMakeAnyChanges') ?? 'Did you make any changes to the system of record?'}
