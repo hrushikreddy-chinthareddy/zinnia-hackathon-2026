@@ -24,19 +24,18 @@ interface RenewalFormProviderProps {
     initialForm: any;
 }
 
+function merge(a: any[], b: any[], prop: string) {
+    const reduced = a.filter(aitem => !b.find(bitem => aitem[prop] === bitem[prop]))
+    return reduced.concat(b);
+};
+
 const RenewalFormProvider = ({ children, parties, document, action, featureFlagDecisions, planCode, form }: RenewalFormProviderProps) => {
     const [channel, setChannel] = useState<Channel>(form?.data?.channel ?? Channel.Form);
     const owners = parties?.filter(party => party.SrcRoleType === 0) || [];
-    let ownerInfo;
 
-    if (form?.createdByPartyId !== 'SYSTEM') {
-        ownerInfo =
-            Array.isArray(form?.data?.ownerInformation) && form?.data?.ownerInformation.length > 0
-                ? form?.data?.ownerInformation
-                : getOwnerInfo(owners);
-    } else {
-        ownerInfo = form?.data?.ownerInformation ?? getOwnerInfo(owners);
-    }
+    const inputOwnerInfo = form?.data?.ownerInformation || [];
+    const existingOwnerInfo = getOwnerInfo(owners) || [];
+    const ownerInfo =  merge(existingOwnerInfo, inputOwnerInfo, 'type');
 
     const [ownerInformation, setOwnerInformation] = useState<OwnerInformation[]>(ownerInfo);
     const [transOption, setTransOption] = useState<string | null>(form?.data?.transOption || DEFAULT_TRANS_OPTION);

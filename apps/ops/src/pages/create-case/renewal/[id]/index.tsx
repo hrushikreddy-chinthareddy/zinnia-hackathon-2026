@@ -273,14 +273,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 logInfo('create-case/renewal/:id::Skipping NIGO check', loggingContext);
             }
 
-            /*const acctInfoResponse = await getPolicyAccountInfoSSR(
-                document.contract,
-                document.processCompanyCode,
-                accessToken,
-                loggingContext
-            );
-            const planCode = acctInfoResponse?.PlanCode ?? '';
-            */
             const policies = await searchPolicySSR(
                 document.contract,
                 [clientId?.toUpperCase() as Carrier],
