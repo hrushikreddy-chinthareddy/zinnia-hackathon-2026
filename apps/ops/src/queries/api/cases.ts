@@ -75,7 +75,7 @@ export const getCases = async (
     featureFlags: FeatureFlags
 ): Promise<CaseSearchResponse | CaseSearchErrorResponse> => {
     try {
-        const searchUrl = featureFlags?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+        const searchUrl = featureFlags?.[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]
             ? `${baseAppUrl}/api/enterprise-search/v1/search`
             : `${baseCasesUrl}/search`;
         const { data } = await client.post<CaseSearchBody, AxiosResponse>(searchUrl, query);
@@ -328,7 +328,7 @@ export const searchCasesSSR = async (
     featureFlags: FeatureFlags
 ): Promise<CaseSearchResponse | null> => {
     try {
-        const searchUrl = featureFlags?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+        const searchUrl = featureFlags?.[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]
             ? enterpriseSearchApiServerUrl
             : `${ssrCasesUrl}/search`;
 

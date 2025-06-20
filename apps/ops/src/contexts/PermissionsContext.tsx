@@ -64,9 +64,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     });
 
     const { data: isAllowReadCaseManagement, isLoading: caseManagementLoading } = useQuery({
-        queryKey: ['isAllowReadCaseManagement', partyId, featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH]],
+        queryKey: ['isAllowReadCaseManagement', partyId, featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]],
         queryFn: async () => {
-            if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH]) {
+            if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]) {
                 return await checkTuple(partyId, FgaRelation.UiAccess, FgaRoles.CASE_MANAGEMENT_ZL_ENTITY);
             }
             return await doesUserHavePagePermissionQuery(UserPermission.AllowReadCaseManagement, partyId);
@@ -76,9 +76,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     });
 
     const { data: isAllowReadPolicyAdmin, isLoading: policyAdminLoading } = useQuery({
-        queryKey: ['isAllowReadPolicyAdmin', partyId, featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH]],
+        queryKey: ['isAllowReadPolicyAdmin', partyId, featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]],
         queryFn: async () => {
-            if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH]) {
+            if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]) {
                 return await checkTuple(partyId, FgaRelation.UiAccess, FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY);
             }
             return await doesUserHavePagePermissionQuery(UserPermission.AllowReadPolicyAdmin, partyId);

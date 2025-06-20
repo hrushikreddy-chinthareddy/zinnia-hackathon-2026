@@ -261,7 +261,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
 
             const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
-            const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+            const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]
                 ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY, loggingContext)
                 : await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin, loggingContext);
             const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);

@@ -22,7 +22,7 @@ export default withAuthAndLogging(
 
             const { offset = 0, limit = 5 } = req.query;
             const featureFlagDecisions = await optimizelyService.getFeatureFlagDecisions(session?.user?.sub, loggingContext);
-            const searchUrl = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+            const searchUrl = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]
                 ? `${enterpriseSearchApiServerUrl}?searchEntity=policy&offset=${offset}&limit=${limit}`
                 : `${policyApiBaseUrl}/search?offset=${offset}&limit=${limit}`;
             logTrace('policySearch::start', { ...loggingContext, url: searchUrl });

@@ -410,7 +410,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const user = await getUserData(context);
             const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
 
-            const doesUserHasPagePermissions = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH]
+            const doesUserHasPagePermissions = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]
                 ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.CASE_MANAGEMENT_ZL_ENTITY, loggingContext)
                 : await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement, loggingContext);
 
