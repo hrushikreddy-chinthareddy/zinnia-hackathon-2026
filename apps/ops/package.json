@@ -23,6 +23,7 @@
         "login:gh-pkg": "pnpm login --scope=@zinnia --registry=https://npm.pkg.github.com",
         "orval": "orval",
         "pre-push": "pnpm check",
+        "pre-commit": "pnpm run lint-staged",
         "cypress": "bash ./e2e/scripts/cypress-tests.sh",
         "cypress:local": "bash ./e2e/scripts/cypress-tests.sh --local"
     },
