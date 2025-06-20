@@ -1,11 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { FormMetadata, TaskType } from '@deps/models/case/task';
-import { PotentialMatches } from '@deps/models/case/task/doc-matching-payment';
-import { BeneficiaryRecord } from '@deps/models/case/task/beneficiary-record';
-import { searchBeneficiaryByCaseId, SearchTransactionFilters } from '../../queries/api/beneficiary';
 import { stringifyValue } from '@deps/helpers/csr-api-helpers';
+import { FormMetadata, TaskType } from '@deps/models/case/task';
+import { BeneficiaryRecord } from '@deps/models/case/task/beneficiary-record';
+import { PotentialMatches } from '@deps/models/case/task/doc-matching-payment';
 import { TaskStatus } from '@deps/models/case/task-instance';
+
+import { searchBeneficiaryByCaseId, SearchTransactionFilters } from '../../queries/api/beneficiary';
 
 export const TaskMetadataHelper = async (task: any, tasksMetadata: any[]) => {
     const updatedMetadata = await Promise.all(

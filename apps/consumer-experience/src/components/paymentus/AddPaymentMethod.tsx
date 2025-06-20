@@ -10,6 +10,8 @@ import { analytics } from '@/utils/segment';
 // TODO: i think the frms TLA changes based on environment -- we really need to get
 // confirmation of this from farmers
 const iframeTokenUrl = `${process.env.NEXT_PUBLIC_FARMERS_API_BASE_URL}/xotp/pm/frms`;
+export const PAYMENTUS_ADD_CC_TOKEN = 'paymentusAddCCToken';
+export const PAYMENTUS_ADD_BANK_TOKEN = 'paymentusAddBankToken';
 
 export const AddPaymentMethod = ({
   policyNumber,
@@ -22,9 +24,6 @@ export const AddPaymentMethod = ({
   >('bank');
 
   const addPaymentMethodParams = {
-    // TODO: hardcoding for now, but this will need to come from access_token
-    // which will only be available through SSO login
-    ownerId: '7657659',
     postMessagePmDetailsOrigin: window.location.href,
     timestamp: Date.now(),
   };
@@ -34,7 +33,7 @@ export const AddPaymentMethod = ({
     error: ccError,
     isLoading: ccLoading,
   } = useQuery({
-    queryKey: ['paymentusAddCCToken', policyNumber],
+    queryKey: [PAYMENTUS_ADD_CC_TOKEN, policyNumber],
     queryFn: () =>
       getPaymentusToken({
         ...addPaymentMethodParams,
@@ -47,7 +46,7 @@ export const AddPaymentMethod = ({
     error: bankError,
     isLoading: bankLoading,
   } = useQuery({
-    queryKey: ['paymentusAddBankToken', policyNumber],
+    queryKey: [PAYMENTUS_ADD_BANK_TOKEN, policyNumber],
     queryFn: () =>
       getPaymentusToken({
         ...addPaymentMethodParams,

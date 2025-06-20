@@ -1,9 +1,10 @@
+import { TaskStatus } from '@deps/models/case/task-instance';
+
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 import { TaskReviewStep } from '../components/steps/task-review/task-review-step';
-import { TaskStatus } from '@deps/models/case/task-instance';
 
 export const getSuitabilitySteps = ({
     carrierId,

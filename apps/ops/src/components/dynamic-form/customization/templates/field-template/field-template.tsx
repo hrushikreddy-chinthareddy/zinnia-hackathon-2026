@@ -44,7 +44,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
     );
 
     if (uiOptions.isQuoted && formData && typeof formData === 'string') {
-        formData = `"${formData}"`
+        formData = `"${formData}"`;
     }
     return (
         <>
@@ -70,7 +70,9 @@ export function FieldTemplate(props: FieldTemplateProps) {
                             </div>
                         )}
 
-                        {readonly && typeof formData === 'string' && !(schema.enum || uiOptions.format === 'numeric')  && !isLink ? formData : children}
+                        {readonly && typeof formData === 'string' && !(schema.enum || uiOptions.format === 'numeric') && !isLink
+                            ? formData
+                            : children}
                         {!hideError && errors}
                     </div>
                 </div>

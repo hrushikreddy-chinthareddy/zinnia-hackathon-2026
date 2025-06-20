@@ -431,3 +431,10 @@ export const setRefreshRouterCookie = async (res?: NextResponse) => {
     res,
   });
 };
+
+export const getFarmersECN = async () => {
+  const { accessToken } = await getAccessToken();
+  const decodedToken = jose.decodeJwt(accessToken ?? '');
+
+  return decodedToken?.ecn;
+};

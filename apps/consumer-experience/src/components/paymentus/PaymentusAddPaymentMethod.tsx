@@ -5,7 +5,11 @@ import { useEffect, useState } from 'react';
 
 import { FormSteps } from '@/types/transactions';
 
-import { AddPaymentMethod } from './AddPaymentMethod';
+import {
+  AddPaymentMethod,
+  PAYMENTUS_ADD_BANK_TOKEN,
+  PAYMENTUS_ADD_CC_TOKEN,
+} from './AddPaymentMethod';
 import { PaymentusSuccess } from './PaymentusSuccess';
 import { Button } from '../button/Button';
 
@@ -61,7 +65,7 @@ export const PaymentusAddPaymentMethod = ({
     setOpen(false);
     setStep(undefined);
     queryClient.invalidateQueries({
-      queryKey: ['paymentusAddCCToken'],
+      queryKey: [PAYMENTUS_ADD_CC_TOKEN, PAYMENTUS_ADD_BANK_TOKEN],
     });
     // call success add bank callback when closing the sidesheet
     step === FormSteps.SUCCESS && onAddPaymentMethod?.();

@@ -328,9 +328,7 @@ export const searchCasesSSR = async (
     featureFlags: FeatureFlags
 ): Promise<CaseSearchResponse | null> => {
     try {
-        const searchUrl = featureFlags?.[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]
-            ? enterpriseSearchApiServerUrl
-            : `${ssrCasesUrl}/search`;
+        const searchUrl = featureFlags?.[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE] ? enterpriseSearchApiServerUrl : `${ssrCasesUrl}/search`;
 
         logInfo('searchCasesSSR', { ...loggingContext, file: 'queries/api/cases', function: 'searchCasesSSR', url: searchUrl });
 

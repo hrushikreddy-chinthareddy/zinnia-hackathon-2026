@@ -33,8 +33,6 @@ export const getPaymentMethods = withLogging(
       const { data: paymentusPaymentMethods, error } =
         await getPaymentusUserPaymentsList(
           {
-            // @TODO: CUI-874: get userId from access token ecn
-            userId: '7657659',
             isMock: false,
           },
           loggingContext

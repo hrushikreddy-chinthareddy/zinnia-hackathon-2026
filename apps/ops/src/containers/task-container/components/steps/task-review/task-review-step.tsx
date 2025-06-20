@@ -10,9 +10,9 @@ import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
+import { TaskStatus } from '@deps/models/case/task-instance';
 
 import { TaskReview } from './task-review';
-import { TaskStatus } from '@deps/models/case/task-instance';
 
 type TaskReviewStepProps = {
     caseId: string;

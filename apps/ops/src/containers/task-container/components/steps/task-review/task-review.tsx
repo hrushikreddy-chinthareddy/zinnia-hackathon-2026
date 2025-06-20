@@ -11,12 +11,12 @@ import Typography, { TypographyVariant } from '@deps/components/typography/typog
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { ExceptionRef } from '@deps/models/case/task';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { searchNigoExceptionRefs } from '@deps/queries/api/v1/exceptionRefs';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { useGetCaseDocs } from './task-review.helpers';
-import { TaskStatus } from '@deps/models/case/task-instance';
 
 interface TaskReviewProps {
     caseId: string;

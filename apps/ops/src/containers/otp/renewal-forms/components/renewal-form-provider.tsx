@@ -25,9 +25,9 @@ interface RenewalFormProviderProps {
 }
 
 function merge(a: any[], b: any[], prop: string) {
-    const reduced = a.filter(aitem => !b.find(bitem => aitem[prop] === bitem[prop]))
+    const reduced = a.filter(aitem => !b.find(bitem => aitem[prop] === bitem[prop]));
     return reduced.concat(b);
-};
+}
 
 const RenewalFormProvider = ({ children, parties, document, action, featureFlagDecisions, planCode, form }: RenewalFormProviderProps) => {
     const [channel, setChannel] = useState<Channel>(form?.data?.channel ?? Channel.Form);
@@ -35,7 +35,7 @@ const RenewalFormProvider = ({ children, parties, document, action, featureFlagD
 
     const inputOwnerInfo = form?.data?.ownerInformation || [];
     const existingOwnerInfo = getOwnerInfo(owners) || [];
-    const ownerInfo =  merge(existingOwnerInfo, inputOwnerInfo, 'type');
+    const ownerInfo = merge(existingOwnerInfo, inputOwnerInfo, 'type');
 
     const [ownerInformation, setOwnerInformation] = useState<OwnerInformation[]>(ownerInfo);
     const [transOption, setTransOption] = useState<string | null>(form?.data?.transOption || DEFAULT_TRANS_OPTION);

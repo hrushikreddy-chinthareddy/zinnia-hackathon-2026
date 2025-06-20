@@ -17,8 +17,7 @@ export const PaymentDetails = async ({
 }) => {
   const loggingContext: CommonLogContext = await buildCommonLogContext();
   const { data } = await getPaymentusUserPaymentsList(
-    // @TODO: CUI-874: get userId from access token ecn
-    { userId: '7657659', isMock: false },
+    { isMock: false },
     loggingContext
   );
 

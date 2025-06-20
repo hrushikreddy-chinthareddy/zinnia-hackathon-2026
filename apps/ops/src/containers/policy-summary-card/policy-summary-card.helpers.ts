@@ -1,11 +1,11 @@
-import { TFunction } from "next-i18next";
+import { TFunction } from 'next-i18next';
 
-import { PolicyStatus } from "@deps/models/policy/sor-policy";
+import { PolicyStatus } from '@deps/models/policy/sor-policy';
 
 export const existingDeathClaimStatuses: any[] = [
     PolicyStatus.DEATHCLAIMPENDING,
     PolicyStatus.LIVINGCLAIMPENDING,
-    PolicyStatus.PAYOUTPARTCLM
+    PolicyStatus.PAYOUTPARTCLM,
 ];
 
 export const deathClaimNotApplicableStatuses: any[] = [
@@ -20,11 +20,11 @@ export const deathClaimNotApplicableStatuses: any[] = [
     PolicyStatus.PNDOUTSTNDREQ,
     PolicyStatus.PNDAWAITFUNDS,
     PolicyStatus.REJECTED,
-    PolicyStatus.TERMINATED
+    PolicyStatus.TERMINATED,
 ];
 
-export const getCancelledPolicyStatuses = (policyStatus: string, t:TFunction ) => {
-    switch(policyStatus) {
+export const getCancelledPolicyStatuses = (policyStatus: string, t: TFunction) => {
+    switch (policyStatus) {
         case PolicyStatus.CANCELEDNOPREMIUM:
             return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyCancelled');
         case PolicyStatus.COMMUTED:

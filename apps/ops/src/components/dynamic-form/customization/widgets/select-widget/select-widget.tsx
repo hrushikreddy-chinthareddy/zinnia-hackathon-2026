@@ -58,7 +58,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     const formData = formContext;
 
     const { enumDisabled, emptyValue: optEmptyVal } = options;
-    let enumOptions: EnumOptionsType<S>[] | undefined = Array.isArray(uiSchema?.['ui:options']?.enumOptions)
+    const enumOptions: EnumOptionsType<S>[] | undefined = Array.isArray(uiSchema?.['ui:options']?.enumOptions)
         ? uiSchema['ui:options'].enumOptions
         : options.enumOptions;
 
@@ -135,10 +135,8 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         placeholder = options.placeholder || '';
     }
 
-    if (readonly) return <>
-        {multiple ? Object.values(selectedValues).join(', ')
-        : enumOptions?.find(option => option.value === value)?.label}
-    </>;
+    if (readonly)
+        return <>{multiple ? Object.values(selectedValues).join(', ') : enumOptions?.find(option => option.value === value)?.label}</>;
 
     return (
         <>

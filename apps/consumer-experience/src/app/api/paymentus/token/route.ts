@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { getFarmersECN } from '@/utils/auth';
 import { getPaymentusIframeToken } from '@/utils/paymentus/encrypt-token';
 
 export async function POST(_request: NextRequest) {
-  const { ownerId, postMessagePmDetailsOrigin, timestamp, pmCategory } =
+  const { postMessagePmDetailsOrigin, timestamp, pmCategory } =
     await _request.json();
 
+  const ownerId = await getFarmersECN();
   const encryptedToken = getPaymentusIframeToken({
     // TODO: get this from the access token
     ownerId,

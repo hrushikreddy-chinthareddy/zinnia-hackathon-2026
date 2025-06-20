@@ -26,7 +26,6 @@ const phoneByCarrier = (name?: CompanyName | string) => {
 };
 
 export const CarrierPhoneNumber = () => {
-  // TODO: switch this to `@xd/hooks/useIsCLient` after the merge of the stepped workflow branch
   const isClient = useIsClient();
 
   const currentTheme = Cookies.get(THEME_COOKIE);

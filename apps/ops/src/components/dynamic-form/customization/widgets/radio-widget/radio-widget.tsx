@@ -42,7 +42,6 @@ export type RadioWidgetProps<T, S extends StrictRJSFSchema, F extends FormContex
 function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     widgetProps: RadioWidgetProps<T, S, F>
 ) {
-
     const { options, value, disabled, onChange, id, uiSchema, formContext, readonly } = widgetProps;
     const { enumOptions, enumDisabled } = options;
     const { customOptions, props, properties, cardType, icon, sectionTitle } = getUiOptions<T, S, F>(uiSchema);

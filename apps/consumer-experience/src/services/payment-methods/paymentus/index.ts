@@ -3,6 +3,7 @@ import * as jose from 'jose';
 import { createSecretKey } from 'crypto';
 
 import { PaymentusProfile } from '@/types/paymentus';
+import { getFarmersECN } from '@/utils/auth';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 
@@ -58,7 +59,7 @@ export const getPaymentusApiToken = async (): Promise<string> => {
 
 export const getPaymentusUserPaymentsList = withLogging(
   async (
-    { userId, isMock }: { userId: string; isMock?: boolean },
+    { isMock }: { isMock?: boolean },
     _loggingContext: CommonLogContext
   ): Promise<PaymentusProfile[]> => {
     if (isMock) {
@@ -66,7 +67,7 @@ export const getPaymentusUserPaymentsList = withLogging(
     }
 
     const authToken = await getPaymentusApiToken();
-
+    const userId = isMock ? '7657659' : await getFarmersECN();
     const url = `${process.env.NEXT_PUBLIC_FARMERS_API_BASE_URL}/api/v2/listProfiles/frms/${userId}`;
 
     const response = await fetch(url, {

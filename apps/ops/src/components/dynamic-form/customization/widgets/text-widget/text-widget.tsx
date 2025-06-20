@@ -2,9 +2,8 @@ import { getUiOptions, WidgetProps } from '@rjsf/utils';
 
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
 
-import { formatValueByDataType } from '../../templates/card-templates/card-template';
-
 import style from './text-widget.module.css';
+import { formatValueByDataType } from '../../templates/card-templates/card-template';
 
 export const TextWidget = function (props: WidgetProps) {
     const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder, readonly } = props;

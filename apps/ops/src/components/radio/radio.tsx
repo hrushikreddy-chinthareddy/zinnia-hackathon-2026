@@ -46,7 +46,7 @@ export default function Radio({
     name,
     readonly,
     className,
-    alignItems='items-start'
+    alignItems = 'items-start',
 }: RadioProps) {
     const classes = radioClasses(variant);
 

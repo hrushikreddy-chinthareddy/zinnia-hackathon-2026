@@ -12,7 +12,6 @@ import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import CallLogCard from '@deps/components/card/card-call-log/card-call-log';
-import { formatTimestamp } from '../../../../../../packages/utils/src/dates';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
 import CustomLoader from '@deps/components/loader/customLoader';
@@ -50,6 +49,7 @@ import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { isAPIErrorInformation, isClaimNextTask, RequestData } from './type-guards';
+import { formatTimestamp } from '../../../../../../packages/utils/src/dates';
 
 export enum TabOptions {
     Details = 'Details',

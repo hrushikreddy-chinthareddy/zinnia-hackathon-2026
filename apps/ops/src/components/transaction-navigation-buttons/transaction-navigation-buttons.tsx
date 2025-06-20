@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { useCallback } from 'react';
 
 import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
@@ -95,7 +95,7 @@ const TransactionNavigationButtons = ({
 
         router.push({
             pathname: link,
-            query: { tab: TabOptions.myTasks }
+            query: { tab: TabOptions.myTasks },
         });
     }, [trackEventProps, sessionId, partyId, link, router]);
 

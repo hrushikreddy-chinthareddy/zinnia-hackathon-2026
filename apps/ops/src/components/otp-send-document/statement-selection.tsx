@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 import { Loader } from '@deps/components/page-loader';
+import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { DocumentDisplayCode, PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
 import { StatementStartYear, StatementTypes } from '@deps/models/case/send-statement';
@@ -11,9 +12,12 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import { Policy } from '@zinnia/api-types/types/sor';
 
+import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { getCorrespondenceDocsV2 } from '@deps/queries/api/documents';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
@@ -24,11 +28,8 @@ import { DatePickerTypes, getQuarter, Quarter, quarters } from '../date-picker/d
 import { FieldSize, FieldType } from '../fields/field';
 import FieldDateSelect from '../fields/field-date-select/field-date-select';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
-import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
+
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 const toggleStatement = (val: StatementTypes, SetSelectedStatements: React.Dispatch<React.SetStateAction<StatementTypes[]>>) => {
     return (shouldHaveStatement: boolean) => {

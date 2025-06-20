@@ -1,11 +1,11 @@
+import { TaskType } from '@deps/models/case/task';
 import { MatchingCase } from '@deps/models/case/task/doc-matching-payment';
+import { TaskStatus } from '@deps/models/case/task-instance';
 
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
-import { TaskStatus } from '@deps/models/case/task-instance';
-import { TaskType } from '@deps/models/case/task';
 
 export const getMatchDocumentPaymentReviewSteps = ({
     taskType,

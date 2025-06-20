@@ -74,7 +74,7 @@ export type NotificationPreferences = {
     notificationMethod: NotificationMethod;
     fax?: FaxNotificationMethod;
     email?: EmailNotificationMethod;
-    address?: AddressNotificationMethod
+    address?: AddressNotificationMethod;
 };
 
 export type NotificationMethod = {

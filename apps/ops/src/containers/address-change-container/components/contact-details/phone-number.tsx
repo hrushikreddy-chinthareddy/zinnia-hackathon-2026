@@ -26,17 +26,18 @@ const PhoneNumber = ({ country, phone, setCountry, setPhone, title = true, label
 
     return (
         <>
-            {title && <div className="flex flex-col">
-                <Typography variant={TypographyVariant.LabelLg}>{t('title')}</Typography>
-            </div>
-            }
+            {title && (
+                <div className="flex flex-col">
+                    <Typography variant={TypographyVariant.LabelLg}>{t('title')}</Typography>
+                </div>
+            )}
             <FieldSelect
                 aria-label={t('fieldLabels.number') as string}
                 className="w-[300px]"
                 dropdownValue={countries[country].phone}
                 formatOptions={{ format: '(###) ###-####' }}
                 frequentOptions={frequentCountryOptions}
-                label={label ?? t('fieldLabels.number') as string}
+                label={label ?? (t('fieldLabels.number') as string)}
                 leading={countries[country].emoji}
                 onChange={event => {
                     setPhone((prevState: any) => ({
