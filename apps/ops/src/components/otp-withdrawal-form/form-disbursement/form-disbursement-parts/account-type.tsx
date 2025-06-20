@@ -1,3 +1,4 @@
+import { toTitleCase } from '@xd/utils/dist';
 import { useTranslation } from 'next-i18next';
 
 import { FieldSize, FieldVariant } from '@deps/components/fields/field';
@@ -15,7 +16,7 @@ const AccountTypes = ({
     error,
 }: DisbursementInformation) => {
     const { t } = useTranslation();
-    const accountType = disbursementInformation.accountType;
+    const accountType = toTitleCase(disbursementInformation.accountType);
     const accountTypeOptions = [
         {
             label: t('caseWithdrawal.request.distributionMethod.savings'),
@@ -42,7 +43,7 @@ const AccountTypes = ({
             options={accountTypeOptions}
             onChange={(val: string) => setDataChange(val as AccountType)}
             size={FieldSize.Small}
-            value={accountType.toUpperCase()}
+            value={accountType}
             data-testid="accountType"
             key={fieldName}
             message={error}
